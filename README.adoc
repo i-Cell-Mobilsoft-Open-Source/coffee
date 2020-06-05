@@ -1,0 +1,57 @@
+= coff:ee
+
+A coff:ee egy JavaEE framework, melynek célja hogy az enterprise világ gyakori algoritmusait összegyűjcse,
+azokra egy alap működést nyújcson, melyet a projekten ha szükséges saját igényekre szabhat.
+Projekt ezeken az alaptechnológiákon alapszik:
+
+* JAVA EE 8+
+* Java 11+
+* CDI 2.0+
+
+Bővebb leírás a http://i-cell-mobilsoft-open-source.github.io/coffee/[coff:ee dokumentáció] oldalon található.
+
+== Maven central
+A coff:ee megtalálhatóa official maven repository-ba is,
+projekten elég behúzni a BOM-ot mely minden almodult lekezel:
+
+.dependencyManagement beállítások
+[source, xml]
+----
+<dependencyManagement>
+    <dependency>
+        <groupId>hu.icellmobilsoft.coffee</groupId>
+        <artifactId>coffee-bom</artifactId>
+        <version>${version.hu.icellmobilsoft.coffee}</version>
+        <type>pom</type>
+        <scope>import</scope>
+    </dependency>
+</dependencyManagement>
+----
+
+.modulok használata
+[source, xml]
+----
+<dependencies>
+    <dependency>
+        <groupId>hu.icellmobilsoft.coffee</groupId>
+        <artifactId>coffee-cdi</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>hu.icellmobilsoft.coffee</groupId>
+        <artifactId>coffee-dto-impl</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>hu.icellmobilsoft.coffee</groupId>
+        <artifactId>coffee-model-base</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>hu.icellmobilsoft.coffee</groupId>
+        <artifactId>coffee-jpa</artifactId>
+    </dependency>
+    ...egyéb coff:ee modulok...
+</dependencies>
+----
+
+Bővebb leírás a http://i-cell-mobilsoft-open-source.github.io/coffee/[coff:ee dokumentáció] oldalon található.
+
+Copyright (C) 2020 i-Cell Mobilsoft Zrt.
