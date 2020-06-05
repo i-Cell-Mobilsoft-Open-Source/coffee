@@ -1,0 +1,14 @@
+[#common_module_coffee-module-notification]
+= coffee-module-notification
+
+Modul célja az értesítések (email, push notification,...) központi kezelése.
+
+A modul szorosan osszeköthető a coffee-module-document modullal, ahonnan szedi a kiküldendő üzeneteket, szövegeket.
+Nemcsak a kiküldésekkel foglalkozik, hanem tárolja azt is hogy ki, kinek, mikor, mit küldött el.
+Jelenleg ezeket az értesítéseket tudja kezelni:
+
+* email
+* push notification
+
+Tartalmaz egy általános DTO almodult (nem kötelező használni) amiben már előre megvannak határozva a
+kommunikációs objektumok.

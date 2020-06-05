@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:common="http://common.dto.coffee.icellmobilsoft.hu/common"
+    xmlns:commonservice="http://common.dto.coffee.icellmobilsoft.hu/commonservice"
+    xmlns:commonsecurity="http://common.dto.coffee.icellmobilsoft.hu/commonsecurity"
+    xmlns="http://notification.dto.coffee.icellmobilsoft.hu/notification"
+    targetNamespace="http://notification.dto.coffee.icellmobilsoft.hu/notification"
+    elementFormDefault="qualified" attributeFormDefault="unqualified">
+
+    <xsd:import namespace="http://common.dto.coffee.icellmobilsoft.hu/common"
+        schemaLocation="../common/common.xsd" />
+    <xsd:import namespace="http://common.dto.coffee.icellmobilsoft.hu/commonservice"
+        schemaLocation="../common/commonservice.xsd" />
+    <xsd:import namespace="http://common.dto.coffee.icellmobilsoft.hu/commonsecurity"
+        schemaLocation="../common/commonsecurity.xsd" />
+
+	<!-- SIMPLE TYPES -->
+    <xsd:simpleType name="DeviceOSType">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="IOS">
+                <xsd:annotation>
+                    <xsd:documentation>Apple device</xsd:documentation>
+                </xsd:annotation>
+            </xsd:enumeration>
+            <xsd:enumeration value="ANDROID">
+                <xsd:annotation>
+                    <xsd:documentation>Android device</xsd:documentation>
+                </xsd:annotation>
+            </xsd:enumeration>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <!-- GROUPS -->
+    <xsd:group name="EmailHeadGroup">
+        <xsd:sequence>
+            <xsd:element name="from" type="common:SimpleText255Type" minOccurs="0" />
+            <xsd:element name="to" type="common:SimpleText255Type" maxOccurs="unbounded" />
+            <xsd:element name="cc" type="common:SimpleText255Type" minOccurs="0" maxOccurs="unbounded">
+                <xsd:annotation>
+                    <xsd:documentation>email copy</xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="bcc" type="common:SimpleText255Type" minOccurs="0" maxOccurs="unbounded">
+                <xsd:annotation>
+                    <xsd:documentation>email hidden copy</xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="attachment" type="xsd:string" minOccurs="0" maxOccurs="unbounded">
+                <xsd:annotation>
+                    <xsd:documentation>Encoded email attachment</xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="userId" type="common:EntityIdType" minOccurs="0" />
+            <xsd:element name="sourceService" type="common:SimpleText255Type" minOccurs="0" />
+        </xsd:sequence>
+    </xsd:group>
+    <xsd:group name="EmailPlainTextGroup">
+        <xsd:sequence>
+            <xsd:group ref="EmailHeadGroup" />
+            <xsd:element name="subject" type="common:SimpleText255Type"/>
+            <xsd:element name="body" type="xsd:string"/>
+        </xsd:sequence>
+    </xsd:group>
+    <xsd:group name="EmailTemplateGroup">
+        <xsd:sequence>
+            <xsd:group ref="EmailHeadGroup" />
+            <xsd:element name="templateKey" type="common:EntityIdType">
+                <xsd:annotation>
+                    <xsd:documentation>email template key. Template or body must be defined</xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="parameter" type="common:KeyValueBasicType" minOccurs="0" maxOccurs="unbounded">
+                <xsd:annotation>
+                    <xsd:documentation>email template parameter</xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="language" type="common:SimpleText5Type"/>
+        </xsd:sequence>
+    </xsd:group>
+
+    <xsd:group name="PushGroup">
+        <xsd:sequence>
+            <xsd:element name="device" type="DeviceType" maxOccurs="unbounded">
+                <xsd:annotation>
+                    <xsd:documentation>device list to push notification</xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="templateKey" type="common:EntityIdType">
+                <xsd:annotation>
+                    <xsd:documentation>push message template key</xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="parameter" type="common:KeyValueBasicType" minOccurs="0" maxOccurs="unbounded">
+                <xsd:annotation>
+                    <xsd:documentation>message template parameter</xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="expire" type="xsd:int" minOccurs="0">
+                <xsd:annotation>
+                    <xsd:documentation>message expiration time in seconds</xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="userId" type="common:EntityIdType" minOccurs="0" />
+            <xsd:element name="sourceService" type="common:SimpleText255Type" minOccurs="0" />
+            <xsd:element name="language" type="common:SimpleText5Type" minOccurs="0" />
+            <xsd:element name="externalId" type="common:EntityIdType" minOccurs="0" />
+        </xsd:sequence>
+    </xsd:group>
+
+    <!-- BASE TYPES -->
+    <xsd:complexType name="DeviceType">
+        <xsd:sequence>
+            <xsd:element name="channelId" type="xsd:string">
+                <xsd:annotation>
+                    <xsd:documentation>device id</xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="deviceOS" type="DeviceOSType">
+                <xsd:annotation>
+                    <xsd:documentation>device operation system</xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="EmailPlainTextType">
+        <xsd:sequence>
+            <xsd:group ref="EmailPlainTextGroup" />
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="EmailTemplateType">
+        <xsd:sequence>
+            <xsd:group ref="EmailTemplateGroup" />
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="PushType">
+        <xsd:complexContent>
+            <xsd:extension base="commonservice:BaseRequestType">
+                <xsd:sequence>
+                    <xsd:group ref="PushGroup" />
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+
+    <!-- ROOT ELEMENTS -->
+<!--     <xsd:element name="EmailRequest"> -->
+<!--         <xsd:complexType> -->
+<!--             <xsd:complexContent> -->
+<!--                 <xsd:extension base="EmailType" /> -->
+<!--             </xsd:complexContent> -->
+<!--         </xsd:complexType> -->
+<!--     </xsd:element> -->
+    <xsd:element name="PushRequest">
+        <xsd:complexType>
+            <xsd:complexContent>
+                <xsd:extension base="PushType" />
+            </xsd:complexContent>
+        </xsd:complexType>
+    </xsd:element>
+</xsd:schema>

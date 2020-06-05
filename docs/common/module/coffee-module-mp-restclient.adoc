@@ -1,0 +1,260 @@
+[#common_module_coffee-module-mp-restclient]
+= coffee-module-mp-restclient
+
+A modul célja a microprofile restclient támogatása mely tartalmazza a következő alapelveket:
+
+* Coffee kompatibilizás - eredeti request headerek másolása, log MDC kulcsok tovább adása, Exception kezelés
+* Üzleti folyamat követhetősége - request/response loggolás
+* HTTP kommunikáció személyre szabás - belső/külső HTTP kommunikáció módosíthátóság (pl. a servicek között
+más REST http kell mint mondjuk amikor a XY felé küldünk requestet, mások a headerek,
+tartalom, content-type stb..), TLS kulcsozás, URL és viselkedés (timeout, repeat, stb...) felülírás
+* Exception személyre szabás - lokálisan módosítható hibakelés
+
+== microprofile-rest-client
+Kiinduló pontnak a https://github.com/eclipse/microprofile-rest-client[microprofile-rest-client]
+van felhasználva mely a https://microprofile.io/[micropfile.io] csoport tagja. Ez sokmindent
+levesz a válunkról, akár önmagában is használható de a projektek igényeihez még ki kell egészíteni
+pár hasznos funkcióval. 
+
+== Core
+A fenti alapelvek nagy részét maga a https://github.com/eclipse/microprofile-rest-client[microprofile-rest-client]
+biztosítja a többit a következő pár osztály végzi.
+
+=== DefaultLoggerClientRequestFilter
+Ez egy alapértelmezett REST kliens *REQUEST logger*,
+ami figyelembe veszi ha van megadva `LogSpecifier` `CLIENT_REQUEST` target-tel (<<common_core_coffee-rest_LogSpecifier,LogSpecifier>>).
+Tehát kiloggolja a kliens átlal kiküldött HTTP *request* adatait:
+
+* HTTP method, URL cím
+* HTTP headers
+* Cookies
+* Entity
+
+Ezt mind beküldi a loggerbe INFO szinten.
+
+=== DefaultLoggerClientResponseFilter
+Ez egy alapértelmezett REST kliens *RESPONSE logger*,
+ami figyelembe veszi ha van megadva `LogSpecifier` `CLIENT_RESPONSE` target-tel (<<common_core_coffee-rest_LogSpecifier,LogSpecifier>>).
+Tehát kiloggolja a kliens átlal kiküldött HTTP *request válasz* adatait:
+
+* HTTP status + kiegészítők
+* HTTP headers
+* Cookies
+* locale, location értékek
+* Entity
+
+Ezt mind beküldi a loggerbe INFO szinten
+
+=== DefaultSettingClientRequestFilter
+Ez egy alapértelmezett REST kliens "REST setting copy".
+A a feladata a *szerviceken keresztül* összekötni a REST hívást,
+hogy például a loggolás és az *authentikáció* alapjai tudjanak működni.
+
+Más szóval ha a service-be bejön egy REST request,
+feldolgozás során a microservice-ben szükség egy másik microserviceben áthívni,
+akkor abban a HTTP hívásban ugyan úgy szükséges belerakni azokat a HTTP headereket,
+melyek az service requestjében bejöttek, hogy az ottani authentikáció is sikeres lehessen.
+Konkrétan az autentikáció MDC változók beállítása bekerül a kiküldött http headerek közé.
+
+[#common_module_coffee-module-mp-restclient_DefaultRestClientBuilderListener]
+=== DefaultRestClientBuilderListener
+Ez egy *minta "aktivátor" a fenti felsorolt osztályok bekötésére*.
+Jelenleg még ezt az osztályt minden projekt kell hogy implementálja és kiegészítse exception kezeléssel,
+mivel az még nem emelhető ki Coffee-be (catalog XSD implementálása funkció után már igen - tervben van).
+Ezen kívül az osztályban van definiálva a HTTP kliens timeout értékei is:
+
+* 5 sec connect timeout
+* 1 perc read timeout
+
+Ha van bármilyen működési változtatási igény,
+akkor azt ezen a központi "aktivátor" osztályon keresztül is lehet befolyásolni,
+további lehetőségek lejebb vannak említve,
+ami a https://github.com/eclipse/microprofile-rest-client[microprofile-rest-client] szabályai szerint történnek.
+
+== Implementálás a projektbe
+
+=== pom.xml
+
+.Coffee modul aktiválás
+[source,xml]
+----
+<dependency>
+    <groupId>hu.icellmobilsoft.coffee.module.mp.restclient</groupId>
+    <artifactId>coffee-module-mp-restclient</artifactId>
+</dependency>
+----
+
+Ez mellett kellhet aktiválni az alkalmazás szerver kiterjesztését is,
+ami például a thorntail serverben a következő:
+
+.Thorntail alkalmazás szerver aktiválás
+[source,xml]
+----
+<dependency>
+    <groupId>io.thorntail</groupId>
+    <artifactId>microprofile-restclient</artifactId>
+</dependency>
+----
+
+=== microprofile-rest-client regisztráció
+NOTE: Jelenleg még nincs elkészítve egy default exception lekezelő osztály,
+ezért mintaként szolgáljon valamelyik projektünkben már elkészített
+'DefaultBaseExceptionResponseExceptionMapper' osztály.
+
+Hogy az "aktivátor" figyelembe is legyen véve a
+https://github.com/eclipse/microprofile-rest-client[microprofile-rest-client]
+számára *a DefaultRestClientBuilderListener osztályt projekt szinten le kell örököltetni*
+és az exception kezelést is beallítani. Az így keletkező osztályt a következő fájlban kell regisztrálni:
+
+.src/main/resources/META-INF/services/org.eclipse.microprofile.rest.client.spi.RestClientBuilderListener 
+[source,txt]
+----
+hu.icellmobilsoft.sample.invoice.service.provider.ProjectRestClientBuilderListener
+----
+Ez egy sima postfix és extension nélküli txt fájl.
+
+== Használati példák
+IMPORTANT: Maga a komplett használat részletes leírása a
+https://github.com/eclipse/microprofile-rest-client[microprofile-rest-client]
+relese kiadásaiban tálálható. Itt helyben pár mintát fogunk említeni.
+
+=== Minta használati lehetőség
+==== Inicializálás
+Abban az osztályban ahol a REST operációkat definiáljuk
+(ha követjük a céges ajánlott REST struktúrát akkor ez a REST interface) ki kell egészíteni a
+@RegisterRestClient annotációval.
+Ezzel tulajdonképpen megmondjuk a microprofile-rest-client rendszernek
+hogy az ebben definiált REST végpontokra HTTP REST kliensként is lehessen hivatkozni.
+Maga kliensben így felfogja tudni használni az itt használt típusokat, annotációkat beállításokat,
+leesik a teher ezeknek a külön beállításaira (pl. text/xml, application/json, entity class, stb...)
+[source,java]
+----
+@Tag(name = IInvoiceTestRest.TAG_TEST, description = "Számlafeldolgozóhoz szükséges SYSTEM REST teszt operációk")
+@Path(InvoicePath.TEST_INVOICE_SERVICE)
+@RegisterRestClient // <1>
+public interface IInvoiceTestRest {
+
+    static final String TAG_TEST = "Test";
+    ...
+----
+<1> hozzá rakjuk a @RegisterRestClient annotációt.
+Általában más már nem kell (hacsak nincsenek valami spéci igények), régi működést nem befolyásolja
+
+==== HTTP kliens használata
+A kódban a HTTP REST kliens leghasználtabb esetei:
+
+.CDI inject
+[source,java]
+----
+import javax.enterprise.inject.Model;
+import javax.inject.Inject;
+
+import org.eclipse.microprofile.rest.client.inject.RestClient;
+
+import hu.icellmobilsoft.coffee.dto.exception.BaseException;
+import hu.icellmobilsoft.coffee.module.mp.restclient.util.MPRestClienUtil;
+
+@Model
+public class TestAction {
+
+    @Inject
+    @RestClient // <1>
+    private IInvoiceTestRest iInvoiceTestRest; // <2>
+
+    public String test() throws BaseException {
+        try {
+            iInvoiceTestRest.postValidatorTest(entityClass); // <3>
+        } catch (Exception e) { // <4>
+            throw MPRestClientUtil.toBaseException(e); // <5>
+        }
+        return null;
+    }
+}
+----
+<1> mp-rest-client @Qualifier annotáció mely a HTTP kliens wrappert hoz létre
+<2> interface melyet megjelöltünk a @RegisterRestClient annotációval
+<3> HTTP REST kliens hívása - ebben a pontban lépnek majd szerepre a konfigurációs beállítasok (URL, HTTP header, timeout, stb...)
+<4> általános hbakezelés. Maga az operáción ugye BaseException van definiálva de az service szintre értendő,
+mi most kliensként használjuk és a <1> pontál mi ezt beburkoltuk egy wrapperbe,
+mely más RuntimeException hibákkal térhet vissza
+<5> Coffee szinten előre megírt Exception fordító
+
+Valószinű az egészre még létrejön egy boilerplate wrapper mely még jobban leegyszerűsíti a kódolást.
+
+.Inline
+[source,java]
+----
+import java.net.URI;
+
+import javax.enterprise.inject.Model;
+import javax.inject.Inject;
+
+import org.eclipse.microprofile.rest.client.RestClientBuilder;
+
+import hu.icellmobilsoft.coffee.dto.exception.BaseException;
+import hu.icellmobilsoft.coffee.module.mp.restclient.util.MPRestClienUtil;
+
+@Model
+public class TestAction {
+
+    public String doWorkAgainstApi(URI uri, Object entity) {
+        try {
+            IInvoiceTestRest iInvoiceTestRest = RestClientBuilder //
+                    .newBuilder() // <1>
+                    .baseUri(uri) // <2>
+                    .build(IInvoiceTestRest.class); <3>
+            return iInvoiceTestRest.postValidatorTest(entity);
+        } catch (Exception e) { // <4>
+            throw MPRestClientUtil.toBaseException(e); // <5>
+        }
+        return null;
+    }
+}
+----
+<1> itt meghívódik a <<common_module_coffee-module-mp-restclient_DefaultRestClientBuilderListener,DefaultRestClientBuilderListener>>,
+melynek bármilyen beállítását felül lehet írni.
+<2> felülírjuk a konfigokban definiált URI-t
+<3> interface melyet megjelöltünk a @RegisterRestClient annotációval
+<4> általános hibakezelés. Maga az operáción ugye BaseException van definiálva de a builder ezt beburkolta egy wrapperbe,
+mely más RuntimeException hibákkal térhet vissza
+<5> Coffee-ben előre megírt Exception fordító
+
+Ezt a használatot nagyon egyedi esetben használjuk,
+hacsak lehet törekedjünk a CDI és konfiguráció szintű megoldásra.
+
+=== Konfigurációs lehetőségek
+A konfigurációkat meg lehet adni egyben az annotációkkal is,
+de természetesen a microprofile-config lehetőségei adottak most is.
+Továbbá pár leggyakoribb konfigurációs mintát sorolnék fel.
+Maga szintaxis a kovetkező:
+
+[source,txt]
+----
+kategoria-kulcs-nev/mp-rest/kulcs
+
+vagy
+
+full-class-name/mp-rest/kulcs
+----
+Ahol a:
+
+* *kategoria-kulcs-nev* - kulcsszó melyet választunk a kódunkban
+és a `@RegisterRestClient(configKey="invoiceService")` annotációban felhasználunk,
+ami az esetünkben például az "invoiceService"
+* *full-class-name* - osztály (esetünkben inkább interface) neve,
+ahol a @RegisterRestClient annotáció fel van rakva. Lehetőség szerint *ezt a fajta konfigurációt kerüljük*,
+mivel későbbi refaktorálás rejtett hibákat okozhat a konfigokban
+* */mp-rest* - microprofile-rest-client default kulcsszó 
+* */kulcs* - maga a microprofile-rest-client által támogatott kulcs, pl.: url, providers, readTimeout, stb...
+
+.project-default.yml - minta konfiguráció
+[source,yaml]
+----
+"invoiceService/mp-rest/url": http://localhost:8083
+"invoiceService/mp-rest/providers": hu.icellmobilsoft.project.invoice.CustomProvider
+
+#vagy a másik lehetóség
+
+"hu.icellmobilsoft.project.invoice.service.rest.IInvoiceTestRest/mp-rest/url": http://localhost:8083
+"hu.icellmobilsoft.project.invoice.service.rest.IInvoiceTestRest/mp-rest/providers": hu.icellmobilsoft.project.invoice.CustomProvider
+----

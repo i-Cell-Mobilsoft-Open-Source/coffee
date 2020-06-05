@@ -1,0 +1,19 @@
+[#common_coffee-model]
+= Coffee model
+
+A model modulnak több almodulja lehet, melyek bizonyos célú adatbázis táblákat tartalmaznak.
+
+== coffee-model-base
+Modul célja az alap táblastruktúra meghatározása.
+
+Minden táblának tartalmaznia kell közös ID, AUDIT és VERSION oszlopokat.
+Ezekre nyújt ősosztályokat, id generátort és audit mező töltőt.
+Tartamazza a deltaspike DATA bekötését, mely a criteria API könnyítését segíti,
+és a maven ezekre az ősökre kigenerálja a SingularAttribute osztályokat is.
+
+== coffee-model-security
+Modul célja egy általános jogosultság kezelés és az ide tartozó entitások gyűjtése.
+
+Eddigi projektekbeli különböző jogosultsági rendszerek logikája alapján össze lettek gyűjtve
+az alap táblák entity osztályai. Egy projekt ezeket szabadon függetlenül használhatja,
+az entity-k között ezért nincs semmiféle kapcsolat, hogy ne korlátozzuk a kombinációk lehetőségét.

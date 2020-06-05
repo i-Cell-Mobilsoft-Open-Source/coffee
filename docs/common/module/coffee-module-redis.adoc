@@ -1,0 +1,37 @@
+[#common_module_coffee-module-redis]
+= coffee-module-redis
+
+Modul célja Redis online key-value kezelése.
+
+A "redis.clients:jedis" java driver alapon működő modul nemcsak a Redisből való lekérdezéseket és mentéseket szolgálja ki, de tud nyújtani egy Redisben mentett cache kezelést is, ami a CDI interceptor alapjain működik.
+
+== RedisConnection
+
+Bevezetésre került a `@RedisConnection` qualifier.
+Ennek használatával nincs szükség Redis kapcsolatonként külön definiálni/implementálni a Redis konfigurációt, JedisPool-t, Jedis-t, RedisService -t; CDI-on keresztül mindegyik legyártásra kerül és injectelhetó.
+Konfiguráció yaml-ben:
+
+[source,yaml]
+----
+coffee:
+    redis:
+        auth: #<1>
+            host: sample-sandbox.icellmobilsoft.hu #default: localhost
+            port: 6380 #default: 6380
+            password: pass1234 #default: null
+            database: 1 #default: 1
+            pool:
+                maxtotal: 128 #default: 64
+                maxidle: 32 #default: 64
+            timeout: 5000 #default: 5000
+----
+<1> A redis kapcsolat egyedi azonosítója (configKey). Minden mező opcionális.
+
+A fenti konfig-hoz tartozó RedisService használata:
+
+[source,java]
+----
+@Inject
+@RedisConnection(configKey = "auth")
+private RedisService authRedisService;
+----

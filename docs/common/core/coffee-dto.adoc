@@ -1,0 +1,36 @@
+[#common_core_coffee-cdi]
+= coffee-dto
+
+Modul célja hogy összefoglalja az alap DTO, adapterek és Exception osztályok őseit,
+főleg azért hogy egyátalán lehessen valami közos kódokat kiemelni a Coffee frameworkbe.
+Lehetelőg semmilyen függősége (dependency) nem lehet,
+kivéve a dokumentációt és JAXB funkciókat kiszolgáló annotációk.
+
+Több almodulból ál.
+
+== coffee-dto-base
+Tartalma olyan java osztályok melyek ősként szolgálnak az egész Coffee framework-ben.
+
+Itt táláható a java.time (java 8+) XSD univerzális adapterek is.
+
+A modul az alap exception classokat tartalmazza.
+Minden más exception amit létrehozunk,
+csak ezekből származhat.
+
+== coffee-dto-xsd
+Tartalma lehetőleg XSD-k, melyek útmutatóként szolgálnak a projekteken.
+Lehetőleg nagyon univerzális XSD simple és complexType-okat tartalmaznak,
+melyeket a projektek saját képére tudják hajlítani.
+
+IMPORTANT: Ez a modul nem generál DTO obektumokat, csak az XSD-ket adja hozzá.
+
+== coffee-dto-gen
+A modul az Coffee DTO generálására szolgál.
+Direkt külön van szervezve hogy a dependency struktúrából könnyen helyettesíthető legyen.
+
+== coffee-dto-impl
+A modul minta implementációként szolgál a `coffee-dto-base`, `coffee-dto-xsd` és `coffee-dto-gen`-hez.
+A Coffee-t használó projektek ezt fogják bekötni.
+Hogyha a cél projektnek nem felel meg a Coffee által generált DTO-k akkor ennél a modulnál kell excelude-olni.
+
+Önmagában egy univerzális, használható modul.

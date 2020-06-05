@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns:common="http://common.dto.coffee.icellmobilsoft.hu/common"
+	xmlns="http://common.dto.coffee.icellmobilsoft.hu/commonservice"
+	targetNamespace="http://common.dto.coffee.icellmobilsoft.hu/commonservice"
+	elementFormDefault="qualified" attributeFormDefault="unqualified">
+
+	<xsd:import namespace="http://common.dto.coffee.icellmobilsoft.hu/common" />
+
+	<xsd:simpleType name="FunctionCodeType">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="OK">
+				<xsd:annotation>
+					<xsd:documentation>OK</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="WARN">
+				<xsd:annotation>
+					<xsd:documentation>Warning</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="ERROR">
+				<xsd:annotation>
+					<xsd:documentation>Error</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+		</xsd:restriction>
+	</xsd:simpleType>
+
+	<xsd:complexType name="UserType">
+		<xsd:sequence>
+			<xsd:element name="userName" type="common:EmailType">
+				<xsd:annotation>
+					<xsd:documentation>Felhasználó bejelentkezési azonosító.
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="password"
+				type="common:SimpleText255Type">
+				<xsd:annotation>
+					<xsd:documentation>Felhasználó bejelentkezési jelszó hash.
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="ContextType">
+		<xsd:sequence>
+			<xsd:element name="requestId" type="common:RequestIdType">
+				<xsd:annotation>
+					<xsd:documentation>A service hívás azonosítója, elvárt hogy
+						globálisan egyedi.
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="timestamp" type="common:TimestampType">
+				<xsd:annotation>
+					<xsd:documentation>A service hívás kliens időpontja.
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="user" type="UserType" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Felhasználó adatok.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="BaseResultType">
+		<xsd:sequence>
+			<xsd:element name="context" type="ContextType" />
+			<xsd:element name="funcCode" type="FunctionCodeType" />
+			<xsd:element name="message" type="xsd:string"
+				minOccurs="0" />
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="BaseRequestType">
+		<xsd:sequence>
+			<xsd:element name="context" type="ContextType" />
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="BaseResponseType">
+		<xsd:complexContent>
+			<xsd:extension base="BaseResultType" />
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="BaseExceptionResultType">
+		<xsd:complexContent>
+			<xsd:extension base="BaseResultType">
+				<xsd:sequence>
+					<xsd:element name="faultType" type="xsd:string">
+						<xsd:annotation>
+							<xsd:documentation>Keletkezett hiba típus, kód.
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="className" type="xsd:string"
+						minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>Osztály neve ahol keletkezett a hiba.
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="exception" type="xsd:string"
+						minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>Hiba stacktrace.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="service" type="xsd:string"
+						minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>Service neve ahol keletkezett a hiba.
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="causedBy"
+						type="BaseExceptionResultType" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>A hiba eredeti okozója.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="ValidationType">
+		<xsd:sequence>
+			<xsd:element name="field" type="xsd:string" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>A probléma mezője.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="error" type="xsd:string" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>A probléma leírása.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="lineNumber" type="xsd:int"
+				minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>A probléma forrásának sora.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="columnNumber" type="xsd:int"
+				minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>A probléma forrásának oszlopa.
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="BONotFoundType">
+		<xsd:complexContent>
+			<xsd:extension base="BaseExceptionResultType" />
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="TechnicalFaultType">
+		<xsd:complexContent>
+			<xsd:extension base="BaseExceptionResultType" />
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="BusinessFaultType">
+		<xsd:complexContent>
+			<xsd:extension base="BaseExceptionResultType" />
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="InvalidRequestFaultType">
+		<xsd:complexContent>
+			<xsd:extension base="BaseExceptionResultType">
+				<xsd:sequence>
+					<!-- validacios hibak felsorolasa -->
+					<xsd:element name="error" type="ValidationType"
+						minOccurs="0" maxOccurs="unbounded" />
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="BaseCommonIdListRequestType">
+		<xsd:complexContent>
+			<xsd:extension base="BaseRequestType">
+				<xsd:sequence>
+					<xsd:element name="ids" type="common:EntityIdType"
+						minOccurs="1" maxOccurs="unbounded" />
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+	<xsd:element name="BONotFound">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:extension base="BONotFoundType" />
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="TechnicalFault">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:extension base="TechnicalFaultType" />
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="BusinessFault">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:extension base="BusinessFaultType" />
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="InvalidRequestFault">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:extension base="InvalidRequestFaultType" />
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="BaseRequest">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:extension base="BaseRequestType" />
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="BaseResponse">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:extension base="BaseResponseType" />
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="BaseCommonIdListRequest">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:extension base="BaseCommonIdListRequestType" />
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+</xsd:schema>

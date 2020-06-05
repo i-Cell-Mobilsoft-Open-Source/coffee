@@ -1,0 +1,103 @@
+[#common_module_coffee-module-mongodb]
+= coffee-module-mongodb
+
+A modul célja a MongoDB NOSQL adatbázis kezelésének támogatása, amihez különböző kiszolgáló osztályokat és metódusokat tartalmaz.
+
+Konfiguráció yaml-ben:
+
+.project-defaults.yml
+[source,yaml]
+----
+mongodb:
+    uri:
+        xmlapi: mongodb://sample_xmlapi:sample_xmlapi@sample-sandbox.icellmobilsoft.hu:27017/sample_xmlapi?ssl=false
+----
+
+Konfiguráció bekötése constantsba:
+
+.hu.icellmobilsoft.sample.common.system.constant.MongoConstants
+[source,java]
+----
+/**
+ * mongo url
+ */
+String CONFIG_URI_XMLAPI = "mongodb.uri.xmlapi";
+ 
+/**
+ * database
+ */
+String CONFIG_DATABASE_SAMPLE_XMLAPI = "sample_xmlapi";
+ 
+/**
+ * collection
+ */
+String TABLE_XMLAPI = "xmlapi";
+ 
+ 
+String COLUMN_MONGO_ID = "_id";
+----
+Konfiguráció bekötése MongoDbHandler-en keresztül:
+
+.MongoDbHandler injektálása
+[source,java]
+----
+@Inject
+@MongoConfiguration(databaseKey = MongoConstants.CONFIG_DATABASE_SAMPLE_XMLAPI, urlKey = MongoConstants.CONFIG_URI_XMLAPI)
+private MongoDbHandler mongoDbHandler;
+----
+Kódrészlet a MongoDbHandler használatára:
+
+.Elem beszúrása a MongoDB-be
+[source,java]
+----
+// Fontos!!! Szükséges a collection megadása
+mongoDbHandler.setCollection(MongoConstants.TABLE_XMLAPI);
+ 
+// a MongoUtil-ok segítéségével lehet a típusos objektumokat kezelni
+String dtoJson = MongoJsonUtil.toJson(invoiceLogType);
+BasicDBObject dtoDocument = MongoUtil.jsonToBasicDbObject(dtoJson);
+ 
+// az elem beszúrása
+mongoDbHandler.insertOne(dtoDocument);
+ 
+// a beszúrt elem id-jának lekérdezése
+String id = dtoDocument.getString(MongoConstants.COLUMN_MONGO_ID);
+----
+
+Kódrészlet a MongoDbHandler használatára POJO-val:
+
+.Pojo kiterjesztése
+[source,java]
+----
+public class Pojo extends AbstractMongoEntity
+----
+
+.MongoService kiterjesztése, konfigurációk megadása
+[source,java]
+----
+public class PojoMongoService extends MongoService<Pojo> {
+...
+    @Inject
+    @MongoCustomConfiguration(databaseName = MongoConstants.POJO_DATABASE_NAME, urlKey = MongoConstants.CONFIG_URI_COMMON)
+    private MongoDbHandler mongoDbHandler;
+
+    @Override
+    protected MongoCollection<Pojo> getMongoCollection() throws BaseException {
+        return mongoDbHandler.getDatabase().getCollection(MongoConstants.TABLE_POJO, Pojo.class);
+    }
+...
+}
+----
+.Service használata
+[source,java]
+----
+@Inject
+private PojoMongoService pojoMongoService;
+...
+pojoMongoService.insertOne(Pojo);
+
+pojoMongoService.insertMany(List<Pojo>);
+
+pojoMongoService.findById("mongoId");
+...
+----

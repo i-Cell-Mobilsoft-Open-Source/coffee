@@ -1,0 +1,171 @@
+[#common_module_coffee-module-ruleng]
+= coffee-module-ruleng
+
+A modul célja egy univerzális szabály rendszer kiértékelés támogatása.
+
+Egyre több helyen van igény hogy egy adat halmazon több kiértékelés elvégzése szükséges,
+ezeknek az eredményei szerint dől el a teljes feldolgozás kimenete. Példa használati esetek:
+
+* beküldött számla feldolgozás
+** számla fejléc ellenőrzések (egyszerű adatok, külső függőség)
+** számlán lévő tételek ellenőrzése (listán kell végigszaladni)
+** számla összesítő ellenőrzések (kalkulált adatok)
+** speciális ellenőrzések (előbbiek kombinációja)
+* bérlet, kedvezmény ellenőrzés
+** valós tulajdonos, érvenyesség, kibocsátó (külső függőség)
+** kedvezmény mértéke, felhasználás jogosultsága (kalkulált adatok)
+* kölcsön kérvényezés
+** kérvény adatok ellenőrzése
+** felülvizsgálatok
+* sok egyéb használati eset
+
+
+== Alapelvek
+Működése teljesen a CDI alapjain dolgozik, a következő igényekre öszpontosítva:
+
+. CDI elvei szerint modularizálható, szinte minden keretrendszeri működés egyénileg módosítható
+. 1 szabály 1 önálló osztály
+. a szabály belső logikája a KISS (keep is simple, stupid) elvét követi
+. hagyományos korlátlan EE logika használati lehetőség
+. a szabály kiértékelése hibatűrő kell hogy legyen, null-safe, csak a saját adatára öszpontosít,
+nem érdekli a más szabály kiértékelése
+. lehetőség a szabályok sorbarendezésére, csoportosítására (kiértékelés párhuzamosítására)
+. lehetőség a sorban feldolgozás megszakítására, míg a másik csoport feldolgozása független
+. kiértékelés eredménye lehet pozitív vagy negatív, logikának nem számít hogyan van használva
+. verziózott adatok szerinti szabály de/aktiválása
+. minden szabály azonos osztály típussal kell hogy végezzen
+. 1 szabályon belül több kiértékelés lehetséges (kerülni kell, de néha igény)
+
+== Rule
+Sok fajta szabály kiértékelés lehetséges, a következő minta szerint lehet kiindulni
+
+.Minta szabály
+[source,java]
+----
+import javax.enterprise.inject.Model;
+import javax.inject.Inject;
+
+import hu.icellmobilsoft.coffee.cdi.annotation.Range;
+import hu.icellmobilsoft.coffee.cdi.annotation.Version;
+import hu.icellmobilsoft.coffee.dto.exception.BaseException;
+import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
+import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
+import hu.icellmobilsoft.coffee.module.ruleng.rule.IRule;
+import hu.icellmobilsoft.project.enums.ValidatorFaultType;
+import hu.icellmobilsoft.project.rule.RuleException;
+import hu.icellmobilsoft.project.rule.CustomRuleResult;
+import hu.icellmobilsoft.project.rule.DataHelper;
+import hu.icellmobilsoft.project.annotation.Ac;
+import hu.icellmobilsoft.project.schemas.data.LineType;
+
+@Model
+@Version(include = @Range(from = "1.1")) // Nem kötelező <1>
+@Ac // Szabály kategória <2>
+public class AcExampleRule implements
+    IRule<LineType, CustomRuleResult>, //<3>
+    IRuleSelector { // Nem kötelező <4>
+
+    @Inject
+    private DataHelper dataHelper; //<5>
+
+    @Override
+    public CustomRuleResult apply(LineType input) throws RuleException, BaseException { //<6>
+        if (input == null) {
+            throw new TechnicalException(CoffeeFaultType.WRONG_OR_MISSING_PARAMETERS, "input is null");
+        }
+
+        if (input.getSub() != null && !input.getSub().getData() ! = null //<7>
+            && input.getSub().getData().compareTo(dataHelper.getValue()) == 0) {
+            return new CustomRuleResult(ValidatorFaultType.INVALID_SUB_DATA);
+        }
+        return null; //<8>
+    }
+
+    @Override
+    public int order() { //<9>
+        return 0;
+    }
+
+    @Override
+    public Enum<?> group() { //<10>
+        return RuleGroup.NONE; 
+    }
+}
+----
+<1> Szabály adat verzió szerinti aktiválása - NEM KÖTELEZŐ
+<2> Szabály kategória. Ez egy @Qualifier típusú annotáció
+<3> IRule<InputType, CustomRuleResult> - bejövő adat típus és kimenet
+<4> Szabály csoportosítás és sorrendezési lehetőség - NEM KÖTELEZŐ
+<5> Így jöhet be az előre kalkulált adat, amit a szabály felhasznál a kiértékelésnél
+<6> RuleException - olyan esetben dobunk amikor megszakítás kell a szabály kiértékelésben
+<7> null-safe ellenőrzések
+<8> Igény esetén pozitív kiertékelés is adhat vissza eredményt
+<9> Szabály sorrendje, alapból 0
+<10> Szabály csoport, alapból NONE
+
+.Hogy is működik:
+* Az AcExampleRule olyan adatra fog aktiválódni, melynek a verziószáma 1.1+.
+Ezt a `hu.icellmobilsoft.coffee.tool.version.ComparableVersion` osztály szerint állapítja meg.
+** Lehetőség van megadni különböző verzió intervallumokat
+* Az AcExampleRule egy "Ac" kategóriába tartozó  szabály, melynek a bemenet LineType (akármi lehet)
+és CustomRuleResult (`extends hu.icellmobilsoft.coffee.module.ruleng.rule.RuleResult`) a kiértékelése
+* Jelenleg használja a IRuleSelector-t is, ami nem kötelező.
+Az implementált metódusai az alapértlmezett értékeket használják a példában. Hogyha több szabályunk van
+ugyanarra a kategória és implementáció kombinációra a rendszer ezek szerint fogja csoportosítani, végrehajtani őket
+** order() - növekvő sorrendben fogja a kiértékelést alkalmazni.
+** group() - szabály csoportja. Hogyha a csoportban valamelyik szabály RuleException-el szál el,
+akkor az order szerinti utánna lévő szabályok nem fognak lefutni. Másik csoportot a megszakítás nem érinti,
+egymástól a csoportok függetlenek
+
+NOTE: Ha a szabályra nem rakjuk IRuleSelector interfészt, akkor a szabályok alapból a Class.SimpleName szerint fognak lefutni,
+és RuleGroup.NONE csoportba fog tartozni
+
+* Ellenőrizzük az input adatot, csak arra koncentrálunk hogy létezik-e az az adat amit ellenőrizni kell
+* Az adatot kiértékeljük és a szabály szerepe itt véget ér
+
+NOTE: A kiértékelési CustomRuleResult projekt igényeire szabható, feltétel hogy a `hu.icellmobilsoft.coffee.module.ruleng.rule.RuleResult` legyen az őse
+
+
+
+== Validator
+Célja lekezelni a szabály-kategóriába tartozó szabályokat.
+
+.Minta validátor
+[source,java]
+----
+import java.lang.annotation.Annotation;
+
+import javax.enterprise.inject.Model;
+import javax.enterprise.util.TypeLiteral;
+
+import hu.icellmobilsoft.coffee.module.ruleng.rule.IRule;
+import hu.icellmobilsoft.coffee.module.ruleng.evaluator.AbstractEvaluator;
+import hu.icellmobilsoft.project.schemas.data.LineType;
+import hu.icellmobilsoft.sample.common.system.validator.rule.CustomRuleResult;
+import hu.icellmobilsoft.sample.invoice.common.action.evaluator.annotation.Ac;
+
+@Model
+public class ACEvaluatorLineType extends AbstractEvaluator<LineType, CustomRuleResult> {
+
+    @Override
+    protected Annotation cdiSelectLiteral() {
+        return new Ac.Literal(); //<1>
+    }
+
+    @Override
+    protected TypeLiteral<IRule<LineType, CustomRuleResult>> cdiTypeLiteral() {
+        return new TypeLiteral<IRule<LineType, CustomRuleResult>>() { <2>
+            private static final long serialVersionUID = 1L;
+        };
+    }
+}
+----
+<1> Szabály kategória Qualifier annotáció
+<2> IRule<LineType, CustomRuleResult> implemetációval ellátott szabályok típusú CDI literal
+
+.Hogy is működik:
+* A validátorból szintén több létezhet, minden egyes szabály kategória és implementációra kell saját.
+* Első dolga hogy beolvassa a CDI konténerből az általa kezelt kategória és implementáció szabályokat
+** Megpróbálja csoportosítani az említett IRuleSelector szerint majd sorba rendezi őket order majd class neve szerint
+* Végigfut a kategorizált szabályokon, gyűjti az eredményeket
+* Válaszban visszaadja a lefutott összes szabály eredményét

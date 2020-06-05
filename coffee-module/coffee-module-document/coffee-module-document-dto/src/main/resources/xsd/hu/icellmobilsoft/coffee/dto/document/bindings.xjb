@@ -1,0 +1,22 @@
+<?xml version="1.0" ?>
+<jaxb:bindings version="2.0"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"
+	xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc"
+	xmlns:annox="http://annox.dev.java.net"
+	jaxb:extensionBindingPrefixes="xjc annox">
+
+	<jaxb:globalBindings generateIsSetMethod="true">
+		<xjc:serializable uid="1" />
+
+		<xjc:javaType xmlType="xsd:date"
+			name="java.time.LocalDate"
+			adapter="hu.icellmobilsoft.coffee.dto.adapter.LocalDateXmlAdapter" />
+		<xjc:javaType xmlType="xsd:time"
+			name="java.time.OffsetTime"
+			adapter="hu.icellmobilsoft.coffee.dto.adapter.OffsetTimeXmlAdapter" />
+		<xjc:javaType xmlType="xsd:dateTime"
+			name="java.time.OffsetDateTime"
+			adapter="hu.icellmobilsoft.coffee.dto.adapter.OffsetDateTimeXmlAdapter" />
+	</jaxb:globalBindings>
+</jaxb:bindings>

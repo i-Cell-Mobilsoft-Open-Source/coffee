@@ -1,0 +1,36 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>hu.icellmobilsoft.coffee</groupId>
+		<artifactId>coffee</artifactId>
+		<version>1.0.0-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>coffee-module</artifactId>
+	<packaging>pom</packaging>
+
+	<modules>
+		<module>coffee-module-mongodb</module>
+		<module>coffee-module-etcd</module>
+		<module>coffee-module-activemq</module>
+		<module>coffee-module-redis</module>
+		<module>coffee-module-document</module>
+		<module>coffee-module-notification</module>
+		<module>coffee-module-csv</module>
+		<module>coffee-module-ruleng</module>
+		<module>coffee-module-mp</module>
+		<module>coffee-module-totp</module>
+	</modules>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>hu.icellmobilsoft.coffee</groupId>
+				<artifactId>coffee-bom</artifactId>
+				<version>${project.version}</version>
+				<scope>import</scope>
+				<type>pom</type>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+</project>
