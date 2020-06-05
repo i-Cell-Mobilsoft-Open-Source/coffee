@@ -1,0 +1,43 @@
+# This workflow will generate html documentation from asciidoc and publish it to `gh-pages` branch
+name: Deploy documentation
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  generate-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout branch [master]
+        uses: actions/checkout@v2
+        with:
+          ref: master
+      - name: Push [master] to [gh-pages]
+        shell: bash
+        run: git push origin master:gh-pages --force
+      - name: Checkout [gh-pages]
+        uses: actions/checkout@v2
+        with:
+          ref: gh-pages
+      - name: Set up JDK 1.8
+        uses: actions/setup-java@v1
+        with:
+          java-version: 1.8
+      - name: Generate docs with Maven
+        run: |
+          mvn org.asciidoctor:asciidoctor-maven-plugin:1.6.0:process-asciidoc \
+          -Dasciidoctor.sourceDirectory=./docs \
+          -Dasciidoctor.outputDirectory=. \
+          -Dasciidoctor.preserveDirectories=true \
+          -Dasciidoctor.sourceHighlighter=coderay \
+          -Dasciidoctor.backend=html5 \
+          -Dasciidoctor.requires=asciidoctor-diagram
+      - name: Commit and push to [gh-pages]
+        shell: bash
+        run: |
+          git config --global user.email "opensource@icellmobilsoft.hu"
+          git config --global user.name "Github Action - Deploy documentation"
+          git add .
+          git commit -m "Add auto-generated documentation"
+          git push origin gh-pages --force
