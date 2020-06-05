@@ -1,0 +1,10 @@
+[#common_core_coffee-cdi]
+= coffee-cdi
+
+Modul célja a java EE, logger, deltaspike és microprofile-config bekötése.
+
+Minden CDI alapon működik. Alábbi komponensek leírása és használati esetek:
+
+include::coffee-cdi/logger.adoc[leveloffset=+1]
+
+include::coffee-cdi/config.adoc[leveloffset=+1]

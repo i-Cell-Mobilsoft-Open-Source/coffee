@@ -1,0 +1,4 @@
+#
+# Registers custom annotation processors
+#
+hu.icellmobilsoft.coffee.rest.log.annotation.processing.LogSpecifiersAnnotationProcessor

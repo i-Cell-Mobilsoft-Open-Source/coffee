@@ -1,0 +1,12 @@
+[#common_coffee-core]
+= Coffee Core
+
+include::core/coffee-dto.adoc[leveloffset=+1]
+
+include::core/coffee-cdi.adoc[leveloffset=+1]
+
+include::core/coffee-tool.adoc[leveloffset=+1]
+
+include::core/coffee-jpa.adoc[leveloffset=+1]
+
+include::core/coffee-rest.adoc[leveloffset=+1]

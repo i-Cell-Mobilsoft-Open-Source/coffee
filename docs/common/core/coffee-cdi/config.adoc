@@ -1,0 +1,53 @@
+[#common_core_coffee-cdi_logger]
+= Config
+
+Konfiguráció megoldásként a microprofile-config megoldásait használjuk.
+
+NOTE: microprofile.io +
+https://github.com/eclipse/microprofile-config +
+http://mirrors.ibiblio.org/eclipse/microprofile/microprofile-config-1.3/microprofile-config-spec.pdf
+
+Röviden összefoglalva hogy mi is ez? A konfigurációs paraméterek megadása széles körben történhet. Nem elég egy konfigurációs paramétert beégetni valami properties fájlba, mert környezetenként annak más értéke lehet. Az értékek külön szinten megadhatók, legyen az ETCD, properties, system property, environment property vagy akármi más. A microprofile-config képes egy megadott kulcsot kikeresni az összes elérhetó forrásból és a legmagasabb prioritású értéket használja fel. Alap használati esetek:
+
+* kódban - amikor nem használható a CDI container, statikus metódusok és egyéb esetek
+* statikus - a program felfutásánál minden 
+* dinamikus - a kulcs érték keresése dinamikusan történik, minden egyes felhasználásnál. Konfiguráció változás újraindítás nélkül történhet (például futás közben beállítunk valami system property-t)
+
+.Konfiguráció minta
+[source,java]
+----
+import org.eclipse.microprofile.config.inject.ConfigProperty;
+import org.eclipse.microprofile.config.ConfigProvider;
+import javax.inject.Provider;
+ 
+ 
+// <1>
+public String kodban() {
+    Config config = ConfigProvider.getConfig();
+    String keyValue =  config.getValue("key", String.class);
+    return keyValue;
+}
+ 
+ 
+// <2>
+@Inject
+@ConfigProperty(name="key")
+String keyValue;
+ 
+public String statikusan() {
+    return keyValue;
+}
+ 
+ 
+// <3>
+@Inject
+@ConfigProperty(name="key")
+Provider<String> keyValue;
+ 
+public String dinamikusan() {
+    return keyValue.get();
+}
+----
+<1> kódban lekérdezett érték
+<2> statikus érték beallítás
+<3> dinamikus érték lekérdezés

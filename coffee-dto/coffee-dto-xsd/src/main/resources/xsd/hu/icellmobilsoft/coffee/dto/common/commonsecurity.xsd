@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:common="http://common.dto.coffee.icellmobilsoft.hu/common"
+    xmlns="http://common.dto.coffee.icellmobilsoft.hu/commonsecurity"
+    targetNamespace="http://common.dto.coffee.icellmobilsoft.hu/commonsecurity"
+    elementFormDefault="qualified" attributeFormDefault="unqualified">
+
+    <xsd:import namespace="http://common.dto.coffee.icellmobilsoft.hu/common"/>
+
+    <xsd:complexType name="LoginType">
+        <xsd:sequence>
+            <xsd:element name="loginName" type="common:SimpleText100Type"/>
+            <xsd:element name="password" type="common:SimpleText255Type"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="UserType">
+        <xsd:sequence>
+            <xsd:element name="userName" type="common:UserNameType"/>
+        </xsd:sequence>
+        <xsd:attribute name="userId" type="common:EntityIdType" />
+    </xsd:complexType>
+    <xsd:complexType name="UserListType">
+        <xsd:sequence>
+            <xsd:element name="user" type="UserType" minOccurs="0" maxOccurs="unbounded" />
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="GroupType">
+        <xsd:sequence>
+            <xsd:element name="id" type="common:EntityIdType" />
+            <xsd:element name="name" type="common:SimpleText100Type" />
+            <xsd:element name="description" type="common:SimpleText255Type" minOccurs="0" />
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="GroupListType">
+        <xsd:sequence>
+            <xsd:element name="group" type="GroupType" minOccurs="0" maxOccurs="unbounded" />
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="PermissionType">
+        <xsd:sequence>
+            <xsd:element name="id" type="common:EntityIdType" />
+            <xsd:element name="name" type="common:SimpleText100Type" />
+            <xsd:element name="description" type="common:SimpleText255Type" minOccurs="0" />
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="PermissionListType">
+        <xsd:sequence>
+            <xsd:element name="permisson" type="PermissionType" minOccurs="0" maxOccurs="unbounded" />
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="RoleType">
+        <xsd:sequence>
+            <xsd:element name="id" type="common:EntityIdType" />
+            <xsd:element name="name" type="common:SimpleText100Type" />
+            <xsd:element name="description" type="common:SimpleText255Type" minOccurs="0" />
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="RoleListType">
+        <xsd:sequence>
+            <xsd:element name="role" type="RoleType" minOccurs="0" maxOccurs="unbounded" />
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="SecurityType">
+        <xsd:complexContent>
+            <xsd:extension base="UserType">
+                <xsd:sequence>
+                    <xsd:element name="sessionId" type="common:SimpleText50Type" />
+                    <xsd:element name="permissionList" type="PermissionListType" />
+                    <xsd:element name="roleList" type="RoleListType"/>
+                    <xsd:element name="groupList" type="GroupListType"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+
+    <xsd:complexType name="RedisUserAuthenticationType">
+        <xsd:complexContent>
+            <xsd:extension base="SecurityType">
+                <xsd:sequence>
+                    <xsd:element name="lastRefreshTime" type="xsd:dateTime" minOccurs="0"/>
+                    <xsd:element name="refreshToken" type="common:SimpleText50Type" minOccurs="0"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+</xsd:schema>

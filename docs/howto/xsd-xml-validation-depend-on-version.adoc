@@ -1,0 +1,146 @@
+[#howto_xsd-xml-validation-depend-on-version]
+= XML XSD verzió függő validáció
+
+A különböző xsd verzióktól függő bejövő xml validáció megvalósítása.
+
+== Verziófüggő validáció Coffee-n kívül projectekben
+
+Példa a validálás használatára:
+A megannotált végpont:
+[source,java]
+----
+public interface ISampleService {
+
+    @POST
+    @Path("/customer/sample")
+    @Consumes(value = { MediaType.TEXT_XML, MediaType.APPLICATION_XML })
+    @Produces(value = { MediaType.TEXT_XML, MediaType.APPLICATION_XML })
+    @LogSpecifier(maxResponseEntityLogSize = LogSpecifier.NO_LOG)
+    SampleResponse postSampleRequest(
+        @ValidateXMLs({
+            @ValidateXML(version = @Version(include = @Range(from = "1.0", to = "1.9")), xsdPath = ""),
+            @ValidateXML(version = @Version(include = @Range(from = "1.10")), xsdPath = "xsd_wsdl/hu/icellmobilsoft/sample/1.0/sample.xsd")
+        }) SampleRequest sampleRequest) throws BaseException;
+----
+vagy pl.:
+[source,java]
+----
+public interface ISampleService {
+
+    @POST
+    @Path("/customer/sample")
+    @Consumes(value = { MediaType.TEXT_XML, MediaType.APPLICATION_XML })
+    @Produces(value = { MediaType.TEXT_XML, MediaType.APPLICATION_XML })
+    @LogSpecifier(maxResponseEntityLogSize = LogSpecifier.NO_LOG)
+    SampleResponse postSampleRequest(
+        @ValidateXML(version = @Version(include = @Range(from = "1.10")), xsdPath = "xsd_wsdl/hu/icellmobilsoft/sample/1.0/sample.xsd") SampleRequest sampleRequest) throws BaseException;
+----
+vagy pl.:
+[source,java]
+----
+public interface ISampleService {
+
+    @POST
+    @Path("/customer/sample")
+    @Consumes(value = { MediaType.TEXT_XML, MediaType.APPLICATION_XML })
+    @Produces(value = { MediaType.TEXT_XML, MediaType.APPLICATION_XML })
+    @LogSpecifier(maxResponseEntityLogSize = LogSpecifier.NO_LOG)
+    SampleResponse postSampleRequest(
+        @ValidateXML(xsdPath = "xsd_wsdl/hu/icellmobilsoft/sample/1.0/sample.xsd") SampleRequest sampleRequest) throws BaseException;
+----
+
+== A providereket is készítsük el
+
+Egy kell az XML-re
+[source,java]
+----
+@Provider
+@Consumes({MediaType.APPLICATION_XML, MediaType.TEXT_XML})
+@Priority(Priorities.ENTITY_CODER)
+public class XMLRequestMessageBodyReader extends XmlMessageBodyReaderBase<BasicRequestType> {
+
+}
+----
+
+Egy pedig a JSON-ra
+[source,java]
+----
+@Provider
+@Consumes({ MediaType.APPLICATION_JSON })
+@Priority(Priorities.ENTITY_CODER)
+public class JsonRequestMessageBodyReader extends JsonMessageBodyReaderBase<BaseRequestType> {
+
+}
+----
+
+A JSON XSD validáció úgy valósul meg, hogy az inputStream JSON parser-rel DTO-vá alakítjuk
+(melyet a provider vissza is ad a további üzleti logika feldolgozáshoz),
+majd ezen futtatunk egy XML marshallert amelyen aktiválva van a XSD, így validáljuk is.
+Ha közben hibák jönnek elő akkor ezekkel elszálunk provider szinten.
+Ezután minden úgy történik a hibákkal ahogy az XML validálásnál.
+
+== Ha saját LSResourceResolver-t szeretnénk használni
+
+Implementálnunk kell a IXsdResourceResolver interfészt (@Alternative annotációval).
+Majd a beans.xml-ben regisztrálnunk kell az alternativ class-t pl.:
+[source,xml]
+----
+<alternatives>
+    <class>hu.icellmobilsoft.sample.xmlvalidation.xmlutils.ProjectXsdResourceResolver</class>
+</alternatives>
+----
+
+Ennek mintájára használhatunk saját: XsdHelper (IXsdHelper), XmlRequestVersionReader (IXmlRequestVersionReader), XsdValidationErrorCollector (IXsdValidationErrorCollector) implementációkat is.
+
+== Hibakezelés projektszinten
+Kiegészítendő lehet még a ExceptionMapper implementációnk:
+[source,java]
+----
+    private Response handleException(Exception e, ReasonCodeType reasonCode, FunctionCodeType functionCode) {
+        if (e instanceof XsdProcessingExceptionWrapper) {
+            XsdProcessingExceptionWrapper processingException = (XsdProcessingExceptionWrapper) e;
+            if (processingException.getCause() instanceof XsdProcessingException) {
+                XsdProcessingException xsdEx = (XsdProcessingException) processingException.getCause();
+                return restExceptionMapper.toResponse(xsdEx);
+            }
+        }
+
+
+    public Response toResponse(BaseException e) {
+        ...
+        } else if (e instanceof XsdProcessingException) {
+            TechnicalFault f = new TechnicalFault();
+            // getLocalizedMessage-ben osszeszedjuk a hibakat
+            f.setMsg(HandleXsdProcessingException.generateDetailedMessage((XsdProcessingException) e));
+            f.setReasonCode(ReasonCodeType.INVALID_REQUEST);
+            f.setFuncCode(FunctionCodeType.ERROR);
+            return Response.status(Response.Status.BAD_REQUEST).entity(f).build();
+
+----
+
+Itt amire még figyelni kell, hogy az összes XSD hibát visszaadja a Coffee.
+Ezeket külön kell kiszedni pl. így:
+[source,java]
+----
+public static String generateDetailedMessage(XsdProcessingException invalidRequestException) {
+       if (invalidRequestException == null) {
+           return null;
+       }
+       StringBuilder msg = new StringBuilder();
+       for (XMLValidationError xmlValidationError : invalidRequestException.getErrors()) {
+           if (xmlValidationError != null) {
+               if (msg.length() > 0) {
+                   msg.append('\n');
+               }
+               msg.append(xmlValidationError.getField()).append(" - ").append(xmlValidationError.getError());
+           }
+       }
+
+	return msg.length() > 0 ? invalidRequestException.getLocalizedMessage() + " errors:\n" + msg.toString() : invalidRequestException.getLocalizedMessage();
+}
+----
+
+== Ha eddig nem volt XSD validáció
+
+... és az átmeneti időszakot is szeretnénk kezelni (a régi verzióra nem validál, az újra igen).
+Akkor schemaPath-nak adjunk egy "" Stringet.

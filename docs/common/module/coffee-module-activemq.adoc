@@ -1,0 +1,6 @@
+[#common_module_coffee-module-activemq]
+= coffee-module-activemq
+
+Modul célja az Apache ActiveMQ bekötése.
+
+Tartalmaz különböző kiszolgáló osztályokat és metódusokat a JMS kezelésre

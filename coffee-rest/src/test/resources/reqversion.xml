@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SampleRequest>
+    <header>
+        <requestId>RRRID_0200002582</requestId>
+        <timestamp>2019-09-20T12:51:51Z</timestamp>
+        <requestVersion>1.9</requestVersion>
+        <headerVersion>1.0</headerVersion>
+    </header>
+</SampleRequest>
