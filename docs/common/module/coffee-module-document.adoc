@@ -1,0 +1,13 @@
+[#common_module_coffee-module-document]
+= coffee-module-document
+
+Modul célja a template szövegek tárolása, kezelése. Tehát ha egy SMS, Email,
+PDF vagy egyéb szöveget kell megkapni kitöltve változó paraméterekkel, különböző nyelveken,
+akkor ezt ez a modul kezeli.
+
+Tartalmaz egy általános DTO almodult (nem kötelező használni) amiben már előre meg vannak határozva
+a kommunikációs objektumok. Az működési alapelv hogy inputban bejön a template kódja,
+kitöltendő paraméterek kulcs-érték párosai, azt be helyettesíti a template-be,
+majd válaszban vissza adja azt. Ha nem jött be minden kellő paraméter, akkor beletölti a default értékeket,
+melyeket szintén tárolja a modul. A modul alkalmas fájlok mentésére is,
+csak ezt korlátozottan kell használni, mert adatbázisba menti őket.

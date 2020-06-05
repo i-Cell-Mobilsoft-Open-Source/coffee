@@ -1,0 +1,43 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>hu.icellmobilsoft.coffee</groupId>
+		<artifactId>coffee-module-notification</artifactId>
+		<version>1.0.0-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>coffee-module-notification-action</artifactId>
+
+	<dependencies>
+		<dependency>
+			<groupId>hu.icellmobilsoft.coffee</groupId>
+			<artifactId>coffee-model-base</artifactId>
+		</dependency>
+
+		<!-- ha a dto generalas projekt szinten tortenik akkor ezt a dependencyt 
+			provided vagy excludolni kell -->
+		<dependency>
+			<groupId>hu.icellmobilsoft.coffee</groupId>
+			<artifactId>coffee-module-notification-dto</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>hu.icellmobilsoft.coffee</groupId>
+			<artifactId>coffee-module-document-dto</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>hu.icellmobilsoft.coffee</groupId>
+			<artifactId>coffee-jpa</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>hu.icellmobilsoft.coffee</groupId>
+			<artifactId>coffee-rest</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-email</artifactId>
+			<version>1.5</version>
+		</dependency>
+	</dependencies>
+</project>

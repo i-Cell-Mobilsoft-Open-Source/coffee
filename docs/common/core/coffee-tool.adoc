@@ -1,0 +1,14 @@
+[#common_core_coffee-tool]
+= coffee-tool
+
+Modul célja az alap util osztályok gyűjtése.
+
+Minden dátum, String, Number vagy egyéb statikus osztályoknak itt a helye.
+
+`MavenURLHandler`::
+Az XSD Catalog használatra szolgáló segédosztály, lehetővé teszi a
++
+ maven:hu.icellmobilsoft.coffee.dto.xsd:coffee-dto-xsd:jar::!/xsd/hu/icellmobilsoft/coffee/dto/common/common.xsd
++
+URL kezelését a kódban.
+Külön aktiválni kell, tehát nem okoz komplikációt (de aktiválva sem).

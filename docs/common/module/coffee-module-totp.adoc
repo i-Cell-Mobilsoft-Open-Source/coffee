@@ -1,0 +1,83 @@
+[#common_module_coffee-module-totp]
+= coffee-module-totp
+
+A modul célja az időalapú egyszer használható jelszavak (Time-based one-time password - TOTP) szabvány szerinti létrehozása, ellenőrzése. 
+A 6238-as számú RFC-ben leírt algoritmust implementáltuk, kiegészítve az általunk is használt microprofile-configgal.  
+
+NOTE: Az rfc-6238-ban szereplő algoritmus
+https://tools.ietf.org/html/rfc6238
+
+== Implementálás a projektbe
+
+=== pom.xml
+
+.Coffee modul aktiválás
+[source,xml]
+----
+<dependency>
+    <groupId>hu.icellmobilsoft.coffee.module.totp</groupId>
+    <artifactId>coffee-module-totp</artifactId>
+</dependency>
+----
+
+Az 1. táblázatban megtalálhatóak a modul által használt konfigurációs kulcsok.
+
+.Konfigurációs paraméterek
+[options="header",cols="1,1,1"]
+|===
+|paraméter neve   |default érték   |leírás   
+//----------------------
+|totp.password.digits.length   |6   |Ilyen hosszú jelszót generál a metódusunk (max. 9)   
+|totp.password.timestep.millisec   |30000   |Az aktuálisan generált jelszóhoz tartozó időablak hossza ezredmásodpercben   
+|totp.password.hash.algorithm   |HmacSha1   |A jelszógeneráláshoz ezt a hash algoritmust használja 
+|totp.password.secret.length   |16   |Ilyen hosszú secretet generálunk/használunk  
+|totp.verify.additional.windows.count   |0   |Ennek a paraméternek segítségével a jelszó ellenőrzését szomszédos időablakokra is kiterjeszthetjük   
+|===
+A default értékeket úgy állítottuk be, hogy a google authenticatorral megegyező otp-t generáljon a modul, de természetesen ettől el is lehet térni. 
+
+.A fontosabb metódusok
+* TOTPVerifier.verify
+
+Ennek segítségével tudjuk a kapott OTP-t validálni akár további időablakokra is kiterjesztve az érvényesség vizsgálatát.
+Paraméterben megadhatjuk az ellenőrzéshez szükséges összes adatot, de használhatjuk az overloados metódusokat is, ahol a konfigurációban eltárolt/default értékeket vesszük alapul.
+
+
+* TOTPGenerator.generateBase32Secret
+
+Ezzel tudunk egy (közös) secretet generálni a felhasználó számára, alapértelmezetten 16 byte hosszan. A kívánt hossz átadható paraméterként is. 
+
+* TOTPGenerator.generatePassword
+
+Ha szükségünk lenne egy OTP-re, akkor a generatePassword metódust használhatjuk ehhez, szintén megadva a generáláshoz szükséges összes paramétert, vagy a konfigurációban beállított/default értékeket alapul véve.
+
+.Használata:
+[source,java]
+----
+@Inject
+private TOTPVerifier totpVerifier;
+@Inject
+private TOTPGenerator totpGenerator;
+
+//secretKey generálás, opcionálisan meg lehet adni paraméterben, hogy milyen hosszú legyen a secret, de általában megfelelő a 16
+String secretKeyBase32Encoded1 = totpGenerator.generateBase32Secret();
+String secretKeyBase32Encoded2 = totpGenerator.generateBase32Secret(32);
+
+//kapott jelszó ellenőrzése
+//rossz jelszó esetén TechnicalExceptiont dob CoffeeFaultType.INVALID_ONE_TIME_PASSWORD hibakóddal
+totpVerifier.verify(secretKey, clientOtp, currentUTCTimestamp, codeDigits, hashAlgorithm);
+//ha default konfigurációt használnánk, akkor hivhatjuk a kevesebb paraméterrel rendelkező metódusokat is 
+totpVerifier.verify(secret, clientOtp);
+totpVerifier.verify(secret, clientOtp, currentUTCTimestamp);
+
+
+//totp generálás
+//az alábbi metódusok kimenete a generált jelszó
+String otp1 = totpGenerator.generatePassword(secret, currentUTCTimestamp, digits, TOtpAlgorithm);
+//ha default konfigurációt használnánk, akkor hivhatjuk a kevesebb paraméterrel rendelkező metódusokat is 
+String otp2 = totpGenerator.generatePassword(secret);
+String otp3 = totpGenerator.generatePassword(secret, currentUTCTimestamp);
+----
+
+WARNING: Érdemes a projekt szinten perzisztálni az utoljára validált és elfogadott OTP-t, hogy ne lehessen mégegyszer megadni.
+
+A Coffee implementál egy default TOTPGenerator (DefaultTOTPGneratorImpl) és egy TOTPVerifier (DefaultTOTPVerifierImpl) osztályt, amit igény szerint a projekten CDI használatával felülírhatunk.

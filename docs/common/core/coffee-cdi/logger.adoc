@@ -1,0 +1,51 @@
+[#common_core_coffee-cdi_logger]
+= Logger
+
+A Coffee saját loggolási rendszert használ, több okból fogva:
+
+* csomagolja a valódi loggolási rendszert (jelenleg ez jboss log)
+* request szinten gyüjti össze az összes logot ami loggolódik a rendszerben,
+azt is amit nem iratunk ki a konzolba (vagy máshova) mert magasabb szintre van állítva a loggolás
+(például ha INFO szintre van állítva a root logger, akkor a TRACE, DEBUG szintű log nem kerül ki sehova).
+Ezeket a logokat hiba esetén képesek vagyunk kiloggolni, hogy segíteni tudjuk a hibakeresés folyamát
+* egyéb információkat lehet rakni a log request szintű containerébe
+* ellenőrizni hogy milyen szintű log level a legmagasabb ami loggolásra került
+
+Minden osztálynak saját loggere van, a loggerek nem örökölhetőek, nem átadhatóak. Az alapját a CDI + jboss logger biztosítja, használata:
+
+.Minta használat
+[source,java]
+----
+// <1>
+@Inject
+@ThisLogger
+private AppLogger log;
+  
+  
+// <2>
+@Inject
+private org.jboss.logging.Logger log;
+
+// <3>
+import hu.icellmobilsoft.coffee.cdi.logger.LogProducer;
+
+public static String blabla() {
+    LogProducer.getStaticLogger(BlaBla.class).trace("class blabla");
+    LogProducer.getStaticLogger("BlaBla").trace("class name blabla");
+    return "blabla";
+}
+----
+<1> ahol @RequestScope-ban (vagy magasabb scope-ban) dolgozunk az osztályal (esetek 90%)
+<2> ahol nincs RequestScope
+<3> ahol nem használható az inject, pl. static metódusokban
+
+
+Ha a loggolásban szerepel paraméter, akkor azt KIVÉTEL NÉLKÜL "[paraméter]" jelek közé kell rakni.
+
+.Paraméter loggolása minta
+[source,java]
+----
+log.trace("Generált azonosító: [{0}]", id);
+----
+
+Ennek a célja, hogy a log nézegetésnél egyből azonosítani lehet a változó értéket, valamit azt is, ha az "" (üres String) vagy null értéke van.

@@ -1,0 +1,6 @@
+[#common_core_coffee-jpa]
+= coffee-jpa
+
+Modul célja a JPA bekötése.
+
+Tartalmazza a deltaspike jpa és a hibernate bekötését. Itt találhatók a lapozás segítő osztályok, tranzakció kezelési osztályok, és minden *Service őse, a BaseService osztály.

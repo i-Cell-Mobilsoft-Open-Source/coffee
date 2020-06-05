@@ -1,0 +1,422 @@
+[#common_core_coffee-rest]
+= coffee-rest
+Modul célja a REST kommunikáció és a kezelése.
+
+Tartalmazza az apache http klienst, különböző REST loggereket és filtereket. Továbbá a nyelvesítés, REST aktivátor és Response util osztály is itt található.
+
+== BaseRestLogger
+Az osztály célja, hogy loggolja az alkalmazásba érkező HTTP request-response kéréseket.
+Aktiválása kézzel történik, projekt szinten a következő minta alapján:
+
+.Projektben aktiválás
+[source,java]
+----
+package hu.icellmobilsoft.project.common.rest.logger;
+
+import javax.inject.Inject;
+import javax.ws.rs.ext.Provider;
+
+import hu.icellmobilsoft.coffee.cdi.logger.AppLogger;
+import hu.icellmobilsoft.coffee.cdi.logger.ThisLogger;
+import hu.icellmobilsoft.coffee.rest.log.BaseRestLogger;
+import hu.icellmobilsoft.coffee.rest.log.LogConstants;
+
+@Provider // <1>
+public class RestLogger extends BaseRestLogger {
+
+    @Inject
+    @ThisLogger
+    private AppLogger log;
+
+    @Override
+    public String sessionKey() { // <2>
+        return LogConstants.LOG_SESSION_ID;
+    }
+}
+----
+<1> JAX-RS aktivátor (ez a lényeg ami aktiválja)
+<2> HTTP headerben szereplő session azonosító kulcs neve
+
+Maga a HTTP request-response log összeállításáról a `hu.icellmobilsoft.coffee.rest.log.RequestResponseLogger` osztály gondoskodik, és ha igény van rá ezt lehet felhasználni más helyzetekben is, például hiba esetén loggolásnál.
+
+A request loggolása során az érzékeny adatok mind a header-ek közül, mind a json/xml body-ból maszkolásra kerülnek (pl. `X-PASSWORD: 1234` helyett `X_PASSWORD: +++*+++`).
+Az adatokról a kulcsuk (header és JSON tartolmnál a kulcs, XML-nél a tag) alapján kerül megállapításra, hogy védendőek-e; ezek alapértelmezetten a `.+++*+++?(pass|secret).+++*+++?` regex-nek megfelelő kulcsok (pl. userPassword, secretToken, ...),
+amennyiben a projekten szükséges, úgy a regex felülírható ha valamelyik *alapértelmezett* microprofile-config forrásban (sys var, env var, META-INF/microprofile-config.properties) megadjuk a `coffee.config.log.sensitive.key.pattern` konfigot.
+
+.Példa request log
+[source,text]
+----
+2019-02-01 16:31:33.044 INFO  [thread:default task-1] [hu.icellmobilsoft.coffee.rest.log.BaseRestLogger] [sid:2G7XOSOJBCFRMW08] - * Server in-bound request
+> POST http://localhost:8083/external/public/sampleService/sample/interface
+> -- Path parameters:
+> -- Query parameters:
+> -- Header parameters:
+> accept: text/xml;charset=utf-8
+> Connection: keep-alive
+> Content-Length: 106420
+> content-type: text/xml;charset=utf-8
+> Host: localhost:8083
+> User-Agent: Apache-HttpClient/4.5.3 (Java/1.8.0_191)
+> X-Client-Address: 10.10.20.49
+> X-CustomerNumber: 10098990
+> X-Password: *
+> X-UserName: sample
+> 
+> entity: [<?xml version="1.0" encoding="UTF-8"?>
+<SampleRequest xmlns="http://schemas.nav.gov.hu/OSA/1.0/api">
+    <header>
+        <requestId>RID314802331803</requestId>
+        <timestamp>2019-02-01T15:31:32.432Z</timestamp>
+        <requestVersion>1.1</requestVersion>
+        <headerVersion>1.0</headerVersion>
+    </header>
+    <user>
+        <passwordHash>*</passwordHash>
+... // röviditve
+----
+
+.Példa response log
+[source,text]
+----
+2019-02-01 16:31:34.042 INFO  [thread:default task-1] [hu.icellmobilsoft.coffee.rest.log.BaseRestLogger] [sid:2G7XOSOJBCFRMW08] - < Server response from [http://localhost:8083/external/public/sampleService/sample/interface]:
+< Status: [200], [OK]
+< Media type: [text/xml;charset=UTF-8]
+< -- Header parameters:
+< Content-Type: [text/xml;charset=UTF-8]
+< entity: [{"transactionId":"2G7XOSYJ6VUEJJ09","header":{"requestId":"RID314802331803","timestamp":"2019-02-01T15:31:32.432Z","requestVersion":"1.1","headerVersion":"1.0"},"result":{"funcCode":"OK"},"software":{"softwareId":"123456789123456789","softwareName":"string","softwareOperation":"LOCAL_SOFTWARE","softwareMainVersion":"string","softwareDevName":"string","softwareDevContact":"string","softwareCountryCode":"HU","softwareDescription":"string"}]
+----
+
+[#common_core_coffee-rest_LogSpecifier]
+== LogSpecifier
+A REST logolás végpontonként testreszabható a `hu.icellmobilsoft.coffee.rest.log.annotation.LogSpecifier` annotációval,
+ez egy helyen többször is megadható, valamint a scope-ja korlátozható a `target` mezőjével,
+amiből több is megadható az annotációban (alapértelmezetten minden target-ra aktiválódik);
+így megvan a lehetőség, hogy a REST request-response, microprofile-client request-response-okat külön-külön testreszabjuk.
+
+IMPORTANT: Egy végponton `LogSpecifierTarget`-enként csak egy LogSpecifier szerepelhet.
+
+.Megadható `target`-ek, a `hu.icellmobilsoft.coffee.rest.log.annotation.enumeration.LogSpecifierTarget` enum értékei:
+|===
+| LogSpecifierTarget | Scope
+
+| `REQUEST` | REST végpont request-je
+
+| `RESPONSE` | REST végpont response-a
+
+| `CLIENT_REQUEST` | Microprofile REST Client végpont request-je
+
+| `CLIENT_RESPONSE` | Microprofile REST Client végpont response-a
+|===
+
+Jelenleg a LogSpecifier a következő esetekre van felkészítve:
+
+* a végponton a request-response logolása kikapcsolható a `LogSpecifier` annotáció `noLog` kapcsolójával.
+* a végponton a kilogolt body méretét a `LogSpecifier` annotáció `maxEntityLogSize` mezőjével lehet korlátozni.
+
+IMPORTANT: ha a `maxEntityLogSize` `LogSpecifier.NO_LOG`-tól *eltérő* értékre van állítva, akkor a REST endpoint-hoz érkező `application/octet-stream` mediaType esetében csak a kérés első 5000 karaktere íródik ki.
+
+.LogSpecifier példa
+[source,java]
+----
+    @POST
+    @Produces({ MediaType.APPLICATION_JSON, MediaType.TEXT_XML, MediaType.APPLICATION_XML })
+    @Consumes({ MediaType.APPLICATION_JSON, MediaType.TEXT_XML, MediaType.APPLICATION_XML })
+    @LogSpecifier(target={LogSpecifierTarget.REQUEST, LogSpecifierTarget.CLIENT_REQUEST}, maxEntityLogSize =  100) //<1>
+    @LogSpecifier(target=LogSpecifierTarget.RESPONSE, maxEntityLogSize =  5000) //<2>
+    @LogSpecifier(target=LogSpecifierTarget.CLIENT_RESPONSE, noLog =  true) //<3>
+    WithoutLogResponse postWithoutLog(WithoutLogRequest withoutLogRequest) throws BaseException;
+----
+<1> Request entity log méretét 100 byte-ra korlátozza, REST hívások és microprofile client használatánál is
+<2> Response entity log méretét 5000 karakterre korlátozza a REST hívásoknál
+<3> Kikapcsolja a response logolást microprofile rest client válaszoknál.
+
+=== LogSpecifiersAnnotationProcessor
+
+A `LogSpecifier`-hez tartozik a `hu.icellmobilsoft.coffee.rest.log.annotation.processing.LogSpecifiersAnnotationProcessor`,
+ennek feladata, hogy a `LogSpecifier` többszöri definiálhatósága miatt ne lehessen ugyanarra a `target`-re több értéket is definiálni.
+Ehhez fordítási időben ellenőrzi, hogy hány `@LogSpecifier` lett definiálva `LogSpecifierTarget`-enként, amennyiben többet talál úgy a fordítást buktatja.
+
+.Invalid példa
+[source,java]
+----
+    @POST
+    @Produces({ MediaType.APPLICATION_JSON, MediaType.TEXT_XML, MediaType.APPLICATION_XML })
+    @Consumes({ MediaType.APPLICATION_JSON, MediaType.TEXT_XML, MediaType.APPLICATION_XML })
+    @LogSpecifier(maxEntityLogSize =  100) //<1>
+    @LogSpecifier(target = LogSpecifierTarget.RESPONSE, maxEntityLogSize =  5000) //<2>
+    ValidatorResponse postValidatorTest(ValidatorRequest validatorRequest) throws BaseException;
+----
+<1> Mivel nincs megadva target, ezért minden entity log méretét 100 byte-ra/karakterre korlátozza, beleértve a `LogSpecifierTarget.RESPONSE`-ét is.
+<2> *LogSpecifierTarget.RESPONSE* entity log méretét 5000 karakterre korlátozza.
+
+Mivel fenti példában a REST response mérete az első annotáció miatt 100, a második annotáció miatt pedig 5000 kellene legyen, így elkerülendő a rejtett logikát a `LogSpecifiersAnnotationProcessor` el fogja buktatni a fordítást az alábbi error-ral:
+
+[source,log]
+----
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-compiler-plugin:3.8.1:compile (default-compile) on project project-sample-service: Compilation failure
+[ERROR] .../project-sample-service/src/main/java/hu/icellmobilsoft/project/sample/service/rest/ISampleTestRest.java:[43,23] Multiple LogSpecifiers are defined for the [RESPONSE] of [postValidatorTest]! Conflicting LogSpecifiers:[[@hu.icellmobilsoft.coffee.rest.log.annotation.LogSpecifier(noLog=false, maxEntityLogSize=100, target={REQUEST, RESPONSE, CLIENT_REQUEST, CLIENT_RESPONSE}), @hu.icellmobilsoft.coffee.rest.log.annotation.LogSpecifier(noLog=false, maxEntityLogSize=5000, target={RESPONSE})]]
+----
+
+[#common_core_coffee-rest_JaxbTool]
+== JaxbTool
+Az osztály célja hogy az XML objektummal kapcsolatos transzformációkat és kezeléseket foglalja össze.
+A felépítése teljes mértékben moduláris, mindent projekt saját igényére tudja szabni a CDI segítségével.
+A moduljai alapesetben ilyen működést biztosítanak:
+
+=== Request verzió megállapítása
+Ezt az `*IXmlRequestVersionReader*` interfész biztosítja.
+Az implementáló beépített és cserélhető osztály: `hu.icellmobilsoft.coffee.rest.validation.xml.reader.XmlRequestVersionReader`.
+
+Minta alapján a
+
+[source,text]
+----
+ ...<header>...<requestVersion>1.1</requestVersion>...</header>...
+----
+
+XML struktúrából keresi, persze szabadon módosítható más struktúrára vagy akár HTTP header olvasásból.
+
+=== XSD hiba gyűjtése
+Marshal (DTO -> XML String) vagy unmarshal (XML String/Stream -> DTO) esetén kérhető a XSD szerinti ellenőrzés.
+Ilyenkor `hu.icellmobilsoft.coffee.rest.validation.xml.exception.XsdProcessingException`
+formában megkapjuk a XSD szabályokat sértő hibákat, listában.
+Ezeket a hibákat a `*IXsdValidationErrorCollector*` interfész kezeli és biztosítja.
+
+Az implementáló beépített és cserélhető osztály: `hu.icellmobilsoft.coffee.rest.validation.xml.error.XsdValidationErrorCollector`.
+
+=== XSD (schema) fájlok kezelése
+Az XSD schema leíró fájlok kezelésére plusz logika szükséges, mivel azokban különféle összekötés lehetséges.
+Ezzel a problémával a `*IXsdResourceResolver*` interfész foglalkozik.
+
+Az implementáló beépített és cserélhető osztály: `hu.icellmobilsoft.coffee.rest.validation.xml.utils.XsdResourceResolver`.
+Olyan alap probléma hogy az XSD-k egymást importálják egy közös könyvtárban múködik alapból is,
+de az hogy tudjunk importáljni XSD-t egy másik projektből, arra már extra logika szükséges.
+Ebben az osztályban ez a helyzet van lekezelve.
+
+== XSD Catalog schema kezelés
+A <<howto_xsd_catalog, XSD Catalog és generálás>> részben található leírás foglalkozik az XSD generálással.
+Ez a felyezet a kódban lévő aktiválását veszi célba - XML validálása XSD catalog segítségével.
+
+Egész funkciót a <<common_core_coffee-rest_JaxbTool,JaxbTool>> osztály végzi.
+Szándékosan olyan modulárisan van felépítve hogy könnyen lehessen igényekhez hajlítani.
+A fenti leírás alapján a Coffee tartalmaz egy `*IXsdResourceResolver*` implementációt,
+ami fel tudja olvasni az XSD Catalog-ban megadott séma struktúrát.
+Ez az osztály a 
+
+.hu.icellmobilsoft.coffee.rest.validation.catalog.PublicCatalogResolver
+[source,java]
+----
+@Alternative
+@Priority(100)
+public class PublicCatalogResolver implements LSResourceResolver, IXsdResourceResolver {
+----
+Mivel az XSD Catalog generálásnál használunk maven által bekötött függőségeket, mint pl.:
+
+./xxx/super.catalog.xsd
+[source,xml]
+----
+...
+<public publicId="http://common.dto.coffee.icellmobilsoft.hu/common" uri="maven:hu.icellmobilsoft.coffee.dto.xsd:coffee-dto-xsd:jar::!/xsd/hu.icellmobilsoft.coffee/dto/common/common.xsd"/>
+...
+----
+Így fel kell készülni a `maven:` URI protokolhoz kezelésére.
+Ez el is készült a `hu.icellmobilsoft.coffee.tool.protocol.handler.MavenURLHandler` osztályban,
+amit aktiválni kell.
+Ez megtörténhet több féle képpen, ajánlott megoldás a következő: 
+
+.src/main/resources/META-INF/services/java.net.spi.URLStreamHandlerProvider
+[source,txt]
+----
+hu.icellmobilsoft.coffee.rest.validation.catalog.MavenURLStreamHandlerProvider
+----
+Tehát létre kell hozni a `src/main/resources/META-INF/services/java.net.spi.URLStreamHandlerProvider` fájlt
+és beleírni azt a class-t mely kezelésbe veszi (Coffee része).
+
+WARNING: Lehetnek olyan rendszerek (pl. Thorntail),
+melyek nem képesek ezt a fájlt beolvasni időben az alkalmazás felfutása idejében.
+Ilyenkor van még egy lehetőségünk a `URL.setURLStreamHandlerFactory(factory);` megoldáson keresztül.
+
+=== Catalog JaxbTool aktiválása
+A `maven:` URI protokol kezelési beállítás után már csak 2 dolog van hátra:
+
+* `PublicCatalogResolver` aktiválása
+* catalog fájl megadása
+
+A `PublicCatalogResolver` aktiválása klasszikus CDI módon történik:
+
+.beans.xml
+[source,xml]
+----
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://www.oracle.com/webfolder/technetwork/jsc/xml/ns/javaee/beans_1_1.xsd"
+    version="1.1" bean-discovery-mode="all">
+
+    <alternatives>
+        <class>hu.icellmobilsoft.coffee.rest.validation.catalog.PublicCatalogResolver</class>
+    </alternatives>
+</beans>
+----
+
+A catalog xsd fájl megadása pedig a konfiguráción keresztül történik, pontosabban a 
+
+ coffee.config.xml.catalog.path
+
+kulcs megdásával, íme egy példa:
+
+.project-defaults.yml
+[source,yml]
+----
+coffee:
+    config:
+        xml:
+            catalog:
+                path: xsd/hu/icellmobilsoft/project/dto/super.catalog.xml
+----
+Ezekután készen is vagyunk és XSD Catalog szerint fog történni a XSD séma felolvasás.
+
+== Nyelvesítés
+Nyelvesítés funkciója egy backend rendszerben több szemszögből hasznos, például hibakódok, 
+enum fordítások vagy akár dokumentumok nyelvesített generálása.
+Erre a célra a deltaspike 
+http://deltaspike.apache.org/documentation/core.html#Messagesandi18n[Messages and i18n]
+funkciót használja, ami még fel van javítva újabb CDI lehetőségekkel.
+
+Három komponense van:
+
+* nyelv megállapítása (LocaleResolver)
+* nyelvesítő fájlok
+* nyelvesítés kezelő (LocalizedMessage)
+
+=== Nyelv (LocaleResolver)
+Alapból a deltaspike tartalmaz egy beépített nyelv feloldást,
+ami a futó JVM locale-t adja vissza,
+persze ez nem felel meg egy rendszernek,
+így CDI segítségével kell `@Alternative`-ot készíteni például így:
+
+.ProjectLocaleResolver
+[source,java]
+----
+import java.util.Locale;
+
+import javax.annotation.Priority;
+import javax.enterprise.context.Dependent;
+import javax.enterprise.inject.Alternative;
+import javax.inject.Inject;
+import javax.interceptor.Interceptor;
+
+import org.apache.commons.lang3.StringUtils;
+import org.apache.deltaspike.core.impl.message.DefaultLocaleResolver;
+
+import hu.icellmobilsoft.coffee.cdi.logger.AppLogger;
+import hu.icellmobilsoft.coffee.cdi.logger.ThisLogger;
+import hu.icellmobilsoft.project.common.rest.header.ProjectHeader;
+
+@Dependent
+@Alternative
+@Priority(Interceptor.Priority.APPLICATION + 10)
+public class ProjectLocaleResolver extends DefaultLocaleResolver {
+
+    private static final long serialVersionUID = 1L;
+
+    public static final String DEFAULT_LANGUAGE = "hu";
+
+    @Inject
+    private ProjectHeader header;
+
+    @Inject
+    @ThisLogger
+    private AppLogger log;
+
+    @Override
+    public Locale getLocale() {
+        if (header != null) {
+            log.debug("header language: [{0}]", header.getLanguage());
+            String language = header.getLanguage();
+            if (StringUtils.isNotBlank(language)) {
+                return new Locale(language);
+            }
+        }
+        return new Locale(DEFAULT_LANGUAGE);
+    }
+}
+----
+Ebben az ezetben egy CDI `ProjectHeader` kezelt osztályból kérjük ki a nyelvet,
+amit feltöltöttünk például a REST HTTP header adataiból.
+
+Persze még a `beans.xml` fájlban ezt az `@Alternative`-ot aktiválni kell. 
+
+=== Nyelvesítő fájlok
+A nyelvesítő fájlok a rendes Java által támogatott rendeszeren működik,
+tehát a
+https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/ResourceBundle.html[ResourceBundle.html]
+szerint.
+Röviden összefoglalva ha van egy szótár fájl akkor a fájl neve + postfix halmaza adja meg a nyelvi feloldást. 
+
+A rendszer alapból a "*i18n.messages*" ResourceBundle nevet támogatja, példa fájl:
+
+.src/main/resources/i18n/messages_hu.properties
+[source,properties]
+----
+pattern.date.full = yyyy-MM-dd HH:mm:ss
+pattern.date = yyyy-MM-dd
+pattern.time = HH:mm:ss
+pattern.date.time = yyyy-MM-dd HH:mm
+
+hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType.GENERIC_EXCEPTION = Nem várt hiba történt!
+----
+A fájlból látható hogy a "hu" locale-ra érvényes tartalmat gyűjti öszze.
+
+A szótár fájlok mennyisége szabadon bővíthető a `*coffee.config.resource.bundles*` konfigurációs kulcsal,
+ahol felsorolva lehet megadni többet/mást is:
+
+.project-defaults.yml
+[source,yaml]
+----
+coffee:
+    config:
+        resource:
+            bundles: i18n.messages,i18n.validations <1>
+----
+<1> space és idézőjelek nélkül kell megadni
+
+Látható hogy 2 fálj csoportban van megadva a szótárázás, amelyek lehetnek például a következők:
+
+* src/main/resources/i18n/messages.properties
+* src/main/resources/i18n/messages_en.properties
+* src/main/resources/i18n/messages_hu.properties
+* src/main/resources/i18n/validations.properties
+* src/main/resources/i18n/validations_en.properties
+* src/main/resources/i18n/validations_hu.properties
+
+=== Nyelvesítés kezelő (LocalizedMessage)
+Teljes mértékben használható a deltaspike type-safe megoldása is,
+de ez legtöbbször nem felel meg a projekteken,
+ott főleg dinamikus kulcsok (pl. hibakódok) alapján kell a nyelvesített üzenetet válaszolni.
+
+Erre a célra jött létre a `LocalizedMessage` osztály.
+Tartalmaz egy pár kulcs szerinti szótar feloldást például az enumok és osztályok számára,
+szabadon bővíthető, módosítható akár @Alternative-al is.
+Pár minta a használatból:
+
+[source,java]
+----
+import hu.icellmobilsoft.coffee.rest.locale.LocalizedMessage;
+
+...
+    @Inject
+    private LocalizedMessage localizedMessage;
+...
+    protected String createDateTimePattern() {
+        return StringUtils.defaultString(localizedMessage.message("{pattern.date.full}"), "yyyy.MM.dd HH:mm:ss");
+    }
+
+    protected String localizeEnum(Enum<?> enumValue) {
+        return localizedMessage.message(enumValue);
+    }
+
+    protected String getMessage(String faultType) {
+        return localizedMessage.message(GeneralExceptionMapper.class, faultType);
+    }
+...
+----

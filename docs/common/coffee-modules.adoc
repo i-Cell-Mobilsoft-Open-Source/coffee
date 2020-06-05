@@ -1,0 +1,20 @@
+[#common_coffee-modules]
+= Coffee modules
+
+include::module/coffee-module-activemq.adoc[leveloffset=+1]
+
+include::module/coffee-module-document.adoc[leveloffset=+1]
+
+include::module/coffee-module-etcd.adoc[leveloffset=+1]
+
+include::module/coffee-module-mongodb.adoc[leveloffset=+1]
+
+include::module/coffee-module-notification.adoc[leveloffset=+1]
+
+include::module/coffee-module-redis.adoc[leveloffset=+1]
+
+include::module/coffee-module-ruleng.adoc[leveloffset=+1]
+
+include::module/coffee-module-mp-restclient.adoc[leveloffset=+1]
+
+include::module/coffee-module-totp.adoc[leveloffset=+1]

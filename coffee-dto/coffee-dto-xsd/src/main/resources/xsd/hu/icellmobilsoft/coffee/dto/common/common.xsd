@@ -1,0 +1,430 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns="http://common.dto.coffee.icellmobilsoft.hu/common"
+	targetNamespace="http://common.dto.coffee.icellmobilsoft.hu/common"
+	elementFormDefault="qualified" attributeFormDefault="unqualified">
+
+	<!-- SIMPLE TYPES -->
+	<xsd:simpleType name="SimpleText5Type">
+		<xsd:restriction base="xsd:string">
+			<xsd:maxLength value="5" />
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="Character">
+		<xsd:restriction base="xsd:string">
+			<xsd:minLength value="1" />
+			<xsd:maxLength value="1" />
+			<xsd:pattern value=".*[^\s].*" />
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="SimpleText2NotBlankType">
+		<xsd:restriction base="xsd:string">
+			<xsd:minLength value="1" />
+			<xsd:maxLength value="2" />
+			<xsd:pattern value=".*[^\s].*" />
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="SimpleText3NotBlankType">
+		<xsd:restriction base="xsd:string">
+			<xsd:minLength value="1" />
+			<xsd:maxLength value="3" />
+			<xsd:pattern value=".*[^\s].*" />
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="SimpleText4NotBlankType">
+		<xsd:restriction base="xsd:string">
+			<xsd:minLength value="1" />
+			<xsd:maxLength value="4" />
+			<xsd:pattern value=".*[^\s].*" />
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="SimpleText5NotBlankType">
+		<xsd:restriction base="xsd:string">
+			<xsd:minLength value="1" />
+			<xsd:maxLength value="5" />
+			<xsd:pattern value=".*[^\s].*" />
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="SimpleText10Type">
+		<xsd:restriction base="xsd:string">
+			<xsd:maxLength value="10" />
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="SimpleText10NotBlankType">
+		<xsd:restriction base="xsd:string">
+			<xsd:minLength value="1" />
+			<xsd:maxLength value="10" />
+			<xsd:pattern value=".*[^\s].*" />
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="SimpleText15Type">
+		<xsd:restriction base="xsd:string">
+			<xsd:maxLength value="15" />
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="SimpleText15NotBlankType">
+		<xsd:restriction base="xsd:string">
+			<xsd:minLength value="1" />
+			<xsd:maxLength value="15" />
+			<xsd:pattern value=".*[^\s].*" />
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="SimpleText20Type">
+		<xsd:restriction base="xsd:string">
+			<xsd:maxLength value="20" />
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="SimpleText20NotBlankType">
+		<xsd:restriction base="xsd:string">
+			<xsd:minLength value="1" />
+			<xsd:maxLength value="20" />
+			<xsd:pattern value=".*[^\s].*" />
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="SimpleText30Type">
+		<xsd:restriction base="xsd:string">
+			<xsd:maxLength value="30" />
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="SimpleText30NotBlankType">
+		<xsd:restriction base="xsd:string">
+			<xsd:minLength value="1" />
+			<xsd:maxLength value="30" />
+			<xsd:pattern value=".*[^\s].*" />
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="SimpleText50Type">
+		<xsd:restriction base="xsd:string">
+			<xsd:maxLength value="50" />
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="SimpleText50NotBlankType">
+		<xsd:restriction base="xsd:string">
+			<xsd:minLength value="1" />
+			<xsd:maxLength value="50" />
+			<xsd:pattern value=".*[^\s].*" />
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="SimpleText64NotBlankType">
+		<xsd:restriction base="xsd:string">
+			<xsd:minLength value="1" />
+			<xsd:maxLength value="64" />
+			<xsd:pattern value=".*[^\s].*" />
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="SimpleText70Type">
+		<xsd:restriction base="xsd:string">
+			<xsd:maxLength value="70" />
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="SimpleText70NotBlankType">
+		<xsd:restriction base="xsd:string">
+			<xsd:minLength value="1" />
+			<xsd:maxLength value="70" />
+			<xsd:pattern value=".*[^\s].*" />
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="SimpleText100Type">
+		<xsd:restriction base="xsd:string">
+			<xsd:maxLength value="100" />
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="SimpleText100NotBlankType">
+		<xsd:restriction base="xsd:string">
+			<xsd:minLength value="1" />
+			<xsd:maxLength value="100" />
+			<xsd:pattern value=".*[^\s].*" />
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="SimpleText128NotBlankType">
+		<xsd:restriction base="xsd:string">
+			<xsd:minLength value="1" />
+			<xsd:maxLength value="128" />
+			<xsd:pattern value=".*[^\s].*" />
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="SimpleText150Type">
+		<xsd:restriction base="xsd:string">
+			<xsd:maxLength value="150" />
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="SimpleText150NotBlankType">
+		<xsd:restriction base="xsd:string">
+			<xsd:minLength value="1" />
+			<xsd:maxLength value="150" />
+			<xsd:pattern value=".*[^\s].*" />
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="SimpleText200Type">
+		<xsd:restriction base="xsd:string">
+			<xsd:maxLength value="200" />
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="SimpleText200NotBlankType">
+		<xsd:restriction base="xsd:string">
+			<xsd:minLength value="1" />
+			<xsd:maxLength value="200" />
+			<xsd:pattern value=".*[^\s].*" />
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="SimpleText250NotBlankType">
+		<xsd:restriction base="xsd:string">
+			<xsd:minLength value="1" />
+			<xsd:maxLength value="250" />
+			<xsd:pattern value=".*[^\s].*" />
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="SimpleText255Type">
+		<xsd:restriction base="xsd:string">
+			<xsd:maxLength value="255" />
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="SimpleText255NotBlankType">
+		<xsd:restriction base="xsd:string">
+			<xsd:minLength value="1" />
+			<xsd:maxLength value="255" />
+			<xsd:pattern value=".*[^\s].*" />
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="SimpleText500Type">
+		<xsd:restriction base="xsd:string">
+			<xsd:maxLength value="500" />
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="SimpleText500NotBlankType">
+		<xsd:restriction base="xsd:string">
+			<xsd:minLength value="1" />
+			<xsd:maxLength value="500" />
+			<xsd:pattern value=".*[^\s].*" />
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="SimpleText512NotBlankType">
+		<xsd:restriction base="xsd:string">
+			<xsd:minLength value="1" />
+			<xsd:maxLength value="512" />
+			<xsd:pattern value=".*[^\s].*" />
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="VatNumberType">
+		<xsd:restriction base="xsd:string">
+			<xsd:minLength value="1" />
+			<xsd:maxLength value="15" />
+			<xsd:pattern value="[0-9A-Z\-]{1,15}" />
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="CountryCodeType">
+		<xsd:restriction base="xsd:string">
+			<xsd:minLength value="1" />
+			<xsd:maxLength value="3" />
+			<xsd:pattern value="[A-Z]{1,3}" />
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="RequestIdType">
+		<xsd:restriction base="xsd:string">
+			<xsd:maxLength value="32" />
+			<xsd:pattern value="[+a-zA-Z0-9_]{1,32}" />
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="EntityIdType">
+		<xsd:restriction base="xsd:string">
+			<xsd:maxLength value="30" />
+			<xsd:pattern value="[+a-zA-Z0-9_]{1,30}" />
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="NameType">
+		<xsd:restriction base="xsd:string">
+			<xsd:maxLength value="150" />
+			<xsd:minLength value="2" />
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="UserNameType">
+		<xsd:restriction base="xsd:string">
+			<xsd:maxLength value="30" />
+			<xsd:pattern value="[a-zA-Z0-9\-@\.]{6,30}" />
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="PasswordType">
+		<xsd:restriction base="xsd:string">
+			<xsd:maxLength value="40" />
+			<xsd:minLength value="6" />
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="EmailType">
+		<xsd:restriction base="xsd:string">
+			<xsd:maxLength value="200" />
+			<xsd:pattern
+				value="[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}" />
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="PhoneType">
+		<xsd:annotation>
+			<xsd:documentation>Nemzetközi formátum + jel nélkül... pl.:
+				36301234567
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:pattern value="[0-9]{10,15}" />
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="OneZeroType">
+		<xsd:restriction base="xsd:int">
+			<xsd:minInclusive value="0" />
+			<xsd:maxInclusive value="1" />
+			<xsd:fractionDigits value="0" />
+			<xsd:totalDigits value="1" />
+			<xsd:pattern value="[0,1]{1}" />
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="NaturalNumberType">
+		<xsd:restriction base="xsd:int">
+			<xsd:minExclusive value="0" />
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="TimeZoneOffsetType">
+		<xsd:restriction base="xsd:int">
+			<xsd:minInclusive value="-12" />
+			<xsd:maxInclusive value="14" />
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="PageType">
+		<xsd:restriction base="xsd:int">
+			<xsd:minInclusive value="1" />
+			<xsd:fractionDigits value="0" />
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="RowsType">
+		<xsd:restriction base="xsd:int">
+			<xsd:minInclusive value="1" />
+			<xsd:maxInclusive value="100" />
+			<xsd:totalDigits value="3" />
+			<xsd:fractionDigits value="0" />
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="OrderByTypeType">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="ASC" />
+			<xsd:enumeration value="DESC" />
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="StatusType">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="ACTIVE" />
+			<xsd:enumeration value="INACTIVE" />
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="GPSCoordinateLatLongType">
+		<xsd:restriction base="xsd:decimal">
+			<xsd:totalDigits value="20" />
+			<xsd:fractionDigits value="16" />
+			<xsd:maxExclusive value="9999.9999999999999999" />
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="TimestampType">
+		<xsd:annotation>
+			<xsd:documentation>Időbélyeg típus ISO "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+				formatumhoz</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:dateTime">
+			<xsd:pattern
+				value="\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(.\d{1,3})?Z" />
+		</xsd:restriction>
+	</xsd:simpleType>
+	<!-- GROUPS -->
+	<xsd:group name="BaseAuditDateGroup">
+		<xsd:sequence>
+			<xsd:element name="creationDate" type="xsd:dateTime"
+				minOccurs="0" />
+			<xsd:element name="modificationDate" type="xsd:dateTime"
+				minOccurs="0" />
+		</xsd:sequence>
+	</xsd:group>
+	<xsd:group name="BaseAuditUserGroup">
+		<xsd:sequence>
+			<xsd:element name="creatorUser" type="EntityIdType"
+				minOccurs="0" />
+			<xsd:element name="modifierUser" type="EntityIdType"
+				minOccurs="0" />
+		</xsd:sequence>
+	</xsd:group>
+	<xsd:group name="BaseAuditGroup">
+		<xsd:sequence>
+			<xsd:group ref="BaseAuditDateGroup" />
+			<xsd:group ref="BaseAuditUserGroup" />
+		</xsd:sequence>
+	</xsd:group>
+	<!-- COMPLEX TYPES -->
+	<xsd:complexType name="KeyValueBasicType">
+		<xsd:sequence>
+			<xsd:element name="value" type="xsd:string" />
+		</xsd:sequence>
+		<xsd:attribute name="key" type="EntityIdType"
+			use="required" />
+	</xsd:complexType>
+	<xsd:complexType name="CommonIdListType">
+		<xsd:sequence>
+			<xsd:element name="id" type="EntityIdType" minOccurs="1"
+				maxOccurs="unbounded" />
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="QueryRequestDetails">
+		<xsd:sequence>
+			<xsd:element name="rows" type="RowsType">
+				<xsd:annotation>
+					<xsd:documentation>Adott lapra eső lekérdezett rekordok száma,
+						aktuális result set rowcount
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="page" type="PageType">
+				<xsd:annotation>
+					<xsd:documentation>Query-ben jött, a kért lap sorszáma
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="QueryResponseDetails">
+		<xsd:complexContent>
+			<xsd:extension base="QueryRequestDetails">
+				<xsd:sequence>
+					<xsd:element name="totalRows" type="xsd:int">
+						<xsd:annotation>
+							<xsd:documentation>Teljes rekordszám, ami a lekérdezési
+								feltételekkel elérhető
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="maxPage" type="xsd:int">
+						<xsd:annotation>
+							<xsd:documentation>Ennyi lap van összesen a kért rowCount/page
+								paraméter alapján
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="AbstractDtoType">
+		<xsd:sequence>
+			<xsd:element name="version" type="xsd:long" />
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="AbstractAuditDtoType">
+		<xsd:complexContent>
+			<xsd:extension base="AbstractDtoType">
+				<xsd:sequence>
+					<xsd:group ref="BaseAuditGroup" />
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="GPSCoordinateType">
+		<xsd:sequence>
+			<xsd:element name="latitude"
+				type="GPSCoordinateLatLongType" />
+			<xsd:element name="longitude"
+				type="GPSCoordinateLatLongType" />
+		</xsd:sequence>
+	</xsd:complexType>
+</xsd:schema>

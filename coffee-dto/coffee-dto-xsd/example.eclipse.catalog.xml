@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
+	<public
+		publicId="http://common.dto.coffee.icellmobilsoft.hu/common"
+		uri="/home/ss/PROJECTS/coffee/coffee-dto/coffee-dto-xsd/src/main/resources/xsd/hu/icellmobilsoft/coffee/dto/common/common.xsd" />
+	<public
+		publicId="http://common.dto.coffee.icellmobilsoft.hu/commonservice"
+		uri="/home/ss/PROJECTS/coffee/coffee-dto/coffee-dto-xsd/src/main/resources/xsd/hu/icellmobilsoft/coffee/dto/common/commonservice.xsd" />
+	<public
+		publicId="http://common.dto.coffee.icellmobilsoft.hu/commonsecurity"
+		uri="/home/ss/PROJECTS/coffee/coffee-dto/coffee-dto-xsd/src/main/resources/xsd/hu/icellmobilsoft/coffee/dto/common/commonsecurity.xsd" />
+</catalog>
