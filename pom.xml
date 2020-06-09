@@ -9,7 +9,7 @@
 
 	<groupId>hu.icellmobilsoft.coffee</groupId>
 	<artifactId>coffee</artifactId>
-	<version>1.0.0</version>
+	<version>1.0.1-SNAPSHOT</version>
 
 	<packaging>pom</packaging>
 
@@ -31,7 +31,7 @@
 		<connection>scm:git:git@github.com:i-Cell-Mobilsoft-Open-Source/coffee.git</connection>
 		<developerConnection>scm:git:git@github.com:i-Cell-Mobilsoft-Open-Source/coffee.git</developerConnection>
 		<url>https://github.com/i-Cell-Mobilsoft-Open-Source/coffee</url>
-		<tag>coffee-1.0.0</tag>
+		<tag>HEAD</tag>
 	</scm>
 
 	<issueManagement>
