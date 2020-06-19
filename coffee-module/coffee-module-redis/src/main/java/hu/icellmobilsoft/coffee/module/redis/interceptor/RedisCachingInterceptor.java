@@ -39,12 +39,13 @@ import hu.icellmobilsoft.coffee.dto.common.Envelope;
 import hu.icellmobilsoft.coffee.module.redis.annotation.RedisConnection;
 import hu.icellmobilsoft.coffee.module.redis.interceptor.annotation.RedisCached;
 import hu.icellmobilsoft.coffee.module.redis.service.AbstractRedisService;
-import hu.icellmobilsoft.coffee.module.redis.service.DefaultRedisService;
 import hu.icellmobilsoft.coffee.module.redis.service.RedisService;
 import hu.icellmobilsoft.coffee.tool.gson.ClassTypeAdapter;
 
 /**
- * <p>RedisCachingInterceptor class.</p>
+ * <p>
+ * RedisCachingInterceptor class.
+ * </p>
  *
  * @since 1.0.0
  */
@@ -59,14 +60,18 @@ public class RedisCachingInterceptor {
     private Gson gson;
 
     /**
-     * <p>Constructor for RedisCachingInterceptor.</p>
+     * <p>
+     * Constructor for RedisCachingInterceptor.
+     * </p>
      */
     public RedisCachingInterceptor() {
         gson = new GsonBuilder().registerTypeAdapter(Class.class, new ClassTypeAdapter()).create();
     }
 
     /**
-     * <p>perform.</p>
+     * <p>
+     * perform.
+     * </p>
      */
     @AroundInvoke
     public Object perform(final InvocationContext ctx) throws Exception {
@@ -135,9 +140,6 @@ public class RedisCachingInterceptor {
         if (redisConnection != null) {
             String configKey = redisConnection.configKey();
             redisService = CDI.current().select(RedisService.class, new RedisConnection.Literal(configKey)).get();
-        }
-        if (redisService == null) {
-            redisService = CDI.current().select(DefaultRedisService.class).get();
         }
         return redisService;
     }
