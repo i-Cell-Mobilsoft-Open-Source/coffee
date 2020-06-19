@@ -56,15 +56,12 @@ public class ApplicationConfiguration {
     @Inject
     private StringHelper stringHelper;
 
-    @SuppressWarnings("rawtypes")
-    private Class valueClass;
-
-    private LoadingCache<String, Optional<?>> cache = CacheBuilder.newBuilder().weakKeys().expireAfterWrite(CACHE_TIME_MINUTES, TimeUnit.MINUTES)
-            .build(new CacheLoader<String, Optional<?>>() {
+    private LoadingCache<CompositeCacheLoaderKey, Optional<?>> cache = CacheBuilder.newBuilder().weakKeys()
+            .expireAfterWrite(CACHE_TIME_MINUTES, TimeUnit.MINUTES).build(new CacheLoader<CompositeCacheLoaderKey, Optional<?>>() {
                 @SuppressWarnings("unchecked")
                 @Override
-                public Optional<?> load(String key) throws Exception {
-                    return configurationHelper.getConfigOptionalValue(key, valueClass);
+                public Optional<?> load(CompositeCacheLoaderKey compositeCacheLoaderKey) throws Exception {
+                    return configurationHelper.getConfigOptionalValue(compositeCacheLoaderKey.getKey(), compositeCacheLoaderKey.getValueClass());
                 }
             });
 
@@ -228,16 +225,13 @@ public class ApplicationConfiguration {
         if (StringUtils.isBlank(key)) {
             return Optional.empty();
         }
-        valueClass = clazz;
         try {
-            Optional<T> value = (Optional<T>) cache.get(key);
+            Optional<T> value = (Optional<T>) cache.get(new CompositeCacheLoaderKey(key, clazz));
             log.debugv("Key [{0}] value [{1}]", key, stringHelper.maskPropertyValue(key, value));
             return value;
         } catch (Exception e) {
             log.errorv(e, "Error in getting configuration for key [{0}]: [{1}]", key, e.getLocalizedMessage());
             return Optional.empty();
-        } finally {
-            valueClass = null;
         }
     }
 
