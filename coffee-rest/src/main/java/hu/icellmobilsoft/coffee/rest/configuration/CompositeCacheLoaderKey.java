@@ -19,8 +19,9 @@
  */
 package hu.icellmobilsoft.coffee.rest.configuration;
 
-import javax.enterprise.inject.Vetoed;
 import java.util.Objects;
+
+import javax.enterprise.inject.Vetoed;
 
 /**
  * Összetett kulcs osztály létrehozása az ApplicationConfiguration osztály cache - jéhez.
@@ -42,11 +43,12 @@ public class CompositeCacheLoaderKey {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
         CompositeCacheLoaderKey that = (CompositeCacheLoaderKey) o;
-        return key.equals(that.key) &&
-                valueClass.equals(that.valueClass);
+        return Objects.equals(key, that.key) && Objects.equals(valueClass, that.valueClass);
     }
 
     @Override
