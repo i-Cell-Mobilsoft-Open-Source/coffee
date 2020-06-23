@@ -31,4 +31,4 @@ byte[] decoded = AesGcmUtil.decryptWithAes256GcmNoPadding(key, encoded, iv);
 String decodedString = new String(decoded, "UTF-8"); //test input test
 ----
 +
-IMPORTANT: Adott kulcs-IV párt nem szabad újra használni! Emiett az IV nélküli encrypt/decrypt-et csak egyszer használatos kulcsokkal szabad meghívni!
+IMPORTANT: Adott kulcs-IV párt nem szabad újra használni! Emiatt az IV nélküli encrypt/decrypt-et csak egyszer használatos kulcsokkal szabad meghívni!
