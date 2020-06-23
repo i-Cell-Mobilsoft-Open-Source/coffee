@@ -71,7 +71,7 @@ class DateXmlUtilTest {
     static void setUpBeforeClass() {
         date = new Date(1549898614051L);
         offsetDateTime = date.toInstant().atOffset(ZoneOffset.UTC);
-        zonedDateTime = ZonedDateTime.ofInstant(date.toInstant(), ZoneId.of("GMT+01:00"));
+        zonedDateTime = ZonedDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault());
         localDate = offsetDateTime.toLocalDate();
 
         gregorianCalendar = GregorianCalendar.getInstance();
@@ -386,7 +386,7 @@ class DateXmlUtilTest {
         ZonedDateTime actual = DateXmlUtil.toZonedDateTime(xmlGregorianCalendar);
 
         // then
-        assertEquals(zonedDateTime, actual);
+        assertEquals(zonedDateTime.toOffsetDateTime(), actual.toOffsetDateTime());
     }
 
     @Nested
