@@ -6,8 +6,14 @@ name: Compile with Maven
 on:
   push:
     branches: '**'
+    branches-ignore:
+      - 'gh-pages'
+      - 'dependabot/**'
   pull_request:
     branches: '**'
+    branches-ignore:
+      - 'gh-pages'
+      - 'dependabot/**'
 
 jobs:
   build:
