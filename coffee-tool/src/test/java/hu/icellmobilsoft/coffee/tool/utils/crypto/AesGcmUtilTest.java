@@ -1,9 +1,14 @@
 package hu.icellmobilsoft.coffee.tool.utils.crypto;
 
+import java.util.stream.Stream;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
 
@@ -107,5 +112,45 @@ class AesGcmUtilTest {
         byte[] decoded = AesGcmUtil.decryptWithAes256GcmNoPadding(key, encoded, iv);
         // then
         Assertions.assertEquals(TEST_INPUT_TEXT, new String(decoded, "UTF-8"));
+    }
+
+    @DisplayName("Testing encryptWithAes256GcmNoPadding for invalid input")
+    @ParameterizedTest(name = "Testing encryptWithAes256GcmNoPadding() with invalid input:[{0}]")
+    // given
+    @MethodSource("invalidInputProvider")
+    void encryptWithAes256GcmNoPadding_invalidInput(byte[] key, byte[] text, byte[] iv) throws Exception {
+        Executable encryptExecution = () -> AesGcmUtil.encryptWithAes256GcmNoPadding(key, text, iv);
+        Assertions.assertThrows(TechnicalException.class, encryptExecution);
+    }
+
+    @DisplayName("Testing decryptWithAes256GcmNoPadding for invalid input")
+    @ParameterizedTest(name = "Testing encryptWithAes256GcmNoPadding() with invalid input:[{0}]")
+    // given
+    @MethodSource("invalidInputProvider")
+    void decryptWithAes256GcmNoPadding_invalidInput(byte[] key, byte[] text, byte[] iv) throws Exception {
+        Executable encryptExecution = () -> AesGcmUtil.decryptWithAes256GcmNoPadding(key, text, iv);
+        Assertions.assertThrows(TechnicalException.class, encryptExecution);
+    }
+
+    static Stream<Arguments> invalidInputProvider() throws Exception {
+        byte[] validKey = TEST_KEY.getBytes("UTF-8");
+        byte[] shortKey = { 1, 2, 3 };
+        byte[] longKey = (TEST_KEY + TEST_KEY).getBytes("UTF-8");
+
+        byte[] validIV = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 };
+        byte[] shortIv = { 1, 2, 3 };
+        byte[] longIv = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13 };
+
+        byte[] validText = TEST_INPUT_TEXT.getBytes("UTF-8");
+
+        return Stream.of(//
+                Arguments.arguments(null, validText, validIV, "null key"), //
+                Arguments.arguments(shortKey, validText, validIV, "too short key"), //
+                Arguments.arguments(longKey, validText, validIV, "too long key"), //
+                Arguments.arguments(validKey, validText, null, "null iv"), //
+                Arguments.arguments(validKey, validText, shortIv, "too short iv"), //
+                Arguments.arguments(validKey, validText, longIv, "too long iv"), //
+                Arguments.arguments(validKey, null, validIV, "null text") //
+        );
     }
 }

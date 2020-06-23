@@ -139,13 +139,13 @@ public class AesGcmUtil {
     }
 
     private static void checkKeyAndIVSize(byte[] key, byte[] iv) throws BaseException {
-        if (key.length != KEY_BYTE_LENGTH) {
-            throw new TechnicalException(CoffeeFaultType.INVALID_INPUT, MessageFormat.format(
-                    "Invalid key length! Input key length in bytes: [{0}], expected key length in bytes: [{1}]", key.length, KEY_BYTE_LENGTH));
+        if (key == null || key.length != KEY_BYTE_LENGTH) {
+            throw new TechnicalException(CoffeeFaultType.INVALID_INPUT,
+                    MessageFormat.format("Invalid key length or key is null! Expected key length in bytes: [{0}]", KEY_BYTE_LENGTH));
         }
-        if (iv.length != IV_BYTE_LENGTH) {
-            throw new TechnicalException(CoffeeFaultType.INVALID_INPUT, MessageFormat
-                    .format("Invalid IV length! Input IV length in bytes: [{0}], expected IV length in bytes: [{1}]", iv.length, IV_BYTE_LENGTH));
+        if (iv == null || iv.length != IV_BYTE_LENGTH) {
+            throw new TechnicalException(CoffeeFaultType.INVALID_INPUT,
+                    MessageFormat.format("Invalid IV length or IV is null! Expected IV length in bytes: [{0}]", IV_BYTE_LENGTH));
         }
     }
 }
