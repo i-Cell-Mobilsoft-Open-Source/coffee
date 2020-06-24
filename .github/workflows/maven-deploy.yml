@@ -37,4 +37,6 @@ jobs:
     - name: Publish to GitHub Packages Apache Maven
       run: mvn deploy -s $GITHUB_WORKSPACE/.github/.m2/settings.xml
       env:
-        GITHUB_TOKEN: ${{ secrets.ROMBOW_GITHUB_COFFEE_PRIVATE }}
+        GITHUB_TOKEN: '${{ secrets.ROMBOW_GITHUB_COFFEE_PRIVATE }}'
+        OSSRH_USERNAME: '${{ secrets.OSS_SONATYPE_ORG_USER }}'
+        OSSRH_PASSWORD: '${{ secrets.OSS_SONATYPE_ORG_PASSWORD }}'
