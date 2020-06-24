@@ -45,8 +45,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-import hu.icellmobilsoft.coffee.tool.utils.date.DateUtil;
-import hu.icellmobilsoft.coffee.tool.utils.date.DateXmlUtil;
 import hu.icellmobilsoft.coffee.tool.version.JavaVersion;
 import hu.icellmobilsoft.coffee.tool.version.JavaVersionUtil;
 
@@ -91,8 +89,7 @@ class DateXmlUtilTest {
         }
         try {
             xmlGregorianCalendarUtc = DatatypeFactory.newInstance().newXMLGregorianCalendar((GregorianCalendar) gregorianCalendar);
-            xmlGregorianCalendarUtc.setHour(xmlGregorianCalendarUtc.getHour() - 1);
-            xmlGregorianCalendarUtc.setTimezone(0);
+            xmlGregorianCalendarUtc = xmlGregorianCalendarUtc.normalize();
 
         } catch (DatatypeConfigurationException e) {
             xmlGregorianCalendarUtc = null;
