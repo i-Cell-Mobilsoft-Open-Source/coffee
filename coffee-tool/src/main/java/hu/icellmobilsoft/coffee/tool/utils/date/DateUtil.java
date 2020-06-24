@@ -302,8 +302,8 @@ public class DateUtil {
         if (dateFrom == null || dateTo == null) {
             return 0;
         }
-        ZonedDateTime from = toZonedDateTime(dateFrom);
-        ZonedDateTime to = toZonedDateTime(dateTo);
+        OffsetDateTime from = toOffsetDateTime(dateFrom);
+        OffsetDateTime to = toOffsetDateTime(dateTo);
         return ChronoUnit.MONTHS.between(from, to);
     }
 
