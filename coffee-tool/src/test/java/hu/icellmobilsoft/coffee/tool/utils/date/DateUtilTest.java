@@ -91,8 +91,8 @@ class DateUtilTest {
         Instant endTimeInstant = ZonedDateTime.of(2019, 2, 11, 23, 59, 59, 999000000, TimeZone.getDefault().toZoneId()).toInstant();
         endOfDay = Date.from(endTimeInstant);
 
-        datePlusTwoDays = new Date(1550071414051L); // 2019-04-13T15:23:34.051Z
-        datePlusTwoMonths = new Date(1554992614051L); // 2019-04-13T16:23:34.051+02:00
+        datePlusTwoDays = new Date(1550071414051L); // 2019-02-13T15:23:34.051Z
+        datePlusTwoMonths = new Date(1554996214051L); // 2019-04-11T15:23:34.051Z
         calendar = Calendar.getInstance();
         calendar.setTime(date);
         gregorianCalendar = (GregorianCalendar) GregorianCalendar.getInstance();
