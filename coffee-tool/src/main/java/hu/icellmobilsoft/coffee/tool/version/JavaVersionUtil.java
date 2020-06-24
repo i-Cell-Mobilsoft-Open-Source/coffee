@@ -20,14 +20,10 @@
 package hu.icellmobilsoft.coffee.tool.version;
 
 import java.security.InvalidParameterException;
-import java.text.MessageFormat;
-import java.util.logging.Logger;
 
 import javax.enterprise.inject.Vetoed;
 
 import org.apache.commons.lang3.StringUtils;
-
-import hu.icellmobilsoft.coffee.cdi.logger.LogProducer;
 
 /**
  * Java version helper
@@ -44,9 +40,7 @@ public class JavaVersionUtil {
      * </p>
      */
     public static JavaVersion getCurrentSystemJavaVersion() {
-        String javaVersion = System.getProperty("java.version");
-        Logger.getLogger(JavaVersionUtil.class.getName()).info(MessageFormat.format("System.getProperty(\"java.version\": [{0}])", javaVersion));
-        return getJavaVersion(javaVersion);
+        return getJavaVersion(System.getProperty("java.version"));
     }
 
     /**
