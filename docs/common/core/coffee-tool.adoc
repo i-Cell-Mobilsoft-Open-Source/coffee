@@ -12,3 +12,23 @@ Az XSD Catalog használatra szolgáló segédosztály, lehetővé teszi a
 +
 URL kezelését a kódban.
 Külön aktiválni kell, tehát nem okoz komplikációt (de aktiválva sem).
+
+`AesGcmUtil`::
+AES 256 GCM encryptálásra és decryptálásra segédosztály. A cipher `AES/GCM/NoPadding` alapján történik, a kulcsnak 256 bit hosszúnak kell lennie, az IV 12 byte hosszú. Tartalmaz segéd metódusokat kulcs és IV generáláshoz is.
++
+Példa használat:
++
+[source, java]
+----
+String inputText = "test input test";
+byte[] key = AesGcmUtil.generateKey(); //B64: HMTpQ4/aEDKoPGMMqMtjeTJ2s26eOEv1aUrE+syjcB8=
+byte[] iv = AesGcmUtil.generateIv(); //B64: 5nqOVSjoGYk/oSwj
+
+byte[] encoded = AesGcmUtil.encryptWithAes256GcmNoPadding(key, inputText.getBytes("UTF-8"), iv);
+String encodedB64 = Base64.getEncoder().encodeToString(encoded); //fRCURHp5DWXtrESNHMo1DUoAcejvKDu9Y5wd5zXblg==
+
+byte[] decoded = AesGcmUtil.decryptWithAes256GcmNoPadding(key, encoded, iv);
+String decodedString = new String(decoded, "UTF-8"); //test input test
+----
++
+IMPORTANT: Adott kulcs-IV párt nem szabad újra használni! Emiatt az IV nélküli encrypt/decrypt-et csak egyszer használatos kulcsokkal szabad meghívni!
