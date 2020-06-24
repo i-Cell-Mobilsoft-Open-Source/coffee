@@ -35,7 +35,9 @@ import org.apache.commons.lang3.StringUtils;
 public class JavaVersionUtil {
 
     /**
-     * <p>getCurrentSystemJavaVersion.</p>
+     * <p>
+     * getCurrentSystemJavaVersion.
+     * </p>
      */
     public static JavaVersion getCurrentSystemJavaVersion() {
         return getJavaVersion(System.getProperty("java.version"));
