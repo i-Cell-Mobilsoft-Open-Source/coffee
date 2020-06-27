@@ -17,24 +17,33 @@
  * limitations under the License.
  * #L%
  */
-package hu.icellmobilsoft.coffee.module.mongodb.config;
+package hu.icellmobilsoft.coffee.module.mongodb.extension;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.enterprise.context.ApplicationScoped;
+
+import com.mongodb.MongoClient;
 
 /**
- * MongoDb configuration values
+ * 
+ * Container for MongoClient instances
+ * 
+ * @author czenczl
  *
- * @author imre.scheffer
- * @since 1.0.0
  */
-@Deprecated
-public interface MongoDbConfig {
+@ApplicationScoped
+public class MongoClientContainer {
 
-    /**
-     * MongoDb full URI, example: "mongodb://user:password@localhost:27017/database?ssl=false"
-     */
-    String getUri();
+    private Map<String, MongoClient> clientMap = new HashMap<>();
 
-    /**
-     * Selected database (collection) in MongoDB, example: "user_request_response"
-     */
-    String getDatabase();
+    public Map<String, MongoClient> getClientMap() {
+        return clientMap;
+    }
+
+    public MongoClient put(String key, MongoClient mongoClientwrapper) {
+        return clientMap.put(key, mongoClientwrapper);
+    }
+
 }

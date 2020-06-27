@@ -51,6 +51,7 @@ import hu.icellmobilsoft.coffee.module.mongodb.handler.MongoDbUtil;
  * @since 1.0.0
  */
 @ApplicationScoped
+@Deprecated
 public class MongoFactory {
 
     private static Logger LOGGER = hu.icellmobilsoft.coffee.cdi.logger.LogProducer.getStaticLogger(MongoFactory.class);

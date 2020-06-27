@@ -44,6 +44,7 @@ import hu.icellmobilsoft.coffee.module.mongodb.service.MongoServiceImpl;
  * @since 1.0.0
  */
 @Dependent
+@Deprecated
 public class MongoDbHandler {
 
     private MongoDbConfig mongoDbConfig;

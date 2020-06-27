@@ -38,16 +38,21 @@ import com.mongodb.client.MongoCollection;
 import hu.icellmobilsoft.coffee.dto.exception.BONotFoundException;
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
+import hu.icellmobilsoft.coffee.module.mongodb.annotation.MongoServiceBaseQualifier;
 import hu.icellmobilsoft.coffee.module.mongodb.repository.MongoRepository;
 
 /**
- * <p>Abstract MongoService class.</p>
+ * <p>
+ * Base mongo service class
+ * </p>
  *
  * @param <T>
+ *            MongoEntity parameter
  * @author imre.scheffer
  * @since 1.0.0
  */
-public abstract class MongoService<T> {
+@MongoServiceBaseQualifier
+public class MongoService<T> {
 
     private static final String COLUMN_MONGO_ID = "_id";
     private static final String FILTER_NULL_ERROR_MSG = "filter is null!";
@@ -81,7 +86,6 @@ public abstract class MongoService<T> {
             throw new BaseException(CoffeeFaultType.WRONG_OR_MISSING_PARAMETERS, "document is null!");
         }
         try {
-            initRepositoryCollection(getMongoCollection());
             mongoRepository.insertOne(document);
         } catch (Exception e) {
             String msg = MessageFormat.format("Error occurred in inserting mongo data: {0}", e.getLocalizedMessage());
@@ -124,7 +128,6 @@ public abstract class MongoService<T> {
         }
         T found;
         try {
-            initRepositoryCollection(getMongoCollection());
             found = mongoRepository.findFirst(filter);
         } catch (Exception e) {
             String msg = MessageFormat.format(FILTER_RESULT_ERROR_MSG, e.getLocalizedMessage());
@@ -154,7 +157,6 @@ public abstract class MongoService<T> {
         }
         T found;
         try {
-            initRepositoryCollection(getMongoCollection());
             found = mongoRepository.findFirst(filter, order);
         } catch (Exception e) {
             String msg = MessageFormat.format(FILTER_RESULT_ERROR_MSG, e.getLocalizedMessage());
@@ -192,7 +194,6 @@ public abstract class MongoService<T> {
         }
         List<T> found;
         try {
-            initRepositoryCollection(getMongoCollection());
             found = mongoRepository.findAll(filter);
         } catch (Exception e) {
             String msg = MessageFormat.format(FILTER_RESULT_ERROR_MSG, e.getLocalizedMessage());
@@ -225,7 +226,6 @@ public abstract class MongoService<T> {
         }
         List<T> found;
         try {
-            initRepositoryCollection(getMongoCollection());
             found = mongoRepository.find(filter, order, rows, page, clazz);
         } catch (Exception e) {
             String msg = MessageFormat.format(FILTER_RESULT_ERROR_MSG, e.getLocalizedMessage());
@@ -253,7 +253,6 @@ public abstract class MongoService<T> {
         }
         long found;
         try {
-            initRepositoryCollection(getMongoCollection());
             found = mongoRepository.count(filter);
         } catch (Exception e) {
             String msg = MessageFormat.format("Error occurred in counting mongo data by filter: {0}", e.getLocalizedMessage());
@@ -279,7 +278,6 @@ public abstract class MongoService<T> {
         }
 
         try {
-            initRepositoryCollection(getMongoCollection());
             mongoRepository.insertMany(documents);
         } catch (Exception e) {
             String msg = MessageFormat.format("Error occurred in inserting mongo datas: {0}", e.getLocalizedMessage());
@@ -302,16 +300,23 @@ public abstract class MongoService<T> {
     /**
      * Mongo Collection kötelező megadása, lekérdezése
      * <p>
-     * <pre>{@code
+     * 
+     * <pre>
+     * {@code
      *
-     * @Override protected MongoCollection<T> getMongoCollection() throws BaseException {
+     * &#64;Override protected MongoCollection<T> getMongoCollection() throws BaseException {
      * return mongoDbHandler.getDatabase().getCollection(MongoConstants.NAME_OF_COLLECTION, Class<T>);
      * }
-     * }</pre>
+     * }
+     * </pre>
+     * 
      * @return MongoCollection
      * @throws BaseException
      */
-    protected abstract MongoCollection<T> getMongoCollection() throws BaseException;
+    @Deprecated
+    protected MongoCollection<T> getMongoCollection() throws BaseException {
+        throw new UnsupportedOperationException("getMongoCollection() not implemented!");
+    }
 
     /**
      * BONotFoundException FaultType felülírás lehetőségét nyújtó metódus

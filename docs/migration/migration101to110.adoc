@@ -1,0 +1,87 @@
+= v1.0.1 → v1.1.0
+
+Framework v1.0.1 -> v1.1.0 migrációs leírás, újdonságok, változások leírása
+
+== Változások
+=== fw-module-mongodb
+
+* Frissült a mongo-java-driver (3.12.5).
+* CDI extension bevezetése dinamikus MongoService gyártáshoz
+* Hatékonyabb connection kezelés
+* yml paraméterezhetőség
+
+MongoDbHandler deprecated lett, helyette a MongoDbClient vagy a MongoService<T> kiterjeszáse használható.
+
+[source,xml]
+----
+// régi definíció
+@Inject
+@MongoCustomConfiguration(databaseName = "database", urlKey = "urlKey")
+private MongoDbHandler mongoDbHandler;
+
+mongoDbHandler.setCollection("collection");
+mongoDbHandler.insertOne(dtoDocument);
+----
+
+helyett MongoDbClient használata
+
+[source,xml]
+----
+// uj használat
+@Inject
+@MongoClientConfiguration(configKey = "configKey")
+private MongoDbClient mongoDbClient;
+
+mongoDbClient.initRepositoryCollection(collection);
+mongoDbClient.insertOne(dtoDocument);
+----
+
+MongoService használata POJO-val
+
+[source,xml]
+----
+// régi definíció
+@Model
+public class CustomMongoService extends MongoService<MongoEntity> {
+
+    @Inject
+    @MongoCustomConfiguration(databaseName = "database", urlKey = "urlKey")
+    private MongoDbHandler mongoDbHandler;
+
+    @Override
+    protected MongoCollection<MongoEntity> getMongoCollection() throws BaseException {
+        return mongoDbHandler.getDatabase().getCollection("collection", MongoEntity.class);
+    }
+}
+    
+@Inject
+private CustomMongoService customMongoService;
+
+----
+
+helyett 
+
+[source,xml]
+----
+// uj használat
+@Model
+public class CustomMongoService extends MongoService<MongoEntity> {
+}
+
+@Inject
+@MongoServiceConfiguration(configKey = "configKey", collectionKey = "collectionKey")
+private CustomMongoService customMongoService;
+----
+*Pagination*
+
+A MongoService 
+[source,xml]
+----
+public List<T> find(Bson filter, Bson order, int rows, int page, Class<T> clazz) throws BaseException {
+----
+metódus használat előtt *initRepositoryCollection(getMongoCollection()* hívás szükséges.
+
+
+
+
+

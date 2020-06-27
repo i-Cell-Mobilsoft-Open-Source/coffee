@@ -31,6 +31,7 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
  * @author imre.scheffer
  * @since 1.0.0
  */
+@Deprecated
 @Dependent
 public class MongoDbConfigImpl implements MongoDbConfig {
 

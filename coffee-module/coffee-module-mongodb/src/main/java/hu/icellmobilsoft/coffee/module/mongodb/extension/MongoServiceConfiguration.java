@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package hu.icellmobilsoft.coffee.module.mongodb.annotation;
+package hu.icellmobilsoft.coffee.module.mongodb.extension;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -28,51 +28,47 @@ import javax.enterprise.util.AnnotationLiteral;
 import javax.enterprise.util.Nonbinding;
 import javax.inject.Qualifier;
 
-import org.eclipse.microprofile.config.inject.ConfigProperty;
-
 /**
- * <p>MongoConfiguration class.</p>
+ * Qualifier for @MongoService implementations
+ * 
+ * @author czenczl
  *
- * @since 1.0.0
  */
-@Deprecated
 @Qualifier
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER, ElementType.TYPE })
-public @interface MongoConfiguration {
+public @interface MongoServiceConfiguration {
 
-    /**
-     * This value is used in {@link ConfigProperty} annotation
-     * 
-     * @return
-     */
     @Nonbinding
-    String urlKey();
+    String configKey();
 
-    /**
-     * This value is used in {@link ConfigProperty} annotation
-     * 
-     * @return
-     */
     @Nonbinding
-    String databaseKey();
+    String collectionKey();
 
-    final class Literal extends AnnotationLiteral<MongoConfiguration> implements MongoConfiguration {
-
-        public static final Literal INSTANCE = new Literal();
+    public class Literal extends AnnotationLiteral<MongoServiceConfiguration> implements MongoServiceConfiguration {
 
         private static final long serialVersionUID = 1L;
 
-        @Nonbinding
-        @Override
-        public String urlKey() {
-            return null;
+        private String configKey;
+        private String collectionKey;
+
+        public Literal(String configKey, String collectionKey) {
+            this.configKey = configKey;
+            this.collectionKey = collectionKey;
         }
 
         @Nonbinding
         @Override
-        public String databaseKey() {
-            return null;
+        public String configKey() {
+            return configKey;
         }
+
+        @Nonbinding
+        @Override
+        public String collectionKey() {
+            return collectionKey;
+        }
+
     }
+
 }
