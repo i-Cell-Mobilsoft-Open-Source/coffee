@@ -64,7 +64,7 @@ helyett
 [source,xml]
 ----
 // uj használat
-@Model
+@Dependent
 public class CustomMongoService extends MongoService<MongoEntity> {
 }
 

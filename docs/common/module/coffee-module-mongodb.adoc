@@ -15,7 +15,7 @@ A CDI 2.0 specifikáció szerint: *javax.enterprise.inject.spi.Extension*
 public class MongoExtension implements javax.enterprise.inject.spi.Extension {
 }
 ----
-Létre kell hozni a `META-INF/services/jakarta.enterprise.inject.spi.Extension` nevű file-t,
+Létre kell hozni a `META-INF/services/javax.enterprise.inject.spi.Extension` nevű file-t,
 amiben megadjuk a saját osztályunk-at ami implementálja az interface-t: *hu.icellmobilsoft.coffee.module.mongodb.extension.MongoExtension*
 
 A `MongoExtension` osztályban a CDI konténer által meghatározott eseményeket tudjuk elkapni és módosítani az osztályok működését.
