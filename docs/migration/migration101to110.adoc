@@ -74,12 +74,49 @@ private CustomMongoService customMongoService;
 ----
 *Pagination*
 
-A MongoService 
+A MongoService find() metódus használat előtt *initRepositoryCollection(getMongoCollection())* hívás szükséges 
+ha nem az új annotációval használjuk.
 [source,xml]
 ----
-public List<T> find(Bson filter, Bson order, int rows, int page, Class<T> clazz) throws BaseException {
+// régi definíció
+@Model
+public class CustomMongoService extends MongoService<MongoEntity> {
+
+    public PagingResult<MongoEntity> findByQueryParams(...) {
+        ...
+        // MongoService pagination find
+        // initRepositoryCollection(getMongoCollection());
+        find(filter, order, rows, page, InvoiceLog.class);
+        ...
+    }
+}
+
+@Inject
+private CustomMongoService customMongoService;
 ----
-metódus használat előtt *initRepositoryCollection(getMongoCollection()* hívás szükséges.
+ 
+helyett, @MongoServiceConfiguration annotáció használatával a collection automatikusan betöltődik.
+ 
+[source,xml]
+----
+// régi definíció
+@Dependent
+public class CustomMongoService extends MongoService<MongoEntity> {
+
+    public PagingResult<MongoEntity> findByQueryParams(...) {
+        ...
+        // MongoService pagination find
+        find(filter, order, rows, page, InvoiceLog.class);
+        ...
+    }
+}
+
+
+@Inject
+@MongoServiceConfiguration(configKey = "configKey", collectionKey = "collectionKey")
+private CustomMongoService customMongoService;
+----
+
 
 
 
