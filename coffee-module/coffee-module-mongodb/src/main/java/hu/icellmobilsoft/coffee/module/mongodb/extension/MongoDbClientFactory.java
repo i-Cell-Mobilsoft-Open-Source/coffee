@@ -19,6 +19,7 @@
  */
 package hu.icellmobilsoft.coffee.module.mongodb.extension;
 
+import java.text.MessageFormat;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
@@ -49,6 +50,7 @@ import hu.icellmobilsoft.coffee.tool.utils.annotation.AnnotationUtil;
  * Factory class to produce @MongoDbClient
  * 
  * @author czenczl
+ * @since 1.1.0
  *
  */
 @ApplicationScoped
@@ -137,7 +139,8 @@ public class MongoDbClientFactory {
             MongoClientURI uri = new MongoClientURI(mongoConfigHelper.getUri(), builder);
             return new MongoClient(uri);
         } catch (Exception e) {
-            throw new MongoException(CoffeeFaultType.OPERATION_FAILED, "Failed to create mongo client: " + e.getLocalizedMessage(), e);
+            throw new MongoException(CoffeeFaultType.OPERATION_FAILED,
+                    MessageFormat.format("Failed to create mongo client: [{0}]", e.getLocalizedMessage()), e);
         }
     }
 

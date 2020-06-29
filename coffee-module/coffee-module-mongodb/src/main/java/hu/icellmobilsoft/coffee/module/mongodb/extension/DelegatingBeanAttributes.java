@@ -29,51 +29,52 @@ import javax.enterprise.inject.spi.BeanAttributes;
  * Delegate class for Bean creation
  * 
  * @author czenczl
+ * @since 1.1.0
  *
  * @param <T>
  */
 public class DelegatingBeanAttributes<T> implements BeanAttributes<T> {
 
-    private final BeanAttributes<?> delegate;
+    private final BeanAttributes<?> beanAttributes;
 
     public DelegatingBeanAttributes(final BeanAttributes<?> delegate) {
         super();
-        this.delegate = delegate;
+        beanAttributes = delegate;
     }
 
     @Override
     public String getName() {
-        return this.delegate.getName();
+        return beanAttributes.getName();
     }
 
     @Override
     public Set<Annotation> getQualifiers() {
-        return this.delegate.getQualifiers();
+        return beanAttributes.getQualifiers();
     }
 
     @Override
     public Class<? extends Annotation> getScope() {
-        return this.delegate.getScope();
+        return beanAttributes.getScope();
     }
 
     @Override
     public Set<Class<? extends Annotation>> getStereotypes() {
-        return this.delegate.getStereotypes();
+        return beanAttributes.getStereotypes();
     }
 
     @Override
     public Set<Type> getTypes() {
-        return this.delegate.getTypes();
+        return beanAttributes.getTypes();
     }
 
     @Override
     public boolean isAlternative() {
-        return this.delegate.isAlternative();
+        return beanAttributes.isAlternative();
     }
 
     @Override
     public String toString() {
-        return this.delegate.toString();
+        return beanAttributes.toString();
     }
 
 }

@@ -31,6 +31,7 @@ import javax.inject.Qualifier;
  * For MongoService<T> injection
  * 
  * @author czenczl
+ * @since 1.1.0
  *
  */
 @Qualifier

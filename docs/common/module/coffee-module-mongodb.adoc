@@ -103,7 +103,7 @@ public <T> MongoService<T> mongoServiceTemplateProducer(final InjectionPoint inj
 coffee:
     mongo:
         xmlapi: #<1>
-             database: icon_xmlapi
+             database: xmlapi
              uri: mongodb://sample_xmlapi:sample_xmlapi@sample-sandbox.icellmobilsoft.hu:27017/sample_xmlapi?ssl=false
              connectionsPerHost: 150 #default: 100
              minConnectionsPerHost: 1 #default: 1

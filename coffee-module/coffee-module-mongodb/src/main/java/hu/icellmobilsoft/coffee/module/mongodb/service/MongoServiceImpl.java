@@ -33,13 +33,13 @@ import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 /**
  * Alap MongoService implementáció a régi BasicDBObject-es használat végett Ez a MongoDbHandler-ben, a getMongoService metódus miatt szükséges
  *
- * @deprecated use @MongoDbClient or extend @MongoService<T>
- *
  * @author balazs.joo
  * @since 1.0.0
+ * 
+ * @deprecated Use {@link MongoDbClient} or extend {@link @MongoService<T>} instead, forRemoval = true, since = "1.1.0"
  */
 @Dependent
-@Deprecated
+@Deprecated(forRemoval = true, since = "1.1.0")
 public class MongoServiceImpl extends MongoService<BasicDBObject> {
 
     private MongoCollection<BasicDBObject> mongoCollection;

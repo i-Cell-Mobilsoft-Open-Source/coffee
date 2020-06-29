@@ -32,6 +32,7 @@ import javax.inject.Qualifier;
  * Qualifier for @MongoService implementations
  * 
  * @author czenczl
+ * @since 1.1.0
  *
  */
 @Qualifier

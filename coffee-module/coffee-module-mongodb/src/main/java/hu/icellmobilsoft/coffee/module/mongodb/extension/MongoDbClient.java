@@ -35,6 +35,7 @@ import hu.icellmobilsoft.coffee.module.mongodb.service.MongoService;
  * Class for handle @MongoDatabase and default MongoService functionality
  * 
  * @author czenczl
+ * @since 1.1.0
  *
  */
 @Dependent

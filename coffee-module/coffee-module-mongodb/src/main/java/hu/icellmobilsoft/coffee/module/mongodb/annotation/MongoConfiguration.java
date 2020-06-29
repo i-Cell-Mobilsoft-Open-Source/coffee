@@ -31,11 +31,15 @@ import javax.inject.Qualifier;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 /**
- * <p>MongoConfiguration class.</p>
+ * <p>
+ * MongoConfiguration class.
+ * </p>
  *
  * @since 1.0.0
+ * 
+ * @deprecated Use {@link MongoClientConfiguration} instead, forRemoval = true, since = "1.1.0"
  */
-@Deprecated
+@Deprecated(forRemoval = true, since = "1.1.0")
 @Qualifier
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER, ElementType.TYPE })

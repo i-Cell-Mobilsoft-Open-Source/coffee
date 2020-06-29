@@ -50,6 +50,7 @@ import hu.icellmobilsoft.coffee.module.mongodb.repository.MongoRepository;
  *            MongoEntity parameter
  * @author imre.scheffer
  * @since 1.0.0
+ * 
  */
 @MongoServiceBaseQualifier
 public class MongoService<T> {
@@ -312,6 +313,8 @@ public class MongoService<T> {
      * 
      * @return MongoCollection
      * @throws BaseException
+     * 
+     * @deprecated Use {@link MongoDbClient#initRepositoryCollection(java.lang.String)} instead, forRemoval = true, since = "1.1.0"
      */
     @Deprecated
     protected MongoCollection<T> getMongoCollection() throws BaseException {

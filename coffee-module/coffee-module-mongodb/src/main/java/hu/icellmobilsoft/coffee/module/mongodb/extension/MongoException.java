@@ -26,6 +26,7 @@ import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
  * Exception class for mongo exceptions
  * 
  * @author czenczl
+ * @since 1.1.0
  *
  */
 public class MongoException extends TechnicalException {

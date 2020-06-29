@@ -35,7 +35,7 @@ import hu.icellmobilsoft.coffee.module.mongodb.codec.time.xmlgregoriancalendar.X
  * Mongo codec registry
  * 
  * @author czenczl
- *
+ * @since 1.1.0
  */
 @ApplicationScoped
 public class MongoCodecRegistryFactory {

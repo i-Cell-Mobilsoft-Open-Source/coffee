@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.enterprise.context.Dependent;
@@ -45,7 +46,8 @@ import hu.icellmobilsoft.coffee.module.mongodb.service.MongoService;
  * Mongo CDI extension activator class
  * 
  * @author czenczl
- *
+ * @since 1.1.0
+ * 
  */
 public class MongoExtension implements javax.enterprise.inject.spi.Extension {
 
@@ -59,7 +61,7 @@ public class MongoExtension implements javax.enterprise.inject.spi.Extension {
         if (mongoServiceTypes.isEmpty()) {
             return;
         }
-        log.info("MongoExtension is active, found MongoService implementations: " + mongoServiceTypes.size());
+        log.log(Level.INFO, "MongoExtension is active, found MongoService implementations: [{0}]", mongoServiceTypes.size());
 
         // find producer template
         AnnotatedMethod<? super MongoServiceProducerFactory> producerMethodTemplate = findProducerMethodTemplate(beanManager);
@@ -127,8 +129,7 @@ public class MongoExtension implements javax.enterprise.inject.spi.Extension {
         Set<AnnotatedMethod<? super MongoServiceProducerFactory>> methods = mongoServiceProducerFactoryType.getMethods();
 
         // find method by return type
-        return mongoServiceProducerFactoryType.getMethods().stream().filter(m -> m.getJavaMember().getReturnType() == MongoService.class).findFirst()
-                .get();
+        return methods.stream().filter(m -> m.getJavaMember().getReturnType() == MongoService.class).findFirst().get();
     }
 
 }

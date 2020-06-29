@@ -31,6 +31,7 @@ import com.mongodb.MongoClient;
  * Container for MongoClient instances
  * 
  * @author czenczl
+ * @since 1.1.0
  *
  */
 @ApplicationScoped

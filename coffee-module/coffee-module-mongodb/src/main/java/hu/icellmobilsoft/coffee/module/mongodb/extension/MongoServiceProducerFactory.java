@@ -35,6 +35,7 @@ import hu.icellmobilsoft.coffee.module.mongodb.service.MongoService;
  * Factory class for MongoService producer template
  * 
  * @author czenczl
+ * @since 1.1.0
  *
  */
 @ApplicationScoped

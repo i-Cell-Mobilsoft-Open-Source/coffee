@@ -38,8 +38,8 @@ import org.eclipse.microprofile.config.Config;
  *  coffee:
  *    mongo:
  *      xmlapi:
- *        database: icon_xmlapi
- *        uri: mongodb://icon_xmlapi:icon_xmlapi@hubphq-icon-sandbox-d001.icellmobilsoft.hu:27017/icon_xmlapi?ssl=false
+ *        database: xmlapi
+ *        uri: mongodb://xmlapi:xmlapi@sample-sandbox-d001.icellmobilsoft.hu:27017/xmlapi?ssl=false
  *        connectionsPerHost: 150
  *        minConnectionsPerHost: 1
  *        connectTimeout: 10000
@@ -54,7 +54,8 @@ import org.eclipse.microprofile.config.Config;
  * </pre>
  * 
  * @author czenczl
- *
+ * @since 1.1.0
+ * 
  */
 @Dependent
 public class MongoConfigHelper {
@@ -64,16 +65,28 @@ public class MongoConfigHelper {
     public static final String DATA_BASE_KEY = "database";
     public static final String URI_KEY = "uri";
     public static final String SOCKET_TIMEOUT_KEY = "socketTimeout";
-    public static final String MAX_CONNECTION_IDLE_TIME = "maxConnectionIdleTime";
-    public static final String MAX_CONNECTION_LIFE_TIME = "maxConnectionLifeTime";
-    public static final String CONNECTIONS_PER_HOST = "connectionsPerHost";
-    public static final String CONNECT_TIMEOUT = "connectTimeout";
-    public static final String HEARTBEAT_CONNECT_TIMEOUT = "heartbeatConnectTimeout";
-    public static final String HEARTBEAT_FREQUENCY = "heartbeatFrequency";
-    public static final String HEARTBEAT_SOCKETT_IMEOUT = "heartbeatSocketTimeout";
-    public static final String MIN_CONNECTIONS_PER_HOST = "minConnectionsPerHost";
-    public static final String MIN_HEART_BEAT_FREQUENCY = "minHeartbeatFrequency";
-    public static final String SERVER_SELECTION_TIMEOUT = "serverSelectionTimeout";
+    public static final String MAX_CONNECTION_IDLE_TIME_KEY = "maxConnectionIdleTime";
+    public static final String MAX_CONNECTION_LIFE_TIME_KEY = "maxConnectionLifeTime";
+    public static final String CONNECTIONS_PER_HOST_KEY = "connectionsPerHost";
+    public static final String CONNECT_TIMEOUT_KEY = "connectTimeout";
+    public static final String HEARTBEAT_CONNECT_TIMEOUT_KEY = "heartbeatConnectTimeout";
+    public static final String HEARTBEAT_FREQUENCY_KEY = "heartbeatFrequency";
+    public static final String HEARTBEAT_SOCKET_TIMEOUT_KEY = "heartbeatSocketTimeout";
+    public static final String MIN_CONNECTIONS_PER_HOST_KEY = "minConnectionsPerHost";
+    public static final String MIN_HEART_BEAT_FREQUENCY_KEY = "minHeartbeatFrequency";
+    public static final String SERVER_SELECTION_TIMEOUT_KEY = "serverSelectionTimeout";
+
+    public static final Integer DEFAULT_SOCKET_TIMEOUT = 0;
+    public static final Integer DEFAULT_MAX_CONNECTION_IDLE_TIME = 20000;
+    public static final Integer DEFAULT_MAX_CONNECTION_LIFE_TIME = 20000;
+    public static final Integer DEFAULT_CONNECTIONS_PER_HOST = 100;
+    public static final Integer DEFAULT_CONNECT_TIMEOUT = 10000;
+    public static final Integer DEFAULT_HEARTBEAT_CONNECT_TIMEOUT = 20000;
+    public static final Integer DEFAULT_HEARTBEAT_FREQUENCY = 10000;
+    public static final Integer DEFAULT_HEARTBEAT_SOCKET_TIMEOUT = 20000;
+    public static final Integer DEFAULT_MIN_CONNECTIONS_PER_HOST = 0;
+    public static final Integer DEFAULT_MIN_HEART_BEAT_FREQUENCY = 500;
+    public static final Integer DEFAULT_SERVER_SELECTION_TIMEOUT = 5000;
 
     public String configKey;
 
@@ -81,14 +94,13 @@ public class MongoConfigHelper {
     private Config config;
 
     /**
-     * MongoDb full URI, example: "mongodb://user:password@localhost:27017/icon_invoice_request?ssl=false"
+     * MongoDb full URI, example: "mongodb://user:password@localhost:27017/samplet?ssl=false"
      *
      * @param configKey
      * @return
      */
     public String getUri() {
-        return config.getOptionalValue(concatConfigKey(URI_KEY), String.class)
-                .orElse("mongodb://user:password@localhost:27017/icon_invoice_request?ssl=false");
+        return config.getOptionalValue(concatConfigKey(URI_KEY), String.class).orElse("mongodb://user:password@localhost:27017/samplet?ssl=false");
     }
 
     /**
@@ -110,7 +122,7 @@ public class MongoConfigHelper {
      * @return
      */
     public Integer getSocketTimeout() {
-        return config.getOptionalValue(concatConfigKey(SOCKET_TIMEOUT_KEY), Integer.class).orElse(0);
+        return config.getOptionalValue(concatConfigKey(SOCKET_TIMEOUT_KEY), Integer.class).orElse(DEFAULT_SOCKET_TIMEOUT);
     }
 
     /**
@@ -121,7 +133,7 @@ public class MongoConfigHelper {
      * @return
      */
     public Integer getMaxConnectionIdleTime() {
-        return config.getOptionalValue(concatConfigKey(MAX_CONNECTION_IDLE_TIME), Integer.class).orElse(20000);
+        return config.getOptionalValue(concatConfigKey(MAX_CONNECTION_IDLE_TIME_KEY), Integer.class).orElse(DEFAULT_MAX_CONNECTION_IDLE_TIME);
     }
 
     /**
@@ -132,7 +144,7 @@ public class MongoConfigHelper {
      * @return
      */
     public Integer getMaxConnectionLifeTime() {
-        return config.getOptionalValue(concatConfigKey(MAX_CONNECTION_LIFE_TIME), Integer.class).orElse(20000);
+        return config.getOptionalValue(concatConfigKey(MAX_CONNECTION_LIFE_TIME_KEY), Integer.class).orElse(DEFAULT_MAX_CONNECTION_LIFE_TIME);
     }
 
     /**
@@ -144,7 +156,7 @@ public class MongoConfigHelper {
      * @return
      */
     public Integer getConnectionsPerHost() {
-        return config.getOptionalValue(concatConfigKey(CONNECTIONS_PER_HOST), Integer.class).orElse(100);
+        return config.getOptionalValue(concatConfigKey(CONNECTIONS_PER_HOST_KEY), Integer.class).orElse(DEFAULT_CONNECTIONS_PER_HOST);
     }
 
     /**
@@ -157,7 +169,7 @@ public class MongoConfigHelper {
      * @return
      */
     public Integer getConnectTimeout() {
-        return config.getOptionalValue(concatConfigKey(CONNECT_TIMEOUT), Integer.class).orElse(10000);
+        return config.getOptionalValue(concatConfigKey(CONNECT_TIMEOUT_KEY), Integer.class).orElse(DEFAULT_CONNECT_TIMEOUT);
     }
 
     /**
@@ -169,7 +181,7 @@ public class MongoConfigHelper {
      * @return
      */
     public Integer getHeartbeatConnectTimeout() {
-        return config.getOptionalValue(concatConfigKey(HEARTBEAT_CONNECT_TIMEOUT), Integer.class).orElse(20000);
+        return config.getOptionalValue(concatConfigKey(HEARTBEAT_CONNECT_TIMEOUT_KEY), Integer.class).orElse(DEFAULT_HEARTBEAT_CONNECT_TIMEOUT);
     }
 
     /**
@@ -179,7 +191,7 @@ public class MongoConfigHelper {
      * @return
      */
     public Integer getHeartbeatFrequency() {
-        return config.getOptionalValue(concatConfigKey(HEARTBEAT_FREQUENCY), Integer.class).orElse(10000);
+        return config.getOptionalValue(concatConfigKey(HEARTBEAT_FREQUENCY_KEY), Integer.class).orElse(DEFAULT_HEARTBEAT_FREQUENCY);
     }
 
     /**
@@ -189,7 +201,7 @@ public class MongoConfigHelper {
      * @return
      */
     public Integer getHeartbeatSocketTimeout() {
-        return config.getOptionalValue(concatConfigKey(HEARTBEAT_SOCKETT_IMEOUT), Integer.class).orElse(20000);
+        return config.getOptionalValue(concatConfigKey(HEARTBEAT_SOCKET_TIMEOUT_KEY), Integer.class).orElse(DEFAULT_HEARTBEAT_SOCKET_TIMEOUT);
     }
 
     /**
@@ -202,7 +214,7 @@ public class MongoConfigHelper {
      * @return
      */
     public Integer getMinConnectionsPerHost() {
-        return config.getOptionalValue(concatConfigKey(MIN_CONNECTIONS_PER_HOST), Integer.class).orElse(0);
+        return config.getOptionalValue(concatConfigKey(MIN_CONNECTIONS_PER_HOST_KEY), Integer.class).orElse(DEFAULT_MIN_CONNECTIONS_PER_HOST);
     }
 
     /**
@@ -213,7 +225,7 @@ public class MongoConfigHelper {
      * @return
      */
     public Integer getMinHeartbeatFrequency() {
-        return config.getOptionalValue(concatConfigKey(MIN_HEART_BEAT_FREQUENCY), Integer.class).orElse(500);
+        return config.getOptionalValue(concatConfigKey(MIN_HEART_BEAT_FREQUENCY_KEY), Integer.class).orElse(DEFAULT_MIN_HEART_BEAT_FREQUENCY);
     }
 
     /**
@@ -228,7 +240,7 @@ public class MongoConfigHelper {
      *
      */
     public Integer getServerSelectionTimeout() {
-        return config.getOptionalValue(concatConfigKey(SERVER_SELECTION_TIMEOUT), Integer.class).orElse(5000);
+        return config.getOptionalValue(concatConfigKey(SERVER_SELECTION_TIMEOUT_KEY), Integer.class).orElse(DEFAULT_SERVER_SELECTION_TIMEOUT);
     }
 
     public String getConfigKey() {

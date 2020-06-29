@@ -32,6 +32,7 @@ import javax.inject.Qualifier;
  * @MongoDbClient használatához szükséges annotáció és MongoService osztalyok inicializalasahoz
  * 
  * @author czenczl
+ * @since 1.1.0
  *
  */
 @Qualifier
