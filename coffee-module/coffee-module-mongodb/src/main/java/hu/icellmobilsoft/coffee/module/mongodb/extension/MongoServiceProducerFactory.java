@@ -63,13 +63,17 @@ public class MongoServiceProducerFactory {
         // create config helper
         Annotation qualifier = new MongoClientConfiguration.Literal(configKey);
         Instance<MongoDbClient> instance = CDI.current().select(MongoDbClient.class, qualifier);
+
         MongoDbClient mongoDbClient = instance.get();
+
+        // destroy dependent bean from instances
+        CDI.current().destroy(instance);
 
         // get type under inject
         Class<T> pType = (Class<T>) injectionPoint.getAnnotated().getBaseType();
 
         // get superclass generic type, mongoEntity.class
-        ParameterizedType parameterizedType = (ParameterizedType) pType.getGenericSuperclass();
+        ParameterizedType parameterizedType = (ParameterizedType) MongoExtensionUtil.getMongoServiceBase(pType);
         Class<T> valueClass = (Class<T>) parameterizedType.getActualTypeArguments()[0];
 
         // select concrate implementation

@@ -1,0 +1,77 @@
+== CDI Extension készítés
+Extension készítéshez implementálni kell a `Extension` interface-t, ami a Java SE service provider architektúrában van definiálva.
+A CDI 2.0 specifikáció szerint: *javax.enterprise.inject.spi.Extension*
+
+.Extension
+[source,xml]
+----
+// Extension-t kezelő osztályunk
+public class MongoExtension implements javax.enterprise.inject.spi.Extension {
+}
+----
+Létre kell hozni a `META-INF/services/javax.enterprise.inject.spi.Extension` nevű file-t,
+amiben megadjuk a saját osztályunk-at ami implementálja az interface-t: *hu.icellmobilsoft.coffee.module.mongodb.extension.MongoExtension*
+
+A `MongoExtension` osztályban a CDI konténer által meghatározott eseményeket tudjuk elkapni és módosítani az osztályok működését.
+A teljes lista itt található: https://docs.jboss.org/cdi/spec/2.0/cdi-spec.html[JSR 365].
+
+Két fő csoportba lehet az eseményeket sorolni:
+ 
+* Application lifecycle events: egyszer hívódnak meg
+* Bean discovery events: többször hívódnak meg
+
+Ezekből az *afterBeanDiscovery* (Application lifecycle) és a *processInjectionTarget* (Bean discovery) event-et fogjuk feldolgozni.
+
+.processInjectionTarget event
+[source,xml]
+----
+// lehetőséget ad hogy a CDI konténer által felolvasott típusokat ellenőrízzük
+// ebben valósul meg a MongoService<T> osztályt implementáló osztályok összegyűjtése
+public <T> void processInjectionTarget(final @Observes ProcessInjectionTarget<T> pit) {
+}
+----
+
+.afterBeanDiscovery event
+[source,xml]
+----
+// amikor a CDI konténer inicializált minden Bean-t akkor ezen a ponton még tudunk módosítani az osztályokon
+// itt kerülnek legyártásra azok a Producerek amik a MongoService-t kiterjesztő osztályokat inject-álhatóvá teszik
+public void afterBeanDiscovery(@Observes final AfterBeanDiscovery abd, BeanManager beanManager) {
+}
+----
+
+A producerek létrehozásához a `MongoServiceProducerFactory` osztály készült.
+Tartalmaz egy mongoServiceTemplateProducer metódust amit a MongoExtension alapul vesz, ez adja a templatet a producerek gyártásához.
+
+
+=== MongoDbClientFactory
+`MongoDbClient` legyártása a feladata. yml-ben megadott configKey alapján legyártja és benne
+inicializálja a `com.mongodb.client.MongoClient` osztályt és `com.mongodb.client.MongoDatabase` interface-t,
+ezzel kommunikálunk a MongoDb-vel. Ezen a ponton használjuk fel a yml-ben definiált paramétereket, a configKey használatával.
+
+.produceMongoDbClient producer
+[source,xml]
+----
+@Produces
+@MongoClientConfiguration(configKey = "")
+@Dependent
+public MongoDbClient produceMongoDbClient(InjectionPoint injectionPoint) throws BaseException {
+----
+=== MongoDbClient
+Tartalmazza a `com.mongodb.client.MongoDatabase` osztályt ami már a kiválasztott Mongo adatbázist tudja kezelni.
+Tartalmaz alap funkciókat, ha nem POJO mongo entitásokkal szeretnénk dolgozni. Delegálja a műveleteket
+a MongoService<BasicDBObject> felé.
+
+=== MongoServiceProducerFactory
+A producerek gyártásához definiál template metódust. A template metódus belül a `MongoDbClient` osztályt kéri el a CDI konténertől, 
+igy generikus a működés és felhasználjuk a már létrehozott `MongoDbClientFactory` működését. Az annotációból érkező collectionKey értékével,
+miután inicializálta a `MongoDbClient`-et, beállítja a használandó Mongo collection-t.
+Ezután elkészíti a projektben definiált MongoService-t kiterjesztő osztályt a generikus paraméterben megadott MongoEntity típussal.
+
+.mongoServiceTemplateProducer template metódus
+[source,xml]
+----
+// producer template
+@MongoServiceConfiguration(configKey = "", collectionKey = "")
+public <T> MongoService<T> mongoServiceTemplateProducer(final InjectionPoint injectionPoint) {
+----

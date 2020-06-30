@@ -20,14 +20,11 @@
 package hu.icellmobilsoft.coffee.module.mongodb.extension;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.enterprise.context.Dependent;
 import javax.enterprise.event.Observes;
@@ -40,6 +37,8 @@ import javax.enterprise.inject.spi.BeanAttributes;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.inject.spi.ProcessInjectionTarget;
 
+import org.jboss.logging.Logger;
+
 import hu.icellmobilsoft.coffee.module.mongodb.service.MongoService;
 
 /**
@@ -51,7 +50,7 @@ import hu.icellmobilsoft.coffee.module.mongodb.service.MongoService;
  */
 public class MongoExtension implements javax.enterprise.inject.spi.Extension {
 
-    private static final Logger log = Logger.getLogger(MongoExtension.class.getName());
+    private static final Logger LOGGER = hu.icellmobilsoft.coffee.cdi.logger.LogProducer.getStaticLogger(MongoExtension.class);
 
     private List<Type> mongoServiceTypes = new ArrayList<>();
 
@@ -61,7 +60,9 @@ public class MongoExtension implements javax.enterprise.inject.spi.Extension {
         if (mongoServiceTypes.isEmpty()) {
             return;
         }
-        log.log(Level.INFO, "MongoExtension is active, found MongoService implementations: [{0}]", mongoServiceTypes.size());
+
+        // jboss logger (later we will use java.util.logging.Logger)
+        LOGGER.infov("MongoExtension is active, found MongoService implementations: [{0}]", mongoServiceTypes.size());
 
         // find producer template
         AnnotatedMethod<? super MongoServiceProducerFactory> producerMethodTemplate = findProducerMethodTemplate(beanManager);
@@ -110,15 +111,13 @@ public class MongoExtension implements javax.enterprise.inject.spi.Extension {
         AnnotatedType<T> at = pit.getAnnotatedType();
         Class<T> pType = (Class<T>) at.getBaseType();
 
-        if (!(pType.getGenericSuperclass() instanceof ParameterizedType)) {
-            return;
-        }
+        // get base MongoService class
+        Type baseType = MongoExtensionUtil.getMongoServiceBase(pType);
 
-        ParameterizedType superType = (ParameterizedType) pType.getGenericSuperclass();
-
-        if (superType.getRawType() == MongoService.class) {
+        if (baseType != null) {
             mongoServiceTypes.add(pType);
         }
+
     }
 
     @SuppressWarnings("unused")
