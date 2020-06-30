@@ -42,6 +42,9 @@ public class MongoExtensionUtil {
      * @return
      */
     public static <T> Type getMongoServiceBase(Class<?> type) {
+        if (type == null) {
+            throw new IllegalArgumentException("type is null");
+        }
         Class<?> baseType = type;
 
         // find MongoService parent if exist
