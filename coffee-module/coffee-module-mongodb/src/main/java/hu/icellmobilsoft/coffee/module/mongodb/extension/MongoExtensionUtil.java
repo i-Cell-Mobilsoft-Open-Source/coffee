@@ -28,7 +28,9 @@ import hu.icellmobilsoft.coffee.module.mongodb.service.MongoService;
 /**
  * Helper class for MongoExtension
  * 
+ *
  * @author czenczl
+ * @since 1.1.0
  *
  */
 @Vetoed
@@ -38,8 +40,10 @@ public class MongoExtensionUtil {
      * get mongoService generic type
      * 
      * @param <T>
+     *            MongoEntity generic class
      * @param type
-     * @return
+     *            Class type to find MongoService base class
+     * @return Type MongoService with generic entity type.
      */
     public static <T> Type getMongoServiceBase(Class<?> type) {
         if (type == null) {

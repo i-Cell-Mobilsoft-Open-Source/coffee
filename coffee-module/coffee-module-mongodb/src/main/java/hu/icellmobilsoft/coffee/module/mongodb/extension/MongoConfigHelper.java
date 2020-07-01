@@ -96,8 +96,7 @@ public class MongoConfigHelper {
     /**
      * MongoDb full URI, example: "mongodb://user:password@localhost:27017/samplet?ssl=false"
      *
-     * @param configKey
-     * @return
+     * @return uri MongoDatabase uri
      */
     public String getUri() {
         return config.getOptionalValue(concatConfigKey(URI_KEY), String.class).orElse("mongodb://user:password@localhost:27017/samplet?ssl=false");
@@ -106,8 +105,7 @@ public class MongoConfigHelper {
     /**
      * Selected database in MongoDB, example: "user_request_response"
      * 
-     * @param configKey
-     * @return
+     * @return database Selected MongoDatabase
      */
     public String getDatabase() {
         return config.getOptionalValue(concatConfigKey(DATA_BASE_KEY), String.class).orElse("default");
@@ -118,8 +116,7 @@ public class MongoConfigHelper {
      * The socket timeout in milliseconds. It is used for I/O socket read and write operations {@link java.net.Socket#setSoTimeout(int)}
      * </p>
      *
-     * @param configKey
-     * @return
+     * @return socketTimeout
      */
     public Integer getSocketTimeout() {
         return config.getOptionalValue(concatConfigKey(SOCKET_TIMEOUT_KEY), Integer.class).orElse(DEFAULT_SOCKET_TIMEOUT);
@@ -129,8 +126,7 @@ public class MongoConfigHelper {
      * The maximum idle time of a pooled connection. A zero value indicates no limit to the idle time. A pooled connection that has exceeded its idle
      * time will be closed and replaced when necessary by a new connection.
      * 
-     * @param configKey
-     * @return
+     * @return maxConnectionIdleTime
      */
     public Integer getMaxConnectionIdleTime() {
         return config.getOptionalValue(concatConfigKey(MAX_CONNECTION_IDLE_TIME_KEY), Integer.class).orElse(DEFAULT_MAX_CONNECTION_IDLE_TIME);
@@ -140,20 +136,19 @@ public class MongoConfigHelper {
      * The maximum life time of a pooled connection. A zero value indicates no limit to the life time. A pooled connection that has exceeded its life
      * time will be closed and replaced when necessary by a new connection.
      *
-     * @param configKey
-     * @return
+     * @return maxConnectionLifeTime
      */
     public Integer getMaxConnectionLifeTime() {
         return config.getOptionalValue(concatConfigKey(MAX_CONNECTION_LIFE_TIME_KEY), Integer.class).orElse(DEFAULT_MAX_CONNECTION_LIFE_TIME);
     }
 
     /**
+     * <p>
      * The maximum number of connections allowed per host for this MongoClient instance. Those connections will be kept in a pool when idle. Once the
      * pool is exhausted, any operation requiring a connection will block waiting for an available connection.
      * </p>
      * 
-     * @param configKey
-     * @return
+     * @return connectionsPerHost
      */
     public Integer getConnectionsPerHost() {
         return config.getOptionalValue(concatConfigKey(CONNECTIONS_PER_HOST_KEY), Integer.class).orElse(DEFAULT_CONNECTIONS_PER_HOST);
@@ -165,8 +160,7 @@ public class MongoConfigHelper {
      * {@link java.net.Socket#connect(java.net.SocketAddress, int) }
      * </p>
      *
-     * @param configKey
-     * @return
+     * @return connectTimeout
      */
     public Integer getConnectTimeout() {
         return config.getOptionalValue(concatConfigKey(CONNECT_TIMEOUT_KEY), Integer.class).orElse(DEFAULT_CONNECT_TIMEOUT);
@@ -177,8 +171,7 @@ public class MongoConfigHelper {
      * Gets the connect timeout for connections used for the cluster heartbeat.
      * </p>
      *
-     * @param configKey
-     * @return
+     * @return heartbeatConnectTimeout
      */
     public Integer getHeartbeatConnectTimeout() {
         return config.getOptionalValue(concatConfigKey(HEARTBEAT_CONNECT_TIMEOUT_KEY), Integer.class).orElse(DEFAULT_HEARTBEAT_CONNECT_TIMEOUT);
@@ -187,8 +180,7 @@ public class MongoConfigHelper {
     /**
      * Gets the heartbeat frequency. This is the frequency that the driver will attempt to determine the current state of each server in the cluster.
      *
-     * @param configKey
-     * @return
+     * @return heartbeatFrequency
      */
     public Integer getHeartbeatFrequency() {
         return config.getOptionalValue(concatConfigKey(HEARTBEAT_FREQUENCY_KEY), Integer.class).orElse(DEFAULT_HEARTBEAT_FREQUENCY);
@@ -197,8 +189,7 @@ public class MongoConfigHelper {
     /**
      * Gets the socket timeout for connections used for the cluster heartbeat.
      *
-     * @param configKey
-     * @return
+     * @return heartbeatSocketTimeout
      */
     public Integer getHeartbeatSocketTimeout() {
         return config.getOptionalValue(concatConfigKey(HEARTBEAT_SOCKET_TIMEOUT_KEY), Integer.class).orElse(DEFAULT_HEARTBEAT_SOCKET_TIMEOUT);
@@ -210,8 +201,7 @@ public class MongoConfigHelper {
      * ensure over time that it contains at least this minimum number.
      * </p>
      *
-     * @param configKey
-     * @return
+     * @return minConnectionsPerHost
      */
     public Integer getMinConnectionsPerHost() {
         return config.getOptionalValue(concatConfigKey(MIN_CONNECTIONS_PER_HOST_KEY), Integer.class).orElse(DEFAULT_MIN_CONNECTIONS_PER_HOST);
@@ -221,8 +211,7 @@ public class MongoConfigHelper {
      * Gets the minimum heartbeat frequency. In the event that the driver has to frequently re-check a server's availability, it will wait at least
      * this long since the previous check to avoid wasted effort.
      *
-     * @param configKey
-     * @return
+     * @return minHeartbeatFrequency
      */
     public Integer getMinHeartbeatFrequency() {
         return config.getOptionalValue(concatConfigKey(MIN_HEART_BEAT_FREQUENCY_KEY), Integer.class).orElse(DEFAULT_MIN_HEART_BEAT_FREQUENCY);
@@ -237,7 +226,8 @@ public class MongoConfigHelper {
      * <p>
      * A value of 0 means that it will timeout immediately if no server is available. A negative value means to wait indefinitely.
      * </p>
-     *
+     * 
+     * @return serverSelectionTimeout
      */
     public Integer getServerSelectionTimeout() {
         return config.getOptionalValue(concatConfigKey(SERVER_SELECTION_TIMEOUT_KEY), Integer.class).orElse(DEFAULT_SERVER_SELECTION_TIMEOUT);

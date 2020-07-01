@@ -45,8 +45,10 @@ public class MongoServiceProducerFactory {
      * Producer template method for generating mongoService producer. No @Produces annotation, its just a template!
      * 
      * @param <T>
+     *            MongoEntity.class value
      * @param injectionPoint
-     * @return
+     *            Represents a MongoService injection
+     * @return MongoService
      */
     @SuppressWarnings("unchecked")
     @MongoServiceConfiguration(configKey = "", collectionKey = "")
@@ -70,7 +72,7 @@ public class MongoServiceProducerFactory {
         CDI.current().destroy(instance);
 
         // get type under inject
-        Class<T> pType = (Class<T>) injectionPoint.getAnnotated().getBaseType();
+        Class<? extends MongoService<T>> pType = (Class<? extends MongoService<T>>) injectionPoint.getAnnotated().getBaseType();
 
         // get superclass generic type, mongoEntity.class
         ParameterizedType parameterizedType = (ParameterizedType) MongoExtensionUtil.getMongoServiceBase(pType);

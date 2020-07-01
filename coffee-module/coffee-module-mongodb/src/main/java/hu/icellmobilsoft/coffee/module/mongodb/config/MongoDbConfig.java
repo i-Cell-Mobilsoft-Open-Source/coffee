@@ -25,7 +25,7 @@ package hu.icellmobilsoft.coffee.module.mongodb.config;
  * @author imre.scheffer
  * @since 1.0.0
  * 
- * @deprecated Use {@link MongoConfigHelper} instead, forRemoval = true, since = "1.1.0"
+ * @deprecated Use {@link hu.icellmobilsoft.coffee.module.mongodb.extension.MongoConfigHelper} instead, forRemoval = true, since = "1.1.0"
  */
 @Deprecated(forRemoval = true, since = "1.1.0")
 public interface MongoDbConfig {

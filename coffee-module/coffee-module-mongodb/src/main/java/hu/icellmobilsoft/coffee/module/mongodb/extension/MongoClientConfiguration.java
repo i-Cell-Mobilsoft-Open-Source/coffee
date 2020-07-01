@@ -29,7 +29,7 @@ import javax.enterprise.util.Nonbinding;
 import javax.inject.Qualifier;
 
 /**
- * @MongoDbClient használatához szükséges annotáció és MongoService osztalyok inicializalasahoz
+ * hu.icellmobilsoft.coffee.module.mongodb.extension.MongoDbClient használatához szükséges annotáció és MongoService osztalyok inicializalasahoz
  * 
  * @author czenczl
  * @since 1.1.0

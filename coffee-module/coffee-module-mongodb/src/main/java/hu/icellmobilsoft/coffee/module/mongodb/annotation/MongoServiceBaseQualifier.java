@@ -28,7 +28,7 @@ import javax.inject.Qualifier;
 
 /**
  * 
- * For MongoService<T> injection
+ * For MongoService injection
  * 
  * @author czenczl
  * @since 1.1.0

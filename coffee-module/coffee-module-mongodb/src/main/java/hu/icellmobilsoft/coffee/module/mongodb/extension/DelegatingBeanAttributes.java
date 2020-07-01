@@ -31,7 +31,7 @@ import javax.enterprise.inject.spi.BeanAttributes;
  * @author czenczl
  * @since 1.1.0
  *
- * @param <T>
+ * @param <T> the class of the bean instance 
  */
 public class DelegatingBeanAttributes<T> implements BeanAttributes<T> {
 

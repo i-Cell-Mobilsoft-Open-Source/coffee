@@ -50,7 +50,7 @@ import hu.icellmobilsoft.coffee.module.mongodb.handler.MongoDbUtil;
  * @author imre.scheffer
  * @since 1.0.0
  * 
- * @deprecated Use {@link MongoDbClientFactory} instead, forRemoval = true, since = "1.1.0"
+ * @deprecated Use {@link hu.icellmobilsoft.coffee.module.mongodb.extension.MongoDbClientFactory} instead, forRemoval = true, since = "1.1.0"
  */
 @ApplicationScoped
 @Deprecated(forRemoval = true, since = "1.1.0")

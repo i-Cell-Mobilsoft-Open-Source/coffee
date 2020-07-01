@@ -43,8 +43,7 @@ public class MongoCodecRegistryFactory {
     /**
      * produce codecs for mongoDB, pay attention to registration order (first default, then custom, last base pojo)
      *
-     * @param database
-     * @return
+     * @return CodecRegistry
      */
     @Produces
     @ApplicationScoped

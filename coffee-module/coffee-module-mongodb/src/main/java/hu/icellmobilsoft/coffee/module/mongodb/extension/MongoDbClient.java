@@ -50,7 +50,8 @@ public class MongoDbClient {
     /**
      * init MongoRepository collection
      * 
-     * @param mongoCollection
+     * @param collection
+     *            The selected mongo collection
      */
     public void initRepositoryCollection(String collection) {
         mongoService.initRepositoryCollection(mongoDatabase.getCollection(collection, BasicDBObject.class));
@@ -59,7 +60,7 @@ public class MongoDbClient {
     /**
      * get selected mongodatabase
      * 
-     * @return
+     * @return mongoDatabase
      */
     public MongoDatabase getMongoDatabase() {
         return mongoDatabase;
@@ -69,6 +70,7 @@ public class MongoDbClient {
      * set mongo database
      * 
      * @param mongoDatabase
+     *            set the selected MongoDatabase
      */
     public void setMongoDatabase(MongoDatabase mongoDatabase) {
         this.mongoDatabase = mongoDatabase;
@@ -78,6 +80,9 @@ public class MongoDbClient {
      * <p>
      * insertOne.
      * </p>
+     * 
+     * @param document BasicDBObject to insert
+     * @throws BaseException If insert fail.
      */
     public void insertOne(BasicDBObject document) throws BaseException {
         mongoService.insertOne(document);
@@ -87,6 +92,11 @@ public class MongoDbClient {
      * <p>
      * findFirst.
      * </p>
+     * 
+     * @param filter
+     *            mongo select filter
+     * @return BasicDBObject
+     * @throws BaseException Missing filter, or mongo select failed.
      */
     public BasicDBObject findFirst(Bson filter) throws BaseException {
         return mongoService.findFirst(filter);
@@ -96,6 +106,11 @@ public class MongoDbClient {
      * <p>
      * findById.
      * </p>
+     * 
+     * @param mongoId
+     *            Mongo document object id
+     * @return BasicDBObject
+     * @throws BaseException Mongo select failed.
      */
     public BasicDBObject findById(String mongoId) throws BaseException {
         return mongoService.findById(mongoId);

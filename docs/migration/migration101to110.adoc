@@ -1,9 +1,9 @@
 = v1.0.1 → v1.1.0
 
-Framework v1.0.1 -> v1.1.0 migrációs leírás, újdonságok, változások leírása
+coff:ee v1.0.1 -> v1.1.0 migrációs leírás, újdonságok, változások leírása
 
 == Változások
-=== fw-module-mongodb
+=== coffee-module-mongodb
 
 * Frissült a mongo-java-driver (3.12.5).
 * CDI extension bevezetése dinamikus MongoService gyártáshoz

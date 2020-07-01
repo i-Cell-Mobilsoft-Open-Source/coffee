@@ -37,7 +37,7 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
  *
  * @since 1.0.0
  * 
- * @deprecated Use {@link MongoClientConfiguration} instead, forRemoval = true, since = "1.1.0"
+ * @deprecated Use {@link hu.icellmobilsoft.coffee.module.mongodb.extension.MongoClientConfiguration} instead, forRemoval = true, since = "1.1.0"
  */
 @Deprecated(forRemoval = true, since = "1.1.0")
 @Qualifier
@@ -48,7 +48,7 @@ public @interface MongoConfiguration {
     /**
      * This value is used in {@link ConfigProperty} annotation
      * 
-     * @return
+     * @return urlKey
      */
     @Nonbinding
     String urlKey();
@@ -56,7 +56,7 @@ public @interface MongoConfiguration {
     /**
      * This value is used in {@link ConfigProperty} annotation
      * 
-     * @return
+     * @return databaseKey
      */
     @Nonbinding
     String databaseKey();

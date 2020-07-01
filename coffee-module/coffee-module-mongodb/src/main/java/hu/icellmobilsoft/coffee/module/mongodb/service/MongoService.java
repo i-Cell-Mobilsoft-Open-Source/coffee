@@ -69,6 +69,7 @@ public class MongoService<T> {
      * Mongo Collection beállítása
      *
      * @param mongoCollection
+     *            MongoDb collection
      */
     public void initRepositoryCollection(MongoCollection<T> mongoCollection) {
         mongoRepository.setMongoCollection(mongoCollection);
@@ -78,7 +79,9 @@ public class MongoService<T> {
      * Objektum beszúrása az előre beállított Mongo Collection-be
      *
      * @param document
+     *            MongoEntity document
      * @throws BaseException
+     *             When Mongo insert fail.
      */
     public void insertOne(T document) throws BaseException {
         log.tracev(">> MongoService.insertOne(document: [{0}]", document);
@@ -100,7 +103,11 @@ public class MongoService<T> {
      * Objektum keresése a megadott mongoId alapján
      *
      * @param mongoId
+     *            mongo document id
      * @throws BaseException
+     *             When Mongo select fail.
+     * @return T
+     * 
      */
     public T findById(String mongoId) throws BaseException {
         if (StringUtils.isBlank(mongoId)) {
@@ -119,7 +126,10 @@ public class MongoService<T> {
      * Objektum keresése a megadott szűrő feltételek alapján, rendezés nélkül
      *
      * @param filter
+     *            mongo select filter
      * @throws BaseException
+     *             When Mongo select fail.
+     * @return T
      */
     public T findFirst(Bson filter) throws BaseException {
         log.tracev(">> MongoService.findFirst(filter: [{0}]", filter);
@@ -147,8 +157,12 @@ public class MongoService<T> {
      * Objektum keresése a megadott szűrő feltételek alapján, rendezéssel
      *
      * @param filter
+     *            mongo select filter
      * @param order
+     *            mongo select order
      * @throws BaseException
+     *             When Mongo select fail.
+     * @return T
      */
     public T findFirst(Bson filter, Bson order) throws BaseException {
         log.tracev(">> MongoService.findFirst(filter: [{0}], order: [{1}]", filter, order);
@@ -176,6 +190,8 @@ public class MongoService<T> {
      * Objektumok közötti keresés, ahol az eredmény a megadott típusú elemek listája.
      *
      * @throws BaseException
+     *             When Mongo select fail.
+     * @return List
      */
     public List<T> findAll() throws BaseException {
         return findAll(new BasicDBObject());
@@ -185,7 +201,10 @@ public class MongoService<T> {
      * Objektumok közötti keresés, ahol az eredmény a megadott szűrés alapján található megadott típusú elemek listája.
      *
      * @param filter
+     *            mongo select filter
      * @throws BaseException
+     *             When mongo select fail.
+     * @return List
      */
     public List<T> findAll(Bson filter) throws BaseException {
         log.tracev(">> MongoService.findAll(filter: [{0}])", filter);
@@ -213,11 +232,18 @@ public class MongoService<T> {
      * listája.
      *
      * @param filter
+     *            mongo select filter
      * @param order
+     *            mongo select order
      * @param rows
+     *            result row limit
+     * @param page
+     *            mongo result page
+     * @param clazz
+     *            Mongo document class
      * @throws BaseException
-     * @params page
-     * @params clazz
+     *             When Mongo pagination select fail.
+     * @return List
      */
     public List<T> find(Bson filter, Bson order, int rows, int page, Class<T> clazz) throws BaseException {
         log.tracev(">> MongoService.find(filter: [{0}], order: [{1}], rows: [{2}], page: [{3}], clazz: [{4}]", filter, order, rows, page, clazz);
@@ -244,7 +270,10 @@ public class MongoService<T> {
      * A megadott szűrés alapján megtalálható elemek számosságát adja vissza.
      *
      * @param filter
+     *            mongo select filter
      * @throws BaseException
+     *             When Mongo count fail.
+     * @return long
      */
     public long count(Bson filter) throws BaseException {
         log.tracev(">> MongoService.count(filter: [{0}]", filter);
@@ -268,7 +297,9 @@ public class MongoService<T> {
      * Batchelt mentést megvalósító metódus
      *
      * @param documents
+     *            Documents to insert
      * @throws BaseException
+     *             When insert fail.
      */
     public void insertMany(List<T> documents) throws BaseException {
         log.tracev(">> BaseMongoService.insertMany(documents: [{0}]", documents);
@@ -290,6 +321,10 @@ public class MongoService<T> {
 
     /**
      * Collection név lekérdezése
+     * 
+     * @return String
+     * @throws BaseException
+     *             When cannot get mongo collection name.
      */
     public String getMongoCollectionName() throws BaseException {
         if (Objects.nonNull(getMongoCollection()) && Objects.nonNull(getMongoCollection().getNamespace())) {
@@ -300,7 +335,6 @@ public class MongoService<T> {
 
     /**
      * Mongo Collection kötelező megadása, lekérdezése
-     * <p>
      * 
      * <pre>
      * {@code
@@ -314,15 +348,18 @@ public class MongoService<T> {
      * @return MongoCollection
      * @throws BaseException
      * 
-     * @deprecated Use {@link MongoDbClient#initRepositoryCollection(java.lang.String)} instead, forRemoval = true, since = "1.1.0"
+     * @deprecated Use {@link hu.icellmobilsoft.coffee.module.mongodb.extension.MongoDbClient#initRepositoryCollection(java.lang.String)} instead,
+     *             forRemoval = true, since = "1.1.0"
      */
-    @Deprecated
+    @Deprecated(forRemoval = true, since = "1.1.0")
     protected MongoCollection<T> getMongoCollection() throws BaseException {
         throw new UnsupportedOperationException("getMongoCollection() not implemented!");
     }
 
     /**
      * BONotFoundException FaultType felülírás lehetőségét nyújtó metódus
+     * 
+     * @return Enum
      */
     protected Enum<?> getDefaultNotFoundFaultTypeEnum() {
         return CoffeeFaultType.ENTITY_NOT_FOUND;

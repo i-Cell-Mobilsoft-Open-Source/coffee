@@ -36,7 +36,7 @@ import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
  * @author balazs.joo
  * @since 1.0.0
  * 
- * @deprecated Use {@link MongoDbClient} or extend {@link @MongoService<T>} instead, forRemoval = true, since = "1.1.0"
+ * @deprecated Use {@link hu.icellmobilsoft.coffee.module.mongodb.extension.MongoDbClient} or extend {@link hu.icellmobilsoft.coffee.module.mongodb.extension.MongoService} instead, forRemoval = true, since = "1.1.0"
  */
 @Dependent
 @Deprecated(forRemoval = true, since = "1.1.0")
@@ -57,6 +57,7 @@ public class MongoServiceImpl extends MongoService<BasicDBObject> {
      * <p>
      * Setter for the field <code>mongoCollection</code>.
      * </p>
+     * @param mongoCollection selected mongo collection
      */
     public void setMongoCollection(MongoCollection<BasicDBObject> mongoCollection) {
         // init repository collection

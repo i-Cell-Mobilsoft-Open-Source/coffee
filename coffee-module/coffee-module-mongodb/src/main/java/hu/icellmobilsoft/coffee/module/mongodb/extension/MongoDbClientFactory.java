@@ -69,9 +69,9 @@ public class MongoDbClientFactory {
     /**
      * Producer method for creating MongoDbClient instance
      * 
-     * @param injectionPoint
-     * @return
-     * @throws BaseException
+     * @param injectionPoint Provides access to metadata about MongoDbClient injection.
+     * @return MongoDbClient
+     * @throws BaseException If MongoClient cannot be created.
      */
     @Produces
     @MongoClientConfiguration(configKey = "")
@@ -103,8 +103,8 @@ public class MongoDbClientFactory {
     /**
      * Create mongoClient and put in the container if not exist with the given configKey, thread safe
      * 
-     * @param configKey
-     * @throws BaseException
+     * @param mongoConfigHelper The initialized helper class with mongo connection parameters.
+     * @throws BaseException If MongoClient cannot be created.
      */
     protected synchronized void createMongoClientIfNotExist(MongoConfigHelper mongoConfigHelper) throws BaseException {
         if (!mongoClientContainer.getClientMap().containsKey(mongoConfigHelper.getConfigKey())) {
