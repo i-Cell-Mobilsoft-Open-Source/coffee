@@ -30,7 +30,7 @@ import hu.icellmobilsoft.coffee.module.totp.enums.TOtpAlgorithm;
 public interface TOtpConfig {
 
     /**
-     * The timestep in seconds we use for generating totp, default: 30
+     * The timestep in milliseconds we use for generating totp, default: 30000
      */
     public Integer getTimestep();
 

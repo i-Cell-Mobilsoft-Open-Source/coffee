@@ -42,8 +42,11 @@ import hu.icellmobilsoft.coffee.module.mongodb.service.MongoServiceImpl;
  *
  * @author imre.scheffer
  * @since 1.0.0
+ * 
+ * @deprecated Use {@link MongoDbClient} instead, forRemoval = true, since = "1.1.0"
  */
 @Dependent
+@Deprecated(forRemoval = true, since = "1.1.0")
 public class MongoDbHandler {
 
     private MongoDbConfig mongoDbConfig;

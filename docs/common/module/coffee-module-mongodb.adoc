@@ -2,102 +2,126 @@
 = coffee-module-mongodb
 
 A modul célja a MongoDB NOSQL adatbázis kezelésének támogatása, amihez különböző kiszolgáló osztályokat és metódusokat tartalmaz.
+CDI extension kiterjesztésen alapszik http://cdi-spec.org/[cdi-spec]. 
 
-Konfiguráció yaml-ben:
 
+== Implementálás a projektbe
+
+.Coffee modul aktiválás
+=== pom.xml
+[source,xml]
+----
+<dependency>
+    <groupId>hu.icellmobilsoft.coffee</groupId>
+    <artifactId>coffee-module-mongodb</artifactId>
+</dependency>
+----
+
+
+=== Konfiguráció yml-ben:
 .project-defaults.yml
 [source,yaml]
 ----
-mongodb:
-    uri:
-        xmlapi: mongodb://sample_xmlapi:sample_xmlapi@sample-sandbox.icellmobilsoft.hu:27017/sample_xmlapi?ssl=false
+coffee:
+    mongo:
+        xmlapi: #<1>
+             database: xmlapi
+             uri: mongodb://sample_xmlapi:sample_xmlapi@sample-sandbox.icellmobilsoft.hu:27017/sample_xmlapi?ssl=false
+             connectionsPerHost: 150 #default: 100
+             minConnectionsPerHost: 1 #default: 1
+             connectTimeout: 10000 #default: 10000
+             serverSelectionTimeout: 5000 #default: 5000
+             socketTimeout: 0 #default: 0
+             maxConnectionIdleTime: 20000 #default: 20000
+             maxConnectionLifeTime: 20000 #default: 20000
+             heartbeatConnectTimeout: 20000 #default: 20000
+             heartbeatFrequency: 500 #default: 500
+             heartbeatSocketTimeout: 20000 #default: 20000
+             minHeartbeatFrequency: 500 #default: 500
+        tada:
+            database: tada
+            uri: mongodb://sample_tada:sample_tada@sample-sandbox.icellmobilsoft.hu:27017
+            connectionsPerHost: 400 #default: 150
 ----
+<1> A mongoDB kapcsolat egyedi azonosítója (configKey). "database" és "uri" megadása kötelező. A többi default értékkel rendelkezik.
+Paraméterek részletes leírása MongoConfigHelper osztályban található.
 
-Konfiguráció bekötése constantsba:
+Több monogDB szerverhez is lehet megadni paramétereket. A configKey egyedisége határozza meg az adatbázist. 
 
-.hu.icellmobilsoft.sample.common.system.constant.MongoConstants
-[source,java]
-----
-/**
- * mongo url
- */
-String CONFIG_URI_XMLAPI = "mongodb.uri.xmlapi";
- 
-/**
- * database
- */
-String CONFIG_DATABASE_SAMPLE_XMLAPI = "sample_xmlapi";
- 
-/**
- * collection
- */
-String TABLE_XMLAPI = "xmlapi";
- 
- 
-String COLUMN_MONGO_ID = "_id";
-----
-Konfiguráció bekötése MongoDbHandler-en keresztül:
+=== Használat
 
-.MongoDbHandler injektálása
+==== @MongoClientConfiguration annotáció
+Ez az annotáció lehetővé teszi hogy MongoDbClient objektumot injektáljunk. Ezen keresztül elérhető a MongoDB.
 [source,java]
 ----
 @Inject
-@MongoConfiguration(databaseKey = MongoConstants.CONFIG_DATABASE_SAMPLE_XMLAPI, urlKey = MongoConstants.CONFIG_URI_XMLAPI)
-private MongoDbHandler mongoDbHandler;
+@MongoClientConfiguration(configKey = "xmlapi") #<1>
+private MongoDbClient mongoDbClient;
 ----
-Kódrészlet a MongoDbHandler használatára:
+<1> A yml-ben meghatározott configKey érték. Egyedi azonosító.
 
-.Elem beszúrása a MongoDB-be
+A coff:ee mongoDB modulja le fogja gyártani a MongoDbClient objektumot, a yml-ben megadott értékeket alapul véve.
+A használni kívánt collection-t külön kell megadnunk.
+Ez a default MongoService implementáció ami BasicDBObject típussal képes dolgozni.
+
+.Service használata 
 [source,java]
 ----
-// Fontos!!! Szükséges a collection megadása
-mongoDbHandler.setCollection(MongoConstants.TABLE_XMLAPI);
- 
+// collection megadása
+mongoDbClient.initRepositoryCollection("xmlapi_collection");
+
 // a MongoUtil-ok segítéségével lehet a típusos objektumokat kezelni
-String dtoJson = MongoJsonUtil.toJson(invoiceLogType);
+String dtoJson = MongoJsonUtil.toJson(dtoDocumentType);
 BasicDBObject dtoDocument = MongoUtil.jsonToBasicDbObject(dtoJson);
- 
+
 // az elem beszúrása
-mongoDbHandler.insertOne(dtoDocument);
- 
+mongoDbClient.insertOne(dtoDocument);
+
 // a beszúrt elem id-jának lekérdezése
 String id = dtoDocument.getString(MongoConstants.COLUMN_MONGO_ID);
+
+// keresés filter-el
+BasicDBObject filter = new BasicDBObject();
+filter.put(MongoConstants.COLUMN_MONGO_ID, new ObjectId(mongoId));
+BasicDBObject result = mongoDbClient.findFirst(filter);
+
+// keresés id-vel
+BasicDBObject result = mongoDbClient.findById(mongoId);
 ----
 
-Kódrészlet a MongoDbHandler használatára POJO-val:
+==== @MongoServiceConfiguration annotáció
+Ezt az annotációt aknázza ki a CDI extension, minden osztályhoz ami kiterjeszti a MongoService<T> osztályt, automatikusan legenerálódik
+egy @Producer ami lehetővé teszi az inject-álást.
 
-.Pojo kiterjesztése
+.Service használata 
 [source,java]
 ----
-public class Pojo extends AbstractMongoEntity
-----
-
-.MongoService kiterjesztése, konfigurációk megadása
-[source,java]
-----
-public class PojoMongoService extends MongoService<Pojo> {
-...
-    @Inject
-    @MongoCustomConfiguration(databaseName = MongoConstants.POJO_DATABASE_NAME, urlKey = MongoConstants.CONFIG_URI_COMMON)
-    private MongoDbHandler mongoDbHandler;
-
-    @Override
-    protected MongoCollection<Pojo> getMongoCollection() throws BaseException {
-        return mongoDbHandler.getDatabase().getCollection(MongoConstants.TABLE_POJO, Pojo.class);
-    }
-...
+/**
+ * MongoService kiterjesztése, POJO megadásával
+ */
+@Dependent
+public class CustomMongoService extends MongoService<MongoEntity> {
+    //nem szükséges semmit felülírni
 }
+
+/**
+ * Az extension a configKey és collectionKey paraméterek alapján injectálja a CustomMongoService-t
+ */
+@Inject
+@MongoServiceConfiguration(configKey = "xmlapi", collectionKey = "xmlapi_collection")
+private CustomMongoService customMongoService;
 ----
-.Service használata
+A CustomMongoService őse a MongoService<T>, ami miatt az extension feldolgozza, és a generikus paramétert figyelembe véve beállítja a háttérben
+az objektumot (MongoEntity) amivel dolgozik a CustomMongoService. Az ősben lévő műveletek felülírhatóak. A CustomMongoService scope értéke is felülírható ha nem lenne megfelelő a @Dependent.
+@Stateless EJB-ből használva nem működik a @Model scope, az csak a Rest interfaceken alkalmazható, ahol a http hívás végén megszűnnek az inject-ált MongoService példányok. 
+
+Használat során nem szükséges a collection-t megadni, mivel az annotációban ez megtörténik. Bármelyik MongoService használhat bármilyen collection-t, nincs megkötés.
 [source,java]
 ----
-@Inject
-private PojoMongoService pojoMongoService;
-...
-pojoMongoService.insertOne(Pojo);
+// lekérdezés
+MongoEntity entity = customMongoService.findById("mongoId");
 
-pojoMongoService.insertMany(List<Pojo>);
-
-pojoMongoService.findById("mongoId");
-...
+// beszúrás
+MongoEntity mongoEntity = new MongoEntity();
+customMongoService.insertOne(mongoEntity);
 ----

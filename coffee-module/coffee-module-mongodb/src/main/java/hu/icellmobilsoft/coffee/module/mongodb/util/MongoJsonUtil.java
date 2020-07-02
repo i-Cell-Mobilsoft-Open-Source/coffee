@@ -69,7 +69,7 @@ public class MongoJsonUtil {
     /**
      * Converting DTO object to JSON string without throwing exception
      *
-     * @param dto
+     * @param dto DTO to convert
      * @return JSON String
      */
     public static String toJson(Object dto) {

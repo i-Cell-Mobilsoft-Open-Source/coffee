@@ -17,26 +17,26 @@
  * limitations under the License.
  * #L%
  */
-package hu.icellmobilsoft.coffee.module.mongodb.config;
+package hu.icellmobilsoft.coffee.module.mongodb.annotation;
+
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+import javax.inject.Qualifier;
 
 /**
- * MongoDb configuration values
- *
- * @author imre.scheffer
- * @since 1.0.0
  * 
- * @deprecated Use {@link hu.icellmobilsoft.coffee.module.mongodb.extension.MongoConfigHelper} instead, forRemoval = true, since = "1.1.0"
+ * For MongoService injection
+ * 
+ * @author czenczl
+ * @since 1.1.0
+ *
  */
-@Deprecated(forRemoval = true, since = "1.1.0")
-public interface MongoDbConfig {
+@Qualifier
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER, ElementType.TYPE })
+public @interface MongoServiceBaseQualifier {
 
-    /**
-     * MongoDb full URI, example: "mongodb://user:password@localhost:27017/database?ssl=false"
-     */
-    String getUri();
-
-    /**
-     * Selected database (collection) in MongoDB, example: "user_request_response"
-     */
-    String getDatabase();
 }

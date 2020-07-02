@@ -49,8 +49,11 @@ import hu.icellmobilsoft.coffee.module.mongodb.handler.MongoDbUtil;
  *
  * @author imre.scheffer
  * @since 1.0.0
+ * 
+ * @deprecated Use {@link hu.icellmobilsoft.coffee.module.mongodb.extension.MongoDbClientFactory} instead, forRemoval = true, since = "1.1.0"
  */
 @ApplicationScoped
+@Deprecated(forRemoval = true, since = "1.1.0")
 public class MongoFactory {
 
     private static Logger LOGGER = hu.icellmobilsoft.coffee.cdi.logger.LogProducer.getStaticLogger(MongoFactory.class);
@@ -58,7 +61,9 @@ public class MongoFactory {
     private Map<String, MongoClient> mongoClientMap = new HashMap<>();
 
     /**
-     * <p>produceMongoDbHandler.</p>
+     * <p>
+     * produceMongoDbHandler.
+     * </p>
      */
     @Produces
     @MongoConfiguration(urlKey = "", databaseKey = "")
@@ -90,7 +95,9 @@ public class MongoFactory {
     }
 
     /**
-     * <p>dispose.</p>
+     * <p>
+     * dispose.
+     * </p>
      */
     public void dispose(@Disposes @MongoConfiguration(urlKey = "", databaseKey = "") MongoDbHandler mongoDbHandler) {
         try {
@@ -101,7 +108,9 @@ public class MongoFactory {
     }
 
     /**
-     * <p>getMongoClient.</p>
+     * <p>
+     * getMongoClient.
+     * </p>
      */
     public MongoClient getMongoClient(String uri) throws BaseException {
         if (StringUtils.isBlank(uri)) {
@@ -115,7 +124,9 @@ public class MongoFactory {
     }
 
     /**
-     * <p>disconnectMongo.</p>
+     * <p>
+     * disconnectMongo.
+     * </p>
      */
     @PreDestroy
     public void disconnectMongo() {

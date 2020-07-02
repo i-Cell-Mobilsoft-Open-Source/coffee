@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package hu.icellmobilsoft.coffee.module.mongodb.annotation;
+package hu.icellmobilsoft.coffee.module.mongodb.extension;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -28,55 +28,36 @@ import javax.enterprise.util.AnnotationLiteral;
 import javax.enterprise.util.Nonbinding;
 import javax.inject.Qualifier;
 
-import org.eclipse.microprofile.config.inject.ConfigProperty;
-
 /**
- * <p>
- * MongoConfiguration class.
- * </p>
- *
- * @since 1.0.0
+ * hu.icellmobilsoft.coffee.module.mongodb.extension.MongoDbClient használatához szükséges annotáció és MongoService osztalyok inicializalasahoz
  * 
- * @deprecated Use {@link hu.icellmobilsoft.coffee.module.mongodb.extension.MongoClientConfiguration} instead, forRemoval = true, since = "1.1.0"
+ * @author czenczl
+ * @since 1.1.0
+ *
  */
-@Deprecated(forRemoval = true, since = "1.1.0")
 @Qualifier
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER, ElementType.TYPE })
-public @interface MongoConfiguration {
+public @interface MongoClientConfiguration {
 
-    /**
-     * This value is used in {@link ConfigProperty} annotation
-     * 
-     * @return urlKey
-     */
     @Nonbinding
-    String urlKey();
+    String configKey();
 
-    /**
-     * This value is used in {@link ConfigProperty} annotation
-     * 
-     * @return databaseKey
-     */
-    @Nonbinding
-    String databaseKey();
-
-    final class Literal extends AnnotationLiteral<MongoConfiguration> implements MongoConfiguration {
-
-        public static final Literal INSTANCE = new Literal();
+    final class Literal extends AnnotationLiteral<MongoClientConfiguration> implements MongoClientConfiguration {
 
         private static final long serialVersionUID = 1L;
 
-        @Nonbinding
-        @Override
-        public String urlKey() {
-            return null;
+        final String configKey;
+
+        public Literal(String configKey) {
+            this.configKey = configKey;
         }
 
         @Nonbinding
         @Override
-        public String databaseKey() {
-            return null;
+        public String configKey() {
+            return configKey;
         }
+
     }
 }

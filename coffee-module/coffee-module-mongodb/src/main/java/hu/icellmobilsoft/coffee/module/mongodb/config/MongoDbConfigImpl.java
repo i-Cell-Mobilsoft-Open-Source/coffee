@@ -30,7 +30,10 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
  *
  * @author imre.scheffer
  * @since 1.0.0
+ * 
+ * @deprecated Use {@link hu.icellmobilsoft.coffee.module.mongodb.extension.MongoClientConfiguration} instead, forRemoval = true, since = "1.1.0"
  */
+@Deprecated(forRemoval = true, since = "1.1.0")
 @Dependent
 public class MongoDbConfigImpl implements MongoDbConfig {
 

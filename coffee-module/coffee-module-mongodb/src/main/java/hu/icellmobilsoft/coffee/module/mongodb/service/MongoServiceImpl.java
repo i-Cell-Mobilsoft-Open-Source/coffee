@@ -31,13 +31,15 @@ import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 
 /**
- * Alap MongoService implementáció a régi BasicDBObject-es használat végett
- * Ez a MongoDbHandler-ben, a getMongoService metódus miatt szükséges
+ * Alap MongoService implementáció a régi BasicDBObject-es használat végett Ez a MongoDbHandler-ben, a getMongoService metódus miatt szükséges
  *
  * @author balazs.joo
  * @since 1.0.0
+ * 
+ * @deprecated Use {@link hu.icellmobilsoft.coffee.module.mongodb.extension.MongoDbClient} or extend {@link hu.icellmobilsoft.coffee.module.mongodb.extension.MongoService} instead, forRemoval = true, since = "1.1.0"
  */
 @Dependent
+@Deprecated(forRemoval = true, since = "1.1.0")
 public class MongoServiceImpl extends MongoService<BasicDBObject> {
 
     private MongoCollection<BasicDBObject> mongoCollection;
@@ -52,9 +54,14 @@ public class MongoServiceImpl extends MongoService<BasicDBObject> {
     }
 
     /**
-     * <p>Setter for the field <code>mongoCollection</code>.</p>
+     * <p>
+     * Setter for the field <code>mongoCollection</code>.
+     * </p>
+     * @param mongoCollection selected mongo collection
      */
     public void setMongoCollection(MongoCollection<BasicDBObject> mongoCollection) {
+        // init repository collection
+        initRepositoryCollection(mongoCollection);
         this.mongoCollection = mongoCollection;
     }
 }
