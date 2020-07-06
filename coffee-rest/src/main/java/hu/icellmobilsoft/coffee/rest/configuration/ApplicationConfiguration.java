@@ -19,6 +19,7 @@
  */
 package hu.icellmobilsoft.coffee.rest.configuration;
 
+import java.text.MessageFormat;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
@@ -32,6 +33,7 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 
+import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.tool.utils.string.StringHelper;
 
 /**
@@ -56,12 +58,20 @@ public class ApplicationConfiguration {
     @Inject
     private StringHelper stringHelper;
 
-    private LoadingCache<CompositeCacheLoaderKey, Optional<?>> cache = CacheBuilder.newBuilder().weakKeys()
+    private LoadingCache<CompositeCacheLoaderKey, Optional<?>> cache = CacheBuilder.newBuilder()
             .expireAfterWrite(CACHE_TIME_MINUTES, TimeUnit.MINUTES).build(new CacheLoader<CompositeCacheLoaderKey, Optional<?>>() {
                 @SuppressWarnings("unchecked")
                 @Override
                 public Optional<?> load(CompositeCacheLoaderKey compositeCacheLoaderKey) throws Exception {
-                    return configurationHelper.getConfigOptionalValue(compositeCacheLoaderKey.getKey(), compositeCacheLoaderKey.getValueClass());
+                    Optional<?> optValue = configurationHelper.getConfigOptionalValue(compositeCacheLoaderKey.getKey(),
+                            compositeCacheLoaderKey.getValueClass());
+                    // if the value is missing, or ETCD cluster failer happend
+                    if (optValue.isEmpty()) {
+                        String msg = MessageFormat.format("Etcd value not found, key: [{0}] valueClass: [{1}]!", compositeCacheLoaderKey.getKey(),
+                                compositeCacheLoaderKey.getValueClass());
+                        throw new TechnicalException(msg);
+                    }
+                    return optValue;
                 }
             });
 
