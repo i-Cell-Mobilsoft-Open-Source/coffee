@@ -26,10 +26,9 @@ import javax.enterprise.context.Dependent;
 import javax.ws.rs.client.ClientRequestContext;
 import javax.ws.rs.client.ClientRequestFilter;
 
-import org.jboss.logging.MDC;
-
 import hu.icellmobilsoft.coffee.dto.common.LogConstants;
 import hu.icellmobilsoft.coffee.module.mp.restclient.RestClientPriority;
+import hu.icellmobilsoft.coffee.se.logging.mdc.MDC;
 
 /**
  * Rest Client default request setting filter. Serviceken keresztul osszekotheto sessionId valtozo beallitasa hogy a loggolas es az authentikacio

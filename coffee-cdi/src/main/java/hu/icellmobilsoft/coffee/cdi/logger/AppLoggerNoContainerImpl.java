@@ -19,16 +19,21 @@
  */
 package hu.icellmobilsoft.coffee.cdi.logger;
 
+import java.text.MessageFormat;
+import java.util.logging.Logger;
+
 import javax.annotation.Priority;
 import javax.enterprise.context.Dependent;
 import javax.enterprise.inject.Alternative;
 import javax.inject.Named;
 import javax.interceptor.Interceptor;
 
-import org.jboss.logging.Logger;
+import hu.icellmobilsoft.coffee.se.logging.JulLevel;
 
 /**
- * <p>AppLoggerNoContainerImpl class.</p>
+ * <p>
+ * AppLoggerNoContainerImpl class.
+ * </p>
  *
  * @author ischeffer
  * @since 1.0.0
@@ -60,8 +65,8 @@ public class AppLoggerNoContainerImpl implements AppLogger {
         if (getLogger() == null) {
             // hogyha null lenne a logger (nem allitja be valaki amikor kell)
             // Logger log = CommonLoggerFactory.getLogger(getClass());
-            Logger log = Logger.getLogger(getClass());
-            log.warn("Logger not SET! Applogger create temporary logger!");
+            Logger log = Logger.getLogger(getClass().getName());
+            log.log(JulLevel.WARN, "Logger not SET! Applogger create temporary logger!");
             return log;
         } else {
             return logger;
@@ -71,109 +76,109 @@ public class AppLoggerNoContainerImpl implements AppLogger {
     /** {@inheritDoc} */
     @Override
     public void trace(String msg) {
-        logger().trace(msg);
+        logger().log(JulLevel.TRACE, msg);
     }
 
     /** {@inheritDoc} */
     @Override
     public void trace(String format, Object... arguments) {
-        logger().tracev(format, arguments);
+        logger().log(JulLevel.TRACE, () -> MessageFormat.format(format, arguments));
     }
 
     /** {@inheritDoc} */
     @Override
     public void trace(String msg, Throwable t) {
-        logger().trace(msg, t);
+        logger().log(JulLevel.TRACE, msg, t);
     }
 
     /** {@inheritDoc} */
     @Override
     public boolean isTraceEnabled() {
-        return logger().isTraceEnabled();
+        return logger().isLoggable(JulLevel.TRACE);
     }
 
     /** {@inheritDoc} */
     @Override
     public void debug(String msg) {
-        logger().debug(msg);
+        logger().log(JulLevel.DEBUG, msg);
     }
 
     /** {@inheritDoc} */
     @Override
     public void debug(String format, Object... arguments) {
-        logger().debugv(format, arguments);
+        logger().log(JulLevel.DEBUG, () -> MessageFormat.format(format, arguments));
     }
 
     /** {@inheritDoc} */
     @Override
     public void debug(String msg, Throwable t) {
-        logger().debug(msg, t);
+        logger().log(JulLevel.DEBUG, msg, t);
     }
 
     /** {@inheritDoc} */
     @Override
     public boolean isDebugEnabled() {
-        return logger().isDebugEnabled();
+        return logger().isLoggable(JulLevel.DEBUG);
     }
 
     /** {@inheritDoc} */
     @Override
     public void info(String msg) {
-        logger().info(msg);
+        logger().log(JulLevel.INFO, msg);
     }
 
     /** {@inheritDoc} */
     @Override
     public void info(String format, Object... arguments) {
-        logger().infov(format, arguments);
+        logger().log(JulLevel.INFO, () -> MessageFormat.format(format, arguments));
     }
 
     /** {@inheritDoc} */
     @Override
     public void info(String msg, Throwable t) {
-        logger().info(msg, t);
+        logger().log(JulLevel.INFO, msg, t);
     }
 
     /** {@inheritDoc} */
     @Override
     public boolean isInfoEnabled() {
-        return logger().isInfoEnabled();
+        return logger().isLoggable(JulLevel.INFO);
     }
 
     /** {@inheritDoc} */
     @Override
     public void warn(String msg) {
-        logger().warn(msg);
+        logger().log(JulLevel.WARN, msg);
     }
 
     /** {@inheritDoc} */
     @Override
     public void warn(String format, Object... arguments) {
-        logger().warnv(format, arguments);
+        logger().log(JulLevel.WARN, () -> MessageFormat.format(format, arguments));
     }
 
     /** {@inheritDoc} */
     @Override
     public void warn(String msg, Throwable t) {
-        logger().warn(msg, t);
+        logger().log(JulLevel.WARN, msg, t);
     }
 
     /** {@inheritDoc} */
     @Override
     public void error(String msg) {
-        logger().error(msg);
+        logger().log(JulLevel.ERROR, msg);
     }
 
     /** {@inheritDoc} */
     @Override
     public void error(String format, Object... arguments) {
-        logger().errorv(format, arguments);
+        logger().log(JulLevel.ERROR, () -> MessageFormat.format(format, arguments));
     }
 
     /** {@inheritDoc} */
     @Override
     public void error(String msg, Throwable t) {
-        logger().error(msg, t);
+        logger().log(JulLevel.ERROR, msg, t);
     }
 
     /**
@@ -204,19 +209,19 @@ public class AppLoggerNoContainerImpl implements AppLogger {
     /** {@inheritDoc} */
     @Override
     public void writeLogToInfo() {
-        logger().info(toString());
+        logger().log(JulLevel.INFO, toString());
     }
 
     /** {@inheritDoc} */
     @Override
     public void writeLogToError() {
-        logger().error(toString());
+        logger().log(JulLevel.ERROR, toString());
     }
 
     /** {@inheritDoc} */
     @Override
     public void writeLog() {
-        logger().info(toString());
+        logger().log(JulLevel.INFO, toString());
     }
 
     /** {@inheritDoc} */

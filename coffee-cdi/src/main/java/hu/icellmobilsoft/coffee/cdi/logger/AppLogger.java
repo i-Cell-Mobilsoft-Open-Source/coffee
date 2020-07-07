@@ -21,25 +21,15 @@ package hu.icellmobilsoft.coffee.cdi.logger;
 
 import java.io.Serializable;
 
-import org.jboss.logging.Logger;
-
 /**
- * <p>AppLogger interface.</p>
+ * <p>
+ * AppLogger interface.
+ * </p>
  *
  * @author ischeffer
  * @since 1.0.0
  */
-public interface AppLogger extends hu.icellmobilsoft.coffee.cdi.logger.Logger, Serializable {
-
-    /**
-     * <p>setLogger.</p>
-     */
-    public void setLogger(Logger logger);
-
-    /**
-     * <p>getLogger.</p>
-     */
-    public Logger getLogger();
+public interface AppLogger extends hu.icellmobilsoft.coffee.se.logging.Logger, Serializable {
 
     /**
      * request szinten eltarolt valtozo elkerese
@@ -85,14 +75,18 @@ public interface AppLogger extends hu.icellmobilsoft.coffee.cdi.logger.Logger, S
     public void writeLog();
 
     /**
-     * <p>isThereAnyError.</p>
+     * <p>
+     * isThereAnyError.
+     * </p>
      *
      * @return true hogyha ERROR vagy magasabb szintu log van benne
      */
     public boolean isThereAnyError();
 
     /**
-     * <p>isThereAnyWarning.</p>
+     * <p>
+     * isThereAnyWarning.
+     * </p>
      *
      * @return true hogyha WARNING vagy magasabb szintu log van benne
      */

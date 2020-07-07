@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package hu.icellmobilsoft.coffee.cdi.logger;
+package hu.icellmobilsoft.coffee.se.logging;
 
 /**
  * Based on slf4j.Logger
@@ -26,6 +26,28 @@ package hu.icellmobilsoft.coffee.cdi.logger;
  * @since 1.0.0
  */
 public interface Logger {
+
+    public static hu.icellmobilsoft.coffee.se.logging.Logger getLogger(Class<?> clazz) {
+        return DefaultLogger.getLogger(clazz);
+    }
+
+    public static hu.icellmobilsoft.coffee.se.logging.Logger getLogger(String name) {
+        return DefaultLogger.getLogger(name);
+    }
+
+    /**
+     * <p>
+     * setLogger.
+     * </p>
+     */
+    void setLogger(java.util.logging.Logger logger);
+
+    /**
+     * <p>
+     * getLogger.
+     * </p>
+     */
+    java.util.logging.Logger getLogger();
 
     /**
      * Is the logger instance enabled for the TRACE level?
@@ -43,13 +65,10 @@ public interface Logger {
     public void trace(String msg);
 
     /**
-     * Log a message at the TRACE level according to the specified format and arguments.
-     * <p/>
+     * Log a message at the TRACE level according to the specified format and arguments.<br>
      * <p>
      * This form avoids superfluous string concatenation when the logger is disabled for the TRACE level. However, this variant incurs the hidden (and
-     * relatively small) cost of creating an <code>Object[]</code> before invoking the method, even if this logger is disabled for TRACE. The variants
-     * taking {@link #trace(String, Object) one} and {@link #trace(String, Object, Object) two} arguments exist solely in order to avoid this hidden
-     * cost.
+     * relatively small) cost of creating an <code>Object[]</code> before invoking the method, even if this logger is disabled for TRACE.
      * </p>
      *
      * @param format
@@ -85,13 +104,10 @@ public interface Logger {
     public void debug(String msg);
 
     /**
-     * Log a message at the DEBUG level according to the specified format and arguments.
-     * <p/>
+     * Log a message at the DEBUG level according to the specified format and arguments. <br>
      * <p>
      * This form avoids superfluous string concatenation when the logger is disabled for the DEBUG level. However, this variant incurs the hidden (and
-     * relatively small) cost of creating an <code>Object[]</code> before invoking the method, even if this logger is disabled for DEBUG. The variants
-     * taking {@link #debug(String, Object) one} and {@link #debug(String, Object, Object) two} arguments exist solely in order to avoid this hidden
-     * cost.
+     * relatively small) cost of creating an <code>Object[]</code> before invoking the method, even if this logger is disabled for DEBUG.
      * </p>
      *
      * @param format
@@ -127,13 +143,10 @@ public interface Logger {
     public void info(String msg);
 
     /**
-     * Log a message at the INFO level according to the specified format and arguments.
-     * <p/>
+     * Log a message at the INFO level according to the specified format and arguments. <br>
      * <p>
      * This form avoids superfluous string concatenation when the logger is disabled for the INFO level. However, this variant incurs the hidden (and
-     * relatively small) cost of creating an <code>Object[]</code> before invoking the method, even if this logger is disabled for INFO. The variants
-     * taking {@link #info(String, Object) one} and {@link #info(String, Object, Object) two} arguments exist solely in order to avoid this hidden
-     * cost.
+     * relatively small) cost of creating an <code>Object[]</code> before invoking the method, even if this logger is disabled for INFO.
      * </p>
      *
      * @param format
@@ -162,13 +175,10 @@ public interface Logger {
     public void warn(String msg);
 
     /**
-     * Log a message at the WARN level according to the specified format and arguments.
-     * <p/>
+     * Log a message at the WARN level according to the specified format and arguments. <br>
      * <p>
      * This form avoids superfluous string concatenation when the logger is disabled for the WARN level. However, this variant incurs the hidden (and
-     * relatively small) cost of creating an <code>Object[]</code> before invoking the method, even if this logger is disabled for WARN. The variants
-     * taking {@link #warn(String, Object) one} and {@link #warn(String, Object, Object) two} arguments exist solely in order to avoid this hidden
-     * cost.
+     * relatively small) cost of creating an <code>Object[]</code> before invoking the method, even if this logger is disabled for WARN.
      * </p>
      *
      * @param format
@@ -197,13 +207,10 @@ public interface Logger {
     public void error(String msg);
 
     /**
-     * Log a message at the ERROR level according to the specified format and arguments.
-     * <p/>
+     * Log a message at the ERROR level according to the specified format and arguments. <br>
      * <p>
      * This form avoids superfluous string concatenation when the logger is disabled for the ERROR level. However, this variant incurs the hidden (and
-     * relatively small) cost of creating an <code>Object[]</code> before invoking the method, even if this logger is disabled for ERROR. The variants
-     * taking {@link #error(String, Object) one} and {@link #error(String, Object, Object) two} arguments exist solely in order to avoid this hidden
-     * cost.
+     * relatively small) cost of creating an <code>Object[]</code> before invoking the method, even if this logger is disabled for ERROR.
      * </p>
      *
      * @param format
