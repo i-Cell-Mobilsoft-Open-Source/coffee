@@ -30,7 +30,7 @@ import java.util.Map;
  */
 public class CoffeeMDCAdapter implements MDCAdapter {
 
-    private ThreadLocal<Map<String, String>> mdcMap = new ThreadLocal<>();
+    private final ThreadLocal<Map<String, String>> mdcMap = new ThreadLocal<>();
 
     /** {@inheritDoc} */
     @Override

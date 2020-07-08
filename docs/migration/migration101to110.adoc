@@ -146,7 +146,7 @@ log.tracev("Some traced log:[{0}]", param);
 .Coffee 1.1.0+
 [source,java]
 ----
-import hu.icellmobilsoft.coffee.se.logging.AppLogger;
+import hu.icellmobilsoft.coffee.cdi.logger.AppLogger;
 ...
     @Inject
     private AppLogger log;

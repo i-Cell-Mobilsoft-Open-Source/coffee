@@ -19,7 +19,7 @@ Minden osztálynak saját loggere van, a loggerek nem örökölhetőek, nem áta
 // <1>
 @Inject
 @ThisLogger
-private hu.icellmobilsoft.coffee.se.logging.AppLogger log;
+private hu.icellmobilsoft.coffee.cdi.logger.AppLogger log;
   
   
 // <2>
