@@ -113,12 +113,12 @@ public class StringUtil {
      *         - {@code value.toString()} otherwise
      */
     private static String toString(Object value) {
+        if (value == null) {
+            return null;
+        }
         Object unwrapped = value;
         if (value instanceof Optional && ((Optional<?>) value).isPresent()) {
             unwrapped = ((Optional<?>) value).get();
-        }
-        if (unwrapped == null) {
-            return null;
         }
         if (unwrapped.getClass().isArray()) {
             return ArrayUtils.toString(unwrapped);
