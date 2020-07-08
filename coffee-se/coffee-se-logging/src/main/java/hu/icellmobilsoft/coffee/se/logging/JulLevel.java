@@ -22,10 +22,9 @@ package hu.icellmobilsoft.coffee.se.logging;
 import java.util.logging.Level;
 
 /**
- * Java Util Logging level extension, to enable use of DEBUG, TRACE levels.
- * 
+ * Java Util Logging level extension, to enable use of DEBUG, TRACE levels. <br>
  * Based on {@code org.jboss.logging.JDKLevel}
- * 
+ *
  * @author mark.petrenyi
  * @since 1.1.0
  */
@@ -33,15 +32,38 @@ public final class JulLevel extends Level {
 
     private static final long serialVersionUID = 1L;
 
+    /**
+     * Instantiates a new Jul level.
+     *
+     * @param name
+     *            the level name
+     * @param value
+     *            the level value
+     */
     protected JulLevel(final String name, final int value) {
         super(name, value);
     }
 
+    /**
+     * The JulLevel ERROR, indicating some errors.
+     */
     public static final JulLevel ERROR = new JulLevel("ERROR", 1000);
+    /**
+     * The JulLevel WARN, inicating protential problems of misconfiguration.
+     */
     public static final JulLevel WARN = new JulLevel("WARN", 900);
+    /**
+     * The JulLevel INFO, providing informational massages.
+     */
     @SuppressWarnings("hiding")
     public static final JulLevel INFO = new JulLevel("INFO", 800);
+    /**
+     * The JulLevel DEBUG, providing detailed informations for debugging.
+     */
     public static final JulLevel DEBUG = new JulLevel("DEBUG", 500);
+    /**
+     * The JulLevel TRACE, providing fine grade trce information.
+     */
     public static final JulLevel TRACE = new JulLevel("TRACE", 400);
 
 }

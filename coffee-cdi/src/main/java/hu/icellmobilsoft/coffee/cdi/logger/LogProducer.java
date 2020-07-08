@@ -71,7 +71,7 @@ public class LogProducer {
      */
     @Produces
     public hu.icellmobilsoft.coffee.se.logging.Logger createDefaultLogger(InjectionPoint injectionPoint) {
-        return getStaticAppLogger(injectionPoint.getMember().getDeclaringClass().getName());
+        return getStaticDefaultLogger(injectionPoint.getMember().getDeclaringClass().getName());
     }
 
     /**
@@ -114,7 +114,7 @@ public class LogProducer {
      * @param clazz
      *            osztaly
      * @return slf4j logger
-     * @deprecated use {@link #getStaticAppLogger(Class)} instead
+     * @deprecated use {@link #getStaticDefaultLogger(Class)} instead
      */
     @Deprecated(forRemoval = true, since = "1.1.0")
     public static org.jboss.logging.Logger getStaticLogger(Class<?> clazz) {
@@ -127,7 +127,7 @@ public class LogProducer {
      * @param className
      *            osztaly neve
      * @return slf4j logger
-     * @deprecated use {@link #getStaticAppLogger(String)} instead
+     * @deprecated use {@link #getStaticDefaultLogger(String)} instead
      */
     @Deprecated(forRemoval = true, since = "1.1.0")
     public static org.jboss.logging.Logger getStaticLogger(String className) {
@@ -141,7 +141,7 @@ public class LogProducer {
      *            osztaly
      * @return slf4j logger
      */
-    public static hu.icellmobilsoft.coffee.se.logging.Logger getStaticAppLogger(Class<?> clazz) {
+    public static hu.icellmobilsoft.coffee.se.logging.Logger getStaticDefaultLogger(Class<?> clazz) {
         return DefaultLogger.getLogger(clazz);
     }
 
@@ -152,7 +152,7 @@ public class LogProducer {
      *            osztaly neve
      * @return slf4j logger
      */
-    public static hu.icellmobilsoft.coffee.se.logging.Logger getStaticAppLogger(String className) {
+    public static hu.icellmobilsoft.coffee.se.logging.Logger getStaticDefaultLogger(String className) {
         return DefaultLogger.getLogger(className);
     }
 }

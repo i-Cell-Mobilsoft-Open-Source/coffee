@@ -30,8 +30,8 @@ private hu.icellmobilsoft.coffee.se.logging.Logger log;
 import hu.icellmobilsoft.coffee.cdi.logger.LogProducer;
 
 public static String blabla() {
-    LogProducer.getStaticAppLogger(BlaBla.class).trace("class blabla");
-    LogProducer.getStaticAppLogger("BlaBla").trace("class name blabla");
+    LogProducer.getStaticDefaultLogger(BlaBla.class).trace("class blabla");
+    LogProducer.getStaticDefaultLogger("BlaBla").trace("class name blabla");
     return "blabla";
 }
 

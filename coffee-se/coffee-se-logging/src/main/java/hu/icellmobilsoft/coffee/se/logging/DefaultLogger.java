@@ -36,10 +36,24 @@ public class DefaultLogger implements hu.icellmobilsoft.coffee.se.logging.Logger
 
     private Logger logger;
 
+    /**
+     * Construct a new DefaultLogger instance.
+     *
+     * @param clazz
+     *            the logger category class
+     * @return the logger
+     */
     public static hu.icellmobilsoft.coffee.se.logging.Logger getLogger(Class<?> clazz) {
         return getLogger(clazz.getName());
     }
 
+    /**
+     * Construct a new Logger instance.
+     *
+     * @param name
+     *            the logger category name
+     * @return the logger
+     */
     public static hu.icellmobilsoft.coffee.se.logging.Logger getLogger(String name) {
         DefaultLogger appLogger = new DefaultLogger();
         appLogger.setLogger(Logger.getLogger(name));

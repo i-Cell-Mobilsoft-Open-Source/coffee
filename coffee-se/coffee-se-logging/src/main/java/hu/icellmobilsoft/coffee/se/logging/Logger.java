@@ -27,10 +27,22 @@ package hu.icellmobilsoft.coffee.se.logging;
  */
 public interface Logger {
 
+    /**
+     * Construct a new Logger instance.
+     *
+     * @param clazz
+     *            the logger category class
+     */
     public static hu.icellmobilsoft.coffee.se.logging.Logger getLogger(Class<?> clazz) {
         return DefaultLogger.getLogger(clazz);
     }
 
+    /**
+     * Construct a new Logger instance.
+     *
+     * @param name
+     *            the logger category name
+     */
     public static hu.icellmobilsoft.coffee.se.logging.Logger getLogger(String name) {
         return DefaultLogger.getLogger(name);
     }

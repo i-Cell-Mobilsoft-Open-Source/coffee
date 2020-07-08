@@ -157,7 +157,7 @@ log.trace("Some traced log:[{0}]", param);
 
 . static logger
 +
-A `LogProducer.getStaticLogger` deprecated lett, helyette a `LogProducer.getStaticAppLogger` használható.
+A `LogProducer.getStaticLogger` deprecated lett, helyette a `LogProducer.getStaticDefaultLogger` használható.
 +
 .Coffee 1.0.0
 [source,java]
@@ -168,7 +168,7 @@ LogProducer.getStaticLogger(BlaBla.class).trace("class blabla");
 .Coffee 1.1.0+
 [source,java]
 ----
-LogProducer.getStaticAppLogger(BlaBla.class).trace("class blabla");
+LogProducer.getStaticDefaultLogger(BlaBla.class).trace("class blabla");
 ----
 
 === MDC
