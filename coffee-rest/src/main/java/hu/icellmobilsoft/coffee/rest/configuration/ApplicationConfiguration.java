@@ -237,7 +237,7 @@ public class ApplicationConfiguration {
         }
         try {
             Optional<T> value = (Optional<T>) cache.get(new CompositeCacheLoaderKey(key, clazz));
-            log.debugv("Key [{0}] value [{1}]", key, stringHelper.maskPropertyValue(key, value));
+            log.tracev("Key [{0}] value [{1}]", key, stringHelper.maskPropertyValue(key, value));
             return value;
         } catch (Exception e) {
             log.errorv(e, "Error in getting configuration for key [{0}]: [{1}]", key, e.getLocalizedMessage());
