@@ -1,5 +1,6 @@
 [#common_coffee-core]
 = Coffee Core
+include::core/coffee-se.adoc[leveloffset=+1]
 
 include::core/coffee-dto.adoc[leveloffset=+1]
 

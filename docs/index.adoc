@@ -8,7 +8,7 @@
 A Coffee framework célja hogy lefektessen bizonyos alapokat azoknak az eszközöknek, melyeket gyakran használunk a projektjeinkben.
 include::common.adoc[leveloffset=+1]
 
-//include::migration.adoc[leveloffset=+1]
+include::migration.adoc[leveloffset=+1]
 
 == HOWTO
 include::howto/etcd.adoc[leveloffset=+2]

@@ -3,7 +3,7 @@
 
 A Coffee saját loggolási rendszert használ, több okból fogva:
 
-* csomagolja a valódi loggolási rendszert (jelenleg ez jboss log)
+* csomagolja a valódi loggolási rendszert (jelenleg ez java util log)
 * request szinten gyüjti össze az összes logot ami loggolódik a rendszerben,
 azt is amit nem iratunk ki a konzolba (vagy máshova) mert magasabb szintre van állítva a loggolás
 (például ha INFO szintre van állítva a root logger, akkor a TRACE, DEBUG szintű log nem kerül ki sehova).
@@ -19,26 +19,35 @@ Minden osztálynak saját loggere van, a loggerek nem örökölhetőek, nem áta
 // <1>
 @Inject
 @ThisLogger
-private AppLogger log;
+private hu.icellmobilsoft.coffee.cdi.logger.AppLogger log;
   
   
 // <2>
 @Inject
-private org.jboss.logging.Logger log;
+private hu.icellmobilsoft.coffee.se.logging.Logger log;
 
 // <3>
 import hu.icellmobilsoft.coffee.cdi.logger.LogProducer;
 
 public static String blabla() {
-    LogProducer.getStaticLogger(BlaBla.class).trace("class blabla");
-    LogProducer.getStaticLogger("BlaBla").trace("class name blabla");
+    LogProducer.getStaticDefaultLogger(BlaBla.class).trace("class blabla");
+    LogProducer.getStaticDefaultLogger("BlaBla").trace("class name blabla");
+    return "blabla";
+}
+
+// <4>
+import hu.icellmobilsoft.coffee.se.logging.Logger;
+
+public static String blabla() {
+    Logger.getLogger(BlaBla.class).trace("class blabla");
+    Logger.getLogger("BlaBla").trace("class name blabla");
     return "blabla";
 }
 ----
 <1> ahol @RequestScope-ban (vagy magasabb scope-ban) dolgozunk az osztályal (esetek 90%)
 <2> ahol nincs RequestScope
 <3> ahol nem használható az inject, pl. static metódusokban
-
+<4> JavaSE környezetben pl. cliens jar-ok
 
 Ha a loggolásban szerepel paraméter, akkor azt KIVÉTEL NÉLKÜL "[paraméter]" jelek közé kell rakni.
 

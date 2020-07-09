@@ -29,6 +29,7 @@ import java.util.Map;
 
 import javax.enterprise.inject.Model;
 
+
 /**
  * Logglasra szolgalo container
  *

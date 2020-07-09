@@ -1,0 +1,6 @@
+[#common_core_coffee-se]
+= coffee-se
+
+Modul célja a lehetőség szerint java EE API-tól független osztályok gyűjtése.
+
+include::coffee-se/coffee-se-logging.adoc[leveloffset=+1]

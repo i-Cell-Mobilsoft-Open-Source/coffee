@@ -35,7 +35,6 @@ import javax.ws.rs.ext.WriterInterceptor;
 import javax.ws.rs.ext.WriterInterceptorContext;
 
 import org.apache.commons.lang3.StringUtils;
-import org.jboss.logging.MDC;
 
 import hu.icellmobilsoft.coffee.cdi.logger.AppLogger;
 import hu.icellmobilsoft.coffee.cdi.logger.ThisLogger;
@@ -43,6 +42,7 @@ import hu.icellmobilsoft.coffee.dto.common.LogConstants;
 import hu.icellmobilsoft.coffee.rest.log.annotation.LogSpecifier;
 import hu.icellmobilsoft.coffee.rest.log.annotation.enumeration.LogSpecifierTarget;
 import hu.icellmobilsoft.coffee.rest.utils.RestLoggerUtil;
+import hu.icellmobilsoft.coffee.se.logging.mdc.MDC;
 import hu.icellmobilsoft.coffee.tool.utils.string.RandomUtil;
 
 /**
@@ -84,7 +84,9 @@ public abstract class BaseRestLogger implements ContainerRequestFilter, WriterIn
     }
 
     /**
-     * <p>processRequest.</p>
+     * <p>
+     * processRequest.
+     * </p>
      */
     protected String processRequest(ContainerRequestContext requestContext) {
         if (RestLoggerUtil.logDisabled(requestContext, LogSpecifierTarget.REQUEST)) {
@@ -102,7 +104,9 @@ public abstract class BaseRestLogger implements ContainerRequestFilter, WriterIn
     }
 
     /**
-     * <p>processResponse.</p>
+     * <p>
+     * processResponse.
+     * </p>
      */
     protected String processResponse(WriterInterceptorContext context) throws IOException {
         if (RestLoggerUtil.logDisabled(context, LogSpecifierTarget.RESPONSE)) {
@@ -120,7 +124,8 @@ public abstract class BaseRestLogger implements ContainerRequestFilter, WriterIn
             byte[] entityCopy = new byte[0];
             int maxResponseEntityLogSize = RestLoggerUtil.getMaxEntityLogSize(context, LogSpecifierTarget.RESPONSE);
             if (maxResponseEntityLogSize != LogSpecifier.NO_LOG) {
-                hu.icellmobilsoft.coffee.tool.utils.stream.OutputStreamCopier osc = new hu.icellmobilsoft.coffee.tool.utils.stream.OutputStreamCopier(originalStream);
+                hu.icellmobilsoft.coffee.tool.utils.stream.OutputStreamCopier osc = new hu.icellmobilsoft.coffee.tool.utils.stream.OutputStreamCopier(
+                        originalStream);
                 context.setOutputStream(osc);
                 // elegessuk a stream-et, kozben masoljuk a tartalmat
                 try {
@@ -150,7 +155,9 @@ public abstract class BaseRestLogger implements ContainerRequestFilter, WriterIn
     public abstract String sessionKey();
 
     /**
-     * <p>printRequestHeaders.</p>
+     * <p>
+     * printRequestHeaders.
+     * </p>
      */
     protected void printRequestHeaders(StringBuffer b, ContainerRequestContext requestContext) {
         b.append(requestResponseLogger.printRequestHeaders(requestContext.getHeaders()));
@@ -162,21 +169,27 @@ public abstract class BaseRestLogger implements ContainerRequestFilter, WriterIn
     }
 
     /**
-     * <p>printRequestLine.</p>
+     * <p>
+     * printRequestLine.
+     * </p>
      */
     protected void printRequestLine(StringBuffer b, ContainerRequestContext requestContext) {
         b.append(requestResponseLogger.printRequestLine(requestContext));
     }
 
     /**
-     * <p>printRequestEntity.</p>
+     * <p>
+     * printRequestEntity.
+     * </p>
      */
     protected void printRequestEntity(StringBuffer b, ContainerRequestContext requestContext) {
         b.append(requestResponseLogger.printRequestEntity(requestContext));
     }
 
     /**
-     * <p>printResponseLine.</p>
+     * <p>
+     * printResponseLine.
+     * </p>
      */
     protected void printResponseLine(StringBuffer b, WriterInterceptorContext context) {
         String fullPath = uriInfo.getAbsolutePath().toASCIIString();
@@ -188,14 +201,18 @@ public abstract class BaseRestLogger implements ContainerRequestFilter, WriterIn
     }
 
     /**
-     * <p>printResponseHeaders.</p>
+     * <p>
+     * printResponseHeaders.
+     * </p>
      */
     protected void printResponseHeaders(StringBuffer b, WriterInterceptorContext context) {
         b.append(requestResponseLogger.printResponseHeaders(context.getHeaders()));
     }
 
     /**
-     * <p>printResponseEntity.</p>
+     * <p>
+     * printResponseEntity.
+     * </p>
      */
     protected void printResponseEntity(StringBuffer b, WriterInterceptorContext context, byte[] entityCopy) {
         b.append(requestResponseLogger.printResponseEntity(uriInfo.getAbsolutePath().toASCIIString(), context, entityCopy));

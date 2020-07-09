@@ -215,6 +215,7 @@
 		<module>coffee-rest</module>
 		<module>coffee-system</module>
 		<module>coffee-module</module>
+		<module>coffee-se</module>
 	</modules>
 
 	<distributionManagement>

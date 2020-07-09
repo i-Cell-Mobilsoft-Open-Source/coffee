@@ -12,7 +12,7 @@ coff:ee v1.0.1 -> v1.1.0 migrációs leírás, újdonságok, változások leír�
 
 MongoDbHandler deprecated lett, helyette a MongoDbClient vagy a MongoService<T> kiterjeszáse használható.
 
-[source,xml]
+[source,java]
 ----
 // régi definíció
 @Inject
@@ -25,7 +25,7 @@ mongoDbHandler.insertOne(dtoDocument);
 
 helyett MongoDbClient használata
 
-[source,xml]
+[source,java]
 ----
 // uj használat
 @Inject
@@ -38,7 +38,7 @@ mongoDbClient.insertOne(dtoDocument);
 
 MongoService használata POJO-val
 
-[source,xml]
+[source,java]
 ----
 // régi definíció
 @Model
@@ -61,7 +61,7 @@ private CustomMongoService customMongoService;
 
 helyett 
 
-[source,xml]
+[source,java]
 ----
 // uj használat
 @Dependent
@@ -76,7 +76,7 @@ private CustomMongoService customMongoService;
 
 A MongoService find() metódus használat előtt *initRepositoryCollection(getMongoCollection())* hívás szükséges 
 ha nem az új annotációval használjuk.
-[source,xml]
+[source,java]
 ----
 // régi definíció
 @Model
@@ -97,7 +97,7 @@ private CustomMongoService customMongoService;
  
 helyett, @MongoServiceConfiguration annotáció használatával a collection automatikusan betöltődik.
  
-[source,xml]
+[source,java]
 ----
 // régi definíció
 @Dependent
@@ -116,9 +116,62 @@ public class CustomMongoService extends MongoService<MongoEntity> {
 @MongoServiceConfiguration(configKey = "configKey", collectionKey = "collectionKey")
 private CustomMongoService customMongoService;
 ----
+=== Loggolás
+Az `AppLogger`-en belül használt loggolási rendszer jboss-ról java.util.logging-ra lett cserélve,
+hogy a coffee-t használó projektek ne legyenek jboss környezetre kényszerítve.
+Ezzel együtt a CDI független osztályok kiszervezésre kerültek a `coffee-se-logging` modul-ba.
+Egyelőre a visszafele kompatibilitás megmaradt, azonban deprecated lett, így érdemes átállni az alábbiak szerint:
+
+==== Átállás
 
 
+. jboss Logger inject
++
+a korábbi jboss Logger helyett a saját coffee `hu.icellmobilsoft.coffee.se.logging.Logger`-t lehet használni.
+Az osztály csere miatt a `org.jobss.logging.Logger.tracev` jellegű metódusokat is le kell cserélni pl. `hu.icellmobilsoft.coffee.se.logging.Logger.trace`-re (az Logger default támogatja a MessageFormat-al történő paraméterezést)
++
+NOTE: Továbbra is működik a jboss Logger Inject-álása, azonban későbbi verzióban ez változhat.
++
+.Coffee 1.0.0
+[source,java]
+----
+import org.jboss.logging.Logger;
+...
+    @Inject
+    private Logger log;
+...
+log.tracev("Some traced log:[{0}]", param);
+----
++
+.Coffee 1.1.0+
+[source,java]
+----
+import hu.icellmobilsoft.coffee.cdi.logger.AppLogger;
+...
+    @Inject
+    private AppLogger log;
+...
+log.trace("Some traced log:[{0}]", param);
+----
 
 
+. static logger
++
+A `LogProducer.getStaticLogger` deprecated lett, helyette a `LogProducer.getStaticDefaultLogger` használható.
++
+.Coffee 1.0.0
+[source,java]
+----
+LogProducer.getStaticLogger(BlaBla.class).trace("class blabla");
+----
++
+.Coffee 1.1.0+
+[source,java]
+----
+LogProducer.getStaticDefaultLogger(BlaBla.class).trace("class blabla");
+----
 
-
+=== MDC
+MDC kezelés is saját rendszeren keresztül történik;
+ahol projekt szinten eddig volt használva `org.jboss.logging.MDC`,
+ott érdemes az import-ot `hu.icellmobilsoft.coffee.se.logging.mdc.MDC`-re cserélni. Bővebben: <<common_core_coffee-se_coffee-se-logging_MDC, MDC>>.

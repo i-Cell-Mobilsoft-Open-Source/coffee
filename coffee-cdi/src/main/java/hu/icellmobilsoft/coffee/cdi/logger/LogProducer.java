@@ -27,10 +27,13 @@ import javax.inject.Named;
 
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.core.api.provider.DependentProvider;
-import org.jboss.logging.Logger;
+
+import hu.icellmobilsoft.coffee.se.logging.DefaultLogger;
 
 /**
- * <p>LogProducer class.</p>
+ * <p>
+ * LogProducer class.
+ * </p>
  *
  * @author ischeffer
  * @since 1.0.0
@@ -44,20 +47,45 @@ public class LogProducer {
     private AppLogger appLogger;
 
     /**
-     * <p>createRequestLogger.</p>
+     * Create request logger app logger.
+     *
+     * @param injectionPoint
+     *            the injection point
+     * @return the app logger
      */
     @Produces
     @ThisLogger
     public AppLogger createRequestLogger(InjectionPoint injectionPoint) {
-        appLogger.setLogger(getStaticLogger(injectionPoint.getMember().getDeclaringClass().getName()));
+        appLogger.setLogger(java.util.logging.Logger.getLogger(injectionPoint.getMember().getDeclaringClass().getName()));
         return appLogger;
     }
 
     /**
-     * <p>createDefaultLogger.</p>
+     * <p>
+     * createDefaultLogger.
+     * </p>
+     *
+     * @param injectionPoint
+     *            the injection point
+     * @return {@link hu.icellmobilsoft.coffee.se.logging.Logger} instance
      */
     @Produces
-    public Logger createDefaultLogger(InjectionPoint injectionPoint) {
+    public hu.icellmobilsoft.coffee.se.logging.Logger createDefaultLogger(InjectionPoint injectionPoint) {
+        return getStaticDefaultLogger(injectionPoint.getMember().getDeclaringClass().getName());
+    }
+
+    /**
+     * <p>
+     * createDefaultJBossLogger.
+     * </p>
+     *
+     * @param injectionPoint
+     *            the injection point
+     * @return {@link org.jboss.logging.Logger} instance
+     */
+    @Produces
+    @Deprecated(since = "1.1.0", forRemoval = true)
+    public org.jboss.logging.Logger createDefaultJbossLogger(InjectionPoint injectionPoint) {
         return getStaticLogger(injectionPoint.getMember().getDeclaringClass().getName());
     }
 
@@ -67,7 +95,7 @@ public class LogProducer {
      *
      * @param clazz
      *            logger class rakotese
-     * @return DependentProvider<AppLogger> instance bean
+     * @return {@code DependentProvider<AppLogger>} instance bean
      */
     public static DependentProvider<AppLogger> getAppLogger(Class<?> clazz) {
         if (clazz == null) {
@@ -75,7 +103,7 @@ public class LogProducer {
         }
         // ez ugyan az ami itt van injectalva "private AppLogger appLogger;"
         DependentProvider<AppLogger> dpAppLogger = BeanProvider.getDependent(AppLogger.class, new DefaultAppLoggerQualifier());
-        Logger log = getStaticLogger(clazz);
+        java.util.logging.Logger log = java.util.logging.Logger.getLogger(clazz.getName());
         dpAppLogger.get().setLogger(log);
         return dpAppLogger;
     }
@@ -86,9 +114,35 @@ public class LogProducer {
      * @param clazz
      *            osztaly
      * @return slf4j logger
+     * @deprecated use {@link #getStaticDefaultLogger(Class)} instead
      */
-    public static Logger getStaticLogger(Class<?> clazz) {
-        return Logger.getLogger(clazz);
+    @Deprecated(forRemoval = true, since = "1.1.0")
+    public static org.jboss.logging.Logger getStaticLogger(Class<?> clazz) {
+        return org.jboss.logging.Logger.getLogger(clazz);
+    }
+
+    /**
+     * Bizonyos esetekben hasznaljuk, peldaul ott ahol nincs CDI es static-kent bekotjuk osztaly valtozoba
+     *
+     * @param className
+     *            osztaly neve
+     * @return slf4j logger
+     * @deprecated use {@link #getStaticDefaultLogger(String)} instead
+     */
+    @Deprecated(forRemoval = true, since = "1.1.0")
+    public static org.jboss.logging.Logger getStaticLogger(String className) {
+        return org.jboss.logging.Logger.getLogger(className);
+    }
+
+    /**
+     * Bizonyos esetekben hasznaljuk, peldaul ott ahol nincs CDI es static-kent bekotjuk osztaly valtozoba
+     *
+     * @param clazz
+     *            osztaly
+     * @return slf4j logger
+     */
+    public static hu.icellmobilsoft.coffee.se.logging.Logger getStaticDefaultLogger(Class<?> clazz) {
+        return DefaultLogger.getLogger(clazz);
     }
 
     /**
@@ -98,7 +152,7 @@ public class LogProducer {
      *            osztaly neve
      * @return slf4j logger
      */
-    public static Logger getStaticLogger(String className) {
-        return Logger.getLogger(className);
+    public static hu.icellmobilsoft.coffee.se.logging.Logger getStaticDefaultLogger(String className) {
+        return DefaultLogger.getLogger(className);
     }
 }
