@@ -22,11 +22,13 @@ package hu.icellmobilsoft.coffee.tool.utils.string;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.enterprise.inject.Vetoed;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jboss.logging.Logger;
 
@@ -89,7 +91,7 @@ public class StringUtil {
      * @return "*" if key and keyPattern are not blank and key matches keyPattern (case ignored); value otherwise
      */
     public static String maskPropertyValue(String key, Object value, String keyPattern) {
-        String valueStr = value == null ? null : value.toString();
+        String valueStr = toString(value);
         if (StringUtils.isNoneBlank(key, keyPattern, valueStr)) {
             Pattern pattern = Pattern.compile(keyPattern, Pattern.CASE_INSENSITIVE);
             Matcher matcher = pattern.matcher(key);
@@ -98,6 +100,30 @@ public class StringUtil {
             }
         }
         return valueStr;
+    }
+
+    /**
+     * Makes String out of value, returning null for null and unwrapping not empty optionals.
+     * 
+     * @param value
+     *            Object to convert
+     * @return - {@code null} if value is null <br>
+     *         - {@code ((Optional<?>) value).get().toString()} if value is a not empty Optional <br>
+     *         - {@code ArrayUtils.toString(value)} if value (or the value inside Optional) is an array <br>
+     *         - {@code value.toString()} otherwise
+     */
+    private static String toString(Object value) {
+        if (value == null) {
+            return null;
+        }
+        Object unwrapped = value;
+        if (value instanceof Optional && ((Optional<?>) value).isPresent()) {
+            unwrapped = ((Optional<?>) value).get();
+        }
+        if (unwrapped.getClass().isArray()) {
+            return ArrayUtils.toString(unwrapped);
+        }
+        return unwrapped.toString();
     }
 
     /**
