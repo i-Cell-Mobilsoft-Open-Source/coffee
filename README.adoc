@@ -1,10 +1,9 @@
 = coff:ee
 
-A coff:ee egy JavaEE framework,
-melynek célja hogy az enterprise világ gyakori algoritmusait összegyűjtse,
-azokra egy alap működést nyújtson,
-melyet a projekten ha szükséges saját igényekre szabható.
-Projekt ezeken az alap technológián alapszik:
+A coff:ee egy JavaEE framework, melynek célja, hogy az enterprise világ gyakori algoritmusait összegyűjtse,
+azokra egy alapvető megoldást nyújtson, melyet, ha szükséges saját igényeinkre szabhatunk.
+
+A projekt ezeken a technológiákon alapszik:
 
 * JAVA EE 8+
 * Java 11+
@@ -13,8 +12,8 @@ Projekt ezeken az alap technológián alapszik:
 Bővebb leírás a http://i-cell-mobilsoft-open-source.github.io/coffee/[coff:ee dokumentáció] oldalon található.
 
 == Maven central
-A coff:ee megtalálható az official maven repository-ba is,
-projekten elég behúzni a BOM-ot mely minden almodult lekezel:
+A coff:ee megtalálható az official maven repository-ban is,
+a projekten elég behúzni a BOM-ot mely minden almodult lekezel:
 
 .dependencyManagement beállítások
 [source, xml]
