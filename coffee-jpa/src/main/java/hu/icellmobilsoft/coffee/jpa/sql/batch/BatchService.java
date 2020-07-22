@@ -21,13 +21,10 @@ package hu.icellmobilsoft.coffee.jpa.sql.batch;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.sql.Timestamp;
 import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import javax.inject.Inject;
@@ -67,6 +64,7 @@ import hu.icellmobilsoft.coffee.tool.utils.string.RandomUtil;
  * Batch mentessekkel foglalkozo osztaly
  *
  * @author imre.scheffer
+ * @author robert.kaplar
  * @since 1.0.0
  */
 public class BatchService {
@@ -81,9 +79,6 @@ public class BatchService {
     @SuppressWarnings("cdi-ambiguous-dependency")
     @Inject
     private EntityManager entityManager;
-
-    @Inject
-    private BatchServiceResult batchServiceResult;
 
     private String sqlPostfix;
 
@@ -170,9 +165,10 @@ public class BatchService {
         }
         List<E> insert = entities.stream().filter(e -> getId(e) == null).collect(Collectors.toList());
         List<E> update = entities.stream().filter(e -> getId(e) != null).collect(Collectors.toList());
-        batchInsertNative(insert, clazz);
-        batchUpdateNative(update, clazz);
-        return batchServiceResult.getResult();
+        Map<String, Status> mergeResult = new HashMap<>();
+        mergeResult.putAll(batchInsertNative(insert, clazz));
+        mergeResult.putAll(batchUpdateNative(update, clazz));
+        return mergeResult;
     }
 
     /**
@@ -191,6 +187,7 @@ public class BatchService {
         String entityName = entities.get(0).getClass().getSimpleName();
         log.debug(">> batchMerge: [{0}] list of [{1}] elements", entityName, entities.size());
 
+        Map<String, Status> result = new HashMap<>();
         try {
             // ha nincs tranzakció nem szabad hogy autoCommit történjen az executeBatch-ben
             entityManager.joinTransaction();
@@ -240,7 +237,7 @@ public class BatchService {
                         tmpProcessingEntities.add(getId(entity));
 
                         if (i % batchSize() == 0) {
-                            executeBatch(BatchMode.UPDATE, ps, tmpProcessingEntities);
+                            executeBatch(result, ps, tmpProcessingEntities);
                             tmpProcessingEntities.clear();
                         }
                         i++;
@@ -248,7 +245,7 @@ public class BatchService {
                     }
 
                     if (!CollectionUtils.isEmpty(tmpProcessingEntities)) {
-                        executeBatch(BatchMode.UPDATE, ps, tmpProcessingEntities);
+                        executeBatch(result, ps, tmpProcessingEntities);
                     }
 
                     log.debug(">> batchMerge: end");
@@ -258,7 +255,7 @@ public class BatchService {
                     throw new RuntimeException(msg, e);
                 }
             });
-            return batchServiceResult.getResult(BatchMode.UPDATE);
+            return result;
         } catch (Exception e) {
             String msg = MessageFormat.format("Exception in batch merge [{0}]: [{1}]", entityName, e.getLocalizedMessage());
             log.error(msg, e);
@@ -284,6 +281,7 @@ public class BatchService {
         String entityName = entities.get(0).getClass().getSimpleName();
         log.debug(">> batchInsertNative: [{0}] list of [{1}] elements", entityName, entities.size());
 
+        Map<String, Status> result = new HashMap<>();
         try {
             // ha nincs tranzakció nem szabad hogy autoCommit történjen az executeBatch-ben
             entityManager.joinTransaction();
@@ -324,7 +322,7 @@ public class BatchService {
                         tmpProcessingEntities.add(getId(entity));
 
                         if (i % batchSize() == 0) {
-                            executeBatch(BatchMode.INSERT, ps, tmpProcessingEntities);
+                            executeBatch(result, ps, tmpProcessingEntities);
                             tmpProcessingEntities.clear();
                         }
                         i++;
@@ -332,7 +330,7 @@ public class BatchService {
                     }
 
                     if (!CollectionUtils.isEmpty(tmpProcessingEntities)) {
-                        executeBatch(BatchMode.INSERT, ps, tmpProcessingEntities);
+                        executeBatch(result, ps, tmpProcessingEntities);
                     }
 
                     log.debug(">> batchInsertNative: end");
@@ -342,7 +340,7 @@ public class BatchService {
                     throw new RuntimeException(msg, e);
                 }
             });
-            return batchServiceResult.getResult(BatchMode.INSERT);
+            return result;
         } catch (Exception e) {
             String msg = MessageFormat.format("Exception in batch insert [{0}]: [{1}]", entityName, e.getLocalizedMessage());
             log.error(msg, e);
@@ -368,6 +366,7 @@ public class BatchService {
         String entityName = entities.get(0).getClass().getSimpleName();
         log.debug(">> batchDeleteNative: [{0}] list of [{1}] elements", entityName, entities.size());
 
+        Map<String, Status> result = new HashMap<>();
         try {
             // ha nincs tranzakció nem szabad hogy autoCommit történjen az executeBatch-ben
             entityManager.joinTransaction();
@@ -400,7 +399,7 @@ public class BatchService {
                         tmpProcessingEntities.add(entityId);
 
                         if (i % batchSize() == 0) {
-                            executeBatch(BatchMode.DELETE, ps, tmpProcessingEntities);
+                            executeBatch(result, ps, tmpProcessingEntities);
                             tmpProcessingEntities.clear();
                         }
                         i++;
@@ -408,7 +407,7 @@ public class BatchService {
                     }
 
                     if (!CollectionUtils.isEmpty(tmpProcessingEntities)) {
-                        executeBatch(BatchMode.DELETE, ps, tmpProcessingEntities);
+                        executeBatch(result, ps, tmpProcessingEntities);
                     }
 
                     log.debug(">> batchDeleteNative: end");
@@ -418,7 +417,7 @@ public class BatchService {
                     throw new RuntimeException(msg, e);
                 }
             });
-            return batchServiceResult.getResult(BatchMode.DELETE);
+            return result;
         } catch (Exception e) {
             String msg = MessageFormat.format("Exception in batch delete [{0}]: [{1}]", entityName, e.getLocalizedMessage());
             log.error(msg, e);
@@ -562,9 +561,37 @@ public class BatchService {
         return (String) entityManager.getEntityManagerFactory().getPersistenceUnitUtil().getIdentifier(entity);
     }
 
-    private <E> void executeBatch(BatchMode batchMode, PreparedStatement ps, List<String> tmpProcessedEntities) throws SQLException {
+    private <E> void executeBatch(Map<String, Status> result, PreparedStatement ps, List<String> tmpProcessedEntities) throws SQLException {
         int[] executeBatchResult = ps.executeBatch();
-        batchServiceResult.addBatchResult(batchMode, tmpProcessedEntities, executeBatchResult);
+        addBatchResult(result, tmpProcessedEntities, executeBatchResult);
     }
 
+    private void addBatchResult(Map<String, Status> result, List<String> entityIds, int[] batchResult) {
+        if (CollectionUtils.isEmpty(entityIds)) {
+            return;
+        } else if (entityIds.size() != batchResult.length) {
+            throw new IllegalArgumentException("Each entityId must have an associated batchResult!");
+        }
+
+        for (int i = 0; i < entityIds.size(); i++) {
+            int resultCode = batchResult[i];
+            if (resultCode > 0) {
+                result.put(entityIds.get(i), Status.SUCCESS.setRowsAffected(resultCode));
+            } else {
+                switch (resultCode) {
+                    case 0:
+                        result.put(entityIds.get(i), Status.SUCCESS_NO_UPDATE);
+                        break;
+                    case Statement.SUCCESS_NO_INFO:
+                        result.put(entityIds.get(i), Status.SUCCESS_NO_INFO);
+                        break;
+                    case Statement.EXECUTE_FAILED:
+                        result.put(entityIds.get(i), Status.EXECUTE_FAILED);
+                        break;
+                    default:
+                        result.put(entityIds.get(i), Status.UNKNOWN);
+                }
+            }
+        }
+    }
 }
