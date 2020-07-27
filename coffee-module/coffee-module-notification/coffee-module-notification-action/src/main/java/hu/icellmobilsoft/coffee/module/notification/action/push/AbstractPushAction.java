@@ -77,11 +77,11 @@ public abstract class AbstractPushAction implements Serializable {
      */
     protected void push(PushType pushType, TemplateFullType templateFullType) throws BaseException {
         Push pushEntity = pushHelper.insertToDb(templateFullType.getSubject(), new String(templateFullType.getData(), StandardCharsets.UTF_8),
-                pushType.getExternalId(), pushType.getDevice());
+                pushType.getExternalId(), pushType.getDevice(), pushType.getPayload());
         for (String channel : androidChannels(pushType)) {
             String responseMessage;
             try {
-                responseMessage = sendAndroidPush(channel, templateFullType, pushType.getExpire());
+                responseMessage = sendAndroidPush(channel, pushType.getPayload(), templateFullType, pushType.getExpire());
                 log.debug("Message to channel[{0}] sended: [{1}]", channel, responseMessage);
                 pushHelper.updateDb(pushEntity, channel, true, responseMessage);
             } catch (PushClientException e) {
@@ -97,7 +97,7 @@ public abstract class AbstractPushAction implements Serializable {
         for (String channel : iosChannels(pushType)) {
             String responseMessage;
             try {
-                responseMessage = sendIosPush(channel, templateFullType, pushType.getExpire());
+                responseMessage = sendIosPush(channel, pushType.getPayload(), templateFullType, pushType.getExpire());
                 log.debug("Message to channel[{0}] sended: [{1}]", channel, responseMessage);
                 pushHelper.updateDb(pushEntity, channel, true, responseMessage);
             } catch (PushClientException e) {
@@ -145,13 +145,13 @@ public abstract class AbstractPushAction implements Serializable {
     /**
      * <p>sendAndroidPush.</p>
      */
-    public abstract String sendAndroidPush(String channel, TemplateFullType templateFullType, Integer expireInSecond)
+    public abstract String sendAndroidPush(String channel, List<KeyValueBasicType> payloads, TemplateFullType templateFullType, Integer expireInSecond)
             throws PushClientException, PushServerException;
 
     /**
      * <p>sendIosPush.</p>
      */
-    public abstract String sendIosPush(String channel, TemplateFullType templateFullType, Integer expireInSecond)
+    public abstract String sendIosPush(String channel, List<KeyValueBasicType> payloads, TemplateFullType templateFullType, Integer expireInSecond)
             throws PushClientException, PushServerException;
 
     /**

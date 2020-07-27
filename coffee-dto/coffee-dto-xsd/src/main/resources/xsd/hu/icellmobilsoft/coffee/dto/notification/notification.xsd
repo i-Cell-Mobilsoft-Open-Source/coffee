@@ -95,6 +95,11 @@
                     <xsd:documentation>message template parameter</xsd:documentation>
                 </xsd:annotation>
             </xsd:element>
+            <xsd:element name="payload" type="common:KeyValueBasicType" minOccurs="0" maxOccurs="unbounded">
+                <xsd:annotation>
+                    <xsd:documentation>message payload parameter</xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
             <xsd:element name="expire" type="xsd:int" minOccurs="0">
                 <xsd:annotation>
                     <xsd:documentation>message expiration time in seconds</xsd:documentation>

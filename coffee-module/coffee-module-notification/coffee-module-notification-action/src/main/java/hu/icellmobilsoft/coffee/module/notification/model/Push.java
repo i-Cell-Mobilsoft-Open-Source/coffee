@@ -60,6 +60,9 @@ public class Push extends AbstractIdentifiedAuditEntity {
     @Transient
     private Map<String, PushDevice> pushDevices = new HashMap<String, PushDevice>();
 
+    @Column(name = "payload")
+    private String payload;
+
     /**
      * <p>Getter for the field <code>subject</code>.</p>
      */
@@ -114,5 +117,19 @@ public class Push extends AbstractIdentifiedAuditEntity {
      */
     public void setPushDevices(Map<String, PushDevice> pushDevices) {
         this.pushDevices = pushDevices;
+    }
+
+    /**
+     * <p>Getter for the field <code>payload</code>.</p>
+     */
+    public String getPayload() {
+        return payload;
+    }
+
+    /**
+     * <p>Setter for the field <code>payload</code>.</p>
+     */
+    public void setPayload(String payload) {
+        this.payload = payload;
     }
 }
