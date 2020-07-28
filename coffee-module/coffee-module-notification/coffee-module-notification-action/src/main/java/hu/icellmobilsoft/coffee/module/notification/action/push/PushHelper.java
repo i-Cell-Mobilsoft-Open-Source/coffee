@@ -29,12 +29,14 @@ import javax.inject.Inject;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.deltaspike.jpa.api.transaction.Transactional;
 
+import hu.icellmobilsoft.coffee.dto.common.common.KeyValueBasicType;
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.dto.notification.notification.DeviceType;
 import hu.icellmobilsoft.coffee.module.notification.model.Push;
 import hu.icellmobilsoft.coffee.module.notification.model.PushDevice;
 import hu.icellmobilsoft.coffee.module.notification.service.PushDeviceService;
 import hu.icellmobilsoft.coffee.module.notification.service.PushService;
+import hu.icellmobilsoft.coffee.tool.gson.JsonUtil;
 import hu.icellmobilsoft.coffee.tool.utils.enums.EnumUtil;
 
 /**
@@ -58,19 +60,21 @@ public class PushHelper implements Serializable {
      * <p>insertToDb.</p>
      */
     @Transactional
-    public Push insertToDb(String subject, String body, String externalId, List<DeviceType> deviceList) throws BaseException {
+    public Push insertToDb(String subject, String body, String externalId, List<DeviceType> deviceList, List<KeyValueBasicType> payloads)
+            throws BaseException {
         if (StringUtils.isBlank(subject) || StringUtils.isBlank(body)) {
             return null;
         }
-        Push savedPush = savePush(subject, body, externalId);
+        Push savedPush = savePush(subject, body, externalId, JsonUtil.toJson(payloads));
         saveDevices(savedPush, deviceList);
         return savedPush;
     }
 
-    private Push savePush(String subject, String body, String externalId) throws BaseException {
+    private Push savePush(String subject, String body, String externalId, String payloads) throws BaseException {
         Push push = new Push();
         push.setBody(body);
         push.setSubject(subject);
+        push.setPayload(payloads);
         if (StringUtils.isNotBlank(externalId)) {
             push.setExternalId(externalId);
         }
@@ -85,7 +89,8 @@ public class PushHelper implements Serializable {
         for (DeviceType device : deviceList) {
             PushDevice pushDevice = new PushDevice();
             pushDevice.setDeviceId(device.getChannelId());
-            pushDevice.setDeviceType(EnumUtil.convert(device.getDeviceOS(), hu.icellmobilsoft.coffee.module.notification.model.enums.DeviceType.class));
+            pushDevice
+                    .setDeviceType(EnumUtil.convert(device.getDeviceOS(), hu.icellmobilsoft.coffee.module.notification.model.enums.DeviceType.class));
             pushDevice.setPushId(pushEntity.getId());
             PushDevice savedPushDevice = pushDeviceService.save(pushDevice);
             pushEntity.getPushDevices().put(savedPushDevice.getDeviceId(), savedPushDevice);
