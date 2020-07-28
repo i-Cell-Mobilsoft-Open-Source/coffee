@@ -86,7 +86,7 @@ public class ResponseUtil {
      */
     public static Response getFileResponse(Object entity, String fileName, String contentType) {
         return Response.ok(entity).header(HttpHeaders.CONTENT_TYPE, contentType)
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename = \"" + fileName + "\"")
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"")
                 .header(CorsHeaders.ACCESS_CONTROL_EXPOSE_HEADERS, HttpHeaders.CONTENT_DISPOSITION).build();
     }
 
