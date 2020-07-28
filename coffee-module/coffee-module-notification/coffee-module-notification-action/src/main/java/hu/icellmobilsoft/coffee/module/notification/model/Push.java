@@ -60,7 +60,8 @@ public class Push extends AbstractIdentifiedAuditEntity {
     @Transient
     private Map<String, PushDevice> pushDevices = new HashMap<String, PushDevice>();
 
-    @Column(name = "payload")
+    @Column(name = "payload", nullable = true, length = 1024)
+    @Size(max = 1024)
     private String payload;
 
     /**
