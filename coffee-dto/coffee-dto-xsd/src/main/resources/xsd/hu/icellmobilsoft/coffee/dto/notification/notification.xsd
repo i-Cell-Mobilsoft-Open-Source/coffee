@@ -7,12 +7,9 @@
     targetNamespace="http://notification.dto.coffee.icellmobilsoft.hu/notification"
     elementFormDefault="qualified" attributeFormDefault="unqualified">
 
-    <xsd:import namespace="http://common.dto.coffee.icellmobilsoft.hu/common"
-        schemaLocation="../common/common.xsd" />
-    <xsd:import namespace="http://common.dto.coffee.icellmobilsoft.hu/commonservice"
-        schemaLocation="../common/commonservice.xsd" />
-    <xsd:import namespace="http://common.dto.coffee.icellmobilsoft.hu/commonsecurity"
-        schemaLocation="../common/commonsecurity.xsd" />
+    <xsd:import namespace="http://common.dto.coffee.icellmobilsoft.hu/common" />
+    <xsd:import namespace="http://common.dto.coffee.icellmobilsoft.hu/commonservice" />
+    <xsd:import namespace="http://common.dto.coffee.icellmobilsoft.hu/commonsecurity" />
 
 	<!-- SIMPLE TYPES -->
     <xsd:simpleType name="DeviceOSType">
