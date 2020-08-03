@@ -28,9 +28,9 @@ import javax.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.microprofile.config.ConfigProvider;
-import org.jboss.logging.Logger;
 
 import hu.icellmobilsoft.coffee.rest.cdi.BaseRequestContainer;
+import hu.icellmobilsoft.coffee.se.logging.Logger;
 import hu.icellmobilsoft.coffee.tool.utils.string.StringHelper;
 
 /**
@@ -212,7 +212,7 @@ public class ConfigurationHelper {
         if (container != null) {
             Object value = container.getObjectMap().get(key);
             if (value != null) {
-                log.debugv("RequestScope cached Key [{0}] value [{1}]", key, stringHelper.maskPropertyValue(key, value));
+                log.debug("RequestScope cached Key [{0}] value [{1}]", key, stringHelper.maskPropertyValue(key, value));
                 return Optional.of((T) value);
             }
         }
@@ -220,9 +220,9 @@ public class ConfigurationHelper {
         if (microprofileConfigValue.isPresent() && container != null) {
             T value = microprofileConfigValue.get();
             container.getObjectMap().put(key, value);
-            log.tracev("Key [{0}] value [{1}] stored in RequestScope cache.", key, stringHelper.maskPropertyValue(key, value));
+            log.trace("Key [{0}] value [{1}] stored in RequestScope cache.", key, stringHelper.maskPropertyValue(key, value));
         }
-        log.debugv("Key [{0}] value [{1}]", key, stringHelper.maskPropertyValue(key, microprofileConfigValue));
+        log.debug("Key [{0}] value [{1}]", key, stringHelper.maskPropertyValue(key, microprofileConfigValue));
         return microprofileConfigValue;
     }
 

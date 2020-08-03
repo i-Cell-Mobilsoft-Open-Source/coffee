@@ -33,11 +33,12 @@ import java.util.concurrent.TimeUnit;
 import javax.enterprise.inject.Vetoed;
 
 import org.apache.commons.lang3.StringUtils;
-import org.jboss.logging.Logger;
 
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
+
+import hu.icellmobilsoft.coffee.se.logging.Logger;
 
 /**
  * <p>PropertyReader class.</p>
@@ -47,7 +48,7 @@ import com.google.common.cache.LoadingCache;
 @Vetoed
 public class PropertyReader {
 
-    private static Logger LOGGER = hu.icellmobilsoft.coffee.cdi.logger.LogProducer.getStaticLogger(PropertyReader.class);
+    private static Logger LOGGER = hu.icellmobilsoft.coffee.cdi.logger.LogProducer.getStaticDefaultLogger(PropertyReader.class);
 
     private static PropertyReader instance = null;
 
@@ -91,7 +92,7 @@ public class PropertyReader {
      */
     public String getSystemProperty(Class<?> c, String keyPart, String defaultValue) {
         String key = c == null ? keyPart : c.getName() + DELIMITER + keyPart;
-        LOGGER.debugv("get system property: [{0}]", key);
+        LOGGER.debug("get system property: [{0}]", key);
         String value = null;
 
         try {
@@ -99,11 +100,11 @@ public class PropertyReader {
             value = prop.getProperty(key);
 
             if (value == null && defaultValue != null) {
-                LOGGER.warnv("property not found, returning [{0}]", defaultValue);
+                LOGGER.warn("property not found, returning [{0}]", defaultValue);
                 return defaultValue;
             }
 
-            LOGGER.debugv("system property value: [{0}]", value);
+            LOGGER.debug("system property value: [{0}]", value);
             return value;
         } catch (ExecutionException e) {
             LOGGER.error(e.getLocalizedMessage());
@@ -118,7 +119,7 @@ public class PropertyReader {
         InputStream fin = null;
         String configFileSystemProperty = System.getProperty(key);
         if (StringUtils.isBlank(configFileSystemProperty)) {
-            LOGGER.errorv("Configuration file missing! Please set the [{0}] system property!!!!", CONFIG_FILE_KEY);
+            LOGGER.error("Configuration file missing! Please set the [{0}] system property!!!!", CONFIG_FILE_KEY);
         } else {
             try {
                 File propertyfile = new File(configFileSystemProperty);

@@ -34,7 +34,6 @@ import javax.enterprise.inject.spi.InjectionPoint;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.microprofile.config.ConfigProvider;
-import org.jboss.logging.Logger;
 
 import com.mongodb.MongoClient;
 
@@ -43,6 +42,7 @@ import hu.icellmobilsoft.coffee.module.mongodb.annotation.MongoConfiguration;
 import hu.icellmobilsoft.coffee.module.mongodb.config.MongoDbConfig;
 import hu.icellmobilsoft.coffee.module.mongodb.handler.MongoDbHandler;
 import hu.icellmobilsoft.coffee.module.mongodb.handler.MongoDbUtil;
+import hu.icellmobilsoft.coffee.se.logging.Logger;
 
 /**
  * MongoDbHandler producer class
@@ -56,7 +56,7 @@ import hu.icellmobilsoft.coffee.module.mongodb.handler.MongoDbUtil;
 @Deprecated(forRemoval = true, since = "1.1.0")
 public class MongoFactory {
 
-    private static Logger LOGGER = hu.icellmobilsoft.coffee.cdi.logger.LogProducer.getStaticLogger(MongoFactory.class);
+    private static Logger LOGGER = hu.icellmobilsoft.coffee.cdi.logger.LogProducer.getStaticDefaultLogger(MongoFactory.class);
 
     private Map<String, MongoClient> mongoClientMap = new HashMap<>();
 
@@ -138,7 +138,7 @@ public class MongoFactory {
             try {
                 String clientString = entry.getValue().toString();
                 MongoDbUtil.close(entry.getValue());
-                LOGGER.debugv("closed: [{0}]", clientString);
+                LOGGER.debug("closed: [{0}]", clientString);
             } catch (BaseException e) {
                 LOGGER.error(e.getLocalizedMessage());
             }

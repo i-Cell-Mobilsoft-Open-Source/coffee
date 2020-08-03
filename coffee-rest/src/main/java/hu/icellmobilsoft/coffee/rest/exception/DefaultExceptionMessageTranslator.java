@@ -77,7 +77,7 @@ public class DefaultExceptionMessageTranslator implements IExceptionMessageTrans
     @Override
     public String getLocalizedMessage(Enum<?> faultType) {
         if (faultType == null) {
-            LogProducer.getStaticLogger(DefaultExceptionMessageTranslator.class)
+            LogProducer.getStaticDefaultLogger(DefaultExceptionMessageTranslator.class)
                     .warn("FaultType is null, proceeding with faultType: [" + CoffeeFaultType.OPERATION_FAILED + "]");
             return localizedMessage.message(CoffeeFaultType.OPERATION_FAILED);
         }

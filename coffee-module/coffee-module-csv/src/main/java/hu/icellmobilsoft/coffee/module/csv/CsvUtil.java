@@ -26,8 +26,6 @@ import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
-import org.jboss.logging.Logger;
-
 import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
 import com.opencsv.bean.CsvToBean;
@@ -39,6 +37,7 @@ import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.dto.exception.BusinessException;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 import hu.icellmobilsoft.coffee.module.csv.strategy.CustomHeaderColumnNameMappingStrategy;
+import hu.icellmobilsoft.coffee.se.logging.Logger;
 
 /**
  * Csv utility.
@@ -48,7 +47,7 @@ import hu.icellmobilsoft.coffee.module.csv.strategy.CustomHeaderColumnNameMappin
  */
 public class CsvUtil {
 
-    private static Logger LOGGER = hu.icellmobilsoft.coffee.cdi.logger.LogProducer.getStaticLogger(CsvUtil.class);
+    private static Logger LOGGER = hu.icellmobilsoft.coffee.cdi.logger.LogProducer.getStaticDefaultLogger(CsvUtil.class);
 
     private static final char DEFAULT_SEPARATOR = ';';
     /** Constant <code>DEFAULT_LIST_SEPARATOR=','</code> */

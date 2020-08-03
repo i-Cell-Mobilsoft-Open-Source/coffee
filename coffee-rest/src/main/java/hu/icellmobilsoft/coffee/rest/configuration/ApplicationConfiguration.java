@@ -27,13 +27,13 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
-import org.jboss.logging.Logger;
 
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 
 import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
+import hu.icellmobilsoft.coffee.se.logging.Logger;
 import hu.icellmobilsoft.coffee.tool.utils.string.StringHelper;
 
 /**
@@ -237,10 +237,10 @@ public class ApplicationConfiguration {
         }
         try {
             Optional<T> value = (Optional<T>) cache.get(new CompositeCacheLoaderKey(key, clazz));
-            log.tracev("Key [{0}] value [{1}]", key, stringHelper.maskPropertyValue(key, value));
+            log.trace("Key [{0}] value [{1}]", key, stringHelper.maskPropertyValue(key, value));
             return value;
         } catch (Exception e) {
-            log.errorv(e, "Error in getting configuration for key [{0}]: [{1}]", key, e.getLocalizedMessage());
+            log.error(MessageFormat.format("Error in getting configuration for key [{0}]: [{1}]", key, e.getLocalizedMessage()), e);
             return Optional.empty();
         }
     }

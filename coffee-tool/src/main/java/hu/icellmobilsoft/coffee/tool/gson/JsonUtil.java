@@ -30,7 +30,6 @@ import javax.enterprise.inject.Vetoed;
 import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.apache.commons.lang3.StringUtils;
-import org.jboss.logging.Logger;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -38,6 +37,7 @@ import com.google.gson.JsonSyntaxException;
 import com.google.gson.stream.JsonReader;
 
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
+import hu.icellmobilsoft.coffee.se.logging.Logger;
 
 /**
  * Json util.
@@ -48,7 +48,7 @@ import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 @Vetoed
 public class JsonUtil {
 
-    private static final Logger LOGGER = hu.icellmobilsoft.coffee.cdi.logger.LogProducer.getStaticLogger(JsonUtil.class);
+    private static final Logger LOGGER = hu.icellmobilsoft.coffee.cdi.logger.LogProducer.getStaticDefaultLogger(JsonUtil.class);
 
     /**
      * Converting DTO object to JSON string without throwing exception

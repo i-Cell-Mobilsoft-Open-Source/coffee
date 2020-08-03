@@ -23,8 +23,6 @@ import java.lang.reflect.Type;
 import java.text.MessageFormat;
 import java.time.LocalDate;
 
-import org.jboss.logging.Logger;
-
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
@@ -33,6 +31,7 @@ import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 
+import hu.icellmobilsoft.coffee.se.logging.Logger;
 import hu.icellmobilsoft.coffee.tool.utils.date.DateParseHelper;
 import hu.icellmobilsoft.coffee.tool.utils.date.DatePrintUtil;
 
@@ -45,7 +44,7 @@ import hu.icellmobilsoft.coffee.tool.utils.date.DatePrintUtil;
  */
 public class LocalDateConverter implements JsonSerializer<LocalDate>, JsonDeserializer<LocalDate> {
 
-    private static Logger LOGGER = hu.icellmobilsoft.coffee.cdi.logger.LogProducer.getStaticLogger(LocalDateConverter.class);
+    private static Logger LOGGER = hu.icellmobilsoft.coffee.cdi.logger.LogProducer.getStaticDefaultLogger(LocalDateConverter.class);
 
     /** {@inheritDoc} */
     @Override

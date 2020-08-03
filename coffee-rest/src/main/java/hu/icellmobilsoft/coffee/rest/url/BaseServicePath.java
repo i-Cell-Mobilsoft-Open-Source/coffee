@@ -27,8 +27,8 @@ import java.util.stream.Collectors;
 import javax.enterprise.inject.Vetoed;
 
 import org.apache.commons.lang3.StringUtils;
-import org.jboss.logging.Logger;
 
+import hu.icellmobilsoft.coffee.se.logging.Logger;
 import hu.icellmobilsoft.coffee.tool.utils.string.StringUtil;
 
 /**
@@ -40,7 +40,7 @@ import hu.icellmobilsoft.coffee.tool.utils.string.StringUtil;
 @Vetoed
 public class BaseServicePath {
 
-    private static Logger LOGGER = hu.icellmobilsoft.coffee.cdi.logger.LogProducer.getStaticLogger(BaseServicePath.class);
+    private static Logger LOGGER = hu.icellmobilsoft.coffee.cdi.logger.LogProducer.getStaticDefaultLogger(BaseServicePath.class);
 
     private static final String SIGN_QUESTION = "?";
     private static final String SIGN_EQUALS = "=";

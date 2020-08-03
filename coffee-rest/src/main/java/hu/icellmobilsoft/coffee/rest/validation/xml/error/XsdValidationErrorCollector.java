@@ -27,9 +27,9 @@ import java.util.Objects;
 import javax.xml.bind.ValidationEvent;
 
 import org.apache.commons.lang3.StringUtils;
-import org.jboss.logging.Logger;
 
 import hu.icellmobilsoft.coffee.dto.exception.XMLValidationError;
+import hu.icellmobilsoft.coffee.se.logging.Logger;
 
 /**
  * Hiba összegyűjtő az XSD validáláskor talált hibákhoz
@@ -39,7 +39,7 @@ import hu.icellmobilsoft.coffee.dto.exception.XMLValidationError;
  * @since 1.0.0
  */
 public class XsdValidationErrorCollector implements IXsdValidationErrorCollector {
-    private static final Logger log = hu.icellmobilsoft.coffee.cdi.logger.LogProducer.getStaticLogger(XsdValidationErrorCollector.class);
+    private static final Logger log = hu.icellmobilsoft.coffee.cdi.logger.LogProducer.getStaticDefaultLogger(XsdValidationErrorCollector.class);
     private List<XMLValidationError> errors;
 
     /** {@inheritDoc} */
@@ -48,7 +48,7 @@ public class XsdValidationErrorCollector implements IXsdValidationErrorCollector
         if (StringUtils.isNotBlank(event.getMessage())
                 && (event.getSeverity() == ValidationEvent.ERROR || event.getSeverity() == ValidationEvent.FATAL_ERROR)) {
             XMLValidationError xmlValidationError = new XMLValidationError();
-            log.warnv("!> XSD validation error: [{0}]", event.getMessage());
+            log.warn("!> XSD validation error: [{0}]", event.getMessage());
             xmlValidationError.setError(event.getMessage());
             if (!Objects.isNull(event.getLocator())) {
                 xmlValidationError.setLineNumber(event.getLocator().getLineNumber());
@@ -56,7 +56,7 @@ public class XsdValidationErrorCollector implements IXsdValidationErrorCollector
             }
             getErrorList().add(xmlValidationError);
         } else {
-            log.warnv(" +++ XSD validation warning [{0}]", event.getMessage());
+            log.warn(" +++ XSD validation warning [{0}]", event.getMessage());
         }
         // ha ez false megszakitjuk a (un)marshallert
         return true;

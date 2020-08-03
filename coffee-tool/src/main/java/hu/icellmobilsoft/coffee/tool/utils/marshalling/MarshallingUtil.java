@@ -35,7 +35,8 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
 import org.apache.commons.lang3.StringUtils;
-import org.jboss.logging.Logger;
+
+import hu.icellmobilsoft.coffee.se.logging.Logger;
 
 /**
  * Utility methods for marshalling.
@@ -46,7 +47,7 @@ import org.jboss.logging.Logger;
 @Vetoed
 public class MarshallingUtil {
 
-    private static Logger LOGGER = hu.icellmobilsoft.coffee.cdi.logger.LogProducer.getStaticLogger(MarshallingUtil.class);
+    private static Logger LOGGER = hu.icellmobilsoft.coffee.cdi.logger.LogProducer.getStaticDefaultLogger(MarshallingUtil.class);
 
     private static final String WARN_CANNOT_CONVERT = "Cannot convert [{0}] object to xml: [{1}]";
 
@@ -62,7 +63,7 @@ public class MarshallingUtil {
         try {
             return marshallUncheckedXml(object);
         } catch (JAXBException e) {
-            LOGGER.warnv(WARN_CANNOT_CONVERT, object, e.getMessage());
+            LOGGER.warn(WARN_CANNOT_CONVERT, object, e.getMessage());
             LOGGER.trace("Exception: ", e);
         }
         return null;
@@ -140,7 +141,7 @@ public class MarshallingUtil {
         try {
             marshallUncheckedXml(object, s);
         } catch (JAXBException e) {
-            LOGGER.warnv(WARN_CANNOT_CONVERT, object, e.getMessage());
+            LOGGER.warn(WARN_CANNOT_CONVERT, object, e.getMessage());
         }
     }
 
@@ -151,7 +152,7 @@ public class MarshallingUtil {
         try {
             marshallUncheckedXml(object, s, c);
         } catch (JAXBException e) {
-            LOGGER.warnv(WARN_CANNOT_CONVERT, object, e.getMessage());
+            LOGGER.warn(WARN_CANNOT_CONVERT, object, e.getMessage());
         }
     }
 

@@ -30,7 +30,6 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
-import org.jboss.logging.Logger;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.client.MongoCollection;
@@ -40,6 +39,7 @@ import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 import hu.icellmobilsoft.coffee.module.mongodb.annotation.MongoServiceBaseQualifier;
 import hu.icellmobilsoft.coffee.module.mongodb.repository.MongoRepository;
+import hu.icellmobilsoft.coffee.se.logging.Logger;
 
 /**
  * <p>
@@ -84,7 +84,7 @@ public class MongoService<T> {
      *             When Mongo insert fail.
      */
     public void insertOne(T document) throws BaseException {
-        log.tracev(">> MongoService.insertOne(document: [{0}]", document);
+        log.trace(">> MongoService.insertOne(document: [{0}]", document);
 
         if (document == null) {
             throw new BaseException(CoffeeFaultType.WRONG_OR_MISSING_PARAMETERS, "document is null!");
@@ -95,7 +95,7 @@ public class MongoService<T> {
             String msg = MessageFormat.format("Error occurred in inserting mongo data: {0}", e.getLocalizedMessage());
             throw new BaseException(msg, e);
         } finally {
-            log.tracev("<< MongoService.insertOne(document: [{0}]", document);
+            log.trace("<< MongoService.insertOne(document: [{0}]", document);
         }
     }
 
@@ -132,7 +132,7 @@ public class MongoService<T> {
      * @return T
      */
     public T findFirst(Bson filter) throws BaseException {
-        log.tracev(">> MongoService.findFirst(filter: [{0}]", filter);
+        log.trace(">> MongoService.findFirst(filter: [{0}]", filter);
 
         if (filter == null) {
             throw new BaseException(CoffeeFaultType.WRONG_OR_MISSING_PARAMETERS, FILTER_NULL_ERROR_MSG);
@@ -144,7 +144,7 @@ public class MongoService<T> {
             String msg = MessageFormat.format(FILTER_RESULT_ERROR_MSG, e.getLocalizedMessage());
             throw new BaseException(msg, e);
         } finally {
-            log.tracev("<< MongoService.findFirst(filter: [{0}]", filter);
+            log.trace("<< MongoService.findFirst(filter: [{0}]", filter);
         }
 
         if (found == null) {
@@ -165,7 +165,7 @@ public class MongoService<T> {
      * @return T
      */
     public T findFirst(Bson filter, Bson order) throws BaseException {
-        log.tracev(">> MongoService.findFirst(filter: [{0}], order: [{1}]", filter, order);
+        log.trace(">> MongoService.findFirst(filter: [{0}], order: [{1}]", filter, order);
 
         if (filter == null) {
             throw new BaseException(CoffeeFaultType.WRONG_OR_MISSING_PARAMETERS, FILTER_NULL_ERROR_MSG);
@@ -177,7 +177,7 @@ public class MongoService<T> {
             String msg = MessageFormat.format(FILTER_RESULT_ERROR_MSG, e.getLocalizedMessage());
             throw new BaseException(msg, e);
         } finally {
-            log.tracev("<< MongoService.findFirst(filter: [{0}], order: [{1}]", filter, order);
+            log.trace("<< MongoService.findFirst(filter: [{0}], order: [{1}]", filter, order);
         }
         if (found == null) {
             throw new BONotFoundException(getDefaultNotFoundFaultTypeEnum(), "Object by filter [" + filter + "] not found");
@@ -207,7 +207,7 @@ public class MongoService<T> {
      * @return List
      */
     public List<T> findAll(Bson filter) throws BaseException {
-        log.tracev(">> MongoService.findAll(filter: [{0}])", filter);
+        log.trace(">> MongoService.findAll(filter: [{0}])", filter);
 
         if (filter == null) {
             throw new BaseException(CoffeeFaultType.WRONG_OR_MISSING_PARAMETERS, FILTER_NULL_ERROR_MSG);
@@ -219,7 +219,7 @@ public class MongoService<T> {
             String msg = MessageFormat.format(FILTER_RESULT_ERROR_MSG, e.getLocalizedMessage());
             throw new BaseException(msg, e);
         } finally {
-            log.tracev("<< MongoService.findAll(filter: [{0}])", filter);
+            log.trace("<< MongoService.findAll(filter: [{0}])", filter);
         }
         if (found == null) {
             found = new ArrayList<>();
@@ -246,7 +246,7 @@ public class MongoService<T> {
      * @return List
      */
     public List<T> find(Bson filter, Bson order, int rows, int page, Class<T> clazz) throws BaseException {
-        log.tracev(">> MongoService.find(filter: [{0}], order: [{1}], rows: [{2}], page: [{3}], clazz: [{4}]", filter, order, rows, page, clazz);
+        log.trace(">> MongoService.find(filter: [{0}], order: [{1}], rows: [{2}], page: [{3}], clazz: [{4}]", filter, order, rows, page, clazz);
 
         if (filter == null) {
             throw new BaseException(CoffeeFaultType.WRONG_OR_MISSING_PARAMETERS, FILTER_NULL_ERROR_MSG);
@@ -258,7 +258,7 @@ public class MongoService<T> {
             String msg = MessageFormat.format(FILTER_RESULT_ERROR_MSG, e.getLocalizedMessage());
             throw new BaseException(msg, e);
         } finally {
-            log.tracev("<< MongoService.find(filter: [{0}], order: [{1}], rows: [{2}], page: [{3}], clazz: [{4}]", filter, order, rows, page, clazz);
+            log.trace("<< MongoService.find(filter: [{0}], order: [{1}], rows: [{2}], page: [{3}], clazz: [{4}]", filter, order, rows, page, clazz);
         }
         if (found == null) {
             found = new ArrayList<>();
@@ -276,7 +276,7 @@ public class MongoService<T> {
      * @return long
      */
     public long count(Bson filter) throws BaseException {
-        log.tracev(">> MongoService.count(filter: [{0}]", filter);
+        log.trace(">> MongoService.count(filter: [{0}]", filter);
 
         if (filter == null) {
             throw new BaseException(CoffeeFaultType.WRONG_OR_MISSING_PARAMETERS, FILTER_NULL_ERROR_MSG);
@@ -288,7 +288,7 @@ public class MongoService<T> {
             String msg = MessageFormat.format("Error occurred in counting mongo data by filter: {0}", e.getLocalizedMessage());
             throw new BaseException(msg, e);
         } finally {
-            log.tracev("<< MongoService.count(filter: [{0}]", filter);
+            log.trace("<< MongoService.count(filter: [{0}]", filter);
         }
         return found;
     }
@@ -302,10 +302,10 @@ public class MongoService<T> {
      *             When insert fail.
      */
     public void insertMany(List<T> documents) throws BaseException {
-        log.tracev(">> BaseMongoService.insertMany(documents: [{0}]", documents);
+        log.trace(">> BaseMongoService.insertMany(documents: [{0}]", documents);
 
         if (CollectionUtils.isEmpty(documents)) {
-            log.infov("<< BaseMongoService.insertMany(No documents to save!)");
+            log.info("<< BaseMongoService.insertMany(No documents to save!)");
             return;
         }
 
@@ -315,7 +315,7 @@ public class MongoService<T> {
             String msg = MessageFormat.format("Error occurred in inserting mongo datas: {0}", e.getLocalizedMessage());
             throw new BaseException(msg, e);
         } finally {
-            log.tracev("<< BaseMongoService.insertMany(documents: [{0}]", documents);
+            log.trace("<< BaseMongoService.insertMany(documents: [{0}]", documents);
         }
     }
 

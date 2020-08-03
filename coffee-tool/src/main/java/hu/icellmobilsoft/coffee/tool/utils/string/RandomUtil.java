@@ -27,7 +27,8 @@ import java.util.UUID;
 import javax.enterprise.inject.Vetoed;
 
 import org.apache.commons.lang3.StringUtils;
-import org.jboss.logging.Logger;
+
+import hu.icellmobilsoft.coffee.se.logging.Logger;
 
 /**
  * Util class for generating random Strings
@@ -38,7 +39,7 @@ import org.jboss.logging.Logger;
 @Vetoed
 public class RandomUtil {
 
-    private static Logger LOGGER = hu.icellmobilsoft.coffee.cdi.logger.LogProducer.getStaticLogger(RandomUtil.class);
+    private static Logger LOGGER = hu.icellmobilsoft.coffee.cdi.logger.LogProducer.getStaticDefaultLogger(RandomUtil.class);
 
     /** Constant <code>DATE_2013_01_01=1356998400000l</code> */
     public static long DATE_2013_01_01 = 1356998400000l;
@@ -173,7 +174,7 @@ public class RandomUtil {
      */
     protected static String generateToken() {
         String token = StringUtils.left(UUID.randomUUID() + generateId(), 48);
-        LOGGER.infov("Generated token: [{0}]", token);
+        LOGGER.info("Generated token: [{0}]", token);
         return token;
     }
 }

@@ -31,7 +31,8 @@ import org.bson.BsonWriter;
 import org.bson.codecs.Codec;
 import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
-import org.jboss.logging.Logger;
+
+import hu.icellmobilsoft.coffee.se.logging.Logger;
 
 /**
  * MongoDB XMLGregorianCalendar <-> Date converter codec
@@ -41,7 +42,7 @@ import org.jboss.logging.Logger;
  */
 public class XMLGregorianCalendarCodec implements Codec<XMLGregorianCalendar> {
 
-    private static Logger LOGGER = hu.icellmobilsoft.coffee.cdi.logger.LogProducer.getStaticLogger(XMLGregorianCalendarCodec.class);
+    private static Logger LOGGER = hu.icellmobilsoft.coffee.cdi.logger.LogProducer.getStaticDefaultLogger(XMLGregorianCalendarCodec.class);
 
     /** {@inheritDoc} */
     @Override

@@ -107,7 +107,7 @@ public class TOtpTest {
 
         currentTime = System.currentTimeMillis();
         // direkt egy eltolt idot hasznalunk majd a jelszohoz
-        LogProducer.getStaticLogger(TOtpTest.class).infov("secret: [{0}] ", secret);
+        LogProducer.getStaticDefaultLogger(TOtpTest.class).info("secret: [{0}] ", secret);
     }
 
     public String generateTOtp() throws BaseException {

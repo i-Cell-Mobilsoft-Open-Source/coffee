@@ -37,9 +37,8 @@ import javax.enterprise.inject.spi.BeanAttributes;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.inject.spi.ProcessInjectionTarget;
 
-import org.jboss.logging.Logger;
-
 import hu.icellmobilsoft.coffee.module.mongodb.service.MongoService;
+import hu.icellmobilsoft.coffee.se.logging.Logger;
 
 /**
  * Mongo CDI extension activator class
@@ -50,7 +49,7 @@ import hu.icellmobilsoft.coffee.module.mongodb.service.MongoService;
  */
 public class MongoExtension implements javax.enterprise.inject.spi.Extension {
 
-    private static final Logger LOGGER = hu.icellmobilsoft.coffee.cdi.logger.LogProducer.getStaticLogger(MongoExtension.class);
+    private static final Logger LOGGER = hu.icellmobilsoft.coffee.cdi.logger.LogProducer.getStaticDefaultLogger(MongoExtension.class);
 
     private List<Type> mongoServiceTypes = new ArrayList<>();
 
@@ -62,7 +61,7 @@ public class MongoExtension implements javax.enterprise.inject.spi.Extension {
         }
 
         // jboss logger (later we will use java.util.logging.Logger)
-        LOGGER.infov("MongoExtension is active, found MongoService implementations: [{0}]", mongoServiceTypes.size());
+        LOGGER.info("MongoExtension is active, found MongoService implementations: [{0}]", mongoServiceTypes.size());
 
         // find producer template
         AnnotatedMethod<? super MongoServiceProducerFactory> producerMethodTemplate = findProducerMethodTemplate(beanManager);

@@ -23,8 +23,6 @@ import java.lang.reflect.Type;
 import java.text.MessageFormat;
 import java.util.Date;
 
-import org.jboss.logging.Logger;
-
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
@@ -32,6 +30,8 @@ import com.google.gson.JsonParseException;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
+
+import hu.icellmobilsoft.coffee.se.logging.Logger;
 
 /**
  * Json <-> Date
@@ -41,7 +41,7 @@ import com.google.gson.JsonSerializer;
  */
 public class DateConverter implements JsonSerializer<Date>, JsonDeserializer<Date> {
 
-    private static Logger LOGGER = hu.icellmobilsoft.coffee.cdi.logger.LogProducer.getStaticLogger(DateConverter.class);
+    private static Logger LOGGER = hu.icellmobilsoft.coffee.cdi.logger.LogProducer.getStaticDefaultLogger(DateConverter.class);
 
     /** {@inheritDoc} */
     @Override

@@ -25,11 +25,10 @@ import java.util.Map;
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
-import org.jboss.logging.Logger;
-
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
+import hu.icellmobilsoft.coffee.se.logging.Logger;
 
 /**
  * <p>ConfigEtcdService class.</p>
@@ -78,7 +77,7 @@ public class ConfigEtcdService extends BaseEtcdService<String> {
             char lastChar = startKey.charAt(strLastIndex);
             endKey = startKey.substring(0, strLastIndex) + ++lastChar;
         } catch (Exception e) {
-            log.debugv("etcd: cannot increase last character of startKey [{0}]", startKey);
+            log.debug("etcd: cannot increase last character of startKey [{0}]", startKey);
             throw new TechnicalException(CoffeeFaultType.REPOSITORY_FAILED, "Convert exception: " + e.getLocalizedMessage(), e);
         }
         return getEtcdDataList(startKey, endKey);

@@ -22,8 +22,7 @@ package hu.icellmobilsoft.coffee.rest.validation.catalog;
 import java.net.URLStreamHandler;
 import java.net.spi.URLStreamHandlerProvider;
 
-import org.jboss.logging.Logger;
-
+import hu.icellmobilsoft.coffee.se.logging.Logger;
 import hu.icellmobilsoft.coffee.tool.protocol.handler.MavenURLHandler;
 
 /**

@@ -55,7 +55,7 @@ public class JpaUtil {
         try {
             return toNativeSQL(em, query);
         } catch (BaseException e) {
-            LogProducer.getStaticLogger(JpaUtil.class).warn("Exception on converting Query to native SQL!", e);
+            LogProducer.getStaticDefaultLogger(JpaUtil.class).warn("Exception on converting Query to native SQL!", e);
         }
         return null;
     }
