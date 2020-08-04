@@ -25,7 +25,7 @@ jobs:
       - name: import GPG key
         run: |
           mkdir -p ~/.gnupg/
-          echo $GPG_SIGNING_KEY >> ~/.gnupg/private.key
+          echo $GPG_SIGNING_KEY | base64 -d > ~/.gnupg/private.key
           cat ~/.gnupg/private.key
           gpg --import ~/.gnupg/private.key
         env:
