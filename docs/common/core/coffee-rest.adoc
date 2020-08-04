@@ -40,8 +40,8 @@ public class RestLogger extends BaseRestLogger {
 Maga a HTTP request-response log összeállításáról a `hu.icellmobilsoft.coffee.rest.log.RequestResponseLogger` osztály gondoskodik, és ha igény van rá ezt lehet felhasználni más helyzetekben is, például hiba esetén loggolásnál.
 
 A request loggolása során az érzékeny adatok mind a header-ek közül, mind a json/xml body-ból maszkolásra kerülnek (pl. `X-PASSWORD: 1234` helyett `X_PASSWORD: +++*+++`).
-Az adatokról a kulcsuk (header és JSON tartolmnál a kulcs, XML-nél a tag) alapján kerül megállapításra, hogy védendőek-e; ezek alapértelmezetten a `.+++*+++?(pass|secret).+++*+++?` regex-nek megfelelő kulcsok (pl. userPassword, secretToken, ...),
-amennyiben a projekten szükséges, úgy a regex felülírható ha valamelyik *alapértelmezett* microprofile-config forrásban (sys var, env var, META-INF/microprofile-config.properties) megadjuk a `coffee.config.log.sensitive.key.pattern` konfigot.
+Az adatokról a kulcsuk (header és JSON tartolmnál a kulcs, XML-nél a tag) alapján kerül megállapításra, hogy védendőek-e; ezek alapértelmezetten a `+++[\w\s]*?secret[\w\s]*?+++` vagy `+++[\w\s]*?pass[\w\s]*?+++` regexek-nek megfelelő kulcsok (pl. userPassword, secretToken, ...),
+amennyiben a projekten szükséges, úgy a regex felülírható ha valamelyik *alapértelmezett* microprofile-config forrásban (sys var, env var, META-INF/microprofile-config.properties) megadjuk a `coffee.config.log.sensitive.key.pattern` konfigot, több pattern is megadható vesszővel elválasztva.
 
 .Példa request log
 [source,text]

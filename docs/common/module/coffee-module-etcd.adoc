@@ -36,5 +36,5 @@ String minVersion = applicationConfiguration.getString(EtcdVal.KEY_PUBLIC_INVOIC
 ----
 
 == Loggolás
-A lekérdezett kulcsok és a kapott értékek logolásra kerülnek, kivéve ha a kulcs megfelel a `.+++*+++?(pass|secret).+++*+++?` reguláris kifejezésnek, ez esetben az érték maszkolva lesz kilogolva.
-Az alapértelmezett regex felülírható, ha valamelyik *alapértelmezett* microprofile-config forrásban (sys var, env var, META-INF/microprofile-config.properties) megadjuk a `coffee.config.log.sensitive.key.pattern` konfigot.
+A lekérdezett kulcsok és a kapott értékek logolásra kerülnek, kivéve ha a kulcs megfelel a `+++[\w\s]*?secret[\w\s]*?+++` vagy `+++[\w\s]*?pass[\w\s]*?+++` reguláris kifejezésnek, ez esetben az érték maszkolva lesz kilogolva.
+Az alapértelmezett regex felülírható, ha valamelyik *alapértelmezett* microprofile-config forrásban (sys var, env var, META-INF/microprofile-config.properties) megadjuk a `coffee.config.log.sensitive.key.pattern` konfigot, több pattern is megadható vesszővel elválasztva.

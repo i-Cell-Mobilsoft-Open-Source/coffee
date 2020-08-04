@@ -65,7 +65,9 @@ public class BaseEtcdService<T> implements Serializable {
     private StringHelper stringHelper;
 
     /**
-     * <p>getEtcdData.</p>
+     * <p>
+     * getEtcdData.
+     * </p>
      */
     @SuppressWarnings("unchecked")
     public T getEtcdData(String key, Class<T> c) throws BaseException {
@@ -96,7 +98,9 @@ public class BaseEtcdService<T> implements Serializable {
     }
 
     /**
-     * <p>setEtcdData.</p>
+     * <p>
+     * setEtcdData.
+     * </p>
      */
     public void setEtcdData(String key, String value) throws BaseException {
         // IS: a value lehetne generikum is, ha szukseg lessz ra, csak akkor meg kell allapodni mikent fogjuk tarolni (pl json)
@@ -118,7 +122,9 @@ public class BaseEtcdService<T> implements Serializable {
     }
 
     /**
-     * <p>getEtcdDataList.</p>
+     * <p>
+     * getEtcdDataList.
+     * </p>
      */
     @SuppressWarnings("unchecked")
     public Map<String, T> getEtcdDataList(String startKeyStr, String endKeyStr) throws BaseException {
@@ -149,7 +155,9 @@ public class BaseEtcdService<T> implements Serializable {
     }
 
     /**
-     * <p>deleteEtcdData.</p>
+     * <p>
+     * deleteEtcdData.
+     * </p>
      */
     public void deleteEtcdData(String key, Class<T> c) throws BaseException {
         log.debug(">> ExtEtcdService.deleteEtcdData(key : [{0}])", key);
@@ -181,7 +189,12 @@ public class BaseEtcdService<T> implements Serializable {
         // mod_revision: 1178
         // version: 7
         // value: "1.2"
-        String replacementRegex = "(kvs[\\S\\s]*?key:[\\s]*?\"(" + stringHelper.getSensitiveKeyPattern() + ")\"[\\S\\s]*?value:[\\s]*?)\"(.*?)\"";
-        return StringUtil.replaceAllIgnoreCase(String.valueOf(response), replacementRegex, "$1\"*\"");
+        String responseText = String.valueOf(response);
+        String[] sensitiveKeyPatterns = stringHelper.getSensitiveKeyPattern();
+        for (String sensitiveKeyPattern : sensitiveKeyPatterns) {
+            String replacementRegex = "(kvs[\\S\\s]*?key:[\\s]*?\"(" + sensitiveKeyPattern + ")\"[\\S\\s]*?value:[\\s]*?)\"(.*?)\"";
+            responseText = StringUtil.replaceAllIgnoreCase(responseText, replacementRegex, "$1\"*\"");
+        }
+        return responseText;
     }
 }
