@@ -26,10 +26,10 @@ import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
-import org.jboss.logging.Logger;
 
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.module.etcd.service.ConfigEtcdService;
+import hu.icellmobilsoft.coffee.se.logging.Logger;
 
 /**
  * Az ETCD paramétereket kezelését segíti. A lekérdezésnél a beágyazottan másik kulcsokra hivatkozó értékeket kiértékeli körellenőrzéssel a láncban.

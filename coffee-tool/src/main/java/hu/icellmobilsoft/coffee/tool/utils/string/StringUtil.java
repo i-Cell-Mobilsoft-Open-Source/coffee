@@ -30,7 +30,8 @@ import javax.enterprise.inject.Vetoed;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.jboss.logging.Logger;
+
+import hu.icellmobilsoft.coffee.se.logging.Logger;
 
 /**
  * StringUtil
@@ -42,7 +43,7 @@ import org.jboss.logging.Logger;
 @Vetoed
 public class StringUtil {
 
-    private static Logger LOGGER = hu.icellmobilsoft.coffee.cdi.logger.LogProducer.getStaticLogger(StringUtil.class);
+    private static Logger LOGGER = hu.icellmobilsoft.coffee.cdi.logger.LogProducer.getStaticDefaultLogger(StringUtil.class);
 
     /**
      * Sharp s biztonságos uppercaselése
@@ -74,7 +75,7 @@ public class StringUtil {
             return URLEncoder.encode(value, StandardCharsets.UTF_8.name());
         } catch (UnsupportedEncodingException e) {
             // Not possible case for UTF_8.
-            LOGGER.error(e);
+            LOGGER.error(e.getLocalizedMessage(), e);
             return value;
         }
     }

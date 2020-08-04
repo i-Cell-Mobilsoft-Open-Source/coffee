@@ -34,7 +34,8 @@ import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.deltaspike.data.impl.audit.AuditEntityListener;
-import org.jboss.logging.Logger;
+
+import hu.icellmobilsoft.coffee.se.logging.Logger;
 
 /**
  * Base class for all entities.
@@ -58,14 +59,18 @@ public abstract class AbstractEntity implements Serializable {
     private Long internalVersion;
 
     /**
-     * <p>Getter for the field <code>version</code>.</p>
+     * <p>
+     * Getter for the field <code>version</code>.
+     * </p>
      */
     public long getVersion() {
         return version;
     }
 
     /**
-     * <p>Setter for the field <code>version</code>.</p>
+     * <p>
+     * Setter for the field <code>version</code>.
+     * </p>
      */
     public void setVersion(long version) {
         if (internalVersion == null || this.version != version) {
@@ -75,7 +80,9 @@ public abstract class AbstractEntity implements Serializable {
     }
 
     /**
-     * <p>rollbackVersion.</p>
+     * <p>
+     * rollbackVersion.
+     * </p>
      */
     public void rollbackVersion() {
         if (internalVersion != null) {
@@ -85,14 +92,18 @@ public abstract class AbstractEntity implements Serializable {
     }
 
     /**
-     * <p>updateVersion.</p>
+     * <p>
+     * updateVersion.
+     * </p>
      */
     public void updateVersion() {
         internalVersion = version;
     }
 
     /**
-     * <p>toString.</p>
+     * <p>
+     * toString.
+     * </p>
      */
     public String toString() {
         ToStringBuilder s = new ToStringBuilder(this);
@@ -106,7 +117,7 @@ public abstract class AbstractEntity implements Serializable {
                 try {
                     s.append(property.getName(), property.getReadMethod().invoke(this));
                 } catch (Exception e) {
-                    Logger.getLogger(getClass()).warnf("Error in toString for property [{0}]: [{1}]", property.getName(), e.getLocalizedMessage());
+                    Logger.getLogger(getClass()).warn("Error in toString for property [{0}]: [{1}]", property.getName(), e.getLocalizedMessage());
                 }
             }
         }

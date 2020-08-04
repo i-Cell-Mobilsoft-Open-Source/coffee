@@ -28,13 +28,13 @@ import javax.enterprise.inject.Instance;
 import javax.enterprise.inject.spi.CDI;
 
 import org.eclipse.microprofile.config.spi.ConfigSource;
-import org.jboss.logging.Logger;
 
 import hu.icellmobilsoft.coffee.dto.exception.BONotFoundException;
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.module.etcd.config.DefaultEtcdConfigImpl;
 import hu.icellmobilsoft.coffee.module.etcd.handler.ConfigEtcdHandler;
 import hu.icellmobilsoft.coffee.module.etcd.service.ConfigEtcdService;
+import hu.icellmobilsoft.coffee.se.logging.Logger;
 
 /**
  * Microprofile-config implementation for configSource
@@ -44,7 +44,7 @@ import hu.icellmobilsoft.coffee.module.etcd.service.ConfigEtcdService;
  */
 public class DefaultEtcdConfigSource implements ConfigSource {
 
-    private static Logger LOGGER = hu.icellmobilsoft.coffee.cdi.logger.LogProducer.getStaticLogger(DefaultEtcdConfigSource.class);
+    private static Logger LOGGER = hu.icellmobilsoft.coffee.cdi.logger.LogProducer.getStaticDefaultLogger(DefaultEtcdConfigSource.class);
 
     /** {@inheritDoc} */
     @Override

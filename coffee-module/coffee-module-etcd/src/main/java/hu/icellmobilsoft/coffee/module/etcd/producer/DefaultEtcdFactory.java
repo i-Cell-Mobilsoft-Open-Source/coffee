@@ -24,9 +24,9 @@ import javax.enterprise.inject.Disposes;
 import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 
-import org.jboss.logging.Logger;
-
 import hu.icellmobilsoft.coffee.module.etcd.config.DefaultEtcdConfigImpl;
+import hu.icellmobilsoft.coffee.se.logging.Logger;
+
 import io.etcd.jetcd.Client;
 
 /**
@@ -38,7 +38,7 @@ import io.etcd.jetcd.Client;
 @ApplicationScoped
 public class DefaultEtcdFactory {
 
-    private static Logger LOGGER = hu.icellmobilsoft.coffee.cdi.logger.LogProducer.getStaticLogger(DefaultEtcdFactory.class);
+    private static Logger LOGGER = hu.icellmobilsoft.coffee.cdi.logger.LogProducer.getStaticDefaultLogger(DefaultEtcdFactory.class);
 
     @Inject
     private DefaultEtcdConfigImpl defaultEtcdConfigImpl;

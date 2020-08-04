@@ -25,12 +25,13 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
-import org.jboss.logging.Logger;
 
 import hu.icellmobilsoft.coffee.dto.exception.BONotFoundException;
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.module.redis.repository.RedisRepository;
+import hu.icellmobilsoft.coffee.se.logging.Logger;
 import hu.icellmobilsoft.coffee.tool.gson.JsonUtil;
+
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.ScanResult;
 
@@ -43,7 +44,7 @@ import redis.clients.jedis.ScanResult;
  */
 public abstract class AbstractRedisService {
 
-    private static Logger LOGGER = hu.icellmobilsoft.coffee.cdi.logger.LogProducer.getStaticLogger(AbstractRedisService.class);
+    private static Logger LOGGER = hu.icellmobilsoft.coffee.cdi.logger.LogProducer.getStaticDefaultLogger(AbstractRedisService.class);
 
     /**
      * <p>getRedisData.</p>
@@ -114,7 +115,7 @@ public abstract class AbstractRedisService {
         String redisDataString = JsonUtil.toJson(redisData);
         RedisRepository redisRepository = new RedisRepository(getJedis());
         String result = redisRepository.setex(redisKey, secondsToExpire, redisDataString);
-        LOGGER.tracev("Redis key [{0}] value [{1}] expire [{2}] setted", redisKey, redisData, secondsToExpire);
+        LOGGER.trace("Redis key [{0}] value [{1}] expire [{2}] setted", redisKey, redisData, secondsToExpire);
         return result;
     }
 
@@ -128,7 +129,7 @@ public abstract class AbstractRedisService {
 
         RedisRepository redisRepository = new RedisRepository(getJedis());
         Long count = redisRepository.del(redisKey);
-        LOGGER.tracev("Redis key [{0}] remove count: [{1}]", redisKey, count);
+        LOGGER.trace("Redis key [{0}] remove count: [{1}]", redisKey, count);
     }
 
     /**
@@ -143,7 +144,7 @@ public abstract class AbstractRedisService {
         keys = redisKeys.toArray(keys);
         RedisRepository redisRepository = new RedisRepository(getJedis());
         Long count = redisRepository.del(keys);
-        LOGGER.tracev("Redis key remove count: {0}", count);
+        LOGGER.trace("Redis key remove count: {0}", count);
     }
 
     /**
@@ -164,7 +165,7 @@ public abstract class AbstractRedisService {
         }
         RedisRepository redisRepository = new RedisRepository(getJedis());
         redisRepository.rpush(redisKey, redisData, secondsToExpire);
-        LOGGER.tracev("Redis key [{0}] value [{1}] expire [{2}] pushed", redisKey, redisData, secondsToExpire);
+        LOGGER.trace("Redis key [{0}] value [{1}] expire [{2}] pushed", redisKey, redisData, secondsToExpire);
     }
 
     /**

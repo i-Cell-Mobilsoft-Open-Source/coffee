@@ -27,13 +27,13 @@ import java.util.Enumeration;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.deltaspike.core.util.ClassUtils;
 import org.apache.deltaspike.core.util.PropertyFileUtils;
-import org.jboss.logging.Logger;
 import org.w3c.dom.DOMImplementationSource;
 import org.w3c.dom.bootstrap.DOMImplementationRegistry;
 import org.w3c.dom.ls.DOMImplementationLS;
 import org.w3c.dom.ls.LSInput;
 
 import hu.icellmobilsoft.coffee.cdi.logger.LogProducer;
+import hu.icellmobilsoft.coffee.se.logging.Logger;
 
 /**
  * XSD resource resolver
@@ -43,7 +43,7 @@ import hu.icellmobilsoft.coffee.cdi.logger.LogProducer;
  * @since 1.0.0
  */
 public class XsdResourceResolver implements IXsdResourceResolver {
-    private static final Logger log = LogProducer.getStaticLogger(XsdResourceResolver.class);
+    private static final Logger log = LogProducer.getStaticDefaultLogger(XsdResourceResolver.class);
     private String xsdDirPath;
 
     /**
@@ -61,7 +61,7 @@ public class XsdResourceResolver implements IXsdResourceResolver {
 
         final LSInput input = domImplLS.createLSInput();
 
-        log.tracev("0: resolving: [{0}], on base path [{1}]", systemId, xsdDirPath);
+        log.trace("0: resolving: [{0}], on base path [{1}]", systemId, xsdDirPath);
         InputStream resStream = null; // classLoader.getResourceAsStream(s);
         if (resStream == null) {
             // xsdDirPath = "xsd/eu/ss/swarm/sample/dto/user/user.xsd"
@@ -80,14 +80,14 @@ public class XsdResourceResolver implements IXsdResourceResolver {
             }
             String path = temp + temp2;
             resStream = classLoader.getResourceAsStream(path);
-            log.tracev("1: finding path: [{0}], resStream [{1}]", path, resStream);
+            log.trace("1: finding path: [{0}], resStream [{1}]", path, resStream);
             if (resStream == null) {
                 try {
                     Enumeration<URL> urlEnum = PropertyFileUtils.resolvePropertyFiles(path);
                     log.trace("2: deltaspike PropertyFileUtils found xsd file [" + urlEnum.hasMoreElements() + "]");
                     if (urlEnum.hasMoreElements()) {
                         resStream = urlEnum.nextElement().openStream();
-                        log.tracev("2.1: finding path: [{0}], resStream [{1}]", path, resStream);
+                        log.trace("2.1: finding path: [{0}], resStream [{1}]", path, resStream);
                     }
                 } catch (IOException e) {
                     log.trace("2.2: " + e.getLocalizedMessage());
@@ -103,14 +103,14 @@ public class XsdResourceResolver implements IXsdResourceResolver {
             String path = temp;
             if (StringUtils.isNotBlank(path)) {
                 resStream = classLoader.getResourceAsStream(path);
-                log.tracev("3: finding path: [{0}], resStream [{1}]", path, resStream);
+                log.trace("3: finding path: [{0}], resStream [{1}]", path, resStream);
                 if (resStream == null) {
                     try {
                         Enumeration<URL> urlEnum = PropertyFileUtils.resolvePropertyFiles(path);
                         log.trace("4: deltaspike PropertyFileUtils found xsd file [" + urlEnum.hasMoreElements() + "]");
                         if (urlEnum.hasMoreElements()) {
                             resStream = urlEnum.nextElement().openStream();
-                            log.tracev("4.1: finding path: [{0}], resStream [{1}]", path, resStream);
+                            log.trace("4.1: finding path: [{0}], resStream [{1}]", path, resStream);
                         }
                     } catch (IOException e) {
                         log.trace("4.2: " + e.getLocalizedMessage());
@@ -119,7 +119,7 @@ public class XsdResourceResolver implements IXsdResourceResolver {
             }
         }
         if (resStream == null) {
-            log.warnv("ResourceResolver: Resource [{0}] not found in classpaths!", systemId);
+            log.warn("ResourceResolver: Resource [{0}] not found in classpaths!", systemId);
             return null;
         }
         input.setByteStream(resStream);

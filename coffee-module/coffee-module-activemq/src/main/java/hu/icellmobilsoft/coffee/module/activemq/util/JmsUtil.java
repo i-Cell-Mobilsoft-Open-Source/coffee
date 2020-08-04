@@ -28,7 +28,8 @@ import javax.jms.MessageProducer;
 import javax.jms.TextMessage;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.jboss.logging.Logger;
+
+import hu.icellmobilsoft.coffee.se.logging.Logger;
 
 /**
  * JMS (activemq specific) utils
@@ -39,7 +40,7 @@ import org.jboss.logging.Logger;
 @Vetoed
 public class JmsUtil {
 
-    private static Logger LOGGER = hu.icellmobilsoft.coffee.cdi.logger.LogProducer.getStaticLogger(JmsUtil.class);
+    private static Logger LOGGER = hu.icellmobilsoft.coffee.cdi.logger.LogProducer.getStaticDefaultLogger(JmsUtil.class);
 
     /**
      * <p>getMessageId.</p>

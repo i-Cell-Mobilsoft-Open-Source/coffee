@@ -38,7 +38,8 @@ import java.util.GregorianCalendar;
 import javax.enterprise.inject.Vetoed;
 
 import org.apache.commons.lang3.StringUtils;
-import org.jboss.logging.Logger;
+
+import hu.icellmobilsoft.coffee.se.logging.Logger;
 
 /**
  * Date util.
@@ -49,7 +50,7 @@ import org.jboss.logging.Logger;
 @Vetoed
 public class DateUtil {
 
-    private static Logger LOGGER = hu.icellmobilsoft.coffee.cdi.logger.LogProducer.getStaticLogger(DateUtil.class);
+    private static Logger LOGGER = hu.icellmobilsoft.coffee.cdi.logger.LogProducer.getStaticDefaultLogger(DateUtil.class);
 
     /** Constant <code>DEFAULT_FULL_PATTERN="yyyy-MM-dd'T'HH:mm:ss.SSSZ"</code> */
     public static final String DEFAULT_FULL_PATTERN = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";

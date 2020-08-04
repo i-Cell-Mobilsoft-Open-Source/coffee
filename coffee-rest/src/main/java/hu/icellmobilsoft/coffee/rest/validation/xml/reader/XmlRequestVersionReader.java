@@ -87,7 +87,7 @@ public class XmlRequestVersionReader implements IXmlRequestVersionReader {
                 try {
                     reader.close();
                 } catch (XMLStreamException e) {
-                    LogProducer.getStaticLogger(XmlRequestVersionReader.class).warn(e.getLocalizedMessage());
+                    LogProducer.getStaticDefaultLogger(XmlRequestVersionReader.class).warn(e.getLocalizedMessage());
                 }
             }
         }

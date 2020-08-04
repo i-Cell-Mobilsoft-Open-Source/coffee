@@ -36,7 +36,8 @@ import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.apache.commons.lang3.StringUtils;
-import org.jboss.logging.Logger;
+
+import hu.icellmobilsoft.coffee.se.logging.Logger;
 
 /**
  * Date util.
@@ -47,7 +48,7 @@ import org.jboss.logging.Logger;
 @Vetoed
 public class DateXmlUtil {
 
-    private static Logger LOGGER = hu.icellmobilsoft.coffee.cdi.logger.LogProducer.getStaticLogger(DateXmlUtil.class);
+    private static Logger LOGGER = hu.icellmobilsoft.coffee.cdi.logger.LogProducer.getStaticDefaultLogger(DateXmlUtil.class);
 
     private static final String TIMESTAMP_CONVERT_ERROR_MSG = "Timestamp convert [{0}] to XmlGregorianCalendar error: ";
 

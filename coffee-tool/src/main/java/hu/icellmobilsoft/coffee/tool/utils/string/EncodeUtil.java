@@ -29,7 +29,8 @@ import java.util.Objects;
 import javax.enterprise.inject.Vetoed;
 
 import org.apache.commons.lang3.StringUtils;
-import org.jboss.logging.Logger;
+
+import hu.icellmobilsoft.coffee.se.logging.Logger;
 
 /**
  * Util class for encoding
@@ -40,7 +41,7 @@ import org.jboss.logging.Logger;
 @Vetoed
 public class EncodeUtil {
 
-    private static Logger LOGGER = hu.icellmobilsoft.coffee.cdi.logger.LogProducer.getStaticLogger(EncodeUtil.class);
+    private static Logger LOGGER = hu.icellmobilsoft.coffee.cdi.logger.LogProducer.getStaticDefaultLogger(EncodeUtil.class);
 
     /**
      * Encode input String with SHA-512
