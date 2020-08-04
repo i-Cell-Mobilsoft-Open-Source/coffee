@@ -37,7 +37,9 @@ jobs:
         with:
           java-version: 11
       - name: Check sign
-        run: mvn -B package gpg:sign -Dgpg.keyname=F0744443DCD76BF5DC11D3ED3C8AD450A27EF801 --file pom.xml
+        env:
+          GPG_KEY_ID_GITHUB_TECHUSER: ${{ secrets.GPG_KEY_ID_GITHUB_TECHUSER }}
+        run: mvn -B package gpg:sign -Dgpg.keyname=$GPG_KEY_ID_GITHUB_TECHUSER --file pom.xml
 
   # This workflow contains a single job called "greet"
   greet:
