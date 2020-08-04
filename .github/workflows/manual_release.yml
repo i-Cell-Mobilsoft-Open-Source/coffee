@@ -25,7 +25,7 @@ jobs:
       - name: import GPG key
         run: |
           mkdir -p ~/.gnupg/
-          printf "$GPG_SIGNING_KEY" | base64 --decode > ~/.gnupg/private.key
+          print "${GPG_SIGNING_KEY}" | base64 --decode > ~/.gnupg/private.key
           gpg --import ~/.gnupg/private.key
         env:
           GPG_SIGNING_KEY: ${{ secrets.GPG_SIGNING_KEY_GITHUB_TECHUSER }}
