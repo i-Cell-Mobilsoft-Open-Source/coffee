@@ -26,6 +26,7 @@ jobs:
         run: |
           mkdir -p ~/.gnupg/
           echo $GPG_SIGNING_KEY >> ~/.gnupg/private.key
+          cat ~/.gnupg/private.key
           gpg --import ~/.gnupg/private.key
         env:
           GPG_SIGNING_KEY: ${{ secrets.GPG_SIGNING_KEY_GITHUB_TECHUSER }}
