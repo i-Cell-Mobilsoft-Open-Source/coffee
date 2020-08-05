@@ -47,10 +47,10 @@ jobs:
           mkdir -p ~/.gnupg/
           echo "$GPG_SIGNING_KEY" | base64 --decode > ~/.gnupg/private.key
           gpg --import ~/.gnupg/private.key
-          git config --local user.email "github_techuser@icellmobilsoft.hu"
-          git config --local user.name "icellmobilsoft-robot"
-          git config --local user.signingkey "$GPG_KEY_ID_GITHUB_TECHUSER"
-          git config --local commit.gpgsign true
+          git config user.email "github_techuser@icellmobilsoft.hu"
+          git config user.name "icellmobilsoft-robot"
+          git config user.signingkey "$GPG_KEY_ID_GITHUB_TECHUSER"
+          git config commit.gpgsign true
 
       - name: Install SSH key
         uses: shimataro/ssh-key-action@v2
