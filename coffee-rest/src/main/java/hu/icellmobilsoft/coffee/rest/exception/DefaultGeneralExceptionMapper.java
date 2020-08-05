@@ -24,8 +24,10 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.ClientErrorException;
+import javax.ws.rs.ForbiddenException;
 import javax.ws.rs.NotAcceptableException;
 import javax.ws.rs.NotAllowedException;
+import javax.ws.rs.NotAuthorizedException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
@@ -93,6 +95,14 @@ public class DefaultGeneralExceptionMapper implements ExceptionMapper<Exception>
                 log.error("Unknown error in cause: ", e);
                 log.writeLogToError();
             }
+        } else if (e instanceof NotAuthorizedException) {
+            log.error("Known error: ", e);
+            log.writeLogToError();
+            result = handleException(e);
+        } else if (e instanceof ForbiddenException) {
+            log.error("Known error: ", e);
+            log.writeLogToError();
+            result = handleException(e);
         } else {
             log.error("Unknown error: ", e);
             log.writeLogToError();
@@ -101,7 +111,11 @@ public class DefaultGeneralExceptionMapper implements ExceptionMapper<Exception>
     }
 
     /**
-     * <p>handleException.</p>
+     * Handle exception.
+     *
+     * @param e
+     *            the exception
+     * @return the response
      */
     protected Response handleException(Exception e) {
 
@@ -111,6 +125,10 @@ public class DefaultGeneralExceptionMapper implements ExceptionMapper<Exception>
         Response.Status statusCode = Response.Status.INTERNAL_SERVER_ERROR;
         if (e instanceof InternalServerErrorException) {
             statusCode = Response.Status.BAD_REQUEST;
+        } else if (e instanceof NotAuthorizedException) {
+            statusCode = Response.Status.UNAUTHORIZED;
+        } else if (e instanceof ForbiddenException) {
+            statusCode = Response.Status.FORBIDDEN;
         }
         ResponseBuilder responseBuilder = Response.status(statusCode);
         boolean productionStage = ProjectStage.Production.equals(projectStage);
@@ -135,6 +153,10 @@ public class DefaultGeneralExceptionMapper implements ExceptionMapper<Exception>
             dto.setMessage(exceptionMessageTranslator.getLocalizedMessage(CoffeeFaultType.NOT_ACCEPTABLE_EXCEPTION));
         } else if (e instanceof NotAllowedException) {
             dto.setMessage(exceptionMessageTranslator.getLocalizedMessage(CoffeeFaultType.NOT_ALLOWED_EXCEPTION));
+        } else if (e instanceof NotAuthorizedException) {
+            dto.setMessage(exceptionMessageTranslator.getLocalizedMessage(CoffeeFaultType.NOT_AUTHORIZED));
+        } else if (e instanceof ForbiddenException) {
+            dto.setMessage(exceptionMessageTranslator.getLocalizedMessage(CoffeeFaultType.FORBIDDEN));
         } else if (e instanceof UnmarshalException) {
             dto.setMessage(maskSensitiveData(exceptionMessageTranslator.getLinkedExceptionLocalizedMessage((UnmarshalException) e)));
         } else if (e instanceof InternalServerErrorException) {
@@ -155,7 +177,7 @@ public class DefaultGeneralExceptionMapper implements ExceptionMapper<Exception>
     }
 
     /**
-     * <p>handleRequestProcess.</p>
+     * Handle request process.
      */
     protected void handleRequestProcess() {
         // MDC ezekben az esetekben nem volt tisztitva, mert nem is volt request loggolas
@@ -182,6 +204,8 @@ public class DefaultGeneralExceptionMapper implements ExceptionMapper<Exception>
      * Szetvalogato metodus, ami kezeli a beburkolt ceges kiveteleketet es tovabb iranyitja a beburkolt kivetelt a megfelelo kivetel feldogozonak,
      * amenyiben az lehetseges.
      *
+     * @param <E>
+     *            the type parameter
      * @param exception
      *            a beburkolt kivetel
      * @return a megfelelo Response objektum vagy null
@@ -202,7 +226,11 @@ public class DefaultGeneralExceptionMapper implements ExceptionMapper<Exception>
     }
 
     /**
-     * <p>maskSensitiveData.</p>
+     * Mask sensitive data string.
+     *
+     * @param sensitive
+     *            the string to mask
+     * @return the masked string
      */
     protected String maskSensitiveData(String sensitive) {
         if (StringUtils.contains(sensitive, "http") || StringUtils.contains(sensitive, "ftp")) {
