@@ -60,6 +60,18 @@ jobs:
       #- name: Check sign
         #run: mvn -B package gpg:sign -Dgpg.keyname=$GPG_KEY_ID_GITHUB_TECHUSER --file pom.xml
 
+      - name: Configure git credentials
+        uses: OleksiyRudenko/gha-git-credentials@v1
+        with:
+          # <git-user-email@domain.com> (default: github-action@users.noreply.github.com)
+          email: github_techuser@icellmobilsoft.hu
+          # Git User Name (default: "GitHub Action")
+          name: icellmobilsoft-robot
+          # GitHub Actor Username (default: github.actor)
+          #actor: Github TechUser
+          # GitHub Token (default: secrets.GITHUB_TOKEN)
+          token: secrets.ROMBOW_GITHUB_COFFEE_PRIVATE
+
       - name: mvn -B release:prepare -DdryRun=true
         run: mvn -B release:prepare -DdryRun=true
 
@@ -71,7 +83,7 @@ jobs:
       - name: mvn -B release:prepare
         env:
           GPG_KEY_ID_GITHUB_TECHUSER: ${{ secrets.GPG_KEY_ID_GITHUB_TECHUSER }}
-          GITHUB_TOKEN: '${{ secrets.ROMBOW_GITHUB_COFFEE_PRIVATE }}'
+          # GITHUB_TOKEN: '${{ secrets.ROMBOW_GITHUB_COFFEE_PRIVATE }}'
         run: mvn -B release:prepare -Dgpg.keyname=$GPG_KEY_ID_GITHUB_TECHUSER
 
       - name: mvn -B release:perform
