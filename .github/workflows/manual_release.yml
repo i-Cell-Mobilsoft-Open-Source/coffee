@@ -47,14 +47,21 @@ jobs:
         env:
           GPG_SIGNING_KEY: ${{ secrets.GPG_SIGNING_KEY_GITHUB_TECHUSER }}
 
-      - name: Setup SSH Keys and known_hosts
-        env:
-          SSH_AUTH_SOCK: /tmp/ssh_agent.sock
-        run: |
-          mkdir -p ~/.ssh
-          ssh-keyscan github.com >> ~/.ssh/known_hosts
-          ssh-agent -a $SSH_AUTH_SOCK > /dev/null
-          ssh-add - <<< "${{ secrets.SSH_PRIVATE_KEY_GITHUB_TECHUSER }}"
+      - name: Install SSH key
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.SSH_PRIVATE_KEY_GITHUB_TECHUSER }}
+          name: id_rsa # optional
+          known_hosts: ${{ secrets.KNOWN_HOSTS }}
+          # config: ${{ secrets.CONFIG }} # ssh_config; optional
+      #- name: Setup SSH Keys and known_hosts
+      #  env:
+      #    SSH_AUTH_SOCK: /tmp/ssh_agent.sock
+      #  run: |
+      #    mkdir -p ~/.ssh
+      #    ssh-keyscan github.com >> ~/.ssh/known_hosts
+      #    ssh-agent -a $SSH_AUTH_SOCK > /dev/null
+      #    ssh-add - <<< "${{ secrets.SSH_PRIVATE_KEY_GITHUB_TECHUSER }}"
 
       - name: Checkout ${{ github.event.ref }}
         uses: actions/checkout@v2
