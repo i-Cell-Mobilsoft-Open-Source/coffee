@@ -18,8 +18,25 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
+  print_params:
+    name: Print parameters
+
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+
+    # Runs a single command using the runners shell
+    - name: Print
+      run: |
+        echo "github.event.inputs.name ${{ github.event.inputs.name }}"
+        echo "github.event.inputs ${{ github.event.inputs }}"
+        echo "github.ref: ${{ github.ref }}"
+        echo "github.event.ref: ${{ github.event.ref }}"
+        echo "github.repository: ${{ github.repository }}"
+
   gpgconf:
-    name: Configure GPG Key
+    name: Maven release
     runs-on: ubuntu-latest
     steps:
       - name: Import GPG key
@@ -38,22 +55,8 @@ jobs:
         with:
           java-version: 11
 
-      #- name: Check sign
-        #env:
-          #GPG_KEY_ID_GITHUB_TECHUSER: ${{ secrets.GPG_KEY_ID_GITHUB_TECHUSER }}
+      - name: mvn -B release:prepare -DdryRun=true
+        env:
+          GPG_KEY_ID_GITHUB_TECHUSER: ${{ secrets.GPG_KEY_ID_GITHUB_TECHUSER }}
+        run: mvn -B release:prepare -DdryRun=true -Dgpg.keyname=$GPG_KEY_ID_GITHUB_TECHUSER --file pom.xml
         #run: mvn -B package gpg:sign -Dgpg.keyname=$GPG_KEY_ID_GITHUB_TECHUSER --file pom.xml
-
-  # This workflow contains a single job called "greet"
-  greet:
-    # The type of runner that the job will run on
-    runs-on: ubuntu-latest
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
-    steps:
-    # Runs a single command using the runners shell
-    - name: Send greeting
-      run: |
-        echo "Hello ${{ github.event.inputs.name }}"
-        echo "github.ref: ${{ github.ref }}"
-        echo "github.event.ref: ${{ github.event.ref }}"
-        echo "github.repository: ${{ github.repository }}"
