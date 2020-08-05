@@ -35,7 +35,7 @@ jobs:
         echo "github.event.ref: ${{ github.event.ref }}"
         echo "github.repository: ${{ github.repository }}"
 
-  gpgconf:
+  release_job:
     name: Maven release
     runs-on: ubuntu-latest
     steps:
@@ -46,6 +46,15 @@ jobs:
           gpg --import ~/.gnupg/private.key
         env:
           GPG_SIGNING_KEY: ${{ secrets.GPG_SIGNING_KEY_GITHUB_TECHUSER }}
+
+      - name: Setup SSH Keys and known_hosts
+        env:
+          SSH_AUTH_SOCK: /tmp/ssh_agent.sock
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan github.com >> ~/.ssh/known_hosts
+          ssh-agent -a $SSH_AUTH_SOCK > /dev/null
+          ssh-add - <<< "${{ secrets.SSH_PRIVATE_KEY_GITHUB_TECHUSER }}"
 
       - name: Checkout ${{ github.event.ref }}
         uses: actions/checkout@v2
