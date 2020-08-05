@@ -95,11 +95,7 @@ public class DefaultGeneralExceptionMapper implements ExceptionMapper<Exception>
                 log.error("Unknown error in cause: ", e);
                 log.writeLogToError();
             }
-        } else if (e instanceof NotAuthorizedException) {
-            log.error("Known error: ", e);
-            log.writeLogToError();
-            result = handleException(e);
-        } else if (e instanceof ForbiddenException) {
+        } else if (e instanceof NotAuthorizedException || e instanceof ForbiddenException) {
             log.error("Known error: ", e);
             log.writeLogToError();
             result = handleException(e);
