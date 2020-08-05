@@ -44,7 +44,8 @@ public interface IConfigKey {
     String CATALOG_XML_PATH = COFFEE_CONFIG_PREFIX + ".xml.catalog.path";
 
     /**
-     * Reguláris kifejezés a request logolásnál, etcd lekérdezésnél maszkolandó kulcsokra. Pl. ".*?(pass|secret).*?"
+     * Reguláris kifejezés a request logolásnál, etcd lekérdezésnél maszkolandó kulcsokra. Pl. "[\\w\\s]*?secret[\\w\\s]*?",
+     * "[\\w\\s]*?pass[\\w\\s]*?"
      */
     String LOG_SENSITIVE_KEY_PATTERN = COFFEE_CONFIG_PREFIX + ".log.sensitive.key.pattern";
 }

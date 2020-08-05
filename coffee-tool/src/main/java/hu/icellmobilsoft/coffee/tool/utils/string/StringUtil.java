@@ -87,17 +87,21 @@ public class StringUtil {
      *            The key to check against keyPattern.
      * @param value
      *            The value to mask
-     * @param keyPattern
-     *            Regex to check against
+     * @param keyPatterns
+     *            Regex array to check against
      * @return "*" if key and keyPattern are not blank and key matches keyPattern (case ignored); value otherwise
      */
-    public static String maskPropertyValue(String key, Object value, String keyPattern) {
+    public static String maskPropertyValue(String key, Object value, String... keyPatterns) {
         String valueStr = toString(value);
-        if (StringUtils.isNoneBlank(key, keyPattern, valueStr)) {
-            Pattern pattern = Pattern.compile(keyPattern, Pattern.CASE_INSENSITIVE);
-            Matcher matcher = pattern.matcher(key);
-            if (matcher.matches()) {
-                return "*";
+        if (StringUtils.isNoneBlank(key, valueStr) && keyPatterns != null) {
+            for (String keyPattern : keyPatterns) {
+                if (StringUtils.isNotBlank(keyPattern)) {
+                    Pattern pattern = Pattern.compile(keyPattern, Pattern.CASE_INSENSITIVE);
+                    Matcher matcher = pattern.matcher(key);
+                    if (matcher.matches()) {
+                        return "*";
+                    }
+                }
             }
         }
         return valueStr;
@@ -165,18 +169,20 @@ public class StringUtil {
      *
      * @param text
      *            XML or JSON text to replace sensitive data
-     * @param keyPattern
-     *            The pattern to which keys are checked
+     * @param keyPatterns
+     *            The patterns to which keys are checked
      */
-    public static String maskValueInXmlJson(String text, String keyPattern) {
+    public static String maskValueInXmlJson(String text, String... keyPatterns) {
         String result = text;
-        if (StringUtils.isNoneBlank(text, keyPattern)) {
-            // xml replacement: pl.<(.*?(pass|secret).*?)>(.*?)<
-            // <somethingPasswordLike>abc123</somethingPasswordLike> -> <somethingPasswordLike>*</somethingPasswordLike>
-            result = replaceAllIgnoreCase(result, "<(" + keyPattern + ")>(.*?)<", "<$1>*<");
-            // json replacement: pl. (".*?(pass|secret).*?" *?: *?)"(.*?)"
-            // "somethingPasswordLike":"abc123" -> "somethingPasswordLike":"*"
-            result = replaceAllIgnoreCase(result, "(\"" + keyPattern + "\" *?: *?)\"(.*?)\"", "$1\"*\"");
+        if (StringUtils.isNotBlank(text) && keyPatterns != null) {
+            for (String keyPattern : keyPatterns) {
+                // xml replacement: pl.<(.*?(pass).*?)>(.*?)<
+                // <somethingPasswordLike>abc123</somethingPasswordLike> -> <somethingPasswordLike>*</somethingPasswordLike>
+                result = replaceAllIgnoreCase(result, "<(" + keyPattern + ")>(.*?)<", "<$1>*<");
+                // json replacement: pl. (".*?(pass).*?" *?: *?)"(.*?)"
+                // "somethingPasswordLike":"abc123" -> "somethingPasswordLike":"*"
+                result = replaceAllIgnoreCase(result, "(\"" + keyPattern + "\" *?: *?)\"(.*?)\"", "$1\"*\"");
+            }
         }
         return result;
     }

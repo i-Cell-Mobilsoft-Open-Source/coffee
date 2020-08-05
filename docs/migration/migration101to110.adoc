@@ -175,3 +175,15 @@ LogProducer.getStaticDefaultLogger(BlaBla.class).trace("class blabla");
 MDC kezelés is saját rendszeren keresztül történik;
 ahol projekt szinten eddig volt használva `org.jboss.logging.MDC`,
 ott érdemes az import-ot `hu.icellmobilsoft.coffee.se.logging.mdc.MDC`-re cserélni. Bővebben: <<common_core_coffee-se_coffee-se-logging_MDC, MDC>>.
+
+=== Sensitive logging
+Loggolás során a szenzitív adatok maszkolására használt default pattern nagy méretú input esetén túl lassú volt,
+ezért optimálisabb regex-re lett cserélve. Az eddigi default pattern `+++.*?(pass|secret).*+++?` volt, ehelyett:
+
+* A `|` operátor kikerült, helyette több pattern megadására is van lehetőség, amiket egyesével ellenőrzünk.
+* A `+++.*?+++` prefix és suffix feleslegesen általános volt, helyette a `+++[\w\s]*?+++` (`[a-zA-Z0-9_]` és whitespace) elegendő.
+
+Így a default patternek: `+++[\w\s]*?secret[\w\s]*?+++` és `+++[\w\s]*?pass[\w\s]*?+++`
+
+A default pattern továbbra is felülírható a `coffee.config.log.sensitive.key.pattern` kulccsal mp-config alapján.
+Több pattern vesszővel(`,`) elválasztva adható meg pl.: `+++[\w\s]*?secret[\w\s]*?,[\w\s]*?pass[\w\s]*?,[\w\s]*?login[\w\s]*?+++`

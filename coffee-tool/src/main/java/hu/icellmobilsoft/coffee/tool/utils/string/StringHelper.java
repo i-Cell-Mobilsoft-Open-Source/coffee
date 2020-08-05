@@ -38,7 +38,7 @@ import hu.icellmobilsoft.coffee.cdi.config.IConfigKey;
 public class StringHelper {
 
     /** Constant <code>DEFAULT_PATTERN=".*?(pass|secret).*?"</code> */
-    public static final String DEFAULT_PATTERN = ".*?(pass|secret).*?";
+    public static final String[] DEFAULT_PATTERN = { "[\\w\\s]*?secret[\\w\\s]*?", "[\\w\\s]*?pass[\\w\\s]*?"};
 
     // PM: Csak a default config source-okat huzhatjuk be, mivel ez az osztály használva van az etcd config sourc-ban (emiatt a
     // @org.eclipse.microprofile.config.inject.ConfigProperty annotacio nem megfelelo)
@@ -54,7 +54,7 @@ public class StringHelper {
      * <li>/META-INF/microprofile-config.properties</li>
      * </ol>
      *
-     * If pattern is not set via config it dafaults to {@value #DEFAULT_PATTERN}
+     * If pattern is not set via config it dafaults to {@link #DEFAULT_PATTERN}
      *
      * @param key
      *            The key to check against keyPattern.
@@ -75,7 +75,7 @@ public class StringHelper {
      * <li>/META-INF/microprofile-config.properties</li>
      * </ol>
      *
-     * If pattern is not set via config it dafaults to {@value #DEFAULT_PATTERN} <br>
+     * If pattern is not set via config it dafaults to {@link #DEFAULT_PATTERN} <br>
      * ie witch default pattern:<br>
      * keypattern = {@code .*?(pass|secret).*?}
      * <table border="1">
@@ -120,14 +120,16 @@ public class StringHelper {
     }
 
     /**
-     * <p>getSensitiveKeyPattern.</p>
+     * <p>
+     * getSensitiveKeyPattern.
+     * </p>
      *
-     * @return value of config key {@value IConfigKey#LOG_SENSITIVE_KEY_PATTERN} if set, {@value DEFAULT_PATTERN} otherwise.
+     * @return value of config key {@value IConfigKey#LOG_SENSITIVE_KEY_PATTERN} if set, {@link #DEFAULT_PATTERN} otherwise.
      */
-    public String getSensitiveKeyPattern() {
+    public String[] getSensitiveKeyPattern() {
         // Default config sources (sys, env, microprofile-config.properties)
-        Optional<String> patternOpt = config.getOptionalValue(IConfigKey.LOG_SENSITIVE_KEY_PATTERN, String.class);
-        return patternOpt.orElse(DEFAULT_PATTERN);
+        Optional<String[]> patternOpt = config.getOptionalValue(IConfigKey.LOG_SENSITIVE_KEY_PATTERN, String[].class);
+        return patternOpt.filter(patternArray -> patternArray.length > 0).orElse(DEFAULT_PATTERN);
     }
 
 }
