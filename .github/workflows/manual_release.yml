@@ -58,5 +58,5 @@ jobs:
       - name: mvn -B release:prepare -DdryRun=true
         env:
           GPG_KEY_ID_GITHUB_TECHUSER: ${{ secrets.GPG_KEY_ID_GITHUB_TECHUSER }}
-        run: mvn -B release:prepare -DdryRun=true -Dgpg.keyname=$GPG_KEY_ID_GITHUB_TECHUSER --file pom.xml
+        run: mvn -B release:prepare gpg:sign -DdryRun=true -Dgpg.keyname=$GPG_KEY_ID_GITHUB_TECHUSER --file pom.xml
         #run: mvn -B package gpg:sign -Dgpg.keyname=$GPG_KEY_ID_GITHUB_TECHUSER --file pom.xml
