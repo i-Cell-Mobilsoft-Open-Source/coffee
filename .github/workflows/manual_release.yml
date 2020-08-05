@@ -51,6 +51,7 @@ jobs:
           git config --global user.name "icellmobilsoft-robot"
           git config --global user.signingkey "$GPG_KEY_ID_GITHUB_TECHUSER"
           git config --global commit.gpgsign true
+          git config --global tag.gpgSign true
 
       - name: Install SSH key
         uses: shimataro/ssh-key-action@v2
