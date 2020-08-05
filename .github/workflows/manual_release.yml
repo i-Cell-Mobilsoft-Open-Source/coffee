@@ -22,24 +22,26 @@ jobs:
     name: Configure GPG Key
     runs-on: ubuntu-latest
     steps:
-      - name: import GPG key
+      - name: Import GPG key
         run: |
           mkdir -p ~/.gnupg/
           echo "$GPG_SIGNING_KEY" | base64 --decode > ~/.gnupg/private.key
           gpg --import ~/.gnupg/private.key
         env:
           GPG_SIGNING_KEY: ${{ secrets.GPG_SIGNING_KEY_GITHUB_TECHUSER }}
-          
-      - uses: actions/checkout@v2
+
+      - name: Checkout
+        uses: actions/checkout@v2
 
       - name: Set up JDK 11
         uses: actions/setup-java@v1
         with:
           java-version: 11
-      - name: Check sign
-        env:
-          GPG_KEY_ID_GITHUB_TECHUSER: ${{ secrets.GPG_KEY_ID_GITHUB_TECHUSER }}
-        run: mvn -B package gpg:sign -Dgpg.keyname=$GPG_KEY_ID_GITHUB_TECHUSER --file pom.xml
+
+      #- name: Check sign
+        #env:
+          #GPG_KEY_ID_GITHUB_TECHUSER: ${{ secrets.GPG_KEY_ID_GITHUB_TECHUSER }}
+        #run: mvn -B package gpg:sign -Dgpg.keyname=$GPG_KEY_ID_GITHUB_TECHUSER --file pom.xml
 
   # This workflow contains a single job called "greet"
   greet:
@@ -50,4 +52,8 @@ jobs:
     steps:
     # Runs a single command using the runners shell
     - name: Send greeting
-      run: echo "Hello ${{ github.event.inputs.name }}"
+      run: |
+        echo "Hello ${{ github.event.inputs.name }}"
+        echo "github.ref: ${{ github.ref }}"
+        echo "github.event.ref: ${{ github.event.ref }}"
+        echo "github.event.reference: ${{ github.event.reference }}"
