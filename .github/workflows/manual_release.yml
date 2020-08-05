@@ -40,12 +40,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Import GPG key
+        env:
+          GPG_SIGNING_KEY: ${{ secrets.GPG_SIGNING_KEY_GITHUB_TECHUSER }}
+          GPG_KEY_ID_GITHUB_TECHUSER: ${{ secrets.GPG_KEY_ID_GITHUB_TECHUSER }}
         run: |
           mkdir -p ~/.gnupg/
           echo "$GPG_SIGNING_KEY" | base64 --decode > ~/.gnupg/private.key
           gpg --import ~/.gnupg/private.key
-        env:
-          GPG_SIGNING_KEY: ${{ secrets.GPG_SIGNING_KEY_GITHUB_TECHUSER }}
+          git config --local user.email "github_techuser@icellmobilsoft.hu"
+          git config --local user.name "icellmobilsoft-robot"
+          git config --local user.signingkey "$GPG_KEY_ID_GITHUB_TECHUSER"
+          git config --local commit.gpgsign true
 
       - name: Install SSH key
         uses: shimataro/ssh-key-action@v2
@@ -54,14 +59,6 @@ jobs:
           name: id_rsa # optional
           known_hosts: ${{ secrets.KNOWN_HOSTS }}
           # config: ${{ secrets.CONFIG }} # ssh_config; optional
-      #- name: Setup SSH Keys and known_hosts
-      #  env:
-      #    SSH_AUTH_SOCK: /tmp/ssh_agent.sock
-      #  run: |
-      #    mkdir -p ~/.ssh
-      #    ssh-keyscan github.com >> ~/.ssh/known_hosts
-      #    ssh-agent -a $SSH_AUTH_SOCK > /dev/null
-      #    ssh-add - <<< "${{ secrets.SSH_PRIVATE_KEY_GITHUB_TECHUSER }}"
 
       - name: Checkout ${{ github.event.ref }}
         uses: actions/checkout@v2
@@ -88,13 +85,13 @@ jobs:
           # GitHub Token (default: secrets.GITHUB_TOKEN)
           token: secrets.ROMBOW_GITHUB_COFFEE_PRIVATE
 
-      - name: mvn -B release:prepare -DdryRun=true
-        run: mvn -B release:prepare -DdryRun=true
+      #- name: mvn -B release:prepare -DdryRun=true
+      #  run: mvn -B release:prepare -DdryRun=true
 
-      - name: mvn -B release:clean
-        env:
-          GPG_KEY_ID_GITHUB_TECHUSER: ${{ secrets.GPG_KEY_ID_GITHUB_TECHUSER }}
-        run: mvn -B release:clean
+      #- name: mvn -B release:clean
+      #  env:
+      #    GPG_KEY_ID_GITHUB_TECHUSER: ${{ secrets.GPG_KEY_ID_GITHUB_TECHUSER }}
+      #  run: mvn -B release:clean
 
       - name: mvn -B release:prepare
         env:
@@ -102,9 +99,9 @@ jobs:
           # GITHUB_TOKEN: '${{ secrets.ROMBOW_GITHUB_COFFEE_PRIVATE }}'
         run: mvn -B release:prepare -Dgpg.keyname=$GPG_KEY_ID_GITHUB_TECHUSER
 
-      - name: mvn -B release:perform
-        env:
-          GPG_KEY_ID_GITHUB_TECHUSER: ${{ secrets.GPG_KEY_ID_GITHUB_TECHUSER }}
-          OSSRH_USERNAME: '${{ secrets.OSS_SONATYPE_ORG_USER }}'
-          OSSRH_PASSWORD: '${{ secrets.OSS_SONATYPE_ORG_PASSWORD }}'
-        run: mvn -B release:perform -Dgpg.keyname=$GPG_KEY_ID_GITHUB_TECHUSER -s $GITHUB_WORKSPACE/.github/.m2/settings.xml
+      #- name: mvn -B release:perform
+      #  env:
+      #    GPG_KEY_ID_GITHUB_TECHUSER: ${{ secrets.GPG_KEY_ID_GITHUB_TECHUSER }}
+      #    OSSRH_USERNAME: '${{ secrets.OSS_SONATYPE_ORG_USER }}'
+      #    OSSRH_PASSWORD: '${{ secrets.OSS_SONATYPE_ORG_PASSWORD }}'
+      #  run: mvn -B release:perform -Dgpg.keyname=$GPG_KEY_ID_GITHUB_TECHUSER -s $GITHUB_WORKSPACE/.github/.m2/settings.xml
