@@ -54,6 +54,7 @@ jobs:
       - name: Install SSH key
         uses: shimataro/ssh-key-action@v2
         with:
+          # A tartalma egy PEM formatumos (kezdete: '-----BEGIN RSA PRIVATE KEY-----') SSH kulcs
           key: ${{ secrets.SSH_PRIVATE_KEY_GITHUB_TECHUSER }}
           name: id_rsa # optional
           known_hosts: ${{ secrets.KNOWN_HOSTS }} # jelenleg ures a tartalma
@@ -106,23 +107,14 @@ jobs:
           git config --global commit.gpgsign true
           git config --global tag.gpgSign true
 
-      #- name: mvn -B release:prepare -DdryRun=true
-      #  run: mvn -B release:prepare -DdryRun=true
-
-      #- name: mvn -B release:clean
-      #  env:
-      #    GPG_KEY_ID_GITHUB_TECHUSER: ${{ secrets.GPG_KEY_ID_GITHUB_TECHUSER }}
-      #  run: mvn -B release:clean
-
       - name: mvn -B release:prepare
         env:
           GPG_KEY_ID_GITHUB_TECHUSER: ${{ secrets.GPG_KEY_ID_GITHUB_TECHUSER }}
-          # GITHUB_TOKEN: '${{ secrets.ROMBOW_GITHUB_COFFEE_PRIVATE }}'
         run: mvn -B release:prepare -Dgpg.keyname=$GPG_KEY_ID_GITHUB_TECHUSER
 
-      #- name: mvn -B release:perform
-      #  env:
-      #    GPG_KEY_ID_GITHUB_TECHUSER: ${{ secrets.GPG_KEY_ID_GITHUB_TECHUSER }}
-      #    OSSRH_USERNAME: '${{ secrets.OSS_SONATYPE_ORG_USER }}'
-      #    OSSRH_PASSWORD: '${{ secrets.OSS_SONATYPE_ORG_PASSWORD }}'
-      #  run: mvn -B release:perform -Dgpg.keyname=$GPG_KEY_ID_GITHUB_TECHUSER -s $GITHUB_WORKSPACE/.github/.m2/settings.xml
+      - name: mvn -B release:perform
+        env:
+          GPG_KEY_ID_GITHUB_TECHUSER: ${{ secrets.GPG_KEY_ID_GITHUB_TECHUSER }}
+          OSSRH_USERNAME: '${{ secrets.OSS_SONATYPE_ORG_USER }}'
+          OSSRH_PASSWORD: '${{ secrets.OSS_SONATYPE_ORG_PASSWORD }}'
+        run: mvn -B release:perform -Dgpg.keyname=$GPG_KEY_ID_GITHUB_TECHUSER -s $GITHUB_WORKSPACE/.github/.m2/settings.xml
