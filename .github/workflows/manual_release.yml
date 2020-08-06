@@ -1,6 +1,6 @@
 # This is a basic workflow that is manually triggered
 
-name: Manual Release workflow
+name: Manual Maven Release
 
 # Controls when the action will run. Workflow runs when manually triggered using the UI
 # or API.
@@ -8,11 +8,11 @@ on:
   workflow_dispatch:
     # Inputs the workflow accepts.
     inputs:
-      name:
+      comment:
         # Friendly description to be shown in the UI instead of 'name'
-        description: 'Person to greet'
+        description: 'Comment for release'
         # Default value if no value is explicitly provided
-        default: 'World'
+        default: 'Start release from WEB UI'
         # Input has to be provided for the workflow to run
         required: true
 
@@ -29,36 +29,34 @@ jobs:
     # Runs a single command using the runners shell
     - name: Print
       run: |
-        echo "github.event.inputs.name ${{ github.event.inputs.name }}"
-        echo "github.event.inputs ${{ github.event.inputs }}"
+        echo "github.event.inputs.comment ${{ github.event.inputs.comment }}"
         echo "github.ref: ${{ github.ref }}"
         echo "github.event.ref: ${{ github.event.ref }}"
         echo "github.repository: ${{ github.repository }}"
+        echo "github.workspace: ${{ github.workspace }}"
 
   release_job:
     name: Maven release
+
     runs-on: ubuntu-latest
+
     steps:
       - name: Import GPG key
         env:
+          # GPG privat kulcs, ami armor-al exportalva (kezdete: '-----BEGIN PGP PRIVATE KEY BLOCK-----') ez az egesz tartalom base64 elkodolva, az betoltve a secrets tartalomnak
           GPG_SIGNING_KEY: ${{ secrets.GPG_SIGNING_KEY_GITHUB_TECHUSER }}
-          GPG_KEY_ID_GITHUB_TECHUSER: ${{ secrets.GPG_KEY_ID_GITHUB_TECHUSER }}
+        # dekodoljuk a base64 elkodolt privat kulcsot es betoltjuk
         run: |
           mkdir -p ~/.gnupg/
           echo "$GPG_SIGNING_KEY" | base64 --decode > ~/.gnupg/private.key
           gpg --import ~/.gnupg/private.key
-          git config --global user.email "github_techuser@icellmobilsoft.hu"
-          git config --global user.name "icellmobilsoft-robot"
-          git config --global user.signingkey "$GPG_KEY_ID_GITHUB_TECHUSER"
-          git config --global commit.gpgsign true
-          git config --global tag.gpgSign true
 
       - name: Install SSH key
         uses: shimataro/ssh-key-action@v2
         with:
           key: ${{ secrets.SSH_PRIVATE_KEY_GITHUB_TECHUSER }}
           name: id_rsa # optional
-          known_hosts: ${{ secrets.KNOWN_HOSTS }}
+          known_hosts: ${{ secrets.KNOWN_HOSTS }} # jelenleg ures a tartalma
           # config: ${{ secrets.CONFIG }} # ssh_config; optional
 
       - name: Checkout ${{ github.event.ref }}
@@ -71,20 +69,42 @@ jobs:
           server-id: ossrh # Value of the distributionManagement/repository/id field of the pom.xml
           settings-path: ${{ github.workspace }} # location for the settings.xml file
 
+      # Buildelt fajlok alairas tesztelese
       #- name: Check sign
-        #run: mvn -B package gpg:sign -Dgpg.keyname=$GPG_KEY_ID_GITHUB_TECHUSER --file pom.xml
+      #  run: mvn -B package gpg:sign -Dgpg.keyname=$GPG_KEY_ID_GITHUB_TECHUSER --file pom.xml
 
-      - name: Configure git credentials
-        uses: OleksiyRudenko/gha-git-credentials@v1
+      #- name: Configure git credentials
+      #  uses: OleksiyRudenko/gha-git-credentials@v1
+      #  with:
+      #    # <git-user-email@domain.com> (default: github-action@users.noreply.github.com)
+      #    email: github_techuser@icellmobilsoft.hu
+      #    # Git User Name (default: "GitHub Action")
+      #    name: icellmobilsoft-robot
+      #    # GitHub Actor Username (default: github.actor)
+      #    #actor: Github TechUser
+      #    # GitHub Token (default: secrets.GITHUB_TOKEN)
+      #    token: secrets.ROMBOW_GITHUB_COFFEE_PRIVATE
+
+      - name: Setup GIT token
+        uses: fregante/setup-git-token@v1
         with:
-          # <git-user-email@domain.com> (default: github-action@users.noreply.github.com)
-          email: github_techuser@icellmobilsoft.hu
-          # Git User Name (default: "GitHub Action")
+          # The token provided by GitHub actions via secrets.GITHUB_TOKEN
+          token: ${{ secrets.ROMBOW_GITHUB_COFFEE_PRIVATE }}
+          # The name that will be used as "Author" of future commits
           name: icellmobilsoft-robot
-          # GitHub Actor Username (default: github.actor)
-          #actor: Github TechUser
-          # GitHub Token (default: secrets.GITHUB_TOKEN)
-          token: secrets.ROMBOW_GITHUB_COFFEE_PRIVATE
+          # The email that will be used as "Author" of future commits
+          email: github_techuser@icellmobilsoft.hu
+
+      - name: Configure GIT for signed commit
+        env:
+          # GPG kulcs azonositoja, jelenleg F0744443DCD76BF5DC11D3ED3C8AD450A27EF801
+          GPG_KEY_ID_GITHUB_TECHUSER: ${{ secrets.GPG_KEY_ID_GITHUB_TECHUSER }}
+          #git config --global user.email "github_techuser@icellmobilsoft.hu"
+          #git config --global user.name "icellmobilsoft-robot"
+        run: |
+          git config --global user.signingkey "$GPG_KEY_ID_GITHUB_TECHUSER"
+          git config --global commit.gpgsign true
+          git config --global tag.gpgSign true
 
       #- name: mvn -B release:prepare -DdryRun=true
       #  run: mvn -B release:prepare -DdryRun=true
