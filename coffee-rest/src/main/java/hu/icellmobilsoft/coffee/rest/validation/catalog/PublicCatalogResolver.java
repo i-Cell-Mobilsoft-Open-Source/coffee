@@ -22,7 +22,6 @@ package hu.icellmobilsoft.coffee.rest.validation.catalog;
 import java.io.StringReader;
 import java.util.Iterator;
 
-import javax.annotation.Priority;
 import javax.enterprise.inject.Alternative;
 import javax.inject.Inject;
 import javax.xml.catalog.Catalog;
@@ -36,10 +35,16 @@ import hu.icellmobilsoft.coffee.cdi.logger.ThisLogger;
 import hu.icellmobilsoft.coffee.rest.validation.xml.utils.IXsdResourceResolver;
 
 /**
- * Implements CatalogResolver.
- *
- * <p>
- * This class implements a SAX EntityResolver, StAX XMLResolver, Schema Validation LSResourceResolver and Transform URIResolver.
+ * Implements CatalogResolver. <br/>
+ * This class implements a SAX EntityResolver, StAX XMLResolver, Schema Validation LSResourceResolver and Transform URIResolver. <br/>
+ * For multi module projekt {@link Alternative} activation need own class like:
+ * 
+ * <pre>
+ * &#64;Priority(100)
+ * &#64;Alternative
+ * public class ProjectPublicCatalogResolver extends PublicCatalogResolver {
+ * }
+ * </pre>
  *
  * @author imre.scheffer
  * @author mark.petrenyi
@@ -47,7 +52,6 @@ import hu.icellmobilsoft.coffee.rest.validation.xml.utils.IXsdResourceResolver;
  * @since 1.0.0
  */
 @Alternative
-@Priority(100)
 public class PublicCatalogResolver implements LSResourceResolver, IXsdResourceResolver {
 
     @Inject
