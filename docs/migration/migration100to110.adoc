@@ -1,6 +1,6 @@
-= v1.0.1 → v1.1.0
+= v1.0.0 → v1.1.0
 
-coff:ee v1.0.1 -> v1.1.0 migrációs leírás, újdonságok, változások leírása
+coff:ee v1.0.0 -> v1.1.0 migrációs leírás, újdonságok, változások leírása
 
 == Változások
 === coffee-module-mongodb
@@ -187,3 +187,28 @@ ezért optimálisabb regex-re lett cserélve. Az eddigi default pattern `+++.*?(
 
 A default pattern továbbra is felülírható a `coffee.config.log.sensitive.key.pattern` kulccsal mp-config alapján.
 Több pattern vesszővel(`,`) elválasztva adható meg pl.: `+++[\w\s]*?secret[\w\s]*?,[\w\s]*?pass[\w\s]*?,[\w\s]*?login[\w\s]*?+++`
+
+=== @Priority + @Alternative korrekció
+A projektben hibásan volt kezelve az @Alternative, konkrétan ezekben az osztályokban:
+
+* AppLoggerNoContainerImpl (@Alternative a AppLoggerImpl osztályhoz)
+* PublicCatalogResolver (@Alternative a XsdResourceResolver osztályhoz)
+* JsonRequestVersionReader (@Alternative a EmptyRequestVersionReader osztályhoz)
+* XmlRequestVersionReader (@Alternative a EmptyRequestVersionReader osztályhoz)
+
+Az összes helyen Az @Alternative csak mint másodlagos beanként volt számolva,
+de az @Priority ezeket elsődlegessé változtatta.
+
+Hogyha továbbra is valamelyik alternative-t akarjuk elsődlegesnek akkor:
+
+* lokális modul: elég aktiválni a beans.xml fájlban
+* multi module projekt: létre kell hozni egy új osztály, mint például a következő példa
+
+[source,java]
+----
+@Priority(100)
+@Alternative
+public class ProjectPublicCatalogResolver extends PublicCatalogResolver {
+}
+----
+És nem kell beans.xml aktiválás sem

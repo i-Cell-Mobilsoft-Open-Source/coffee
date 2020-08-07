@@ -22,7 +22,6 @@ package hu.icellmobilsoft.coffee.rest.validation.xml.reader;
 import java.lang.reflect.Method;
 import java.text.MessageFormat;
 
-import javax.annotation.Priority;
 import javax.enterprise.context.Dependent;
 import javax.enterprise.inject.Alternative;
 
@@ -38,7 +37,6 @@ import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
  * @since 1.0.0
  */
 @Alternative
-@Priority(100)
 @Dependent
 public class JsonRequestVersionReader implements IJsonRequestVersionReader {
 

@@ -22,11 +22,9 @@ package hu.icellmobilsoft.coffee.cdi.logger;
 import java.text.MessageFormat;
 import java.util.logging.Logger;
 
-import javax.annotation.Priority;
 import javax.enterprise.context.Dependent;
 import javax.enterprise.inject.Alternative;
 import javax.inject.Named;
-import javax.interceptor.Interceptor;
 
 import hu.icellmobilsoft.coffee.se.logging.JulLevel;
 
@@ -42,7 +40,6 @@ import hu.icellmobilsoft.coffee.se.logging.JulLevel;
 @Named
 @Alternative
 @DefaultAppLogger
-@Priority(Interceptor.Priority.APPLICATION + 10)
 public class AppLoggerNoContainerImpl implements AppLogger {
 
     private static final long serialVersionUID = 1L;
