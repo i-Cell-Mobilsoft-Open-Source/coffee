@@ -24,6 +24,8 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.Enumeration;
 
+import javax.enterprise.inject.Alternative;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.deltaspike.core.util.ClassUtils;
 import org.apache.deltaspike.core.util.PropertyFileUtils;
@@ -31,18 +33,29 @@ import org.w3c.dom.DOMImplementationSource;
 import org.w3c.dom.bootstrap.DOMImplementationRegistry;
 import org.w3c.dom.ls.DOMImplementationLS;
 import org.w3c.dom.ls.LSInput;
+import org.w3c.dom.ls.LSResourceResolver;
 
 import hu.icellmobilsoft.coffee.cdi.logger.LogProducer;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
 
 /**
- * XSD resource resolver
+ * XSD schemalocation based resource resolver.<br/>
+ * This class implements a SAX EntityResolver, StAX XMLResolver, Schema Validation LSResourceResolver and Transform URIResolver. <br/>
+ * For multi module projekt {@link Alternative} activation need own class like:
+ * 
+ * <pre>
+ * &#64;Priority(100)
+ * &#64;Alternative
+ * public class ProjectXsdResourceResolver extends XsdResourceResolver {
+ * }
+ * </pre>
  *
  * @author cstamas
  * @author robert.kaplar
  * @since 1.0.0
  */
-public class XsdResourceResolver implements IXsdResourceResolver {
+@Alternative
+public class XsdResourceResolver implements LSResourceResolver, IXsdResourceResolver {
     private static final Logger log = LogProducer.getStaticDefaultLogger(XsdResourceResolver.class);
     private String xsdDirPath;
 

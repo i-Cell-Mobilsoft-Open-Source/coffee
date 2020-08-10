@@ -192,23 +192,25 @@ Több pattern vesszővel(`,`) elválasztva adható meg pl.: `+++[\w\s]*?secret[\
 A projektben hibásan volt kezelve az @Alternative, konkrétan ezekben az osztályokban:
 
 * AppLoggerNoContainerImpl (@Alternative a AppLoggerImpl osztályhoz)
-* PublicCatalogResolver (@Alternative a XsdResourceResolver osztályhoz)
 * JsonRequestVersionReader (@Alternative a EmptyRequestVersionReader osztályhoz)
 * XmlRequestVersionReader (@Alternative a EmptyRequestVersionReader osztályhoz)
+* XsdResourceResolver (@Alternative a PublicCatalogResolver osztályhoz)
 
 Az összes helyen Az @Alternative csak mint másodlagos beanként volt számolva,
 de az @Priority ezeket elsődlegessé változtatta.
+Kivétel a `PublicCatalogResolver` ahol elsődlegessé volt szánva,
+és most ez is lett átvezetve.  
 
 Hogyha továbbra is valamelyik alternative-t akarjuk elsődlegesnek akkor:
 
 * lokális modul: elég aktiválni a beans.xml fájlban
-* multi module projekt: létre kell hozni egy új osztály, mint például a következő példa
+* multi module projekt: létre kell hozni egy új osztályt, mint például a következő példában
 
 [source,java]
 ----
 @Priority(100)
 @Alternative
-public class ProjectPublicCatalogResolver extends PublicCatalogResolver {
+public class ProjectXsdResourceResolver extends XsdResourceResolver {
 }
 ----
 És nem kell beans.xml aktiválás sem
