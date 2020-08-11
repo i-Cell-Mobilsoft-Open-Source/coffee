@@ -174,14 +174,14 @@ public class DefaultGeneralExceptionMapper implements ExceptionMapper<Exception>
     }
 
     protected ResponseBuilder createResponseBuilder(Exception e, Response.Status responseStatus, CoffeeFaultType faultType,
-            BiConsumer<TechnicalFault, CoffeeFaultType> productStageConsumer) {
+            BiConsumer<TechnicalFault, CoffeeFaultType> productionStageConsumer) {
         TechnicalFault dto = new TechnicalFault();
         exceptionMessageTranslator.addCommonInfo(dto, e, faultType);
         Response.Status statusCode = responseStatus;
         ResponseBuilder responseBuilder = Response.status(statusCode);
         boolean productionStage = ProjectStage.Production.equals(projectStage);
         if (productionStage) {
-            productStageConsumer.accept(dto, faultType);
+            productionStageConsumer.accept(dto, faultType);
         }
         return responseBuilder.entity(dto);
     }
