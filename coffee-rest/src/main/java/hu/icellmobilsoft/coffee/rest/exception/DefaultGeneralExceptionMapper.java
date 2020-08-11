@@ -19,6 +19,8 @@
  */
 package hu.icellmobilsoft.coffee.rest.exception;
 
+import java.util.function.BiConsumer;
+
 import javax.inject.Inject;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -84,26 +86,28 @@ public class DefaultGeneralExceptionMapper implements ExceptionMapper<Exception>
     public Response toResponse(Exception e) {
         Response result = null;
         if (e instanceof BaseExceptionWrapper<?>) {
-            BaseExceptionWrapper<?> wrappedException = (BaseExceptionWrapper<?>) e;
-            if (wrappedException.getException() != null) {
-                log.info("Wrapped exception. Trying to match the correct mapper...");
-                result = handleWrappedException(wrappedException.getException());
-            } else if (e.getCause() instanceof BaseException) {
-                log.info("Wrapped BaseException. Trying to match the correct mapper...");
-                result = handleWrappedException((BaseException) e.getCause());
-            } else {
-                log.error("Unknown error in cause: ", e);
-                log.writeLogToError();
+            Exception unwrappedException = unwrapException((Exception & BaseExceptionWrapper<?>) e);
+            if (unwrappedException instanceof BaseException) {
+                result = handleWrappedException((BaseException) unwrappedException);
             }
-        } else if (e instanceof NotAuthorizedException || e instanceof ForbiddenException) {
-            log.error("Known error: ", e);
-            log.writeLogToError();
-            result = handleException(e);
-        } else {
-            log.error("Unknown error: ", e);
-            log.writeLogToError();
         }
         return (result != null) ? result : handleException(e);
+    }
+
+    protected <WRAPPED extends Exception & BaseExceptionWrapper<?>> Exception unwrapException(WRAPPED wrappedException) {
+        Exception unwrapped;
+        if (wrappedException.getException() != null) {
+            log.info("Wrapped exception.");
+            unwrapped = wrappedException.getException();
+        } else if (wrappedException.getCause() instanceof BaseException) {
+            log.info("Wrapped BaseException.");
+            unwrapped = (BaseException) wrappedException.getCause();
+        } else {
+            log.error("Unknown error in cause: ", wrappedException);
+            log.writeLogToError();
+            unwrapped = wrappedException;
+        }
+        return unwrapped;
     }
 
     /**
@@ -114,62 +118,72 @@ public class DefaultGeneralExceptionMapper implements ExceptionMapper<Exception>
      * @return the response
      */
     protected Response handleException(Exception e) {
-
-        TechnicalFault dto = new TechnicalFault();
-        exceptionMessageTranslator.addCommonInfo(dto, e, CoffeeFaultType.OPERATION_FAILED);
-
-        Response.Status statusCode = Response.Status.INTERNAL_SERVER_ERROR;
-        if (e instanceof InternalServerErrorException) {
-            statusCode = Response.Status.BAD_REQUEST;
+        ResponseBuilder responseBuilder = null;
+        if (e instanceof NotAcceptableException) {
+            responseBuilder = createResponseBuilder(e, Response.Status.INTERNAL_SERVER_ERROR, CoffeeFaultType.NOT_ACCEPTABLE_EXCEPTION,
+                    this::handleProductionStage);
+        } else if (e instanceof NotAllowedException) {
+            responseBuilder = createResponseBuilder(e, Response.Status.INTERNAL_SERVER_ERROR, CoffeeFaultType.NOT_ALLOWED_EXCEPTION,
+                    this::handleProductionStage);
         } else if (e instanceof NotAuthorizedException) {
-            statusCode = Response.Status.UNAUTHORIZED;
+            responseBuilder = createResponseBuilder(e, Response.Status.UNAUTHORIZED, CoffeeFaultType.NOT_AUTHORIZED, this::handleProductionStage);
         } else if (e instanceof ForbiddenException) {
-            statusCode = Response.Status.FORBIDDEN;
+            responseBuilder = createResponseBuilder(e, Response.Status.FORBIDDEN, CoffeeFaultType.FORBIDDEN, this::handleProductionStage);
+        } else if (e instanceof UnmarshalException) {
+            responseBuilder = createResponseBuilder(e, Response.Status.INTERNAL_SERVER_ERROR, CoffeeFaultType.OPERATION_FAILED, (dto, faultType) -> {
+                dto.setMessage(maskSensitiveData(exceptionMessageTranslator.getLinkedExceptionLocalizedMessage((UnmarshalException) e)));
+                dto.setException(null);
+            });
+        } else if (e instanceof InternalServerErrorException) {
+            responseBuilder = createResponseBuilder(e, Response.Status.BAD_REQUEST, CoffeeFaultType.INVALID_REQUEST, this::handleProductionStage);
+        } else if (e.getCause() instanceof IllegalArgumentException) {
+            responseBuilder = createResponseBuilder(e, Response.Status.INTERNAL_SERVER_ERROR, CoffeeFaultType.ILLEGAL_ARGUMENT_EXCEPTION,
+                    this::handleProductionStage);
+        } else if (e instanceof ClientErrorException) {
+            responseBuilder = createResponseBuilder(e, Response.Status.INTERNAL_SERVER_ERROR, CoffeeFaultType.OPERATION_FAILED, (dto, faultType) -> {
+                dto.setMessage(maskSensitiveData(e.getLocalizedMessage()));
+                dto.setException(null);
+            });
+
+            boolean productionStage = ProjectStage.Production.equals(projectStage);
+            if (productionStage) {
+                // NotFoundException, NotSupportedException, ...
+                handleRequestProcess();
+                // a kérésben megadott accept lesz a válasz application/octet-stream helyett
+                String accept = servletRequest.getHeader(HttpHeaders.ACCEPT);
+                responseBuilder.type(MediaType.valueOf(StringUtils.defaultString(accept, MediaType.APPLICATION_XML)));
+            }
         }
+
+        if (responseBuilder != null) {
+            log.error("Known error: ", e);
+            log.writeLogToError();
+        } else {
+            log.error("Unknown error: ", e);
+            log.writeLogToError();
+            responseBuilder = createResponseBuilder(e, Response.Status.INTERNAL_SERVER_ERROR, CoffeeFaultType.GENERIC_EXCEPTION,
+                    this::handleProductionStage);
+
+        }
+        return responseBuilder.build();
+    }
+
+    private void handleProductionStage(TechnicalFault dto, CoffeeFaultType faultType) {
+        dto.setMessage(exceptionMessageTranslator.getLocalizedMessage(faultType));
+        dto.setException(null);
+    }
+
+    protected ResponseBuilder createResponseBuilder(Exception e, Response.Status responseStatus, CoffeeFaultType faultType,
+            BiConsumer<TechnicalFault, CoffeeFaultType> productStageConsumer) {
+        TechnicalFault dto = new TechnicalFault();
+        exceptionMessageTranslator.addCommonInfo(dto, e, faultType);
+        Response.Status statusCode = responseStatus;
         ResponseBuilder responseBuilder = Response.status(statusCode);
         boolean productionStage = ProjectStage.Production.equals(projectStage);
         if (productionStage) {
-            handleProductionStageException(dto, responseBuilder, e);
+            productStageConsumer.accept(dto, faultType);
         }
-        return responseBuilder.entity(dto).build();
-    }
-
-    /**
-     * Unhandled Exception -> Error message converter
-     *
-     * @param dto
-     *            DTO to fill with message
-     * @param responseBuilder
-     *            response builder
-     * @param e
-     *            throwe exception to handling
-     */
-    protected void handleProductionStageException(TechnicalFault dto, ResponseBuilder responseBuilder, Exception e) {
-        if (e instanceof NotAcceptableException) {
-            dto.setMessage(exceptionMessageTranslator.getLocalizedMessage(CoffeeFaultType.NOT_ACCEPTABLE_EXCEPTION));
-        } else if (e instanceof NotAllowedException) {
-            dto.setMessage(exceptionMessageTranslator.getLocalizedMessage(CoffeeFaultType.NOT_ALLOWED_EXCEPTION));
-        } else if (e instanceof NotAuthorizedException) {
-            dto.setMessage(exceptionMessageTranslator.getLocalizedMessage(CoffeeFaultType.NOT_AUTHORIZED));
-        } else if (e instanceof ForbiddenException) {
-            dto.setMessage(exceptionMessageTranslator.getLocalizedMessage(CoffeeFaultType.FORBIDDEN));
-        } else if (e instanceof UnmarshalException) {
-            dto.setMessage(maskSensitiveData(exceptionMessageTranslator.getLinkedExceptionLocalizedMessage((UnmarshalException) e)));
-        } else if (e instanceof InternalServerErrorException) {
-            dto.setMessage(exceptionMessageTranslator.getLocalizedMessage(CoffeeFaultType.INVALID_REQUEST));
-        } else if (e.getCause() instanceof IllegalArgumentException) {
-            dto.setMessage(exceptionMessageTranslator.getLocalizedMessage(CoffeeFaultType.ILLEGAL_ARGUMENT_EXCEPTION));
-        } else if (e instanceof ClientErrorException) {
-            // NotFoundException, NotSupportedException, ...
-            handleRequestProcess();
-            // a kérésben megadott accept lesz a válasz application/octet-stream helyett
-            String accept = servletRequest.getHeader(HttpHeaders.ACCEPT);
-            responseBuilder.type(MediaType.valueOf(StringUtils.defaultString(accept, MediaType.APPLICATION_XML)));
-            dto.setMessage(maskSensitiveData(e.getLocalizedMessage()));
-        } else {
-            dto.setMessage(exceptionMessageTranslator.getLocalizedMessage(CoffeeFaultType.GENERIC_EXCEPTION));
-        }
-        dto.setException(null);
+        return responseBuilder.entity(dto);
     }
 
     /**
