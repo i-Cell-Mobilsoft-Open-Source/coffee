@@ -22,7 +22,6 @@ package hu.icellmobilsoft.coffee.rest.validation.xml.reader;
 import java.io.InputStream;
 import java.text.MessageFormat;
 
-import javax.annotation.Priority;
 import javax.enterprise.context.Dependent;
 import javax.enterprise.inject.Alternative;
 import javax.xml.stream.XMLInputFactory;
@@ -56,7 +55,6 @@ import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
  * @since 1.0.0
  */
 @Alternative
-@Priority(100)
 @Dependent
 public class XmlRequestVersionReader implements IXmlRequestVersionReader {
 

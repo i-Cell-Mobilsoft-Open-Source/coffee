@@ -22,8 +22,6 @@ package hu.icellmobilsoft.coffee.rest.validation.catalog;
 import java.io.StringReader;
 import java.util.Iterator;
 
-import javax.annotation.Priority;
-import javax.enterprise.inject.Alternative;
 import javax.inject.Inject;
 import javax.xml.catalog.Catalog;
 
@@ -36,18 +34,14 @@ import hu.icellmobilsoft.coffee.cdi.logger.ThisLogger;
 import hu.icellmobilsoft.coffee.rest.validation.xml.utils.IXsdResourceResolver;
 
 /**
- * Implements CatalogResolver.
- *
- * <p>
- * This class implements a SAX EntityResolver, StAX XMLResolver, Schema Validation LSResourceResolver and Transform URIResolver.
+ * Implements CatalogResolver. <br/>
+ * This class implements a SAX EntityResolver, StAX XMLResolver, Schema Validation LSResourceResolver and Transform URIResolver. <br/>
  *
  * @author imre.scheffer
  * @author mark.petrenyi
  * @see Inspired by javax.xml.catalog.CatalogResolverImpl, javax.xml.catalog.Util
  * @since 1.0.0
  */
-@Alternative
-@Priority(100)
 public class PublicCatalogResolver implements LSResourceResolver, IXsdResourceResolver {
 
     @Inject
