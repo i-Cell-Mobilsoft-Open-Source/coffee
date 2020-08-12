@@ -4,7 +4,7 @@
 	<parent>
 		<artifactId>coffee</artifactId>
 		<groupId>hu.icellmobilsoft.coffee</groupId>
-		<version>1.1.0</version>
+		<version>1.1.1-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>coffee-se</artifactId>
