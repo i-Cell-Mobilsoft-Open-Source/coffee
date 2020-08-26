@@ -8,8 +8,8 @@ A projekten való használat időpontjában a legfrissebb változat a 0.17.3.
 
 Első lépésben Node.js-re van szükség a Gren használatához.
 
-* Windows-t használóknál ez a [https://nodejs.org/en/download/] címen tölthető le.
-* Linux-ot használók számára egy kicsit bonyolultabb a történet a különböző változatok miatt, de a Node.js segítséget nyújt ehhez is: [https://nodejs.org/en/download/package-manager/]
+* Windows-t használóknál ez a https://nodejs.org/en/download/ címen tölthető le.
+* Linux-ot használók számára egy kicsit bonyolultabb a történet a különböző változatok miatt, de a Node.js segítséget nyújt ehhez is: https://nodejs.org/en/download/package-manager/
 
 Második lépésben telepíteni kell a `github-release-notes` npm csomagot:
 
@@ -17,7 +17,7 @@ Második lépésben telepíteni kell a `github-release-notes` npm csomagot:
 npm install github-release-notes -g
 ```
 
-Ezután, generálni kell egy `GitHub tokent`, _**repo** scope-pal_, a következő segédlet alapján [link](https://help.github.com/articles/creating-a-personal-access-token-for-the-command-line/).
+Ezután, generálni kell egy `GitHub tokent`, _**repo** scope-pal_, a következő segédlet alapján https://help.github.com/articles/creating-a-personal-access-token-for-the-command-line[link].
 
 Ezután fel kell venni a GREN_GITHUB_TOKEN kulcsot a környezeti változók közé.
 
@@ -70,7 +70,7 @@ gren changelog --generate
 
 == Konfigurációs fájl
 
-Létre lehet hozni konfigurációs fájlt, ahol a külöböző kapcsolólatk előre definiálni lehet, így nem kell a parancs futtatásakor megadni őket. [A beállítási lehetőségeket itt találod](https://github-tools.github.io/github-release-notes/options.html#configuration-file)
+Létre lehet hozni konfigurációs fájlt, ahol a külöböző kapcsolólatk előre definiálni lehet, így nem kell a parancs futtatásakor megadni őket. https://github-tools.github.io/github-release-notes/options.html#configuration-file[A beállítási lehetőségeket itt találod]
 Az elfogadott fájlok a következőek lehetnek:
 
 - `.grenrc`
@@ -91,6 +91,6 @@ A projektben használt fájlban a következő opciók vannak érvényesítve:
 - Előre definiált kinézet van még meghatározva a config fájlban a template alatt.
 
 
-[Minden opciót megtalálsz itt](https://github-tools.github.io/github-release-notes/options.html)
+https://github-tools.github.io/github-release-notes/options.html[Minden opciót megtalálsz itt]
 Bővebb leírás a https://github.com/github-tools/github-release-notes#gren-[Gren github repójában] lévő README.md-ben található.
 
