@@ -46,7 +46,7 @@ gren release
 
 === Parancsok
 
-Két fő parancs parancsa van a gren-nek:
+Két fő típusa van a gren parancsnak:
 
 ==== `gren release`
 
@@ -70,7 +70,7 @@ gren changelog --generate
 
 == Konfigurációs fájl
 
-Létre lehet hozni konfigurációs fájlt, ahol a külöböző kapcsolólatk előre definiálni lehet, így nem kell a parancs futtatásakor megadni őket. https://github-tools.github.io/github-release-notes/options.html#configuration-file[A beállítási lehetőségeket itt találod]
+Létre lehet hozni konfigurációs fájlt, ahol a külöböző kapcsolókat előre definiálni lehet, így nem kell a parancs futtatásakor megadni őket. https://github-tools.github.io/github-release-notes/options.html#configuration-file[A beállítási lehetőségeket itt találod]
 Az elfogadott fájlok a következőek lehetnek:
 
 - `.grenrc`
