@@ -89,6 +89,8 @@ public class DefaultGeneralExceptionMapper implements ExceptionMapper<Exception>
             Exception unwrappedException = unwrapException((Exception & BaseExceptionWrapper<?>) e);
             if (unwrappedException instanceof BaseException) {
                 result = handleWrappedException((BaseException) unwrappedException);
+            } else {
+                log.trace("Unwrapped exception is not a BaseException, proceeding with default exception handling.");
             }
         }
         return (result != null) ? result : handleException(e);
@@ -97,10 +99,10 @@ public class DefaultGeneralExceptionMapper implements ExceptionMapper<Exception>
     protected <WRAPPED extends Exception & BaseExceptionWrapper<?>> Exception unwrapException(WRAPPED wrappedException) {
         Exception unwrapped;
         if (wrappedException.getException() != null) {
-            log.info("Wrapped exception.");
+            log.trace("Wrapped exception.");
             unwrapped = wrappedException.getException();
         } else if (wrappedException.getCause() instanceof BaseException) {
-            log.info("Wrapped BaseException.");
+            log.trace("Wrapped BaseException.");
             unwrapped = (BaseException) wrappedException.getCause();
         } else {
             log.error("Unknown error in cause: ", wrappedException);

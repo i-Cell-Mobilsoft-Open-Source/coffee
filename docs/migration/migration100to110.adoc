@@ -218,6 +218,6 @@ public class ProjectXsdResourceResolver extends XsdResourceResolver {
 
 === DefaultGeneralExceptionMapper
 
-Refaktorálásra került a `DefaultGeneralExceptionMapper` eddig a `handleException` és a `handleProductionStageException` metődusokban is szerepelt egy sor if-else.
+Refaktorálásra került a `DefaultGeneralExceptionMapper` eddig a `handleException` és a `handleProductionStageException` metódusokban is szerepelt egy sor if-else.
 Ez a kettő összevonásra került, így új exception lekezeléséhez egy helyen kell kódot módosítani. Ezzel együtt a `handleProductionStageException` metódus törölve lett,
 helyette a production esetén végrehajtandó logikát consumer-en keresztül lehet igény szerint felül definiálni.
