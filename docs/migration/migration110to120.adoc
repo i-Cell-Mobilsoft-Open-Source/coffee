@@ -5,7 +5,9 @@ coff:ee v1.1.0 -> v1.2.0 migrációs leírás, újdonságok, változások leír�
 == Változások
 === coffee-rest
 
-* RequestResponseLogger válasz kiíráatás kibővült xml kiírással, ha a mediaType application/xml. A json kiírás is mediaType függővé lett téve. Egyéb esetben az objektum toString() metódusával kerül kiírásra a válasz objektum.
+* RequestResponseLogger válasz kiíráatás kibővült xml kiírással, ha a mediaType application/xml vagy application/atom+xml.
+A json kiírás is mediaType függővé lett téve.
+Egyéb esetben az objektum toString() metódusával kerül kiírásra a válasz objektum.
 
 ==== Átállás
 

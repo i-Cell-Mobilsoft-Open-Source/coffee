@@ -396,9 +396,10 @@ public class RequestResponseLogger {
         String entityText = null;
         if (entity instanceof String) {
             entityText = (String) entity;
-        } else if (mediaType != null && StringUtils.containsIgnoreCase(mediaType.getSubtype(), "json")) {
+        } else if (mediaType != null && MediaType.APPLICATION_JSON_TYPE.getSubtype().equals(mediaType.getSubtype())) {
             entityText = JsonUtil.toJson(entity);
-        } else if (mediaType != null && StringUtils.containsIgnoreCase(mediaType.getSubtype(), "xml")) {
+        } else if (mediaType != null && (MediaType.APPLICATION_XML_TYPE.getSubtype().equals(mediaType.getSubtype()) //
+                || MediaType.APPLICATION_ATOM_XML_TYPE.getSubtype().equals(mediaType.getSubtype()))) {
             entityText = MarshallingUtil.marshall(entity);
         } else {
             entityText = entity.toString();
