@@ -199,7 +199,7 @@ A projektben hibásan volt kezelve az @Alternative, konkrétan ezekben az osztá
 Az összes helyen Az @Alternative csak mint másodlagos beanként volt számolva,
 de az @Priority ezeket elsődlegessé változtatta.
 Kivétel a `PublicCatalogResolver` ahol elsődlegessé volt szánva,
-és most ez is lett átvezetve.  
+és most ez is lett átvezetve.
 
 Hogyha továbbra is valamelyik alternative-t akarjuk elsődlegesnek akkor:
 
@@ -214,3 +214,10 @@ public class ProjectXsdResourceResolver extends XsdResourceResolver {
 }
 ----
 És nem kell beans.xml aktiválás sem
+
+
+=== DefaultGeneralExceptionMapper
+
+Refaktorálásra került a `DefaultGeneralExceptionMapper` eddig a `handleException` és a `handleProductionStageException` metódusokban is szerepelt egy sor if-else.
+Ez a kettő összevonásra került, így új exception lekezeléséhez egy helyen kell kódot módosítani. Ezzel együtt a `handleProductionStageException` metódus törölve lett,
+helyette a production esetén végrehajtandó logikát consumer-en keresztül lehet igény szerint felül definiálni.
