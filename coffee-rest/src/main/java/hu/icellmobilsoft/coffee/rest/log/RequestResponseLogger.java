@@ -50,6 +50,7 @@ import hu.icellmobilsoft.coffee.rest.log.annotation.LogSpecifier;
 import hu.icellmobilsoft.coffee.rest.log.annotation.enumeration.LogSpecifierTarget;
 import hu.icellmobilsoft.coffee.rest.utils.RestLoggerUtil;
 import hu.icellmobilsoft.coffee.tool.gson.JsonUtil;
+import hu.icellmobilsoft.coffee.tool.utils.marshalling.MarshallingUtil;
 import hu.icellmobilsoft.coffee.tool.utils.string.StringHelper;
 
 /**
@@ -361,9 +362,15 @@ public class RequestResponseLogger {
      * Print response entity object. Try it print as String or jsonobject
      *
      * @param entity
+     *            entity to log
+     * @param maxLogSize
+     *            max size of log if relevant
+     * @param mediaType
+     *            media type of entity if relevant
+     * @return entity in string
      */
-    protected String printResponseEntity(Object entity, Integer maxLogSize) {
-        return printEntity(entity, maxLogSize, RequestResponseLogger.RESPONSE_PREFIX, false);
+    protected String printResponseEntity(Object entity, Integer maxLogSize, MediaType mediaType) {
+        return printEntity(entity, maxLogSize, RequestResponseLogger.RESPONSE_PREFIX, false, mediaType);
     }
 
     /**
@@ -377,8 +384,11 @@ public class RequestResponseLogger {
      *            log prefix
      * @param maskingNeeded
      *            is masking sensitive data needed
+     * @param mediaType
+     *            media type of entity if relevant
+     * @return entity in string
      */
-    public String printEntity(Object entity, Integer maxLogSize, String prefix, boolean maskingNeeded) {
+    public String printEntity(Object entity, Integer maxLogSize, String prefix, boolean maskingNeeded, MediaType mediaType) {
         if (entity == null) {
             return null;
         }
@@ -386,8 +396,12 @@ public class RequestResponseLogger {
         String entityText = null;
         if (entity instanceof String) {
             entityText = (String) entity;
-        } else {
+        } else if (mediaType != null && StringUtils.containsIgnoreCase(mediaType.getSubtype(), "json")) {
             entityText = JsonUtil.toJson(entity);
+        } else if (mediaType != null && StringUtils.containsIgnoreCase(mediaType.getSubtype(), "xml")) {
+            entityText = MarshallingUtil.marshall(entity);
+        } else {
+            entityText = entity.toString();
         }
         if (maxLogSize != null && entityText != null && entityText.length() > maxLogSize.intValue()) {
             entityText = StringUtils.substring(entityText, 0, maxLogSize);
@@ -433,7 +447,8 @@ public class RequestResponseLogger {
                     .append("Response outputstream logging disabled, because MediaType: [" + mediaType + "]\n");
         } else {
             String responseText = new String(entityCopy, StandardCharsets.UTF_8);
-            sb.append(printResponseEntity(responseText, RestLoggerUtil.getMaxEntityLogSize(writerInterceptorContext, LogSpecifierTarget.RESPONSE)));
+            sb.append(printResponseEntity(responseText, RestLoggerUtil.getMaxEntityLogSize(writerInterceptorContext, LogSpecifierTarget.RESPONSE),
+                    mediaType));
         }
         return sb.toString();
     }
