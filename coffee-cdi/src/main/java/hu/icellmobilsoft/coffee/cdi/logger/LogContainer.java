@@ -226,7 +226,7 @@ public class LogContainer {
 
         @Override
         public String toString() {
-            return MessageFormat.format("[{}]{}:{}",DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(logDateTime),level,message);
+            return MessageFormat.format("[{0}]{1}:{2}",DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(logDateTime),level,message);
         }
     }
 
