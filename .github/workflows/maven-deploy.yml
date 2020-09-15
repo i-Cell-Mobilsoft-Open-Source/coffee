@@ -23,14 +23,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Comment Trigger
-      uses: khan/pull-request-comment-trigger@master
-      with:
-        trigger: '@deploy'
-        reaction: rocket
-      env:
-          GITHUB_TOKEN: '${{ secrets.ROMBOW_GITHUB_COFFEE_PRIVATE }}'
-    
     - name: Checkout
       uses: actions/checkout@v2
 
