@@ -92,13 +92,13 @@ public class LogContainerLogTests {
     private void testLog(LogContainer logContainer, String logLevel) {
         String[] logContainerRows = logContainer.toString().split("\\n");
         Assertions.assertTrue(
-                Pattern.matches("\\[\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{0,9}\\]" + logLevel.toUpperCase() + ":" + logLevel + " message",
+                Pattern.matches("\\[\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{0,9}\\] " + logLevel.toUpperCase() + ": " + logLevel + " message",
                         logContainerRows[0]));
         Assertions.assertTrue(Pattern.matches(
-                "\\[\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{0,9}\\]" + logLevel.toUpperCase() + ":" + logLevel + " message with param:param1",
+                "\\[\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{0,9}\\] " + logLevel.toUpperCase() + ": " + logLevel + " message with param:param1",
                 logContainerRows[1]));
 
-        Assertions.assertTrue(Pattern.matches("\\[\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{0,9}\\]" + logLevel.toUpperCase() + ":" + logLevel
+        Assertions.assertTrue(Pattern.matches("\\[\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{0,9}\\] " + logLevel.toUpperCase() + ": " + logLevel
                 + " Exception log. > stacktrace: ", logContainerRows[2]));
         Assertions.assertTrue(logContainerRows[3].startsWith("[java.lang.Exception: Test exception"));
     }
