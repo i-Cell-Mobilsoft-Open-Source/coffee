@@ -30,6 +30,7 @@ import javax.inject.Inject;
 import javax.ws.rs.client.ClientRequestContext;
 import javax.ws.rs.client.ClientRequestFilter;
 import javax.ws.rs.core.Cookie;
+import javax.ws.rs.core.MediaType;
 
 import hu.icellmobilsoft.coffee.cdi.logger.AppLogger;
 import hu.icellmobilsoft.coffee.cdi.logger.LogProducer;
@@ -117,17 +118,18 @@ public class DefaultLoggerClientRequestFilter implements ClientRequestFilter {
     protected String logEntity(ClientRequestContext requestContext) throws IOException {
         StringBuilder msg = new StringBuilder();
         Object entity = requestContext.getEntity();
+        MediaType mediaType = requestContext.getMediaType();
         if (entity != null) {
             msg.append(
                     requestResponseLogger.printEntity(entity, RestLoggerUtil.getMaxEntityLogSize(requestContext, LogSpecifierTarget.CLIENT_REQUEST),
-                            RequestResponseLogger.REQUEST_PREFIX, true));
+                            RequestResponseLogger.REQUEST_PREFIX, true, mediaType));
         } else {
             OutputStreamCopier osc = new OutputStreamCopier(requestContext.getEntityStream());
             requestContext.setEntityStream(osc);
             String requestText = new String(osc.getCopy(), StandardCharsets.UTF_8);
             msg.append(requestResponseLogger.printEntity(requestText,
-                    RestLoggerUtil.getMaxEntityLogSize(requestContext, LogSpecifierTarget.CLIENT_REQUEST), RequestResponseLogger.REQUEST_PREFIX,
-                    true));
+                    RestLoggerUtil.getMaxEntityLogSize(requestContext, LogSpecifierTarget.CLIENT_REQUEST), RequestResponseLogger.REQUEST_PREFIX, true,
+                    mediaType));
         }
         return msg.toString();
     }
