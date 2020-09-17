@@ -3,12 +3,22 @@
 coff:ee v1.1.0 -> v1.2.0 migrációs leírás, újdonságok, változások leírása
 
 == Változások
-=== coffee-rest
 
-* RequestResponseLogger válasz kiíráatás kibővült xml kiírással, ha a mediaType application/xml,text/xml vagy application/atom+xml.
-A json kiírás is mediaType függővé lett téve.
-Egyéb esetben az objektum toString() metódusával kerül kiírásra a válasz objektum.
+=== coffee-cdi
+* LogContainer-ben a különböző logszintek megadásánál, a formázott üzenetekhez használt több argumentum megadási lehetőségek közül, csak a Varargs maradt meg (multiple arguments).
+* LogContainer logjai autómatikusan kapnak létrejöttükkor egy LocalDateTime.now() -t, ami a loggok kiírásakor is kiíródik.
+* LogContainer-ben Throwable kiírásakor mostmár a paraméterben kapott üzenet is kiíródik, valamint struktúráltabban íródik ki hozzá a stacktrace.
 
 ==== Átállás
 
-Nem szükséges semmi plusz teendő, visszafelé kompatibilis a változtatás.
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+=== coffee-rest
+
+* RequestResponseLogger válasz kiíráatás kibővült xml kiírással, ha a mediaType application/xml,text/xml vagy application/atom+xml.
+* RequestResponseLogger válasz kiíráatásnál, a json kiírás is mediaType függővé lett téve.
+* RequestResponseLogger válasz kiíráatásnál minden egyéb, nem String objektum esetben, az objektum toString() metódusával kerül kiírásra a válasz objektum.
+
+==== Átállás
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
