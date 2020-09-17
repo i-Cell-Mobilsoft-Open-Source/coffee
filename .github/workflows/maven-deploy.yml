@@ -3,9 +3,19 @@
 
 name: Maven Deploy
 
+# Controls when the action will run. Workflow runs when manually triggered using the UI
+# or API.
 on:
-  issue_comment:
-    types: [created]
+  workflow_dispatch:
+    # Inputs the workflow accepts.
+    inputs:
+      comment:
+        # Friendly description to be shown in the UI instead of 'name'
+        description: 'Comment for deploy'
+        # Default value if no value is explicitly provided
+        default: 'Start release from WEB UI'
+        # Input has to be provided for the workflow to run
+        required: true
 
 jobs:
   build:
@@ -13,14 +23,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Comment Trigger
-      uses: khan/pull-request-comment-trigger@master
-      with:
-        trigger: '@deploy'
-        reaction: rocket
-      env:
-          GITHUB_TOKEN: '${{ secrets.ROMBOW_GITHUB_COFFEE_PRIVATE }}'
-    
     - name: Checkout
       uses: actions/checkout@v2
 
