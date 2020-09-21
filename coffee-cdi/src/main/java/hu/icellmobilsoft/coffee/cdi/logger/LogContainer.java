@@ -22,6 +22,8 @@ package hu.icellmobilsoft.coffee.cdi.logger;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.text.MessageFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -52,14 +54,6 @@ public class LogContainer {
     /**
      * <p>trace.</p>
      */
-    public void trace(String format, Object arg) {
-        String message = format(format, arg);
-        logs.add(new Log(LogLevel.TRACE, message));
-    }
-
-    /**
-     * <p>trace.</p>
-     */
     public void trace(String format, Object... arguments) {
         String message = format(format, arguments);
         logs.add(new Log(LogLevel.TRACE, message));
@@ -69,17 +63,10 @@ public class LogContainer {
      * <p>trace.</p>
      */
     public void trace(String msg, Throwable t) {
-        String message = getFullStackTrace(t);
+        String message = getFullStackTrace(msg, t);
         logs.add(new Log(LogLevel.TRACE, message));
     }
 
-    /**
-     * <p>trace.</p>
-     */
-    public void trace(String format, Object arg1, Object arg2) {
-        String message = format(format, arg1, arg2);
-        logs.add(new Log(LogLevel.TRACE, message));
-    }
 
     /**
      * <p>debug.</p>
@@ -88,13 +75,6 @@ public class LogContainer {
         logs.add(new Log(LogLevel.DEBUG, msg));
     }
 
-    /**
-     * <p>debug.</p>
-     */
-    public void debug(String format, Object arg) {
-        String message = format(format, arg);
-        logs.add(new Log(LogLevel.DEBUG, message));
-    }
 
     /**
      * <p>debug.</p>
@@ -108,17 +88,10 @@ public class LogContainer {
      * <p>debug.</p>
      */
     public void debug(String msg, Throwable t) {
-        String message = getFullStackTrace(t);
+        String message = getFullStackTrace(msg, t);
         logs.add(new Log(LogLevel.DEBUG, message));
     }
 
-    /**
-     * <p>debug.</p>
-     */
-    public void debug(String format, Object arg1, Object arg2) {
-        String message = format(format, arg1, arg2);
-        logs.add(new Log(LogLevel.DEBUG, message));
-    }
 
     /**
      * <p>info.</p>
@@ -127,13 +100,6 @@ public class LogContainer {
         logs.add(new Log(LogLevel.INFO, msg));
     }
 
-    /**
-     * <p>info.</p>
-     */
-    public void info(String format, Object arg) {
-        String message = format(format, arg);
-        logs.add(new Log(LogLevel.INFO, message));
-    }
 
     /**
      * <p>info.</p>
@@ -147,17 +113,10 @@ public class LogContainer {
      * <p>info.</p>
      */
     public void info(String msg, Throwable t) {
-        String message = getFullStackTrace(t);
+        String message = getFullStackTrace(msg, t);
         logs.add(new Log(LogLevel.INFO, message));
     }
 
-    /**
-     * <p>info.</p>
-     */
-    public void info(String format, Object arg1, Object arg2) {
-        String message = format(format, arg1, arg2);
-        logs.add(new Log(LogLevel.INFO, message));
-    }
 
     /**
      * <p>warn.</p>
@@ -166,13 +125,6 @@ public class LogContainer {
         logs.add(new Log(LogLevel.WARN, msg));
     }
 
-    /**
-     * <p>warn.</p>
-     */
-    public void warn(String format, Object arg) {
-        String message = format(format, arg);
-        logs.add(new Log(LogLevel.WARN, message));
-    }
 
     /**
      * <p>warn.</p>
@@ -186,17 +138,10 @@ public class LogContainer {
      * <p>warn.</p>
      */
     public void warn(String msg, Throwable t) {
-        String message = getFullStackTrace(t);
+        String message = getFullStackTrace(msg, t);
         logs.add(new Log(LogLevel.WARN, message));
     }
 
-    /**
-     * <p>warn.</p>
-     */
-    public void warn(String format, Object arg1, Object arg2) {
-        String message = format(format, arg1, arg2);
-        logs.add(new Log(LogLevel.WARN, message));
-    }
 
     /**
      * <p>error.</p>
@@ -205,13 +150,6 @@ public class LogContainer {
         logs.add(new Log(LogLevel.ERROR, msg));
     }
 
-    /**
-     * <p>error.</p>
-     */
-    public void error(String format, Object arg) {
-        String message = format(format, arg);
-        logs.add(new Log(LogLevel.ERROR, message));
-    }
 
     /**
      * <p>error.</p>
@@ -225,15 +163,7 @@ public class LogContainer {
      * <p>error.</p>
      */
     public void error(String msg, Throwable t) {
-        String message = getFullStackTrace(t);
-        logs.add(new Log(LogLevel.ERROR, message));
-    }
-
-    /**
-     * <p>error.</p>
-     */
-    public void error(String format, Object arg1, Object arg2) {
-        String message = format(format, arg1, arg2);
+        String message = getFullStackTrace(msg, t);
         logs.add(new Log(LogLevel.ERROR, message));
     }
 
@@ -279,17 +209,19 @@ public class LogContainer {
     }
 
     private class Log {
+        private LocalDateTime logDateTime;
         private LogLevel level;
         private String message;
 
         private Log(LogLevel level, String message) {
+            this.logDateTime = LocalDateTime.now();
             this.level = level;
             this.message = message;
         }
 
         @Override
         public String toString() {
-            return level + ":" + message;
+            return MessageFormat.format("[{0}] {1}: {2}", DateTimeFormatter.ISO_LOCAL_DATE_TIME.format(logDateTime), level, message);
         }
     }
 
@@ -304,6 +236,16 @@ public class LogContainer {
             }
         }
         return highestLogLevel;
+    }
+
+    private static String getFullStackTrace(String msg, Throwable t) {
+        StringWriter sw = new StringWriter();
+        sw.append(msg);
+        sw.append(" > stacktrace: \n");
+        sw.append("[");
+        sw.append(getFullStackTrace(t));
+        sw.append("]");
+        return sw.toString();
     }
 
     /**
