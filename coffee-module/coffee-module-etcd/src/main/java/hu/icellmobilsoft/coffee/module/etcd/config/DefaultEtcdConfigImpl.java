@@ -20,11 +20,10 @@
 package hu.icellmobilsoft.coffee.module.etcd.config;
 
 import javax.enterprise.context.Dependent;
-import javax.inject.Inject;
-import javax.inject.Provider;
 
 import org.apache.commons.lang3.StringUtils;
-import org.eclipse.microprofile.config.inject.ConfigProperty;
+
+import hu.icellmobilsoft.coffee.tool.utils.config.ConfigUtil;
 
 /**
  * ETCD configuration values from microprofile-config
@@ -35,15 +34,13 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 @Dependent
 public class DefaultEtcdConfigImpl implements EtcdConfig {
 
-    @SuppressWarnings("cdi-ambiguous-dependency")
-    @Inject
-    @ConfigProperty(name = "etcd.default.url", defaultValue = "http://localhost:2379")
-    private Provider<String> url;
+    private String urlKey = "etcd.default.url";
 
     /** {@inheritDoc} */
     @Override
     public String[] getUrl() {
-        String urlString = url.get();
+        String urlString = ConfigUtil.defaultConfig().getOptionalValue(urlKey, String.class).orElse("http://localhost:2379");
         return StringUtils.split(urlString, ",");
     }
+
 }
