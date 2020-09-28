@@ -35,7 +35,7 @@ import hu.icellmobilsoft.coffee.se.logging.Logger;
  *
  * @author imre.scheffer
  * @author czenczl
- * @since 1.0.0
+ * @since 1.2.0
  */
 public class BaseServicePath {
 
