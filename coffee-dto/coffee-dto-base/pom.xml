@@ -12,6 +12,11 @@
 		<version.javax.xml.bind.jaxb-api>2.3.1</version.javax.xml.bind.jaxb-api>
 		<version.com.sun.xml.bind.jaxb-api>2.3.1</version.com.sun.xml.bind.jaxb-api>
 		<version.com.sun.xml.bind.jaxb-core>2.3.0</version.com.sun.xml.bind.jaxb-core>
+
+		<!-- Test dependency versions -->
+		<version.junit.jupiter>5.5.2</version.junit.jupiter>
+		<version.org.jboss.weld.weld-junit5>2.0.1.Final</version.org.jboss.weld.weld-junit5>
+		<version.org.mockito>3.2.0</version.org.mockito>
 	</properties>
 
 	<dependencies>
@@ -30,5 +35,31 @@
 			<artifactId>jaxb-core</artifactId>
 			<version>${version.com.sun.xml.bind.jaxb-core}</version>
 		</dependency>
+		<dependency>
+			<groupId>hu.icellmobilsoft.coffee</groupId>
+			<artifactId>coffee-se-logging</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<!--Test dependecies -->
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter</artifactId>
+			<version>${version.junit.jupiter}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.jboss.weld</groupId>
+			<artifactId>weld-junit5</artifactId>
+			<version>${version.org.jboss.weld.weld-junit5}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-junit-jupiter</artifactId>
+			<version>${version.org.mockito}</version>
+			<scope>test</scope>
+		</dependency>
+
 	</dependencies>
 </project>

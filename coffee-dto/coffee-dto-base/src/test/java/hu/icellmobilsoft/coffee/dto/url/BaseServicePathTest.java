@@ -17,17 +17,14 @@
  * limitations under the License.
  * #L%
  */
-package hu.icellmobilsoft.coffee.rest.url;
+package hu.icellmobilsoft.coffee.dto.url;
 
 import java.util.Collections;
 
-import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-
-import hu.icellmobilsoft.coffee.rest.url.BaseServicePath;
 
 /**
  * @author karoly.tamas
@@ -47,7 +44,7 @@ public class BaseServicePathTest {
 
         String path = BaseServicePath.path(urlPart1, urlPart2);
 
-        Assertions.assertEquals(StringUtils.equals(path, expected), result);
+        Assertions.assertEquals(path.equals(expected), result);
     }
 
     @DisplayName("Testing query parameter fill")
@@ -64,7 +61,7 @@ public class BaseServicePathTest {
     })
     void query(String url, String paramKey, String paramValue, String expected, boolean result) {
         String pathWithQueryParams = BaseServicePath.query(url, Collections.singletonMap(paramKey, paramValue));
-        Assertions.assertEquals(StringUtils.equals(pathWithQueryParams, expected), result);
+        Assertions.assertEquals(pathWithQueryParams.equals(expected), result);
     }
 
     @DisplayName("Testing query without parameter")
@@ -77,7 +74,7 @@ public class BaseServicePathTest {
     })
     void queryWithoutParameter(String url, String expected, boolean result) {
         String path = BaseServicePath.query("customer", null);
-        Assertions.assertEquals(StringUtils.equals(path, expected), result);
+        Assertions.assertEquals(path.equals(expected), result);
     }
 
     @DisplayName("Testing path parameter fill")
@@ -91,7 +88,7 @@ public class BaseServicePathTest {
     })
     void fillParam(String url, String param, String value, String expected, boolean result) {
         String pathWithParams = BaseServicePath.fillParam(url, param, value);
-        Assertions.assertEquals(StringUtils.equals(pathWithParams, expected), result);
+        Assertions.assertEquals(pathWithParams.equals(expected), result);
     }
 
 }
