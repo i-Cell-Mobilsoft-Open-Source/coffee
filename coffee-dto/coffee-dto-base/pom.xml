@@ -15,7 +15,6 @@
 
 		<!-- Test dependency versions -->
 		<version.junit.jupiter>5.5.2</version.junit.jupiter>
-		<version.org.jboss.weld.weld-junit5>2.0.1.Final</version.org.jboss.weld.weld-junit5>
 		<version.org.mockito>3.2.0</version.org.mockito>
 	</properties>
 

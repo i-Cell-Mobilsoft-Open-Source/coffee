@@ -41,7 +41,7 @@ public class BaseServicePath {
 
     private static Logger log = Logger.getLogger(BaseServicePath.class);
 
-    private static final String EMTPY = "";
+    private static final String EMPTY = "";
     private static final String SIGN_QUESTION = "?";
     private static final String SIGN_EQUALS = "=";
     private static final String SIGN_AND = "&";
@@ -161,7 +161,7 @@ public class BaseServicePath {
         if (strings == null) {
             return null;
         }
-        return join(Arrays.asList(strings), EMTPY);
+        return join(Arrays.asList(strings), EMPTY);
     }
 
     /**
