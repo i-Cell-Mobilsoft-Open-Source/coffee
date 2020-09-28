@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -22,7 +22,6 @@ package hu.icellmobilsoft.coffee.dto.exception;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 
 /**
- *
  * AccessDenied if login failed
  *
  * @author imre.scheffer
@@ -33,28 +32,48 @@ public class AccessDeniedException extends BusinessException {
     private static final long serialVersionUID = 1L;
 
     /**
-     * <p>Constructor for AccessDeniedException.</p>
+     * Constructor for AccessDeniedException.
+     *
+     * @param message
+     *            message
      */
     public AccessDeniedException(String message) {
         this(CoffeeFaultType.NOT_AUTHORIZED, message);
     }
 
     /**
-     * <p>Constructor for AccessDeniedException.</p>
+     * Constructor for AccessDeniedException.
+     *
+     * @param message
+     *            message
+     * @param e
+     *            e
      */
     public AccessDeniedException(String message, Throwable e) {
         this(CoffeeFaultType.NOT_AUTHORIZED, message, e);
     }
 
     /**
-     * <p>Constructor for AccessDeniedException.</p>
+     * Constructor for AccessDeniedException.
+     *
+     * @param faultTypeEnum
+     *            faultTypeEnum
+     * @param message
+     *            message
      */
     public AccessDeniedException(Enum<?> faultTypeEnum, String message) {
         super(faultTypeEnum, message);
     }
 
     /**
-     * <p>Constructor for AccessDeniedException.</p>
+     * Constructor for AccessDeniedException.
+     *
+     * @param faultTypeEnum
+     *            faultTypeEnum
+     * @param message
+     *            message
+     * @param e
+     *            e
      */
     public AccessDeniedException(Enum<?> faultTypeEnum, String message, Throwable e) {
         super(faultTypeEnum, message, e);

@@ -33,21 +33,36 @@ public class TechnicalException extends BaseException {
     private static final long serialVersionUID = 1L;
 
     /**
-     * <p>Constructor for TechnicalException.</p>
+     * Constructor for TechnicalException.
+     *
+     * @param message
+     *            message
      */
     public TechnicalException(String message) {
         this(CoffeeFaultType.REPOSITORY_FAILED, message, null);
     }
 
     /**
-     * <p>Constructor for TechnicalException.</p>
+     * Constructor for TechnicalException.
+     *
+     * @param faultTypeEnum
+     *            faultTypeEnum
+     * @param message
+     *            message
      */
     public TechnicalException(Enum<?> faultTypeEnum, String message) {
         this(faultTypeEnum, message, null);
     }
 
     /**
-     * <p>Constructor for TechnicalException.</p>
+     * Constructor for TechnicalException.
+     * 
+     * @param faultTypeEnum
+     *            faultTypeEnum
+     * @param message
+     *            message
+     * @param e
+     *            e
      */
     public TechnicalException(Enum<?> faultTypeEnum, String message, Throwable e) {
         super(faultTypeEnum, message, e);

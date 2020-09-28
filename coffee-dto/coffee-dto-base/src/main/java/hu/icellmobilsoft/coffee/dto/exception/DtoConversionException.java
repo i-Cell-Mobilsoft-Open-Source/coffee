@@ -32,28 +32,48 @@ public class DtoConversionException extends BusinessException {
     private static final long serialVersionUID = 1L;
 
     /**
-     * <p>Constructor for DtoConversionException.</p>
+     * Constructor for DtoConversionException.
+     *
+     * @param message
+     *            message
      */
     public DtoConversionException(String message) {
         this(message, null);
     }
 
     /**
-     * <p>Constructor for DtoConversionException.</p>
+     * Constructor for DtoConversionException.
+     * 
+     * @param message
+     *            message
+     * @param e
+     *            e
      */
     public DtoConversionException(String message, Throwable e) {
         this(CoffeeFaultType.DTO_CONVERSION_FAILED, message, e);
     }
 
     /**
-     * <p>Constructor for DtoConversionException.</p>
+     * Constructor for DtoConversionException.
+     *
+     * @param faultTypeEnum
+     *            faultTypeEnum
+     * @param message
+     *            message
      */
     public DtoConversionException(Enum<?> faultTypeEnum, String message) {
         super(faultTypeEnum, message);
     }
 
     /**
-     * <p>Constructor for DtoConversionException.</p>
+     * Constructor for DtoConversionException.
+     * 
+     * @param faultTypeEnum
+     *            faultTypeEnum
+     * @param message
+     *            message
+     * @param e
+     *            e
      */
     public DtoConversionException(Enum<?> faultTypeEnum, String message, Throwable e) {
         super(faultTypeEnum, message, e);

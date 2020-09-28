@@ -35,7 +35,9 @@ public class ServiceUnavailableException extends BaseException {
      * message + throwable constructor
      *
      * @param message
+     *            message
      * @param e
+     *            message
      */
     public ServiceUnavailableException(String message, Throwable e) {
         super(CoffeeFaultType.SERVICE_UNAVAILABLE, message, e);
@@ -45,6 +47,7 @@ public class ServiceUnavailableException extends BaseException {
      * message constructor
      *
      * @param message
+     *            message
      */
     public ServiceUnavailableException(String message) {
         super(CoffeeFaultType.SERVICE_UNAVAILABLE, message);

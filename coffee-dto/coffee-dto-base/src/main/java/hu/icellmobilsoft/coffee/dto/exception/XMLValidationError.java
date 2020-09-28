@@ -38,14 +38,19 @@ public class XMLValidationError implements Serializable {
     private String error;
 
     /**
-     * <p>Getter for the field <code>error</code>.</p>
+     * Getter for the field <code>error</code>.
+     * 
+     * @return error
      */
     public String getError() {
         return error;
     }
 
     /**
-     * <p>Setter for the field <code>error</code>.</p>
+     * Setter for the field <code>error</code>.
+     *
+     * @param error
+     *            error
      */
     public void setError(String error) {
         this.error = error;
@@ -54,15 +59,19 @@ public class XMLValidationError implements Serializable {
     /**
      * Return the line number if available
      *
+     * {@link javax.xml.bind.ValidationEventLocator#getLineNumber()}
+     *
      * @return the line number or -1 if unavailable
-     * @see {@code javax.xml.bind.ValidationEventLocator.ValidationEventLocator#getColumnNumber()}
      */
     public int getLineNumber() {
         return lineNumber;
     }
 
     /**
-     * <p>Setter for the field <code>lineNumber</code>.</p>
+     * Setter for the field <code>lineNumber</code>.
+     *
+     * @param lineNumber
+     *            lineNumber
      */
     public void setLineNumber(int lineNumber) {
         this.lineNumber = lineNumber;
@@ -70,16 +79,20 @@ public class XMLValidationError implements Serializable {
 
     /**
      * Return the column number if available
+     * 
+     * {@link javax.xml.bind.ValidationEventLocator#getColumnNumber()}
      *
      * @return the column number or -1 if unavailable
-     * @see {@code javax.xml.bind.ValidationEventLocator.ValidationEventLocator#getColumnNumber()}
      */
     public int getColumnNumber() {
         return columnNumber;
     }
 
     /**
-     * <p>Setter for the field <code>columnNumber</code>.</p>
+     * Setter for the field <code>columnNumber</code>.
+     * 
+     * @param columnNumber
+     *            columnNumber
      */
     public void setColumnNumber(int columnNumber) {
         this.columnNumber = columnNumber;

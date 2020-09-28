@@ -42,21 +42,28 @@ public class BaseEntityListDto<E extends Serializable, CONTEXT extends Serializa
     private List<E> entityList;
 
     /**
-     * <p>Getter for the field <code>context</code>.</p>
+     * Getter for the field <code>context</code>.
+     * 
+     * @return context
      */
     public CONTEXT getContext() {
         return context;
     }
 
     /**
-     * <p>Setter for the field <code>context</code>.</p>
+     * Setter for the field <code>context</code>.
+     * 
+     * @param context
+     *            context
      */
     public void setContext(CONTEXT context) {
         this.context = context;
     }
 
     /**
-     * <p>Getter for the field <code>entityList</code>.</p>
+     * Getter for the field <code>entityList</code>.
+     * 
+     * @return entityList
      */
     public List<E> getEntityList() {
         if (entityList == null) {
@@ -66,7 +73,10 @@ public class BaseEntityListDto<E extends Serializable, CONTEXT extends Serializa
     }
 
     /**
-     * <p>Setter for the field <code>entityList</code>.</p>
+     * Setter for the field <code>entityList</code>.
+     * 
+     * @param entityList
+     *            entityList
      */
     public void setEntityList(List<E> entityList) {
         this.entityList = entityList;
