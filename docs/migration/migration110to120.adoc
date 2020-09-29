@@ -18,7 +18,9 @@ A változtatások nem eredményeznek átállási munkálatokat, visszafelé komp
 * RequestResponseLogger válasz kiíráatás kibővült xml kiírással, ha a mediaType application/xml,text/xml vagy application/atom+xml.
 * RequestResponseLogger válasz kiíráatásnál, a json kiírás is mediaType függővé lett téve.
 * RequestResponseLogger válasz kiíráatásnál minden egyéb, nem String objektum esetben, az objektum toString() metódusával kerül kiírásra a válasz objektum.
+* BaseServicePath osztály átkerült a coffee-dto csomagba.
 
 ==== Átállás
 
-A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+A `BaseServicePath` osztályt ősként használó osztályok-ban az importot meg kell változtatni:
+`hu.icellmobilsoft.coffee.rest.url.BaseServicePath` -> `hu.icellmobilsoft.coffee.dto.url.BaseServicePath`

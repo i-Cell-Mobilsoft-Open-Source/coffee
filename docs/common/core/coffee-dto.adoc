@@ -11,7 +11,8 @@ Több almodulból ál.
 == coffee-dto-base
 Tartalma olyan java osztályok melyek ősként szolgálnak az egész Coffee framework-ben.
 
-Itt táláható a java.time (java 8+) XSD univerzális adapterek is.
+Itt táláható a java.time (java 8+) XSD univerzális adapterek és rest végpontokhoz tartozó alap path-okat kezelő osztály.
+
 
 A modul az alap exception classokat tartalmazza.
 Minden más exception amit létrehozunk,
