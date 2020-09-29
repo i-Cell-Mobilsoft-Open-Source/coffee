@@ -98,6 +98,9 @@ public class BaseServicePath {
      * @return Filled path.
      */
     public static String query(String path, Map<String, String> queryParams) {
+        if (isBlank(path)) {
+            return path;
+        }
         if (queryParams == null || queryParams.isEmpty()) {
             log.debug(MessageFormat.format("No query parameter arrived to add to path [{0}] ", path));
             return path;
