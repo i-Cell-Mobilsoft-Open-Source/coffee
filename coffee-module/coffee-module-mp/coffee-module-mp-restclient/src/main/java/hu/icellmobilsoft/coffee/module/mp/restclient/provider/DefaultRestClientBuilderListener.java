@@ -55,8 +55,7 @@ public class DefaultRestClientBuilderListener implements RestClientBuilderListen
         // settings
         builder.register(cdi.select(DefaultSettingClientRequestFilter.class).get());
         // exception
-        // TODO ezt meg nem lehet Coffee-be kiemelni a generalt tipusok miatt
-        // builder.register(DefaultBaseExceptionResponseExceptionMapper.class);
+        builder.register(DefaultBaseExceptionResponseExceptionMapper.class);
         // timeout
         builder.connectTimeout(5, TimeUnit.SECONDS);
         builder.readTimeout(1, TimeUnit.MINUTES);
