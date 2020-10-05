@@ -240,7 +240,7 @@ public class ApplicationConfiguration {
             log.trace("Key [{0}] value [{1}]", key, stringHelper.maskPropertyValue(key, value));
             return value;
         } catch (Exception e) {
-            log.error(MessageFormat.format("Error in getting configuration for key [{0}]: [{1}]", key, e.getLocalizedMessage()), e);
+            log.warn(MessageFormat.format("Error in getting configuration for key [{0}]: [{1}]", key, e.getLocalizedMessage()));
             return Optional.empty();
         }
     }
