@@ -326,7 +326,7 @@
 		</xsd:annotation>
 		<xsd:restriction base="xsd:dateTime">
 			<xsd:pattern
-				value="\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(.\d{1,6})?Z" />
+				value="\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{1,6})?Z" />
 		</xsd:restriction>
 	</xsd:simpleType>
 	<!-- GROUPS -->
