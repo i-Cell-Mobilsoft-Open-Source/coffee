@@ -87,7 +87,9 @@ public class DateUtil {
     }
 
     /**
-     * <p>parse.</p>
+     * <p>
+     * parse.
+     * </p>
      */
     public static Date parse(String dateString, String pattern) {
         if (StringUtils.isBlank(pattern) || StringUtils.isBlank(dateString)) {
@@ -103,12 +105,13 @@ public class DateUtil {
     }
 
     /**
-     * Gets back the number of calendar days between 2 dates.
-     * For example: 2020.01.01 23:59:59 - 2020.01.02 00:00:01. The result is 1 day.
-     * It is not depend on summer time change.
+     * Gets back the number of calendar days between 2 dates. For example: 2020.01.01 23:59:59 - 2020.01.02 00:00:01. The result is 1 day. It is not
+     * depend on summer time change.
      *
-     * @param dateFrom date from
-     * @param dateTo   date to
+     * @param dateFrom
+     *            date from
+     * @param dateTo
+     *            date to
      * @return number of days
      */
     public static long daysBetween(Date dateFrom, Date dateTo) {
@@ -214,7 +217,9 @@ public class DateUtil {
     }
 
     /**
-     * <p>toGregorianCalendar.</p>
+     * <p>
+     * toGregorianCalendar.
+     * </p>
      */
     protected static GregorianCalendar toGregorianCalendar(Calendar c) {
         if (c == null) {
@@ -380,4 +385,15 @@ public class DateUtil {
         return Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
     }
 
+    /**
+     * java.time.LocalDateTime -> java.util.Date konverter
+     *
+     * @param localDateTime
+     */
+    public static Date toDate(LocalDate localDate) {
+        if (localDate == null) {
+            return null;
+        }
+        return Date.from(localDate.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
+    }
 }
