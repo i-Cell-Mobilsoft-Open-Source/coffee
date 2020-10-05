@@ -6,8 +6,8 @@ coff:ee v1.1.0 -> v1.2.0 migrációs leírás, újdonságok, változások leír�
 
 === coffee-cdi
 * LogContainer-ben a különböző logszintek megadásánál, a formázott üzenetekhez használt több argumentum megadási lehetőségek közül, csak a Varargs maradt meg (multiple arguments).
-* LogContainer logjai autómatikusan kapnak létrejöttükkor egy LocalDateTime.now() -t, ami a loggok kiírásakor is kiíródik.
-* LogContainer-ben Throwable kiírásakor mostmár a paraméterben kapott üzenet is kiíródik, valamint struktúráltabban íródik ki hozzá a stacktrace.
+* LogContainer logjai automatikusan kapnak létrejöttükkor egy LocalDateTime.now() -t, ami a logok kiírásakor is kiíródik.
+* LogContainer-ben Throwable kiírásakor most már a paraméterben kapott üzenet is kiíródik, valamint struktúráltabban íródik ki hozzá a stacktrace.
 
 ==== Átállás
 
@@ -19,6 +19,7 @@ A változtatások nem eredményeznek átállási munkálatokat, visszafelé komp
 * RequestResponseLogger válasz kiíráatásnál, a json kiírás is mediaType függővé lett téve.
 * RequestResponseLogger válasz kiíráatásnál minden egyéb, nem String objektum esetben, az objektum toString() metódusával kerül kiírásra a válasz objektum.
 * BaseServicePath osztály átkerült a coffee-dto csomagba.
+* ApplicationConfiguration - ha nem talál a konfigurációs kulcshoz értéket - ezentúl csak egy WARN sort logol, stacktrace nélkül.
 
 ==== Átállás
 
