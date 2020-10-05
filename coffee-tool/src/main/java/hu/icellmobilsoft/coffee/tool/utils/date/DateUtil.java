@@ -386,9 +386,9 @@ public class DateUtil {
     }
 
     /**
-     * java.time.LocalDateTime -> java.util.Date konverter
+     * java.time.LocalDate -> java.util.Date konverter
      *
-     * @param localDateTime
+     * @param localDate
      */
     public static Date toDate(LocalDate localDate) {
         if (localDate == null) {
