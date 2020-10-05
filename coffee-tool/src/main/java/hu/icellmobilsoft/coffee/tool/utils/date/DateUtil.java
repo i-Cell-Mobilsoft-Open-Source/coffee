@@ -386,9 +386,11 @@ public class DateUtil {
     }
 
     /**
-     * java.time.LocalDate -> java.util.Date konverter
+     * Returns a {@link Date} instance created from {@link LocalDate}
      *
      * @param localDate
+     *            localDate to convert
+     * @return new Date instance or null if localDate is empty
      */
     public static Date toDate(LocalDate localDate) {
         if (localDate == null) {
