@@ -60,7 +60,7 @@ class DateUtilTest {
     private static Calendar calendar;
     private static GregorianCalendar gregorianCalendar;
     private static Date date;
-    private static Date dateOnly;
+    private static Calendar dateOnly;
     private static Date timelessDate;
     private static Date endOfDay;
     private static Date datePlusTwoDays;
@@ -79,7 +79,8 @@ class DateUtilTest {
         offsetDateTime = zonedDateTime.toOffsetDateTime();
 
         date = new Date(1549898614051L); // 2019-02-11T15:23:34.051Z
-        dateOnly = new Date(1549839600000L); // 2019-02-11
+        dateOnly = DateUtil.clearTimePart(Calendar.getInstance());
+        dateOnly.set(2019, Calendar.FEBRUARY, 11);
 
         localDate = LocalDate.of(2019, 2, 11);
         localDateTime = LocalDateTime.ofInstant(date.toInstant(), TimeZone.getDefault().toZoneId());
@@ -417,7 +418,7 @@ class DateUtilTest {
         Date actual = DateUtil.toDate(localDate);
 
         // then
-        assertEquals(dateOnly, actual);
+        assertEquals(dateOnly.getTime(), actual);
     }
 
     @Test
