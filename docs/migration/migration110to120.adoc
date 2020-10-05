@@ -24,3 +24,11 @@ A változtatások nem eredményeznek átállási munkálatokat, visszafelé komp
 
 A `BaseServicePath` osztályt ősként használó osztályok-ban az importot meg kell változtatni:
 `hu.icellmobilsoft.coffee.rest.url.BaseServicePath` -> `hu.icellmobilsoft.coffee.dto.url.BaseServicePath`
+
+=== coffee-tool
+* DateUtil osztályhoz hozzáadásra került egy LocalDate-ről Date-re konvertáló metódus.
+
+==== Átállás
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
