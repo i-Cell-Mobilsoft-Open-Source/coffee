@@ -21,6 +21,7 @@ package hu.icellmobilsoft.coffee.rest.configuration;
 
 import java.text.MessageFormat;
 import java.util.Optional;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -32,7 +33,7 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 
-import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
+import hu.icellmobilsoft.coffee.dto.exception.BONotFoundException;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
 import hu.icellmobilsoft.coffee.tool.utils.string.StringHelper;
 
@@ -48,6 +49,15 @@ public class ApplicationConfiguration {
 
     /** Constant <code>CACHE_TIME_MINUTES=30</code> */
     public static final int CACHE_TIME_MINUTES = 30;
+
+    /** Constant <code>ERROR_IN_GETTING_KEY=Error in getting configuration for key [{0}]: [{1}]</code> */
+    public static final String ERROR_IN_GETTING_KEY = "Error in getting configuration for key [{0}]: [{1}]";
+
+    /** Constant <code>MSG_ETCD_VALUE_NOT_FOUND=Etcd value not found, key: [{0}] valueClass: [{1}]!</code> */
+    public static final String MSG_ETCD_VALUE_NOT_FOUND = "Etcd value not found, key: [{0}] valueClass: [{1}]!";
+
+    /** Constant <code>MSG_ETCD_VALUE_FOR_KEY=Key [{0}] value [{1}]</code> */
+    public static final String MSG_ETCD_VALUE_FOR_KEY = "Key [{0}] value [{1}]";
 
     @Inject
     private Logger log;
@@ -65,11 +75,11 @@ public class ApplicationConfiguration {
                 public Optional<?> load(CompositeCacheLoaderKey compositeCacheLoaderKey) throws Exception {
                     Optional<?> optValue = configurationHelper.getConfigOptionalValue(compositeCacheLoaderKey.getKey(),
                             compositeCacheLoaderKey.getValueClass());
-                    // if the value is missing, or ETCD cluster failer happend
+                    // if the value is missing or ETCD cluster failure happened
                     if (optValue.isEmpty()) {
-                        String msg = MessageFormat.format("Etcd value not found, key: [{0}] valueClass: [{1}]!", compositeCacheLoaderKey.getKey(),
+                        String msg = MessageFormat.format(MSG_ETCD_VALUE_NOT_FOUND, compositeCacheLoaderKey.getKey(),
                                 compositeCacheLoaderKey.getValueClass());
-                        throw new TechnicalException(msg);
+                        throw new BONotFoundException(msg);
                     }
                     return optValue;
                 }
@@ -237,12 +247,16 @@ public class ApplicationConfiguration {
         }
         try {
             Optional<T> value = (Optional<T>) cache.get(new CompositeCacheLoaderKey(key, clazz));
-            log.trace("Key [{0}] value [{1}]", key, stringHelper.maskPropertyValue(key, value));
+            log.trace(MSG_ETCD_VALUE_FOR_KEY, key, stringHelper.maskPropertyValue(key, value));
             return value;
-        } catch (Exception e) {
-            log.warn(MessageFormat.format("Error in getting configuration for key [{0}]: [{1}]", key, e.getLocalizedMessage()));
-            return Optional.empty();
+        } catch (ExecutionException e) {
+            if (e.getCause() instanceof BONotFoundException) {
+                log.warn(e.getCause().getMessage());
+            } else {
+                log.error(MessageFormat.format(ERROR_IN_GETTING_KEY, key, e.getLocalizedMessage()), e);
+            }
         }
+        return Optional.empty();
     }
 
     /**
