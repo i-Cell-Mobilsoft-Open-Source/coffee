@@ -60,6 +60,7 @@ class DateUtilTest {
     private static Calendar calendar;
     private static GregorianCalendar gregorianCalendar;
     private static Date date;
+    private static Calendar dateOnly;
     private static Date timelessDate;
     private static Date endOfDay;
     private static Date datePlusTwoDays;
@@ -78,6 +79,8 @@ class DateUtilTest {
         offsetDateTime = zonedDateTime.toOffsetDateTime();
 
         date = new Date(1549898614051L); // 2019-02-11T15:23:34.051Z
+        dateOnly = DateUtil.clearTimePart(Calendar.getInstance());
+        dateOnly.set(2019, Calendar.FEBRUARY, 11);
 
         localDate = LocalDate.of(2019, 2, 11);
         localDateTime = LocalDateTime.ofInstant(date.toInstant(), TimeZone.getDefault().toZoneId());
@@ -408,6 +411,17 @@ class DateUtilTest {
     }
 
     @Test
+    @DisplayName("Testing toDate() from LocalDate")
+    void toDateFromLocalDate() {
+        // given
+        // when
+        Date actual = DateUtil.toDate(localDate);
+
+        // then
+        assertEquals(dateOnly.getTime(), actual);
+    }
+
+    @Test
     @DisplayName("Testing null conversions")
     void testNullConversions() {
         // given
@@ -416,6 +430,7 @@ class DateUtilTest {
         ZonedDateTime nullZonedDateTime = null;
         LocalDateTime nullLocalDateTime = null;
         OffsetDateTime nullOffsetDateTime = null;
+        LocalDate nullLocalDate = null;
 
         // when, then
         assertNull(DateUtil.toCalendar(nullDate));
@@ -444,6 +459,7 @@ class DateUtilTest {
         assertNull(DateUtil.toDate(nullLocalDateTime));
         assertNull(DateUtil.toOffsetDateTime(nullDate));
         assertNull(DateUtil.toDate(nullOffsetDateTime));
+        assertNull(DateUtil.toDate(nullLocalDate));
     }
 
 }
