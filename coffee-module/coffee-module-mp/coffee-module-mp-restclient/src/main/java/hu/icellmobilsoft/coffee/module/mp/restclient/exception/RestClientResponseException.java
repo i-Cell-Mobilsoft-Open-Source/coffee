@@ -88,6 +88,9 @@ public class RestClientResponseException extends BaseException {
      *          {@link RestClientResponseException} initialized with data from input {@link BaseExceptionResultType}.
      */
     public static RestClientResponseException fromExceptionResult(BaseExceptionResultType baseExceptionResultType) {
+        if (baseExceptionResultType == null) {
+            return null;
+        }
         RestClientResponseException exception = new RestClientResponseException(FaultTypeParser.parseFaultType(baseExceptionResultType.getFaultType()), baseExceptionResultType.getMessage());
         exception.setService(baseExceptionResultType.getService());
         exception.setClassName(baseExceptionResultType.getClassName());
