@@ -34,6 +34,15 @@ import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
  */
 @Vetoed
 public class FaultTypeParser {
+    /**
+     * Parse fault type String into {@link CoffeeFaultType}.
+     * If none match returns {@link CoffeeFaultType#OPERATION_FAILED}.
+     *
+     * @param faultTypeString
+     *          {@link String} to parse.
+     * @return
+     *          {@link CoffeeFaultType} parsed from input string.
+     */
     public static Enum<?> parseFaultType(String faultTypeString) {
         Enum<?> fault = EnumUtils.getEnum(CoffeeFaultType.class, faultTypeString);
         if (fault != null) {

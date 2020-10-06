@@ -24,3 +24,10 @@ A változtatások nem eredményeznek átállási munkálatokat, visszafelé komp
 
 A `BaseServicePath` osztályt ősként használó osztályok-ban az importot meg kell változtatni:
 `hu.icellmobilsoft.coffee.rest.url.BaseServicePath` -> `hu.icellmobilsoft.coffee.dto.url.BaseServicePath`
+
+=== coffee-module-mp-restclient
+* Default ResponseExceptionMapper<BaseException> implementáció
+
+==== Átállás
+
+A default ResponseExceptionMapper<BaseException> priority nélkül lett létrehozva, attól eltérő implementáció használata priority megadásával lehetséges.

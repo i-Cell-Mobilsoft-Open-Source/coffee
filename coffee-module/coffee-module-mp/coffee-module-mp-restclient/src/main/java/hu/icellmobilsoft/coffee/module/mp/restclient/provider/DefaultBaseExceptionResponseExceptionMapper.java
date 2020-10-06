@@ -34,7 +34,7 @@ import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 import hu.icellmobilsoft.coffee.module.mp.restclient.exception.FaultTypeParser;
-import hu.icellmobilsoft.coffee.module.mp.restclient.exception.ResponseException;
+import hu.icellmobilsoft.coffee.module.mp.restclient.exception.RestClientResponseException;
 import hu.icellmobilsoft.coffee.tool.gson.JsonUtil;
 import hu.icellmobilsoft.coffee.tool.utils.marshalling.MarshallingUtil;
 
@@ -55,13 +55,13 @@ public class DefaultBaseExceptionResponseExceptionMapper implements ResponseExce
         if (dto != null) {
             if (responseStatus == HTTP_STATUS_I_AM_A_TEAPOT) {
                 return new BONotFoundException(FaultTypeParser.parseFaultType(dto.getFaultType()), dto.getMessage(),
-                        ResponseException.fromExceptionResult(dto));
+                        RestClientResponseException.fromExceptionResult(dto));
             } else if (responseStatus == Response.Status.UNAUTHORIZED.getStatusCode()) {
                 return new AccessDeniedException(FaultTypeParser.parseFaultType(dto.getFaultType()), dto.getMessage(),
-                        ResponseException.fromExceptionResult(dto));
+                        RestClientResponseException.fromExceptionResult(dto));
             } else if (responseStatus == Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()) {
                 return new BaseException(FaultTypeParser.parseFaultType(dto.getFaultType()), dto.getMessage(),
-                        ResponseException.fromExceptionResult(dto));
+                        RestClientResponseException.fromExceptionResult(dto));
             }
         }
         return new TechnicalException(CoffeeFaultType.OPERATION_FAILED,
