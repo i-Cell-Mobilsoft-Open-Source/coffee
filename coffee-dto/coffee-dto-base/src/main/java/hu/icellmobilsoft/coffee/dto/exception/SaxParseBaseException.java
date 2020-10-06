@@ -26,7 +26,9 @@ import java.util.List;
  *
  * @author imre.scheffer
  * @since 1.0.0
+ * @deprecated replaced by {@code XsdProcessingException}
  */
+@Deprecated(since = "1.2.0", forRemoval = true)
 public class SaxParseBaseException extends InvalidRequestException {
 
     private static final long serialVersionUID = 1L;
