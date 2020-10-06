@@ -87,7 +87,13 @@ public class DateUtil {
     }
 
     /**
-     * <p>parse.</p>
+     * Parse dateString to {@link Date}.
+     * 
+     * @param dateString
+     *            value to parse
+     * @param pattern
+     *            to parse the dateString with
+     * @return new Date instance
      */
     public static Date parse(String dateString, String pattern) {
         if (StringUtils.isBlank(pattern) || StringUtils.isBlank(dateString)) {
@@ -103,13 +109,14 @@ public class DateUtil {
     }
 
     /**
-     * Gets back the number of calendar days between 2 dates.
-     * For example: 2020.01.01 23:59:59 - 2020.01.02 00:00:01. The result is 1 day.
-     * It is not depend on summer time change.
+     * Gets back the number of calendar days between 2 dates. For example: 2020.01.01 23:59:59 - 2020.01.02 00:00:01. The result is 1 day. It is not
+     * depend on summer time change.
      *
-     * @param dateFrom date from
-     * @param dateTo   date to
-     * @return number of days
+     * @param dateFrom
+     *            date from
+     * @param dateTo
+     *            date to
+     * @return number of days or 0 if dateFrom or dateTo is null
      */
     public static long daysBetween(Date dateFrom, Date dateTo) {
         if (dateFrom == null || dateTo == null) {
@@ -214,7 +221,11 @@ public class DateUtil {
     }
 
     /**
-     * <p>toGregorianCalendar.</p>
+     * Convert {@link Calendar} to {@link GregorianCalendar}
+     * 
+     * @param c
+     *            calendar to convert
+     * @return new GregorianCalendar instance
      */
     protected static GregorianCalendar toGregorianCalendar(Calendar c) {
         if (c == null) {
@@ -380,4 +391,17 @@ public class DateUtil {
         return Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
     }
 
+    /**
+     * Returns a {@link Date} instance created from {@link LocalDate}
+     *
+     * @param localDate
+     *            localDate to convert
+     * @return new Date instance or null if localDate is empty
+     */
+    public static Date toDate(LocalDate localDate) {
+        if (localDate == null) {
+            return null;
+        }
+        return Date.from(localDate.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
+    }
 }
