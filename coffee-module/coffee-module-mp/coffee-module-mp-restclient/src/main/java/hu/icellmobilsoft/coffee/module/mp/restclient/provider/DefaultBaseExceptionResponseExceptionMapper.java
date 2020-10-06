@@ -27,15 +27,14 @@ import javax.ws.rs.core.Response;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.microprofile.rest.client.ext.ResponseExceptionMapper;
 
-import hu.icellmobilsoft.coffee.dto.common.commonservice.BONotFound;
-import hu.icellmobilsoft.coffee.dto.common.commonservice.BusinessFault;
-import hu.icellmobilsoft.coffee.dto.common.commonservice.TechnicalFault;
+import hu.icellmobilsoft.coffee.dto.common.commonservice.BaseExceptionResultType;
 import hu.icellmobilsoft.coffee.dto.exception.AccessDeniedException;
 import hu.icellmobilsoft.coffee.dto.exception.BONotFoundException;
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
-import hu.icellmobilsoft.coffee.tool.exception.FaultTypeParser;
+import hu.icellmobilsoft.coffee.module.mp.restclient.exception.FaultTypeParser;
+import hu.icellmobilsoft.coffee.module.mp.restclient.exception.ResponseException;
 import hu.icellmobilsoft.coffee.tool.gson.JsonUtil;
 import hu.icellmobilsoft.coffee.tool.utils.marshalling.MarshallingUtil;
 
@@ -52,21 +51,17 @@ public class DefaultBaseExceptionResponseExceptionMapper implements ResponseExce
     public BaseException toThrowable(Response response) {
         int responseStatus = response.getStatus();
 
-        if (responseStatus == HTTP_STATUS_I_AM_A_TEAPOT) {
-            BONotFound dto = readEntity(response, BONotFound.class);
-            if (dto != null) {
-                return new BONotFoundException(
-                        "Entity not found on REST call:\nMessage: [" + dto.getMessage() + "]\nfaultType: [" + dto.getFaultType() + "]");
-            }
-        } else if (responseStatus == Response.Status.UNAUTHORIZED.getStatusCode()) {
-            BusinessFault dto = readEntity(response, BusinessFault.class);
-            if (dto != null) {
-                return new AccessDeniedException(FaultTypeParser.parseFaultType(dto.getFaultType()), dto.getMessage());
-            }
-        } else if (responseStatus == Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()) {
-            TechnicalFault dto = readEntity(response, TechnicalFault.class);
-            if (dto != null) {
-                return new BaseException(FaultTypeParser.parseFaultType(dto.getFaultType()), dto.getMessage());
+        BaseExceptionResultType dto = readEntity(response, BaseExceptionResultType.class);
+        if (dto != null) {
+            if (responseStatus == HTTP_STATUS_I_AM_A_TEAPOT) {
+                return new BONotFoundException(FaultTypeParser.parseFaultType(dto.getFaultType()), dto.getMessage(),
+                        ResponseException.fromExceptionResult(dto));
+            } else if (responseStatus == Response.Status.UNAUTHORIZED.getStatusCode()) {
+                return new AccessDeniedException(FaultTypeParser.parseFaultType(dto.getFaultType()), dto.getMessage(),
+                        ResponseException.fromExceptionResult(dto));
+            } else if (responseStatus == Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()) {
+                return new BaseException(FaultTypeParser.parseFaultType(dto.getFaultType()), dto.getMessage(),
+                        ResponseException.fromExceptionResult(dto));
             }
         }
         return new TechnicalException(CoffeeFaultType.OPERATION_FAILED,

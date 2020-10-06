@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package hu.icellmobilsoft.coffee.tool.exception;
+package hu.icellmobilsoft.coffee.module.mp.restclient.exception;
 
 import javax.enterprise.inject.Vetoed;
 
