@@ -11,6 +11,57 @@ Ezekre nyújt ősosztályokat, id generátort és audit mező töltőt.
 Tartamazza a deltaspike DATA bekötését, mely a criteria API könnyítését segíti,
 és a maven ezekre az ősökre kigenerálja a SingularAttribute osztályokat is.
 
+=== ID generálás
+Az ID generálás célja, hogy minden körülmény között egyedi és nem sorfolytonos ID értékekkel (string) dolgozhassunk.footnote:[Milyért string tipust használunk az azonosítokra és nem int-et? *Biztonsági szempontból*, az azonosítoknak nem szabad sorfolytonosnak lenniük, különben könnyen kitalálhatóak, *hordozhatóság szempontjából* egy esetleges db migráció során az int tipusú azonosítok könnyen összeakadhatnak a már meglévő adatokkal, *bővíthetőség szempontjából* nagyobb a mozgásterünk, *mennyiség szempontjából* nem vagyunk lekorlátozva, *hordozott információ szempontjából* nem derül ki a rendszerről az adatkör mennyisége.] A generáláshoz az `EntityIdGenerator.java` osztályt használjuk, ez alapértelmezetten az entity java osztályon annotávióval van használva, de ha szükség van rá direktben is meg lehet hívni a generate() metódusával. Működés szempontjából a generate metódus új ID-t generál az entitynek amennyiben az ID értéke még nincs beállítva (null), ellenkező esetben a meglévő ID-t fogja használni.
+
+Az algoritmus egy fix 16 hosszú azonosítót fog generálni [0-9a-zA-Z] random karaktereket használva, figyelembe véve az aktuális időpont nanoszekundum részét, pl. '2ZJMG008YRR4E5NW'
+
+Példa kód `AbstractIdentifiedEntity.java` osztályon használt azonosítóra:
+[source,java]
+----
+@Id
+@Column(name = "X__ID", length = 30)
+@GenericGenerator(name = "entity-id-generator", strategy = "hu.icellmobilsoft.coffee.model.base.generator.EntityIdGenerator")
+@GeneratedValue(generator = "entity-id-generator", strategy = GenerationType.IDENTITY)
+private String id;
+----
+
+Példa kód olyan Entity-re ahol egy azonosítóra van szükség:
+[source,java]
+----
+@Entity
+@Table(name = "SIMPLE_TABLE")
+public class SimpleEntity extends AbstractIdentifiedEntity {
+
+}
+----
+
+=== Audit oszlopok
+Az audit oszlopok arra szolgálnak, hogy minden tábla szintű mozgást, pl. új rekord beszúrását vagy módosítását nyomon lehessen követni. Erre a célra használt oszlopok elkülönülnek, a beszúrást nyomon követő elemek X$$__$$INSDATE és X$$__$$INSUSER oszlopba kerülnek, a módosításnált használt elemek pedig X$$__$$MODDATE és X$$__$$MODUSER oszlopokba. Ezek előre definiálva vannak a `AbstractAuditEntity.java` osztályon és automatán töltödnek a megfelelő annotációt használva (pl. `@CreatedOn`, `@ModifiedOn`)
+
+Példa kód olyan Entity-re ahol audit elemekre van szükség:
+[source,java]
+----
+@Entity
+@Table(name = "SIMPLE_TABLE")
+public class SimpleEntity extends AbstractAuditEntity {
+
+}
+----
+
+=== Version oszlop
+A version oszlop egy kizárolag technikai célra használt elem mely az `AbstractEntity.java` osztályon van definiálva. Hibernate használja @Version annotáción keresztül, ezzel biztosítva, hogy egy merge művelet idején az entitás sértetlen maradhasson optimistic lock konkurenciavezérlést használva.
+
+NOTE: Ajánlott minden entity osztályt a `AbstractIdentifiedAuditEntity.java` osztállyal kiterjeszteni, így az már tartalmazni fogja az ID, AUDIT és VERSION oszlopokat
+[source,java]
+----
+@Entity
+@Table(name = "SIMPLE_TABLE")
+public class SimpleEntity extends AbstractIdentifiedAuditEntity {
+
+}
+----
+
 == coffee-model-security
 Modul célja egy általános jogosultság kezelés és az ide tartozó entitások gyűjtése.
 
