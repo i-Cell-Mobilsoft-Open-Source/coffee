@@ -29,7 +29,7 @@ import javax.validation.constraints.Size;
 import hu.icellmobilsoft.coffee.model.base.AbstractIdentifiedAuditEntity;
 
 /**
- * <p>SecurityRoleSecurityPermission class.</p>
+ * SecurityRoleSecurityPermission class.
  *
  * @author imre.scheffer
  * @since 1.0.0
@@ -52,28 +52,38 @@ public class SecurityRoleSecurityPermission extends AbstractIdentifiedAuditEntit
     private String permissionId;
 
     /**
-     * <p>Getter for the field <code>roleId</code>.</p>
+     * Getter for the field {@code roleId}.
+     * 
+     * @return roleId
      */
     public String getRoleId() {
         return roleId;
     }
 
     /**
-     * <p>Setter for the field <code>roleId</code>.</p>
+     * Setter for the field {@code roleId}.
+     * 
+     * @param roleId
+     *            roleId
      */
     public void setRoleId(String roleId) {
         this.roleId = roleId;
     }
 
     /**
-     * <p>Getter for the field <code>permissionId</code>.</p>
+     * Getter for the field {@code permissionId}.
+     * 
+     * @return permissionId
      */
     public String getPermissionId() {
         return permissionId;
     }
 
     /**
-     * <p>Setter for the field <code>permissionId</code>.</p>
+     * Setter for the field {@code permissionId}.
+     * 
+     * @param permissionId
+     *            permissionId
      */
     public void setPermissionId(String permissionId) {
         this.permissionId = permissionId;

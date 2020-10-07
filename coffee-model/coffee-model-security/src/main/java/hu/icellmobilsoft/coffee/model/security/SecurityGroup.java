@@ -29,7 +29,7 @@ import javax.validation.constraints.Size;
 import hu.icellmobilsoft.coffee.model.base.AbstractIdentifiedAuditEntity;
 
 /**
- * <p>SecurityGroup class.</p>
+ * SecurityGroup class.
  *
  * @author imre.scheffer
  * @since 1.0.0
@@ -39,59 +39,74 @@ import hu.icellmobilsoft.coffee.model.base.AbstractIdentifiedAuditEntity;
 @Table(name = "security_group")
 public class SecurityGroup extends AbstractIdentifiedAuditEntity {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	@Column(name = "description", length = 255)
-	@Size(max = 255)
-	private String description;
+    @Column(name = "description", length = 255)
+    @Size(max = 255)
+    private String description;
 
-	@Column(name = "deletable", nullable = false)
-	private boolean deletable;
+    @Column(name = "deletable", nullable = false)
+    private boolean deletable;
 
-	@Column(name = "name", nullable = false, length = 100)
-	@Size(max = 100)
-	@NotNull
-	private String name;
+    @Column(name = "name", nullable = false, length = 100)
+    @Size(max = 100)
+    @NotNull
+    private String name;
 
-	/**
-	 * <p>Getter for the field <code>description</code>.</p>
-	 */
-	public String getDescription() {
-		return description;
-	}
+    /**
+     * Getter for the field {@code description}.
+     * 
+     * @return description
+     */
+    public String getDescription() {
+        return description;
+    }
 
-	/**
-	 * <p>Setter for the field <code>description</code>.</p>
-	 */
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    /**
+     * Setter for the field {@code description}.
+     * 
+     * @param description
+     *            description
+     */
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-	/**
-	 * <p>isDeletable.</p>
-	 */
-	public boolean isDeletable() {
-		return deletable;
-	}
+    /**
+     * Getter for the field {@code deletable}.
+     * 
+     * @return deletable
+     */
+    public boolean isDeletable() {
+        return deletable;
+    }
 
-	/**
-	 * <p>Setter for the field <code>deletable</code>.</p>
-	 */
-	public void setDeletable(boolean deletable) {
-		this.deletable = deletable;
-	}
+    /**
+     * Setter for the field {@code deletable}.
+     * 
+     * @param deletable
+     *            deletable
+     */
+    public void setDeletable(boolean deletable) {
+        this.deletable = deletable;
+    }
 
-	/**
-	 * <p>Getter for the field <code>name</code>.</p>
-	 */
-	public String getName() {
-		return name;
-	}
+    /**
+     * Getter for the field {@code name}.
+     * 
+     * @return name
+     */
+    public String getName() {
+        return name;
+    }
 
-	/**
-	 * <p>Setter for the field <code>name</code>.</p>
-	 */
-	public void setName(String name) {
-		this.name = name;
-	}
+    /**
+     * Setter for the field {@code name}.
+     * 
+     * @param name
+     *            name
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
 }

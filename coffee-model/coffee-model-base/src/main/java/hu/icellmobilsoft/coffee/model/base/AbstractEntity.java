@@ -59,18 +59,19 @@ public abstract class AbstractEntity implements Serializable {
     private Long internalVersion;
 
     /**
-     * <p>
-     * Getter for the field <code>version</code>.
-     * </p>
+     * Getter for the field {@code version}.
+     * 
+     * @return version
      */
     public long getVersion() {
         return version;
     }
 
     /**
-     * <p>
-     * Setter for the field <code>version</code>.
-     * </p>
+     * Setter for the field {@code version}.
+     * 
+     * @param version
+     *            version
      */
     public void setVersion(long version) {
         if (internalVersion == null || this.version != version) {
@@ -80,9 +81,7 @@ public abstract class AbstractEntity implements Serializable {
     }
 
     /**
-     * <p>
      * rollbackVersion.
-     * </p>
      */
     public void rollbackVersion() {
         if (internalVersion != null) {
@@ -92,18 +91,14 @@ public abstract class AbstractEntity implements Serializable {
     }
 
     /**
-     * <p>
      * updateVersion.
-     * </p>
      */
     public void updateVersion() {
         internalVersion = version;
     }
 
     /**
-     * <p>
      * toString.
-     * </p>
      */
     public String toString() {
         ToStringBuilder s = new ToStringBuilder(this);

@@ -36,7 +36,7 @@ import hu.icellmobilsoft.coffee.model.base.AbstractIdentifiedAuditEntity;
 import hu.icellmobilsoft.coffee.model.security.enums.UserStatus;
 
 /**
- * <p>SecurityUser class.</p>
+ * SecurityUser class.
  *
  * @author imre.scheffer
  * @since 1.0.0
@@ -71,70 +71,95 @@ public class SecurityUser extends AbstractIdentifiedAuditEntity {
     private Date lastLoginDate;
 
     /**
-     * <p>Getter for the field <code>login</code>.</p>
+     * Getter for the field {@code login}.
+     * 
+     * @return login
      */
     public String getLogin() {
         return login;
     }
 
     /**
-     * <p>Setter for the field <code>login</code>.</p>
+     * Setter for the field {@code login}.
+     * 
+     * @param login
+     *            login
      */
     public void setLogin(String login) {
         this.login = login;
     }
 
     /**
-     * <p>Getter for the field <code>password</code>.</p>
+     * Getter for the field {@code password}.
+     * 
+     * @return password
      */
     public String getPassword() {
         return password;
     }
 
     /**
-     * <p>Setter for the field <code>password</code>.</p>
+     * Setter for the field {@code password}.
+     * 
+     * @param password
+     *            password
      */
     public void setPassword(String password) {
         this.password = password;
     }
 
     /**
-     * <p>Getter for the field <code>status</code>.</p>
+     * Getter for the field {@code status}.
+     * 
+     * @return status
      */
     public UserStatus getStatus() {
         return status;
     }
 
     /**
-     * <p>Setter for the field <code>status</code>.</p>
+     * Setter for the field {@code status}.
+     * 
+     * @param status
+     *            status
      */
     public void setStatus(UserStatus status) {
         this.status = status;
     }
 
     /**
-     * <p>Getter for the field <code>salt</code>.</p>
+     * Getter for the field {@code salt}.
+     * 
+     * @return salt
      */
     public String getSalt() {
         return salt;
     }
 
     /**
-     * <p>Setter for the field <code>salt</code>.</p>
+     * Setter for the field {@code salt}.
+     * 
+     * @param salt
+     *            salt
      */
     public void setSalt(String salt) {
         this.salt = salt;
     }
 
     /**
-     * <p>Getter for the field <code>lastLoginDate</code>.</p>
+     * Getter for the field {@code lastLoginDate}.
+     * 
+     * @return lastLoginDate
      */
     public Date getLastLoginDate() {
         return lastLoginDate;
     }
 
     /**
-     * <p>Setter for the field <code>lastLoginDate</code>.</p>
+     * Setter for the field {@code lastLoginDate}.
+     * 
+     * @param lastLoginDate
+     *            lastLoginDate
      */
     public void setLastLoginDate(Date lastLoginDate) {
         this.lastLoginDate = lastLoginDate;

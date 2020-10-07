@@ -40,7 +40,7 @@ public @interface Dictionary {
     /**
      * default DictionaryType.NAME
      * 
-     * @return
+     * @return default DictionaryType.NAME
      */
     @Nonbinding
     DictionaryType type() default DictionaryType.NAME;

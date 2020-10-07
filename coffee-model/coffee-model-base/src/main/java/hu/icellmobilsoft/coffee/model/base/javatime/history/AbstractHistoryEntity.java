@@ -53,28 +53,38 @@ public abstract class AbstractHistoryEntity extends AbstractAuditEntity<String> 
     private HistoryPk historyPk;
 
     /**
-     * <p>Getter for the field <code>historyPk</code>.</p>
+     * Getter for the field {@code historyPk}.
+     * 
+     * @return historyPk
      */
     public HistoryPk getHistoryPk() {
         return historyPk;
     }
 
     /**
-     * <p>Setter for the field <code>historyPk</code>.</p>
+     * Setter for the field {@code historyPk}.
+     * 
+     * @param historyPk
+     *            historyPk
      */
     public void setHistoryPk(HistoryPk historyPk) {
         this.historyPk = historyPk;
     }
 
     /**
-     * <p>Getter for the field <code>state</code>.</p>
+     * Getter for the field {@code state}.
+     * 
+     * @return state
      */
     public State getState() {
         return state;
     }
 
     /**
-     * <p>Setter for the field <code>state</code>.</p>
+     * Setter for the field {@code state}.
+     * 
+     * @param state
+     *            state
      */
     public void setState(State state) {
         this.state = state;

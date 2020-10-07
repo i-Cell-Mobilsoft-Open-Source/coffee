@@ -52,28 +52,38 @@ public class SecurityUserSecurityGroup extends AbstractIdentifiedAuditEntity {
     private String userId;
 
     /**
-     * <p>Getter for the field <code>groupId</code>.</p>
+     * Getter for the field {@code groupId}.
+     * 
+     * @return groupId
      */
     public String getGroupId() {
         return groupId;
     }
 
     /**
-     * <p>Setter for the field <code>groupId</code>.</p>
+     * Setter for the field {@code groupId}.
+     * 
+     * @param groupId
+     *            groupId
      */
     public void setGroupId(String groupId) {
         this.groupId = groupId;
     }
 
     /**
-     * <p>getSecurityUserId.</p>
+     * Getter for the field {@code userId}.
+     * 
+     * @return userId
      */
     public String getSecurityUserId() {
         return userId;
     }
 
     /**
-     * <p>setSecurityUserId.</p>
+     * Setter for the field {@code userId}.
+     * 
+     * @param userId
+     *            userId
      */
     public void setSecurityUserId(String userId) {
         this.userId = userId;

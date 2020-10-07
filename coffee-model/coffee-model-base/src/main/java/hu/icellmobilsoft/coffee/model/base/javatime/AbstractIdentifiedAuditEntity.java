@@ -47,14 +47,19 @@ public abstract class AbstractIdentifiedAuditEntity extends AbstractAuditEntity<
     private String id;
 
     /**
-     * <p>Getter for the field <code>id</code>.</p>
+     * Getter for the field {@code id}.
+     * 
+     * @return id
      */
     public String getId() {
         return id;
     }
 
     /**
-     * <p>Setter for the field <code>id</code>.</p>
+     * Setter for the field {@code id}.
+     * 
+     * @param id
+     *            id
      */
     public void setId(String id) {
         this.id = id;
