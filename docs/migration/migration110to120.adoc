@@ -33,6 +33,13 @@ A `BaseServicePath` osztályt ősként használó osztályok-ban az importot meg
 
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
 
+=== coffee-module-mp-restclient
+* Default ResponseExceptionMapper<BaseException> implementáció
+
+==== Átállás
+
+A default ResponseExceptionMapper<BaseException> priority nélkül lett létrehozva, attól eltérő implementáció használata priority megadásával lehetséges.
+
 === coffee-dto-base
 * InvalidRequestException deprecated
 * SaxParseBaseException deprecated
