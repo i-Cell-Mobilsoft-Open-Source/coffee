@@ -33,3 +33,11 @@ A `BaseServicePath` osztályt ősként használó osztályok-ban az importot meg
 
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
 
+=== coffee-dto-base
+* InvalidRequestException deprecated
+* SaxParseBaseException deprecated
+
+==== Átállás
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+A két exception nincs használatban, szerepüket az XsdProcessingException tölti be.
