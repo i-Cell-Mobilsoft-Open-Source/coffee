@@ -20,6 +20,7 @@ A változtatások nem eredményeznek átállási munkálatokat, visszafelé komp
 * RequestResponseLogger válasz kiíráatásnál minden egyéb, nem String objektum esetben, az objektum toString() metódusával kerül kiírásra a válasz objektum.
 * BaseServicePath osztály átkerült a coffee-dto csomagba.
 * ApplicationConfiguration - ha nem talál a konfigurációs kulcshoz értéket - ezentúl csak egy WARN sort logol, stacktrace nélkül.
+* JsonMessageBodyReaderBase összes metódusa kiterjeszthető.
 
 ==== Átállás
 
