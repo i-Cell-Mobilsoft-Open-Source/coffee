@@ -39,3 +39,10 @@ A változtatások nem eredményeznek átállási munkálatokat, visszafelé komp
 ==== Átállás
 
 A default ResponseExceptionMapper<BaseException> priority nélkül lett létrehozva, attól eltérő implementáció használata priority megadásával lehetséges.
+
+=== cofee-jpa
+* BaseService log és hibakezelő függvényei `private` -> `protected`
+
+==== Átállás
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
