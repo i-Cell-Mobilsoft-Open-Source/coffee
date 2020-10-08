@@ -13,6 +13,13 @@ coff:ee v1.1.0 -> v1.2.0 migrációs leírás, újdonságok, változások leír�
 
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
 
+=== coffee-dto
+* common.xsd-ben a TimestampType típust leíró regex bővítésre került, a törtmásodperceket a korábbi 3 helyett 6 jegy pontossággal képes befogadni.
+
+==== Átállás
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
 === coffee-rest
 
 * RequestResponseLogger válasz kiíráatás kibővült xml kiírással, ha a mediaType application/xml,text/xml vagy application/atom+xml.
