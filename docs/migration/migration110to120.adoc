@@ -13,6 +13,13 @@ coff:ee v1.1.0 -> v1.2.0 migrációs leírás, újdonságok, változások leír�
 
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
 
+=== coffee-dto
+* common.xsd-ben a TimestampType típust leíró regex bővítésre került, a törtmásodperceket a korábbi 3 helyett 6 jegy pontossággal képes befogadni.
+
+==== Átállás
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
 === coffee-rest
 
 * RequestResponseLogger válasz kiíráatás kibővült xml kiírással, ha a mediaType application/xml,text/xml vagy application/atom+xml.
@@ -20,6 +27,7 @@ A változtatások nem eredményeznek átállási munkálatokat, visszafelé komp
 * RequestResponseLogger válasz kiíráatásnál minden egyéb, nem String objektum esetben, az objektum toString() metódusával kerül kiírásra a válasz objektum.
 * BaseServicePath osztály átkerült a coffee-dto csomagba.
 * ApplicationConfiguration - ha nem talál a konfigurációs kulcshoz értéket - ezentúl csak egy WARN sort logol, stacktrace nélkül.
+* JsonMessageBodyReaderBase összes metódusa kiterjeszthető.
 
 ==== Átállás
 
@@ -39,6 +47,15 @@ A változtatások nem eredményeznek átállási munkálatokat, visszafelé komp
 ==== Átállás
 
 A default ResponseExceptionMapper<BaseException> priority nélkül lett létrehozva, attól eltérő implementáció használata priority megadásával lehetséges.
+
+=== coffee-dto-base
+* InvalidRequestException deprecated
+* SaxParseBaseException deprecated
+
+==== Átállás
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+A két exception nincs használatban, szerepüket az XsdProcessingException tölti be.
 
 === cofee-jpa
 * BaseService log és hibakezelő függvényei `private` -> `protected`
