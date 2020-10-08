@@ -47,3 +47,12 @@ A változtatások nem eredményeznek átállási munkálatokat, visszafelé komp
 ==== Átállás
 
 A default ResponseExceptionMapper<BaseException> priority nélkül lett létrehozva, attól eltérő implementáció használata priority megadásával lehetséges.
+
+=== coffee-dto-base
+* InvalidRequestException deprecated
+* SaxParseBaseException deprecated
+
+==== Átállás
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+A két exception nincs használatban, szerepüket az XsdProcessingException tölti be.
