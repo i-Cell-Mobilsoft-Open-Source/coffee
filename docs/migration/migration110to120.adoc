@@ -56,3 +56,10 @@ A default ResponseExceptionMapper<BaseException> priority nélkül lett létreho
 
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
 A két exception nincs használatban, szerepüket az XsdProcessingException tölti be.
+
+=== cofee-jpa
+* BaseService log és hibakezelő függvényei `private` -> `protected`
+
+==== Átállás
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.

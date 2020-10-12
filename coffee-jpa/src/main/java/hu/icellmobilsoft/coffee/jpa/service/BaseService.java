@@ -860,13 +860,29 @@ public class BaseService<T> {
         return false;
     }
 
-    private void logReturn(String methodInfo, Object... params) {
+    /**
+     * Adds log entry for method return if trace is enabled.
+     *
+     * @param methodInfo
+     *          method info format {@link String} with method and param names, and placeholders for parameter values
+     * @param params
+     *          parameter values in matching order with methodInfo
+     */
+    protected void logReturn(String methodInfo, Object... params) {
         if (log.isTraceEnabled()) {
             log.trace("<<" + methodInfo, prepareParametersToLog(params));
         }
     }
 
-    private void logEnter(String methodInfo, Object... params) {
+    /**
+     * Adds log entry for method enter if trace is enabled.
+     *
+     * @param methodInfo
+     *          method info format {@link String} with method and param names, and placeholders for param values
+     * @param params
+     *          parameter values in matching order with methodInfo
+     */
+    protected void logEnter(String methodInfo, Object... params) {
         if (log.isTraceEnabled()) {
             log.trace(">>" + methodInfo, prepareParametersToLog(params));
         }
@@ -902,19 +918,48 @@ public class BaseService<T> {
         return copy;
     }
 
-    private BONotFoundException notFound(String methodInfo, Object... params) {
+    /**
+     * Creates {@link BONotFoundException}.
+     *
+     * @param methodInfo
+     *          method info format {@link String} with method and param names, and placeholders for param values
+     * @param params
+     *          parameter values in matching order with methodInfo
+     * @return {@link BONotFoundException} with message from methodInfo.
+     */
+    protected BONotFoundException notFound(String methodInfo, Object... params) {
         return new BONotFoundException(getDefaultNotFoundFaultTypeEnum(),
                 MessageFormat.format("Entry for " + methodInfo + " not found!", prepareParametersToLog(params)));
     }
 
-    private TechnicalException repositoryFailed(Exception e, String methodInfo, Object... params) throws BaseException {
+    /**
+     * Creates {@link TechnicalException} with {@link CoffeeFaultType#REPOSITORY_FAILED} fault type.
+     *
+     * @param e
+     *          cause {@link Exception}
+     * @param methodInfo
+     *          method info format {@link String} with method and param names, and placeholders for param values
+     * @param params
+     *          parameter values in matching order with methodInfo
+     * @return {@link TechnicalException} with message from methodInfo.
+     */
+    protected TechnicalException repositoryFailed(Exception e, String methodInfo, Object... params) {
         StringBuilder sb = new StringBuilder();
         sb.append("Error occurred in ").append(methodInfo).append(" : [").append(e.getLocalizedMessage()).append("]");
         String msg = MessageFormat.format(sb.toString(), prepareParametersToLog(params));
         return new TechnicalException(CoffeeFaultType.REPOSITORY_FAILED, msg, e);
     }
 
-    private BaseException invalidParameter(String methodInfo, Object... params) throws BaseException {
+    /**
+     * Creates {@link BaseException} with {@link CoffeeFaultType#WRONG_OR_MISSING_PARAMETERS} fault type.
+     *
+     * @param methodInfo
+     *          method info format {@link String} with method and param names, and placeholders for param values
+     * @param params
+     *          parameter values in matching order with methodInfo
+     * @return {@link BaseException} with message from methodInfo.
+     */
+    protected BaseException invalidParameter(String methodInfo, Object... params) throws BaseException {
         String msg = MessageFormat.format("At least one incoming parameter in " + methodInfo + " is null or blank!", params);
         return newInvalidParameterException(msg);
     }
