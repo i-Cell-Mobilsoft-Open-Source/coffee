@@ -57,9 +57,32 @@ A default ResponseExceptionMapper<BaseException> priority nélkül lett létreho
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
 A két exception nincs használatban, szerepüket az XsdProcessingException tölti be.
 
-=== cofee-jpa
+=== coffee-jpa
 * BaseService log és hibakezelő függvényei `private` -> `protected`
 
 ==== Átállás
 
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+=== coffee - cdi-n alapuló modulok
+* beans.xml hozzáadásra került ezekhez a modulokhoz.
+
+==== Átállás
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+=== coffee-cdi
+* `hu.icellmobilsoft.coffee.cdi.logger.LogProducer.getStaticDefaultLogger(String)` deprecated lett.
+* `hu.icellmobilsoft.coffee.cdi.logger.LogProducer.getStaticDefaultLogger(Class)` deprecated lett.
+
+==== Átállás
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+=== coffee-se-logging
+* `hu.icellmobilsoft.coffee.se.logging.DefaultLogger` private constructort kapott.
+
+==== Átállás
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
