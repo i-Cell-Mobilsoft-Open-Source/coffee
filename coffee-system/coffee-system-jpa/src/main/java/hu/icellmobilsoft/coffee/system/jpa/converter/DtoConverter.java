@@ -25,13 +25,13 @@ import hu.icellmobilsoft.coffee.dto.exception.DtoConversionException;
 import hu.icellmobilsoft.coffee.model.base.AbstractEntity;
 
 /**
- * Basic converter {@link AbstractEntity} <-> {@link AbtractDto}
+ * Basic converter {@link AbstractEntity} &lt;-&gt; {@link AbstractDtoType}
  *
  * @author karoly.tamas
  * @param <E>
  *            {@link AbstractEntity}
  * @param <D>
- *            {@link AbtractDto}
+ *            {@link AbstractDtoType}
  * @since 1.0.0
  */
 public abstract class DtoConverter<E extends AbstractEntity, D extends AbstractDtoType> implements Converter<E, D> {
@@ -50,7 +50,14 @@ public abstract class DtoConverter<E extends AbstractEntity, D extends AbstractD
     }
 
     /**
-     * <p>validate.</p>
+     * validate
+     * 
+     * @param dto
+     *            dto
+     * @param entity
+     *            entity
+     * @throws DtoConversionException
+     *             exception
      */
     public void validate(D dto, E entity) throws DtoConversionException {
         validate(dto);
@@ -58,7 +65,12 @@ public abstract class DtoConverter<E extends AbstractEntity, D extends AbstractD
     }
 
     /**
-     * <p>validate.</p>
+     * validate
+     * 
+     * @param dto
+     *            dto
+     * @throws DtoConversionException
+     *             exception
      */
     public void validate(D dto) throws DtoConversionException {
         if (dto == null) {
@@ -67,7 +79,12 @@ public abstract class DtoConverter<E extends AbstractEntity, D extends AbstractD
     }
 
     /**
-     * <p>validate.</p>
+     * validate
+     * 
+     * @param entity
+     *            entity
+     * @throws DtoConversionException
+     *             exception
      */
     public void validate(E entity) throws DtoConversionException {
         if (entity == null) {

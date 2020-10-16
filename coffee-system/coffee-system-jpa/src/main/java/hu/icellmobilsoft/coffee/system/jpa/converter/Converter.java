@@ -36,22 +36,48 @@ import hu.icellmobilsoft.coffee.model.base.AbstractEntity;
 public interface Converter<E extends AbstractEntity, D extends AbstractDtoType> {
 
     /**
-     * <p>convert.</p>
+     * convert
+     * 
+     * @param entity
+     *            entity
+     * @return dto
+     * @throws BaseException
+     *             exception
      */
     public D convert(E entity) throws BaseException;
 
     /**
-     * <p>convert.</p>
+     * convert
+     * 
+     * @param dto
+     *            dto
+     * @return entity
+     * @throws BaseException
+     *             exception
      */
     public E convert(D dto) throws BaseException;
 
     /**
-     * <p>convert.</p>
+     * convert
+     * 
+     * @param destinationDto
+     *            destinationDto
+     * @param sourceEntity
+     *            sourceEntity
+     * @throws BaseException
+     *             exception
      */
     public void convert(D destinationDto, E sourceEntity) throws BaseException;
 
     /**
-     * <p>convert.</p>
+     * convert
+     * 
+     * @param destinationEntity
+     *            destinationEntity
+     * @param sourceDto
+     *            sourceDto
+     * @throws BaseException
+     *             exception
      */
     public void convert(E destinationEntity, D sourceDto) throws BaseException;
 }

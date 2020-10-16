@@ -24,13 +24,13 @@ import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.model.base.javatime.AbstractAuditEntity;
 
 /**
- * Basic converter {@link AbstractAuditEntity} <-> {@link AbtractAuditDto}
+ * Basic converter {@link AbstractAuditEntity} &lt;-&gt; {@link AbstractAuditDtoType}
  *
  * @author karoly.tamas
  * @param <E>
  *            {@link AbstractAuditEntity}
  * @param <D>
- *            {@link AbtractAuditDto}
+ *            {@link AbstractAuditDtoType}
  * @since 1.0.0
  */
 public abstract class DtoAuditConverter<E extends AbstractAuditEntity<String>, D extends AbstractAuditDtoType> extends DtoConverter<E, D> {
