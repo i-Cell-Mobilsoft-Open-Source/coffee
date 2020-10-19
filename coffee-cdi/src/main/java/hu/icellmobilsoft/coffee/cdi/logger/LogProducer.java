@@ -29,6 +29,7 @@ import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.core.api.provider.DependentProvider;
 
 import hu.icellmobilsoft.coffee.se.logging.DefaultLogger;
+import hu.icellmobilsoft.coffee.se.logging.Logger;
 
 /**
  * <p>
@@ -71,7 +72,7 @@ public class LogProducer {
      */
     @Produces
     public hu.icellmobilsoft.coffee.se.logging.Logger createDefaultLogger(InjectionPoint injectionPoint) {
-        return getStaticDefaultLogger(injectionPoint.getMember().getDeclaringClass().getName());
+        return Logger.getLogger(injectionPoint.getMember().getDeclaringClass().getName());
     }
 
     /**
@@ -140,7 +141,9 @@ public class LogProducer {
      * @param clazz
      *            osztaly
      * @return slf4j logger
+     * @deprecated use {@link Logger#getLogger(Class)} instead
      */
+    @Deprecated(forRemoval = true, since = "1.1.0")
     public static hu.icellmobilsoft.coffee.se.logging.Logger getStaticDefaultLogger(Class<?> clazz) {
         return DefaultLogger.getLogger(clazz);
     }
@@ -151,7 +154,9 @@ public class LogProducer {
      * @param className
      *            osztaly neve
      * @return slf4j logger
+     * @deprecated use {@link Logger#getLogger(String)} instead
      */
+    @Deprecated(forRemoval = true, since = "1.1.0")
     public static hu.icellmobilsoft.coffee.se.logging.Logger getStaticDefaultLogger(String className) {
         return DefaultLogger.getLogger(className);
     }
