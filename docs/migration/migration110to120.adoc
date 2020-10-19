@@ -78,6 +78,8 @@ A változtatások nem eredményeznek átállási munkálatokat, visszafelé komp
 ==== Átállás
 
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+A `hu.icellmobilsoft.coffee.cdi.logger.LogProducer.getStaticDefaultLogger(String)` helyett a `hu.icellmobilsoft.coffee.se.logging.DefaultLogger.getLogger(String)` haszálata javasolt.
+A `hu.icellmobilsoft.coffee.cdi.logger.LogProducer.getStaticDefaultLogger(Class)` helyett a `hu.icellmobilsoft.coffee.se.logging.DefaultLogger.getLogger(Class)` haszálata javasolt.
 
 === coffee-se-logging
 * `hu.icellmobilsoft.coffee.se.logging.DefaultLogger` private constructort kapott.
