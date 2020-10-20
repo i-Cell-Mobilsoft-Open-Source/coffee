@@ -13,7 +13,7 @@ on:
         # Friendly description to be shown in the UI instead of 'name'
         description: 'Comment for deploy'
         # Default value if no value is explicitly provided
-        default: 'Start release from WEB UI'
+        default: 'Deploy SNAPSHOT from WEB UI'
         # Input has to be provided for the workflow to run
         required: true
 
