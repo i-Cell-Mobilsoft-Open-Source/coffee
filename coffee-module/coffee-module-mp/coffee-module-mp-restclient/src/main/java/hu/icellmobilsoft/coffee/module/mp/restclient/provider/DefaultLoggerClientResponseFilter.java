@@ -138,8 +138,11 @@ public class DefaultLoggerClientResponseFilter implements ClientResponseFilter {
         if (requestContext == null || responseContext == null) {
             return null;
         }
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
         InputStream in = responseContext.getEntityStream();
+        if (in == null) {
+            return "";
+        }
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
         try {
             IOUtils.copy(in, out);
 
