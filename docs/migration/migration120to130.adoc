@@ -1,0 +1,14 @@
+= v1.2.0 → v1.3.0
+
+coff:ee v1.2.0 -> v1.3.0 migrációs leírás, újdonságok, változások leírása
+
+== Változások
+
+=== coffee-dto
+* common.xsd-ben hozzáadásra került a SimpleText1024NotBlankType típus.
+
+==== Átállás
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+
