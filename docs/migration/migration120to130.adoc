@@ -4,6 +4,13 @@ coff:ee v1.2.0 -> v1.3.0 migrációs leírás, újdonságok, változások leír�
 
 == Változások
 
+=== coffee-dto
+* common.xsd-ben hozzáadásra került a SimpleText1024NotBlankType típus.
+
+==== Átállás
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
 === coffee-rest
 
 * `RequestResponseLogger#printEntity(byte[], Integer, String)` megfelelően adja vissza a logüzenetet, ha a byte tömb paramétere (entity) null vagy üres.
@@ -19,3 +26,5 @@ A változtatások nem eredményeznek átállási munkálatokat, visszafelé komp
 ==== Átállás
 
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+
