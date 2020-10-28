@@ -138,19 +138,15 @@ public class DefaultLoggerClientResponseFilter implements ClientResponseFilter {
         if (requestContext == null || responseContext == null) {
             return null;
         }
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
         InputStream in = responseContext.getEntityStream();
         try {
-            IOUtils.copy(in, out);
+            int maxResponseEntityLogSize = getMaxResponseEntityLogSize(requestContext, responseContext);
 
-            byte[] responseEntity = out.toByteArray();
-            int maxResponseEntityLogSize = RestLoggerUtil.getMaxEntityLogSize(requestContext, LogSpecifierTarget.CLIENT_RESPONSE);
-            if (maxResponseEntityLogSize != LogSpecifier.NO_LOG &&
-            // byte-code betoltesi fajlokat ne loggoljuk ki egeszben
-                    Objects.equals(responseContext.getMediaType(), MediaType.APPLICATION_OCTET_STREAM_TYPE)) {
-                maxResponseEntityLogSize = RequestResponseLogger.BYTECODE_MAX_LOG;
-
+            if (in == null) {
+                return requestResponseLogger.printEntity(null, maxResponseEntityLogSize, RequestResponseLogger.RESPONSE_PREFIX);
             }
+
+            byte[] responseEntity = IOUtils.toByteArray(in);
             // vissza irjuk a kiolvasott streamet
             responseContext.setEntityStream(new ByteArrayInputStream(responseEntity));
 
@@ -160,4 +156,16 @@ public class DefaultLoggerClientResponseFilter implements ClientResponseFilter {
             return null;
         }
     }
+
+    private int getMaxResponseEntityLogSize(ClientRequestContext requestContext, ClientResponseContext responseContext) {
+        int maxResponseEntityLogSize = RestLoggerUtil.getMaxEntityLogSize(requestContext, LogSpecifierTarget.CLIENT_RESPONSE);
+        if (maxResponseEntityLogSize != LogSpecifier.NO_LOG &&
+        // byte-code betoltesi fajlokat ne loggoljuk ki egeszben
+                Objects.equals(responseContext.getMediaType(), MediaType.APPLICATION_OCTET_STREAM_TYPE)) {
+            maxResponseEntityLogSize = RequestResponseLogger.BYTECODE_MAX_LOG;
+
+        }
+        return maxResponseEntityLogSize;
+    }
+
 }
