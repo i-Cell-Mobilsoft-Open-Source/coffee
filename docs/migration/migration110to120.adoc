@@ -28,6 +28,7 @@ A változtatások nem eredményeznek átállási munkálatokat, visszafelé komp
 * BaseServicePath osztály átkerült a coffee-dto csomagba.
 * ApplicationConfiguration - ha nem talál a konfigurációs kulcshoz értéket - ezentúl csak egy WARN sort logol, stacktrace nélkül.
 * JsonMessageBodyReaderBase összes metódusa kiterjeszthető.
+* `RequestResponseLogger#printEntity(byte[], Integer, String)` megfelelően adja vissza a logüzenetet, ha a byte tömb paramétere (entity) null vagy üres.
 
 ==== Átállás
 
@@ -43,6 +44,7 @@ A változtatások nem eredményeznek átállási munkálatokat, visszafelé komp
 
 === coffee-module-mp-restclient
 * Default ResponseExceptionMapper<BaseException> implementáció
+* `DefaultLoggerClientResponseFilter#logEntity` megfelelően logolja, ha a válaszban nincs entity.
 
 ==== Átállás
 
