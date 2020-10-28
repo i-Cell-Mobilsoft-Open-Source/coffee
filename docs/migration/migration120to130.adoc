@@ -11,4 +11,20 @@ coff:ee v1.2.0 -> v1.3.0 migrációs leírás, újdonságok, változások leír�
 
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
 
+=== coffee-rest
+
+* `RequestResponseLogger#printEntity(byte[], Integer, String)` megfelelően adja vissza a logüzenetet, ha a byte tömb paramétere (entity) null vagy üres.
+
+==== Átállás
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+=== coffee-module-mp-restclient
+
+* `DefaultLoggerClientResponseFilter#logEntity` megfelelően logolja, ha a válaszban nincs entity.
+
+==== Átállás
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
 
