@@ -31,6 +31,7 @@ import org.junit.jupiter.api.Test;
 import hu.icellmobilsoft.coffee.dto.common.commonservice.BaseResponse;
 import hu.icellmobilsoft.coffee.dto.common.commonservice.ContextType;
 import hu.icellmobilsoft.coffee.dto.common.commonservice.FunctionCodeType;
+import hu.icellmobilsoft.coffee.rest.log.annotation.LogSpecifier;
 
 /**
  * RequestResponseLogger class tests
@@ -44,10 +45,10 @@ public class RequestResponseLoggerTest {
 
     @Test
     @DisplayName("Test printEntity with Json object and application/json;charset=UTF-8 media type")
-    public void printJsonEntityTest() {
+    void printJsonEntityTest() {
         BaseResponse response = new BaseResponse().withMessage("msg").withFuncCode(FunctionCodeType.OK)
                 .withContext(new ContextType().withRequestId("TEST").withTimestamp(OffsetDateTime.now()));
-        MediaType mediaType = new MediaType("application","json",StandardCharsets.UTF_8.displayName());
+        MediaType mediaType = new MediaType("application", "json", StandardCharsets.UTF_8.displayName());
         String responseText = requestResponseLogger.printEntity(response, null, "", false, mediaType);
         Assertions.assertTrue(responseText.startsWith("entity: [{\"context\":{\"requestId\":\"TEST\",\"timestamp\""));
 
@@ -55,31 +56,48 @@ public class RequestResponseLoggerTest {
 
     @Test
     @DisplayName("Test printEntity with String object and without media type")
-    public void printStringEntityTest() {
-        String responseText = requestResponseLogger.printEntity("<div>Hello World</div>", null, "", false, null);
-        Assertions.assertTrue(responseText.startsWith("entity: [<div>Hello World</div>]"));
+    void printStringEntityTest() {
+        String input = "<div>Hello World</div>";
+        String responseText = requestResponseLogger.printEntity(input, null, "", false, null);
+        Assertions.assertEquals("entity: [" + input + "]\n", responseText);
+    }
+
+    @Test
+    @DisplayName("Test printEntity with String object and without media type and UNLIMIT")
+    void printStringUnlimitEntityTest() {
+        String input = "<div>Hello World</div>";
+        String responseText = requestResponseLogger.printEntity(input, LogSpecifier.UNLIMIT, "", false, null);
+        Assertions.assertEquals("entity: [" + input + "]\n", responseText);
+    }
+
+    @Test
+    @DisplayName("Test printEntity with String object and without media type and NO_LOG")
+    void printStringNoLogEntityTest() {
+        String input = "<div>Hello World</div>";
+        String responseText = requestResponseLogger.printEntity(input, LogSpecifier.NO_LOG, "", false, null);
+        Assertions.assertEquals("entity: []\n", responseText);
     }
 
     @Test
     @DisplayName("Test printEntity with Object object and without media type")
-    public void printObjectEntityTest() {
+    void printObjectEntityTest() {
         String responseText = requestResponseLogger.printEntity(new Object(), null, "", false, null);
         Assertions.assertTrue(responseText.startsWith("entity: [java.lang.Object@"));
     }
 
     @Test
     @DisplayName("Test printEntity with XML object and application/xml media type")
-    public void printXmlEntityTest() {
+    void printXmlEntityTest() {
         BaseResponse response = new BaseResponse().withMessage("msg").withFuncCode(FunctionCodeType.OK)
                 .withContext(new ContextType().withRequestId("TEST").withTimestamp(OffsetDateTime.now()));
-        MediaType mediaType = new MediaType("application","xml",StandardCharsets.UTF_8.displayName());
+        MediaType mediaType = new MediaType("application", "xml", StandardCharsets.UTF_8.displayName());
         String responseText = requestResponseLogger.printEntity(response, null, "", false, mediaType);
         Assertions.assertTrue(responseText.startsWith("entity: [<?xml"));
     }
 
     @Test
     @DisplayName("Test printEntity with XML object and application/atom+xml media type")
-    public void printAtomPlusXmlMediaTypeEntityTest() {
+    void printAtomPlusXmlMediaTypeEntityTest() {
         BaseResponse response = new BaseResponse().withMessage("msg").withFuncCode(FunctionCodeType.OK)
                 .withContext(new ContextType().withRequestId("TEST").withTimestamp(OffsetDateTime.now()));
         MediaType mediaType = MediaType.APPLICATION_ATOM_XML_TYPE;
@@ -89,7 +107,7 @@ public class RequestResponseLoggerTest {
 
     @Test
     @DisplayName("Test printEntity with XML object and text/xml media type")
-    public void printTextXmlMediaTypeEntityTest() {
+    void printTextXmlMediaTypeEntityTest() {
         BaseResponse response = new BaseResponse().withMessage("msg").withFuncCode(FunctionCodeType.OK)
                 .withContext(new ContextType().withRequestId("TEST").withTimestamp(OffsetDateTime.now()));
         MediaType mediaType = MediaType.TEXT_XML_TYPE;
