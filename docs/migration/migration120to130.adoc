@@ -14,6 +14,7 @@ A változtatások nem eredményeznek átállási munkálatokat, visszafelé komp
 === coffee-rest
 
 * `RequestResponseLogger#printEntity(byte[], Integer, String)` megfelelően adja vissza a logüzenetet, ha a byte tömb paramétere (entity) null vagy üres.
+* `RequestResponseLogger#printEntity` javítva lett a LogSpecifier.UNLIMIT (ez a default) esetében az utolsó karakter levágása
 
 ==== Átállás
 

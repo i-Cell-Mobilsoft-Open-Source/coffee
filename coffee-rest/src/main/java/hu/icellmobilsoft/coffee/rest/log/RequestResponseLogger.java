@@ -406,8 +406,9 @@ public class RequestResponseLogger {
         } else {
             entityText = entity.toString();
         }
-        if (maxLogSize != null && entityText != null && entityText.length() > maxLogSize.intValue()) {
-            entityText = StringUtils.substring(entityText, 0, maxLogSize);
+        int maxSize = maxLogSize == null ? LogSpecifier.UNLIMIT : maxLogSize.intValue();
+        if (maxSize > LogSpecifier.UNLIMIT && entityText != null && entityText.length() > maxSize) {
+            entityText = StringUtils.substring(entityText, 0, maxSize);
         }
         if (maskingNeeded) {
             entityText = stringHelper.maskValueInXmlJson(entityText);
