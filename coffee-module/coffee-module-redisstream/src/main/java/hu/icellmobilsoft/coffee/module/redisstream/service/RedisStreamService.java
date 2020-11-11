@@ -152,8 +152,10 @@ public class RedisStreamService implements Closeable {
      * </pre>
      */
     public void handleGroup() {
-        if (existGroup() && log.isTraceEnabled()) {
-            log.trace("Group [{0}] already exist", getGroup());
+        if (existGroup()) {
+            if (log.isTraceEnabled()) {
+                log.trace("Group [{0}] already exist", getGroup());
+            }
         } else {
             String createGroupResult = getJedis().xgroupCreate(streamKey(), getGroup(), new StreamEntryID(), true);
             log.info("Stream group [{0}] on stream [{1}] created with result: [{2}]", getGroup(), streamKey(), createGroupResult);

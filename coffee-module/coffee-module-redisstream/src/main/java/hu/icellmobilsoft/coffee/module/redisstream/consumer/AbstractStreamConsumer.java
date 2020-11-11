@@ -172,7 +172,7 @@ public abstract class AbstractStreamConsumer implements IRedisStreamConsumer {
     }
 
     /**
-     * Vegtelen stream olvasa leallitasa
+     * Végtelen stream olvasása leállítása
      */
     public void stopLoop() {
         endLoop = true;
