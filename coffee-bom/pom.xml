@@ -180,6 +180,11 @@
 			</dependency>
 			<dependency>
 				<groupId>hu.icellmobilsoft.coffee</groupId>
+				<artifactId>coffee-module-redisstream</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>hu.icellmobilsoft.coffee</groupId>
 				<artifactId>coffee-module-mongodb</artifactId>
 				<version>${project.version}</version>
 			</dependency>

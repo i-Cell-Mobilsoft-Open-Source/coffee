@@ -26,10 +26,7 @@ import javax.enterprise.context.Dependent;
 import javax.enterprise.inject.Produces;
 import javax.enterprise.inject.spi.CDI;
 import javax.enterprise.inject.spi.InjectionPoint;
-import javax.inject.Inject;
 
-import hu.icellmobilsoft.coffee.cdi.logger.AppLogger;
-import hu.icellmobilsoft.coffee.cdi.logger.ThisLogger;
 import hu.icellmobilsoft.coffee.module.redis.annotation.RedisConnection;
 import hu.icellmobilsoft.coffee.module.redis.config.ManagedRedisConfig;
 import hu.icellmobilsoft.coffee.tool.utils.annotation.AnnotationUtil;
@@ -42,10 +39,6 @@ import hu.icellmobilsoft.coffee.tool.utils.annotation.AnnotationUtil;
  */
 @ApplicationScoped
 public class RedisConfigProducer {
-
-    @Inject
-    @ThisLogger
-    private AppLogger log;
 
     /**
      * Creates ManagedRedisConfig for the injected configkey
