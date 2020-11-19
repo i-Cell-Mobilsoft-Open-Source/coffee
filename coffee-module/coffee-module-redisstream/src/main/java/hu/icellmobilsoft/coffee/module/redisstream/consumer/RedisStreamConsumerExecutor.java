@@ -25,7 +25,10 @@ import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
+import javax.enterprise.context.Dependent;
 import javax.enterprise.inject.Instance;
+import javax.enterprise.inject.spi.Bean;
+import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.inject.spi.CDI;
 import javax.inject.Inject;
 
@@ -40,12 +43,14 @@ import redis.clients.jedis.Jedis;
 import redis.clients.jedis.StreamEntry;
 
 /**
- * Abstract stream consumer class
+ * Redis stream consumer executor class
  * 
  * @author imre.scheffer
+ * @author czenczl
  * @since 1.3.0
  */
-public abstract class AbstractStreamConsumer implements IRedisStreamConsumer {
+@Dependent
+public class RedisStreamConsumerExecutor implements IRedisStreamConsumerExecutor {
 
     @Inject
     private Logger log;
@@ -53,19 +58,25 @@ public abstract class AbstractStreamConsumer implements IRedisStreamConsumer {
     @Inject
     private RedisStreamService redisStreamService;
 
+    @Inject
+    private BeanManager beanManager;
+
+    @Inject
+    private BoundRequestContext boundRequestContext;
+
     private String consumerIdentifier;
 
     private String redisConfigKey;
 
     private boolean endLoop;
 
-    @Inject
-    private BoundRequestContext boundRequestContext;
+    private Bean<? super IRedisStreamConsumer> consumerBean;
 
     @Override
-    public void init(String redisConfigKey, String group) {
+    public void init(String redisConfigKey, String group, Bean<? super IRedisStreamConsumer> consumerBean) {
         this.redisConfigKey = redisConfigKey;
         redisStreamService.setGroup(group);
+        this.consumerBean = consumerBean;
     }
 
     /**
@@ -120,11 +131,15 @@ public abstract class AbstractStreamConsumer implements IRedisStreamConsumer {
      *             exceptin is error
      */
     protected void executeProcess(StreamEntry streamEntry) throws BaseException {
+        // get reference for the consumerBean
+        IRedisStreamConsumer consumer = (IRedisStreamConsumer) beanManager.getReference(consumerBean, consumerBean.getBeanClass(),
+                beanManager.createCreationalContext(consumerBean));
+
         Map<String, Object> requestScopeStore = null;
         try {
             requestScopeStore = new ConcurrentHashMap<>();
             startRequestScope(requestScopeStore);
-            process(streamEntry);
+            consumer.onStream(streamEntry);
         } finally {
             endRequestScope(requestScopeStore);
         }
