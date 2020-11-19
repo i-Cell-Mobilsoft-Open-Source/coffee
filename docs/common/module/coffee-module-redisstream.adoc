@@ -78,7 +78,7 @@ public class SampleConsumer implements IRedisStreamConsumer {
     private CounterApplication counterApplication; // <3>
 
     @Override
-    public void process(StreamEntry streamEntry) throws BaseException {
+    public void onStream(StreamEntry streamEntry) throws BaseException {
         log.info("Processing streamEntry [{0}]", streamEntry);
         counter.print();
         counterDependent.print();
