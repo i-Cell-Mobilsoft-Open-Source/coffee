@@ -51,40 +51,45 @@ package hu.icellmobilsoft.redis.consume;
 
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
-import javax.inject.Provider;
 
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.module.redisstream.annotation.RedisStreamConsumer;
-import hu.icellmobilsoft.coffee.module.redisstream.consumer.AbstractStreamConsumer;
+import hu.icellmobilsoft.coffee.module.redisstream.consumer.IRedisStreamConsumer;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
 import hu.icellmobilsoft.sample.requestScope.Counter;
+import hu.icellmobilsoft.sample.dependent.CounterDependent;
+import hu.icellmobilsoft.sample.applicationScope.CounterApplication;
 import redis.clients.jedis.StreamEntry;
 
 @Dependent
 @RedisStreamConsumer(configKey = "redisConfigKey", group = "sampleGroup")
-public class SampleConsumer extends AbstractStreamConsumer {
+public class SampleConsumer implements IRedisStreamConsumer {
 
     @Inject
     private Logger log;
 
     @Inject
-    private Provider<Counter> counterProvider; // <1>
+    private Counter counter; // <1>
+
+    @Inject
+    private CounterDependent counterDependent; // <2>
+
+    @Inject
+    private CounterApplication counterApplication; // <3>
 
     @Override
     public void process(StreamEntry streamEntry) throws BaseException {
         log.info("Processing streamEntry [{0}]", streamEntry);
-        counterProvider.get().print();
+        counter.print();
+        counterDependent.print();
+        counterApplication.print();
     }
 }
 ----
-<1> A Counter osztály RequestScope-ban működik, ezért Provider-be kell csomagolni, lásd lejjebb
+<1> A Counter osztály RequestScope-ban működik
+<2> A CounterDependent osztály Dependent-ként működik
+<3> A CounterApplication osztály ApplicationScope-ban működik
 
-CAUTION: A `hu.icellmobilsoft.coffee.module.redisstream.annotation.RedisStreamConsumer` annotációval
-ellátott osztály kizárólag csak `Dependent` vagy `Application` scope injecteket tartalmazhat,
-`RequestScope` osztályokat csak mint `Provider<Counter>` minta lehet,
-vagy a `process(StreamEntry streamEntry)` metódusban az inline `CDI.current.select()` megoldással.
-Ennek az oka hogy indulásnál `Dependent` scope-al van létrehozva annyi példány amennyi
-a beálításban szerepel és ezeket külön szálban vannak használva.
 
 == Hogyan is működik?
 
@@ -99,7 +104,7 @@ annotációval van ellátva
 A talált osztályok annotációjából ismert a redis kapcsolat kulcsa és a stream csoport neve,
 amiből kiegészíti a stream kulcs nevét és a beállításokat.
 Az osztályokon végig iterál és mindegyik konfigurációja szerint létrehoz annyi példányt,
-amit önálló szálakban futtat.
+amit önálló szálakban futtat, a `hu.icellmobilsoft.coffee.module.redisstream.consumer.RedisStreamConsumerExecutor` segítségével.
 
 Egy-egy szálban végtelen ciklusban az algoritmus kérdezi a Redis-ből az üzeneteket.
 Első körben ellenőrzi hogy van-e megadott csoport és stream, ha nem létrehozza.
