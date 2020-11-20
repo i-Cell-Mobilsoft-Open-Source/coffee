@@ -19,25 +19,27 @@
  */
 package hu.icellmobilsoft.coffee.module.redisstream.consumer;
 
-import hu.icellmobilsoft.coffee.dto.exception.BaseException;
-import redis.clients.jedis.StreamEntry;
+import javax.enterprise.inject.spi.Bean;
 
 /**
- * Stream consumer interface
+ * Stream consumer executor interface
  * 
  * @author imre.scheffer
+ * @author czenczl
  * @since 1.3.0
  */
-public interface IRedisStreamConsumer {
+public interface IRedisStreamConsumerExecutor extends Runnable {
 
     /**
-     * A kapott uzenet uzleto logika kezelese
+     * Stream consumer executor inicializacioja
      * 
-     * @param streamEntry
-     *            stream message
-     * @throws BaseException
-     *             hiba eset
+     * @param redisConfigKey
+     *            kulcs ami a redis konfiguraciot celozza, @RedisConnection-ba hasznalja fel
+     * @param group
+     *            stream consumer group nev
+     * @param consumerBean
+     *            stream consumer bean
      */
-    void onStream(StreamEntry streamEntry) throws BaseException;
+    void init(String redisConfigKey, String group, Bean<? super IRedisStreamConsumer> consumerBean);
 
 }

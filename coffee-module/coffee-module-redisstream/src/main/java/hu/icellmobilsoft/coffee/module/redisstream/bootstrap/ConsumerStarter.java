@@ -26,13 +26,17 @@ import javax.enterprise.concurrent.ManagedExecutorService;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.Initialized;
 import javax.enterprise.event.Observes;
+import javax.enterprise.inject.Instance;
 import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
+import javax.enterprise.inject.spi.CDI;
 import javax.inject.Inject;
 
 import hu.icellmobilsoft.coffee.module.redisstream.annotation.RedisStreamConsumer;
 import hu.icellmobilsoft.coffee.module.redisstream.config.StreamGroupConfig;
 import hu.icellmobilsoft.coffee.module.redisstream.consumer.IRedisStreamConsumer;
+import hu.icellmobilsoft.coffee.module.redisstream.consumer.IRedisStreamConsumerExecutor;
+import hu.icellmobilsoft.coffee.module.redisstream.consumer.RedisStreamConsumerExecutor;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
 import hu.icellmobilsoft.coffee.tool.utils.annotation.AnnotationUtil;
 
@@ -77,18 +81,22 @@ public class ConsumerStarter {
         config.setConfigKey(redisStreamConsumerAnnotation.group());
         int threads = config.getConsumerThreadsCount().orElse(redisStreamConsumerAnnotation.consumerThreadsCount());
         // Letrehozunk annyi onnalo instance-t (dependent) amennyi a konfigban van megadva
+        Instance<RedisStreamConsumerExecutor> consumerExecutor = CDI.current().select(RedisStreamConsumerExecutor.class);
         for (int i = 0; i < threads; i++) {
-            IRedisStreamConsumer consumer = (IRedisStreamConsumer) bean.create(beanManager.createCreationalContext(null));
+            IRedisStreamConsumerExecutor executor = consumerExecutor.get();
+
             // kulon onnalo szalban inditjuk a vegtelen hallgatozo ciklust
-            startThread(consumer, redisStreamConsumerAnnotation);
+            startThread(executor, redisStreamConsumerAnnotation, bean);
         }
     }
 
-    private void startThread(IRedisStreamConsumer consumer, RedisStreamConsumer redisStreamConsumerAnnotation) {
-        consumer.init(redisStreamConsumerAnnotation.configKey(), redisStreamConsumerAnnotation.group());
-        log.info("Starting Redis stream consumer class [{0}] for configKey [{1}], group [{2}]...", consumer,
+    private void startThread(IRedisStreamConsumerExecutor executor, RedisStreamConsumer redisStreamConsumerAnnotation, Bean<?> bean) {
+        executor.init(redisStreamConsumerAnnotation.configKey(), redisStreamConsumerAnnotation.group(), (Bean<? super IRedisStreamConsumer>) bean);
+        log.info("Starting Redis stream consumer with executor, class [{0}] for configKey [{1}], group [{2}]...", bean.getBeanClass(),
                 redisStreamConsumerAnnotation.configKey(), redisStreamConsumerAnnotation.group());
-        managedExecutorService.submit(consumer);
-        log.info("consumer class [{0}] started.", consumer);
+
+        managedExecutorService.submit(executor);
+        log.info("consumer class [{0}] started.", bean.getBeanClass());
     }
+
 }
