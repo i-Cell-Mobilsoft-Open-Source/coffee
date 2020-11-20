@@ -19,6 +19,7 @@
  */
 package hu.icellmobilsoft.coffee.model.base.javatime.listener;
 
+import java.lang.annotation.Annotation;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -27,7 +28,6 @@ import java.time.OffsetTime;
 import java.time.ZoneId;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.deltaspike.data.impl.audit.AuditPropertyException;
@@ -36,7 +36,6 @@ import org.apache.deltaspike.data.impl.audit.PreUpdateAuditListener;
 import org.apache.deltaspike.data.impl.property.Property;
 import org.apache.deltaspike.data.impl.property.query.AnnotatedPropertyCriteria;
 import org.apache.deltaspike.data.impl.property.query.PropertyQueries;
-import org.apache.deltaspike.data.impl.property.query.PropertyQuery;
 
 import hu.icellmobilsoft.coffee.model.base.javatime.annotation.CreatedOn;
 import hu.icellmobilsoft.coffee.model.base.javatime.annotation.ModifiedOn;
@@ -56,34 +55,34 @@ public class TimestampsProvider implements PrePersistAuditListener, PreUpdateAud
     /** {@inheritDoc} */
     @Override
     public void prePersist(Object entity) {
-        updateTimestamps(entity, true);
+        updateTimestamps(entity, CreatedOn.class);
     }
 
     /** {@inheritDoc} */
     @Override
     public void preUpdate(Object entity) {
-        updateTimestamps(entity, false);
+        updateTimestamps(entity, ModifiedOn.class);
     }
 
-    private void updateTimestamps(Object entity, boolean create) {
-        long systime = System.currentTimeMillis();
-        List<Property<Object>> properties = new LinkedList<Property<Object>>();
-        PropertyQuery<Object> query = PropertyQueries.<Object> createQuery(entity.getClass())
-                .addCriteria(new AnnotatedPropertyCriteria(ModifiedOn.class));
-        properties.addAll(query.getWritableResultList());
-        if (create) {
-            query = PropertyQueries.<Object> createQuery(entity.getClass()).addCriteria(new AnnotatedPropertyCriteria(CreatedOn.class));
-            properties.addAll(query.getWritableResultList());
-        }
-        for (Property<Object> property : properties) {
-            setProperty(entity, property, create, systime);
+    private void updateTimestamps(Object entity, Class<? extends Annotation> annotationClass) {
+        long sysTime = System.currentTimeMillis();
+
+        List<Property<Object>> writableResultList = getWritableProperties(entity, annotationClass);
+        for (Property<Object> property : writableResultList) {
+            setProperty(entity, property, sysTime);
         }
     }
 
-    private void setProperty(Object entity, Property<Object> property, boolean create, long systime) {
-        Object value = systime;
+    private List<Property<Object>> getWritableProperties(Object entity, Class<? extends Annotation> annotationClass) {
+        return PropertyQueries.createQuery(entity.getClass())//
+                .addCriteria(new AnnotatedPropertyCriteria(annotationClass))//
+                .getWritableResultList();
+    }
+
+    private void setProperty(Object entity, Property<Object> property, long sysTime) {
+        Object value = sysTime;
         try {
-            value = now(property.getJavaClass(), systime);
+            value = now(property.getJavaClass(), sysTime);
             property.setValue(entity, value);
         } catch (Exception e) {
             throw new AuditPropertyException("Failed to write value [" + value + "] to property [" + property.getName() + "] on entity ["
