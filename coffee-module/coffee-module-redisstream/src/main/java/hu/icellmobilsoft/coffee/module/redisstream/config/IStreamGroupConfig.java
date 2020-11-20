@@ -58,4 +58,12 @@ public interface IStreamGroupConfig {
      *             Exception on read properties
      */
     Optional<Integer> getConsumerThreadsCount() throws BaseException;
+
+    /**
+     * Enable/Disable any part of stream function for any reason. This is only for project logic, no have direct use-case in coffee
+     * 
+     * @return true - enabled, default
+     * @throws BaseException
+     */
+    boolean isEnabled() throws BaseException;
 }
