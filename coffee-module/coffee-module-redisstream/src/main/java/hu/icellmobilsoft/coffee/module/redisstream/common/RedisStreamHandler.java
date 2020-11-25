@@ -26,6 +26,8 @@ import javax.enterprise.context.Dependent;
 import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 
+import org.apache.commons.lang3.StringUtils;
+
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.module.redisstream.config.IRedisStreamConstant;
@@ -77,7 +79,7 @@ public class RedisStreamHandler {
     }
 
     /**
-     * Publish (send) one message to stream.
+     * Publish (send) one message to stream calculated by initialized streamGroup name.
      * 
      * @param streamMessage
      *            Message in stream. Can be String or JSON
@@ -87,6 +89,31 @@ public class RedisStreamHandler {
      */
     public StreamEntryID publish(String streamMessage) throws BaseException {
         checkInitialization();
+        return publishBase(streamGroup, streamMessage);
+    }
+
+    /**
+     * Publish (send) one message to stream calculated by input streamGroup name.
+     * 
+     * @param streamGroup
+     *            stream group to send (another than initialized)
+     * @param streamMessage
+     *            Message in stream. Can be String or JSON
+     * @return Stream message object
+     * @throws BaseException
+     *             exception on sending
+     */
+    public StreamEntryID publish(String streamGroup, String streamMessage) throws BaseException {
+        if (jedisInstance == null) {
+            throw new TechnicalException("RedisStreamHandler is not initialized!");
+        }
+        if (StringUtils.isBlank(streamGroup)) {
+            throw new TechnicalException("Input of custom streamGroup is null!");
+        }
+        return publishBase(streamGroup, streamMessage);
+    }
+
+    protected StreamEntryID publishBase(String streamGroup, String streamMessage) throws BaseException {
         Map<String, String> keyValues = new HashMap<>();
         keyValues.put(IRedisStreamConstant.Common.DATA_KEY_MESSAGE, streamMessage);
         Jedis jedis = null;

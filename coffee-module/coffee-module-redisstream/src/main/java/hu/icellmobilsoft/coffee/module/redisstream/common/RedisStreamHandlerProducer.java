@@ -35,7 +35,7 @@ import redis.clients.jedis.Jedis;
  * RedisStreamHandler producer for easy usage
  * 
  * @author imre.scheffer
- *
+ * @since 1.3.0
  */
 @ApplicationScoped
 public class RedisStreamHandlerProducer {

@@ -31,6 +31,8 @@ import java.util.Objects;
 import java.util.Optional;
 
 import javax.enterprise.context.Dependent;
+import javax.enterprise.inject.Instance;
+import javax.enterprise.inject.spi.CDI;
 import javax.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
@@ -376,5 +378,14 @@ public class RedisStreamService implements Closeable {
     public void setGroup(String group) {
         this.group = group;
         config.setConfigKey(group);
+    }
+
+    /**
+     * Get CDI instance
+     * 
+     * @return Dependent instance of RedisStreamService
+     */
+    public static Instance<RedisStreamService> instance() {
+        return CDI.current().select(RedisStreamService.class);
     }
 }
