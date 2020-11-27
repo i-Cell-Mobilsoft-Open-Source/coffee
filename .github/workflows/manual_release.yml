@@ -37,6 +37,9 @@ jobs:
   release_job:
     name: Maven release
 
+    # Permission ellenorzes https://github.community/t/who-has-permission-to-workflow-dispatch/133981
+    if: contains('["rombow"]', github.actor)
+
     runs-on: ubuntu-latest
 
     steps:
