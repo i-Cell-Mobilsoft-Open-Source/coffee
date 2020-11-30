@@ -21,17 +21,18 @@ package hu.icellmobilsoft.coffee.module.redisstream.bootstrap;
 
 import java.util.Set;
 
-import javax.annotation.Resource;
 import javax.enterprise.concurrent.ManagedExecutorService;
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.context.Initialized;
 import javax.enterprise.event.Observes;
 import javax.enterprise.inject.Instance;
+import javax.enterprise.inject.spi.AfterDeploymentValidation;
 import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.inject.spi.CDI;
-import javax.inject.Inject;
+import javax.enterprise.inject.spi.Extension;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 
+import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.module.redisstream.annotation.RedisStreamConsumer;
 import hu.icellmobilsoft.coffee.module.redisstream.config.StreamGroupConfig;
 import hu.icellmobilsoft.coffee.module.redisstream.consumer.IRedisStreamConsumer;
@@ -47,35 +48,45 @@ import hu.icellmobilsoft.coffee.tool.utils.annotation.AnnotationUtil;
  * @since 1.3.0
  *
  */
-@ApplicationScoped
-public class ConsumerStarter {
+public class ConsumerStarter implements Extension {
 
-    @Inject
-    private Logger log;
+    private static final Logger LOG = Logger.getLogger(ConsumerStarter.class);
 
-    @Resource
     private ManagedExecutorService managedExecutorService;
 
-    @Inject
-    private StreamGroupConfig config;
-
-    @Inject
-    private BeanManager beanManager;
-
     /**
-     * After initialized all ApplicationScoped beans
+     * After deployment validation
      * 
-     * @param init
+     * @param adv
      *            object, not relevant
      */
-    public void begin(@Observes @Initialized(ApplicationScoped.class) Object init) {
+    void validate(@Observes AfterDeploymentValidation adv, BeanManager beanManager) {
+        LOG.debug("Checking consumer for RedisStreamConsumer...");
         // kiszedjuk az osszes olyan osztalyt, ami a IRedisStreamConsumer interfeszt implementalja
         Set<Bean<?>> beans = beanManager.getBeans(IRedisStreamConsumer.class, RedisStreamConsumer.LITERAL);
-        beans.stream().forEach(this::handleConsumerBean);
+        LOG.info("Found [{0}] RedisStreamConsumer bean...", beans.size());
+        if (!beans.isEmpty()) {
+            Instance<StreamGroupConfig> iconfig = beanManager.createInstance().select(StreamGroupConfig.class);
+            StreamGroupConfig config = iconfig.get();
+            initManagedExecutorService(adv);
+            if (managedExecutorService == null) {
+                return;
+            }
+            beans.stream().forEach((bean) -> handleConsumerBean(bean, config));
+            iconfig.destroy(config);
+        }
     }
 
-    private void handleConsumerBean(Bean<?> bean) {
-        log.info("Found consumer: [{0}]", bean.getBeanClass());
+    private void initManagedExecutorService(AfterDeploymentValidation adv) {
+        try {
+            managedExecutorService = (ManagedExecutorService) InitialContext.doLookup("java:jboss/ee/concurrency/executor/default");
+        } catch (NamingException e) {
+            adv.addDeploymentProblem(new BaseException("Can't get ManagedExecutorService", e));
+        }
+    }
+
+    private void handleConsumerBean(Bean<?> bean, StreamGroupConfig config) {
+        LOG.debug("Handling [{0}] bean", bean.getBeanClass());
         RedisStreamConsumer redisStreamConsumerAnnotation = AnnotationUtil.getAnnotation(bean.getBeanClass(), RedisStreamConsumer.class);
         // a coffee.redisstream beallitasok kellenek, annal a group a kulcs
         config.setConfigKey(redisStreamConsumerAnnotation.group());
@@ -90,13 +101,13 @@ public class ConsumerStarter {
         }
     }
 
+    @SuppressWarnings("unchecked")
     private void startThread(IRedisStreamConsumerExecutor executor, RedisStreamConsumer redisStreamConsumerAnnotation, Bean<?> bean) {
         executor.init(redisStreamConsumerAnnotation.configKey(), redisStreamConsumerAnnotation.group(), (Bean<? super IRedisStreamConsumer>) bean);
-        log.info("Starting Redis stream consumer with executor, class [{0}] for configKey [{1}], group [{2}]...", bean.getBeanClass(),
+        LOG.info("Starting Redis stream consumer with executor, class [{0}] for configKey [{1}], group [{2}]...", bean.getBeanClass(),
                 redisStreamConsumerAnnotation.configKey(), redisStreamConsumerAnnotation.group());
 
         managedExecutorService.submit(executor);
-        log.info("consumer class [{0}] started.", bean.getBeanClass());
+        LOG.info("consumer class [{0}] started.", bean.getBeanClass());
     }
-
 }
