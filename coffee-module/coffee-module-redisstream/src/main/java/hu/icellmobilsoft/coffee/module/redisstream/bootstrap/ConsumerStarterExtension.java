@@ -42,15 +42,16 @@ import hu.icellmobilsoft.coffee.se.logging.Logger;
 import hu.icellmobilsoft.coffee.tool.utils.annotation.AnnotationUtil;
 
 /**
- * Create Redis stream consumer in separate threads
+ * Create Redis stream consumer in separate threads. This way have some limits, like JNDI access. This class can be activated by
+ * <code>META-INF/services/javax.enterprise.inject.spi.Extension</code> file
  * 
  * @author imre.scheffer
  * @since 1.3.0
  *
  */
-public class ConsumerStarter implements Extension {
+public class ConsumerStarterExtension implements Extension {
 
-    private static final Logger LOG = Logger.getLogger(ConsumerStarter.class);
+    private static final Logger LOG = Logger.getLogger(ConsumerStarterExtension.class);
 
     private ManagedExecutorService managedExecutorService;
 
