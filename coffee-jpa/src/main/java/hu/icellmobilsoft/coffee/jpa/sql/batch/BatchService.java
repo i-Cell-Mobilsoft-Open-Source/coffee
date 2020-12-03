@@ -90,6 +90,7 @@ public class BatchService {
      * input validalas.
      * 
      * @param entities
+     *            - validalni kivant collection
      * @throws BaseException
      */
     protected void validateInput(Collection<?> entities) throws BaseException {
@@ -103,10 +104,13 @@ public class BatchService {
     }
 
     /**
-     * Hibarnate batch mentes. Ezt akkor erdemes hasznalni, amikor a memoria optimalizalas vegett tul sokat kell menteni, de hibernate-en keresztul.
+     * Hibernate batch mentes. Ezt akkor erdemes hasznalni, amikor a memoria optimalizalas vegett tul sokat kell menteni, de hibernate-en keresztul.
      * Mentesi sebessegen nem gyorsit, de a memoria igenyeket jocskan lejebb viszi
      *
+     * @param <E>
+     *            - entitas tipusa
      * @param entities
+     *            - merge-olni kivant collection
      * @throws BaseException
      */
     public <E> List<String> batchMerge(Collection<E> entities) throws BaseException {
@@ -160,7 +164,9 @@ public class BatchService {
      * klasszikus-an folyik. Nagyon gyors a mentes, kicsi memoria hasznalattal
      *
      * @param entities
+     *            - merge-olni kivant collection
      * @param clazz
+     *            - a collection-ben levo osztalyok tipusa
      * @throws BaseException
      * @see #batchInsertNative(List, Class)
      * @see #batchUpdateNative(List, Class)
@@ -182,8 +188,12 @@ public class BatchService {
      * Klasszikus PreparedStatement alapon mukododo batch update mentes. A SQL osszeallitasara a hibernate dolgai vannak felhasznalva, de a futas mar
      * klasszikus-an folyik. Nagyon gyors a mentes, kicsi memoria hasznalattal
      *
+     * @param <E>
+     *            - entitas tipusa
      * @param entities
+     *            - update-elni kivant collection
      * @param clazz
+     *            - a collection-ben levo osztalyok tipusa
      * @throws BaseException
      */
     public <E> Map<String, Status> batchUpdateNative(Collection<E> entities, Class<E> clazz) throws BaseException {
@@ -276,8 +286,12 @@ public class BatchService {
      * Klasszikus PreparedStatement alapon mukododo batch insert mentes. A SQL osszeallitasara a hibernate dolgai vannak felhasznalva, de a futas mar
      * klasszikus-an folyik. Nagyon gyors a mentes, kicsi memoria hasznalattal
      *
+     * @param <E>
+     *            - entitas tipusa
      * @param entities
+     *            - insertalni kivant collection
      * @param clazz
+     *            - a collection-ben levo osztalyok tipusa
      * @throws BaseException
      */
     public <E> Map<String, Status> batchInsertNative(Collection<E> entities, Class<E> clazz) throws BaseException {
@@ -361,8 +375,12 @@ public class BatchService {
      * Klasszikus PreparedStatement alapon mukododo batch delete. A SQL osszeallitasara a hibernate dolgai vannak felhasznalva, de a futas mar
      * klasszikus-an folyik. Nagyon gyors a törlés, kicsi memoria hasznalattal
      *
+     * @param <E>
+     *            - entitas tipusa
      * @param entities
+     *            - torolni kivant collection
      * @param clazz
+     *            - a collection-ben levo osztalyok tipusa
      * @throws BaseException
      */
     public <E> Map<String, Status> batchDeleteNative(Collection<E> entities, Class<E> clazz) throws BaseException {
@@ -438,9 +456,13 @@ public class BatchService {
      * Parameterek beallitasa az update szamara.
      * 
      * @param <E>
+     *            - entitas tipusa
      * @param ps
+     *            - beallitando preparedStatement
      * @param persister
+     *            - persister
      * @param entity
+     *            - modositani kivant entitas
      * @throws SQLException
      */
     protected <E> void setParametersForUpdate(PreparedStatement ps, SingleTableEntityPersister persister, E entity) throws SQLException {
@@ -469,9 +491,13 @@ public class BatchService {
      * Parameterek beallitasa az insert szamara.
      * 
      * @param <E>
+     *            - entitas tipusa
      * @param ps
+     *            - beallitando preparedStatement
      * @param persister
+     *            - persister
      * @param entity
+     *            - beszurni kivant entitas
      * @throws SQLException
      */
     protected <E> void setParametersForInsert(PreparedStatement ps, SingleTableEntityPersister persister, E entity) throws SQLException {
@@ -505,9 +531,13 @@ public class BatchService {
      * 
      * @param <E>
      * @param ps
+     *            - beallitando preparedStatement
      * @param parameterIndex
+     *            - parameter indexe
      * @param type
+     *            - parameter tipusa
      * @param value
+     *            - parameter erteke
      * @throws SQLException
      */
     protected <E> void setPsObject(PreparedStatement ps, int parameterIndex, Type type, Object value) throws SQLException {
@@ -536,7 +566,9 @@ public class BatchService {
      * Audit bejegyzes beszurasanak kezelese
      * 
      * @param <E>
+     *            - entitas tipusa
      * @param entity
+     *            - entitas
      */
     protected <E> void handleInsertAudit(E entity) {
     }
@@ -545,7 +577,9 @@ public class BatchService {
      * Audit bejegyzes modositasanak kezelese.
      * 
      * @param <E>
+     *            - entitas tipusa
      * @param entity
+     *            - entitas
      */
     protected <E> void handleUpdateAudit(E entity) {
     }
@@ -569,9 +603,10 @@ public class BatchService {
     }
 
     /**
-     * Szerver ido visszadasa <code>java.sql.Timestamp</code>-kent
+     * Parameterkent kapott <code>java.util.Date</code> visszadasa <code>java.sql.Timestamp</code>-kent
      * 
      * @param date
+     *            - datum
      * @return
      */
     public static Timestamp getTimestamp(Date date) {
@@ -591,6 +626,7 @@ public class BatchService {
      * Setter for the field <code>sqlPostfix</code>.
      * 
      * @param sqlPostfix
+     *            - postfix
      */
     public void setSqlPostfix(String sqlPostfix) {
         this.sqlPostfix = sqlPostfix;
@@ -600,6 +636,7 @@ public class BatchService {
      * Entity id visszadasa.
      * 
      * @param entity
+     *            - entitas
      * @return
      */
     protected String getId(Object entity) {
