@@ -25,6 +25,7 @@ import java.sql.Statement;
 import java.sql.Timestamp;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -86,9 +87,12 @@ public class BatchService {
     private String sqlPostfix;
 
     /**
-     * <p>validateInput.</p>
+     * input validalas.
+     * 
+     * @param entities
+     * @throws BaseException
      */
-    protected void validateInput(List<?> entities) throws BaseException {
+    protected void validateInput(Collection<?> entities) throws BaseException {
         if (entities == null) {
             log.warn("entities is null skipped to save!");
             throw new BaseException("entity is null!");
@@ -105,13 +109,13 @@ public class BatchService {
      * @param entities
      * @throws BaseException
      */
-    public <E> List<String> batchMerge(List<E> entities) throws BaseException {
+    public <E> List<String> batchMerge(Collection<E> entities) throws BaseException {
         validateInput(entities);
         if (entities.isEmpty()) {
             return Collections.emptyList();
         }
 
-        String entityName = entities.get(0).getClass().getSimpleName();
+        String entityName = entities.iterator().next().getClass().getSimpleName();
         log.debug(">> batchMerge: [{0}] list of [{1}] elements", entityName, entities.size());
         StatelessSession statelessSession = null;
         try {
@@ -161,7 +165,7 @@ public class BatchService {
      * @see #batchInsertNative(List, Class)
      * @see #batchUpdateNative(List, Class)
      */
-    public <E> Map<String, Status> batchMergeNative(List<E> entities, Class<E> clazz) throws BaseException {
+    public <E> Map<String, Status> batchMergeNative(Collection<E> entities, Class<E> clazz) throws BaseException {
         validateInput(entities);
         if (entities.isEmpty()) {
             return Collections.emptyMap();
@@ -182,12 +186,12 @@ public class BatchService {
      * @param clazz
      * @throws BaseException
      */
-    public <E> Map<String, Status> batchUpdateNative(List<E> entities, Class<E> clazz) throws BaseException {
+    public <E> Map<String, Status> batchUpdateNative(Collection<E> entities, Class<E> clazz) throws BaseException {
         validateInput(entities);
         if (entities.isEmpty()) {
             return Collections.emptyMap();
         }
-        String entityName = entities.get(0).getClass().getSimpleName();
+        String entityName = entities.iterator().next().getClass().getSimpleName();
         log.debug(">> batchMerge: [{0}] list of [{1}] elements", entityName, entities.size());
 
         Map<String, Status> result = new HashMap<>();
@@ -276,12 +280,12 @@ public class BatchService {
      * @param clazz
      * @throws BaseException
      */
-    public <E> Map<String, Status> batchInsertNative(List<E> entities, Class<E> clazz) throws BaseException {
+    public <E> Map<String, Status> batchInsertNative(Collection<E> entities, Class<E> clazz) throws BaseException {
         validateInput(entities);
         if (entities.isEmpty()) {
             return Collections.emptyMap();
         }
-        String entityName = entities.get(0).getClass().getSimpleName();
+        String entityName = entities.iterator().next().getClass().getSimpleName();
         log.debug(">> batchInsertNative: [{0}] list of [{1}] elements", entityName, entities.size());
 
         Map<String, Status> result = new HashMap<>();
@@ -361,12 +365,12 @@ public class BatchService {
      * @param clazz
      * @throws BaseException
      */
-    public <E> Map<String, Status> batchDeleteNative(List<E> entities, Class<E> clazz) throws BaseException {
+    public <E> Map<String, Status> batchDeleteNative(Collection<E> entities, Class<E> clazz) throws BaseException {
         validateInput(entities);
         if (entities.isEmpty()) {
             return Collections.emptyMap();
         }
-        String entityName = entities.get(0).getClass().getSimpleName();
+        String entityName = entities.iterator().next().getClass().getSimpleName();
         log.debug(">> batchDeleteNative: [{0}] list of [{1}] elements", entityName, entities.size());
 
         Map<String, Status> result = new HashMap<>();
@@ -431,7 +435,13 @@ public class BatchService {
     }
 
     /**
-     * <p>setParametersForUpdate.</p>
+     * Parameterek beallitasa az update szamara.
+     * 
+     * @param <E>
+     * @param ps
+     * @param persister
+     * @param entity
+     * @throws SQLException
      */
     protected <E> void setParametersForUpdate(PreparedStatement ps, SingleTableEntityPersister persister, E entity) throws SQLException {
         int i = 1;
@@ -456,7 +466,13 @@ public class BatchService {
     }
 
     /**
-     * <p>setParametersForInsert.</p>
+     * Parameterek beallitasa az insert szamara.
+     * 
+     * @param <E>
+     * @param ps
+     * @param persister
+     * @param entity
+     * @throws SQLException
      */
     protected <E> void setParametersForInsert(PreparedStatement ps, SingleTableEntityPersister persister, E entity) throws SQLException {
         int i = 1;
@@ -485,7 +501,14 @@ public class BatchService {
     }
 
     /**
-     * <p>setPsObject.</p>
+     * setPsObject.
+     * 
+     * @param <E>
+     * @param ps
+     * @param parameterIndex
+     * @param type
+     * @param value
+     * @throws SQLException
      */
     protected <E> void setPsObject(PreparedStatement ps, int parameterIndex, Type type, Object value) throws SQLException {
         // enumokat le kell kezelni
@@ -502,7 +525,6 @@ public class BatchService {
         } else if (type instanceof TimestampType) {
             ps.setObject(parameterIndex, value, TimestampType.INSTANCE.sqlType());
         } else if (type instanceof ManyToOneType) {
-            ManyToOneType m = (ManyToOneType) type;
             E manyToOneEntity = (E) value;
             ps.setObject(parameterIndex, manyToOneEntity != null ? EntityHelper.getLazyId(manyToOneEntity) : null);
         } else {
@@ -511,54 +533,74 @@ public class BatchService {
     }
 
     /**
-     * <p>handleInsertAudit.</p>
+     * Audit bejegyzes beszurasanak kezelese
+     * 
+     * @param <E>
+     * @param entity
      */
     protected <E> void handleInsertAudit(E entity) {
     }
 
     /**
-     * <p>handleUpdateAudit.</p>
+     * Audit bejegyzes modositasanak kezelese.
+     * 
+     * @param <E>
+     * @param entity
      */
     protected <E> void handleUpdateAudit(E entity) {
     }
 
     /**
-     * <p>generateId.</p>
+     * ID generalas
+     * 
+     * @return
      */
     protected String generateId() {
         return RandomUtil.generateId();
     }
 
     /**
-     * <p>batchSize.</p>
+     * Batch merete
+     * 
+     * @return
      */
     protected int batchSize() {
         return BATCH_SIZE;
     }
 
     /**
-     * <p>getTimestamp.</p>
+     * Szerver ido visszadasa <code>java.sql.Timestamp</code>-kent
+     * 
+     * @param date
+     * @return
      */
     public static Timestamp getTimestamp(Date date) {
         return date == null ? null : new java.sql.Timestamp(date.getTime());
     }
 
     /**
-     * <p>Getter for the field <code>sqlPostfix</code>.</p>
+     * Getter for the field <code>sqlPostfix</code>.
+     * 
+     * @return
      */
     public String getSqlPostfix() {
         return sqlPostfix;
     }
 
     /**
-     * <p>Setter for the field <code>sqlPostfix</code>.</p>
+     * Setter for the field <code>sqlPostfix</code>.
+     * 
+     * @param sqlPostfix
      */
     public void setSqlPostfix(String sqlPostfix) {
         this.sqlPostfix = sqlPostfix;
     }
 
     /**
-     * <p>getId.</p>
+     * Entity id visszadasa.
+     * 
+     * @param entity
+     * @return
      */
     protected String getId(Object entity) {
         return (String) entityManager.getEntityManagerFactory().getPersistenceUnitUtil().getIdentifier(entity);
@@ -582,17 +624,17 @@ public class BatchService {
                 result.put(entityIds.get(i), Status.SUCCESS.setRowsAffected(resultCode));
             } else {
                 switch (resultCode) {
-                    case 0:
-                        result.put(entityIds.get(i), Status.SUCCESS_NO_UPDATE);
-                        break;
-                    case Statement.SUCCESS_NO_INFO:
-                        result.put(entityIds.get(i), Status.SUCCESS_NO_INFO);
-                        break;
-                    case Statement.EXECUTE_FAILED:
-                        result.put(entityIds.get(i), Status.EXECUTE_FAILED);
-                        break;
-                    default:
-                        result.put(entityIds.get(i), Status.UNKNOWN);
+                case 0:
+                    result.put(entityIds.get(i), Status.SUCCESS_NO_UPDATE);
+                    break;
+                case Statement.SUCCESS_NO_INFO:
+                    result.put(entityIds.get(i), Status.SUCCESS_NO_INFO);
+                    break;
+                case Statement.EXECUTE_FAILED:
+                    result.put(entityIds.get(i), Status.EXECUTE_FAILED);
+                    break;
+                default:
+                    result.put(entityIds.get(i), Status.UNKNOWN);
                 }
             }
         }

@@ -25,6 +25,13 @@ A változtatások nem eredményeznek átállási munkálatokat, visszafelé komp
 
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
 
+=== coffee-jpa
+* BatchService osztályban az inputként érkező `List` típusok `Collection`-re cserélése
+
+==== Átállás
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
 === coffee-rest
 
 * `RequestResponseLogger#printEntity(byte[], Integer, String)` megfelelően adja vissza a logüzenetet, ha a byte tömb paramétere (entity) null vagy üres.
