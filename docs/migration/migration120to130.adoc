@@ -53,5 +53,5 @@ A változtatások nem eredményeznek átállási munkálatokat, visszafelé komp
 * `etcd.default.url` -> `coffee.etcd.default.url` konfigurációs kulcs változtatás.
 
 ==== Átállás
-A Wildfly Swarm konfigurációban ki kell egészíteni az `etcd.default.url` kulcsot a `coffee.` prefix-szel.
+A konfigurációban felvett `etcd.default.url` kulcsot ki kell egészíteni `coffee.` prefix-szel.
 

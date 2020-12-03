@@ -7,7 +7,7 @@ Az projekt a konfigurációkat tárolhatja ETCD-ben. Ennek kezelésére már ren
 Az ETCD konfigurációk használatba vételéhez az coffee-module-etcd modult húzzuk be függőségként.
 Ez szolgáltatja majd a konfigurációkezeléshez szükséges segédosztályokat,
 valamint tartalmaz egy `EtcdConfig` implementációt, ami azt határozza meg,
-hogy a Wildfly Swarm konfigurációjában meghatározott `coffee.etcd.default.url`
+hogy a konfigurációban felvett `coffee.etcd.default.url`
 (hu.icellmobilsoft.coffee.module.etcd.config.DefaultEtcdConfigImpl osztályban található)
 property lesz az ETCD elérhetősége.
 
