@@ -34,7 +34,7 @@ import hu.icellmobilsoft.coffee.tool.utils.config.ConfigUtil;
 @Dependent
 public class DefaultEtcdConfigImpl implements EtcdConfig {
 
-    private String urlKey = "etcd.default.url";
+    private String urlKey = "coffee.etcd.default.url";
 
     /** {@inheritDoc} */
     @Override

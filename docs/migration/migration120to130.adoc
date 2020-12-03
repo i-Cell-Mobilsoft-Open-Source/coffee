@@ -49,3 +49,9 @@ A változtatások nem eredményeznek átállási munkálatokat, visszafelé komp
 ==== Átállás
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
 
+=== coffee-module-etcd
+* `etcd.default.url` -> `coffee.etcd.default.url` konfigurációs kulcs változtatás.
+
+==== Átállás
+A Wildfly Swarm konfigurációban ki kell egészíteni az `etcd.default.url` kulcsot a `coffee.` prefix-szel.
+
