@@ -56,3 +56,9 @@ A változtatások nem eredményeznek átállási munkálatokat, visszafelé komp
 ==== Átállás
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
 
+=== coffee-module-etcd
+* `etcd.default.url` -> `coffee.etcd.default.url` konfigurációs kulcs változtatás.
+
+==== Átállás
+A konfigurációban felvett `etcd.default.url` kulcsot ki kell egészíteni `coffee.` prefix-szel.
+
