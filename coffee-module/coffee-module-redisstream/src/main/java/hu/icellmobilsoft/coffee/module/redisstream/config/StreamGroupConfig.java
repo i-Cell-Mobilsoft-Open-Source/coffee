@@ -33,6 +33,7 @@ import org.eclipse.microprofile.config.Config;
  * <pre>
  * coffee:
  *   redisstream:
+ *     enabled: true
  *     sampleGroup:
  *       stream:
  *         maxlen: 10
@@ -74,6 +75,11 @@ public class StreamGroupConfig implements IStreamGroupConfig {
      */
     public static final String CONSUMER_THREADS_COUNT = "consumer.threadsCount";
 
+    /**
+     * Default true {@link #isEnabled()}}
+     */
+    public static final String ENABLED = "enabled";
+
     @Inject
     private Config config;
 
@@ -92,6 +98,11 @@ public class StreamGroupConfig implements IStreamGroupConfig {
     @Override
     public Optional<Integer> getConsumerThreadsCount() {
         return config.getOptionalValue(joinKey(CONSUMER_THREADS_COUNT), Integer.class);
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return config.getOptionalValue(joinKey(ENABLED), Boolean.class).orElse(true);
     }
 
     /**

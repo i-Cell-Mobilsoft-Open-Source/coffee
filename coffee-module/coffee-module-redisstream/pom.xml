@@ -16,6 +16,11 @@
 			<artifactId>coffee-module-redis</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>hu.icellmobilsoft.coffee</groupId>
+			<artifactId>coffee-rest</artifactId>
+		</dependency>
+
+		<dependency>
 			<groupId>org.jboss.weld</groupId>
 			<artifactId>weld-api</artifactId>
 			<version>3.0.Final</version>
