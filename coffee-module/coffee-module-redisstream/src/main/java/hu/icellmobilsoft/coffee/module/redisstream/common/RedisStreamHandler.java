@@ -28,12 +28,14 @@ import javax.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
 
+import hu.icellmobilsoft.coffee.dto.common.LogConstants;
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.module.redisstream.config.IRedisStreamConstant;
 import hu.icellmobilsoft.coffee.module.redisstream.config.IStreamGroupConfig;
 import hu.icellmobilsoft.coffee.module.redisstream.config.StreamGroupConfig;
 import hu.icellmobilsoft.coffee.module.redisstream.service.RedisStreamService;
+import hu.icellmobilsoft.coffee.se.logging.mdc.MDC;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.StreamEntryID;
 
@@ -115,6 +117,7 @@ public class RedisStreamHandler {
 
     protected StreamEntryID publishBase(String streamGroup, String streamMessage) throws BaseException {
         Map<String, String> keyValues = new HashMap<>();
+        keyValues.put(IRedisStreamConstant.Common.DATA_KEY_FLOW_ID, MDC.get(LogConstants.LOG_SESSION_ID));
         keyValues.put(IRedisStreamConstant.Common.DATA_KEY_MESSAGE, streamMessage);
         Jedis jedis = null;
         try {
