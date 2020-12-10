@@ -34,7 +34,6 @@ import javax.enterprise.util.AnnotationLiteral;
  * @author czenczl
  * @since 1.3.0
  */
-
 @Retention(RUNTIME)
 @Target({ ANNOTATION_TYPE, TYPE })
 public @interface Traceable {
