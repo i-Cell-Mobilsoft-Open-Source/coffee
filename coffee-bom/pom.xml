@@ -255,6 +255,11 @@
 			</dependency>
 			<dependency>
 				<groupId>hu.icellmobilsoft.coffee</groupId>
+				<artifactId>coffee-module-mp-opentracing</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>hu.icellmobilsoft.coffee</groupId>
 				<artifactId>coffee-module-totp</artifactId>
 				<version>${project.version}</version>
 			</dependency>

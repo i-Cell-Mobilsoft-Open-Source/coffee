@@ -45,6 +45,7 @@ A változtatások nem eredményeznek átállási munkálatokat, visszafelé komp
 === coffee-module-mp-restclient
 
 * `DefaultLoggerClientResponseFilter#logEntity` megfelelően logolja, ha a válaszban nincs entity.
+* `RestClientPriority#REQUEST_LOG` priority Priorities.AUTHENTICATION -> Priorities.HEADER_DECORATOR + 100, igy trace információkat is logolunk.
 
 ==== Átállás
 
@@ -62,3 +63,8 @@ A változtatások nem eredményeznek átállási munkálatokat, visszafelé komp
 ==== Átállás
 A konfigurációban felvett `etcd.default.url` kulcsot ki kell egészíteni `coffee.` prefix-szel.
 
+=== coffee-module-opentracing
+* Új modul, bővebb infó a leírásban.
+
+=== coffee-cdi
+* Új annotáció: `hu.icellmobilsoft.coffee.cdi.trace.annotation.Traceable`, bővebb infó a leírásban.

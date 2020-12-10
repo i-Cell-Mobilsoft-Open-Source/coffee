@@ -1,0 +1,14 @@
+[#common_core_coffee-cdi_trace]
+= Trace
+
+A `@Traceable` annotáción keresztül lehetőséget biztosít a moduloknak hogy trace információt szolgáltassanak.
+A class összes metódusa trace-elhetővé válik.
+
+.minta 
+[source,java]
+----
+@Traceable
+public class ConfigEtcdHandler {
+...
+}
+----

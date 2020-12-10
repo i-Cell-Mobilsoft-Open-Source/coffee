@@ -1,0 +1,70 @@
+[#common_module_coffee-module-mp-restclient]
+= coffee-module-mp-opentracing
+
+A modul célja a microprofile opentracing támogatása mely tartalmazza a következő alapelveket:
+
+* Coffee kompatibilizás - lehetőséget biztosít hogy a coffee moduljai trace információkat szolgáltassanak.
+* Metrika és logolást egészíti ki a teljes observability érdekében.
+* Jelenleg sajat osztalyokat használunk mivel nem lehet extension szinten jól kezelni azt hogy melyik komponens adjon trace információkat.
+
+== microprofile-opentracing
+Alapja a https://github.com/eclipse/microprofile-opentracing valamint a
+https://github.com/opentracing-contrib/java-interceptors projekt.
+Az `org.eclipse.microprofile.opentracing.Traced` annotáció helyett saját bindingot használunk, mivel jelenleg a beépített interceptor
+nem tudja felolvasni a dinamikusan hozzáadott InterceptorBindingot.
+
+== Core
+Az extension azokat a classokat amik `@Traceable` annotációval vannak jelölve, megkapják a `hu.icellmobilsoft.coffee.module.mp.opentracing.extension.Traced` bindingot.
+Ezt használja fel az `OpenTraceInterceptor`. Ezzel a megoldással később könnyen lehet cserélni/módosítani a trace interceptor működését.
+
+=== coffee-module-etcd trace
+A `ConfigEtcdHandler` lett annotálva, az ebben lévő metódushívások adnak trace adatot.
+
+
+=== OpenTraceErrorResponseFilter
+Azok a rest operációk amik HTTP500, vagy magasabb hibakódot adnak, nem látszanak a trace-ben hibásnak.
+Ez a filter kellene kezelje, de ez jelenleg exception alapú, ami a resten nem fog megtörténni.
+https://github.com/opentracing-contrib/java-jaxrs/blob/master/opentracing-jaxrs2/src/main/java/io/opentracing/contrib/jaxrs2/server/SpanFinishingFilter.java
+A filter feladata hogy ezt az esetet lekezelje.
+
+
+=== Thorntail alapú projekt konfig
+Default a Jaeger trace implementációt használja.
+https://docs.thorntail.io/2.5.0.Final/#_jaeger
+
+
+.project-defaults.yml
+[source,yaml]
+----
+thorntail:
+    jaeger:
+        service-name: ${service.name}
+        sampler-type: const #There are 4 supported type: 'const', 'probabilistic', 'ratelimiting' and 'remote'.
+        sampler-parameter: 1 #For a 'Constant' sampler 0 means no trace and 1 means all traces.
+        remote-reporter-http-endpoint: 'http://jaeger-collector.istio-system:14268/api/traces'
+----
+.pom.xml
+----
+<dependency>
+    <groupId>hu.icellmobilsoft.coffee</groupId>
+    <artifactId>coffee-module-mp-opentracing</artifactId>
+</dependency>
+<dependency>
+    <groupId>io.thorntail</groupId>
+    <artifactId>microprofile-opentracing</artifactId>
+</dependency>
+<dependency>
+    <groupId>io.thorntail</groupId>
+    <artifactId>jaeger</artifactId>
+</dependency>
+----
+=== Wildfly alapú projekt konfig
+Default a Jaeger trace implementációt használja.
+https://docs.wildfly.org/20/wildscribe/subsystem/microprofile-opentracing-smallrye/jaeger-tracer/index.html
+.pom.xml
+----
+<dependency>
+    <groupId>hu.icellmobilsoft.coffee</groupId>
+    <artifactId>coffee-module-mp-opentracing</artifactId>
+</dependency>
+----

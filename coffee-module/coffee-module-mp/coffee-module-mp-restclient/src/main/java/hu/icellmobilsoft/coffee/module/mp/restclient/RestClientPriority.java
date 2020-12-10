@@ -32,7 +32,7 @@ public interface RestClientPriority {
     /**
      * HTTP REST Client request loggolas
      */
-    static final int REQUEST_LOG = Priorities.AUTHENTICATION;
+    static final int REQUEST_LOG = Priorities.HEADER_DECORATOR + 100;
 
     /**
      * HTTP REST Client setting - sessionId, user, stb beallitasok

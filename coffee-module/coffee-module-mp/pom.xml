@@ -11,6 +11,7 @@
 
 	<modules>
 		<module>coffee-module-mp-restclient</module>
+		<module>coffee-module-mp-opentracing</module>
 	</modules>
 
 	<dependencyManagement>
