@@ -21,6 +21,7 @@ package hu.icellmobilsoft.coffee.module.etcd.service;
 
 import java.io.Serializable;
 import java.nio.charset.StandardCharsets;
+import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -79,8 +80,7 @@ public class BaseEtcdService<T> implements Serializable {
             ByteSequence bsKey = ByteSequence.from(key, StandardCharsets.UTF_8);
             GetResponse response = etcdRepository.get(bsKey).get();
             if (response.getCount() < 1) {
-                log.trace("etcd: getting key [{0}], value NOT FOUND, response: [{1}]", key, response);
-                throw new BONotFoundException("Etcd data not found for key [" + key + "]!");
+                throw new BONotFoundException(MessageFormat.format("Etcd data not found for key [{0}], response: [{1}]", key, response));
             }
             String stringData = response.getKvs().get(0).getValue().toString(StandardCharsets.UTF_8);
             String responseStr = replaceSensitiveDataInReponseString(response);
