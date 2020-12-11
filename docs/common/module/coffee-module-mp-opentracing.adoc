@@ -5,7 +5,7 @@ A modul célja a microprofile opentracing támogatása mely tartalmazza a követ
 
 * Coffee kompatibilizás - lehetőséget biztosít hogy a coffee moduljai trace információkat szolgáltassanak.
 * Metrika és logolást egészíti ki a teljes observability érdekében.
-* Jelenleg sajat osztalyokat használunk mivel nem lehet extension szinten jól kezelni azt hogy melyik komponens adjon trace információkat.
+* Jelenleg saját osztályokat használunk mivel nem lehet extension szinten jól kezelni azt hogy melyik komponens adjon trace információkat.
 
 == microprofile-opentracing
 Alapja a https://github.com/eclipse/microprofile-opentracing valamint a
