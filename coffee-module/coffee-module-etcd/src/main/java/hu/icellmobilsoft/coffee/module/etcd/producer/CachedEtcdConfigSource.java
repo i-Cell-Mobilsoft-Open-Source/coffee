@@ -19,7 +19,10 @@
  */
 package hu.icellmobilsoft.coffee.module.etcd.producer;
 
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 
@@ -30,6 +33,29 @@ import hu.icellmobilsoft.coffee.dto.exception.BaseException;
  * @since 1.3.0
  */
 public class CachedEtcdConfigSource extends DefaultEtcdConfigSource {
+
+    /**
+     * Konfigurációs kulcsokat cachel-i, hogy ne legyenek mindig lekérdezve. Vannak helyzetek amikor többszörösen hívodik (futás közben ugyse kerül be
+     * uj konfigurációs kulcs)
+     */
+    private static final Set<String> PROPERTY_NAME_CACHE = Collections.synchronizedSet(new HashSet<>());
+
+    /**
+     * Visszaadja a config-source-okon elérhető kulcsokat, az első hívás eredményét cacheli, minden továbbit a cache-ből szolgál ki
+     * 
+     * <br/>
+     * <br/>
+     * {@inheritDoc}
+     */
+    @Override
+    public Set<String> getPropertyNames() {
+        Set<String> propertyNames = new HashSet<>();
+        if (PROPERTY_NAME_CACHE.isEmpty()) {
+            PROPERTY_NAME_CACHE.addAll(super.getPropertyNames());
+        }
+        propertyNames.addAll(PROPERTY_NAME_CACHE);
+        return propertyNames;
+    }
 
     @Override
     protected Optional<String> readValue(String propertyName) throws BaseException {
