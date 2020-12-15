@@ -173,10 +173,6 @@ Nem létező konfiguráció elkérése, törlése esetén BONotFoundException-t 
 Mivel ezt a mechanizmust használja minden felsorolt lehetőség, így ez mindegyikre igaz.
 @ConfigurationValue annotációval történő injektelés esetén a hibát elkapjuk, és null lesz a beállított érték.
 
-== Konfigurációk kezelése frontend oldalon
-Van egy mini rest alkalmazás, az *-config-service. Ez rendelkezésre bocsát 3 endpointot konfigurációk
-egyenkénti vagy listázott lekérdezésére, valamint a `public.` prefix-szel rendelkező konfigurációk módosítására.
-
 == Default értékek
 A konfigurációkezelő nem támogat default értékeket, nem létező konfiguráció elkérése BONotFoundException-t dob, injektálás esetén null értékre értékelődik ki.
 
