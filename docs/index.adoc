@@ -11,8 +11,6 @@ include::common.adoc[leveloffset=+1]
 include::migration.adoc[leveloffset=+1]
 
 == HOWTO
-include::howto/etcd.adoc[leveloffset=+2]
-
 include::howto/xsd-xml-validation-depend-on-version.adoc[leveloffset=+2]
 
 include::howto/xsd-catalog.adoc[leveloffset=+2]
