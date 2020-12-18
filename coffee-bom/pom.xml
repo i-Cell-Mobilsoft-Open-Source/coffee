@@ -3,7 +3,7 @@
 	<parent>
 		<groupId>hu.icellmobilsoft.coffee</groupId>
 		<artifactId>coffee</artifactId>
-		<version>1.2.0-SNAPSHOT</version>
+		<version>1.3.0-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>coffee-bom</artifactId>
@@ -180,6 +180,11 @@
 			</dependency>
 			<dependency>
 				<groupId>hu.icellmobilsoft.coffee</groupId>
+				<artifactId>coffee-module-redisstream</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>hu.icellmobilsoft.coffee</groupId>
 				<artifactId>coffee-module-mongodb</artifactId>
 				<version>${project.version}</version>
 			</dependency>
@@ -246,6 +251,11 @@
 			<dependency>
 				<groupId>hu.icellmobilsoft.coffee</groupId>
 				<artifactId>coffee-module-mp-restclient</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>hu.icellmobilsoft.coffee</groupId>
+				<artifactId>coffee-module-mp-opentracing</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>

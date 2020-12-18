@@ -1,0 +1,72 @@
+= v1.2.0 → v1.3.0
+
+coff:ee v1.2.0 -> v1.3.0 migrációs leírás, újdonságok, változások leírása
+
+== Újdonságok
+
+== coffee-module-redisstream
+Új modul, mely a redis stream megoldásra ad enterprise CDI alap keretet,
+bővebb infó a leírásban
+
+== Változások
+
+=== coffee-dto
+* common.xsd-ben hozzáadásra került a SimpleText1024NotBlankType típus.
+
+==== Átállás
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+=== coffee-model
+
+* Auditált entitások `modificationDate` mezője nem töltődik automatán létrehozáskor, csak módosításkor.
+
+==== Átállás
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+=== coffee-jpa
+* BatchService osztályban az inputként érkező `List` típusok `Collection`-re cserélése
+
+==== Átállás
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+=== coffee-rest
+
+* `RequestResponseLogger#printEntity(byte[], Integer, String)` megfelelően adja vissza a logüzenetet, ha a byte tömb paramétere (entity) null vagy üres.
+* `RequestResponseLogger#printEntity` javítva lett a LogSpecifier.UNLIMIT (ez a default) esetében az utolsó karakter levágása
+* `CoffeeFaultType.INVALID_XML` lokalizáció átírásra került
+
+==== Átállás
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+=== coffee-module-mp-restclient
+
+* `DefaultLoggerClientResponseFilter#logEntity` megfelelően logolja, ha a válaszban nincs entity.
+* `RestClientPriority#REQUEST_LOG` priority Priorities.AUTHENTICATION -> Priorities.HEADER_DECORATOR + 100, igy trace információkat is logolunk.
+
+==== Átállás
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+=== coffee-module-redis
+* jedis frissítés 3.1.0 -> 3.3.0
+
+==== Átállás
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+=== coffee-module-etcd
+* `etcd.default.url` -> `coffee.etcd.default.url` konfigurációs kulcs változtatás.
+* `hu.icellmobilsoft.coffee.module.etcd.producer.CachedEtcdConfigSource` config source bevezetése.
+Apró loggolási optimalizáció
+
+==== Átállás
+A konfigurációban felvett `etcd.default.url` kulcsot ki kell egészíteni `coffee.` prefix-szel.
+
+=== coffee-module-opentracing
+* Új modul, bővebb infó a leírásban.
+
+=== coffee-cdi
+* Új annotáció: `hu.icellmobilsoft.coffee.cdi.trace.annotation.Traceable`, bővebb infó a leírásban.

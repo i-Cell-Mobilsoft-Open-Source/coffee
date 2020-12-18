@@ -32,9 +32,13 @@ import java.util.logging.Logger;
  */
 public class DefaultLogger implements hu.icellmobilsoft.coffee.se.logging.Logger {
 
-    private static final long serialVersionUID = 1L;
-
     private Logger logger;
+
+    /**
+     * prevent instantiation of this class directly
+     */
+    private DefaultLogger() {
+    }
 
     /**
      * Construct a new DefaultLogger instance.

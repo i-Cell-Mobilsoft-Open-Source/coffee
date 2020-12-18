@@ -229,8 +229,17 @@ public class RequestResponseLogger {
      * @throws IOException
      */
     public String printEntity(byte[] entity, Integer maxLogSize, String prefix) throws IOException {
-        if (entity == null || entity.length == 0) {
+        String requestText = entityToString(entity, maxLogSize);
+        String maskedText = stringHelper.maskValueInXmlJson(requestText);
+        return prefix + "entity: [" + maskedText + "]\n";
+    }
+
+    private String entityToString(byte[] entity, Integer maxLogSize) {
+        if (entity == null) {
             return null;
+        }
+        if (entity.length == 0) {
+            return "";
         }
         // input parameter szerint korlatozzuk a logot
         byte[] requestEntityPart = entity;
@@ -238,14 +247,7 @@ public class RequestResponseLogger {
             requestEntityPart = Arrays.copyOf(entity, maxLogSize);
         }
 
-        StringBuffer sb = new StringBuffer();
-        String requestText = new String(requestEntityPart, StandardCharsets.UTF_8);
-        if (StringUtils.isNotBlank(requestText)) {
-            requestText = stringHelper.maskValueInXmlJson(requestText);
-
-            sb.append(prefix).append("entity: [").append(requestText).append("]\n");
-        }
-        return sb.toString();
+        return new String(requestEntityPart, StandardCharsets.UTF_8);
     }
 
     /**
@@ -404,8 +406,9 @@ public class RequestResponseLogger {
         } else {
             entityText = entity.toString();
         }
-        if (maxLogSize != null && entityText != null && entityText.length() > maxLogSize.intValue()) {
-            entityText = StringUtils.substring(entityText, 0, maxLogSize);
+        int maxSize = maxLogSize == null ? LogSpecifier.UNLIMIT : maxLogSize.intValue();
+        if (maxSize > LogSpecifier.UNLIMIT && entityText != null && entityText.length() > maxSize) {
+            entityText = StringUtils.substring(entityText, 0, maxSize);
         }
         if (maskingNeeded) {
             entityText = stringHelper.maskValueInXmlJson(entityText);

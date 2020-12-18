@@ -106,7 +106,16 @@ public abstract class JsonMessageBodyReaderBase<T> implements MessageBodyReader<
         }
     }
 
-    private String readRequestVersion(Object object) throws XsdProcessingException {
+    /**
+     * Reads request version from request entity.
+     * 
+     * @param object
+     *            object to read from
+     * @return request version as {@link String}
+     * @throws XsdProcessingException
+     *             if version cannot be read from the object
+     */
+    protected String readRequestVersion(Object object) throws XsdProcessingException {
         try {
             return jsonRequestVersionReader.readFromJSON(object);
         } catch (TechnicalException e) {
@@ -116,15 +125,17 @@ public abstract class JsonMessageBodyReaderBase<T> implements MessageBodyReader<
     }
 
     /**
-     * Creates {@link BaseRequestType} from json inputStream
+     * Creates object from json inputStream.
      * 
      * @param type
+     *            type to deserialize into
      * @param entityStream
-     * @return
+     *            input stream of entity
+     * @return deserialized object
      * @throws XsdProcessingException
      *             if the json can not be deserialized
      */
-    private T deserializeJson(Class<T> type, InputStream entityStream) throws XsdProcessingException {
+    protected T deserializeJson(Class<T> type, InputStream entityStream) throws XsdProcessingException {
         try {
             return JsonUtil.toObjectGson(new InputStreamReader(entityStream), type);
         } catch (Exception e) {

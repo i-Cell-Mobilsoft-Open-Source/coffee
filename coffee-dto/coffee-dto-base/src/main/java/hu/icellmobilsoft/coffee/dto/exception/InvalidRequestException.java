@@ -29,7 +29,9 @@ import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
  *
  * @author imre.scheffer
  * @since 1.0.0
+ * @deprecated replaced by {@code XsdProcessingException}
  */
+@Deprecated(since = "1.2.0", forRemoval = true)
 public class InvalidRequestException extends BaseException {
 
     private static final long serialVersionUID = 1L;

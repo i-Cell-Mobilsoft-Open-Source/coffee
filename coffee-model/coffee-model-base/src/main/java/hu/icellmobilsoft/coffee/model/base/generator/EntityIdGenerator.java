@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -111,7 +111,7 @@ public class EntityIdGenerator implements IdentifierGenerator {
     private static final Random RANDOM = new Random();
 
     /**
-     * generate fix 19 length id!
+     * generate fix 16 length id!
      * 
      * @return entityId
      */
@@ -155,7 +155,7 @@ public class EntityIdGenerator implements IdentifierGenerator {
     }
 
     /*
-     * 
+     *
      * Egy szám tetszőleges számrendszerbe való váltása. 62-es szamrendszer a max
      */
     private static String convertToRadix(long inNum, long radix) {

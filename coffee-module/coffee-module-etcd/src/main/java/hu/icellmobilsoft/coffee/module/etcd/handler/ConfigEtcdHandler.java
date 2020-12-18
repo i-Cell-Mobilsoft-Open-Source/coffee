@@ -27,9 +27,9 @@ import javax.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
 
+import hu.icellmobilsoft.coffee.cdi.trace.annotation.Traceable;
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.module.etcd.service.ConfigEtcdService;
-import hu.icellmobilsoft.coffee.se.logging.Logger;
 
 /**
  * Az ETCD paramétereket kezelését segíti. A lekérdezésnél a beágyazottan másik kulcsokra hivatkozó értékeket kiértékeli körellenőrzéssel a láncban.
@@ -38,16 +38,16 @@ import hu.icellmobilsoft.coffee.se.logging.Logger;
  * @since 1.0.0
  */
 @Dependent
+@Traceable
 public class ConfigEtcdHandler {
-
-    @Inject
-    private Logger log;
 
     @Inject
     private ConfigEtcdService configEtcdService;
 
     /**
-     * <p>getValue.</p>
+     * <p>
+     * getValue.
+     * </p>
      */
     public String getValue(String key) throws BaseException {
         Set<String> previousKeys = new HashSet<String>();
@@ -55,7 +55,9 @@ public class ConfigEtcdHandler {
     }
 
     /**
-     * <p>putValue.</p>
+     * <p>
+     * putValue.
+     * </p>
      */
     public void putValue(String key, Object value) throws BaseException {
         if (StringUtils.isBlank(key)) {
@@ -72,7 +74,7 @@ public class ConfigEtcdHandler {
         if (StringUtils.startsWith(value, "{") && StringUtils.endsWith(value, "}")) {
             String newKey = value.substring(1, value.length() - 1);
             if (previousKeys.contains(newKey)) {
-                throw new BaseException("Circle found in the chain!");
+                throw new BaseException("Circle found in the chain for key [" + key + "]!");
             } else {
                 previousKeys.add(newKey);
             }

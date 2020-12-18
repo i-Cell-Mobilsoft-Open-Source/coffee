@@ -32,10 +32,9 @@ import javax.enterprise.inject.spi.CDI;
 import javax.enterprise.inject.spi.InjectionPoint;
 import javax.inject.Inject;
 
-import hu.icellmobilsoft.coffee.cdi.logger.AppLogger;
-import hu.icellmobilsoft.coffee.cdi.logger.ThisLogger;
 import hu.icellmobilsoft.coffee.module.redis.annotation.RedisConnection;
 import hu.icellmobilsoft.coffee.module.redis.config.ManagedRedisConfig;
+import hu.icellmobilsoft.coffee.se.logging.Logger;
 import hu.icellmobilsoft.coffee.tool.utils.annotation.AnnotationUtil;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
@@ -50,8 +49,7 @@ import redis.clients.jedis.JedisPoolConfig;
 public class JedisPoolProducer {
 
     @Inject
-    @ThisLogger
-    private AppLogger log;
+    private Logger log;
 
     private Map<String, JedisPool> jedisPoolInstances = new HashMap<>();
 

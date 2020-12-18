@@ -205,6 +205,13 @@
 			<xsd:pattern value=".*[^\s].*" />
 		</xsd:restriction>
 	</xsd:simpleType>
+	<xsd:simpleType name="SimpleText1024NotBlankType">
+		<xsd:restriction base="xsd:string">
+			<xsd:minLength value="1" />
+			<xsd:maxLength value="1024" />
+			<xsd:pattern value=".*[^\s].*" />
+		</xsd:restriction>
+	</xsd:simpleType>
 	<xsd:simpleType name="VatNumberType">
 		<xsd:restriction base="xsd:string">
 			<xsd:minLength value="1" />
@@ -321,12 +328,12 @@
 	</xsd:simpleType>
 	<xsd:simpleType name="TimestampType">
 		<xsd:annotation>
-			<xsd:documentation>Időbélyeg típus ISO "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
-				formatumhoz</xsd:documentation>
+			<xsd:documentation>Időbélyeg típus ISO "yyyy-MM-dd'T'HH:mm:ss.SSSSSSZ"
+				formátumhoz</xsd:documentation>
 		</xsd:annotation>
 		<xsd:restriction base="xsd:dateTime">
 			<xsd:pattern
-				value="\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(.\d{1,3})?Z" />
+				value="\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{1,6})?Z" />
 		</xsd:restriction>
 	</xsd:simpleType>
 	<!-- GROUPS -->

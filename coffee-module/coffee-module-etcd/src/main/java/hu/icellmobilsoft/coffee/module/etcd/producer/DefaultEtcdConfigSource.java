@@ -23,10 +23,12 @@ import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.enterprise.inject.Instance;
 import javax.enterprise.inject.spi.CDI;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.microprofile.config.spi.ConfigSource;
 
 import hu.icellmobilsoft.coffee.dto.exception.BONotFoundException;
@@ -44,7 +46,7 @@ import hu.icellmobilsoft.coffee.se.logging.Logger;
  */
 public class DefaultEtcdConfigSource implements ConfigSource {
 
-    private static Logger LOGGER = hu.icellmobilsoft.coffee.cdi.logger.LogProducer.getStaticDefaultLogger(DefaultEtcdConfigSource.class);
+    private static Logger LOGGER = Logger.getLogger(DefaultEtcdConfigSource.class);
 
     /** {@inheritDoc} */
     @Override
@@ -71,13 +73,7 @@ public class DefaultEtcdConfigSource implements ConfigSource {
     @Override
     public String getValue(String propertyName) {
         try {
-            CDI<Object> cdi = CDI.current();
-            Instance<ConfigEtcdHandler> configEtcdHandlerInstance = cdi.select(ConfigEtcdHandler.class);
-            String value = configEtcdHandlerInstance.get().getValue(propertyName);
-            cdi.destroy(configEtcdHandlerInstance);
-            return value;
-        } catch (BONotFoundException e) {
-            LOGGER.debug(MessageFormat.format("Value for propertyName [{0}] not found in ETCD", propertyName));
+            return readValue(propertyName).orElse(null);
         } catch (BaseException e) {
             LOGGER.error(MessageFormat.format("Error in getting value from ETCD by propertyName [{0}]: [{1}]", propertyName, e.getLocalizedMessage()),
                     e);
@@ -86,6 +82,45 @@ public class DefaultEtcdConfigSource implements ConfigSource {
                     e.getLocalizedMessage()));
         }
         return null;
+    }
+
+    /**
+     * Read value from ETCD
+     * 
+     * @param propertyName
+     *            key in ETCD
+     * @return value Optional value
+     * @throws BaseException
+     *             connection or similar exception
+     */
+    protected Optional<String> readValue(String propertyName) throws BaseException {
+        return readEtcdValue(propertyName);
+    }
+
+    /**
+     * ETCD read flow
+     * 
+     * @param propertyName
+     *            key in ETCD
+     * @return value Optional value
+     * @throws BaseException
+     *             connection or similar exception
+     */
+    public static Optional<String> readEtcdValue(String propertyName) throws BaseException {
+        if (StringUtils.isBlank(propertyName)) {
+            return Optional.empty();
+        }
+        try {
+            // Modositani kell az ETCD core kezeleset javaSE-re mert hibakat okoz felfutasnal
+            CDI<Object> cdi = CDI.current();
+            Instance<ConfigEtcdHandler> configEtcdHandlerInstance = cdi.select(ConfigEtcdHandler.class);
+            String value = configEtcdHandlerInstance.get().getValue(propertyName);
+            cdi.destroy(configEtcdHandlerInstance);
+            return Optional.of(value);
+        } catch (BONotFoundException e) {
+            LOGGER.trace(e.getLocalizedMessage());
+        }
+        return Optional.empty();
     }
 
     /** {@inheritDoc} */

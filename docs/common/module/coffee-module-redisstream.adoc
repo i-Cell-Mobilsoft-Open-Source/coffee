@@ -1,0 +1,214 @@
+[#common_module_coffee-module-redisstream]
+= coffee-module-redisstream
+
+Modul célja az egyre népszerűbb stream támogatása Redis megszemélyesítésében.
+A Redis Stream egy új feature, ami a Redis 5+ verziójába került.
+Ötvözi a classic Redis publisher/subscriber funkciót a JMS queue igényeivel,
+így egy alternatív megoldást ad a JMS leváltására, helyettesítésére.
+A koncepció leírása https://redis.io/topics/streams-intro[Redis streams-intro] oldalon olvasható,
+amiból ez az implementáció is indult ki, enterprise igények kiegészítésével. 
+
+== RedisConnection
+
+A coffee-module-redisstream modul a <<coffee-module-redis>> modult használja fel a Redis connection kezelésre.
+A Redis kapcsolat beállítása egyezik a <<coffee-module-redis>> leírásnak,
+ott lévő "kulcs" alapján történik, csak saját annotáció osztályon keresztül,
+ami egyéb stream beállításokat is lehetővé tesz.
+
+== Konfiguráció
+
+A konfiguráció a `@RedisStreamConsumer` és `@RedisStreamProducer` qualifier-en keresztül történik.
+Konfiguráció yaml-ben:
+
+.yaml config file
+[source,yaml]
+----
+coffee:
+   redisstream:
+       sampleGroup: #<1>
+           stream:
+               maxlen: 10 #default: 1000000 <2>
+               read:
+                   timeoutmillis: 60000 #default: 60000 <3>
+           consumer:
+               threadsCount: 2 #default: 1 <4>
+----
+<1> A stream csoport egyedi neve. Minden mező opcionális.
+<2> A stream maximális mérete.
+Minden új üzenet beszúrásánál kidobja a régebbi üzeneteket a stream-ből,
+akkor is ha fel vagy nem volt az dolgozva.
+<3> Stream consumer timeoutja - meddig várjon 1 iterációban az üzenetre.
+Ha nem érkezik üzenet a streamben ennyi ms ideig,
+akkor lezárja a connectiont és egy új iterációban újra nyit egy új connectiont.
+<4> Az adott csoport (sampleGroup) consumer mennyi független szálban induljon el.
+
+Ehhez tartozik EE szintű beállítás is,
+ami akkor kell ha az extra szálak indításánál nem elég a default (pl. maximális thread count).
+Ezek a beállítások az alkalmazás szerverek szerint változnak, például:
+
+* Wildfly 21:
+
+** használat https://docs.wildfly.org/21/Developer_Guide.html#managed-executor-service 
+** konfiguráció https://docs.wildfly.org/21/Admin_Guide.html#managed-executor-services
+
+* Thorntail 2.7:
+
+** konfiguráció https://docs.thorntail.io/2.7.0.Final/#_ee
+
+=== RedisStreamService
+
+Minden Redis stream művelet a
+`hu.icellmobilsoft.coffee.module.redisstream.service.RedisStreamService`
+osztályon keresztül történik.
+Ha kell, akkor a CDI-n keresztül lehetőség van közvetlen elérni,
+de praktikusabb inkább a _Producer_ és _Consumer_ célra készített osztályokat használni.
+
+=== Producer
+
+Üzenetek stream-be küldésére a
+`hu.icellmobilsoft.coffee.module.redisstream.common.RedisStreamHandler`
+osztály szolgál, mint például:
+
+[source,java]
+----
+@Inject
+@RedisStreamProducer(configKey = "streamConfigKey", group = "streamGroup") //<1>
+private RedisStreamHandler redisStreamHandler;
+...
+redisStreamHandler.publish("message"); //<2>
+----
+<1> "group" nem kötelező minden esetben
+<2> Maga a "message" tartalom egyfajta coffee stream message struktúrába fog kerülni,
+ami `IRedisStreamConstant.Common.DATA_KEY_MESSAGE` érték kulcsa.
+Maga a message kiegészült még extra információval, mint pl. folyamat azonosító.
+
+=== Consumer
+
+A fenti konfig-hoz tartozó SampleConsumer használata:
+
+.SampleConsumer.class
+[source,java]
+----
+package hu.icellmobilsoft.redis.consume;
+
+import javax.enterprise.context.Dependent;
+import javax.inject.Inject;
+
+import hu.icellmobilsoft.coffee.dto.exception.BaseException;
+import hu.icellmobilsoft.coffee.module.redisstream.annotation.RedisStreamConsumer;
+import hu.icellmobilsoft.coffee.module.redisstream.consumer.IRedisStreamConsumer;
+import hu.icellmobilsoft.coffee.se.logging.Logger;
+import hu.icellmobilsoft.sample.requestScope.Counter;
+import hu.icellmobilsoft.sample.dependent.CounterDependent;
+import hu.icellmobilsoft.sample.applicationScope.CounterApplication;
+import redis.clients.jedis.StreamEntry;
+
+@Dependent
+@RedisStreamConsumer(configKey = "redisConfigKey", group = "sampleGroup")
+public class SampleConsumer implements IRedisStreamConsumer {
+
+    @Inject
+    private Logger log;
+
+    @Inject
+    private Counter counter; // <1>
+
+    @Inject
+    private CounterDependent counterDependent; // <2>
+
+    @Inject
+    private CounterApplication counterApplication; // <3>
+
+    @Override
+    public void onStream(StreamEntry streamEntry) throws BaseException {
+        log.info("Processing streamEntry [{0}]", streamEntry);
+        counter.print();
+        counterDependent.print();
+        counterApplication.print();
+    }
+}
+----
+<1> A Counter osztály RequestScope-ban működik
+<2> A CounterDependent osztály Dependent-ként működik
+<3> A CounterApplication osztály ApplicationScope-ban működik
+
+EE környezetben szükséges egyéb logikával is kiegészíteni a consumert,
+ami például a folyamat azonosító, egyedi meta adatok,
+ezért ajánlott az
+`hu.icellmobilsoft.coffee.module.redisstream.consumer.AbstractStreamConsumer`
+használata ami felkészíti az implementáló kozumert.
+Ezzel a logikával küldi be az üzeneteket a
+`hu.icellmobilsoft.coffee.module.redisstream.common.RedisStreamHandler`
+osztály is.
+ 
+[source,java]
+----
+import javax.enterprise.inject.Model;
+import javax.inject.Inject;
+
+import hu.icellmobilsoft.coffee.dto.exception.BaseException;
+import hu.icellmobilsoft.coffee.module.redisstream.annotation.RedisStreamConsumer;
+import hu.icellmobilsoft.coffee.module.redisstream.consumer.AbstractStreamConsumer
+
+@Model
+@RedisStreamConsumer(configKey = "redisConfigKey", group = "redisGroup")
+public class SampleConsumer extends AbstractStreamConsumer {
+
+    @Inject
+    private Provider<Sample> sample;
+
+    @Override
+    public void doWork(String text) throws BaseException { // <1>
+        sample.do(text);
+    }
+}
+----
+<1> A tartalma string vagy json lehet,
+ami a _StreamEntry_-ből a RedisStreamConstant.Common#DATA_KEY_MAIN kulcs értéke 
+
+==== Hogyan is működik?
+
+Az alkalmazás felfutásánál például (több lehetőség van) a CDI `@Observes @Initialized(ApplicationScoped.class)` eventre kikeresi
+az összes olyan osztályt, mely:
+
+* `hu.icellmobilsoft.coffee.module.redisstream.consumer.IRedisStreamConsumer`
+interfészt implementálja
+* `hu.icellmobilsoft.coffee.module.redisstream.annotation.RedisStreamConsumer`
+annotációval van ellátva
+
+A talált osztályok annotációjából ismert a redis kapcsolat kulcsa és a stream csoport neve,
+amiből kiegészíti a stream kulcs nevét és a beállításokat.
+Az osztályokon végig iterál és mindegyik konfigurációja szerint létrehoz annyi példányt,
+amit önálló szálakban futtat, a `hu.icellmobilsoft.coffee.module.redisstream.consumer.RedisStreamConsumerExecutor` segítségével.
+
+Egy-egy szálban végtelen ciklusban az algoritmus kérdezi a Redis-ből az üzeneteket.
+Első körben ellenőrzi hogy van-e megadott csoport és stream, ha nem létrehozza.
+További körökben már ezt nem ellenőrzi.
+Ha érkezik üzenet, annak az üzleti végrehajtására létrehoz egy automatán kezelt RequestScope-t:
+
+. hogy a szokásos RequestScope logikánk használható legyen az üzenet feldolgozásánál
+. minden üzenet tulajdonképpen egy valós requestnek felel meg annyi különbséggel hogy nem REST-en jön
+. ez a logika a JMS scope kezelését is követi
+
+A sikeres üzenet feldolgozás után lezárja a RequestScope-t és kiadja az ACK parancsot.
+
+=== Starter
+
+A konzumerek indítása több féle módon lehetséges,
+például CDI esemény, CDI extension, manuális/késleltetett indítás, stb...
+
+Ezekre elkészült egy
+`hu.icellmobilsoft.coffee.module.redisstream.bootstrap.BaseRedisConsumerStarter`
+ős osztály és egy
+`hu.icellmobilsoft.coffee.module.redisstream.bootstrap.ConsumerStarterExtension`
+CDI extension minta (ezzel lehetnek gondok például a konzumerekben használt JNDI feloldásnál)
+
+WARNING: A coffee önmagában nem indítja a consumereket, ezt mindenkinek a projekten kell megtenni a saját igényei alapján. 
+
+== Nem ACK-olt üzenetek
+
+A jelen implementáció nem foglalkozik a lekért, de nem ACK-olt üzenetekkel.
+Ezeket helyileg esetenként kell kezelni hogy mi történjen velük.
+Az `hu.icellmobilsoft.coffee.module.redisstream.service.RedisStreamService` osztály
+tartalmaz lekérdező és lekezelő metódusokat erre a célra,
+amit fel lehet használni a beragadt üzleti folyamatban.
