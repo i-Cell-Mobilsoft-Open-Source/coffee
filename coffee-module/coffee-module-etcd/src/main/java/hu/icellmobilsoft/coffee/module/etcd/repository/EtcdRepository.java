@@ -146,4 +146,8 @@ public class EtcdRepository {
                     "Exception in getList startKey [" + startKey + "] into etcd: " + e.getLocalizedMessage(), e);
         }
     }
+
+    public Client getEtcdClient() {
+        return etcdClient;
+    }
 }

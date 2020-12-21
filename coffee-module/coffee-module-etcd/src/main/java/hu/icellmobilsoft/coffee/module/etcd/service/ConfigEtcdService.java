@@ -19,6 +19,7 @@
  */
 package hu.icellmobilsoft.coffee.module.etcd.service;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -26,8 +27,7 @@ import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
 
-import javax.enterprise.context.Dependent;
-import javax.inject.Inject;
+import javax.enterprise.inject.Vetoed;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -38,19 +38,39 @@ import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
 
 /**
- * Service class for MP-Config handling and other visualized data
+ * Service class for MP-Config and other visualized data handling
  *
  * @since 1.0.0
  * @author imre.scheffer
  */
-@Dependent
+@Vetoed
 public class ConfigEtcdService {
 
-    @Inject
     private Logger log;
 
-    @Inject
     private EtcdService etcdService;
+
+    /**
+     * ETCD service initialization
+     * 
+     * @param etcdRepository
+     *            ETCD repository
+     */
+    public void init(EtcdService etcdService) {
+        this.etcdService = etcdService;
+    }
+
+    /**
+     * Check initialization
+     * 
+     * @throws BaseException
+     *             Exception if etcdService is null
+     */
+    protected void checkInit() throws BaseException {
+        if (etcdService == null) {
+            throw new TechnicalException("EtcdRepository is not initialized!");
+        }
+    }
 
     /**
      * Get value from ETCD
@@ -64,6 +84,7 @@ public class ConfigEtcdService {
      *             if key not found
      */
     public String getRawValue(String key) throws BaseException {
+        checkInit();
         return etcdService.get(key).orElse(EtcdService.EMPTY_VALUE);
     }
 
@@ -79,6 +100,7 @@ public class ConfigEtcdService {
      *             key-value loop found
      */
     public String getValue(String key) throws BaseException {
+        checkInit();
         Set<String> previousKeys = new HashSet<String>();
         return getValueWithCircleCheck(key, previousKeys);
     }
@@ -94,6 +116,7 @@ public class ConfigEtcdService {
      *             technical error
      */
     public void putValue(String key, Object value) throws BaseException {
+        checkInit();
         etcdService.set(key, value == null ? null : value.toString());
     }
 
@@ -105,6 +128,7 @@ public class ConfigEtcdService {
      *             technical error
      */
     public Map<String, String> getAll() throws BaseException {
+        checkInit();
         Map<String, Optional<String>> valueMap = etcdService.getList(EtcdService.STARTKEY, EtcdService.ENDKEY);
         return reMapOptional(valueMap);
     }
@@ -152,6 +176,10 @@ public class ConfigEtcdService {
      *             technical error
      */
     public Map<String, String> searchList(String startKey) throws BaseException {
+        if (startKey == null) {
+            return Collections.emptyMap();
+        }
+        checkInit();
         String endKey = EtcdService.ENDKEY;
         try {
             int strLastIndex = startKey.length() - 1;
@@ -194,6 +222,7 @@ public class ConfigEtcdService {
      *             if not found key
      */
     public void delete(String key) throws BaseException {
+        checkInit();
         etcdService.delete(key);
     }
 
@@ -226,5 +255,9 @@ public class ConfigEtcdService {
         } else {
             return value;
         }
+    }
+
+    public EtcdService getEtcdService() {
+        return etcdService;
     }
 }

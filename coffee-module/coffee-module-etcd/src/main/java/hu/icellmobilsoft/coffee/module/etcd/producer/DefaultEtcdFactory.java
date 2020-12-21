@@ -28,6 +28,7 @@ import javax.inject.Inject;
 
 import hu.icellmobilsoft.coffee.module.etcd.config.DefaultEtcdConfigImpl;
 import hu.icellmobilsoft.coffee.module.etcd.repository.EtcdRepository;
+import hu.icellmobilsoft.coffee.module.etcd.service.ConfigEtcdService;
 import hu.icellmobilsoft.coffee.module.etcd.service.EtcdService;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
 import io.etcd.jetcd.Client;
@@ -104,5 +105,19 @@ public class DefaultEtcdFactory {
         EtcdRepository etcdRepository = CDI.current().select(EtcdRepository.class).get();
         etcdService.init(etcdRepository);
         return etcdService;
+    }
+
+    /**
+     * Producer for default ConfigEtcdService
+     * 
+     * @return ConfigEtcdService
+     */
+    @Produces
+    @Dependent
+    public ConfigEtcdService createConfigEtcdService() {
+        ConfigEtcdService configEtcdService = new ConfigEtcdService();
+        EtcdService etcdService = CDI.current().select(EtcdService.class).get();
+        configEtcdService.init(etcdService);
+        return configEtcdService;
     }
 }

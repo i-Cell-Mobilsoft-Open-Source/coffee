@@ -87,7 +87,9 @@ public class EtcdService {
      *             Exception if etcdRepository is null
      */
     protected void checkInit() throws BaseException {
-        throw new TechnicalException("EtcdRepository is not initialized!");
+        if (etcdRepository == null) {
+            throw new TechnicalException("EtcdRepository is not initialized!");
+        }
     }
 
     /**
@@ -264,5 +266,9 @@ public class EtcdService {
             responseText = StringUtil.replaceAllIgnoreCase(responseText, replacementRegex, "$1\"*\"");
         }
         return responseText;
+    }
+
+    public EtcdRepository getEtcdRepository() {
+        return etcdRepository;
     }
 }

@@ -34,12 +34,12 @@ import hu.icellmobilsoft.coffee.tool.utils.config.ConfigUtil;
 @Dependent
 public class DefaultEtcdConfigImpl implements EtcdConfig {
 
-    private String urlKey = "coffee.etcd.default.url";
+    public static final String URL_KEY = "coffee.etcd.default.url";
 
     /** {@inheritDoc} */
     @Override
     public String[] getUrl() {
-        String urlString = ConfigUtil.defaultConfig().getOptionalValue(urlKey, String.class).orElse("http://localhost:2379");
+        String urlString = ConfigUtil.defaultConfig().getOptionalValue(URL_KEY, String.class).orElse("http://localhost:2379");
         return StringUtils.split(urlString, ",");
     }
 
