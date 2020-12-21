@@ -20,58 +20,139 @@
 package hu.icellmobilsoft.coffee.module.etcd.service;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Optional;
+import java.util.Set;
 
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
+import org.apache.commons.lang3.StringUtils;
+
+import hu.icellmobilsoft.coffee.dto.exception.BONotFoundException;
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
 
 /**
- * <p>ConfigEtcdService class.</p>
+ * Service class for MP-Config handling and other visualized data
  *
  * @since 1.0.0
+ * @author imre.scheffer
  */
 @Dependent
-public class ConfigEtcdService extends BaseEtcdService<String> {
-
-    private static final long serialVersionUID = 1L;
-
-    private static final String STARTKEY = " ";
-    private static final String ENDKEY = "\0";
+public class ConfigEtcdService {
 
     @Inject
     private Logger log;
 
+    @Inject
+    private EtcdService etcdService;
+
     /**
-     * <p>getValue.</p>
+     * Get value from ETCD
+     * 
+     * @param key
+     *            key in ETCD
+     * @return value of key, no value is {@value EtcdService#EMPTY_VALUE} (empty String)
+     * @throws BaseException
+     *             technical error
+     * @throws BONotFoundException
+     *             if key not found
+     */
+    public String getRawValue(String key) throws BaseException {
+        return etcdService.get(key).orElse(EtcdService.EMPTY_VALUE);
+    }
+
+    /**
+     * Get value from ETCD. If value is inside "{}" then continue finding to this value as key
+     * 
+     * @param key
+     *            key in ETCD
+     * @return value of key, no value is {@value EtcdService#EMPTY_VALUE} (empty String)
+     * @throws BaseException
+     *             technical error
+     * @throws TechnicalException
+     *             key-value loop found
      */
     public String getValue(String key) throws BaseException {
-        return getEtcdData(key, String.class);
+        Set<String> previousKeys = new HashSet<String>();
+        return getValueWithCircleCheck(key, previousKeys);
     }
 
     /**
-     * <p>putValue.</p>
+     * Put value to ETCD
+     * 
+     * @param key
+     *            key in ETCD
+     * @param value
+     *            value save to ETCD. Null value means {@value #EMPTY_VALUE} (empty String)
+     * @throws BaseException
+     *             technical error
      */
     public void putValue(String key, Object value) throws BaseException {
-        setEtcdData(key, value == null ? null : value.toString());
+        etcdService.set(key, value == null ? null : value.toString());
     }
 
     /**
-     * <p>getList.</p>
+     * Get all key-values pair from ETCD
+     * 
+     * @return all key/values
+     * @throws BaseException
+     *             technical error
      */
-    public Map<String, String> getList() throws BaseException {
-        return getEtcdDataList(STARTKEY, ENDKEY);
+    public Map<String, String> getAll() throws BaseException {
+        Map<String, Optional<String>> valueMap = etcdService.getList(EtcdService.STARTKEY, EtcdService.ENDKEY);
+        return reMapOptional(valueMap);
     }
 
     /**
-     * <p>searchList.</p>
+     * Remapping {@code Map<String, Optional<String>>} to {@code Map<String, String>}
+     * 
+     * @param map
+     *            input
+     * @return output
+     */
+    protected Map<String, String> reMapOptional(Map<String, Optional<String>> map) {
+        Map<String, String> result = new HashMap<>();
+        for (Entry<String, Optional<String>> entry : map.entrySet()) {
+            result.put(entry.getKey(), entry.getValue().orElse(EtcdService.EMPTY_VALUE));
+        }
+        return result;
+    }
+
+    /**
+     * Get all key-values pair from ETCD
+     * 
+     * @deprecated use {@link #getAll()} instead
+     * @return all key/values
+     * @throws BaseException
+     *             technical error
+     */
+    @Deprecated(since = "1.3.0", forRemoval = true)
+    public Map<String, String> getList() throws BaseException {
+        return getAll();
+    }
+
+    /**
+     * Search/Select all key-values pairs by input starter key. ETCD does not natively support key filtering, only search for the first match. This is
+     * limited implementation when the input key is supplemented with the input key endkey
+     * <ul>
+     * <li>input: "abc" - search keys: "abc"-"abd"</li>
+     * <li>input: "c" - search keys: "c"-"d"</li>
+     * </ul>
+     * 
+     * @param startKey
+     *            start key for filtration
+     * @return key/values
+     * @throws BaseException
+     *             technical error
      */
     public Map<String, String> searchList(String startKey) throws BaseException {
-        String endKey = ENDKEY;
+        String endKey = EtcdService.ENDKEY;
         try {
             int strLastIndex = startKey.length() - 1;
             char lastChar = startKey.charAt(strLastIndex);
@@ -80,11 +161,18 @@ public class ConfigEtcdService extends BaseEtcdService<String> {
             log.debug("etcd: cannot increase last character of startKey [{0}]", startKey);
             throw new TechnicalException(CoffeeFaultType.REPOSITORY_FAILED, "Convert exception: " + e.getLocalizedMessage(), e);
         }
-        return getEtcdDataList(startKey, endKey);
+        Map<String, Optional<String>> valueMap = etcdService.getList(startKey, endKey);
+        return reMapOptional(valueMap);
     }
 
     /**
-     * <p>searchList.</p>
+     * Extended implementation of {@link #searchList(String)} when input is aggregated by input keys
+     * 
+     * @param startKeyArray
+     *            start keys array for filtration
+     * @return key/values
+     * @throws BaseException
+     *             technical error
      */
     public Map<String, String> searchList(String[] startKeyArray) throws BaseException {
         Map<String, String> aggregatedMap = new HashMap<>();
@@ -96,9 +184,47 @@ public class ConfigEtcdService extends BaseEtcdService<String> {
     }
 
     /**
-     * <p>delete.</p>
+     * Delete key from ETCD
+     * 
+     * @param key
+     *            key for deletion
+     * @throws BaseException
+     *             technical error
+     * @throws BONotFoundException
+     *             if not found key
      */
     public void delete(String key) throws BaseException {
-        deleteEtcdData(key, String.class);
+        etcdService.delete(key);
+    }
+
+    /**
+     * Inifinity loop cheking for values
+     * 
+     * @param key
+     *            initial key
+     * @param previousKeys
+     *            set of previous keys to check
+     * @return real value
+     * @throws BaseException
+     *             technical error
+     * @throws TechnicalException
+     *             key-value loop found
+     */
+    protected String getValueWithCircleCheck(String key, Set<String> previousKeys) throws BaseException {
+        if (StringUtils.isBlank(key)) {
+            throw new BaseException("key is empty!");
+        }
+        String value = getRawValue(key);
+        if (StringUtils.startsWith(value, "{") && StringUtils.endsWith(value, "}")) {
+            String newKey = value.substring(1, value.length() - 1);
+            if (previousKeys.contains(newKey)) {
+                throw new TechnicalException("Circle found in the chain for key [" + key + "]!");
+            } else {
+                previousKeys.add(newKey);
+            }
+            return getValueWithCircleCheck(newKey, previousKeys);
+        } else {
+            return value;
+        }
     }
 }

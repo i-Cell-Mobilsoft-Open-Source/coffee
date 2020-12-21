@@ -20,13 +20,16 @@
 package hu.icellmobilsoft.coffee.module.etcd.producer;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.context.Dependent;
 import javax.enterprise.inject.Disposes;
 import javax.enterprise.inject.Produces;
+import javax.enterprise.inject.spi.CDI;
 import javax.inject.Inject;
 
 import hu.icellmobilsoft.coffee.module.etcd.config.DefaultEtcdConfigImpl;
+import hu.icellmobilsoft.coffee.module.etcd.repository.EtcdRepository;
+import hu.icellmobilsoft.coffee.module.etcd.service.EtcdService;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
-
 import io.etcd.jetcd.Client;
 
 /**
@@ -38,13 +41,15 @@ import io.etcd.jetcd.Client;
 @ApplicationScoped
 public class DefaultEtcdFactory {
 
-    private static Logger LOGGER = hu.icellmobilsoft.coffee.cdi.logger.LogProducer.getStaticDefaultLogger(DefaultEtcdFactory.class);
+    private static Logger LOGGER = Logger.getLogger(DefaultEtcdFactory.class);
 
     @Inject
     private DefaultEtcdConfigImpl defaultEtcdConfigImpl;
 
     /**
      * Producer for ETCD client
+     * 
+     * @return ETCD client
      */
     @ApplicationScoped
     @Produces
@@ -62,6 +67,7 @@ public class DefaultEtcdFactory {
      * Close ETCD client
      *
      * @param etcdClient
+     *            CDI parameter
      */
     public void closeEtcdClient(@Disposes Client etcdClient) {
         try {
@@ -70,5 +76,33 @@ public class DefaultEtcdFactory {
         } catch (Exception e) {
             LOGGER.error("Error in closing etcd client: " + e.getLocalizedMessage(), e);
         }
+    }
+
+    /**
+     * Producer for default EtcdRepository
+     * 
+     * @return EtcdRepository
+     */
+    @Produces
+    @Dependent
+    public EtcdRepository createEtcdRepository() {
+        EtcdRepository etcdRepository = new EtcdRepository();
+        Client client = CDI.current().select(Client.class).get();
+        etcdRepository.init(client);
+        return etcdRepository;
+    }
+
+    /**
+     * Producer for default EtcdService
+     * 
+     * @return EtcdService
+     */
+    @Produces
+    @Dependent
+    public EtcdService createEtcdService() {
+        EtcdService etcdService = new EtcdService();
+        EtcdRepository etcdRepository = CDI.current().select(EtcdRepository.class).get();
+        etcdService.init(etcdRepository);
+        return etcdService;
     }
 }

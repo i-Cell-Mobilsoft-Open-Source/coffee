@@ -19,7 +19,6 @@
  */
 package hu.icellmobilsoft.coffee.module.etcd.service;
 
-import java.io.Serializable;
 import java.nio.charset.StandardCharsets;
 import java.text.MessageFormat;
 import java.util.HashMap;
@@ -38,7 +37,6 @@ import hu.icellmobilsoft.coffee.module.etcd.repository.EtcdRepository;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
 import hu.icellmobilsoft.coffee.tool.utils.string.StringHelper;
 import hu.icellmobilsoft.coffee.tool.utils.string.StringUtil;
-
 import io.etcd.jetcd.ByteSequence;
 import io.etcd.jetcd.Response;
 import io.etcd.jetcd.kv.DeleteResponse;
@@ -50,14 +48,13 @@ import io.etcd.jetcd.kv.PutResponse;
  *
  * @author imre.scheffer
  * @since 1.0.0
+ * @deprecated Use {@link EtcdService}
  */
 @Dependent
-public class BaseEtcdService<T> implements Serializable {
+@Deprecated(since = "1.3.0", forRemoval = true)
+public class BaseEtcdService<T> {
 
-    private static final long serialVersionUID = 1L;
-
-    @Inject
-    private Logger log;
+    private static Logger log = Logger.getLogger(BaseEtcdService.class);
 
     @Inject
     private EtcdRepository etcdRepository;
