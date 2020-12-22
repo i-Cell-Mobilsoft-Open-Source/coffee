@@ -53,6 +53,7 @@ import hu.icellmobilsoft.coffee.tool.common.FunctionalInterfaces.BaseExceptionSu
  *
  * @author imre.scheffer
  * @param <T>
+ *     entity
  * @since 1.0.0
  */
 @Dependent
@@ -68,6 +69,8 @@ public class BaseService<T> {
 
     /**
      * Overridable method for default not found fault type.
+     *
+     * @return ENTITY_NOT_FOUND enum
      */
     protected Enum<?> getDefaultNotFoundFaultTypeEnum() {
         return CoffeeFaultType.ENTITY_NOT_FOUND;
@@ -82,6 +85,7 @@ public class BaseService<T> {
      *            Entity class
      * @return entity
      * @throws BaseException
+     *             exception
      */
     public T findById(String id, Class<T> clazz) throws BaseException {
         if (StringUtils.isBlank(id) || clazz == null) {
@@ -118,6 +122,7 @@ public class BaseService<T> {
      *            Entity class
      * @return Optional entity (empty if entity is not found)
      * @throws BaseException
+     *             exception
      */
     public Optional<T> findOptionalById(String id, Class<T> clazz) throws BaseException {
         if (StringUtils.isBlank(id) || clazz == null) {
@@ -148,6 +153,7 @@ public class BaseService<T> {
      *            Entity class
      * @return entity
      * @throws BaseException
+     *             exception
      */
     public List<T> findAll(Class<T> clazz) throws BaseException {
         log.trace(">> BaseService.findAll(class: [{0}])", clazz.getCanonicalName());
@@ -169,8 +175,10 @@ public class BaseService<T> {
      * Transaction required!
      *
      * @param entity
+     *            entity to save
      * @return saved entity
      * @throws BaseException
+     *             exception
      */
     public T save(T entity) throws BaseException {
         if (entity == null) {
@@ -196,11 +204,13 @@ public class BaseService<T> {
     }
 
     /**
-     * <p>refresh.</p>
+     * Refresh entity.
      *
      * @param entity
+     *            entity to refresh
      * @return refreshed entity
      * @throws BaseException
+     *             exception
      */
     public T refresh(T entity) throws BaseException {
         if (entity == null) {
@@ -223,10 +233,12 @@ public class BaseService<T> {
     }
 
     /**
-     * Transaction required!
+     * Delete entity. Transaction required!
      *
      * @param entity
+     *            entity to delete
      * @throws BaseException
+     *             exception
      */
     public void delete(T entity) throws BaseException {
         if (entity == null) {
@@ -249,14 +261,20 @@ public class BaseService<T> {
     }
 
     /**
-     * <p>getEntityManager.</p>
+     * Getter of {@link EntityManager}.
+     * 
+     * @return {@link EntityManager}
      */
     protected EntityManager getEntityManager() {
         return em;
     }
 
     /**
-     * <p>likeParameter.</p>
+     * Transforms given {@link String} to a like parameter.
+     *
+     * @param string
+     *            input {@link String}
+     * @return the input completed to a like parameter
      */
     public static String likeParameter(String string) {
         StringBuffer sb = new StringBuffer();
@@ -265,7 +283,11 @@ public class BaseService<T> {
     }
 
     /**
-     * <p>afterLikeParameter.</p>
+     * Transforms given {@link String} to an after like parameter.
+     *
+     * @param string
+     *            input {@link String}
+     * @return the input completed to an after like parameter
      */
     public static String afterLikeParameter(String string) {
         StringBuffer sb = new StringBuffer();
@@ -274,14 +296,28 @@ public class BaseService<T> {
     }
 
     /**
-     * <p>newInvalidParameterException.</p>
+     * Returns {@link BaseException} with {@link CoffeeFaultType#WRONG_OR_MISSING_PARAMETERS} and given message.
+     *
+     * @param msg
+     *            exception message
+     * @return {@link BaseException}
      */
-    public static BaseException newInvalidParameterException(String msg) throws BaseException {
+    public static BaseException newInvalidParameterException(String msg) {
         return new BaseException(CoffeeFaultType.WRONG_OR_MISSING_PARAMETERS, msg);
     }
 
     /**
-     * <p>wrap.</p>
+     * Wraps call to parameter-less method.
+     *
+     * @param function
+     *            the function doing business logic
+     * @param methodName
+     *            method name to log
+     * @param <RESPONSE>
+     *            response object type
+     * @return what the function returns
+     * @throws BaseException
+     *             in case of any exception caught inside
      */
     protected <RESPONSE> RESPONSE wrap(BaseExceptionSupplier<RESPONSE> function, String methodName) throws BaseException {
         String methodInfo = getCalledMethodWithOnlyPathParams(methodName);
@@ -298,7 +334,17 @@ public class BaseService<T> {
     }
 
     /**
-     * <p>wrapOptional.</p>
+     * Wraps call to parameter-less method with {@link Optional} response.
+     *
+     * @param function
+     *            the function doing business logic
+     * @param methodName
+     *            method name to log
+     * @param <RESPONSE>
+     *            response object type
+     * @return what the function returns wrapped in {@link Optional}
+     * @throws BaseException
+     *             in case of any exception caught inside
      */
     protected <RESPONSE> Optional<RESPONSE> wrapOptional(BaseExceptionSupplier<RESPONSE> function, String methodName) throws BaseException {
         String methodInfo = getCalledMethodWithOnlyPathParams(methodName);
@@ -608,7 +654,23 @@ public class BaseService<T> {
     }
 
     /**
-     * <p>wrap.</p>
+     * Wraps the business logic method call in order to handle common logging and exception handling with one parameter.
+     *
+     * @param function
+     *            the function doing business logic
+     * @param p1
+     *            parameter of the function call
+     * @param methodName
+     *            method name to log
+     * @param p1Name
+     *            parameter name to log
+     * @param <RESPONSE>
+     *            response object type
+     * @param <P1>
+     *            type of the parameter
+     * @return what the function returns
+     * @throws BaseException
+     *             in case of any exception caught inside
      */
     protected <P1, RESPONSE> RESPONSE wrap(BaseExceptionFunction<P1, RESPONSE> function, P1 p1, String methodName, String p1Name)
             throws BaseException {
@@ -616,7 +678,23 @@ public class BaseService<T> {
     }
 
     /**
-     * <p>wrapValidated.</p>
+     * Wraps the business logic method call in order to handle common logging and exception handling with one non-empty parameter.
+     *
+     * @param function
+     *            the function doing business logic
+     * @param p1
+     *            parameter of the function call
+     * @param methodName
+     *            method name to log
+     * @param p1Name
+     *            parameter name to log
+     * @param <RESPONSE>
+     *            response object type
+     * @param <P1>
+     *            type of the parameter
+     * @return what the function returns
+     * @throws BaseException
+     *             in case of any exception caught inside
      */
     protected <P1, RESPONSE> RESPONSE wrapValidated(BaseExceptionFunction<P1, RESPONSE> function, P1 p1, String methodName, String p1Name)
             throws BaseException {
@@ -624,7 +702,24 @@ public class BaseService<T> {
     }
 
     /**
-     * <p>wrapOptional.</p>
+     * Wraps the business logic method call in order to handle common logging and exception handling with one parameter and an {@link Optional}
+     * response.
+     *
+     * @param function
+     *            the function doing business logic
+     * @param p1
+     *            parameter of the function call
+     * @param methodName
+     *            method name to log
+     * @param p1Name
+     *            parameter name to log
+     * @param <RESPONSE>
+     *            response object type
+     * @param <P1>
+     *            type of the parameter
+     * @return what the function returns
+     * @throws BaseException
+     *             in case of any exception caught inside
      */
     protected <P1, RESPONSE> Optional<RESPONSE> wrapOptional(BaseExceptionFunction<P1, RESPONSE> function, P1 p1, String methodName, String p1Name)
             throws BaseException {
@@ -632,7 +727,24 @@ public class BaseService<T> {
     }
 
     /**
-     * <p>wrapOptionalValidated.</p>
+     * Wraps the business logic method call in order to handle common logging and exception handling with one non-empty parameter and an {@link Optional}
+     * response.
+     *
+     * @param function
+     *            the function doing business logic
+     * @param p1
+     *            parameter of the function call
+     * @param methodName
+     *            method name to log
+     * @param p1Name
+     *            parameter name to log
+     * @param <RESPONSE>
+     *            response object type
+     * @param <P1>
+     *            type of the parameter
+     * @return what the function returns
+     * @throws BaseException
+     *             in case of any exception caught inside
      */
     protected <P1, RESPONSE> Optional<RESPONSE> wrapOptionalValidated(BaseExceptionFunction<P1, RESPONSE> function, P1 p1, String methodName,
             String p1Name) throws BaseException {
@@ -640,7 +752,23 @@ public class BaseService<T> {
     }
 
     /**
-     * <p>wrapList.</p>
+     * Wraps the business logic method call in order to handle common logging and exception handling with one parameter and a {@link List} response
+     *
+     * @param function
+     *            the function doing business logic
+     * @param p1
+     *            parameter of the function call
+     * @param methodName
+     *            method name to log
+     * @param p1Name
+     *            parameter name to log
+     * @param <RESPONSE>
+     *            response object type
+     * @param <P1>
+     *            type of the parameter
+     * @return what the function returns
+     * @throws BaseException
+     *             in case of any exception caught inside
      */
     protected <P1, RESPONSE> List<RESPONSE> wrapList(BaseExceptionFunction<P1, List<RESPONSE>> function, P1 p1, String methodName, String p1Name)
             throws BaseException {
@@ -648,7 +776,24 @@ public class BaseService<T> {
     }
 
     /**
-     * <p>wrapListValidated.</p>
+     * Wraps the business logic method call in order to handle common logging and exception handling with one non-empty parameter and a {@link List}
+     * response.
+     *
+     * @param function
+     *            the function doing business logic
+     * @param p1
+     *            parameter of the function call
+     * @param methodName
+     *            method name to log
+     * @param p1Name
+     *            parameter name to log
+     * @param <RESPONSE>
+     *            response object type
+     * @param <P1>
+     *            type of the parameter
+     * @return what the function returns
+     * @throws BaseException
+     *             in case of any exception caught inside
      */
     protected <P1, RESPONSE> List<RESPONSE> wrapListValidated(BaseExceptionFunction<P1, List<RESPONSE>> function, P1 p1, String methodName,
             String p1Name) throws BaseException {
@@ -656,7 +801,29 @@ public class BaseService<T> {
     }
 
     /**
-     * <p>wrap.</p>
+     * Wraps the business logic method call in order to handle common logging and exception handling with two parameters.
+     *
+     * @param function
+     *            the function doing business logic
+     * @param p1
+     *            first parameter of the function call
+     * @param p2
+     *            second parameter of the function call
+     * @param methodName
+     *            method name to log
+     * @param p1Name
+     *            first parameter name to log
+     * @param p2Name
+     *            second parameter name to log
+     * @param <RESPONSE>
+     *            response object type
+     * @param <P1>
+     *            type of the first parameter
+     * @param <P2>
+     *            type of the second parameter
+     * @return what the function returns
+     * @throws BaseException
+     *             in case of any exception caught inside
      */
     protected <P1, P2, RESPONSE> RESPONSE wrap(BaseExceptionFunction2<P1, P2, RESPONSE> function, P1 p1, P2 p2, String methodName, String p1Name,
             String p2Name) throws BaseException {
@@ -664,7 +831,29 @@ public class BaseService<T> {
     }
 
     /**
-     * <p>wrapValidated.</p>
+     * Wraps the business logic method call in order to handle common logging and exception handling with two non-empty parameters.
+     *
+     * @param function
+     *            the function doing business logic
+     * @param p1
+     *            first parameter of the function call
+     * @param p2
+     *            second parameter of the function call
+     * @param methodName
+     *            method name to log
+     * @param p1Name
+     *            first parameter name to log
+     * @param p2Name
+     *            second parameter name to log
+     * @param <RESPONSE>
+     *            response object type
+     * @param <P1>
+     *            type of the first parameter
+     * @param <P2>
+     *            type of the second parameter
+     * @return what the function returns
+     * @throws BaseException
+     *             in case of any exception caught inside
      */
     protected <P1, P2, RESPONSE> RESPONSE wrapValidated(BaseExceptionFunction2<P1, P2, RESPONSE> function, P1 p1, P2 p2, String methodName,
             String p1Name, String p2Name) throws BaseException {
@@ -672,7 +861,30 @@ public class BaseService<T> {
     }
 
     /**
-     * <p>wrapOptional.</p>
+     * Wraps the business logic method call in order to handle common logging and exception handling with two parameters and an {@link Optional}
+     * response.
+     *
+     * @param function
+     *            the function doing business logic
+     * @param p1
+     *            first parameter of the function call
+     * @param p2
+     *            second parameter of the function call
+     * @param methodName
+     *            method name to log
+     * @param p1Name
+     *            first parameter name to log
+     * @param p2Name
+     *            second parameter name to log
+     * @param <RESPONSE>
+     *            response object type
+     * @param <P1>
+     *            type of the first parameter
+     * @param <P2>
+     *            type of the second parameter
+     * @return what the function returns
+     * @throws BaseException
+     *             in case of any exception caught inside
      */
     protected <P1, P2, RESPONSE> Optional<RESPONSE> wrapOptional(BaseExceptionFunction2<P1, P2, RESPONSE> function, P1 p1, P2 p2, String methodName,
             String p1Name, String p2Name) throws BaseException {
@@ -680,7 +892,30 @@ public class BaseService<T> {
     }
 
     /**
-     * <p>wrapOptionalValidated.</p>
+     * Wraps the business logic method call in order to handle common logging and exception handling with two non-empty parameters and an
+     * {@link Optional} response.
+     *
+     * @param function
+     *            the function doing business logic
+     * @param p1
+     *            first parameter of the function call
+     * @param p2
+     *            second parameter of the function call
+     * @param methodName
+     *            method name to log
+     * @param p1Name
+     *            first parameter name to log
+     * @param p2Name
+     *            second parameter name to log
+     * @param <RESPONSE>
+     *            response object type
+     * @param <P1>
+     *            type of the first parameter
+     * @param <P2>
+     *            type of the second parameter
+     * @return what the function returns
+     * @throws BaseException
+     *             in case of any exception caught inside
      */
     protected <P1, P2, RESPONSE> Optional<RESPONSE> wrapOptionalValidated(BaseExceptionFunction2<P1, P2, RESPONSE> function, P1 p1, P2 p2,
             String methodName, String p1Name, String p2Name) throws BaseException {
@@ -688,7 +923,30 @@ public class BaseService<T> {
     }
 
     /**
-     * <p>wrapList.</p>
+     * Wraps the business logic method call in order to handle common logging and exception handling with two parameters and a {@link List}
+     * response.
+     *
+     * @param function
+     *            the function doing business logic
+     * @param p1
+     *            first parameter of the function call
+     * @param p2
+     *            second parameter of the function call
+     * @param methodName
+     *            method name to log
+     * @param p1Name
+     *            first parameter name to log
+     * @param p2Name
+     *            second parameter name to log
+     * @param <RESPONSE>
+     *            response object type
+     * @param <P1>
+     *            type of the first parameter
+     * @param <P2>
+     *            type of the second parameter
+     * @return what the function returns
+     * @throws BaseException
+     *             in case of any exception caught inside
      */
     protected <P1, P2, RESPONSE> List<RESPONSE> wrapList(BaseExceptionFunction2<P1, P2, List<RESPONSE>> function, P1 p1, P2 p2, String methodName,
             String p1Name, String p2Name) throws BaseException {
@@ -696,7 +954,30 @@ public class BaseService<T> {
     }
 
     /**
-     * <p>wrapListValidated.</p>
+     * Wraps the business logic method call in order to handle common logging and exception handling with two non-empty parameters and a {@link List}
+     * response.
+     *
+     * @param function
+     *            the function doing business logic
+     * @param p1
+     *            first parameter of the function call
+     * @param p2
+     *            second parameter of the function call
+     * @param methodName
+     *            method name to log
+     * @param p1Name
+     *            first parameter name to log
+     * @param p2Name
+     *            second parameter name to log
+     * @param <RESPONSE>
+     *            response object type
+     * @param <P1>
+     *            type of the first parameter
+     * @param <P2>
+     *            type of the second parameter
+     * @return what the function returns
+     * @throws BaseException
+     *             in case of any exception caught inside
      */
     protected <P1, P2, RESPONSE> List<RESPONSE> wrapListValidated(BaseExceptionFunction2<P1, P2, List<RESPONSE>> function, P1 p1, P2 p2,
             String methodName, String p1Name, String p2Name) throws BaseException {
@@ -704,7 +985,36 @@ public class BaseService<T> {
     }
 
     /**
-     * <p>wrap.</p>
+     * Wraps the business logic method call in order to handle common logging and exception handling with three parameters and a {@link List}
+     * response.
+     *
+     * @param function
+     *            the function doing business logic
+     * @param p1
+     *            first parameter of the function call
+     * @param p2
+     *            second parameter of the function call
+     * @param p3
+     *            third parameter of the function call
+     * @param methodName
+     *            method name to log
+     * @param p1Name
+     *            first parameter name to log
+     * @param p2Name
+     *            second parameter name to log
+     * @param p3Name
+     *            third parameter name to log
+     * @param <RESPONSE>
+     *            response object type
+     * @param <P1>
+     *            type of the first parameter
+     * @param <P2>
+     *            type of the second parameter
+     * @param <P3>
+     *            type of the third parameter
+     * @return what the function returns
+     * @throws BaseException
+     *             in case of any exception caught inside
      */
     protected <P1, P2, P3, RESPONSE> RESPONSE wrap(BaseExceptionFunction3<P1, P2, P3, RESPONSE> function, P1 p1, P2 p2, P3 p3, String methodName,
             String p1Name, String p2Name, String p3Name) throws BaseException {
@@ -712,7 +1022,35 @@ public class BaseService<T> {
     }
 
     /**
-     * <p>wrapValidated.</p>
+     * Wraps the business logic method call in order to handle common logging and exception handling with three non-empty parameters.
+     *
+     * @param function
+     *            the function doing business logic
+     * @param p1
+     *            first parameter of the function call
+     * @param p2
+     *            second parameter of the function call
+     * @param p3
+     *            third parameter of the function call
+     * @param methodName
+     *            method name to log
+     * @param p1Name
+     *            first parameter name to log
+     * @param p2Name
+     *            second parameter name to log
+     * @param p3Name
+     *            third parameter name to log
+     * @param <RESPONSE>
+     *            response object type
+     * @param <P1>
+     *            type of the first parameter
+     * @param <P2>
+     *            type of the second parameter
+     * @param <P3>
+     *            type of the third parameter
+     * @return what the function returns
+     * @throws BaseException
+     *             in case of any exception caught inside
      */
     protected <P1, P2, P3, RESPONSE> RESPONSE wrapValidated(BaseExceptionFunction3<P1, P2, P3, RESPONSE> function, P1 p1, P2 p2, P3 p3,
             String methodName, String p1Name, String p2Name, String p3Name) throws BaseException {
@@ -720,7 +1058,36 @@ public class BaseService<T> {
     }
 
     /**
-     * <p>wrapOptional.</p>
+     * Wraps the business logic method call in order to handle common logging and exception handling with three parameters and an {@link Optional}
+     * response.
+     *
+     * @param function
+     *            the function doing business logic
+     * @param p1
+     *            first parameter of the function call
+     * @param p2
+     *            second parameter of the function call
+     * @param p3
+     *            third parameter of the function call
+     * @param methodName
+     *            method name to log
+     * @param p1Name
+     *            first parameter name to log
+     * @param p2Name
+     *            second parameter name to log
+     * @param p3Name
+     *            third parameter name to log
+     * @param <RESPONSE>
+     *            response object type
+     * @param <P1>
+     *            type of the first parameter
+     * @param <P2>
+     *            type of the second parameter
+     * @param <P3>
+     *            type of the third parameter
+     * @return what the function returns
+     * @throws BaseException
+     *             in case of any exception caught inside
      */
     protected <P1, P2, P3, RESPONSE> Optional<RESPONSE> wrapOptional(BaseExceptionFunction3<P1, P2, P3, RESPONSE> function, P1 p1, P2 p2, P3 p3,
             String methodName, String p1Name, String p2Name, String p3Name) throws BaseException {
@@ -728,7 +1095,36 @@ public class BaseService<T> {
     }
 
     /**
-     * <p>wrapOptionalValidated.</p>
+     * Wraps the business logic method call in order to handle common logging and exception handling with three non-empty parameters and an
+     * {@link Optional} response.
+     *
+     * @param function
+     *            the function doing business logic
+     * @param p1
+     *            first parameter of the function call
+     * @param p2
+     *            second parameter of the function call
+     * @param p3
+     *            third parameter of the function call
+     * @param methodName
+     *            method name to log
+     * @param p1Name
+     *            first parameter name to log
+     * @param p2Name
+     *            second parameter name to log
+     * @param p3Name
+     *            third parameter name to log
+     * @param <RESPONSE>
+     *            response object type
+     * @param <P1>
+     *            type of the first parameter
+     * @param <P2>
+     *            type of the second parameter
+     * @param <P3>
+     *            type of the third parameter
+     * @return what the function returns
+     * @throws BaseException
+     *             in case of any exception caught inside
      */
     protected <P1, P2, P3, RESPONSE> Optional<RESPONSE> wrapOptionalValidated(BaseExceptionFunction3<P1, P2, P3, RESPONSE> function, P1 p1, P2 p2,
             P3 p3, String methodName, String p1Name, String p2Name, String p3Name) throws BaseException {
@@ -736,7 +1132,36 @@ public class BaseService<T> {
     }
 
     /**
-     * <p>wrapList.</p>
+     * Wraps the business logic method call in order to handle common logging and exception handling with three parameters and a {@link List}
+     * response.
+     *
+     * @param function
+     *            the function doing business logic
+     * @param p1
+     *            first parameter of the function call
+     * @param p2
+     *            second parameter of the function call
+     * @param p3
+     *            third parameter of the function call
+     * @param methodName
+     *            method name to log
+     * @param p1Name
+     *            first parameter name to log
+     * @param p2Name
+     *            second parameter name to log
+     * @param p3Name
+     *            third parameter name to log
+     * @param <RESPONSE>
+     *            response object type
+     * @param <P1>
+     *            type of the first parameter
+     * @param <P2>
+     *            type of the second parameter
+     * @param <P3>
+     *            type of the third parameter
+     * @return what the function returns
+     * @throws BaseException
+     *             in case of any exception caught inside
      */
     protected <P1, P2, P3, RESPONSE> List<RESPONSE> wrapList(BaseExceptionFunction3<P1, P2, P3, List<RESPONSE>> function, P1 p1, P2 p2, P3 p3,
             String methodName, String p1Name, String p2Name, String p3Name) throws BaseException {
@@ -744,7 +1169,36 @@ public class BaseService<T> {
     }
 
     /**
-     * <p>wrapListValidated.</p>
+     * Wraps the business logic method call in order to handle common logging and exception handling with three non-empty parameters and a
+     * {@link List} response.
+     *
+     * @param function
+     *            the function doing business logic
+     * @param p1
+     *            first parameter of the function call
+     * @param p2
+     *            second parameter of the function call
+     * @param p3
+     *            third parameter of the function call
+     * @param methodName
+     *            method name to log
+     * @param p1Name
+     *            first parameter name to log
+     * @param p2Name
+     *            second parameter name to log
+     * @param p3Name
+     *            third parameter name to log
+     * @param <RESPONSE>
+     *            response object type
+     * @param <P1>
+     *            type of the first parameter
+     * @param <P2>
+     *            type of the second parameter
+     * @param <P3>
+     *            type of the third parameter
+     * @return what the function returns
+     * @throws BaseException
+     *             in case of any exception caught inside
      */
     protected <P1, P2, P3, RESPONSE> List<RESPONSE> wrapListValidated(BaseExceptionFunction3<P1, P2, P3, List<RESPONSE>> function, P1 p1, P2 p2,
             P3 p3, String methodName, String p1Name, String p2Name, String p3Name) throws BaseException {
@@ -752,7 +1206,41 @@ public class BaseService<T> {
     }
 
     /**
-     * <p>wrap.</p>
+     * Wraps the business logic method call in order to handle common logging and exception handling with four parameters.
+     *
+     * @param function
+     *            the function doing business logic
+     * @param p1
+     *            first parameter of the function call
+     * @param p2
+     *            second parameter of the function call
+     * @param p3
+     *            third parameter of the function call
+     * @param p4
+     *            fourth parameter of the function call
+     * @param methodName
+     *            method name to log
+     * @param p1Name
+     *            first parameter name to log
+     * @param p2Name
+     *            second parameter name to log
+     * @param p3Name
+     *            third parameter name to log
+     * @param p4Name
+     *            fourth parameter name to log
+     * @param <RESPONSE>
+     *            response object type
+     * @param <P1>
+     *            type of the first parameter
+     * @param <P2>
+     *            type of the second parameter
+     * @param <P3>
+     *            type of the third parameter
+     * @param <P4>
+     *            type of the fourth parameter
+     * @return what the function returns
+     * @throws BaseException
+     *             in case of any exception caught inside
      */
     protected <P1, P2, P3, P4, RESPONSE> RESPONSE wrap(BaseExceptionFunction4<P1, P2, P3, P4, RESPONSE> function, P1 p1, P2 p2, P3 p3, P4 p4,
             String methodName, String p1Name, String p2Name, String p3Name, String p4Name) throws BaseException {
@@ -760,7 +1248,41 @@ public class BaseService<T> {
     }
 
     /**
-     * <p>wrapValidated.</p>
+     * Wraps the business logic method call in order to handle common logging and exception handling with four non-empty parameters.
+     *
+     * @param function
+     *            the function doing business logic
+     * @param p1
+     *            first parameter of the function call
+     * @param p2
+     *            second parameter of the function call
+     * @param p3
+     *            third parameter of the function call
+     * @param p4
+     *            fourth parameter of the function call
+     * @param methodName
+     *            method name to log
+     * @param p1Name
+     *            first parameter name to log
+     * @param p2Name
+     *            second parameter name to log
+     * @param p3Name
+     *            third parameter name to log
+     * @param p4Name
+     *            fourth parameter name to log
+     * @param <RESPONSE>
+     *            response object type
+     * @param <P1>
+     *            type of the first parameter
+     * @param <P2>
+     *            type of the second parameter
+     * @param <P3>
+     *            type of the third parameter
+     * @param <P4>
+     *            type of the fourth parameter
+     * @return what the function returns
+     * @throws BaseException
+     *             in case of any exception caught inside
      */
     protected <P1, P2, P3, P4, RESPONSE> RESPONSE wrapValidated(BaseExceptionFunction4<P1, P2, P3, P4, RESPONSE> function, P1 p1, P2 p2, P3 p3, P4 p4,
             String methodName, String p1Name, String p2Name, String p3Name, String p4Name) throws BaseException {
@@ -768,7 +1290,42 @@ public class BaseService<T> {
     }
 
     /**
-     * <p>wrapOptional.</p>
+     * Wraps the business logic method call in order to handle common logging and exception handling with four parameters and an {@link Optional}
+     * response.
+     *
+     * @param function
+     *            the function doing business logic
+     * @param p1
+     *            first parameter of the function call
+     * @param p2
+     *            second parameter of the function call
+     * @param p3
+     *            third parameter of the function call
+     * @param p4
+     *            fourth parameter of the function call
+     * @param methodName
+     *            method name to log
+     * @param p1Name
+     *            first parameter name to log
+     * @param p2Name
+     *            second parameter name to log
+     * @param p3Name
+     *            third parameter name to log
+     * @param p4Name
+     *            fourth parameter name to log
+     * @param <RESPONSE>
+     *            response object type
+     * @param <P1>
+     *            type of the first parameter
+     * @param <P2>
+     *            type of the second parameter
+     * @param <P3>
+     *            type of the third parameter
+     * @param <P4>
+     *            type of the fourth parameter
+     * @return what the function returns
+     * @throws BaseException
+     *             in case of any exception caught inside
      */
     protected <P1, P2, P3, P4, RESPONSE> Optional<RESPONSE> wrapOptional(BaseExceptionFunction4<P1, P2, P3, P4, RESPONSE> function, P1 p1, P2 p2,
             P3 p3, P4 p4, String methodName, String p1Name, String p2Name, String p3Name, String p4Name) throws BaseException {
@@ -776,7 +1333,42 @@ public class BaseService<T> {
     }
 
     /**
-     * <p>wrapOptionalValidated.</p>
+     * Wraps the business logic method call in order to handle common logging and exception handling with four non-empty parameters and an
+     * {@link Optional} response.
+     *
+     * @param function
+     *            the function doing business logic
+     * @param p1
+     *            first parameter of the function call
+     * @param p2
+     *            second parameter of the function call
+     * @param p3
+     *            third parameter of the function call
+     * @param p4
+     *            fourth parameter of the function call
+     * @param methodName
+     *            method name to log
+     * @param p1Name
+     *            first parameter name to log
+     * @param p2Name
+     *            second parameter name to log
+     * @param p3Name
+     *            third parameter name to log
+     * @param p4Name
+     *            fourth parameter name to log
+     * @param <RESPONSE>
+     *            response object type
+     * @param <P1>
+     *            type of the first parameter
+     * @param <P2>
+     *            type of the second parameter
+     * @param <P3>
+     *            type of the third parameter
+     * @param <P4>
+     *            type of the fourth parameter
+     * @return what the function returns
+     * @throws BaseException
+     *             in case of any exception caught inside
      */
     protected <P1, P2, P3, P4, RESPONSE> Optional<RESPONSE> wrapOptionalValidated(BaseExceptionFunction4<P1, P2, P3, P4, RESPONSE> function, P1 p1,
             P2 p2, P3 p3, P4 p4, String methodName, String p1Name, String p2Name, String p3Name, String p4Name) throws BaseException {
@@ -784,7 +1376,41 @@ public class BaseService<T> {
     }
 
     /**
-     * <p>wrapList.</p>
+     * Wraps the business logic method call in order to handle common logging and exception handling with four parameters and a {@link List} response.
+     *
+     * @param function
+     *            the function doing business logic
+     * @param p1
+     *            first parameter of the function call
+     * @param p2
+     *            second parameter of the function call
+     * @param p3
+     *            third parameter of the function call
+     * @param p4
+     *            fourth parameter of the function call
+     * @param methodName
+     *            method name to log
+     * @param p1Name
+     *            first parameter name to log
+     * @param p2Name
+     *            second parameter name to log
+     * @param p3Name
+     *            third parameter name to log
+     * @param p4Name
+     *            fourth parameter name to log
+     * @param <RESPONSE>
+     *            response object type
+     * @param <P1>
+     *            type of the first parameter
+     * @param <P2>
+     *            type of the second parameter
+     * @param <P3>
+     *            type of the third parameter
+     * @param <P4>
+     *            type of the fourth parameter
+     * @return what the function returns
+     * @throws BaseException
+     *             in case of any exception caught inside
      */
     protected <P1, P2, P3, P4, RESPONSE> List<RESPONSE> wrapList(BaseExceptionFunction4<P1, P2, P3, P4, List<RESPONSE>> function, P1 p1, P2 p2, P3 p3,
             P4 p4, String methodName, String p1Name, String p2Name, String p3Name, String p4Name) throws BaseException {
@@ -792,7 +1418,42 @@ public class BaseService<T> {
     }
 
     /**
-     * <p>wrapListValidated.</p>
+     * Wraps the business logic method call in order to handle common logging and exception handling with four non-empty parameters and a {@link List}
+     * response.
+     *
+     * @param function
+     *            the function doing business logic
+     * @param p1
+     *            first parameter of the function call
+     * @param p2
+     *            second parameter of the function call
+     * @param p3
+     *            third parameter of the function call
+     * @param p4
+     *            fourth parameter of the function call
+     * @param methodName
+     *            method name to log
+     * @param p1Name
+     *            first parameter name to log
+     * @param p2Name
+     *            second parameter name to log
+     * @param p3Name
+     *            third parameter name to log
+     * @param p4Name
+     *            fourth parameter name to log
+     * @param <RESPONSE>
+     *            response object type
+     * @param <P1>
+     *            type of the first parameter
+     * @param <P2>
+     *            type of the second parameter
+     * @param <P3>
+     *            type of the third parameter
+     * @param <P4>
+     *            type of the fourth parameter
+     * @return what the function returns
+     * @throws BaseException
+     *             in case of any exception caught inside
      */
     protected <P1, P2, P3, P4, RESPONSE> List<RESPONSE> wrapListValidated(BaseExceptionFunction4<P1, P2, P3, P4, List<RESPONSE>> function, P1 p1,
             P2 p2, P3 p3, P4 p4, String methodName, String p1Name, String p2Name, String p3Name, String p4Name) throws BaseException {
@@ -800,7 +1461,47 @@ public class BaseService<T> {
     }
 
     /**
-     * <p>wrap.</p>
+     * Wraps the business logic method call in order to handle common logging and exception handling with five parameters.
+     *
+     * @param function
+     *            the function doing business logic
+     * @param p1
+     *            first parameter of the function call
+     * @param p2
+     *            second parameter of the function call
+     * @param p3
+     *            third parameter of the function call
+     * @param p4
+     *            fourth parameter of the function call
+     * @param p5
+     *            fifth parameter of the function call
+     * @param methodName
+     *            method name to log
+     * @param p1Name
+     *            first parameter name to log
+     * @param p2Name
+     *            second parameter name to log
+     * @param p3Name
+     *            third parameter name to log
+     * @param p4Name
+     *            fourth parameter name to log
+     * @param p5Name
+     *            fifth parameter name to log
+     * @param <RESPONSE>
+     *            response object type
+     * @param <P1>
+     *            type of the first parameter
+     * @param <P2>
+     *            type of the second parameter
+     * @param <P3>
+     *            type of the third parameter
+     * @param <P4>
+     *            type of the fourth parameter
+     * @param <P5>
+     *            type of the fifth parameter
+     * @return what the function returns
+     * @throws BaseException
+     *             in case of any exception caught inside
      */
     protected <P1, P2, P3, P4, P5, RESPONSE> RESPONSE wrap(BaseExceptionFunction5<P1, P2, P3, P4, P5, RESPONSE> function, P1 p1, P2 p2, P3 p3, P4 p4,
             P5 p5, String methodName, String p1Name, String p2Name, String p3Name, String p4Name, String p5Name) throws BaseException {
@@ -808,7 +1509,47 @@ public class BaseService<T> {
     }
 
     /**
-     * <p>wrapValidated.</p>
+     * Wraps the business logic method call in order to handle common logging and exception handling with five non-empty parameters.
+     *
+     * @param function
+     *            the function doing business logic
+     * @param p1
+     *            first parameter of the function call
+     * @param p2
+     *            second parameter of the function call
+     * @param p3
+     *            third parameter of the function call
+     * @param p4
+     *            fourth parameter of the function call
+     * @param p5
+     *            fifth parameter of the function call
+     * @param methodName
+     *            method name to log
+     * @param p1Name
+     *            first parameter name to log
+     * @param p2Name
+     *            second parameter name to log
+     * @param p3Name
+     *            third parameter name to log
+     * @param p4Name
+     *            fourth parameter name to log
+     * @param p5Name
+     *            fifth parameter name to log
+     * @param <RESPONSE>
+     *            response object type
+     * @param <P1>
+     *            type of the first parameter
+     * @param <P2>
+     *            type of the second parameter
+     * @param <P3>
+     *            type of the third parameter
+     * @param <P4>
+     *            type of the fourth parameter
+     * @param <P5>
+     *            type of the fifth parameter
+     * @return what the function returns
+     * @throws BaseException
+     *             in case of any exception caught inside
      */
     protected <P1, P2, P3, P4, P5, RESPONSE> RESPONSE wrapValidated(BaseExceptionFunction5<P1, P2, P3, P4, P5, RESPONSE> function, P1 p1, P2 p2,
             P3 p3, P4 p4, P5 p5, String methodName, String p1Name, String p2Name, String p3Name, String p4Name, String p5Name) throws BaseException {
@@ -816,7 +1557,48 @@ public class BaseService<T> {
     }
 
     /**
-     * <p>wrapOptional.</p>
+     * Wraps the business logic method call in order to handle common logging and exception handling with five parameters and an {@link Optional}
+     * response.
+     *
+     * @param function
+     *            the function doing business logic
+     * @param p1
+     *            first parameter of the function call
+     * @param p2
+     *            second parameter of the function call
+     * @param p3
+     *            third parameter of the function call
+     * @param p4
+     *            fourth parameter of the function call
+     * @param p5
+     *            fifth parameter of the function call
+     * @param methodName
+     *            method name to log
+     * @param p1Name
+     *            first parameter name to log
+     * @param p2Name
+     *            second parameter name to log
+     * @param p3Name
+     *            third parameter name to log
+     * @param p4Name
+     *            fourth parameter name to log
+     * @param p5Name
+     *            fifth parameter name to log
+     * @param <RESPONSE>
+     *            response object type
+     * @param <P1>
+     *            type of the first parameter
+     * @param <P2>
+     *            type of the second parameter
+     * @param <P3>
+     *            type of the third parameter
+     * @param <P4>
+     *            type of the fourth parameter
+     * @param <P5>
+     *            type of the fifth parameter
+     * @return what the function returns
+     * @throws BaseException
+     *             in case of any exception caught inside
      */
     protected <P1, P2, P3, P4, P5, RESPONSE> Optional<RESPONSE> wrapOptional(BaseExceptionFunction5<P1, P2, P3, P4, P5, RESPONSE> function, P1 p1,
             P2 p2, P3 p3, P4 p4, P5 p5, String methodName, String p1Name, String p2Name, String p3Name, String p4Name, String p5Name)
@@ -825,7 +1607,48 @@ public class BaseService<T> {
     }
 
     /**
-     * <p>wrapOptionalValidated.</p>
+     * Wraps the business logic method call in order to handle common logging and exception handling with five non-empty parameters and an
+     * {@link Optional} response.
+     *
+     * @param function
+     *            the function doing business logic
+     * @param p1
+     *            first parameter of the function call
+     * @param p2
+     *            second parameter of the function call
+     * @param p3
+     *            third parameter of the function call
+     * @param p4
+     *            fourth parameter of the function call
+     * @param p5
+     *            fifth parameter of the function call
+     * @param methodName
+     *            method name to log
+     * @param p1Name
+     *            first parameter name to log
+     * @param p2Name
+     *            second parameter name to log
+     * @param p3Name
+     *            third parameter name to log
+     * @param p4Name
+     *            fourth parameter name to log
+     * @param p5Name
+     *            fifth parameter name to log
+     * @param <RESPONSE>
+     *            response object type
+     * @param <P1>
+     *            type of the first parameter
+     * @param <P2>
+     *            type of the second parameter
+     * @param <P3>
+     *            type of the third parameter
+     * @param <P4>
+     *            type of the fourth parameter
+     * @param <P5>
+     *            type of the fifth parameter
+     * @return what the function returns
+     * @throws BaseException
+     *             in case of any exception caught inside
      */
     protected <P1, P2, P3, P4, P5, RESPONSE> Optional<RESPONSE> wrapOptionalValidated(BaseExceptionFunction5<P1, P2, P3, P4, P5, RESPONSE> function,
             P1 p1, P2 p2, P3 p3, P4 p4, P5 p5, String methodName, String p1Name, String p2Name, String p3Name, String p4Name, String p5Name)
@@ -834,7 +1657,47 @@ public class BaseService<T> {
     }
 
     /**
-     * <p>wrapList.</p>
+     * Wraps the business logic method call in order to handle common logging and exception handling with five parameters and a {@link List} response.
+     *
+     * @param function
+     *            the function doing business logic
+     * @param p1
+     *            first parameter of the function call
+     * @param p2
+     *            second parameter of the function call
+     * @param p3
+     *            third parameter of the function call
+     * @param p4
+     *            fourth parameter of the function call
+     * @param p5
+     *            fifth parameter of the function call
+     * @param methodName
+     *            method name to log
+     * @param p1Name
+     *            first parameter name to log
+     * @param p2Name
+     *            second parameter name to log
+     * @param p3Name
+     *            third parameter name to log
+     * @param p4Name
+     *            fourth parameter name to log
+     * @param p5Name
+     *            fifth parameter name to log
+     * @param <RESPONSE>
+     *            response object type
+     * @param <P1>
+     *            type of the first parameter
+     * @param <P2>
+     *            type of the second parameter
+     * @param <P3>
+     *            type of the third parameter
+     * @param <P4>
+     *            type of the fourth parameter
+     * @param <P5>
+     *            type of the fifth parameter
+     * @return what the function returns
+     * @throws BaseException
+     *             in case of any exception caught inside
      */
     protected <P1, P2, P3, P4, P5, RESPONSE> List<RESPONSE> wrapList(BaseExceptionFunction5<P1, P2, P3, P4, P5, List<RESPONSE>> function, P1 p1,
             P2 p2, P3 p3, P4 p4, P5 p5, String methodName, String p1Name, String p2Name, String p3Name, String p4Name, String p5Name)
@@ -843,7 +1706,48 @@ public class BaseService<T> {
     }
 
     /**
-     * <p>wrapListValidated.</p>
+     * Wraps the business logic method call in order to handle common logging and exception handling with five non-empty parameters and a {@link List}
+     * response.
+     *
+     * @param function
+     *            the function doing business logic
+     * @param p1
+     *            first parameter of the function call
+     * @param p2
+     *            second parameter of the function call
+     * @param p3
+     *            third parameter of the function call
+     * @param p4
+     *            fourth parameter of the function call
+     * @param p5
+     *            fifth parameter of the function call
+     * @param methodName
+     *            method name to log
+     * @param p1Name
+     *            first parameter name to log
+     * @param p2Name
+     *            second parameter name to log
+     * @param p3Name
+     *            third parameter name to log
+     * @param p4Name
+     *            fourth parameter name to log
+     * @param p5Name
+     *            fifth parameter name to log
+     * @param <RESPONSE>
+     *            response object type
+     * @param <P1>
+     *            type of the first parameter
+     * @param <P2>
+     *            type of the second parameter
+     * @param <P3>
+     *            type of the third parameter
+     * @param <P4>
+     *            type of the fourth parameter
+     * @param <P5>
+     *            type of the fifth parameter
+     * @return what the function returns
+     * @throws BaseException
+     *             in case of any exception caught inside
      */
     protected <P1, P2, P3, P4, P5, RESPONSE> List<RESPONSE> wrapListValidated(BaseExceptionFunction5<P1, P2, P3, P4, P5, List<RESPONSE>> function,
             P1 p1, P2 p2, P3 p3, P4 p4, P5 p5, String methodName, String p1Name, String p2Name, String p3Name, String p4Name, String p5Name)
@@ -889,10 +1793,12 @@ public class BaseService<T> {
     }
 
     /**
-     * Szukseg eseten at lehet irni rekurzivra is, hogyha a parameterekben ujabb lista van es szukseg lessz ra, de ezen a szinten egyenlore nem kell
+     * Puts any number of input param {@link Object}s in an array. Note: collection parameters are handled on one level of depth. This method could be
+     * rewritten in a recursive way if necessary.
      * 
      * @param params
-     * @return
+     *            input params
+     * @return array of params
      */
     private Object[] prepareParametersToLog(Object... params) {
         if (params == null) {
@@ -959,7 +1865,7 @@ public class BaseService<T> {
      *          parameter values in matching order with methodInfo
      * @return {@link BaseException} with message from methodInfo.
      */
-    protected BaseException invalidParameter(String methodInfo, Object... params) throws BaseException {
+    protected BaseException invalidParameter(String methodInfo, Object... params) {
         String msg = MessageFormat.format("At least one incoming parameter in " + methodInfo + " is null or blank!", params);
         return newInvalidParameterException(msg);
     }
@@ -977,7 +1883,13 @@ public class BaseService<T> {
     }
 
     /**
-     * <p>getCalledMethodWithParamsBase.</p>
+     * Concatenates given method name and param names into loggable formatted method info.
+     *
+     * @param methodName
+     *            method name eg. "getCustomerInfoByUserId"
+     * @param paramNames
+     *            eg. "userId"
+     * @return method info e.g. " getCustomerInfoByUserId(userId: [{0}])"
      */
     protected String getCalledMethodWithParamsBase(String methodName, String... paramNames) {
         StringBuilder methodInfo = new StringBuilder(" ").append(getOriginalClassName()).append(".").append(methodName).append("(");
@@ -994,7 +1906,9 @@ public class BaseService<T> {
     }
 
     /**
-     * <p>getOriginalClassName.</p>
+     * Returns original, un-proxied class name.
+     *
+     * @return class name
      */
     protected String getOriginalClassName() {
         return ProxyUtils.getUnproxiedClass(getClass()).getSimpleName();

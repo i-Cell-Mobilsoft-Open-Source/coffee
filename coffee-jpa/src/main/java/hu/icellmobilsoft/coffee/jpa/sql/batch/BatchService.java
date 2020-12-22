@@ -92,6 +92,7 @@ public class BatchService {
      * @param entities
      *            - validalni kivant collection
      * @throws BaseException
+     *             exception
      */
     protected void validateInput(Collection<?> entities) throws BaseException {
         if (entities == null) {
@@ -105,13 +106,15 @@ public class BatchService {
 
     /**
      * Hibernate batch mentes. Ezt akkor erdemes hasznalni, amikor a memoria optimalizalas vegett tul sokat kell menteni, de hibernate-en keresztul.
-     * Mentesi sebessegen nem gyorsit, de a memoria igenyeket jocskan lejebb viszi
+     * Mentesi sebessegen nem gyorsit, de a memoria igenyeket jocskan lejjebb viszi
      *
      * @param <E>
      *            - entitas tipusa
      * @param entities
      *            - merge-olni kivant collection
+     * @return merge-elt entitas id-k {@link List}-je
      * @throws BaseException
+     *             exception
      */
     public <E> List<String> batchMerge(Collection<E> entities) throws BaseException {
         validateInput(entities);
@@ -159,17 +162,21 @@ public class BatchService {
     }
 
     /**
-     * Szetvalogatja a beerkezo entitasokat az szerint hogy a id ki-e van toltve vagy sem es az szerint kuldi be a megfelelo metodusokba.<br>
+     * Szetvalogatja a beerkezo entitasokat az szerint hogy az id ki van-e toltve vagy sem es aszerint kuldi be a megfelelo metodusokba.<br>
      * Klasszikus PreparedStatement alapon mukododo batch mentes. A SQL osszeallitasara a hibernate dolgai vannak felhasznalva, de a futas mar
-     * klasszikus-an folyik. Nagyon gyors a mentes, kicsi memoria hasznalattal
+     * klasszikusan folyik. Nagyon gyors a mentes, kicsi memoria hasznalattal
      *
+     * @param <E>
+     *            - entitas tipusa
      * @param entities
      *            - merge-olni kivant collection
      * @param clazz
      *            - a collection-ben levo osztalyok tipusa
+     * @return {@link Map}, benne az merge-elt entitas id-k es a hozzajuk tartozo feldolgozas sikeressege
      * @throws BaseException
-     * @see #batchInsertNative(List, Class)
-     * @see #batchUpdateNative(List, Class)
+     *             exception
+     * @see #batchInsertNative(Collection, Class)
+     * @see #batchUpdateNative(Collection, Class)
      */
     public <E> Map<String, Status> batchMergeNative(Collection<E> entities, Class<E> clazz) throws BaseException {
         validateInput(entities);
@@ -186,7 +193,7 @@ public class BatchService {
 
     /**
      * Klasszikus PreparedStatement alapon mukododo batch update mentes. A SQL osszeallitasara a hibernate dolgai vannak felhasznalva, de a futas mar
-     * klasszikus-an folyik. Nagyon gyors a mentes, kicsi memoria hasznalattal
+     * klasszikusan folyik. Nagyon gyors a mentes, kicsi memoria hasznalattal
      *
      * @param <E>
      *            - entitas tipusa
@@ -194,7 +201,9 @@ public class BatchService {
      *            - update-elni kivant collection
      * @param clazz
      *            - a collection-ben levo osztalyok tipusa
+     * @return {@link Map}, benne az update-elt entitas id-k es a hozzajuk tartozo feldolgozas sikeressege
      * @throws BaseException
+     *             exception
      */
     public <E> Map<String, Status> batchUpdateNative(Collection<E> entities, Class<E> clazz) throws BaseException {
         validateInput(entities);
@@ -284,7 +293,7 @@ public class BatchService {
 
     /**
      * Klasszikus PreparedStatement alapon mukododo batch insert mentes. A SQL osszeallitasara a hibernate dolgai vannak felhasznalva, de a futas mar
-     * klasszikus-an folyik. Nagyon gyors a mentes, kicsi memoria hasznalattal
+     * klasszikusan folyik. Nagyon gyors a mentes, kicsi memoria hasznalattal
      *
      * @param <E>
      *            - entitas tipusa
@@ -292,7 +301,9 @@ public class BatchService {
      *            - insertalni kivant collection
      * @param clazz
      *            - a collection-ben levo osztalyok tipusa
+     * @return {@link Map}, benne az insertalt entitas id-k es a hozzajuk tartozo feldolgozas sikeressege
      * @throws BaseException
+     *             exception
      */
     public <E> Map<String, Status> batchInsertNative(Collection<E> entities, Class<E> clazz) throws BaseException {
         validateInput(entities);
@@ -373,7 +384,7 @@ public class BatchService {
 
     /**
      * Klasszikus PreparedStatement alapon mukododo batch delete. A SQL osszeallitasara a hibernate dolgai vannak felhasznalva, de a futas mar
-     * klasszikus-an folyik. Nagyon gyors a törlés, kicsi memoria hasznalattal
+     * klasszikusan folyik. Nagyon gyors a törlés, kicsi memoria hasznalattal
      *
      * @param <E>
      *            - entitas tipusa
@@ -381,7 +392,9 @@ public class BatchService {
      *            - torolni kivant collection
      * @param clazz
      *            - a collection-ben levo osztalyok tipusa
+     * @return {@link Map}, benne az torolt entitas id-k es a hozzajuk tartozo feldolgozas sikeressege
      * @throws BaseException
+     *             exception
      */
     public <E> Map<String, Status> batchDeleteNative(Collection<E> entities, Class<E> clazz) throws BaseException {
         validateInput(entities);
@@ -464,6 +477,7 @@ public class BatchService {
      * @param entity
      *            - modositani kivant entitas
      * @throws SQLException
+     *             exception
      */
     protected <E> void setParametersForUpdate(PreparedStatement ps, SingleTableEntityPersister persister, E entity) throws SQLException {
         int i = 1;
@@ -499,6 +513,7 @@ public class BatchService {
      * @param entity
      *            - beszurni kivant entitas
      * @throws SQLException
+     *             exception
      */
     protected <E> void setParametersForInsert(PreparedStatement ps, SingleTableEntityPersister persister, E entity) throws SQLException {
         int i = 1;
@@ -527,9 +542,10 @@ public class BatchService {
     }
 
     /**
-     * setPsObject.
+     * Adott objektum {@link PreparedStatement}-be valo behelyettesitese.
      * 
      * @param <E>
+     *            - entitas tipusa
      * @param ps
      *            - beallitando preparedStatement
      * @param parameterIndex
@@ -539,6 +555,7 @@ public class BatchService {
      * @param value
      *            - parameter erteke
      * @throws SQLException
+     *             exception
      */
     protected <E> void setPsObject(PreparedStatement ps, int parameterIndex, Type type, Object value) throws SQLException {
         // enumokat le kell kezelni
@@ -587,7 +604,7 @@ public class BatchService {
     /**
      * ID generalas
      * 
-     * @return
+     * @return random id
      */
     protected String generateId() {
         return RandomUtil.generateId();
@@ -596,7 +613,7 @@ public class BatchService {
     /**
      * Batch merete
      * 
-     * @return
+     * @return batch meret
      */
     protected int batchSize() {
         return BATCH_SIZE;
@@ -607,7 +624,7 @@ public class BatchService {
      * 
      * @param date
      *            - datum
-     * @return
+     * @return {@link Timestamp}
      */
     public static Timestamp getTimestamp(Date date) {
         return date == null ? null : new java.sql.Timestamp(date.getTime());
@@ -616,7 +633,7 @@ public class BatchService {
     /**
      * Getter for the field <code>sqlPostfix</code>.
      * 
-     * @return
+     * @return SQL postfix
      */
     public String getSqlPostfix() {
         return sqlPostfix;
@@ -637,7 +654,7 @@ public class BatchService {
      * 
      * @param entity
      *            - entitas
-     * @return
+     * @return entity id
      */
     protected String getId(Object entity) {
         return (String) entityManager.getEntityManagerFactory().getPersistenceUnitUtil().getIdentifier(entity);

@@ -33,18 +33,18 @@ import javax.xml.bind.annotation.XmlType;
  * <p>The following schema fragment specifies the expected content contained within this class.
  *
  * <pre>
- * &lt;complexType name="QueryMetaData">
- *   &lt;complexContent>
- *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *       &lt;sequence>
- *         &lt;element name="totalRows" type="{http://www.w3.org/2001/XMLSchema}integer"/>
- *         &lt;element name="maxPage" type="{http://www.w3.org/2001/XMLSchema}integer"/>
- *         &lt;element name="rows" type="{http://www.w3.org/2001/XMLSchema}integer"/>
- *         &lt;element name="page" type="{http://www.w3.org/2001/XMLSchema}integer"/>
- *       &lt;/sequence>
- *     &lt;/restriction>
- *   &lt;/complexContent>
- * &lt;/complexType>
+ * &lt;complexType name="QueryMetaData"&gt;
+ *   &lt;complexContent&gt;
+ *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
+ *       &lt;sequence&gt;
+ *         &lt;element name="totalRows" type="{http://www.w3.org/2001/XMLSchema}integer"/&gt;
+ *         &lt;element name="maxPage" type="{http://www.w3.org/2001/XMLSchema}integer"/&gt;
+ *         &lt;element name="rows" type="{http://www.w3.org/2001/XMLSchema}integer"/&gt;
+ *         &lt;element name="page" type="{http://www.w3.org/2001/XMLSchema}integer"/&gt;
+ *       &lt;/sequence&gt;
+ *     &lt;/restriction&gt;
+ *   &lt;/complexContent&gt;
+ * &lt;/complexType&gt;
  * </pre>
  *
  * @since 1.0.0
@@ -69,6 +69,8 @@ public class QueryMetaData {
 
     /**
      * Gets the value of the totalRows property.
+     * 
+     * @return total row count
      */
     public BigInteger getTotalRows() {
         return totalRows;
@@ -87,6 +89,8 @@ public class QueryMetaData {
 
     /**
      * Gets the value of the maxPage property.
+     * 
+     * @return max page number
      */
     public BigInteger getMaxPage() {
         return maxPage;
@@ -105,6 +109,8 @@ public class QueryMetaData {
 
     /**
      * Gets the value of the rows property.
+     *
+     * @return row counter
      */
     public BigInteger getRows() {
         return rows;
@@ -123,6 +129,8 @@ public class QueryMetaData {
 
     /**
      * Gets the value of the page property.
+     *
+     * @return page index
      */
     public BigInteger getPage() {
         return page;

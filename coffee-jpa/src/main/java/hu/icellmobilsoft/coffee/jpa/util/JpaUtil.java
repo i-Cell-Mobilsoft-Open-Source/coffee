@@ -34,7 +34,7 @@ import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 
 /**
- * JPA common funtions
+ * JPA common functions.
  *
  * @author imre.scheffer
  * @since 1.0.0
@@ -43,7 +43,7 @@ import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 public class JpaUtil {
 
     /**
-     * Get native SQL from created Query, exception is loggend only
+     * Get native SQL from created Query, exception is logged only
      *
      * @param em
      *            entity manager
@@ -69,6 +69,7 @@ public class JpaUtil {
      *            created query
      * @return native SQL of query
      * @throws BaseException
+     *             exception
      */
     public static String toNativeSQL(EntityManager em, Query query) throws BaseException {
         if (em == null) {

@@ -40,7 +40,7 @@ import hu.icellmobilsoft.coffee.tool.common.FunctionalInterfaces.BaseExceptionFu
 import hu.icellmobilsoft.coffee.tool.common.FunctionalInterfaces.BaseExceptionFunction3;
 
 /**
- * Helper class for entity handling
+ * Helper class for entity handling.
  *
  * @author imre.scheffer
  * @since 1.0.0
@@ -131,9 +131,10 @@ public class EntityHelper {
      * @param param1
      *            select paraméter
      * @param function
-     *            hívott funkció {@link hu.icellmobilsoft.coffee.tool.common.FunctionalInterfaces.BaseExceptionFunction2}
+     *            hívott funkció {@link BaseExceptionFunction2}
      * @return id lista select eredménye, mely {@value #MAX_PARAMETER_COUNT} sublista selectekre volt bontva
-     * @throws hu.icellmobilsoft.coffee.dto.exception.BaseException
+     * @throws BaseException
+     *             exception
      */
     public static <T, P> List<T> partitionedQuery(Collection<String> ids, P param1, BaseExceptionFunction2<List<String>, P, List<T>> function)
             throws BaseException {
@@ -169,9 +170,10 @@ public class EntityHelper {
      * @param param2
      *            select paraméter
      * @param function
-     *            hívott funkció {@link hu.icellmobilsoft.coffee.tool.common.FunctionalInterfaces.BaseExceptionFunction3}
+     *            hívott funkció {@link BaseExceptionFunction3}
      * @return id lista select eredménye, mely {@value #MAX_PARAMETER_COUNT} sublista selectekre volt bontva
-     * @throws hu.icellmobilsoft.coffee.dto.exception.BaseException
+     * @throws BaseException
+     *             exception
      */
     public static <T, P1, P2> List<T> partitionedQuery(Collection<String> ids, P1 param1, P2 param2,
             BaseExceptionFunction3<List<String>, P1, P2, List<T>> function) throws BaseException {
