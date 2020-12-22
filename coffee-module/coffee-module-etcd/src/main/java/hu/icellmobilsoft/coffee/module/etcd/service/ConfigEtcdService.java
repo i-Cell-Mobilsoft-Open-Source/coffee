@@ -129,7 +129,7 @@ public class ConfigEtcdService {
      */
     public Map<String, String> getAll() throws BaseException {
         checkInit();
-        Map<String, Optional<String>> valueMap = etcdService.getList(EtcdService.STARTKEY, EtcdService.ENDKEY);
+        Map<String, Optional<String>> valueMap = etcdService.get(EtcdService.STARTKEY, EtcdService.ENDKEY);
         return reMapOptional(valueMap);
     }
 
@@ -189,7 +189,7 @@ public class ConfigEtcdService {
             log.debug("etcd: cannot increase last character of startKey [{0}]", startKey);
             throw new TechnicalException(CoffeeFaultType.REPOSITORY_FAILED, "Convert exception: " + e.getLocalizedMessage(), e);
         }
-        Map<String, Optional<String>> valueMap = etcdService.getList(startKey, endKey);
+        Map<String, Optional<String>> valueMap = etcdService.get(startKey, endKey);
         return reMapOptional(valueMap);
     }
 

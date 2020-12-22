@@ -118,7 +118,7 @@ public class EtcdService {
             Optional<String> value = toOptional(response.getKvs().get(0).getValue());
 
             if (log.isTraceEnabled()) {
-                String responseStr = replaceSensitiveDataInReponseString(response);
+                String responseStr = replaceSensitiveDataInResponseString(response);
                 log.trace("etcd: getting key [{0}], value [{1}], response: [{2}]", key,
                         value.isPresent() ? new StringHelper().maskPropertyValue(key, value.get()) : "null", responseStr);
             }
@@ -156,7 +156,7 @@ public class EtcdService {
             ByteSequence bsValue = ByteSequence.from(value == null ? EMPTY_VALUE : value, StandardCharsets.UTF_8);
             PutResponse response = etcdRepository.put(bsKey, bsValue).get();
             if (log.isTraceEnabled()) {
-                String stringData = replaceSensitiveDataInReponseString(response);
+                String stringData = replaceSensitiveDataInResponseString(response);
                 log.trace("etcd: putting key [{0}], value [{1}] response: [{2}]", key, new StringHelper().maskPropertyValue(key, value), stringData);
             }
         } catch (BaseException e) {
@@ -169,7 +169,7 @@ public class EtcdService {
     }
 
     /**
-     * Get value list from ETCD. This call {@link EtcdRepository#getList(ByteSequence, ByteSequence)}
+     * Get value map from ETCD. This call {@link EtcdRepository#getList(ByteSequence, ByteSequence)}
      * 
      * @param startKeyStr
      *            search starting key
@@ -179,7 +179,7 @@ public class EtcdService {
      * @throws BaseException
      *             If technical error happening
      */
-    public Map<String, Optional<String>> getList(String startKeyStr, String endKeyStr) throws BaseException {
+    public Map<String, Optional<String>> get(String startKeyStr, String endKeyStr) throws BaseException {
         if (startKeyStr == null || endKeyStr == null) {
             throw new TechnicalException(CoffeeFaultType.INVALID_INPUT, "startKeyStr or endKeyStr is null!");
         }
@@ -203,7 +203,7 @@ public class EtcdService {
                 etcdDataList.put(stringKey, value);
             }
             if (log.isTraceEnabled()) {
-                String responseStr = replaceSensitiveDataInReponseString(response);
+                String responseStr = replaceSensitiveDataInResponseString(response);
                 log.trace("etcd: found [{0}] entry, response: [{1}]", kvsCount, responseStr);
             }
             return etcdDataList;
@@ -239,7 +239,7 @@ public class EtcdService {
                 log.trace("etcd: delete key [{0}], key NOT FOUND, response: [{1}]", key, deleteResponse);
                 throw new BONotFoundException("Etcd data not found for key [" + key + "]!");
             } else if (log.isTraceEnabled()) {
-                String responseStr = replaceSensitiveDataInReponseString(deleteResponse);
+                String responseStr = replaceSensitiveDataInResponseString(deleteResponse);
                 log.trace("etcd: delete key [{0}], key NOT FOUND, response: [{1}]", key, responseStr);
             }
 
@@ -250,7 +250,7 @@ public class EtcdService {
         }
     }
 
-    private String replaceSensitiveDataInReponseString(Response response) {
+    private String replaceSensitiveDataInResponseString(Response response) {
         // Pattern: (kvs[\S\s]*?key:[\s]*?"(stringHelper.getSensitiveKeyPattern())"[\S\s]*?value:[\s]*?)"(.*?)"
         // ETCD válasz formátumára, $1 csoportba kerül minden a "kvs" és "value " között, így a value értéke egyszerüen cserélhetó $1"*"-gal.
         // kvs {
