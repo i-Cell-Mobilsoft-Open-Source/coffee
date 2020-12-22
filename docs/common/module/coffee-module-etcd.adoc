@@ -55,7 +55,8 @@ Pl.:
 .Konfigurációs értékek injectelése
 [source,java]
 ----
-// nem ajánlott, a többi módszerek közül érdemes választani
+// korlátozottan használjuk ahol nem számít a sebesség és magas tranzakciószám,
+// ilyenkor a többi módszerek közül érdemes választani
 @Inject
 @ConfigProperty(name="key")
 Provider<String> keyValue;
@@ -72,7 +73,7 @@ public String kodban() {
 == ConfigurationHelper osztály
 Az osztály segítségével lehetőség van típushelyes konfigurációk lekérdezésére.
 A háttérben a konfiguráció injectelési mechanizmust használja, valamint RequestScope szintű
-cache-t használ (request scopeon belül egy lekérdezés csak 1x van lekérdezve az ETCD-ből).
+cache-t használ (request scopeon belül egy lekérdezés csak 1x van lekérdezve minden config source-ból).
 
 .Konfiguráció lekérdezése
 [source,java]
@@ -102,7 +103,8 @@ public String kodban() {
 ----
 
 == ConfigEtcdHandler osztály
-Lehetőséget biztosít konfiguráció értékek írására és olvasására. A háttérben a ConfigEtcdService-t használja.
+Lehetőséget biztosít konktrétan az ETCD konfiguráció értékek írására és olvasására.
+A háttérben a ConfigEtcdService-t használja.
 
 .Konfiguráció írása
 [source,java]
@@ -167,14 +169,9 @@ private ConfigEtcdService configEtcdService;
 Map<String, String> allConfigMap = configEtcdService.getList(); //összes konfiguráció listázása
 Map<String, String> publicConfigMap = configEtcdService.searchList("public."); //adott prefixű kulccsal rendelkező konfigok listázása (nem lehet üres String)
 ----
-A service nem engedélyezi null vagy üres String érték mentését konfiguráció értékeként. E helyett esetleg törölni lehet a konfigurációt.
 
 Nem létező konfiguráció elkérése, törlése esetén BONotFoundException-t dob a service.
 Mivel ezt a mechanizmust használja minden felsorolt lehetőség, így ez mindegyikre igaz.
-@ConfigurationValue annotációval történő injektelés esetén a hibát elkapjuk, és null lesz a beállított érték.
-
-== Default értékek
-A konfigurációkezelő nem támogat default értékeket, nem létező konfiguráció elkérése BONotFoundException-t dob, injektálás esetén null értékre értékelődik ki.
 
 == Namespace-ek, konfiguráció elnevezési konvenciók
 A konfiguráció kezelő nem támogat külön namespace-ket, minden, az etcd-ben tárolt információhoz hozzáférünk.
@@ -190,11 +187,6 @@ A következő konvenciók alapján kezelik ezeket:
 |`protected.` |A backend és a frontend számára is elérhető konfiguráció, a frontend csak olvashat   
 |`public.`    |A backend és a frontend számára is elérhető konfiguráció, a frontend is módosíthatja az értékét   
 |===
-
-== Rendelkezésre álló konfigutációk gyűjtő interfésze
-Az alkalmazás által használt, rendelkezésre álló konfigurációkat az EtcdVal interfészben kerülnek
-összegyűjtésre az *-common-dto modulban. Konfigurációk írásakor, olvasásakor az itt definiált
-konstansokra hivatkoznak.
 
 == Konfigurációk kezelés Command Line Tool segítségével
 Töltsük le és csomagoljuk ki a rendszerünknek megfelelő ETCD csomagot: https://github.com/coreos/etcd/releases/
