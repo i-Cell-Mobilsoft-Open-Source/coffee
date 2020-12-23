@@ -120,7 +120,7 @@ public class EtcdService {
             if (log.isTraceEnabled()) {
                 String responseStr = replaceSensitiveDataInResponseString(response);
                 log.trace("etcd: getting key [{0}], value [{1}], response: [{2}]", key,
-                        value.isPresent() ? new StringHelper().maskPropertyValue(key, value.get()) : "null", responseStr);
+                        value.isPresent() ? StringHelper.maskPropertyValue(key, value.get()) : "null", responseStr);
             }
             return value;
         } catch (BaseException e) {
@@ -157,7 +157,7 @@ public class EtcdService {
             PutResponse response = etcdRepository.put(bsKey, bsValue).get();
             if (log.isTraceEnabled()) {
                 String stringData = replaceSensitiveDataInResponseString(response);
-                log.trace("etcd: putting key [{0}], value [{1}] response: [{2}]", key, new StringHelper().maskPropertyValue(key, value), stringData);
+                log.trace("etcd: putting key [{0}], value [{1}] response: [{2}]", key, StringHelper.maskPropertyValue(key, value), stringData);
             }
         } catch (BaseException e) {
             throw e;
@@ -198,7 +198,7 @@ public class EtcdService {
                 Optional<String> value = toOptional(response.getKvs().get(i).getValue());
                 if (log.isTraceEnabled()) {
                     log.trace("etcd: [{0}]. key: [{1}], value: [{2}]", i, stringKey,
-                            value.isPresent() ? new StringHelper().maskPropertyValue(stringKey, value.get()) : "null");
+                            value.isPresent() ? StringHelper.maskPropertyValue(stringKey, value.get()) : "null");
                 }
                 etcdDataList.put(stringKey, value);
             }
@@ -260,7 +260,7 @@ public class EtcdService {
         // version: 7
         // value: "1.2"
         String responseText = String.valueOf(response);
-        String[] sensitiveKeyPatterns = new StringHelper().getSensitiveKeyPattern();
+        String[] sensitiveKeyPatterns = StringHelper.getSensitiveKeyPattern();
         for (String sensitiveKeyPattern : sensitiveKeyPatterns) {
             String replacementRegex = "(kvs[\\S\\s]*?key:[\\s]*?\"(" + sensitiveKeyPattern + ")\"[\\S\\s]*?value:[\\s]*?)\"(.*?)\"";
             responseText = StringUtil.replaceAllIgnoreCase(responseText, replacementRegex, "$1\"*\"");

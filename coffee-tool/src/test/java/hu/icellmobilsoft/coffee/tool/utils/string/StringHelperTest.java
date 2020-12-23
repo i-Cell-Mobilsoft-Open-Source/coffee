@@ -50,12 +50,9 @@ import io.smallrye.config.inject.ConfigExtension;
 @DisplayName("Testing StringHelper")
 class StringHelperTest {
 
-    @Inject
-    private StringHelper underTest;
-
     @SuppressWarnings("unchecked")
     @WeldSetup
-    public WeldInitiator weld = WeldInitiator.from(WeldInitiator.createWeld().addExtensions(ConfigExtension.class).addBeanClass(StringHelper.class))
+    public WeldInitiator weld = WeldInitiator.from(WeldInitiator.createWeld().addExtensions(ConfigExtension.class))
             .activate(RequestScoped.class).build();
 
     @BeforeEach
@@ -71,7 +68,7 @@ class StringHelperTest {
         // given
         System.setProperty(IConfigKey.LOG_SENSITIVE_KEY_PATTERN, ".*?alma.*?");
         // when
-        String actual = underTest.maskPropertyValue(key, value);
+        String actual = StringHelper.maskPropertyValue(key, value);
         // then
         Assertions.assertEquals(expected, actual);
     }
@@ -83,7 +80,7 @@ class StringHelperTest {
     void maskPropertyValueDefaultPattern(String key, String value, String expected) {
         // given
         // when
-        String actual = underTest.maskPropertyValue(key, value);
+        String actual = StringHelper.maskPropertyValue(key, value);
         // then
         Assertions.assertEquals(expected, actual);
     }
@@ -96,7 +93,7 @@ class StringHelperTest {
         // given
         System.setProperty(IConfigKey.LOG_SENSITIVE_KEY_PATTERN, ".*?alma.*?");
         // when
-        String actual = underTest.maskValueInXmlJson(text);
+        String actual = StringHelper.maskValueInXmlJson(text);
         // then
         Assertions.assertEquals(expected, actual);
     }
@@ -108,7 +105,7 @@ class StringHelperTest {
     void maskValueInXmlJsonDefaultPattern(String text, String expected) {
         // given
         // when
-        String actual = underTest.maskValueInXmlJson(text);
+        String actual = StringHelper.maskValueInXmlJson(text);
         // then
         Assertions.assertEquals(expected, actual);
     }
