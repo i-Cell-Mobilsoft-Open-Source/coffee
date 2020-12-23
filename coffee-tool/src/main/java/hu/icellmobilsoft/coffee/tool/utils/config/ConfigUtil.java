@@ -35,11 +35,17 @@ public class ConfigUtil {
 
     /**
      * Get the default configuration sources
+     * <ol>
+     * <li>System properties</li>
+     * <li>Environment properties</li>
+     * <li>/META-INF/microprofile-config.properties</li>
+     * </ol>
      * 
-     * @return the config
+     * @return default microprofile config without other configsources
      */
     public static Config defaultConfig() {
-        // Default config sources (sys, env, mp-c.properties)
-        return ConfigProviderResolver.instance().getBuilder().addDefaultSources().build();
+        // Lefixaljuk arra a classloader-re ahol kezeljunk a kodunkat, ezzel biztositjuk hogyha netan az alkalmazas szerver mas classloaderrel
+        // inicializal mindig megtalalja a sajat 'microprofile-config.properties' fajlunkat
+        return ConfigProviderResolver.instance().getBuilder().forClassLoader(ConfigUtil.class.getClassLoader()).addDefaultSources().build();
     }
 }
