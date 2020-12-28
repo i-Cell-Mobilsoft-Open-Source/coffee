@@ -59,7 +59,8 @@ import javax.enterprise.inject.Typed;
  * @author <a href="mailto:kenney@apache.org">Kenney Westerhof</a>
  * @author <a href="mailto:hboutemy@apache.org">Hervé Boutemy</a>
  * @see <a href="https://cwiki.apache.org/confluence/display/MAVENOLD/Versioning">"Versioning" on Maven Wiki</a>, source:
- * {@link https://github.com/apache/maven/blob/master/maven-artifact/src/main/java/org/apache/maven/artifact/versioning/ComparableVersion.java}
+ * @see <a href=
+ *      "https://github.com/apache/maven/blob/master/maven-artifact/src/main/java/org/apache/maven/artifact/versioning/ComparableVersion.java">ComparableVersion.java</a>
  * @since 1.0.0
  */
 @Typed
@@ -192,6 +193,7 @@ public class ComparableVersion implements Comparable<ComparableVersion> {
          * it requires a lexical sort anyway.
          *
          * @param qualifier
+         *            qualifier
          * @return an equivalent value that can be used with lexical comparison
          */
         public static String comparableQualifier(String qualifier) {
@@ -302,14 +304,21 @@ public class ComparableVersion implements Comparable<ComparableVersion> {
     }
 
     /**
-     * <p>Constructor for ComparableVersion.</p>
+     * Constructor for ComparableVersion.
+     * 
+     * @param version
+     *            {@code version}
      */
     public ComparableVersion(String version) {
         parseVersion(version);
     }
 
     /**
-     * <p>parseVersion.</p>
+     * Parses {@code ComparableVersion} from {@link String}.
+     *
+     * @param version
+     *            {@code String} to parse
+     * 
      */
     public final void parseVersion(String version) {
         this.value = version;
@@ -386,22 +395,20 @@ public class ComparableVersion implements Comparable<ComparableVersion> {
         return isDigit ? new IntegerItem(buf) : new StringItem(buf, false);
     }
 
-    /**
-     * <p>compareTo.</p>
-     */
+    /** {@inheritDoc} */
     public int compareTo(ComparableVersion o) {
         return items.compareTo(o.items);
     }
 
-    /**
-     * <p>toString.</p>
-     */
+    /** {@inheritDoc} */
     public String toString() {
         return value;
     }
 
     /**
-     * <p>Getter for the field <code>canonical</code>.</p>
+     * Getter for the field {@code canonical}.
+     * 
+     * @return {@code canonical}
      */
     public String getCanonical() {
         return canonical;
@@ -412,9 +419,7 @@ public class ComparableVersion implements Comparable<ComparableVersion> {
         return (o instanceof ComparableVersion) && canonical.equals(((ComparableVersion) o).canonical);
     }
 
-    /**
-     * <p>hashCode.</p>
-     */
+    /** {@inheritDoc} */
     public int hashCode() {
         return canonical.hashCode();
     }

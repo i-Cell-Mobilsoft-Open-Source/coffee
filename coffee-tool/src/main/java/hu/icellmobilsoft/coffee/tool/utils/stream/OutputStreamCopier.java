@@ -74,7 +74,9 @@ public class OutputStreamCopier extends OutputStream {
     }
 
     /**
-     * Copy of used outputstream data
+     * Copy of used output stream data.
+     * 
+     * @return byte array copy
      */
     public byte[] getCopy() {
         return copy.toByteArray();

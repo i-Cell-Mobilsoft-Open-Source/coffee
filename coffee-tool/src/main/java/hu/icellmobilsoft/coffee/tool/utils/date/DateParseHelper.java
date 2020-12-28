@@ -46,7 +46,7 @@ import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 public class DateParseHelper {
 
     /**
-     * String to {@link OffsetDateTime}
+     * String to {@code OffsetDateTime}
      *
      * @param from
      *            Parse string as OffsetDateTime. Valid values are UTC time in millis; and ISO_OFFSET_DATE_TIME or ISO_LOCAL_DATE_TIME
@@ -85,7 +85,7 @@ public class DateParseHelper {
     }
 
     /**
-     * String to {@link OffsetTime}
+     * String to {@code OffsetTime}
      *
      * @param from
      *            Parse string as OffsetTime. Valid values are ISO_OFFSET__TIME or ISO_LOCAL__TIME ('10:15:30+01:00' or '10:15:30') representation of
@@ -117,11 +117,12 @@ public class DateParseHelper {
     }
 
     /**
-     * Unmarshalling object to {@link LocalDate}
+     * Unmarshalling object to {@code LocalDate}
      *
      * @param from
      *            Parse string as LocalDate. Valid values are UTC time in millis; and ISO_DATE ('2011-12-03' or '2011-12-03+01:00') representation of
      *            date
+     * @return parsed {@code LocalDate}
      * @throws BaseException
      *             if input parameter is unparsable
      */

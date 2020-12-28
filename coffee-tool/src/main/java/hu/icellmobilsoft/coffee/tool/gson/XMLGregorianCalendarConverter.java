@@ -38,7 +38,7 @@ import com.google.gson.JsonSerializer;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
 
 /**
- * Json <-> XMLGregorianCalendar
+ * Json &lt;-&gt; XMLGregorianCalendar converter.
  *
  * @author imre.scheffer
  * @since 1.0.0

@@ -56,9 +56,11 @@ public class DateUtil {
     public static final String DEFAULT_FULL_PATTERN = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
 
     /**
-     * Creates a new calendar instance from a util Date.
+     * Creates a new calendar instance from a {@link Date}.
      *
      * @param date
+     *            {@code Date} to convert
+     * @return {@link Calendar} or null if {@code date} is null
      */
     public static Calendar toCalendar(Date date) {
         if (date == null) {
@@ -70,11 +72,15 @@ public class DateUtil {
     }
 
     /**
-     * Convert to Calendar, change value and converts to Date.
+     * Converts to {@link Calendar}, then changes value and converts back to {@link Date}.
      *
      * @param date
+     *            {@code Date} to add value to
      * @param value
+     *            value to change the {@code date} with
      * @param measureUnit
+     *            unit of {@code value}
+     * @return modified {@code Date} or null if {@code date} is null
      */
     public static Date addValueToDate(Date date, int value, int measureUnit) {
         if (date == null) {
@@ -87,13 +93,13 @@ public class DateUtil {
     }
 
     /**
-     * Parse dateString to {@link Date}.
+     * Parses {@code String} to {@link Date}.
      * 
      * @param dateString
      *            value to parse
      * @param pattern
      *            to parse the dateString with
-     * @return new Date instance
+     * @return parsed {@code Date} or null if {@code dateString} or {@code pattern} is null
      */
     public static Date parse(String dateString, String pattern) {
         if (StringUtils.isBlank(pattern) || StringUtils.isBlank(dateString)) {
@@ -109,14 +115,14 @@ public class DateUtil {
     }
 
     /**
-     * Gets back the number of calendar days between 2 dates. For example: 2020.01.01 23:59:59 - 2020.01.02 00:00:01. The result is 1 day. It is not
-     * depend on summer time change.
+     * Returns the number of calendar days between 2 dates. Independent of summer time change. For example: 2020.01.01 23:59:59 - 2020.01.02 00:00:01.
+     * The result is 1 day.
      *
      * @param dateFrom
      *            date from
      * @param dateTo
      *            date to
-     * @return number of days or 0 if dateFrom or dateTo is null
+     * @return number of days or 0 if {@code dateFrom} or {@code dateTo} is null
      */
     public static long daysBetween(Date dateFrom, Date dateTo) {
         if (dateFrom == null || dateTo == null) {
@@ -128,9 +134,11 @@ public class DateUtil {
     }
 
     /**
-     * Gets back a date without time part.
+     * Returns given {@link Date} without time part.
      *
      * @param date
+     *            {@code Date} to clear
+     * @return cleared {@code Date} or null if {@code date} is null
      */
     public static Date clearTimePart(Date date) {
         if (date == null) {
@@ -142,9 +150,11 @@ public class DateUtil {
     }
 
     /**
-     * Clearing hour, minute, second and millis. This not zeroing ZONE_OFFSET!
+     * Returns given {@link Calendar} without hour, minute, second and millis parts. Does not clear ZONE_OFFSET!
      *
      * @param cal
+     *            {@code Calendar} to clear
+     * @return cleared {@code Calendar} or null if {@code cal} is null
      */
     public static Calendar clearTimePart(final Calendar cal) {
         if (cal == null) {
@@ -159,11 +169,11 @@ public class DateUtil {
     }
 
     /**
-     * Gets back from a custom date the ellapsed seconds.
+     * Returns the elapsed number of seconds of a {@link Date}.
      *
      * @param date
-     *            any date
-     * @return ellapsed seconds from a day
+     *            {@code Date} to calculate with
+     * @return elapsed seconds of the {@code date} or 0 if {@code date} is null
      */
     public static int secondInDay(Date date) {
         if (date == null) {
@@ -178,9 +188,11 @@ public class DateUtil {
     }
 
     /**
-     * Gets back the end time of date.
+     * Sets given {@link Date}'s time part to end of day (23:59:59:999) then returns it.
      *
      * @param day
+     * {@code Date} to calculate with
+     * @return end time of {@code day} or null if {@code day} is null
      */
     public static Date endTimeOfDate(Date day) {
         if (day == null) {
@@ -196,10 +208,11 @@ public class DateUtil {
     }
 
     /**
-     * java 8 ZonedDateTime from ISO format string date
+     * java 8 {@link ZonedDateTime} from ISO format {@code String} date
      *
      * @param stringISODate
      *            {@value #DEFAULT_FULL_PATTERN}
+     * @return parsed {@code ZonedDateTime} or null if unable to parse
      */
     public static ZonedDateTime toZoneDateTime(String stringISODate) {
         if (StringUtils.isBlank(stringISODate)) {
@@ -224,8 +237,8 @@ public class DateUtil {
      * Convert {@link Calendar} to {@link GregorianCalendar}
      * 
      * @param c
-     *            calendar to convert
-     * @return new GregorianCalendar instance
+     *            {@code Calendar} to convert
+     * @return {@code GregorianCalendar} instance or null if {@code c} is null
      */
     protected static GregorianCalendar toGregorianCalendar(Calendar c) {
         if (c == null) {
@@ -242,9 +255,11 @@ public class DateUtil {
     }
 
     /**
-     * Calendar -> ZonedDateTime converter Calendar belso idozona szerint (classic)
+     * {@link Calendar} to {@link ZonedDateTime} converter {@code Calendar} belso idozona szerint (classic)
      *
      * @param cal
+     *            {@code Calendar} to convert
+     * @return {@code ZonedDateTime} instance or null if {@code cal} is null
      */
     public static ZonedDateTime toZonedDateTime(Calendar cal) {
         if (cal == null) {
@@ -257,9 +272,11 @@ public class DateUtil {
     }
 
     /**
-     * Date -> ZonedDateTime converter lokalis idozona szerint (classic)
+     * {@link Date} to {@link ZonedDateTime} converter with system default zone id
      *
      * @param date
+     *            {@code Date} to convert
+     * @return {@code ZonedDateTime} instance or null if {@code date} is null
      */
     public static ZonedDateTime toZonedDateTime(Date date) {
         if (date == null) {
@@ -269,9 +286,11 @@ public class DateUtil {
     }
 
     /**
-     * Date -> OffsetDateTime converter lokalis idozona szerint (classic)
+     * {@link Date} to {@link OffsetDateTime} converter with system default zone id
      *
      * @param date
+     *            {@code Date} to convert
+     * @return {@code OffsetDateTime} instance or null if {@code date} is null
      */
     public static OffsetDateTime toOffsetDateTime(Date date) {
         if (date == null) {
@@ -281,9 +300,11 @@ public class DateUtil {
     }
 
     /**
-     * Date -> LocalDate converter lokalis idozona szerint (classic)
+     * {@link Date} to {@link LocalDate} converter with system default zone id
      *
      * @param date
+     *            {@code Date} to convert
+     * @return {@code LocalDate} instance or null if {@code date} is null
      */
     public static LocalDate toLocalDate(Date date) {
         if (date == null) {
@@ -293,9 +314,11 @@ public class DateUtil {
     }
 
     /**
-     * Date -> LocalTime converter lokalis idozona szerint (classic)
+     * {@link Date} to {@link LocalTime} converter with system default zone id
      *
      * @param date
+     *            {@code Date} to convert
+     * @return {@code LocalTime} instance or null if {@code date} is null
      */
     public static LocalTime toLocalTime(Date date) {
         if (date == null) {
@@ -305,10 +328,13 @@ public class DateUtil {
     }
 
     /**
-     * Dátumok közti hónap kulönbség
+     * Returns the number of months between two {@link Date}s. The "from" month is inclusive, the "to" is exclusive.
      *
      * @param dateFrom
+     *            from {@code Date}, inclusive
      * @param dateTo
+     *            to {@code Date}, exclusive
+     * @return Number of months between {@code dateFrom} and {@code dateTo} or null if {@code dateFrom} or {@code dateTo} is null
      */
     public static long monthsBetween(Date dateFrom, Date dateTo) {
         if (dateFrom == null || dateTo == null) {
@@ -320,9 +346,11 @@ public class DateUtil {
     }
 
     /**
-     * ZonedDateTime -> java.util.Date converter
+     * {@link ZonedDateTime} to {@link Date} converter
      *
      * @param zonedDateTime
+     *            {@code ZonedDateTime} to convert
+     * @return {@code Date} instance or null if {@code zonedDateTime} is null
      */
     public static Date toDate(ZonedDateTime zonedDateTime) {
         if (zonedDateTime == null) {
@@ -332,9 +360,11 @@ public class DateUtil {
     }
 
     /**
-     * OffsetDateTime -> java.util.Date converter
+     * {@link OffsetDateTime} to {@link Date} converter
      *
      * @param offsetDateTime
+     *            {@code OffsetDateTime} to convert
+     * @return {@code Date} instance or null if {@code offsetDateTime} is null
      */
     public static Date toDate(OffsetDateTime offsetDateTime) {
         if (offsetDateTime == null) {
@@ -344,9 +374,11 @@ public class DateUtil {
     }
 
     /**
-     * Start ZonedDateTime of given YearMonth
+     * {@link YearMonth} to {@link ZonedDateTime} converter using start of first day in given month with system default zone id
      *
      * @param yearMonth
+     *            {@code YearMonth} to convert
+     * @return {@code ZonedDateTime} instance with start of first day or null if {@code yearMonth} is null
      */
     public static ZonedDateTime startZonedDateTime(YearMonth yearMonth) {
         if (yearMonth == null) {
@@ -356,9 +388,11 @@ public class DateUtil {
     }
 
     /**
-     * End ZonedDateTime of given YearMonth
+     * {@link YearMonth} to {@link ZonedDateTime} converter using end of last day in given month with system default zone id
      *
      * @param yearMonth
+     *            {@code YearMonth} to convert
+     * @return {@code ZonedDateTime} instance with end of last day or null if {@code yearMonth} is null
      */
     public static ZonedDateTime endZonedDateTime(YearMonth yearMonth) {
         if (yearMonth == null) {
@@ -368,9 +402,11 @@ public class DateUtil {
     }
 
     /**
-     * java.util.Date -> java.time.LocalDateTime konverter
+     * {@link Date} to {@link LocalDateTime} converter with system default zone id
      *
      * @param date
+     *            {@code Date} to convert
+     * @return {@code LocalDateTime} instance or null if {@code date} is null
      */
     public static LocalDateTime toLocalDateTime(Date date) {
         if (date == null) {
@@ -380,9 +416,11 @@ public class DateUtil {
     }
 
     /**
-     * java.time.LocalDateTime -> java.util.Date konverter
+     * {@link LocalDateTime} to {@link Date} converter with system default zone id
      *
      * @param localDateTime
+     *            {@code LocalDateTime} to convert
+     * @return {@code Date} instance or null if {@code localDateTime} is null
      */
     public static Date toDate(LocalDateTime localDateTime) {
         if (localDateTime == null) {
@@ -392,11 +430,11 @@ public class DateUtil {
     }
 
     /**
-     * Returns a {@link Date} instance created from {@link LocalDate}
+     * Returns a {@link Date} instance created from {@link LocalDate} with system default zone id
      *
      * @param localDate
      *            localDate to convert
-     * @return new Date instance or null if localDate is empty
+     * @return {@code Date} instance or null if {@code localDate} is empty
      */
     public static Date toDate(LocalDate localDate) {
         if (localDate == null) {

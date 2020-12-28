@@ -75,11 +75,12 @@ public class StringHelper {
      * <li>/META-INF/microprofile-config.properties</li>
      * </ol>
      *
-     * If pattern is not set via config it dafaults to {@link #DEFAULT_PATTERN} <br>
+     * If pattern is not set via config it defaults to {@link #DEFAULT_PATTERN} <br>
      * ie witch default pattern:<br>
      * keypattern = {@code .*?(pass|secret).*?}
      * <table border="1">
-     * <tbody>
+     *
+     * <caption>Example input-output pairs</caption> <tbody>
      * <tr>
      * <td>text</td>
      * <td>result</td>
@@ -113,6 +114,7 @@ public class StringHelper {
      *
      * @param text
      *            XML or JSON text to replace sensitive data
+     * @return masked text
      */
     public String maskValueInXmlJson(String text) {
         // Default config sources (sys, env, microprofile-config.properties)

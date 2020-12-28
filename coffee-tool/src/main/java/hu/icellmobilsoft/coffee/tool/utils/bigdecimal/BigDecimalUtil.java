@@ -40,10 +40,13 @@ public class BigDecimalUtil {
     public static final BigDecimal PERCENTAGE_1 = new BigDecimal("0.01");
 
     /**
-     * Check that the array contains the specific value
+     * Check that the array contains the specific value.
      *
      * @param bigDecimals
+     *            array of {@link BigDecimal}s
      * @param value
+     *            {@link BigDecimal} value to search in the array
+     * @return if {@code bigDecimals} contains {@code value}
      */
     public static boolean containsBigDecimal(BigDecimal[] bigDecimals, BigDecimal value) {
         if (bigDecimals == null || value == null) {
@@ -58,10 +61,13 @@ public class BigDecimalUtil {
     }
 
     /**
-     * Check that the list contains the specific value
+     * Check that the collection contains the specific value.
      *
      * @param bigDecimals
+     *            {@link Collection} of {@link BigDecimal}s
      * @param value
+     *            {@link BigDecimal} value to search in the {@link Collection}
+     * @return if {@code bigDecimals} contains {@code value}
      */
     public static boolean containsBigDecimal(Collection<BigDecimal> bigDecimals, BigDecimal value) {
         if (bigDecimals == null || value == null) {

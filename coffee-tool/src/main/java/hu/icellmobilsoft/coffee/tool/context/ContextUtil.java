@@ -30,7 +30,7 @@ import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 
 /**
- * <p>ContextUtil class.</p>
+ * ContextUtil class.
  *
  * @author imre.scheffer
  * @since 1.0.0
@@ -39,7 +39,17 @@ import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 public class ContextUtil {
 
     /**
-     * <p>doLookup.</p>
+     * Retrieves named object.
+     *
+     * @param jndi
+     *            the name of the object to look up
+     * @param clazz
+     *            class of returned object
+     * @param <T>
+     *            type of returned object
+     * @return the object bound to {@code jndi}
+     * @throws BaseException
+     *             exception
      */
     @SuppressWarnings("unchecked")
     public static <T> T doLookup(String jndi, Class<T> clazz) throws BaseException {

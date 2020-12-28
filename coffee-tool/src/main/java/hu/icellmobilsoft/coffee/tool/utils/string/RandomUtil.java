@@ -99,7 +99,9 @@ public class RandomUtil {
     private static final Random RANDOM = new Random();
 
     /**
-     * generate fix 16 length id!
+     * Generates fix 16 length id.
+     * 
+     * @return generated id
      */
     public static String generateId() {
         int xInd = getNextIndex();
@@ -128,7 +130,9 @@ public class RandomUtil {
     }
 
     /**
-     * <p>getNextIndex.</p>
+     * Generates sequential index. Restarts sequence at value 1296.
+     * 
+     * @return next index
      */
     protected static synchronized int getNextIndex() {
         generatedIndex++;
@@ -140,7 +144,15 @@ public class RandomUtil {
     }
 
     /**
-     * <p>paddL.</p>
+     * Applies left padding to given text.
+     *
+     * @param str
+     *            text to pad
+     * @param length
+     *            pad length
+     * @param padd
+     *            pad charachter
+     * @return left-padded text
      */
     protected static String paddL(String str, int length, char padd) {
         /*
@@ -150,7 +162,13 @@ public class RandomUtil {
     }
 
     /**
-     * Egy szám tetszőleges számrendszerbe való váltása. 62-es szamrendszer a max
+     * Converts input {@code long} to any number system. Highest available number system is 62.
+     *
+     * @param inNum
+     *            {@code long} to convert
+     * @param radix
+     *            radix of the number system
+     * @return converted number {@link String}
      */
     protected static String convertToRadix(long inNum, long radix) {
         if (radix == 0) {
@@ -170,7 +188,9 @@ public class RandomUtil {
     }
 
     /**
-     * Generating random String token
+     * Generating random {@link String} token
+     * 
+     * @return generated token
      */
     protected static String generateToken() {
         String token = StringUtils.left(UUID.randomUUID() + generateId(), 48);

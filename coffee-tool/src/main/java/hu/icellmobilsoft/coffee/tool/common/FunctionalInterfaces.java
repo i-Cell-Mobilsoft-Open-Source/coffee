@@ -33,6 +33,7 @@ public class FunctionalInterfaces {
      * This and the following ones are for a smart wrapping of all action calls inside the REST implementations
      * 
      * @param <R>
+     *            return object type
      */
     @FunctionalInterface
     public interface BaseExceptionSupplier<R> {
@@ -43,6 +44,7 @@ public class FunctionalInterfaces {
      * Consumer {@link BaseException}-t dobó operációkhoz
      * 
      * @param <T>
+     *            input objektum tipusa
      * @see java.util.function.Consumer
      */
     @FunctionalInterface
@@ -52,6 +54,8 @@ public class FunctionalInterfaces {
          *
          * @param t
          *            the input argument
+         * @throws BaseException
+         *             exception
          */
         void accept(T t) throws BaseException;
     }

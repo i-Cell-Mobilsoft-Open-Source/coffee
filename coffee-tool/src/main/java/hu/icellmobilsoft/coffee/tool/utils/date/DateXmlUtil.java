@@ -40,7 +40,7 @@ import org.apache.commons.lang3.StringUtils;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
 
 /**
- * Date util.
+ * Date XML util.
  *
  * @author imre.scheffer
  * @since 1.0.0
@@ -53,11 +53,11 @@ public class DateXmlUtil {
     private static final String TIMESTAMP_CONVERT_ERROR_MSG = "Timestamp convert [{0}] to XmlGregorianCalendar error: ";
 
     /**
-     * Convert Calendar to XMLGregorianCalendar
+     * Converts {@link Calendar} to {@link XMLGregorianCalendar}
      *
      * @param c
-     *            calendar
-     * @return null if error
+     *            {@code Calendar} to convert
+     * @return converted {@code XMLGregorianCalendar} or null if error
      */
     public static XMLGregorianCalendar toXMLGregorianCalendar(Calendar c) {
         if (c == null) {
@@ -78,10 +78,11 @@ public class DateXmlUtil {
     }
 
     /**
-     * Creates a new XMLGregorianCalandar instance from a util Date.
+     * Converts {@link Date} to {@link XMLGregorianCalendar}
      *
      * @param date
-     * @return null if error
+     *            {@code Date} to convert
+     * @return converted {@code XMLGregorianCalendar} or null if error
      */
     public static XMLGregorianCalendar toXMLGregorianCalendar(Date date) {
         if (date == null) {
@@ -91,10 +92,13 @@ public class DateXmlUtil {
     }
 
     /**
-     * Creates a new XMLGregorianCalendar instance from a GregorianCalendar with specific timezone offset.
+     * Creates a new {@link XMLGregorianCalendar} instance from a {@link GregorianCalendar} with specific timezone offset.
      *
      * @param calendar
+     *            {@code GregorianCalendar} to convert
      * @param offsetInMinutes
+     *            timezone offset defined in minutes
+     * @return converted {@code XMLGregorianCalendar} or null if error
      */
     public static XMLGregorianCalendar toXMLGregorianCalendar(GregorianCalendar calendar, int offsetInMinutes) {
         if (calendar == null) {
@@ -118,10 +122,11 @@ public class DateXmlUtil {
     }
 
     /**
-     * Creates a new XMLGregorianCalandar instance from a util Date, sets the timezone to undefinied.
+     * Creates a new {@link XMLGregorianCalendar} instance from a {@link Date} with undefined timezone.
      *
      * @param date
-     * @return null if error
+     *            {@code Date} to convert
+     * @return converted {@code XMLGregorianCalendar} or null if error
      */
     public static XMLGregorianCalendar toXMLGregorianCalendarNoTimeZone(Date date) {
         if (date == null) {
@@ -133,9 +138,11 @@ public class DateXmlUtil {
     }
 
     /**
-     * Creates a calendar instance from a XMLGregorianCalendar.
+     * Converts {@link XMLGregorianCalendar} to {@link Calendar}
      *
      * @param xmlGregorianCalendar
+     *            {@code XMLGregorianCalendar} to convert
+     * @return converted {@code Calendar} or null if error
      */
     public static Calendar toCalendar(XMLGregorianCalendar xmlGregorianCalendar) {
         if (xmlGregorianCalendar == null) {
@@ -145,9 +152,11 @@ public class DateXmlUtil {
     }
 
     /**
-     * Creates a Date instance from a XMLGregorianCalendar.
+     * Converts {@link XMLGregorianCalendar} to {@link Date}
      *
      * @param xmlGregorianCalendar
+     *            {@code XMLGregorianCalendar} to convert
+     * @return converted {@code Date} or null if error
      */
     public static Date toDate(XMLGregorianCalendar xmlGregorianCalendar) {
         if (xmlGregorianCalendar == null) {
@@ -157,11 +166,12 @@ public class DateXmlUtil {
     }
 
     /**
-     * Creates a new XMLGregorianCalandar instance from a String ISO Date (such as 2011-12-03T10:15:30Z). Date is converted to current timezone
+     * Creates a new {@link XMLGregorianCalendar} instance from a {@link String} ISO Date (such as 2011-12-03T10:15:30Z). Date is converted to current
+     * timezone.
      *
      * @param stringISODate
-     *            yyyy-MM-dd'T'HH:mm:ss.SSSZ
-     * @return null if error
+     *            yyyy-MM-dd'T'HH:mm:ss.SSSZ format
+     * @return converted {@code XMLGregorianCalendar} null if error
      */
     public static XMLGregorianCalendar toXMLGregorianCalendarFromISO(String stringISODate) {
         if (StringUtils.isBlank(stringISODate)) {
@@ -180,10 +190,11 @@ public class DateXmlUtil {
     }
 
     /**
-     * Convert OffsetDateTime to XMLGregorianCalendar
+     * Converts {@link OffsetDateTime} to {@link XMLGregorianCalendar}
      *
      * @param offsetDateTime
-     * @return null for null
+     *            {@code OffsetDateTime} to convert
+     * @return converted {@code XMLGregorianCalendar} or null if error
      */
     public static XMLGregorianCalendar toXMLGregorianCalendar(OffsetDateTime offsetDateTime) {
         if (offsetDateTime == null) {
@@ -193,10 +204,11 @@ public class DateXmlUtil {
     }
 
     /**
-     * LocalDate to XMLGregorianCalendar converter
+     * Converts {@link LocalDate} to {@link XMLGregorianCalendar}
      *
      * @param localDate
-     * @return "2020-03-03Z"
+     *            {@code LocalDate} to convert
+     * @return converted {@code XMLGregorianCalendar} (eg. "2020-03-03Z") or null if error
      */
     public static XMLGregorianCalendar toXMLGregorianCalendar(LocalDate localDate) {
         if (localDate == null) {
@@ -213,10 +225,12 @@ public class DateXmlUtil {
     }
 
     /**
-     * XMLGregorianCalendar ban levo datumot ugy veszi mindha local timezone lenne, tehat az UTC-t felulirja local timetozone-al. Hasznos bizonyos
-     * esetekben, amikor az oracle-ben nincs tarolva timestamp, de viszont input adatkent UTC-bol indulunk ki es a DB-ben is helyesen kell eltarolni
+     * Creates a new {@link Date} instance from an {@link XMLGregorianCalendar} with timezone overwritten to local timezone. Use this when there is no
+     * timestamp stored in database (oracle), but the input is in UTC.
      *
      * @param xmlGregorianCalendar
+     *            {@code XMLGregorianCalendar} to convert
+     * @return {@code Date} in local timezone or null if {@code xmlGregorianCalendar} is null
      */
     public static Date toDateAsLocal(XMLGregorianCalendar xmlGregorianCalendar) {
         if (xmlGregorianCalendar == null) {
@@ -230,10 +244,11 @@ public class DateXmlUtil {
     }
 
     /**
-     * XMLGregorianCalendar-bol kiszedi a datumot (ido nullazva). Hasznalhato foleg birthDate mezoknel es ott ahol xsd:date tipus van hasznalva.<br>
+     * {@link XMLGregorianCalendar}-bol kiszedi a datumot (ido nullazva). Hasznalhato foleg birthDate mezoknel es ott ahol xsd:date tipus van
+     * hasznalva.<br>
      * <br>
-     * Azt a problemat orvosolja hogy long-kent beadott datum (UTC zero ido) json formatumban a XMLGregorianCalendar helyi idore forditja, es igy
-     * mindig belekerul ido eltolodas.<br>
+     * Azt a problemat orvosolja hogy long-kent beadott datum (UTC zero ido) json formatumban a {@code XMLGregorianCalendar} helyi idore forditja, es
+     * igy mindig belekerul ido eltolodas.<br>
      * <ul>
      * <li>json datum: 1515452400000 (Tue Jan 09 00:00:00 CET 2018)</li>
      * <li>ebbol XMLGregorianCalendar: 2018-01-09T01:00:00+01:00</li>
@@ -242,6 +257,8 @@ public class DateXmlUtil {
      * </ul>
      *
      * @param xmlGregorianCalendar
+     *            {@code XMLGregorianCalendar} to convert
+     * @return {@code Date} without time part or null if {@code xmlGregorianCalendar} is null
      */
     public static Date toDateOnly(XMLGregorianCalendar xmlGregorianCalendar) {
         if (xmlGregorianCalendar == null) {
@@ -253,11 +270,12 @@ public class DateXmlUtil {
     }
 
     /**
-     * {@link #toDateAsLocal(XMLGregorianCalendar)} ennek a vissza fele parja
+     * Creates a new {@link XMLGregorianCalendar} instance from a {@link Calendar} with timezone overwritten to UTC. 
      *
+     * @see #toDateAsLocal(XMLGregorianCalendar)
      * @param c
-     *            calendar
-     * @return null if error
+     *            {@code Calendar} to convert
+     * @return {@code XMLGregorianCalendar} in UTC or null if error
      */
     public static XMLGregorianCalendar toXMLGregorianCalendarAsUTC(Calendar c) {
         if (c == null) {
@@ -275,10 +293,12 @@ public class DateXmlUtil {
     }
 
     /**
-     * {@link #toDateAsLocal(XMLGregorianCalendar)} ennek a vissza fele parja
+     * Creates a new {@link XMLGregorianCalendar} instance from a {@link Date} with timezone overwritten to UTC.
      *
+     * @see #toDateAsLocal(XMLGregorianCalendar)
      * @param date
-     * @return null if error
+     *            {@code Date} to convert
+     * @return {@code XMLGregorianCalendar} in UTC or null if error
      */
     public static XMLGregorianCalendar toXMLGregorianCalendarAsUTC(Date date) {
         if (date == null) {
@@ -288,11 +308,11 @@ public class DateXmlUtil {
     }
 
     /**
-     * Calendar ertekbol csinal egy tiszta datum (YYYY-MM-DDZ ido nelkuli UTCben ertelmezett) XMLGregorianCalendar-t
+     * Creates a new {@link XMLGregorianCalendar} instance from a {@link Calendar} without time part in UTC (YYYY-MM-DDZ format).
      *
      * @param c
-     *            Calendar
-     * @return null if error
+     *            {@code Calendar} to convert
+     * @return {@code XMLGregorianCalendar} without time part in UTC or null if error
      */
     public static XMLGregorianCalendar toXMLGregorianCalendarDateOnly(Calendar c) {
         if (c == null) {
@@ -310,10 +330,11 @@ public class DateXmlUtil {
     }
 
     /**
-     * java.util.Date ertekbol csinal egy tiszta datum (YYYY-MM-DDZ ido nelkuli UTCben ertelmezett) XMLGregorianCalendar-t
+     * Creates a new {@link XMLGregorianCalendar} instance from a {@link Date} without time part in UTC (YYYY-MM-DDZ format).
      *
      * @param date
-     * @return null if error
+     *            {@code Date} to convert
+     * @return {@code XMLGregorianCalendar} without time part in UTC or null if error
      */
     public static XMLGregorianCalendar toXMLGregorianCalendarDateOnly(Date date) {
         if (date == null) {
@@ -323,9 +344,11 @@ public class DateXmlUtil {
     }
 
     /**
-     * XMLGregorianCalendar -> ZonedDateTime converter XMLGregorianCalendar belso idozona szerint (classic)
+     * {@link XMLGregorianCalendar} to {@link ZonedDateTime} converter with system default zone id
      *
      * @param xmlCal
+     *            {@code XMLGregorianCalendar} to convert
+     * @return {@code ZonedDateTime} instance or null if {@code xmlCal} is null
      */
     public static ZonedDateTime toZonedDateTime(XMLGregorianCalendar xmlCal) {
         if (xmlCal == null) {
@@ -335,9 +358,11 @@ public class DateXmlUtil {
     }
 
     /**
-     * XMLGregorianCalendar to LocalDate converter
+     * {@link XMLGregorianCalendar} to {@link LocalDate} converter
      *
      * @param xmlGregorianCalendar
+     *            {@code XMLGregorianCalendar} to convert
+     * @return {@code LocalDate} instance or null if {@code xmlGregorianCalendar} is null
      */
     public static LocalDate toLocalDate(XMLGregorianCalendar xmlGregorianCalendar) {
         if (xmlGregorianCalendar == null) {
@@ -347,11 +372,12 @@ public class DateXmlUtil {
     }
 
     /**
+     * Sets the input {@link Calendar}'s time zone to UTC, then applies {@link #toXMLGregorianCalendar(Calendar)}. 
      * A bejovo Calendar ido zonajat "UTC"-re alitja, igy a benne levo datum is transformalodik (+/- ido) es a sima
-     * {@link #toXMLGregorianCalendar(Calendar)} '2018-03-07T14:15:01.000Z' formatumra rakja az XMLGregorianCalendar objektumot
+     *  '2018-03-07T14:15:01.000Z' formatumra rakja az XMLGregorianCalendar objektumot
      *
      * @param cal
-     *            calendar
+     *            {@code Calendar} to transform
      * @return null if null input or "2018-03-07T14:15:01.000Z" formatted XMLGregorianCalendar
      */
     public static XMLGregorianCalendar toXMLGregorianCalendarInUTC(Calendar cal) {
@@ -365,18 +391,22 @@ public class DateXmlUtil {
     }
 
     /**
-     * Ugyan az mint a {@link #toXMLGregorianCalendarInUTC(Calendar)} csak java.util.Date inputra
+     * Same as {@link #toXMLGregorianCalendarInUTC(Calendar)} for java.util.Date input.
      *
      * @param date
+     *            {@code Date} to transform
+     * @return null if null input or "2018-03-07T14:15:01.000Z" formatted XMLGregorianCalendar
      */
     public static XMLGregorianCalendar toXMLGregorianCalendarInUTC(Date date) {
         return toXMLGregorianCalendarInUTC(DateUtil.toCalendar(date));
     }
 
     /**
-     * Ido resz torlese
+     * Clears time part of given {@link XMLGregorianCalendar}.
      *
      * @param xmlCal
+     *            {@code XMLGregorianCalendar} to clear
+     * @return {@code XMLGregorianCalendar} without time fields or null if {@code xmlCal} is null
      */
     public static XMLGregorianCalendar clearTime(XMLGregorianCalendar xmlCal) {
         if (xmlCal == null) {
@@ -393,9 +423,11 @@ public class DateXmlUtil {
     }
 
     /**
-     * Null safe clone of XMLGregorianCalendar
+     * Null safe clone of {@link XMLGregorianCalendar}.
      *
      * @param xmlGregorianCalendar
+     *            {@code XMLGregorianCalendar} to clone
+     * @return {@code XMLGregorianCalendar} instance clone or null if {@code xmlGregorianCalendar} is null
      */
     public static XMLGregorianCalendar cloneXMLGregorianCalendar(XMLGregorianCalendar xmlGregorianCalendar) {
         if (xmlGregorianCalendar == null) {

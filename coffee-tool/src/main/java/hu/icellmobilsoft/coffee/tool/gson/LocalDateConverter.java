@@ -36,7 +36,7 @@ import hu.icellmobilsoft.coffee.tool.utils.date.DateParseHelper;
 import hu.icellmobilsoft.coffee.tool.utils.date.DatePrintUtil;
 
 /**
- * Json <-> LocalDate
+ * Json &lt;-&gt; LocalDate converter.
  *
  * @author mark.petrenyi
  * @author imre.scheffer

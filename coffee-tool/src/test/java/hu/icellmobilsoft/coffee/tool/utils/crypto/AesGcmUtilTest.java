@@ -35,7 +35,7 @@ import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
  * Test class for {@link AesGcmUtil}
  * 
  * @author mark.petrenyi
- * @since
+ * @since 1.1.0
  */
 @DisplayName("Testing AesGcmUtil")
 class AesGcmUtilTest {
