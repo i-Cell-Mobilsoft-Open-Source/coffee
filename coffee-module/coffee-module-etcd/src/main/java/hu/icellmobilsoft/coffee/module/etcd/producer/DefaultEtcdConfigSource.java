@@ -60,14 +60,14 @@ public class DefaultEtcdConfigSource implements ConfigSource {
     @Override
     public Map<String, String> getProperties() {
         try {
-            return getconfigEtcdService().getAll();
+            return getConfigEtcdService().getAll();
         } catch (BaseException e) {
             log.error(MessageFormat.format("Error in getting all values from ETCD: [{0}]", e.getLocalizedMessage()), e);
         }
         return Collections.emptyMap();
     }
 
-    private static ConfigEtcdService getconfigEtcdService() {
+    private static ConfigEtcdService getConfigEtcdService() {
         if (configEtcdService == null) {
             synchronized (DefaultEtcdConfigSource.class) {
                 if (configEtcdService != null) {
@@ -136,7 +136,7 @@ public class DefaultEtcdConfigSource implements ConfigSource {
             return Optional.empty();
         }
         try {
-            String value = DefaultEtcdConfigSource.getconfigEtcdService().getValue(propertyName);
+            String value = DefaultEtcdConfigSource.getConfigEtcdService().getValue(propertyName);
             return Optional.of(value);
         } catch (BONotFoundException e) {
             log.trace(e.getLocalizedMessage());
