@@ -124,6 +124,9 @@ public class RedisStreamHandler {
      *             exception on sending
      */
     public StreamEntryID publishPublication(RedisStreamPublication publication) throws BaseException {
+        if (publication == null) {
+            throw new TechnicalException("publication is null!");
+        }
         checkJedisInstance();
         validateGroup(publication.getStreamGroup());
         return publishBase(publication.getStreamGroup(), publication.getStreamMessage());
@@ -139,6 +142,9 @@ public class RedisStreamHandler {
      *             exception on sending
      */
     public List<StreamEntryID> publishPublications(List<RedisStreamPublication> publications) throws BaseException {
+        if (publications == null) {
+            throw new TechnicalException("publications is null!");
+        }
         checkJedisInstance();
 
         Jedis jedis = null;
@@ -163,6 +169,9 @@ public class RedisStreamHandler {
      *             exception on sending
      */
     public List<StreamEntryID> publish(List<String> streamMessages) throws BaseException {
+        if (streamMessages == null) {
+            throw new TechnicalException("streamMessages is null!");
+        }
         checkInitialization();
 
         Jedis jedis = null;
@@ -189,8 +198,11 @@ public class RedisStreamHandler {
      *             exception on sending
      */
     public List<StreamEntryID> publish(String streamGroup, List<String> streamMessages) throws BaseException {
-        checkJedisInstance();
+        if (streamMessages == null) {
+            throw new TechnicalException("streamMessages is null!");
+        }
         validateGroup(streamGroup);
+        checkJedisInstance();
 
         Jedis jedis = null;
         try {
@@ -258,13 +270,17 @@ public class RedisStreamHandler {
 
     protected void checkInitialization() throws BaseException {
         if (jedisInstance == null || streamGroup == null) {
-            throw new TechnicalException("RedisStreamHandler is not initialized!");
+            throw notInitializedException();
         }
     }
 
     protected void checkJedisInstance() throws TechnicalException {
         if (jedisInstance == null) {
-            throw new TechnicalException("RedisStreamHandler is not initialized!");
+            throw notInitializedException();
         }
+    }
+
+    private TechnicalException notInitializedException() {
+        return new TechnicalException("RedisStreamHandler is not initialized!");
     }
 }
