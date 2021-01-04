@@ -67,7 +67,7 @@ public class DefaultEtcdConfigSource implements ConfigSource {
         return Collections.emptyMap();
     }
 
-    protected static ConfigEtcdService getconfigEtcdService() {
+    private static ConfigEtcdService getconfigEtcdService() {
         if (configEtcdService == null) {
             synchronized (DefaultEtcdConfigSource.class) {
                 if (configEtcdService != null) {
@@ -79,7 +79,7 @@ public class DefaultEtcdConfigSource implements ConfigSource {
         return configEtcdService;
     }
 
-    protected static ConfigEtcdService createConfigEtcdService() {
+    private static ConfigEtcdService createConfigEtcdService() {
         EtcdConfig config = new DefaultEtcdConfigImpl();
         Client etcdClient = Client.builder().endpoints(config.getUrl()).build();
 
