@@ -19,12 +19,16 @@
  */
 package hu.icellmobilsoft.coffee.module.mp.restclient.exception;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
+import javax.annotation.Priority;
 import javax.enterprise.event.Observes;
+import javax.enterprise.inject.spi.AfterTypeDiscovery;
 import javax.enterprise.inject.spi.AnnotatedType;
 import javax.enterprise.inject.spi.Extension;
 import javax.enterprise.inject.spi.ProcessAnnotatedType;
@@ -41,7 +45,10 @@ import hu.icellmobilsoft.coffee.se.logging.Logger;
  */
 public class FaultTypeParserExtension implements Extension {
 
-    private static volatile Set<Class<? extends Enum>> faultTypeClasses = Collections.synchronizedSet(new LinkedHashSet<>());
+    private static final int DEFAULT_FAULT_TYPE_PRIORITY = 500;
+
+    private static List<Class<? extends Enum>> faultTypeClasses = new ArrayList<>();
+    private static volatile Map<Class<? extends Enum>, Integer> faultTypePriorityMap = new HashMap<>();
 
     /**
      * Process annotated type.
@@ -57,8 +64,33 @@ public class FaultTypeParserExtension implements Extension {
         if (IFaultType.class.isAssignableFrom(javaClass) && javaClass.isEnum()) {
             Logger.getLogger(FaultTypeParserExtension.class).debug("IFaultType implementation found:[{0}], registering as fault type enum",
                     javaClass);
-            faultTypeClasses.add((Class<? extends Enum>) javaClass);
+            synchronized (FaultTypeParserExtension.class) {
+                faultTypePriorityMap.put((Class<? extends Enum>) javaClass, getPriority(annotatedType));
+            }
         }
+    }
+
+    /**
+     * After type discovery. Feltölti a faultTypeClasses listát priority szerint rendezve
+     *
+     * @param afterTypeDiscovery
+     *            the after type discovery
+     */
+    void afterTypeDiscovery(@Observes AfterTypeDiscovery afterTypeDiscovery) {
+        synchronized (FaultTypeParserExtension.class) {
+            List<Class<? extends Enum>> sortedFaultTypes = faultTypePriorityMap.entrySet().stream().sorted(Map.Entry.comparingByValue())
+                    .map(Map.Entry::getKey).collect(Collectors.toList());
+            faultTypeClasses.addAll(sortedFaultTypes);
+        }
+    }
+
+    private static <T> int getPriority(AnnotatedType<T> annotatedType) {
+        int priority = 0;
+        if (annotatedType.isAnnotationPresent(Priority.class)) {
+            Priority priorityAnnotation = annotatedType.getAnnotation(Priority.class);
+            priority = priorityAnnotation.value();
+        }
+        return priority > 0 ? priority : DEFAULT_FAULT_TYPE_PRIORITY;
     }
 
     /**
@@ -67,7 +99,7 @@ public class FaultTypeParserExtension implements Extension {
      * @return the fault type classes
      */
     public static Collection<Class<? extends Enum>> getFaultTypeClasses() {
-        return Set.copyOf(faultTypeClasses);
+        return List.copyOf(faultTypeClasses);
     }
 
 }
