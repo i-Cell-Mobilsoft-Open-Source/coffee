@@ -43,7 +43,8 @@ import hu.icellmobilsoft.coffee.se.logging.Logger;
 @Vetoed
 public class StringUtil {
 
-    private static Logger LOGGER = hu.icellmobilsoft.coffee.cdi.logger.LogProducer.getStaticDefaultLogger(StringUtil.class);
+    private static Logger LOGGER = Logger.getLogger(StringUtil.class);
+    private static RegexPatternCache patternCache = new RegexPatternCache();
 
     /**
      * Sharp s biztonságos uppercaselése
@@ -96,7 +97,7 @@ public class StringUtil {
         if (StringUtils.isNoneBlank(key, valueStr) && keyPatterns != null) {
             for (String keyPattern : keyPatterns) {
                 if (StringUtils.isNotBlank(keyPattern)) {
-                    Pattern pattern = Pattern.compile(keyPattern, Pattern.CASE_INSENSITIVE);
+                    Pattern pattern = patternCache.getPattern(keyPattern);
                     Matcher matcher = pattern.matcher(key);
                     if (matcher.matches()) {
                         return "*";
@@ -202,7 +203,7 @@ public class StringUtil {
     public static String replaceAllIgnoreCase(String text, String regex, String replacement) {
         // replacement-re csak null-t ellenőrzünk, üres Stringre engedjük cserélni
         if (StringUtils.isNoneBlank(text, regex) && replacement != null) {
-            Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
+            Pattern pattern = patternCache.getPattern(regex);
             Matcher matcher = pattern.matcher(text);
             return matcher.replaceAll(replacement);
         }
