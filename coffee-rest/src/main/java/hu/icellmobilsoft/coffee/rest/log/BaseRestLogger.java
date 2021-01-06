@@ -84,9 +84,11 @@ public abstract class BaseRestLogger implements ContainerRequestFilter, WriterIn
     }
 
     /**
-     * <p>
-     * processRequest.
-     * </p>
+     * Processes HTTP request.
+     *
+     * @param requestContext
+     *            context
+     * @return HTTP request message or null if logging is disabled
      */
     protected String processRequest(ContainerRequestContext requestContext) {
         if (RestLoggerUtil.logDisabled(requestContext, LogSpecifierTarget.REQUEST)) {
@@ -104,9 +106,13 @@ public abstract class BaseRestLogger implements ContainerRequestFilter, WriterIn
     }
 
     /**
-     * <p>
-     * processResponse.
-     * </p>
+     * Processes HTTP response.
+     * 
+     * @param context
+     *            context
+     * @return HTTP response message or null if logging is disabled
+     * @throws IOException
+     *             if response cannot be processed.
      */
     protected String processResponse(WriterInterceptorContext context) throws IOException {
         if (RestLoggerUtil.logDisabled(context, LogSpecifierTarget.RESPONSE)) {
@@ -151,13 +157,19 @@ public abstract class BaseRestLogger implements ContainerRequestFilter, WriterIn
      * <code>MDC.put(LogConstants.LOG_SESSION_ID, ertek)</code> részben.<br>
      * <br>
      * Folyamat azonosítás, Graylog loggolásban van nagy értelme
+     * 
+     * @return session key
      */
     public abstract String sessionKey();
 
     /**
-     * <p>
-     * printRequestHeaders.
-     * </p>
+     * Prints request headers from {@link ContainerRequestContext} and appends given {@link StringBuffer} with the print result.
+     *
+     * @param b
+     *            request message
+     * @param requestContext
+     *            context
+     * @see RequestResponseLogger#printRequestHeaders(java.util.Map)
      */
     protected void printRequestHeaders(StringBuffer b, ContainerRequestContext requestContext) {
         b.append(requestResponseLogger.printRequestHeaders(requestContext.getHeaders()));
@@ -169,27 +181,39 @@ public abstract class BaseRestLogger implements ContainerRequestFilter, WriterIn
     }
 
     /**
-     * <p>
-     * printRequestLine.
-     * </p>
+     * Prints http path info from {@link ContainerRequestContext} and appends given {@link StringBuffer} with the print result.
+     *
+     * @param b
+     *            request message
+     * @param requestContext
+     *            context
+     * @see RequestResponseLogger#printRequestLine(ContainerRequestContext)
      */
     protected void printRequestLine(StringBuffer b, ContainerRequestContext requestContext) {
         b.append(requestResponseLogger.printRequestLine(requestContext));
     }
 
     /**
-     * <p>
-     * printRequestEntity.
-     * </p>
+     * Prints http entity from {@link ContainerRequestContext} and appends given {@link StringBuffer} with the print result.
+     * 
+     * @param b
+     *            request message
+     * @param requestContext
+     *            context
+     * @see RequestResponseLogger#printRequestEntity(ContainerRequestContext)
      */
     protected void printRequestEntity(StringBuffer b, ContainerRequestContext requestContext) {
         b.append(requestResponseLogger.printRequestEntity(requestContext));
     }
 
     /**
-     * <p>
-     * printResponseLine.
-     * </p>
+     * Prints response URL line and appends given {@link StringBuffer} with the print result.
+     * 
+     * @param b
+     *            response message
+     * @param context
+     *            context
+     * @see RequestResponseLogger#printResponseLine(String, int, String, String)
      */
     protected void printResponseLine(StringBuffer b, WriterInterceptorContext context) {
         String fullPath = uriInfo.getAbsolutePath().toASCIIString();
@@ -201,18 +225,28 @@ public abstract class BaseRestLogger implements ContainerRequestFilter, WriterIn
     }
 
     /**
-     * <p>
-     * printResponseHeaders.
-     * </p>
+     * Prints response header values and appends given {@link StringBuffer} with the print result.
+     * 
+     * @param b
+     *            response message
+     * @param context
+     *            context
+     * @see RequestResponseLogger#printResponseHeaders(java.util.Map)
      */
     protected void printResponseHeaders(StringBuffer b, WriterInterceptorContext context) {
         b.append(requestResponseLogger.printResponseHeaders(context.getHeaders()));
     }
 
     /**
-     * <p>
-     * printResponseEntity.
-     * </p>
+     * Prints response from {@link WriterInterceptorContext} and appends given {@link StringBuffer} with the print result.
+     * 
+     * @param b
+     *            response message
+     * @param context
+     *            context
+     * @param entityCopy
+     *            entity
+     * @see RequestResponseLogger#printResponseEntity(String, WriterInterceptorContext, byte[])
      */
     protected void printResponseEntity(StringBuffer b, WriterInterceptorContext context, byte[] entityCopy) {
         b.append(requestResponseLogger.printResponseEntity(uriInfo.getAbsolutePath().toASCIIString(), context, entityCopy));

@@ -52,9 +52,9 @@ import javax.enterprise.util.Nonbinding;
 public @interface ValidateXMLs {
 
     /**
-     * Az egyes xsd validációk verziófüggő felsorolása (azaz Verzió -> xsd összerendelés)
+     * Az egyes xsd validációk verziófüggő felsorolása (azaz Verzió -&gt; xsd összerendelés)
      *
-     * @return
+     * @return {@code ValidateXML} tömb
      */
     @Nonbinding
     ValidateXML[] value();

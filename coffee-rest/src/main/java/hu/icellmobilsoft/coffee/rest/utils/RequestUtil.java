@@ -30,7 +30,7 @@ import org.jboss.resteasy.core.ResourceMethodInvoker;
 import hu.icellmobilsoft.coffee.cdi.logger.LogProducer;
 
 /**
- * REST Response utils
+ * REST Request utils.
  *
  * @author mark.petrenyi
  * @since 1.0.0
@@ -42,10 +42,16 @@ public class RequestUtil {
     public static final String ECLIPSE_MICROPROFILE_REST_CLIENT_INVOKED_METHOD_KEY = "org.eclipse.microprofile.rest.client.invokedMethod";
 
     /**
-     * ContainerRequestContext-bol kiszedi a kivan annotaciot
+     * Returns desired {@link Annotation} from given {@link ContainerRequestContext}.
      *
+     * @param <A>
+     *            type of desired {@code Annotation}
      * @param requestContext
+     *            context
      * @param clazz
+     *            class of desired {@code Annotation}
+     * @return desired {@code Annotation} or null if it is not found
+     *
      */
     public static <A extends Annotation> A getAnnotation(ContainerRequestContext requestContext, Class<A> clazz) {
         if (requestContext == null || clazz == null) {
@@ -63,10 +69,16 @@ public class RequestUtil {
     }
 
     /**
-     * ContainerRequestContext-bol kiszedi a kivan annotaciot
+     * Returns desired {@link Annotation} from given {@link ClientRequestContext}.
      *
+     * @param <A>
+     *            type of desired {@code Annotation}
      * @param requestContext
+     *            context
      * @param clazz
+     *            class of desired {@code Annotation}
+     * @return desired {@code Annotation} or null if it is not found
+     * 
      */
     public static <A extends Annotation> A getAnnotation(ClientRequestContext requestContext, Class<A> clazz) {
         if (requestContext == null || clazz == null) {

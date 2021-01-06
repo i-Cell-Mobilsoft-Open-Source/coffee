@@ -46,7 +46,7 @@ public @interface ValidateXML {
     /**
      * Melyik verziókra aktiválódjon
      *
-     * @return
+     * @return {@link Version}
      */
     @Nonbinding
     Version version() default @Version();
@@ -54,7 +54,7 @@ public @interface ValidateXML {
     /**
      * A Version-höz rendelt xsd fájl elérési útvonallal
      *
-     * @return
+     * @return path of XSD file
      */
     @Nonbinding
     String xsdPath();

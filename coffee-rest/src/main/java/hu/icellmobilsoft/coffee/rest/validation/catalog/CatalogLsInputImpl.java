@@ -36,7 +36,10 @@ public class CatalogLsInputImpl implements LSInput {
     private String systemId;
 
     /**
-     * <p>Constructor for CatalogLsInputImpl.</p>
+     * Constructor for CatalogLsInputImpl.
+     *
+     * @param systemId
+     *            system id
      */
     public CatalogLsInputImpl(String systemId) {
         this.systemId = systemId;

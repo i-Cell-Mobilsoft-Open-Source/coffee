@@ -39,14 +39,14 @@ import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
  * Példa a megkövetelt xml struktúrára:
  *
  * <pre>
- * &lt;xml>
+ * &lt;xml&gt;
  *     ...
- *     &lt;header>
- *         &lt;requestVersion>1.1&lt;/requestVersion>
+ *     &lt;header&gt;
+ *         &lt;requestVersion&gt;1.1&lt;/requestVersion&gt;
  *         ...
- *     &lt;/header>
+ *     &lt;/header&gt;
  *     ...
- * &lt;/xml>
+ * &lt;/xml&gt;
  * </pre>
  *
  * @see IXmlRequestVersionReader

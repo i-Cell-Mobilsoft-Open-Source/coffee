@@ -220,6 +220,8 @@ public class ApplicationConfiguration {
     /**
      * Getting value by key from application cache
      *
+     * @param <T>
+     *            return object type
      * @param key
      *            configuration key
      * @param clazz
@@ -234,11 +236,13 @@ public class ApplicationConfiguration {
     /**
      * Getting optional value by key from application cache
      *
+     * @param <T>
+     *            return object type
      * @param key
      *            configuration key
      * @param clazz
      *            return class type
-     * @return Optional<T> value
+     * @return {@code Optional<T>} value
      */
     @SuppressWarnings("unchecked")
     public <T> Optional<T> getOptionalValue(String key, Class<T> clazz) {

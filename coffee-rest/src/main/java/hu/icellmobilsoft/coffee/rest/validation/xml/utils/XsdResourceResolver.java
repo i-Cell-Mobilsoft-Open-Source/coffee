@@ -39,8 +39,8 @@ import hu.icellmobilsoft.coffee.cdi.logger.LogProducer;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
 
 /**
- * XSD schemalocation based resource resolver.<br/>
- * This class implements a SAX EntityResolver, StAX XMLResolver, Schema Validation LSResourceResolver and Transform URIResolver. <br/>
+ * XSD schemalocation based resource resolver.<br>
+ * This class implements a SAX EntityResolver, StAX XMLResolver, Schema Validation LSResourceResolver and Transform URIResolver. <br>
  * For multi module projekt {@link Alternative} activation need own class like:
  * 
  * <pre>

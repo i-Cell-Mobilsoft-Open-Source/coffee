@@ -37,14 +37,19 @@ public class BaseAppContainer {
     private BaseRequestContainer baseRequestContainer;
 
     /**
-     * <p>Getter for the field <code>baseRequestContainer</code>.</p>
+     * Getter for the field <code>baseRequestContainer</code>.
+     * 
+     * @return {@code BaseRequestContainer}
      */
     public BaseRequestContainer getBaseRequestContainer() {
         return baseRequestContainer;
     }
 
     /**
-     * <p>Setter for the field <code>baseRequestContainer</code>.</p>
+     * Setter for the field <code>baseRequestContainer</code>.
+     * 
+     * @param baseRequestContainer
+     *            {@code BaseRequestContainer}
      */
     public void setBaseRequestContainer(BaseRequestContainer baseRequestContainer) {
         this.baseRequestContainer = baseRequestContainer;

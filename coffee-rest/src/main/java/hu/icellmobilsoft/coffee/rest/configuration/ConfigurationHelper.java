@@ -183,6 +183,8 @@ public class ConfigurationHelper {
     /**
      * Getting value by key from config sources
      *
+     * @param <T>
+     *            return object type
      * @param key
      *            config key
      * @param clazz
@@ -196,12 +198,14 @@ public class ConfigurationHelper {
 
     /**
      * Getting optional value by key from config sources
-     *
+
+     * @param <T>
+     *            return object type
      * @param key
      *            key
      * @param clazz
      *            return class type
-     * @return Optional<T> value
+     * @return {@code Optional<T>} value
      */
     @SuppressWarnings("unchecked")
     public <T> Optional<T> getConfigOptionalValue(String key, Class<T> clazz) {

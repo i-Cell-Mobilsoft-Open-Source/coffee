@@ -43,21 +43,38 @@ public class XsdProcessingException extends BaseException {
     private final List<XMLValidationError> errors = new ArrayList<>();
 
     /**
-     * <p>Constructor for XsdProcessingException.</p>
+     * Constructor for XsdProcessingException.
+     *
+     * @param faultTypeEnum
+     *            fault type enum
+     * @param message
+     *            exception message
      */
     public XsdProcessingException(Enum<?> faultTypeEnum, String message) {
         super(faultTypeEnum, message);
     }
 
     /**
-     * <p>Constructor for XsdProcessingException.</p>
+     * Constructor for XsdProcessingException.
+     *
+     * @param faultTypeEnum
+     *            fault type enum
+     * @param message
+     *            exception message
+     * @param e
+     *            throwable
      */
     public XsdProcessingException(Enum<?> faultTypeEnum, String message, Throwable e) {
         super(faultTypeEnum, message, e);
     }
 
     /**
-     * <p>Constructor for XsdProcessingException.</p>
+     * Constructor for XsdProcessingException.
+     *
+     * @param errors
+     *            error list
+     * @param e
+     *            throwable
      */
     public XsdProcessingException(List<XMLValidationError> errors, Throwable e) {
         super(CoffeeFaultType.INVALID_XML, "Xml validation failed", e);
@@ -66,7 +83,9 @@ public class XsdProcessingException extends BaseException {
     }
 
     /**
-     * <p>Getter for the field <code>errors</code>.</p>
+     * Getter for the field <code>errors</code>.
+     *
+     * @return errors
      */
     public List<XMLValidationError> getErrors() {
         return this.errors;

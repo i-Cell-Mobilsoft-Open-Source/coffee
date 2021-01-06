@@ -33,7 +33,7 @@ import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 
 /**
- * Base class for all other business logic action class
+ * Base class for all other business logic action class.
  *
  * @author imre.scheffer
  * @since 1.0.0
@@ -45,17 +45,17 @@ public abstract class AbstractBaseAction {
     private AppLogger log;
 
     /**
-     * Create a new Context for responses
+     * Creates a new {@link ContextType} for responses.
      *
-     * @return ContextType object
+     * @return {@code ContextType} object
      */
     // A context.timestamp vegett nem lehet az Coffee-ben (Date vs OffsetDateTime)
     public abstract ContextType createContext();
 
     /**
-     * Create a new BaseResponse for responses
+     * Creates new {@link BaseResponse} for responses.
      *
-     * @return BaseResponse object
+     * @return {@code BaseResponse} object
      */
     public BaseResponse createBaseResponse() {
         BaseResponse baseResponse = new BaseResponse();
@@ -64,11 +64,11 @@ public abstract class AbstractBaseAction {
     }
 
     /**
-     * Create a new BaseResponse for responses with specific context
+     * Creates a new {@link BaseResponse} for responses with specific context.
      *
      * @param context
      *            specific context
-     * @return BaseResponse object
+     * @return {@code BaseResponse} object
      */
     public BaseResponse createBaseResponse(ContextType context) {
         BaseResponse baseResponse = new BaseResponse();
@@ -77,7 +77,7 @@ public abstract class AbstractBaseAction {
     }
 
     /**
-     * Mark BaseResultType to succes. If context not exists, creating new.
+     * Marks {@link BaseResultType} to success. If context not exists, creating new.
      *
      * @param baseResultType
      *            object to mark
@@ -87,7 +87,7 @@ public abstract class AbstractBaseAction {
     }
 
     /**
-     * Mark BaseResultType to succes with request context
+     * Marks {@link BaseResultType} to success with request context.
      *
      * @param baseResultType
      *            result
@@ -100,8 +100,7 @@ public abstract class AbstractBaseAction {
     }
 
     /**
-    /**
-     * Mark BaseResultType to succes with specific context
+     * Marks given {@link BaseResultType} to success with specific context.
      *
      * @param baseResultType
      *            result
@@ -114,10 +113,12 @@ public abstract class AbstractBaseAction {
     }
 
     /**
-     * Mark BaseResultType to fail. If context not exists, creating new.
+     * Marks given {@link BaseResultType} to fail. If context does not exist, creates a new one.
      *
      * @param baseResultType
+     *            given {@link BaseResultType}
      * @param message
+     *            result message
      */
     public void handleUnsuccessResultType(BaseResultType baseResultType, String message) {
         handleResultType(baseResultType, message, FunctionCodeType.ERROR);
@@ -133,13 +134,13 @@ public abstract class AbstractBaseAction {
     }
 
     /**
-     * Create custom KeyValueBasicType object with input key and value
+     * Creates custom {@link KeyValueBasicType} object with input key and value.
      *
      * @param key
      *            key
      * @param value
      *            value
-     * @return new KeyValueBasicType
+     * @return new {@code KeyValueBasicType}
      */
     public static KeyValueBasicType getKeyValue(String key, String value) {
         KeyValueBasicType param = new KeyValueBasicType();
@@ -149,7 +150,7 @@ public abstract class AbstractBaseAction {
     }
 
     /**
-     * Create new exception object for invalid parameter
+     * Creates new exception object for invalid parameter.
      *
      * @param msg
      *            exception message

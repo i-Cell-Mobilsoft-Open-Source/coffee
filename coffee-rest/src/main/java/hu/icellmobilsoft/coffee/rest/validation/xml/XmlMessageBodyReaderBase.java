@@ -49,7 +49,7 @@ import hu.icellmobilsoft.coffee.rest.validation.xml.exception.XsdProcessingExcep
  * &#64;Provider
  * &#64;Consumes({ MediaType.APPLICATION_XML, MediaType.TEXT_XML })
  * &#64;Priority(Priorities.ENTITY_CODER)
- * public class XMLRequestMessageBodyReader extends XmlMessageBodyReaderBase<BasicRequestType> {
+ * public class XMLRequestMessageBodyReader extends XmlMessageBodyReaderBase&lt;BasicRequestType&gt; {
  * }
  * </pre>
  *
@@ -97,7 +97,11 @@ public abstract class XmlMessageBodyReaderBase<T> implements MessageBodyReader<T
     }
 
     /**
-     * <p>getValidateIfPresent.</p>
+     * Returns all {@link ValidateXML} annotations from given array of {@link Annotation}s.
+     * 
+     * @param annotations
+     *            array of {@code Annotation}s to search in
+     * @return array of {@link ValidateXML} annotations, can be empty
      */
     public static ValidateXML[] getValidateIfPresent(Annotation[] annotations) {
         List<ValidateXML> list = new ArrayList<>();

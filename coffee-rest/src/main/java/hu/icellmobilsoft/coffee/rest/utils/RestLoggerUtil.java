@@ -39,10 +39,13 @@ import hu.icellmobilsoft.coffee.rest.log.annotation.enumeration.LogSpecifierTarg
 public class RestLoggerUtil {
 
     /**
-     * Returns max target entity log size for requestContext
+     * Returns max target entity log size for requestContext.
      *
      * @param requestContext
+     *            context
      * @param target
+     *            target to check
+     * @return max entity log size
      */
     public static int getMaxEntityLogSize(ContainerRequestContext requestContext, LogSpecifierTarget target) {
         if (requestContext == null) {
@@ -58,10 +61,13 @@ public class RestLoggerUtil {
     }
 
     /**
-     * Returns max target entity log size for requestContext
+     * Returns max target entity log size for requestContext.
      *
      * @param requestContext
+     *            context
      * @param target
+     *            target to check
+     * @return max entity log size
      */
     public static int getMaxEntityLogSize(ClientRequestContext requestContext, LogSpecifierTarget target) {
         if (requestContext == null) {
@@ -77,10 +83,13 @@ public class RestLoggerUtil {
     }
 
     /**
-     * Returns max target entity log size for writerInterceptorContext
+     * Returns max target entity log size for writerInterceptorContext.
      *
      * @param writerInterceptorContext
+     *            context
      * @param target
+     *            target to check
+     * @return max entity log size
      */
     public static int getMaxEntityLogSize(WriterInterceptorContext writerInterceptorContext, LogSpecifierTarget target) {
         if (writerInterceptorContext == null) {
@@ -103,7 +112,10 @@ public class RestLoggerUtil {
      * Returns the targets max entity log size
      *
      * @param target
+     *            target to check
      * @param logSpecifiers
+     *            {@link LogSpecifier}s to check
+     * @return max entity log size
      */
     public static int getMaxEntityLogSize(LogSpecifierTarget target, LogSpecifier... logSpecifiers) {
         if (logSpecifiers != null) {
@@ -117,10 +129,13 @@ public class RestLoggerUtil {
     }
 
     /**
-     * Checks if {@link LogSpecifier} annotation is present and {@link LogSpecifier#noLog()} ()} is NoLogTarget.ALL or target.
+     * Checks if {@link LogSpecifier} annotation is present and {@link LogSpecifier#noLog()} is NoLogTarget.ALL or target.
      *
      * @param requestContext
+     *            context
      * @param target
+     *            target to check
+     * @return if {@code LogSpecifier} annotation is present and log is disabled
      */
     public static boolean logDisabled(ContainerRequestContext requestContext, LogSpecifierTarget target) {
         if (requestContext == null) {
@@ -136,10 +151,13 @@ public class RestLoggerUtil {
     }
 
     /**
-     * Checks if {@link LogSpecifier} annotation is present and {@link LogSpecifier#noLog()} ()} is NoLogTarget.ALL or target.
+     * Checks if {@link LogSpecifier} annotation is present and {@link LogSpecifier#noLog()} is NoLogTarget.ALL or target.
      *
      * @param requestContext
+     *            context
      * @param target
+     *            target to check
+     * @return if {@code LogSpecifier} annotation is present and log is disabled
      */
     public static boolean logDisabled(ClientRequestContext requestContext, LogSpecifierTarget target) {
         if (requestContext == null) {
@@ -155,10 +173,13 @@ public class RestLoggerUtil {
     }
 
     /**
-     * Checks if {@link LogSpecifier} annotation is present and {@link LogSpecifier#noLog()} ()} is NoLogTarget.ALL or target.
+     * Checks if {@link LogSpecifier} annotation is present and {@link LogSpecifier#noLog()} is NoLogTarget.ALL or target.
      *
      * @param writerInterceptorContext
+     *            context
      * @param target
+     *            target to check
+     * @return if {@code LogSpecifier} annotation is present and log is disabled
      */
     public static boolean logDisabled(WriterInterceptorContext writerInterceptorContext, LogSpecifierTarget target) {
         if (writerInterceptorContext == null) {
@@ -182,7 +203,10 @@ public class RestLoggerUtil {
      * Returns if log is disabled for the target
      *
      * @param target
+     *            target to check
      * @param logSpecifiers
+     *            {@link LogSpecifier}s to check
+     * @return if log is disabled
      */
     public static boolean logDisabled(LogSpecifierTarget target, LogSpecifier... logSpecifiers) {
         if (logSpecifiers != null) {

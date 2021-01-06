@@ -42,7 +42,9 @@ import javax.inject.Qualifier;
 public @interface LogSpecifiers {
 
     /**
-     * (Required) One or more LogSpecifier
+     * Returns array of {@link LogSpecifier}s.
+     *
+     * @return (Required) One or more LogSpecifier
      */
     LogSpecifier[] value();
 

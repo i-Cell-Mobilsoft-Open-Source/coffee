@@ -30,7 +30,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 
 /**
- * HTTP request object data
+ * HTTP request object data.
  *
  * @author imre.scheffer
  * @since 1.0.0
@@ -57,126 +57,171 @@ public class RequestData {
     private byte[] body;
 
     /**
-     * <p>Getter for the field <code>cookies</code>.</p>
+     * Getter for the field <code>cookies</code>.
+     *
+     * @return cookies
      */
     public Map<String, Cookie> getCookies() {
         return cookies;
     }
 
     /**
-     * <p>Setter for the field <code>cookies</code>.</p>
+     * Setter for the field <code>cookies</code>.
+     *
+     * @param cookies
+     *            cookies
      */
     public void setCookies(Map<String, Cookie> cookies) {
         this.cookies = cookies;
     }
 
     /**
-     * <p>Getter for the field <code>messageDate</code>.</p>
+     * Getter for the field <code>messageDate</code>.
+     *
+     * @return messageDate
      */
     public Date getMessageDate() {
         return messageDate;
     }
 
     /**
-     * <p>Setter for the field <code>messageDate</code>.</p>
+     * Setter for the field <code>messageDate</code>.
+     *
+     * @param messageDate
+     *            message date
      */
     public void setMessageDate(Date messageDate) {
         this.messageDate = messageDate;
     }
 
     /**
-     * <p>Getter for the field <code>headers</code>.</p>
+     * Getter for the field <code>headers</code>.
+     *
+     * @return headers
      */
     public MultivaluedMap<String, String> getHeaders() {
         return headers;
     }
 
     /**
-     * <p>Setter for the field <code>headers</code>.</p>
+     * Setter for the field <code>headers</code>.
+     *
+     * @param headers
+     *            headers
      */
     public void setHeaders(MultivaluedMap<String, String> headers) {
         this.headers = headers;
     }
 
     /**
-     * <p>Getter for the field <code>mediaType</code>.</p>
+     * Getter for the field <code>mediaType</code>.
+     *
+     * @return mediaType
      */
     public MediaType getMediaType() {
         return mediaType;
     }
 
     /**
-     * <p>Setter for the field <code>mediaType</code>.</p>
+     * Setter for the field <code>mediaType</code>.
+     *
+     * @param mediaType
+     *            media type
      */
     public void setMediaType(MediaType mediaType) {
         this.mediaType = mediaType;
     }
 
     /**
-     * <p>Getter for the field <code>method</code>.</p>
+     * Getter for the field <code>method</code>.
+     *
+     * @return method
      */
     public String getMethod() {
         return method;
     }
 
     /**
-     * <p>Setter for the field <code>method</code>.</p>
+     * Setter for the field <code>method</code>.
+     *
+     * @param method
+     *            method
      */
     public void setMethod(String method) {
         this.method = method;
     }
 
     /**
-     * <p>Getter for the field <code>fullPath</code>.</p>
+     * Getter for the field <code>fullPath</code>.
+     *
+     * @return full path
      */
     public String getFullPath() {
         return fullPath;
     }
 
     /**
-     * <p>Setter for the field <code>fullPath</code>.</p>
+     * Setter for the field <code>fullPath</code>.
+     *
+     * @param fullPath
+     *            full path
      */
     public void setFullPath(String fullPath) {
         this.fullPath = fullPath;
     }
 
     /**
-     * <p>Getter for the field <code>pathParameters</code>.</p>
+     * Getter for the field <code>pathParameters</code>.
+     *
+     * @return pathParameters
      */
     public Map<String, List<String>> getPathParameters() {
         return pathParameters;
     }
 
     /**
-     * <p>Setter for the field <code>pathParameters</code>.</p>
+     * Setter for the field <code>pathParameters</code>.
+     *
+     * @param pathParameters
+     *            path parameters
      */
     public void setPathParameters(Map<String, List<String>> pathParameters) {
         this.pathParameters = pathParameters;
     }
 
     /**
-     * <p>Getter for the field <code>queryParameters</code>.</p>
+     * Getter for the field <code>queryParameters</code>.
+     *
+     * @return queryParameters
      */
     public Map<String, List<String>> getQueryParameters() {
         return queryParameters;
     }
 
     /**
-     * <p>Setter for the field <code>queryParameters</code>.</p>
+     * Setter for the field <code>queryParameters</code>.
+     *
+     * @param queryParameters
+     *            query parameters
      */
     public void setQueryParameters(Map<String, List<String>> queryParameters) {
         this.queryParameters = queryParameters;
     }
 
     /**
-     * <p>Getter for the field <code>body</code>.</p>
+     * Getter for the field <code>body</code>.
+     *
+     * @return body
      */
     public byte[] getBody() {
         return body;
     }
 
     /**
-     * <p>Setter for the field <code>body</code>.</p>
+     * Setter for the field <code>body</code>.
+     * 
+     * @param body
+     *            body
      */
     public void setBody(byte[] body) {
         this.body = body;

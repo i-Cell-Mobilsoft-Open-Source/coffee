@@ -27,7 +27,7 @@ import hu.icellmobilsoft.coffee.tool.protocol.handler.MavenURLHandler;
 
 /**
  * "maven" URL protocol olvasashoz szolgalo Provider. Regisztralni szukseges a
- * <code>src/main/resources/META-INF/services/java.net.spi.URLStreamHandlerProvider<code> fajlban
+ * <code>src/main/resources/META-INF/services/java.net.spi.URLStreamHandlerProvider</code> fajlban
  *
  * @author imre.scheffer
  * @since 1.0.0
@@ -53,8 +53,10 @@ public class MavenURLStreamHandlerProvider extends URLStreamHandlerProvider {
      * {@code URL$DefaultFactory} osztaly masolata
      * 
      * @param protocol
+     *            protocol
      * 
-     * @return
+     * @return default {@code URLStreamHandler} or null in case of any exception
+     *
      */
     private URLStreamHandler createDefaultURLStreamHandler(String protocol) {
         String name = PREFIX + "." + protocol + ".Handler";

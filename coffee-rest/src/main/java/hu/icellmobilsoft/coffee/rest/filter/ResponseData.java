@@ -29,7 +29,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 
 /**
- * HTTP response object data
+ * HTTP response object data.
  *
  * @author imre.scheffer
  * @since 1.0.0
@@ -48,70 +48,95 @@ public class ResponseData {
     private byte[] body;
 
     /**
-     * <p>Getter for the field <code>responseType</code>.</p>
+     * Getter for the field <code>responseType</code>.
+     *
+     * @return responseType
      */
     public Type getResponseType() {
         return responseType;
     }
 
     /**
-     * <p>Setter for the field <code>responseType</code>.</p>
+     * Setter for the field <code>responseType</code>.
+     *
+     * @param responseType
+     *            response type
      */
     public void setResponseType(Type responseType) {
         this.responseType = responseType;
     }
 
     /**
-     * <p>Getter for the field <code>headers</code>.</p>
+     * Getter for the field <code>headers</code>.
+     *
+     * @return headers
      */
     public MultivaluedMap<String, Object> getHeaders() {
         return headers;
     }
 
     /**
-     * <p>Setter for the field <code>headers</code>.</p>
+     * Setter for the field <code>headers</code>.
+     *
+     * @param headers
+     *            headers
      */
     public void setHeaders(MultivaluedMap<String, Object> headers) {
         this.headers = headers;
     }
 
     /**
-     * <p>Getter for the field <code>mediaType</code>.</p>
+     * Getter for the field <code>mediaType</code>.
+     *
+     * @return mediaType
      */
     public MediaType getMediaType() {
         return mediaType;
     }
 
     /**
-     * <p>Setter for the field <code>mediaType</code>.</p>
+     * Setter for the field <code>mediaType</code>.
+     *
+     * @param mediaType
+     *            media type
      */
     public void setMediaType(MediaType mediaType) {
         this.mediaType = mediaType;
     }
 
     /**
-     * <p>Getter for the field <code>status</code>.</p>
+     * Getter for the field <code>status</code>.
+     *
+     * @return status
      */
     public int getStatus() {
         return status;
     }
 
     /**
-     * <p>Setter for the field <code>status</code>.</p>
+     * Setter for the field <code>status</code>.
+     *
+     * @param status
+     *            status
      */
     public void setStatus(int status) {
         this.status = status;
     }
 
     /**
-     * <p>Getter for the field <code>body</code>.</p>
+     * Getter for the field <code>body</code>.
+     *
+     * @return body
      */
     public byte[] getBody() {
         return body;
     }
 
     /**
-     * <p>Setter for the field <code>body</code>.</p>
+     * Setter for the field <code>body</code>.
+     *
+     * @param body
+     *            body
      */
     public void setBody(byte[] body) {
         this.body = body;
