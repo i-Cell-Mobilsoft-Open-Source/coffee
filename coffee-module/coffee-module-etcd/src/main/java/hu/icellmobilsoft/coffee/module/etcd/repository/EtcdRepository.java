@@ -19,40 +19,67 @@
  */
 package hu.icellmobilsoft.coffee.module.etcd.repository;
 
-import java.io.Serializable;
 import java.util.concurrent.CompletableFuture;
 
-import javax.enterprise.context.Dependent;
-import javax.inject.Inject;
+import javax.enterprise.inject.Vetoed;
 
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 import io.etcd.jetcd.ByteSequence;
 import io.etcd.jetcd.Client;
+import io.etcd.jetcd.KV;
 import io.etcd.jetcd.kv.DeleteResponse;
 import io.etcd.jetcd.kv.GetResponse;
 import io.etcd.jetcd.kv.PutResponse;
 import io.etcd.jetcd.options.GetOption;
 
 /**
- * https://github.com/coreos/jetcd
+ * Base ETCD operations based on https://github.com/coreos/jetcd
  *
  * @author imre.scheffer
  * @since 1.0.0
  */
-@Dependent
-public class EtcdRepository implements Serializable {
+@Vetoed
+public class EtcdRepository {
 
-    private static final long serialVersionUID = 1L;
-
-    @Inject
     private Client etcdClient;
 
     /**
-     * <p>put.</p>
+     * ETCD repository initialization
+     * 
+     * @param etcdClient
+     *            ETCD client
+     */
+    public void init(Client etcdClient) {
+        this.etcdClient = etcdClient;
+    }
+
+    /**
+     * Check initialization
+     * 
+     * @throws BaseException
+     *             Exception if etcdClient is null
+     */
+    protected void checkInit() throws BaseException {
+        if (etcdClient == null) {
+            throw new TechnicalException("Etcd client is not initialized!");
+        }
+    }
+
+    /**
+     * Put value into ETCD. This call {@link KV#put(ByteSequence, ByteSequence)}
+     * 
+     * @param key
+     *            ETCD key
+     * @param value
+     *            value
+     * @return ETCD response
+     * @throws BaseException
+     *             If technical error happening
      */
     public CompletableFuture<PutResponse> put(ByteSequence key, ByteSequence value) throws BaseException {
+        checkInit();
         try {
             return etcdClient.getKVClient().put(key, value);
         } catch (Exception e) {
@@ -62,38 +89,65 @@ public class EtcdRepository implements Serializable {
     }
 
     /**
-     * <p>get.</p>
+     * Get value from ETCD. This call {@link KV#get(ByteSequence)}
+     * 
+     * @param key
+     *            ETCD key
+     * @return ETCD response
+     * @throws BaseException
+     *             If technical error happening
      */
     public CompletableFuture<GetResponse> get(ByteSequence key) throws BaseException {
+        checkInit();
         try {
             return etcdClient.getKVClient().get(key);
         } catch (Exception e) {
-            throw new TechnicalException(CoffeeFaultType.REPOSITORY_FAILED, "Exception in get key [" + key + "] into etcd: " + e.getLocalizedMessage(),
-                    e);
+            throw new TechnicalException(CoffeeFaultType.REPOSITORY_FAILED,
+                    "Exception in get key [" + key + "] into etcd: " + e.getLocalizedMessage(), e);
         }
     }
 
     /**
-     * <p>delete.</p>
+     * Delete value in ETCD. This call {@link KV#delete(ByteSequence)}
+     * 
+     * @param key
+     *            ETCD key
+     * @return ETCD response
+     * @throws BaseException
+     *             If technical error happening
      */
     public CompletableFuture<DeleteResponse> delete(ByteSequence key) throws BaseException {
+        checkInit();
         try {
             return etcdClient.getKVClient().delete(key);
         } catch (Exception e) {
-            throw new TechnicalException(CoffeeFaultType.REPOSITORY_FAILED, "Exception in deleting key [" + key + "] in etcd: " + e.getLocalizedMessage(),
-                    e);
+            throw new TechnicalException(CoffeeFaultType.REPOSITORY_FAILED,
+                    "Exception in deleting key [" + key + "] in etcd: " + e.getLocalizedMessage(), e);
         }
     }
 
     /**
-     * <p>getList.</p>
+     * Get values from ETCD. This call {@link KV#get(ByteSequence, GetOption)} wit list setting of {@link GetOption.Builder#withRange(ByteSequence)}
+     * 
+     * @param startKey
+     *            start key
+     * @param endKey
+     *            end key (exclusive)
+     * @return ETCD response
+     * @throws BaseException
+     *             If technical error happening
      */
     public CompletableFuture<GetResponse> getList(ByteSequence startKey, ByteSequence endKey) throws BaseException {
+        checkInit();
         try {
             return etcdClient.getKVClient().get(startKey, GetOption.newBuilder().withRange(endKey).build());
         } catch (Exception e) {
             throw new TechnicalException(CoffeeFaultType.REPOSITORY_FAILED,
                     "Exception in getList startKey [" + startKey + "] into etcd: " + e.getLocalizedMessage(), e);
         }
+    }
+
+    public Client getEtcdClient() {
+        return etcdClient;
     }
 }

@@ -65,9 +65,6 @@ public class ApplicationConfiguration {
     @Inject
     private ConfigurationHelper configurationHelper;
 
-    @Inject
-    private StringHelper stringHelper;
-
     private LoadingCache<CompositeCacheLoaderKey, Optional<?>> cache = CacheBuilder.newBuilder()
             .expireAfterWrite(CACHE_TIME_MINUTES, TimeUnit.MINUTES).build(new CacheLoader<CompositeCacheLoaderKey, Optional<?>>() {
                 @SuppressWarnings("unchecked")
@@ -247,7 +244,7 @@ public class ApplicationConfiguration {
         }
         try {
             Optional<T> value = (Optional<T>) cache.get(new CompositeCacheLoaderKey(key, clazz));
-            log.trace(MSG_ETCD_VALUE_FOR_KEY, key, stringHelper.maskPropertyValue(key, value));
+            log.trace(MSG_ETCD_VALUE_FOR_KEY, key, StringHelper.maskPropertyValue(key, value));
             return value;
         } catch (ExecutionException e) {
             if (e.getCause() instanceof BONotFoundException) {

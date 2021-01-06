@@ -38,11 +38,11 @@ import hu.icellmobilsoft.coffee.cdi.config.IConfigKey;
 public class StringHelper {
 
     /** Constant <code>DEFAULT_PATTERN=".*?(pass|secret).*?"</code> */
-    public static final String[] DEFAULT_PATTERN = { "[\\w\\s]*?secret[\\w\\s]*?", "[\\w\\s]*?pass[\\w\\s]*?"};
+    public static final String[] DEFAULT_PATTERN = { "[\\w\\s]*?secret[\\w\\s]*?", "[\\w\\s]*?pass[\\w\\s]*?" };
 
     // PM: Csak a default config source-okat huzhatjuk be, mivel ez az osztály használva van az etcd config sourc-ban (emiatt a
     // @org.eclipse.microprofile.config.inject.ConfigProperty annotacio nem megfelelo)
-    private Config config = ConfigProviderResolver.instance().getBuilder().addDefaultSources().build();
+    private static Config config = ConfigProviderResolver.instance().getBuilder().addDefaultSources().build();
 
     /**
      * Masks value, if key ignore-case matches a pattern.
@@ -62,7 +62,7 @@ public class StringHelper {
      *            The value to mask
      * @return "*" if key and pattern are not blank and key matches pattern (case ignored); value otherwise
      */
-    public String maskPropertyValue(String key, Object value) {
+    public static String maskPropertyValue(String key, Object value) {
         return StringUtil.maskPropertyValue(key, value, getSensitiveKeyPattern());
     }
 
@@ -114,7 +114,7 @@ public class StringHelper {
      * @param text
      *            XML or JSON text to replace sensitive data
      */
-    public String maskValueInXmlJson(String text) {
+    public static String maskValueInXmlJson(String text) {
         // Default config sources (sys, env, microprofile-config.properties)
         return StringUtil.maskValueInXmlJson(text, getSensitiveKeyPattern());
     }
@@ -126,7 +126,7 @@ public class StringHelper {
      *
      * @return value of config key {@value IConfigKey#LOG_SENSITIVE_KEY_PATTERN} if set, {@link #DEFAULT_PATTERN} otherwise.
      */
-    public String[] getSensitiveKeyPattern() {
+    public static String[] getSensitiveKeyPattern() {
         // Default config sources (sys, env, microprofile-config.properties)
         Optional<String[]> patternOpt = config.getOptionalValue(IConfigKey.LOG_SENSITIVE_KEY_PATTERN, String[].class);
         return patternOpt.filter(patternArray -> patternArray.length > 0).orElse(DEFAULT_PATTERN);
