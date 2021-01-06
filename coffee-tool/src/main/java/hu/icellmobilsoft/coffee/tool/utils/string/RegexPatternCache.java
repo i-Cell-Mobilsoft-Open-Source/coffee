@@ -44,7 +44,7 @@ public class RegexPatternCache {
         }
     };
 
-    private LoadingCache<String, Pattern> cache;
+    private final LoadingCache<String, Pattern> cache;
     
     /**
      * Instantiates a new Regex pattern cache.
