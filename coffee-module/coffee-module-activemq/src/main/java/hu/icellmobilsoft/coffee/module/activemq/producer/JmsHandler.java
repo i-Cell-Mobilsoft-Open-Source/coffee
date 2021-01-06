@@ -57,7 +57,10 @@ public class JmsHandler {
     private MessageProducer producer;
 
     /**
-     * <p>init.</p>
+     * Clears all fields then sets the field {@code connectionFactory}.
+     * 
+     * @param connectionFactory
+     *            {@link ConnectionFactory} to set
      */
     public void init(ConnectionFactory connectionFactory) {
         clear();
@@ -65,7 +68,11 @@ public class JmsHandler {
     }
 
     /**
-     * <p>Getter for the field <code>connection</code>.</p>
+     * Getter for the field {@code connection}.
+     *
+     * @return {@code connection}
+     * @throws JMSException
+     *             if connection is not available
      */
     public Connection getConnection() throws JMSException {
         if (connectionFactory == null) {
@@ -78,31 +85,39 @@ public class JmsHandler {
     }
 
     /**
-     * JMS session letrehozasa, es Session.CLIENT_ACKNOWLEDG
+     * Creates JMS {@link Session} with {@link Session#CLIENT_ACKNOWLEDGE} session management.
      *
      * @param transacted
+     *            whether session should be transacted
      * @return JMS session
      * @throws JMSException
+     *             if session cannot be created
      */
     public Session getSession(boolean transacted) throws JMSException {
         return getSession(transacted, Session.CLIENT_ACKNOWLEDGE);
     }
 
     /**
-     * JMS session letrehozasa, default transacted true, es Session.CLIENT_ACKNOWLEDG
+     * Creates transacted JMS {@link Session} with {@link Session#CLIENT_ACKNOWLEDGE} transaction management.
      *
      * @return JMS session
      * @throws JMSException
+     *             if session cannot be created
      */
     public Session getSession() throws JMSException {
         return getSession(true);
     }
 
     /**
-     * JMS session letrehozasa
+     * Creates JMS {@link Session}.
      *
+     * @param transacted
+     *            whether session should be transacted
+     * @param trnManagemant
+     *            transaction management type (see constant fields of {@link Session})
      * @return JMS session
      * @throws JMSException
+     *             if session cannot be created
      */
     public Session getSession(boolean transacted, int trnManagemant) throws JMSException {
         if (session == null) {
@@ -112,26 +127,33 @@ public class JmsHandler {
     }
 
     /**
-     * <p>getMessageProducer.</p>
+     * Getter for the field {@code producer}.
+     * 
+     * @return {@link MessageProducer}
      */
     public MessageProducer getMessageProducer() {
         return producer;
     }
 
     /**
-     * <p>setMessageProducer.</p>
+     * Setter for the field {@code producer}.
+     * 
+     * @param producer
+     *            {@link MessageProducer} to set
      */
     public void setMessageProducer(MessageProducer producer) {
         this.producer = producer;
     }
 
     /**
-     * Producer manualis letrehozasa. Ha nem kell kulon konfigolni letrehozas utan akkor hasznalhato a {@link #setMessageProducer(Queue)} is
-     * DeliveryMode set to Persistent!
+     * Creates {@link MessageProducer} for given {@link Queue} manually. Sets delivery mode to {@link DeliveryMode#PERSISTENT}. If further
+     * configurations are not needed for the returned producer, then {@link #setMessageProducer(Queue)} can be used instead.
      *
      * @param queue
+     *            JMS {@code Queue}
      * @return JMS producer
      * @throws JMSException
+     *             if producer cannot be created
      */
     public MessageProducer createMessageProducer(Queue queue) throws JMSException {
         if (queue == null) {
@@ -143,14 +165,26 @@ public class JmsHandler {
     }
 
     /**
-     * <p>setMessageProducer.</p>
+     * Creates {@link MessageProducer} for given {@link Queue}. Sets delivery mode to {@link DeliveryMode#PERSISTENT}.
+     *
+     * @param queue
+     *            JMS {@code Queue}
+     * @throws JMSException
+     *             if producer cannot be created
+     * @see #createMessageProducer(Queue)
      */
     public void setMessageProducer(Queue queue) throws JMSException {
         producer = createMessageProducer(queue);
     }
 
     /**
-     * <p>createTextMessage.</p>
+     * Creates JMS text message.
+     *
+     * @param text
+     *            text message
+     * @return JMS {@link TextMessage}
+     * @throws JMSException
+     *             if message cannot be created
      */
     public TextMessage createTextMessage(String text) throws JMSException {
         TextMessage message = getSession().createTextMessage();
@@ -159,7 +193,17 @@ public class JmsHandler {
     }
 
     /**
-     * <p>createTextMessage.</p>
+     * Creates JMS text message with given delay time and priority.
+     *
+     * @param text
+     *            text message
+     * @param delayInMillis
+     *            message delay given in milliseconds
+     * @param priority
+     *            message priority
+     * @return JMS {@link TextMessage}
+     * @throws JMSException
+     *             if message cannot be created
      */
     public TextMessage createTextMessage(String text, long delayInMillis, int priority) throws JMSException {
         TextMessage message = createTextMessage(text);
@@ -171,7 +215,16 @@ public class JmsHandler {
     }
 
     /**
-     * <p>addProperty.</p>
+     * Sets given property value for given {@link TextMessage}.
+     * 
+     * @param textMessage
+     *            {@code TextMessage} to add property to
+     * @param property
+     *            property to set
+     * @param propertyValue
+     *            value to set property to
+     * @throws JMSException
+     *             if property cannot be set
      */
     public void addProperty(TextMessage textMessage, String property, String propertyValue) throws JMSException {
         if (textMessage == null) {
@@ -181,12 +234,15 @@ public class JmsHandler {
     }
 
     /**
-     * JMS Text message elkuldese. Producert be kell allitani elotte vagy a {@link #setMessageProducer(Queue)} vagy a
-     * {@link #setMessageProducer(MessageProducer)} segitsegevel
+     * Sends JMS {@link Message}. Producer must be set before calling this by {@link #setMessageProducer(Queue)} or
+     * {@link #setMessageProducer(MessageProducer)}.
      *
      * @param message
-     *            message objektum
+     *            message object
      * @throws JMSException
+     *             if message cannot be sent
+     * @throws NullPointerException
+     *             if producer is null
      */
     public void sendJmsMessage(Message message) throws JMSException {
         if (getMessageProducer() == null) {
@@ -196,7 +252,7 @@ public class JmsHandler {
     }
 
     /**
-     * <p>closeConnection.</p>
+     * Closes JMS connection.
      */
     public void closeConnection() {
         JmsUtil.close(connection);
@@ -204,7 +260,7 @@ public class JmsHandler {
     }
 
     /**
-     * <p>clear.</p>
+     * Clears session, producer and connection fields.
      */
     public void clear() {
         session = null;
@@ -213,12 +269,14 @@ public class JmsHandler {
     }
 
     /**
-     * JMS Text message elkuldese. Producert be kell allitani elotte vagy a {@link #setMessageProducer(Queue)} vagy a
-     * {@link #setMessageProducer(MessageProducer)} segitsegevel
+     * Sends JMS text message. Producer must be set before calling this by {@link #setMessageProducer(Queue)} or
+     * {@link #setMessageProducer(MessageProducer)}.
      *
      * @param text
-     *            kuldott szoveg a message-ben
+     *            text message
      * @throws JMSException
+     *             if message cannot be created or sent
+     * @see #createTextMessage(String)
      */
     public void sendSimpleTextMessage(String text) throws JMSException {
         TextMessage message = createTextMessage(text);
@@ -226,7 +284,17 @@ public class JmsHandler {
     }
 
     /**
-     * <p>sendSimpleDelayedTextMessage.</p>
+     * Sends JMS text message with given delay time and priority.
+     * 
+     * @param text
+     *            text message
+     * @param delayInMillis
+     *            message delay given in milliseconds
+     * @param priority
+     *            message priority
+     * @throws JMSException
+     *             if message cannot be created or sent
+     * @see #createTextMessage(String, long, int)
      */
     public void sendSimpleDelayedTextMessage(String text, long delayInMillis, int priority) throws JMSException {
         TextMessage message = createTextMessage(text, delayInMillis, priority);

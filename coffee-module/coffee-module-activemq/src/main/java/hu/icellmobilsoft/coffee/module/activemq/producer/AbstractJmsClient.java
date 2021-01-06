@@ -43,7 +43,7 @@ import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 import hu.icellmobilsoft.coffee.module.activemq.util.JmsUtil;
 
 /**
- * <p>Abstract AbstractJmsClient class.</p>
+ * Abstract JMS client class.
  *
  * @author imre.scheffer
  * @since 1.0.0
@@ -61,17 +61,30 @@ public abstract class AbstractJmsClient implements Serializable {
     private JmsHandler jmsHandler;
 
     /**
-     * <p>getConnectionFactory.</p>
+     * Getter for the JMS {@link ConnectionFactory}.
+     *
+     * @return {@code ConnectionFactory}.
      */
     public abstract ConnectionFactory getConnectionFactory();
 
     /**
-     * <p>getQueue.</p>
+     * Getter for the JMS {@link Queue}.
+     *
+     * @return {@code Queue}.
      */
     public abstract Queue getQueue();
 
     /**
-     * <p>sendSimpleDelayed.</p>
+     * Sends JMS text message with given delay time and priority.
+     *
+     * @param content
+     *            text message to send
+     * @param delayInMillis
+     *            message delay given in milliseconds
+     * @param priority
+     *            message priority
+     * @throws TechnicalException
+     *             if JMS exception occurs
      */
     public void sendSimpleDelayed(String content, long delayInMillis, int priority) throws TechnicalException {
         log.debug(">> JmsClient.sendSimpleDelayed(content: [" + content + "], delayInMillis: [" + delayInMillis + "], priority: [" + priority + "]");
@@ -95,7 +108,12 @@ public abstract class AbstractJmsClient implements Serializable {
     }
 
     /**
-     * <p>sendSimple.</p>
+     * Sends JMS text message.
+     *
+     * @param content
+     *            text message
+     * @throws TechnicalException
+     *             if JMS exception occurs
      */
     public void sendSimple(String content) throws TechnicalException {
         log.debug(">> JmsClient.sendSimple(content: [" + content + "]");
@@ -117,14 +135,26 @@ public abstract class AbstractJmsClient implements Serializable {
     }
 
     /**
-     * <p>sendBatch.</p>
+     * Sends multiple JMS text messages in batch.
+     *
+     * @param contents
+     *            {@link List} of text messages
+     * @throws TechnicalException
+     *             if JMS exception occurs
      */
     public void sendBatch(List<String> contents) throws TechnicalException {
         sendBatch(contents, null);
     }
 
     /**
-     * <p>sendBatch.</p>
+     * Sends multiple JMS text messages in batch.
+     *
+     * @param contents
+     *            {@link List} of text messages
+     * @param propertyValues
+     *            properties to add to the messages
+     * @throws TechnicalException
+     *             if JMS exception occurs
      */
     public void sendBatch(List<String> contents, Map<String, String> propertyValues) throws TechnicalException {
         log.debug(">> JmsClient.sendBatch(List<String>, Map<String, String>)");

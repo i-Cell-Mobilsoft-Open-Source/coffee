@@ -43,7 +43,11 @@ public class JmsUtil {
     private static Logger LOGGER = hu.icellmobilsoft.coffee.cdi.logger.LogProducer.getStaticDefaultLogger(JmsUtil.class);
 
     /**
-     * <p>getMessageId.</p>
+     * Returns id of given {@link Message}.
+     *
+     * @param m
+     *            {@code Message}
+     * @return message id or null if JMS exception occurs
      */
     public static String getMessageId(Message m) {
         try {
@@ -55,7 +59,13 @@ public class JmsUtil {
     }
 
     /**
-     * <p>getMessageStringProperty.</p>
+     * Returns given property of given {@link Message}.
+     *
+     * @param m
+     *            {@code Message}
+     * @param propertyName
+     *            desired property
+     * @return desired property of the message or null if JMS exception occurs
      */
     public static String getMessageStringProperty(Message m, String propertyName) {
         try {
@@ -67,14 +77,29 @@ public class JmsUtil {
     }
 
     /**
-     * <p>newJmsException.</p>
+     * Throws new JMS Exception ({@link EJBException}) with given error text.
+     *
+     * @param m
+     *            JMS message which threw given {@code Exception}
+     * @param errorText
+     *            error description text
+     * @return {@code EJBException} with given error text
+     * @see #newJmsException(Message, String, Exception)
      */
     public static RuntimeException newJmsException(Message m, String errorText) {
         return newJmsException(m, errorText, null);
     }
 
     /**
-     * <p>newJmsException.</p>
+     * Wraps given {@link Exception} to a new JMS Exception ({@link EJBException}) with given error text.
+     * 
+     * @param m
+     *            JMS message which threw given {@code Exception}
+     * @param errorText
+     *            error description text
+     * @param exception
+     *            {@code Exception} to wrap
+     * @return wrapped {@code Exception}
      */
     public static RuntimeException newJmsException(Message m, String errorText, Exception exception) {
         String mId = getMessageId(m);
@@ -87,7 +112,10 @@ public class JmsUtil {
     }
 
     /**
-     * <p>close.</p>
+     * Closes given {@link Connection}.
+     *
+     * @param connection
+     *            connection to close
      */
     public static void close(Connection connection) {
         if (connection != null) {
@@ -101,7 +129,10 @@ public class JmsUtil {
     }
 
     /**
-     * <p>close.</p>
+     * Closes given {@link MessageProducer}.
+     * 
+     * @param messageProducer
+     *            message producer to close
      */
     public static void close(MessageProducer messageProducer) {
         if (messageProducer != null) {
@@ -114,7 +145,11 @@ public class JmsUtil {
     }
 
     /**
-     * <p>getTextMessage.</p>
+     * Converts given {@link Message} to {@link TextMessage}.
+     * 
+     * @param message
+     *            message to convert
+     * @return {@code TextMessage} based on {@code message} or JMS exception if cannot be converted
      */
     public static TextMessage getTextMessage(Message message) {
         if (message instanceof TextMessage) {
