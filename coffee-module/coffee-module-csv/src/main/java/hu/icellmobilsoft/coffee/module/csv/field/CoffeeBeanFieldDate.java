@@ -28,6 +28,8 @@ import com.opencsv.bean.BeanFieldDate;
 /**
  * Kellett, mert a "gyári" nem tudott sorrendezést, ami tudott, az nem gyártott headert
  *
+ * @param <T>
+ *            type of the bean
  * @author andras.bognar
  * @since 1.0.0
  */
@@ -38,16 +40,25 @@ public class CoffeeBeanFieldDate<T> extends BeanFieldDate<T> implements CoffeeBe
     private Integer position;
 
     /**
-     * <p>Constructor for CoffeeBeanFieldDate.</p>
+     * Constructor for {@code CoffeeBeanFieldDate}.
+     *
+     * @param field
+     *            value for {@code field} field
+     * @param required
+     *            value for {@code required} field
+     * @param formatString
+     *            value for {@code formatString} field
+     * @param locale
+     *            value for {@code locale} field
+     * @param position
+     *            value for {@code position} field
      */
     public CoffeeBeanFieldDate(Field field, boolean required, String formatString, String locale, int position) {
         super(field, required, formatString, locale);
         this.position = position;
     }
 
-    /**
-     * <p>Getter for the field <code>position</code>.</p>
-     */
+    /** {@inheritDoc} */
     public Integer getPosition() {
         return position;
     }

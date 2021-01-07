@@ -59,11 +59,17 @@ public class CsvUtil {
     public static final String CSV_FILE_NAME_DATE_FORMAT = "yyyyMMddHHmmss";
 
     /**
-     * Bean list to csv.
+     * Converts bean list to CSV.
      *
+     * @param <T>
+     *            type of beans
      * @param beans
+     *            {@link List} of beans to convert
      * @param clazz
+     *            class of beans
+     * @return converted CSV text
      * @throws BaseException
+     *             if CSV file cannot be generated from beans.
      */
     public static <T> String toCsv(List<T> beans, Class<? extends T> clazz) throws BaseException {
         StringWriter sw = new StringWriter();
@@ -80,11 +86,17 @@ public class CsvUtil {
     }
 
     /**
-     * Csv to bean list.
+     * Converts CSV to bean list.
      *
+     * @param <T>
+     *            type of beans
      * @param csv
+     *            CSV text
      * @param clazz
+     *            class of beans
+     * @return converted list of beans
      * @throws BaseException
+     *             if CSV file cannot be read and converted to beans
      */
     public static <T> List<T> toBean(String csv, Class<? extends T> clazz) throws BaseException {
         CSVReader csvReader = null;
@@ -107,11 +119,17 @@ public class CsvUtil {
     }
 
     /**
-     * Csv stream to bean list.
+     * Converts CSV input stream to bean list.
      *
+     * @param <T>
+     *            type of beans
      * @param inputStream
+     *            CSV text stream
      * @param clazz
+     *            class of beans
+     * @return converted list of beans
      * @throws BaseException
+     *             if CSV file cannot be read and converted to beans
      */
     public static <T> List<T> toBean(InputStream inputStream, Class<? extends T> clazz) throws BaseException {
         CSVReader csvReader = null;

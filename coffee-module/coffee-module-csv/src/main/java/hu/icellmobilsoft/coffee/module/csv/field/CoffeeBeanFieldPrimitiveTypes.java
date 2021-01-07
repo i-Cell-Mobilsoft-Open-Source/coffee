@@ -28,6 +28,8 @@ import com.opencsv.bean.BeanFieldPrimitiveTypes;
 /**
  * Kellett, mert a "gyári" nem tudott sorrendezést, ami tudott, az nem gyártott headert
  *
+ * @param <T>
+ *            type of the bean
  * @author andras.bognar
  * @since 1.0.0
  */
@@ -38,16 +40,23 @@ public class CoffeeBeanFieldPrimitiveTypes<T> extends BeanFieldPrimitiveTypes<T>
     private int position;
 
     /**
-     * <p>Constructor for CoffeeBeanFieldPrimitiveTypes.</p>
+     * Constructor for {@code CoffeeBeanFieldPrimitiveTypes}.
+     * 
+     * @param field
+     *            value for {@code field} field
+     * @param required
+     *            value for {@code required} field
+     * @param locale
+     *            value for {@code locale} field
+     * @param position
+     *            value for {@code position} field
      */
     public CoffeeBeanFieldPrimitiveTypes(Field field, boolean required, String locale, int position) {
         super(field, required, locale);
         this.position = position;
     }
 
-    /**
-     * <p>Getter for the field <code>position</code>.</p>
-     */
+    /** {@inheritDoc} */
     public Integer getPosition() {
         return position;
     }
