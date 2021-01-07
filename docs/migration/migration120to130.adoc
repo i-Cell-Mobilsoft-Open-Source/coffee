@@ -81,3 +81,10 @@ Ajánlott a `hu.icellmobilsoft.coffee.module.etcd.producer.CachedEtcdConfigSourc
 
 === coffee-cdi
 * Új annotáció: `hu.icellmobilsoft.coffee.cdi.trace.annotation.Traceable`, bővebb infó a leírásban.
+
+=== coffee-tool
+* `hu.icellmobilsoft.coffee.tool.utils.string.RegexPatternCache` bevezetése és használata a `StringUtil` osztályban a
+reguláris kifejezések optimalizálásának érdekében.
+
+==== Átállás
+A változtatás nem eredményez átállási munkálatokat, visszafelé kompatibilis.
