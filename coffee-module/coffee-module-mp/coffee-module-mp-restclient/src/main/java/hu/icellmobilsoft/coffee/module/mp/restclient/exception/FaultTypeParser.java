@@ -35,18 +35,19 @@ import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 @Vetoed
 public class FaultTypeParser {
     /**
-     * Parse fault type String into {@link CoffeeFaultType}.
-     * If none match returns {@link CoffeeFaultType#OPERATION_FAILED}.
+     * Parse fault type String into an implementation of {@link hu.icellmobilsoft.coffee.dto.error.IFaultType}. If none match returns
+     * {@link CoffeeFaultType#OPERATION_FAILED}.
      *
      * @param faultTypeString
-     *          {@link String} to parse.
-     * @return
-     *          {@link CoffeeFaultType} parsed from input string.
+     *            {@link String} to parse.
+     * @return {@link hu.icellmobilsoft.coffee.dto.error.IFaultType} parsed from input string.
      */
     public static Enum<?> parseFaultType(String faultTypeString) {
-        Enum<?> fault = EnumUtils.getEnum(CoffeeFaultType.class, faultTypeString);
-        if (fault != null) {
-            return fault;
+        for (Class<? extends Enum> faultTypeClass : FaultTypeParserExtension.getFaultTypeClasses()) {
+            Enum<?> fault = EnumUtils.getEnum(faultTypeClass, faultTypeString);
+            if (fault != null) {
+                return fault;
+            }
         }
         LogProducer.getStaticDefaultLogger(FaultTypeParser.class)
                 .warn("FaultType not exists in enum for messages, faultType: [" + faultTypeString + "]");

@@ -65,7 +65,7 @@ class ApplicationConfigurationTest {
     @WeldSetup
     public WeldInitiator weld = WeldInitiator
             .from(WeldInitiator.createWeld().addExtensions(ConfigExtension.class).addBeanClasses(LogContainer.class, AppLoggerImpl.class,
-                    LogProducer.class, ApplicationConfiguration.class, ConfigurationHelper.class, StringHelper.class, BaseRequestContainer.class))
+                    LogProducer.class, ApplicationConfiguration.class, ConfigurationHelper.class, BaseRequestContainer.class))
             .activate(RequestScoped.class).build();
 
     @Test

@@ -87,9 +87,6 @@ public class RequestResponseLogger {
     @ThisLogger
     private AppLogger log;
 
-    @Inject
-    private StringHelper stringHelper;
-
     /**
      * Prints request headers to {@link String}. Masks password.
      *
@@ -106,7 +103,7 @@ public class RequestResponseLogger {
         for (Map.Entry<String, List<String>> param : headerValues.entrySet()) {
             for (String value : param.getValue()) {
                 String key = param.getKey();
-                sb.append(REQUEST_PREFIX).append(key).append(": ").append(stringHelper.maskPropertyValue(key, value)).append('\n');
+                sb.append(REQUEST_PREFIX).append(key).append(": ").append(StringHelper.maskPropertyValue(key, value)).append('\n');
             }
         }
         sb.append(REQUEST_PREFIX).append('\n');
@@ -247,7 +244,7 @@ public class RequestResponseLogger {
      */
     public String printEntity(byte[] entity, Integer maxLogSize, String prefix) throws IOException {
         String requestText = entityToString(entity, maxLogSize);
-        String maskedText = stringHelper.maskValueInXmlJson(requestText);
+        String maskedText = StringHelper.maskValueInXmlJson(requestText);
         return prefix + "entity: [" + maskedText + "]\n";
     }
 
@@ -439,7 +436,7 @@ public class RequestResponseLogger {
             entityText = StringUtils.substring(entityText, 0, maxSize);
         }
         if (maskingNeeded) {
-            entityText = stringHelper.maskValueInXmlJson(entityText);
+            entityText = StringHelper.maskValueInXmlJson(entityText);
         }
 
         sb.append(prefix).append("entity: [").append(entityText).append("]\n");

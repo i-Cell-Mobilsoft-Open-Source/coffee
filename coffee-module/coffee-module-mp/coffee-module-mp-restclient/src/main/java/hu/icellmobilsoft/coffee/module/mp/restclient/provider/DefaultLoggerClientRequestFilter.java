@@ -57,9 +57,6 @@ public class DefaultLoggerClientRequestFilter implements ClientRequestFilter {
     private AppLogger log;
 
     @Inject
-    private StringHelper stringHelper;
-
-    @Inject
     private RequestResponseLogger requestResponseLogger;
 
     /** {@inheritDoc} */
@@ -98,12 +95,12 @@ public class DefaultLoggerClientRequestFilter implements ClientRequestFilter {
         StringBuilder msg = new StringBuilder();
         msg.append("> headers: [");
         for (Entry<String, List<Object>> header : requestContext.getHeaders().entrySet()) {
-            msg.append("\n>    ").append(header.getKey()).append(":").append(stringHelper.maskPropertyValue(header.getKey(), header.getValue()));
+            msg.append("\n>    ").append(header.getKey()).append(":").append(StringHelper.maskPropertyValue(header.getKey(), header.getValue()));
         }
         msg.append("]\n");
         msg.append("> cookies: [");
         for (Entry<String, Cookie> cookie : requestContext.getCookies().entrySet()) {
-            msg.append("\n>    ").append(cookie.getKey()).append(":").append(stringHelper.maskPropertyValue(cookie.getKey(), cookie.getValue()));
+            msg.append("\n>    ").append(cookie.getKey()).append(":").append(StringHelper.maskPropertyValue(cookie.getKey(), cookie.getValue()));
         }
         msg.append("]\n");
         return msg.toString();

@@ -76,11 +76,22 @@ osztály szolgál, mint például:
 private RedisStreamHandler redisStreamHandler;
 ...
 redisStreamHandler.publish("message"); //<2>
+// vagy
+redisStreamHandler.publish("alternativeGroup", "message");
+redisStreamHandler.publish(List.of("message-1", "message-2"));
+redisStreamHandler.publish("alternativeGroup", List.of("message-1", "message-2"));
+redisStreamHandler.publishPublications(List.of(
+        RedisStreamPublication.of("group-1", "message-1"),
+        RedisStreamPublication.of("group-2", "message-2")
+));
 ----
 <1> "group" nem kötelező minden esetben
 <2> Maga a "message" tartalom egyfajta coffee stream message struktúrába fog kerülni,
 ami `IRedisStreamConstant.Common.DATA_KEY_MESSAGE` érték kulcsa.
 Maga a message kiegészült még extra információval, mint pl. folyamat azonosító.
+
+TIP: Minden egyes `publish` hívás külön Jedis connection-ön történik, ezért adott
+esetben érdemes lehet összegyűjteni a message-eket, és azokat listaként átadni.
 
 === Consumer
 

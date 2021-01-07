@@ -19,7 +19,9 @@
  */
 package hu.icellmobilsoft.coffee.module.redisstream.common;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.enterprise.context.Dependent;
@@ -43,6 +45,7 @@ import redis.clients.jedis.StreamEntryID;
  * Redis stream helper functions
  * 
  * @author imre.scheffer
+ * @author martin.nagy
  * @since 1.3.0
  */
 @Dependent
@@ -106,25 +109,48 @@ public class RedisStreamHandler {
      *             exception on sending
      */
     public StreamEntryID publish(String streamGroup, String streamMessage) throws BaseException {
-        if (jedisInstance == null) {
-            throw new TechnicalException("RedisStreamHandler is not initialized!");
-        }
-        if (StringUtils.isBlank(streamGroup)) {
-            throw new TechnicalException("Input of custom streamGroup is null!");
-        }
+        checkJedisInstance();
+        validateGroup(streamGroup);
         return publishBase(streamGroup, streamMessage);
     }
 
-    protected StreamEntryID publishBase(String streamGroup, String streamMessage) throws BaseException {
-        Map<String, String> keyValues = new HashMap<>();
-        keyValues.put(IRedisStreamConstant.Common.DATA_KEY_FLOW_ID, MDC.get(LogConstants.LOG_SESSION_ID));
-        keyValues.put(IRedisStreamConstant.Common.DATA_KEY_MESSAGE, streamMessage);
+    /**
+     * Publish (send) one message to stream calculated by input publication streamGroup name.
+     *
+     * @param publication
+     *             stream publication data
+     * @return Stream message object
+     * @throws BaseException
+     *             exception on sending
+     */
+    public StreamEntryID publishPublication(RedisStreamPublication publication) throws BaseException {
+        if (publication == null) {
+            throw new TechnicalException("publication is null!");
+        }
+        checkJedisInstance();
+        validateGroup(publication.getStreamGroup());
+        return publishBase(publication.getStreamGroup(), publication.getStreamMessage());
+    }
+
+    /**
+     * Publish (send) multiple messages to stream calculated by input publication streamGroup name.
+     *
+     * @param publications
+     *             stream publication data list
+     * @return Stream message objects
+     * @throws BaseException
+     *             exception on sending
+     */
+    public List<StreamEntryID> publishPublications(List<RedisStreamPublication> publications) throws BaseException {
+        if (publications == null) {
+            throw new TechnicalException("publications is null!");
+        }
+        checkJedisInstance();
+
         Jedis jedis = null;
         try {
             jedis = jedisInstance.get();
-            redisStreamService.setGroup(streamGroup);
-            redisStreamService.setJedis(jedis);
-            return redisStreamService.publish(keyValues);
+            return publishPublications(jedis, publications);
         } finally {
             if (jedis != null) {
                 // el kell engedni a connectiont
@@ -133,9 +159,128 @@ public class RedisStreamHandler {
         }
     }
 
+    /**
+     * Publish (send) multiple messages to stream calculated by input streamGroup name.
+     *
+     * @param streamMessages
+     *            Messages in stream. Can be String or JSON List
+     * @return Stream message objects
+     * @throws BaseException
+     *             exception on sending
+     */
+    public List<StreamEntryID> publish(List<String> streamMessages) throws BaseException {
+        if (streamMessages == null) {
+            throw new TechnicalException("streamMessages is null!");
+        }
+        checkInitialization();
+
+        Jedis jedis = null;
+        try {
+            jedis = jedisInstance.get();
+            return publish(jedis, streamGroup, streamMessages);
+        } finally {
+            if (jedis != null) {
+                // el kell engedni a connectiont
+                jedisInstance.destroy(jedis);
+            }
+        }
+    }
+
+    /**
+     * Publish (send) multiple messages to stream calculated by input streamGroup name.
+     *
+     * @param streamGroup
+     *            stream group to send (another than initialized)
+     * @param streamMessages
+     *            Messages in stream. Can be String or JSON List
+     * @return Stream message objects
+     * @throws BaseException
+     *             exception on sending
+     */
+    public List<StreamEntryID> publish(String streamGroup, List<String> streamMessages) throws BaseException {
+        if (streamMessages == null) {
+            throw new TechnicalException("streamMessages is null!");
+        }
+        validateGroup(streamGroup);
+        checkJedisInstance();
+
+        Jedis jedis = null;
+        try {
+            jedis = jedisInstance.get();
+            return publish(jedis, streamGroup, streamMessages);
+        } finally {
+            if (jedis != null) {
+                // el kell engedni a connectiont
+                jedisInstance.destroy(jedis);
+            }
+        }
+    }
+
+    private List<StreamEntryID> publishPublications(Jedis jedis, List<RedisStreamPublication> publications) throws BaseException {
+        List<StreamEntryID> ids = new ArrayList<>();
+        for (RedisStreamPublication publication : publications) {
+            validateGroup(publication.getStreamGroup());
+            StreamEntryID id = publish(jedis, publication.getStreamGroup(), publication.getStreamMessage());
+            ids.add(id);
+        }
+        return ids;
+    }
+
+    private List<StreamEntryID> publish(Jedis jedis, String streamGroup, List<String> streamMessages) throws BaseException {
+        List<StreamEntryID> ids = new ArrayList<>();
+        for (String streamMessage : streamMessages) {
+            StreamEntryID id = publish(jedis, streamGroup, streamMessage);
+            ids.add(id);
+        }
+        return ids;
+    }
+
+    protected StreamEntryID publishBase(String streamGroup, String streamMessage) throws BaseException {
+        Jedis jedis = null;
+        try {
+            jedis = jedisInstance.get();
+            return publish(jedis, streamGroup, streamMessage);
+        } finally {
+            if (jedis != null) {
+                // el kell engedni a connectiont
+                jedisInstance.destroy(jedis);
+            }
+        }
+    }
+
+    protected StreamEntryID publish(Jedis jedis, String streamGroup, String streamMessage) throws BaseException {
+        Map<String, String> keyValues = createJedisMessage(streamMessage);
+        redisStreamService.setJedis(jedis);
+        redisStreamService.setGroup(streamGroup);
+        return redisStreamService.publish(keyValues);
+    }
+
+    protected Map<String, String> createJedisMessage(String streamMessage) {
+        Map<String, String> keyValues = new HashMap<>();
+        keyValues.put(IRedisStreamConstant.Common.DATA_KEY_FLOW_ID, MDC.get(LogConstants.LOG_SESSION_ID));
+        keyValues.put(IRedisStreamConstant.Common.DATA_KEY_MESSAGE, streamMessage);
+        return keyValues;
+    }
+
+    protected void validateGroup(String streamGroup) throws TechnicalException {
+        if (StringUtils.isBlank(streamGroup)) {
+            throw new TechnicalException("Input of custom streamGroup is null!");
+        }
+    }
+
     protected void checkInitialization() throws BaseException {
         if (jedisInstance == null || streamGroup == null) {
-            throw new TechnicalException("RedisStreamHandler is not initialized!");
+            throw notInitializedException();
         }
+    }
+
+    protected void checkJedisInstance() throws TechnicalException {
+        if (jedisInstance == null) {
+            throw notInitializedException();
+        }
+    }
+
+    private TechnicalException notInitializedException() {
+        return new TechnicalException("RedisStreamHandler is not initialized!");
     }
 }

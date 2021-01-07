@@ -46,10 +46,12 @@ A változtatások nem eredményeznek átállási munkálatokat, visszafelé komp
 
 * `DefaultLoggerClientResponseFilter#logEntity` megfelelően logolja, ha a válaszban nincs entity.
 * `RestClientPriority#REQUEST_LOG` priority Priorities.AUTHENTICATION -> Priorities.HEADER_DECORATOR + 100, igy trace információkat is logolunk.
+* `IFaultType`-ot implementáló enum-ok automata detektálása `FaultTypeParserExtension`-nel. Így lehetséges az error válaszokat megfelelő FaultCode-dal exceptionre mappelni.
 
 ==== Átállás
 
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+Az `IFaultType` implementációk megtalálásához előfordulhat, hogy projekt szinten fel kell venni a felismerendő enum moduljába `beans.xml`-t.
 
 === coffee-module-redis
 * jedis frissítés 3.1.0 -> 3.3.0
@@ -59,14 +61,30 @@ A változtatások nem eredményeznek átállási munkálatokat, visszafelé komp
 
 === coffee-module-etcd
 * `etcd.default.url` -> `coffee.etcd.default.url` konfigurációs kulcs változtatás.
-* `hu.icellmobilsoft.coffee.module.etcd.producer.CachedEtcdConfigSource` config source bevezetése.
-Apró loggolási optimalizáció
+* Át lett dolgozva az `EtcdRepository` és `ConfigEtcdService` hogy fel lehessen őket használni
+nem CDI helyeken is (pl. MP-ConfigSource, test), kaptak külön CDI producereket. 
+* `hu.icellmobilsoft.coffee.module.etcd.producer.CachedEtcdConfigSource` config source bevezetése,
+lásd <<Microprofile-config>>
+* Apró loggolási optimalizáció.
+* `hu.icellmobilsoft.coffee.module.etcd.service.BaseEtcdService` deprecated lett.
+A felépítése nagyon régi volt, és a kiinduló koncepció nem illett a Microprofile-Config
+működési elveibe.
+Teljes értékű helyettese a `hu.icellmobilsoft.coffee.module.etcd.service.EtcdService` osztály,
+mely kifejezetten String értékekkel dolgozik.
 
 ==== Átállás
 A konfigurációban felvett `etcd.default.url` kulcsot ki kell egészíteni `coffee.` prefix-szel.
+Ajánlott a `hu.icellmobilsoft.coffee.module.etcd.producer.CachedEtcdConfigSource` config source használata.
 
 === coffee-module-opentracing
 * Új modul, bővebb infó a leírásban.
 
 === coffee-cdi
 * Új annotáció: `hu.icellmobilsoft.coffee.cdi.trace.annotation.Traceable`, bővebb infó a leírásban.
+
+=== coffee-tool
+* `hu.icellmobilsoft.coffee.tool.utils.string.RegexPatternCache` bevezetése és használata a `StringUtil` osztályban a
+reguláris kifejezések optimalizálásának érdekében.
+
+==== Átállás
+A változtatás nem eredményez átállási munkálatokat, visszafelé kompatibilis.

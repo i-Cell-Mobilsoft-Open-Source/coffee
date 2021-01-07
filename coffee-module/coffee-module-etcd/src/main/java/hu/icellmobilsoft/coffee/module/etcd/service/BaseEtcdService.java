@@ -19,7 +19,6 @@
  */
 package hu.icellmobilsoft.coffee.module.etcd.service;
 
-import java.io.Serializable;
 import java.nio.charset.StandardCharsets;
 import java.text.MessageFormat;
 import java.util.HashMap;
@@ -38,7 +37,6 @@ import hu.icellmobilsoft.coffee.module.etcd.repository.EtcdRepository;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
 import hu.icellmobilsoft.coffee.tool.utils.string.StringHelper;
 import hu.icellmobilsoft.coffee.tool.utils.string.StringUtil;
-
 import io.etcd.jetcd.ByteSequence;
 import io.etcd.jetcd.Response;
 import io.etcd.jetcd.kv.DeleteResponse;
@@ -50,20 +48,16 @@ import io.etcd.jetcd.kv.PutResponse;
  *
  * @author imre.scheffer
  * @since 1.0.0
+ * @deprecated Use {@link EtcdService}
  */
 @Dependent
-public class BaseEtcdService<T> implements Serializable {
+@Deprecated(since = "1.3.0", forRemoval = true)
+public class BaseEtcdService<T> {
 
-    private static final long serialVersionUID = 1L;
-
-    @Inject
-    private Logger log;
+    private static Logger log = Logger.getLogger(BaseEtcdService.class);
 
     @Inject
     private EtcdRepository etcdRepository;
-
-    @Inject
-    private StringHelper stringHelper;
 
     /**
      * <p>
@@ -84,7 +78,7 @@ public class BaseEtcdService<T> implements Serializable {
             }
             String stringData = response.getKvs().get(0).getValue().toString(StandardCharsets.UTF_8);
             String responseStr = replaceSensitiveDataInReponseString(response);
-            log.trace("etcd: getting key [{0}], value [{1}], response: [{2}]", key, stringHelper.maskPropertyValue(key, stringData), responseStr);
+            log.trace("etcd: getting key [{0}], value [{1}], response: [{2}]", key, StringHelper.maskPropertyValue(key, stringData), responseStr);
             if (c == String.class) {
                 return (T) stringData;
             } else {
@@ -113,7 +107,7 @@ public class BaseEtcdService<T> implements Serializable {
             ByteSequence bsValue = ByteSequence.from(value, StandardCharsets.UTF_8);
             PutResponse response = etcdRepository.put(bsKey, bsValue).get();
             String stringData = replaceSensitiveDataInReponseString(response);
-            log.trace("etcd: putting key [{0}], value [{1}] response: [{2}]", key, stringHelper.maskPropertyValue(key, value), stringData);
+            log.trace("etcd: putting key [{0}], value [{1}] response: [{2}]", key, StringHelper.maskPropertyValue(key, value), stringData);
         } catch (BaseException e) {
             throw e;
         } catch (Exception e) {
@@ -140,7 +134,7 @@ public class BaseEtcdService<T> implements Serializable {
             for (int i = 0; i < kvsCount; i++) {
                 String stringKey = response.getKvs().get(i).getKey().toString(StandardCharsets.UTF_8);
                 String stringValue = response.getKvs().get(i).getValue().toString(StandardCharsets.UTF_8);
-                log.debug("etcd: [{0}]. key : [{1}], value : [{2}]", i, stringKey, stringHelper.maskPropertyValue(stringKey, stringValue));
+                log.debug("etcd: [{0}]. key : [{1}], value : [{2}]", i, stringKey, StringHelper.maskPropertyValue(stringKey, stringValue));
                 etcdDataList.put(stringKey, (T) stringValue);
             }
             String responseStr = replaceSensitiveDataInReponseString(response);
@@ -190,7 +184,7 @@ public class BaseEtcdService<T> implements Serializable {
         // version: 7
         // value: "1.2"
         String responseText = String.valueOf(response);
-        String[] sensitiveKeyPatterns = stringHelper.getSensitiveKeyPattern();
+        String[] sensitiveKeyPatterns = StringHelper.getSensitiveKeyPattern();
         for (String sensitiveKeyPattern : sensitiveKeyPatterns) {
             String replacementRegex = "(kvs[\\S\\s]*?key:[\\s]*?\"(" + sensitiveKeyPattern + ")\"[\\S\\s]*?value:[\\s]*?)\"(.*?)\"";
             responseText = StringUtil.replaceAllIgnoreCase(responseText, replacementRegex, "$1\"*\"");
