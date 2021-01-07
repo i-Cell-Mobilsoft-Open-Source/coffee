@@ -83,112 +83,152 @@ public class TemplateData extends AbstractIdentifiedAuditEntity {
     private Date validTo;
 
     /**
-     * <p>Getter for the field <code>templateKey</code>.</p>
+     * Getter for the field {@code templateKey}.
+     *
+     * @return templateKey
      */
     public String getTemplateKey() {
         return templateKey;
     }
 
     /**
-     * <p>Setter for the field <code>templateKey</code>.</p>
+     * Setter for the field {@code templateKey}.
+     *
+     * @param templateKey
+     *            templateKey to set
      */
     public void setTemplateKey(String templateKey) {
         this.templateKey = templateKey;
     }
 
     /**
-     * <p>Getter for the field <code>dataType</code>.</p>
+     * Getter for the field {@code dataType}.
+     *
+     * @return dataType
      */
     public TemplateDataType getDataType() {
         return dataType;
     }
 
     /**
-     * <p>Setter for the field <code>dataType</code>.</p>
+     * Setter for the field {@code dataType}.
+     *
+     * @param dataType
+     *            dataType to set
      */
     public void setDataType(TemplateDataType dataType) {
         this.dataType = dataType;
     }
 
     /**
-     * <p>Getter for the field <code>language</code>.</p>
+     * Getter for the field {@code language}.
+     *
+     * @return language
      */
     public String getLanguage() {
         return language;
     }
 
     /**
-     * <p>Setter for the field <code>language</code>.</p>
+     * Setter for the field {@code language}.
+     *
+     * @param language
+     *            language to set
      */
     public void setLanguage(String language) {
         this.language = language;
     }
 
     /**
-     * <p>Getter for the field <code>subject</code>.</p>
+     * Getter for the field {@code subject}.
+     *
+     * @return subject
      */
     public String getSubject() {
         return subject;
     }
 
     /**
-     * <p>Setter for the field <code>subject</code>.</p>
+     * Setter for the field {@code subject}.
+     *
+     * @param subject
+     *            subject to set
      */
     public void setSubject(String subject) {
         this.subject = subject;
     }
 
     /**
-     * <p>Getter for the field <code>data</code>.</p>
+     * Getter for the field {@code data}.
+     *
+     * @return data
      */
     public String getData() {
         return data;
     }
 
     /**
-     * <p>Setter for the field <code>data</code>.</p>
+     * Setter for the field {@code data}.
+     *
+     * @param data
+     *            data to set
      */
     public void setData(String data) {
         this.data = data;
     }
 
     /**
-     * <p>Getter for the field <code>defaultFilename</code>.</p>
+     * Getter for the field {@code defaultFilename}.
+     *
+     * @return defaultFilename
      */
     public String getDefaultFilename() {
         return defaultFilename;
     }
 
     /**
-     * <p>Setter for the field <code>defaultFilename</code>.</p>
+     * Setter for the field {@code defaultFilename}.
+     *
+     * @param defaultFilename
+     *            defaultFilename to set
      */
     public void setDefaultFilename(String defaultFilename) {
         this.defaultFilename = defaultFilename;
     }
 
     /**
-     * <p>Getter for the field <code>validFrom</code>.</p>
+     * Getter for the field {@code validFrom}.
+     *
+     * @return validFrom
      */
     public Date getValidFrom() {
         return validFrom;
     }
 
     /**
-     * <p>Setter for the field <code>validFrom</code>.</p>
+     * Setter for the field {@code validFrom}.
+     *
+     * @param validFrom
+     *            validFrom to set
      */
     public void setValidFrom(Date validFrom) {
         this.validFrom = validFrom;
     }
 
     /**
-     * <p>Getter for the field <code>validTo</code>.</p>
+     * Getter for the field {@code validTo}.
+     *
+     * @return validTo
      */
     public Date getValidTo() {
         return validTo;
     }
 
     /**
-     * <p>Setter for the field <code>validTo</code>.</p>
+     * Setter for the field {@code validTo}.
+     *
+     * @param validTo
+     *            validTo to set
      */
     public void setValidTo(Date validTo) {
         this.validTo = validTo;

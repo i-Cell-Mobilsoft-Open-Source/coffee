@@ -57,7 +57,7 @@ public class TemplateDataService extends BaseService<TemplateData> {
     private TemplateDataRepository templateDataRepository;
 
     /**
-     * <p>find.</p>
+     * Finds {@link TemplateData} by template key, data type and language and validity date.
      *
      * @param templateKey
      *            not null value of template key
@@ -66,9 +66,10 @@ public class TemplateDataService extends BaseService<TemplateData> {
      * @param language
      *            not null value of language
      * @param date
-     *            searching date, can be null
+     *            searching date, if null, then sysdate is used
      * @return entity
      * @throws BaseException
+     *             if invalid parameters or the query throws exception
      */
     public TemplateData find(String templateKey, TemplateDataType dataType, String language, Date date) throws BaseException {
         log.trace(">> find(templateKey: [{0}], dataType: [{1}], language: [{2}], date: [{3}]", templateKey, dataType, language, date);
@@ -91,7 +92,7 @@ public class TemplateDataService extends BaseService<TemplateData> {
     }
 
     /**
-     * <p>find.</p>
+     * Finds {@link TemplateData} by template key, data type, language and fix sysdate validity date.
      *
      * @param templateKey
      *            not null value of template key
@@ -101,16 +102,21 @@ public class TemplateDataService extends BaseService<TemplateData> {
      *            not null value of language
      * @return entity
      * @throws BaseException
+     *             if invalid parameters or the query throws exception
+     * @see #find(String, TemplateDataType, String, Date)
      */
     public TemplateData find(String templateKey, TemplateDataType dataType, String language) throws BaseException {
         return find(templateKey, dataType, language, null);
     }
 
     /**
-     * Find TemplateData by id.
+     * Finds {@link TemplateData} by id. Returns null if id is null.
      *
      * @param id
+     *            not null value of id
+     * @return entity
      * @throws BaseException
+     *             if the query throws exception or its result is null
      */
     public TemplateData findById(String id) throws BaseException {
         log.trace(">> TemplateDataService.findById(id: [{0}])", id);

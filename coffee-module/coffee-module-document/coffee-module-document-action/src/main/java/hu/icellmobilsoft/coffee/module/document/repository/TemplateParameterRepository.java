@@ -36,7 +36,13 @@ import hu.icellmobilsoft.coffee.module.document.model.TemplateParameter;
 public interface TemplateParameterRepository extends EntityRepository<TemplateParameter, String> {
 
     /**
-     * <p>findAllTemplateKeyAndLanguage.</p>
+     * Returns all {@link TemplateParameter}s with given template key and language.
+     *
+     * @param templateKey
+     *            value of template key
+     * @param language
+     *            value of language
+     * @return entity
      */
     List<TemplateParameter> findAllTemplateKeyAndLanguage(String templateKey, String language);
 }
