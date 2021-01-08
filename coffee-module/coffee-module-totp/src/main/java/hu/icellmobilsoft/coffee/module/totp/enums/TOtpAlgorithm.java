@@ -28,15 +28,15 @@ package hu.icellmobilsoft.coffee.module.totp.enums;
 public enum TOtpAlgorithm {
 
     /**
-     * 
+     * HmacSHA1
      */
     HMACSHA1("HmacSHA1"),
     /**
-     * 
+     * HmacSHA256
      */
     HMACSHA256("HmacSHA256"),
     /**
-     * 
+     * HmacSHA512
      */
     HMACSHA512("HmacSHA512");
 
@@ -47,9 +47,11 @@ public enum TOtpAlgorithm {
     }
 
     /**
-     * <p>valueFrom.</p>
+     * Returns {@link TOtpAlgorithm} from {@link String} value.
      *
      * @param value
+     *            {@code String} value
+     * @return corresponding {@code TOtpAlgorithm} or null if matching value does not exist
      */
     public static TOtpAlgorithm valueFrom(String value) {
         for (TOtpAlgorithm a : values()) {
@@ -61,7 +63,9 @@ public enum TOtpAlgorithm {
     }
 
     /**
-     * <p>value.</p>
+     * Getter for the field {@code value}.
+     * 
+     * @return value
      */
     public String value() {
         return this.value;

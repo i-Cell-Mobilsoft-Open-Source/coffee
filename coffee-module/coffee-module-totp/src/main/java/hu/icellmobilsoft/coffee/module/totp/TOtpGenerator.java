@@ -25,7 +25,7 @@ import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.module.totp.enums.TOtpAlgorithm;
 
 /**
- * <p>TOtpGenerator interface.</p>
+ * TOtpGenerator interface.
  *
  * @author cstamas
  * @since 1.0.0
@@ -33,68 +33,94 @@ import hu.icellmobilsoft.coffee.module.totp.enums.TOtpAlgorithm;
 public interface TOtpGenerator {
 
     /**
-     * General egy TOTP-t a parameterben kapott kulcs, UTC idopont, otp hossz es hash algoritmus alapjan (RFC 6238)
+     * Generates TOTP with given secret key, UTC timestamp, OTP length and hash algorithm (RFC 6238).
      *
      * @param secretKey
-     *            - titkos kulcs
+     *            secret key for TOTP generation
      * @param utcTimestamp
-     *            - az OTP generáláshoz használt UTC timestamp
+     *            UTC timestamp for TOTP generation
      * @param otpLength
-     *            - a generat TOTP hossza (1-9 kozott)
+     *            generated OTP length, valid values between 1 and 9
      * @param hashAlgorithm
-     *            - az OTP generáláshoz használt hash algoritmus
+     *            hash algorithm for TOTP generation
+     * @return TOTP
      * @throws BaseException
+     *             if any exception occurs
      */
     public String generatePassword(byte[] secretKey, long utcTimestamp, int otpLength, TOtpAlgorithm hashAlgorithm) throws BaseException;
 
     /**
-     * General egy TOTP-t a parameterben kapott epoch time es kulcs alapjan a configban beallitott hash algoritmussal es otp hosszal
+     * Generates TOTP with given secret key, UTC timestamp. Uses hash algorithm and OTP length defined in config.
      *
      * @param secretKey
-     *            - titkos kulcs
+     *            secret key for TOTP generation
      * @param utcTimestamp
-     *            - az OTP generáláshoz használt UTC timestamp
+     *            UTC timestamp for TOTP generation
+     * @return TOTP
+     * @throws BaseException
+     *             if any exception occurs
      */
     public String generatePassword(byte[] secretKey, long utcTimestamp) throws BaseException;
 
     /**
-     * General egy TOTP-t a szerver aktualis epoch time-ja es a parameterben kapott kulcs alapjan a configban beallitott hash algoritmussal
+     * Generates TOTP with given secret key and the server's actual epoch time. Uses hash algorithm and OTP length defined in config.
      *
      * @param secretKey
-     *            - titkos kulcs
+     *            secret key for TOTP generation
+     * @return TOTP
+     * @throws BaseException
+     *             if any exception occurs
      */
     public default String generatePassword(byte[] secretKey) throws BaseException {
         return generatePassword(secretKey, System.currentTimeMillis());
     }
 
     /**
-     * Hasonlo a {@link #generateSecretBase32()} -hoz, de megadhato a secretKey hossza byteban
+     * Returns a secret key - with length given in bytes - in base32 format (A-Z2-7) using {@link SecureRandom}. This secret key can be used to
+     * generate a QR code to be shared with the user.
      *
      * @param length
-     *            - a titkos kulcs hossza
+     *            length of generated secret
+     * @return secret key
+     * @throws BaseException
+     *             if any exception occurs
+     * @see #generateSecretBase32()
      */
     public default String generateSecretBase32(int length) throws BaseException {
         return encodeWithBase32(generateSecret(length));
     }
 
     /**
-     * Egy 16 byte hosszu, base32 (A-Z2-7) formatumu titkos kulcsot hoz letre a {@link SecureRandom} hasznalataval. Segitsegevel generalhato egy QR
-     * kod, ami megoszthato a felhasznaloval. Ha meg szeretnenk adni a kulcs hosszat, akkor hasznaljuk a {@link #generateSecretBase32(int)} metodust.
+     * Returns a fix 16 bytes long secret key in base32 format (A-Z2-7) using {@link SecureRandom}. This secret key can be used to generate a QR code
+     * to be shared with the user. The length of the key can be declared using {@link #generateSecretBase32(int)}.
+     * 
+     * @return 16 bytes long secret key
+     * @throws BaseException
+     *             if any exception occurs
+     * @see #generateSecretBase32(int)
      */
     public String generateSecretBase32() throws BaseException;
 
     /**
-     * Egy 16 byte hosszu titkos kulcsot hoz letre a {@link SecureRandom} hasznalataval. A tombben levo byteok csak 0-32 kozotti erteket vehetnek fel
-     * a kesobbi olvashatosag miatt.
+     * Returns a fix 16 bytes long secret key using {@link SecureRandom}. Valid byte values in the array are between 0 and 32 for later readability.
+     * 
+     * @return 16 bytes long secret key
+     * @throws BaseException
+     *             if any exception occurs
+     * @see #generateSecret(int)
      */
     public byte[] generateSecret() throws BaseException;
 
     /**
-     * Hasonlo a {@link #generateSecret()} -hez, de megadhato a secretKey hossza byteban. A tombben levo byteok csak 0-32 kozotti erteket vehetnek fel
-     * a kesobbi olvashatosag miatt
+     * Returns a secret key with length given in bytes using {@link SecureRandom}. Valid byte values in the array are between 0 and 32 for later
+     * readability.
      *
      * @param length
-     *            - a titkos kulcs hossza
+     *            length of generated secret in bytes
+     * @return secret key
+     * @throws BaseException
+     *             if any exception occurs
+     * @see #generateSecret()
      */
     public default byte[] generateSecret(int length) throws BaseException {
         SecureRandom random = new SecureRandom();
@@ -106,9 +132,11 @@ public interface TOtpGenerator {
     }
 
     /**
-     * base32 enkodoljuk a megadott byte tombot (a tombben csak 0-32 kozott szerepelhetnek byteok a kesobbi olvashatosag miatt)
+     * Base32 encodes given byte array.
      *
      * @param arr
+     *            byte array to encode
+     * @return encoded array
      */
     private String encodeWithBase32(byte[] arr) {
         StringBuilder sb = new StringBuilder();
