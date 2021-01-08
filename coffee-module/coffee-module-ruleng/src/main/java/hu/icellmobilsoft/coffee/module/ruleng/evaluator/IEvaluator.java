@@ -24,36 +24,40 @@ import java.util.List;
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 
 /**
- * Alap interfész a kiértékelés számára
+ * Base interface for evaluations.
  *
  * @author imre.scheffer
  * @param <INPUT>
- *            input objektum típus
+ *            input object type
  * @param <RULERESULT>
- *            alkalmazott rule-k kimeneti típusa
+ *            output type of executed Rules
  * @since 1.0.0
  */
 public interface IEvaluator<INPUT, RULERESULT> {
 
     /**
-     * Kiértékelés elvégzése
+     * Executes evaluation on given input.
      *
      * @param input
-     *            objetum melyen a kiértékelést el kell végezni
+     *            object to execute the evaluation on
      * @param inputIndex
-     *            input adat melyik indexhez tartozik (ha például listában szerepel)
-     * @return eredmény lista (akár siker és hiba esetén is)
+     *            index of the input object (e.g. if it's in a list)
+     * @return esult of evaluation (either in successful or exceptional case)
      * @throws BaseException
+     *             if any exception occurs
+     * @see #evaluate(Object)
      */
     List<RULERESULT> evaluate(INPUT input, Long inputIndex) throws BaseException;
 
     /**
-     * Kiértékelés elvégzése
+     * Executes evaluation on given input.
      *
      * @param input
-     *            objetum melyen a kiértékelést el kell végezni
-     * @return eredmény lista (akár siker és hiba esetén is)
+     *            object to execute the evaluation on
+     * @return result of evaluation (either in successful or exceptional case)
      * @throws BaseException
+     *             if any exception occurs
+     * @see #evaluate(Object, Long)
      */
     default List<RULERESULT> evaluate(INPUT input) throws BaseException {
         return evaluate(input, null);

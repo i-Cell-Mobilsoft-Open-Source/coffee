@@ -53,7 +53,7 @@ import hu.icellmobilsoft.coffee.tool.utils.annotation.AnnotationUtil;
 import hu.icellmobilsoft.coffee.tool.utils.annotation.RangeUtil;
 
 /**
- * Általános kiértékelés logika egyetlen objektum típusra. Minta hassználat:
+ * Base evaluation logic for a single object type. Eg.:
  *
  * <pre>
  * &#64;Model
@@ -76,9 +76,9 @@ import hu.icellmobilsoft.coffee.tool.utils.annotation.RangeUtil;
  *
  * @author imre.scheffer
  * @param <INPUT>
- *            kiértékelt objektum
+ *            evaluated object type
  * @param <RULERESULT>
- *            kiértékelés eredmény típusa
+ *            output type of executed evaluations
  * @since 1.0.0
  */
 public abstract class AbstractEvaluator<INPUT, RULERESULT extends RuleResult> implements IEvaluator<INPUT, RULERESULT> {
@@ -92,7 +92,7 @@ public abstract class AbstractEvaluator<INPUT, RULERESULT extends RuleResult> im
     private String currentVersion;
 
     /**
-     * Qualifier annotacio, amivel jelolve vannak a Rule-k. Minta:
+     * Qualifier which the Rules are annotated with. Eg.:
      *
      * <pre>
      * &#64;Override
@@ -100,11 +100,13 @@ public abstract class AbstractEvaluator<INPUT, RULERESULT extends RuleResult> im
      *     return new RuleQualifier.Literal();
      * }
      * </pre>
+     * 
+     * @return {@code Annotation}
      */
     protected abstract Annotation cdiSelectLiteral();
 
     /**
-     * Rule-k származtatott típusa, abból TypeLiteral készítve. Minta:
+     * Extended Rule type, {@link TypeLiteral}. Eg.:
      *
      * <pre>
      * &#64;Override
@@ -114,11 +116,13 @@ public abstract class AbstractEvaluator<INPUT, RULERESULT extends RuleResult> im
      *     };
      * }
      * </pre>
+     * 
+     * @return {@code TypeLiteral}
      */
     protected abstract TypeLiteral<IRule<INPUT, RULERESULT>> cdiTypeLiteral();
 
     /**
-     * Rule comparator a IRuleSelector és Rule class név alapján
+     * Rule comparator by {@link IRuleSelector} and Rule class name
      */
     protected Comparator<IRule<INPUT, RULERESULT>> ruleComparator = new Comparator<IRule<INPUT, RULERESULT>>() {
         @Override
@@ -134,7 +138,7 @@ public abstract class AbstractEvaluator<INPUT, RULERESULT extends RuleResult> im
     };
 
     /**
-     * Group funkció ami a IRuleSelector szerint csoportosít
+     * Function which groups by {@link IRuleSelector}.
      */
     protected Function<IRule<INPUT, RULERESULT>, Enum<?>> ruleGroupGetter = new Function<IRule<INPUT, RULERESULT>, Enum<?>>() {
         @Override
@@ -147,22 +151,24 @@ public abstract class AbstractEvaluator<INPUT, RULERESULT extends RuleResult> im
     };
 
     /**
-     * Rule instance kikeresése a CDI konténerből
+     * Initializes Rule instance from CDI container.
      *
      * @param type
-     *            TypeLiteral, Rule-k implementációja
+     *            TypeLiteral, implementation of Rules
      * @param annotation
-     *            Qualifier annotació amelyel a Rule-k jelölve vannak
+     *            Qualifier which the Rules are annotated with
+     * @return CDI Rule instance
      */
     protected Instance<IRule<INPUT, RULERESULT>> initRuleInstances(TypeLiteral<IRule<INPUT, RULERESULT>> type, Annotation annotation) {
         return CDI.current().select(type, annotation);
     }
 
     /**
-     * Előkészítés a Rule listán, csoportosítás és sorbarendezés
+     * Prepares a Rule list by grouping and ordering.
      *
      * @param instance
-     *            Rule lista
+     *            Rule list
+     * @return prepared Rule list
      */
     protected Map<Enum<?>, List<IRule<INPUT, RULERESULT>>> prepareRuleInstances(Instance<IRule<INPUT, RULERESULT>> instance) {
         // csoportositas
@@ -213,18 +219,19 @@ public abstract class AbstractEvaluator<INPUT, RULERESULT extends RuleResult> im
     }
 
     /**
-     * Rule alkalmazása
+     * Applies rule to given input.
      *
      * @param rule
-     *            rule
+     *            rule to apply
      * @param input
-     *            ellenőrzött adat
+     *            input data to apply the rule on
      * @param inputIndex
-     *            ellenőrzött adat indexe (pl. ha listában szerepel)
-     * @return Rule eredményei (akár sikeresség vagy szabály sértés)
+     *            index of {@code input}, eg. if it's in a list
+     * @return result of {@code rule} application (either in successful or exceptional case)
      * @throws RuleException
-     *             rule csoport sorrend végrehajtási megszakítás
+     *             if rule group ordered execution is interrupted
      * @throws BaseException
+     *             if case of an unexpected error
      */
     protected List<RULERESULT> applyRule(IRule<INPUT, RULERESULT> rule, INPUT input, Long inputIndex) throws RuleException, BaseException {
         // ez eleg sokat kepes logolni
@@ -250,16 +257,19 @@ public abstract class AbstractEvaluator<INPUT, RULERESULT extends RuleResult> im
     }
 
     /**
-     * Aktuális verzió mi szerint a Rule-k aktiválva vannak
+     * Getter for the field {@code currentVersion}. Rules are activated in accordance with the current version.
+     *
+     * @return currentVersion
      */
     public String getCurrentVersion() {
         return currentVersion;
     }
 
     /**
-     * Aktuális verzió mi szerint a Rule-k aktiválva vannak
+     * Setter for the field {@code currentVersion}. Rules are activated in accordance with the current version.
      *
      * @param currentVersion
+     *            currentVersion
      */
     public void setCurrentVersion(String currentVersion) {
         this.currentVersion = currentVersion;

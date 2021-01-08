@@ -34,14 +34,16 @@ public class RuleException extends BaseException {
     private Object ruleResult;
 
     /**
-     * Konstruktor
+     * Constructor for {@code RuleException}.
      *
+     * @param <RULERESULT>
+     *            type of ruleResult
      * @param ruleResultCode
-     *            kiértékelés hiba kódja
+     *            rule result error code
      * @param message
-     *            hiba szöveg
+     *            rule result error message
      * @param ruleResult
-     *            kiértékelést sértő hiba objektum
+     *            rule result fault object
      */
     public <RULERESULT extends RuleResult> RuleException(Enum<?> ruleResultCode, String message, RULERESULT ruleResult) {
         super(ruleResultCode, message);
@@ -49,16 +51,21 @@ public class RuleException extends BaseException {
     }
 
     /**
-     * <p>Getter for the field <code>ruleResult</code>.</p>
+     * Getter for the field {@code ruleResult}. The value must be cast to extend {@link RuleResult}.
      *
-     * @return az értéket mappelni kell "extends RuleResult" típusúra
+     * @return ruleResult as {@link Object}
      */
     public Object getRuleResult() {
         return ruleResult;
     }
 
     /**
-     * <p>Setter for the field <code>ruleResult</code>.</p>
+     * Setter for the field {@code ruleResult}.
+     *
+     * @param <RULERESULT>
+     *            type of ruleResult
+     * @param ruleResult
+     *            ruleResult
      */
     public <RULERESULT extends RuleResult> void setRuleResult(RULERESULT ruleResult) {
         this.ruleResult = ruleResult;
