@@ -43,8 +43,7 @@ public abstract class AbstractStreamConsumer implements IRedisStreamConsumer {
     /**
      * {@inheritDoc}
      * 
-     * <br/>
-     * <br/>
+     * <br>
      * Az egész stream tartalmat kategorizálva várja, melyek üzleti metadata értéket hordoznak. Például a folyamat azonosító
      */
     @Override
@@ -67,7 +66,7 @@ public abstract class AbstractStreamConsumer implements IRedisStreamConsumer {
      * Alap implementáló metódus, üzleti logikát tartalmaz
      * 
      * @param text
-     *            stream adat tartalom, konkrétan a {@value RedisStreamConstant.Common#DATA_KEY_MAIN} kulcs értéke, ami string vagy json lehet
+     *            stream adat tartalom, konkrétan a {@value IRedisStreamConstant.Common#DATA_KEY_MESSAGE} kulcs értéke, ami string vagy json lehet
      * @throws BaseException
      *             hiba a feldolgozás során
      */

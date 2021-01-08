@@ -168,7 +168,7 @@ public class RedisStreamService implements Closeable {
      * Consume one entry from stream. Read timeout is defined in configuration. This is equivalent to redis console:
      * 
      * <pre>
-     * XREADGROUP GROUP group consumerIdentifier BLOCK config.StreamReadTimeoutMillis COUNT 1 STREAMS mystream >
+     * XREADGROUP GROUP group consumerIdentifier BLOCK config.StreamReadTimeoutMillis COUNT 1 STREAMS mystream &gt;
      * </pre>
      * 
      * @param consumerIdentifier
@@ -223,6 +223,7 @@ public class RedisStreamService implements Closeable {
      * 
      * @param streamEntryID
      *            stream element unique ID. If null then do nothing
+     * @return success count, if &gt;0 then successfully ACKed
      */
     public long ack(StreamEntryID streamEntryID) {
         if (Objects.isNull(streamEntryID)) {
@@ -353,9 +354,10 @@ public class RedisStreamService implements Closeable {
     }
 
     /**
-     * <p>
-     * Setter for the field <code>jedis</code>.
-     * </p>
+     * Setter for the field {@code jedis}.
+     *
+     * @param jedis
+     *            jedis
      */
     public void setJedis(Jedis jedis) {
         this.jedis = jedis;

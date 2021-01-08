@@ -106,18 +106,19 @@ public class StreamGroupConfig implements IStreamGroupConfig {
     }
 
     /**
-     * <p>
-     * Getter for the field <code>configKey</code>.
-     * </p>
+     * Getter for the field {@code configKey}.
+     *
+     * @return configKey
      */
     public String getConfigKey() {
         return configKey;
     }
 
     /**
-     * <p>
-     * Setter for the field <code>configKey</code>.
-     * </p>
+     * Setter for the field {@code configKey}.
+     *
+     * @param configKey
+     *            configKey
      */
     public void setConfigKey(String configKey) {
         this.configKey = configKey;
