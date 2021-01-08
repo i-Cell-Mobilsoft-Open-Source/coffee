@@ -48,7 +48,7 @@ public class EtcdConfigSourceCache {
     private EtcdConfigSourceCache() {
     }
 
-    private LoadingCache<String, Optional<String>> cache = CacheBuilder.newBuilder().weakKeys().expireAfterWrite(CACHE_TIME_MINUTES, TimeUnit.MINUTES)
+    private LoadingCache<String, Optional<String>> cache = CacheBuilder.newBuilder().expireAfterWrite(CACHE_TIME_MINUTES, TimeUnit.MINUTES)
             .build(new CacheLoader<String, Optional<String>>() {
                 @Override
                 public Optional<String> load(String key) throws Exception {
