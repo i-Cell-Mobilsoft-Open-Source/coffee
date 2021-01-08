@@ -71,6 +71,14 @@ akkor azt ezen a központi "aktivátor" osztályon keresztül is lehet befolyás
 további lehetőségek lejebb vannak említve,
 ami a https://github.com/eclipse/microprofile-rest-client[microprofile-rest-client] szabályai szerint történnek.
 
+=== FaultTypeParserExtension
+`IFaultType` interface-t implementáló enum osztályok összegyűjtését végzi.
+Ez alapján a `FaultTypeParser` képes az mp rest client hívásokban a válasz String faultCode-ot enumra parsolni és megfelelő exceptionre mappelni.
+
+IMPORTANT:: Csak a container által elérhető enum-okat tudja felolvasni, ennek előfeltétele, hogy az implementáció moduljában legyen `beans.xml`.
+
+A felolvasott implementációk sorrendezhetőek a `@Priority` annotációval, az alapértelmezett priority 500.
+
 == Implementálás a projektbe
 
 === pom.xml
