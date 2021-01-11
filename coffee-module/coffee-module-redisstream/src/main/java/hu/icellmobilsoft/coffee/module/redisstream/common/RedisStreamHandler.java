@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.enterprise.context.Dependent;
 import javax.enterprise.inject.Instance;
@@ -94,7 +95,7 @@ public class RedisStreamHandler {
      *             exception on sending
      */
     public StreamEntryID publish(String streamMessage) throws BaseException {
-        return publish(streamMessage, (Map<StreamMessageParameter, String>) null);
+        return publish(streamMessage, (Map<String, String>) null);
     }
 
     /**
@@ -103,12 +104,12 @@ public class RedisStreamHandler {
      * @param streamMessage
      *            Message in stream. Can be String or JSON
      * @param parameters
-     *            Message parameters, nullable
+     *            Message parameters, nullable. Map key value is standardized from {@link StreamMessageParameter} enum value
      * @return Stream message object
      * @throws BaseException
      *             exception on sending
      */
-    public StreamEntryID publish(String streamMessage, Map<StreamMessageParameter, String> parameters) throws BaseException {
+    public StreamEntryID publish(String streamMessage, Map<String, String> parameters) throws BaseException {
         checkInitialization();
         return publishBase(streamGroup, streamMessage, parameters);
     }
@@ -136,12 +137,12 @@ public class RedisStreamHandler {
      * @param streamMessage
      *            Message in stream. Can be String or JSON
      * @param parameters
-     *            Message parameters, nullable
+     *            Message parameters, nullable. Map key value is standardized from {@link StreamMessageParameter} enum value
      * @return Stream message object
      * @throws BaseException
      *             exception on sending
      */
-    public StreamEntryID publish(String streamGroup, String streamMessage, Map<StreamMessageParameter, String> parameters) throws BaseException {
+    public StreamEntryID publish(String streamGroup, String streamMessage, Map<String, String> parameters) throws BaseException {
         checkJedisInstance();
         validateGroup(streamGroup);
         return publishBase(streamGroup, streamMessage, parameters);
@@ -211,12 +212,12 @@ public class RedisStreamHandler {
      * @param streamMessages
      *            Messages in stream. Can be String or JSON List
      * @param parameters
-     *            Messages parameters, nullable
+     *            Messages parameters, nullable. Map key value is standardized from {@link StreamMessageParameter} enum value
      * @return Stream message objects
      * @throws BaseException
      *             exception on sending
      */
-    public List<StreamEntryID> publish(List<String> streamMessages, Map<StreamMessageParameter, String> parameters) throws BaseException {
+    public List<StreamEntryID> publish(List<String> streamMessages, Map<String, String> parameters) throws BaseException {
         if (streamMessages == null) {
             throw new TechnicalException("streamMessages is null!");
         }
@@ -257,13 +258,12 @@ public class RedisStreamHandler {
      * @param streamMessages
      *            Messages in stream. Can be String or JSON List
      * @param parameters
-     *            Messages parameters, nullable
+     *            Messages parameters, nullable. Map key value is standardized from {@link StreamMessageParameter} enum value
      * @return Stream message objects
      * @throws BaseException
      *             exception on sending
      */
-    public List<StreamEntryID> publish(String streamGroup, List<String> streamMessages, Map<StreamMessageParameter, String> parameters)
-            throws BaseException {
+    public List<StreamEntryID> publish(String streamGroup, List<String> streamMessages, Map<String, String> parameters) throws BaseException {
         if (streamMessages == null) {
             throw new TechnicalException("streamMessages is null!");
         }
@@ -292,7 +292,7 @@ public class RedisStreamHandler {
         return ids;
     }
 
-    private List<StreamEntryID> publish(Jedis jedis, String streamGroup, List<String> streamMessages, Map<StreamMessageParameter, String> parameters)
+    private List<StreamEntryID> publish(Jedis jedis, String streamGroup, List<String> streamMessages, Map<String, String> parameters)
             throws BaseException {
         List<StreamEntryID> ids = new ArrayList<>();
         for (String streamMessage : streamMessages) {
@@ -302,8 +302,7 @@ public class RedisStreamHandler {
         return ids;
     }
 
-    protected StreamEntryID publishBase(String streamGroup, String streamMessage, Map<StreamMessageParameter, String> parameters)
-            throws BaseException {
+    protected StreamEntryID publishBase(String streamGroup, String streamMessage, Map<String, String> parameters) throws BaseException {
         Jedis jedis = null;
         try {
             jedis = jedisInstance.get();
@@ -316,22 +315,39 @@ public class RedisStreamHandler {
         }
     }
 
-    protected StreamEntryID publish(Jedis jedis, String streamGroup, String streamMessage, Map<StreamMessageParameter, String> parameters)
-            throws BaseException {
+    protected StreamEntryID publish(Jedis jedis, String streamGroup, String streamMessage, Map<String, String> parameters) throws BaseException {
         Map<String, String> keyValues = createJedisMessage(streamMessage, parameters);
         redisStreamService.setJedis(jedis);
         redisStreamService.setGroup(streamGroup);
         return redisStreamService.publish(keyValues);
     }
 
-    protected Map<String, String> createJedisMessage(String streamMessage, Map<StreamMessageParameter, String> parameters) {
+    protected Map<String, String> createJedisMessage(String streamMessage, Map<String, String> parameters) {
         Map<String, String> keyValues = new HashMap<>();
         keyValues.put(IRedisStreamConstant.Common.DATA_KEY_FLOW_ID, MDC.get(LogConstants.LOG_SESSION_ID));
         keyValues.put(IRedisStreamConstant.Common.DATA_KEY_MESSAGE, streamMessage);
         if (parameters != null) {
-            parameters.entrySet().forEach(e -> keyValues.put(e.getKey().getMessageKey(), e.getValue()));
+            parameters.entrySet().forEach(e -> keyValues.put(e.getKey(), e.getValue()));
         }
         return keyValues;
+    }
+
+    /**
+     * Create one stream message parameter
+     * 
+     * @param parameterKey
+     *            system parameter enum
+     * @param parameterValue
+     *            parameter value
+     * @return Parameter entry
+     * @throws BaseException
+     *             exception on sending
+     */
+    public static Entry<String, String> parameterOf(StreamMessageParameter parameterKey, Object parameterValue) throws BaseException {
+        if (parameterKey == null) {
+            throw new TechnicalException("parameterKey is null!");
+        }
+        return Map.entry(parameterKey.getMessageKey(), String.valueOf(parameterValue));
     }
 
     protected void validateGroup(String streamGroup) throws TechnicalException {

@@ -42,9 +42,9 @@ public class RedisStreamPublication {
     private final String streamMessage;
 
     /**
-     * Message parameters
+     * Message parameters. Map key value is standardized from {@link StreamMessageParameter} enum value
      */
-    private Map<StreamMessageParameter, String> parameters;
+    private Map<String, String> parameters;
 
     /**
      * Creates the value class for redis stream publication
@@ -67,14 +67,14 @@ public class RedisStreamPublication {
      * @param streamMessage
      *            Message in stream. Can be String or JSON
      * @param parameters
-     *            Message parameters
+     *            Message parameters, nullable. Map key value is standardized from {@link StreamMessageParameter} enum value
      * @return the create value class
      */
-    public static RedisStreamPublication of(String streamGroup, String streamMessage, Map<StreamMessageParameter, String> parameters) {
+    public static RedisStreamPublication of(String streamGroup, String streamMessage, Map<String, String> parameters) {
         return new RedisStreamPublication(streamGroup, streamMessage, parameters);
     }
 
-    private RedisStreamPublication(String streamGroup, String streamMessage, Map<StreamMessageParameter, String> parameters) {
+    private RedisStreamPublication(String streamGroup, String streamMessage, Map<String, String> parameters) {
         this.streamGroup = streamGroup;
         this.streamMessage = streamMessage;
         this.parameters = parameters;
@@ -88,7 +88,7 @@ public class RedisStreamPublication {
         return streamMessage;
     }
 
-    public Map<StreamMessageParameter, String> getParameters() {
+    public Map<String, String> getParameters() {
         return parameters;
     }
 }
