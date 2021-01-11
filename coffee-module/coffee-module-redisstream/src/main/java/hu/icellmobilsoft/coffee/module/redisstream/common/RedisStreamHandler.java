@@ -36,6 +36,7 @@ import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.module.redisstream.config.IRedisStreamConstant;
 import hu.icellmobilsoft.coffee.module.redisstream.config.IStreamGroupConfig;
 import hu.icellmobilsoft.coffee.module.redisstream.config.StreamGroupConfig;
+import hu.icellmobilsoft.coffee.module.redisstream.config.StreamMessageParameter;
 import hu.icellmobilsoft.coffee.module.redisstream.service.RedisStreamService;
 import hu.icellmobilsoft.coffee.se.logging.mdc.MDC;
 import redis.clients.jedis.Jedis;
@@ -93,8 +94,23 @@ public class RedisStreamHandler {
      *             exception on sending
      */
     public StreamEntryID publish(String streamMessage) throws BaseException {
+        return publish(streamMessage, (Map<StreamMessageParameter, String>) null);
+    }
+
+    /**
+     * Publish (send) one message to stream calculated by initialized streamGroup name.
+     * 
+     * @param streamMessage
+     *            Message in stream. Can be String or JSON
+     * @param parameters
+     *            Message parameters, nullable
+     * @return Stream message object
+     * @throws BaseException
+     *             exception on sending
+     */
+    public StreamEntryID publish(String streamMessage, Map<StreamMessageParameter, String> parameters) throws BaseException {
         checkInitialization();
-        return publishBase(streamGroup, streamMessage);
+        return publishBase(streamGroup, streamMessage, parameters);
     }
 
     /**
@@ -109,16 +125,33 @@ public class RedisStreamHandler {
      *             exception on sending
      */
     public StreamEntryID publish(String streamGroup, String streamMessage) throws BaseException {
+        return publish(streamGroup, streamMessage, null);
+    }
+
+    /**
+     * Publish (send) one message to stream calculated by input streamGroup name.
+     * 
+     * @param streamGroup
+     *            stream group to send (another than initialized)
+     * @param streamMessage
+     *            Message in stream. Can be String or JSON
+     * @param parameters
+     *            Message parameters, nullable
+     * @return Stream message object
+     * @throws BaseException
+     *             exception on sending
+     */
+    public StreamEntryID publish(String streamGroup, String streamMessage, Map<StreamMessageParameter, String> parameters) throws BaseException {
         checkJedisInstance();
         validateGroup(streamGroup);
-        return publishBase(streamGroup, streamMessage);
+        return publishBase(streamGroup, streamMessage, parameters);
     }
 
     /**
      * Publish (send) one message to stream calculated by input publication streamGroup name.
      *
      * @param publication
-     *             stream publication data
+     *            stream publication data
      * @return Stream message object
      * @throws BaseException
      *             exception on sending
@@ -129,14 +162,14 @@ public class RedisStreamHandler {
         }
         checkJedisInstance();
         validateGroup(publication.getStreamGroup());
-        return publishBase(publication.getStreamGroup(), publication.getStreamMessage());
+        return publishBase(publication.getStreamGroup(), publication.getStreamMessage(), publication.getParameters());
     }
 
     /**
      * Publish (send) multiple messages to stream calculated by input publication streamGroup name.
      *
      * @param publications
-     *             stream publication data list
+     *            stream publication data list
      * @return Stream message objects
      * @throws BaseException
      *             exception on sending
@@ -169,6 +202,21 @@ public class RedisStreamHandler {
      *             exception on sending
      */
     public List<StreamEntryID> publish(List<String> streamMessages) throws BaseException {
+        return publish(streamMessages, null);
+    }
+
+    /**
+     * Publish (send) multiple messages to stream calculated by input streamGroup name.
+     *
+     * @param streamMessages
+     *            Messages in stream. Can be String or JSON List
+     * @param parameters
+     *            Messages parameters, nullable
+     * @return Stream message objects
+     * @throws BaseException
+     *             exception on sending
+     */
+    public List<StreamEntryID> publish(List<String> streamMessages, Map<StreamMessageParameter, String> parameters) throws BaseException {
         if (streamMessages == null) {
             throw new TechnicalException("streamMessages is null!");
         }
@@ -177,7 +225,7 @@ public class RedisStreamHandler {
         Jedis jedis = null;
         try {
             jedis = jedisInstance.get();
-            return publish(jedis, streamGroup, streamMessages);
+            return publish(jedis, streamGroup, streamMessages, parameters);
         } finally {
             if (jedis != null) {
                 // el kell engedni a connectiont
@@ -198,6 +246,24 @@ public class RedisStreamHandler {
      *             exception on sending
      */
     public List<StreamEntryID> publish(String streamGroup, List<String> streamMessages) throws BaseException {
+        return publish(streamGroup, streamMessages, null);
+    }
+
+    /**
+     * Publish (send) multiple messages to stream calculated by input streamGroup name.
+     *
+     * @param streamGroup
+     *            stream group to send (another than initialized)
+     * @param streamMessages
+     *            Messages in stream. Can be String or JSON List
+     * @param parameters
+     *            Messages parameters, nullable
+     * @return Stream message objects
+     * @throws BaseException
+     *             exception on sending
+     */
+    public List<StreamEntryID> publish(String streamGroup, List<String> streamMessages, Map<StreamMessageParameter, String> parameters)
+            throws BaseException {
         if (streamMessages == null) {
             throw new TechnicalException("streamMessages is null!");
         }
@@ -207,7 +273,7 @@ public class RedisStreamHandler {
         Jedis jedis = null;
         try {
             jedis = jedisInstance.get();
-            return publish(jedis, streamGroup, streamMessages);
+            return publish(jedis, streamGroup, streamMessages, parameters);
         } finally {
             if (jedis != null) {
                 // el kell engedni a connectiont
@@ -220,26 +286,28 @@ public class RedisStreamHandler {
         List<StreamEntryID> ids = new ArrayList<>();
         for (RedisStreamPublication publication : publications) {
             validateGroup(publication.getStreamGroup());
-            StreamEntryID id = publish(jedis, publication.getStreamGroup(), publication.getStreamMessage());
+            StreamEntryID id = publish(jedis, publication.getStreamGroup(), publication.getStreamMessage(), publication.getParameters());
             ids.add(id);
         }
         return ids;
     }
 
-    private List<StreamEntryID> publish(Jedis jedis, String streamGroup, List<String> streamMessages) throws BaseException {
+    private List<StreamEntryID> publish(Jedis jedis, String streamGroup, List<String> streamMessages, Map<StreamMessageParameter, String> parameters)
+            throws BaseException {
         List<StreamEntryID> ids = new ArrayList<>();
         for (String streamMessage : streamMessages) {
-            StreamEntryID id = publish(jedis, streamGroup, streamMessage);
+            StreamEntryID id = publish(jedis, streamGroup, streamMessage, parameters);
             ids.add(id);
         }
         return ids;
     }
 
-    protected StreamEntryID publishBase(String streamGroup, String streamMessage) throws BaseException {
+    protected StreamEntryID publishBase(String streamGroup, String streamMessage, Map<StreamMessageParameter, String> parameters)
+            throws BaseException {
         Jedis jedis = null;
         try {
             jedis = jedisInstance.get();
-            return publish(jedis, streamGroup, streamMessage);
+            return publish(jedis, streamGroup, streamMessage, parameters);
         } finally {
             if (jedis != null) {
                 // el kell engedni a connectiont
@@ -248,17 +316,21 @@ public class RedisStreamHandler {
         }
     }
 
-    protected StreamEntryID publish(Jedis jedis, String streamGroup, String streamMessage) throws BaseException {
-        Map<String, String> keyValues = createJedisMessage(streamMessage);
+    protected StreamEntryID publish(Jedis jedis, String streamGroup, String streamMessage, Map<StreamMessageParameter, String> parameters)
+            throws BaseException {
+        Map<String, String> keyValues = createJedisMessage(streamMessage, parameters);
         redisStreamService.setJedis(jedis);
         redisStreamService.setGroup(streamGroup);
         return redisStreamService.publish(keyValues);
     }
 
-    protected Map<String, String> createJedisMessage(String streamMessage) {
+    protected Map<String, String> createJedisMessage(String streamMessage, Map<StreamMessageParameter, String> parameters) {
         Map<String, String> keyValues = new HashMap<>();
         keyValues.put(IRedisStreamConstant.Common.DATA_KEY_FLOW_ID, MDC.get(LogConstants.LOG_SESSION_ID));
         keyValues.put(IRedisStreamConstant.Common.DATA_KEY_MESSAGE, streamMessage);
+        if (parameters != null) {
+            parameters.entrySet().forEach(e -> keyValues.put(e.getKey().getMessageKey(), e.getValue()));
+        }
         return keyValues;
     }
 

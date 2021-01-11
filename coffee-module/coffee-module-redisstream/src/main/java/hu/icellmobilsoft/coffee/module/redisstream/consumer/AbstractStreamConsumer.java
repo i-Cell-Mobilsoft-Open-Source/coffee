@@ -19,13 +19,18 @@
  */
 package hu.icellmobilsoft.coffee.module.redisstream.consumer;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.inject.Inject;
 
 import hu.icellmobilsoft.coffee.dto.common.LogConstants;
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.module.redisstream.config.IRedisStreamConstant;
+import hu.icellmobilsoft.coffee.se.logging.Logger;
 import hu.icellmobilsoft.coffee.se.logging.mdc.MDC;
 import redis.clients.jedis.StreamEntry;
 
@@ -36,6 +41,9 @@ import redis.clients.jedis.StreamEntry;
  * @since 1.3.0
  */
 public abstract class AbstractStreamConsumer implements IRedisStreamConsumer {
+
+    @Inject
+    private Logger log;
 
     @Resource(lookup = "java:app/AppName")
     private String applicationName;
@@ -57,10 +65,40 @@ public abstract class AbstractStreamConsumer implements IRedisStreamConsumer {
             String flowId = fieldMap.getOrDefault(IRedisStreamConstant.Common.DATA_KEY_FLOW_ID, mainData);
             MDC.put(LogConstants.LOG_SESSION_ID, flowId);
 
+            if (customize(streamEntry)) {
+                return;
+            }
+
             doWork(mainData);
         } finally {
             MDC.clear();
         }
+    }
+
+    /**
+     * Egyéb stream message kezelések, projektre szabható igényekkel
+     * 
+     * @param streamEntry
+     *            {@link IRedisStreamConsumer#onStream(StreamEntry)}
+     * @return true - szakítsa meg a feldolgozást, ne küldje a stream üzleti feldolgozási logikába és ACK-koljon.
+     * @throws BaseException
+     *             hiba a feldolgozás során
+     */
+    protected boolean customize(StreamEntry streamEntry) throws BaseException {
+        Map<String, String> fieldMap = streamEntry.getFields();
+        String ttl = fieldMap.get(IRedisStreamConstant.Common.DATA_KEY_TTL);
+        if (ttl != null) {
+            try {
+                LocalDateTime ttlDate = LocalDateTime.ofInstant(Instant.ofEpochMilli(Long.parseLong(ttl)), ZoneId.systemDefault());
+                if (ttlDate.isBefore(LocalDateTime.now())) {
+                    log.trace("Message ttl [{0}] exceeded.", ttl);
+                    return true;
+                }
+            } catch (NumberFormatException e) {
+                log.trace("Cant parse message ttl [{0}] value, skipping ttl check. Error: [{1}]", ttl, e.getLocalizedMessage());
+            }
+        }
+        return false;
     }
 
     /**

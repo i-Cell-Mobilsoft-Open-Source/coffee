@@ -44,5 +44,9 @@ public interface IRedisStreamConstant {
          * Key for redis stream message flow ID
          */
         String DATA_KEY_FLOW_ID = LogConstants.LOG_SESSION_ID;
+        /**
+         * Key for redis stream message timeout in epoch time
+         */
+        String DATA_KEY_TTL = "ttl";
     }
 }
