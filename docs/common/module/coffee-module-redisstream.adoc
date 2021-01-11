@@ -100,7 +100,6 @@ enum osztályon keresztül lehet elérni
 TIP: Minden egyes `publish` hívás külön Jedis connection-ön történik, ezért adott
 esetben érdemes lehet összegyűjteni a message-eket, és azokat listaként átadni.
 
-Minden üzenetet lehet paraméterezni, amivel további
 
 === Consumer
 
