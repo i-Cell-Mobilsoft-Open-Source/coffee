@@ -91,11 +91,12 @@ public abstract class AbstractStreamConsumer implements IRedisStreamConsumer {
             try {
                 LocalDateTime ttlDate = LocalDateTime.ofInstant(Instant.ofEpochMilli(Long.parseLong(ttl)), ZoneId.systemDefault());
                 if (ttlDate.isBefore(LocalDateTime.now())) {
-                    log.trace("Message ttl [{0}] exceeded.", ttl);
+                    log.trace("Message [{0}] with ttl [{1}] exceeded.", streamEntry.getID(), ttl);
                     return true;
                 }
             } catch (NumberFormatException e) {
-                log.trace("Cant parse message ttl [{0}] value, skipping ttl check. Error: [{1}]", ttl, e.getLocalizedMessage());
+                log.trace("Cant parse message [{0}] with ttl [{1}] value, skipping ttl check. Error: [{2}]", streamEntry.getID(), ttl,
+                        e.getLocalizedMessage());
             }
         }
         return false;
