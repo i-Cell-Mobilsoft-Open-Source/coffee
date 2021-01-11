@@ -67,7 +67,7 @@ public class RedisStreamPublication {
      * @param streamMessage
      *            Message in stream. Can be String or JSON
      * @param parameters
-     *            Message parameters, nullable. Map key value is standardized from {@link StreamMessageParameter} enum value
+     *            Message parameters, nullable. Map key value is standardized in {@link StreamMessageParameter} enum value
      * @return the create value class
      */
     public static RedisStreamPublication of(String streamGroup, String streamMessage, Map<String, String> parameters) {

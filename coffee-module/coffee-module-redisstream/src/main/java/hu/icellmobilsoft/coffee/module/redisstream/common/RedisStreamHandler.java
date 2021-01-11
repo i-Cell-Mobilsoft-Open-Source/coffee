@@ -104,7 +104,7 @@ public class RedisStreamHandler {
      * @param streamMessage
      *            Message in stream. Can be String or JSON
      * @param parameters
-     *            Message parameters, nullable. Map key value is standardized from {@link StreamMessageParameter} enum value
+     *            Message parameters, nullable. Map key value is standardized in {@link StreamMessageParameter} enum value
      * @return Stream message object
      * @throws BaseException
      *             exception on sending
@@ -137,7 +137,7 @@ public class RedisStreamHandler {
      * @param streamMessage
      *            Message in stream. Can be String or JSON
      * @param parameters
-     *            Message parameters, nullable. Map key value is standardized from {@link StreamMessageParameter} enum value
+     *            Message parameters, nullable. Map key value is standardized in {@link StreamMessageParameter} enum value
      * @return Stream message object
      * @throws BaseException
      *             exception on sending
@@ -212,7 +212,7 @@ public class RedisStreamHandler {
      * @param streamMessages
      *            Messages in stream. Can be String or JSON List
      * @param parameters
-     *            Messages parameters, nullable. Map key value is standardized from {@link StreamMessageParameter} enum value
+     *            Messages parameters, nullable. Map key value is standardized in {@link StreamMessageParameter} enum value
      * @return Stream message objects
      * @throws BaseException
      *             exception on sending
@@ -258,7 +258,7 @@ public class RedisStreamHandler {
      * @param streamMessages
      *            Messages in stream. Can be String or JSON List
      * @param parameters
-     *            Messages parameters, nullable. Map key value is standardized from {@link StreamMessageParameter} enum value
+     *            Messages parameters, nullable. Map key value is standardized in {@link StreamMessageParameter} enum value
      * @return Stream message objects
      * @throws BaseException
      *             exception on sending
