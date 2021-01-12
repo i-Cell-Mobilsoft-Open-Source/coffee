@@ -195,27 +195,28 @@ public class RedisRepository {
 
     /**
      * <p>hscan.</p>
-     *
+     * 
      * @see Jedis#hscan(String, String)
-     * @param key
-     * @param cursor
-     * @param secondsToExpire
+     * @param key redis key
+     * @param cursor cursor
+     * @param secondsToExpire timeout on the key
+     * @return scan result
      */
     public ScanResult<Map.Entry<String, String>> hscan(String key, String cursor, int secondsToExpire) {
         ScanResult<Map.Entry<String, String>> result = getJedis().hscan(key, cursor);
         getJedis().expire(key, secondsToExpire);
         return result;
     }
-
     
     /**
      * <p>hscan.</p>
-     *
+     * 
      * @see Jedis#hscan(String, String, ScanParams)
-     * @param key
-     * @param cursor
-     * @param secondsToExpire
-     * @param scanParams
+     * @param key redis key
+     * @param cursor cursor
+     * @param secondsToExpire timeout on the key
+     * @param scanParams param use on hscan
+     * @return hscan result
      */
     public ScanResult<Map.Entry<String, String>> hscan(String key, String cursor, int secondsToExpire, ScanParams scanParams) {
         ScanResult<Map.Entry<String, String>> result = getJedis().hscan(key, cursor, scanParams);
