@@ -195,12 +195,12 @@ public class RedisRepository {
 
     /**
      * <p>hscan.</p>
-     * 
+     *
      * @see Jedis#hscan(String, String)
      * @param key redis key
      * @param cursor cursor
      * @param secondsToExpire timeout on the key
-     * @return scan result
+     * @return hscan result
      */
     public ScanResult<Map.Entry<String, String>> hscan(String key, String cursor, int secondsToExpire) {
         ScanResult<Map.Entry<String, String>> result = getJedis().hscan(key, cursor);
@@ -210,7 +210,7 @@ public class RedisRepository {
     
     /**
      * <p>hscan.</p>
-     * 
+     *
      * @see Jedis#hscan(String, String, ScanParams)
      * @param key redis key
      * @param cursor cursor
