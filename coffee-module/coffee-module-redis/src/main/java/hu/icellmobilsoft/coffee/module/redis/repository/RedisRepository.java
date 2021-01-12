@@ -25,6 +25,7 @@ import java.util.Map;
 import javax.enterprise.inject.Vetoed;
 
 import redis.clients.jedis.Jedis;
+import redis.clients.jedis.ScanParams;
 import redis.clients.jedis.ScanResult;
 
 /**
@@ -206,6 +207,22 @@ public class RedisRepository {
         return result;
     }
 
+    
+    /**
+     * <p>hscan.</p>
+     *
+     * @see Jedis#hscan(String, String, ScanParams)
+     * @param key
+     * @param cursor
+     * @param secondsToExpire
+     * @param scanParams
+     */
+    public ScanResult<Map.Entry<String, String>> hscan(String key, String cursor, int secondsToExpire, ScanParams scanParams) {
+        ScanResult<Map.Entry<String, String>> result = getJedis().hscan(key, cursor, scanParams);
+        getJedis().expire(key, secondsToExpire);
+        return result;
+    }
+    
     /**
      * <p>flushDB.</p>
      *

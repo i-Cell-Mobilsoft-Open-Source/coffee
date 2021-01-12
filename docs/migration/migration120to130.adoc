@@ -88,3 +88,9 @@ reguláris kifejezések optimalizálásának érdekében.
 
 ==== Átállás
 A változtatás nem eredményez átállási munkálatokat, visszafelé kompatibilis.
+
+=== coffee-module-redis
+* A hscan művelet paraméterezhető count értékkel. 
+
+==== Átállás
+A változtatás nem eredményez átállási munkálatokat, visszafelé kompatibilis.
