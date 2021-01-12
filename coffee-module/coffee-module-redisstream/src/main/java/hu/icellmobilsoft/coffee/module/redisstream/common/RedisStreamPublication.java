@@ -19,6 +19,10 @@
  */
 package hu.icellmobilsoft.coffee.module.redisstream.common;
 
+import java.util.Map;
+
+import hu.icellmobilsoft.coffee.module.redisstream.config.StreamMessageParameter;
+
 /**
  * Value class for redis stream publications
  *
@@ -38,19 +42,42 @@ public class RedisStreamPublication {
     private final String streamMessage;
 
     /**
+     * Message parameters. Map key value is standardized from {@link StreamMessageParameter} enum value
+     */
+    private Map<String, String> parameters;
+
+    /**
      * Creates the value class for redis stream publication
      *
-     * @param streamGroup Stream group to send the message (another than initialized)
-     * @param streamMessage Message in stream. Can be String or JSON
+     * @param streamGroup
+     *            Stream group to send the message (another than initialized)
+     * @param streamMessage
+     *            Message in stream. Can be String or JSON
      * @return the create value class
      */
     public static RedisStreamPublication of(String streamGroup, String streamMessage) {
-        return new RedisStreamPublication(streamGroup, streamMessage);
+        return of(streamGroup, streamMessage, null);
     }
 
-    private RedisStreamPublication(String streamGroup, String streamMessage) {
+    /**
+     * Creates the value class for redis stream publication
+     *
+     * @param streamGroup
+     *            Stream group to send the message (another than initialized)
+     * @param streamMessage
+     *            Message in stream. Can be String or JSON
+     * @param parameters
+     *            Message parameters, nullable. Map key value is standardized in {@link StreamMessageParameter} enum value
+     * @return the create value class
+     */
+    public static RedisStreamPublication of(String streamGroup, String streamMessage, Map<String, String> parameters) {
+        return new RedisStreamPublication(streamGroup, streamMessage, parameters);
+    }
+
+    private RedisStreamPublication(String streamGroup, String streamMessage, Map<String, String> parameters) {
         this.streamGroup = streamGroup;
         this.streamMessage = streamMessage;
+        this.parameters = parameters;
     }
 
     public String getStreamGroup() {
@@ -59,5 +86,9 @@ public class RedisStreamPublication {
 
     public String getStreamMessage() {
         return streamMessage;
+    }
+
+    public Map<String, String> getParameters() {
+        return parameters;
     }
 }
