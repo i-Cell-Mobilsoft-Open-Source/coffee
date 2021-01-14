@@ -39,7 +39,7 @@ import io.opentracing.contrib.tracerresolver.TracerResolver;
 import io.opentracing.tag.Tags;
 
 /**
- * Interceptor for {@link @Traced} binding
+ * Interceptor for {@link Traced} binding
  * <p>
  * based on io.opentracing.contrib.interceptors.OpenTracingInterceptor
  * 

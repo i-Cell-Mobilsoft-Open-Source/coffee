@@ -74,10 +74,13 @@ public class DefaultLoggerClientRequestFilter implements ClientRequestFilter {
     }
 
     /**
-     * HTTP method, url loggolas
+     * Logs HTTP method and URL.
      *
      * @param requestContext
+     *            context
+     * @return HTTP method and URL {@link String}
      * @throws IOException
+     *             exception
      */
     protected String logUrl(ClientRequestContext requestContext) throws IOException {
         StringBuilder msg = new StringBuilder();
@@ -86,10 +89,13 @@ public class DefaultLoggerClientRequestFilter implements ClientRequestFilter {
     }
 
     /**
-     * HTTP header adatok loggolasa
+     * Logs HTTP header data.
      *
      * @param requestContext
+     *            context
+     * @return header {@link String}
      * @throws IOException
+     *             exception
      */
     protected String logHeader(ClientRequestContext requestContext) throws IOException {
         StringBuilder msg = new StringBuilder();
@@ -107,10 +113,13 @@ public class DefaultLoggerClientRequestFilter implements ClientRequestFilter {
     }
 
     /**
-     * Entitas loggolasa, levagva LogSpecifierTarget.CLIENT_REQUEST szerint
+     * Logs entity, trimmed according to {@link LogSpecifierTarget#CLIENT_REQUEST}.
      *
      * @param requestContext
+     *            context
+     * @return entity {@link String}
      * @throws IOException
+     *             exception
      */
     protected String logEntity(ClientRequestContext requestContext) throws IOException {
         StringBuilder msg = new StringBuilder();
