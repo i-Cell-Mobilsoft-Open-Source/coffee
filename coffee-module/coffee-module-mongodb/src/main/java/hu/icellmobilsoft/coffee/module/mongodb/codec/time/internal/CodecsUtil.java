@@ -50,11 +50,14 @@ public final class CodecsUtil {
     }
 
     /**
-     * Unify encode runtime exceptions
+     * Unifies encode runtime exceptions.
      *
      * @param valueSupplier
+     *            value supplier
      * @param valueConsumer
+     *            value consumer
      * @param <Value>
+     *            input value type
      */
     public static <Value> void translateEncodeExceptions(Supplier<Value> valueSupplier, Consumer<Value> valueConsumer) {
 
@@ -67,12 +70,17 @@ public final class CodecsUtil {
     }
 
     /**
-     * Unify decode runtime exceptions
+     * Unifies decode runtime exceptions.
      *
      * @param valueSupplier
+     *            value supplier
      * @param valueConverter
+     *            value converter function
      * @param <Value>
+     *            input value type
      * @param <Result>
+     *            decoded result type
+     * @return decoding result
      */
     public static <Value, Result> Result translateDecodeExceptions(Supplier<Value> valueSupplier, Function<Value, Result> valueConverter) {
 
@@ -85,11 +93,15 @@ public final class CodecsUtil {
     }
 
     /**
-     * Reads BSON documents, and decodes fields
+     * Reads BSON documents and decodes fields.
      *
      * @param reader
+     *            BSON reader
      * @param decoderContext
+     *            context
      * @param fieldDecoders
+     *            {@link Map} of field decoders
+     * @return BSON {@link Document}
      */
     public static Document readDocument(BsonReader reader, DecoderContext decoderContext, Map<String, Decoder<?>> fieldDecoders) {
 
@@ -108,12 +120,17 @@ public final class CodecsUtil {
     }
 
     /**
-     * Gets field value from document
+     * Returns field value from document.
      *
      * @param document
+     *            document to return field value from
      * @param key
+     *            key of field to return
      * @param clazz
+     *            class of value to return
      * @param <Value>
+     *            type of value to return
+     * @return desired field value
      */
     public static <Value> Value getFieldValue(Document document, Object key, Class<Value> clazz) {
 

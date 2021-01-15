@@ -34,9 +34,11 @@ import com.mongodb.util.JSON;
 public class MongoUtil {
 
     /**
-     * Convert to BasicDBObject.
+     * Converts JSON {@link String} to {@link BasicDBObject}.
      *
      * @param json
+     *            JSON to convert
+     * @return converted {@code BasicDBObject}
      */
     public static BasicDBObject jsonToBasicDbObject(String json) {
         Object o = JSON.parse(json);

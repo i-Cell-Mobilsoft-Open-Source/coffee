@@ -31,12 +31,16 @@ package hu.icellmobilsoft.coffee.module.mongodb.config;
 public interface MongoDbConfig {
 
     /**
-     * MongoDb full URI, example: "mongodb://user:password@localhost:27017/database?ssl=false"
+     * Returns full Mongo DB URI, example: "mongodb://user:password@localhost:27017/database?ssl=false".
+     *
+     * @return Mongo DB URI
      */
     String getUri();
 
     /**
-     * Selected database (collection) in MongoDB, example: "user_request_response"
+     * Returns database (collection) in MongoDB, example: "user_request_response".
+     *
+     * @return Mongo DB
      */
     String getDatabase();
 }

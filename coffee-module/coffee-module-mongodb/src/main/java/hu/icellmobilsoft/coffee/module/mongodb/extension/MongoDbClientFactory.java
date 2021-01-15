@@ -114,10 +114,11 @@ public class MongoDbClientFactory {
     }
 
     /**
-     * Create mongoClient
+     * Creates mongoClient.
      * 
-     * @return
+     * @return mongo client
      * @throws BaseException
+     *             if any exception occurs during creation
      */
     private MongoClient createMongoClient(MongoConfigHelper mongoConfigHelper) throws BaseException {
         try {

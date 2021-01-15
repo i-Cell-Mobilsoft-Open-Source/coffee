@@ -35,7 +35,7 @@ import org.bson.codecs.EncoderContext;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
 
 /**
- * MongoDB XMLGregorianCalendar <-> Date converter codec
+ * MongoDB {@link XMLGregorianCalendar} &lt;-&gt; Date converter codec
  *
  * @author robert.kaplar
  * @since 1.0.0

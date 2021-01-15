@@ -43,7 +43,7 @@ public @interface RedisConnection {
      * Config key of the desired redis connection. <br>
      * ie. if connection details are defined in the project-*.yml by the keys: {@code coffee.redis.auth.*=...} then configKey should be "auth"
      * 
-     * @return
+     * @return config key
      */
     @Nonbinding
     String configKey();
