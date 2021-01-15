@@ -58,42 +58,57 @@ public class EmailRecipient extends AbstractIdentifiedAuditEntity {
     private RecipientType recipientType;
 
     /**
-     * <p>Getter for the field <code>email</code>.</p>
+     * Getter for the field {@code email}.
+     *
+     * @return {@code email}
      */
     public Email getEmail() {
         return email;
     }
 
     /**
-     * <p>Setter for the field <code>email</code>.</p>
+     * Setter for the field {@code email}.
+     *
+     * @param email
+     *            email to set
      */
     public void setEmail(Email email) {
         this.email = email;
     }
 
     /**
-     * <p>Getter for the field <code>recipient</code>.</p>
+     * Getter for the field {@code recipient}.
+     *
+     * @return {@code recipient}
      */
     public Recipient getRecipient() {
         return recipient;
     }
 
     /**
-     * <p>Setter for the field <code>recipient</code>.</p>
+     * Setter for the field {@code recipient}.
+     *
+     * @param recipient
+     *            recipient to set
      */
     public void setRecipient(Recipient recipient) {
         this.recipient = recipient;
     }
 
     /**
-     * <p>Getter for the field <code>recipientType</code>.</p>
+     * Getter for the field {@code recipientType}.
+     *
+     * @return {@code recipientType}
      */
     public RecipientType getRecipientType() {
         return recipientType;
     }
 
     /**
-     * <p>Setter for the field <code>recipientType</code>.</p>
+     * Setter for the field {@code recipientType}.
+     *
+     * @param recipientType
+     *            recipientType to set
      */
     public void setRecipientType(RecipientType recipientType) {
         this.recipientType = recipientType;

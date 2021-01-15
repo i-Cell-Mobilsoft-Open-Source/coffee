@@ -65,70 +65,95 @@ public class Push extends AbstractIdentifiedAuditEntity {
     private String payload;
 
     /**
-     * <p>Getter for the field <code>subject</code>.</p>
+     * Getter for the field {@code subject}.
+     *
+     * @return {@code subject}
      */
     public String getSubject() {
         return subject;
     }
 
     /**
-     * <p>Setter for the field <code>subject</code>.</p>
+     * Setter for the field {@code subject}.
+     *
+     * @param subject
+     *            subject to set
      */
     public void setSubject(String subject) {
         this.subject = subject;
     }
 
     /**
-     * <p>Getter for the field <code>body</code>.</p>
+     * Getter for the field {@code body}.
+     *
+     * @return {@code body}
      */
     public String getBody() {
         return body;
     }
 
     /**
-     * <p>Setter for the field <code>body</code>.</p>
+     * Setter for the field {@code body}.
+     *
+     * @param body
+     *            body to set
      */
     public void setBody(String body) {
         this.body = body;
     }
-    
+
     /**
-     * <p>Getter for the field <code>externalId</code>.</p>
+     * Getter for the field {@code externalId}.
+     *
+     * @return {@code externalId}
      */
     public String getExternalId() {
         return externalId;
     }
 
     /**
-     * <p>Setter for the field <code>externalId</code>.</p>
+     * Setter for the field {@code externalId}.
+     *
+     * @param externalId
+     *            externalId to set
      */
     public void setExternalId(String externalId) {
         this.externalId = externalId;
     }
 
     /**
-     * <p>Getter for the field <code>pushDevices</code>.</p>
+     * Getter for the field {@code pushDevices}.
+     *
+     * @return {@code pushDevices}
      */
     public Map<String, PushDevice> getPushDevices() {
         return pushDevices;
     }
 
     /**
-     * <p>Setter for the field <code>pushDevices</code>.</p>
+     * Setter for the field {@code pushDevices}.
+     *
+     * @param pushDevices
+     *            pushDevices to set
      */
     public void setPushDevices(Map<String, PushDevice> pushDevices) {
         this.pushDevices = pushDevices;
     }
 
     /**
-     * <p>Getter for the field <code>payload</code>.</p>
+     * Getter for the field {@code payload}.
+     *
+     * @return {@code payload}
      */
     public String getPayload() {
         return payload;
     }
 
     /**
-     * <p>Setter for the field <code>payload</code>.</p>
+     * Setter for the field {@code payload}.
+     *
+     * @param payload
+     *            payload to set
      */
     public void setPayload(String payload) {
         this.payload = payload;

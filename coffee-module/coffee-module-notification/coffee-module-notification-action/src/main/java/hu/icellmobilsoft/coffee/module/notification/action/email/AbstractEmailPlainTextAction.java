@@ -32,9 +32,10 @@ import hu.icellmobilsoft.coffee.dto.common.common.KeyValueBasicType;
 import hu.icellmobilsoft.coffee.dto.document.document.TemplateFullType;
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.dto.notification.notification.EmailPlainTextType;
+import hu.icellmobilsoft.coffee.dto.notification.notification.EmailTemplateType;
 
 /**
- * <p>Abstract AbstractEmailPlainTextAction class.</p>
+ * AbstractEmailPlainTextAction class.
  *
  * @since 1.0.0
  */
@@ -56,7 +57,12 @@ public abstract class AbstractEmailPlainTextAction implements Serializable {
     private EmailDataBase emailDataBase;
 
     /**
-     * <p>sendAndSave.</p>
+     * Sends given {@link EmailPlainTextType} and saves it to the database.
+     *
+     * @param emailType
+     *            email to send
+     * @throws BaseException
+     *             if email fields are empty, template cannot be found, or email exception occurs
      */
     public void sendAndSave(EmailPlainTextType emailType) throws BaseException {
         if (emailType == null) {
@@ -84,13 +90,28 @@ public abstract class AbstractEmailPlainTextAction implements Serializable {
     }
 
     /**
-     * <p>validate.</p>
+     * Checks if given {@link EmailPlainTextType} is valid.
+     *
+     * @param emailType
+     *            email to validate
+     * @throws BaseException
+     *             if {@code emailType} is invalid
      */
     public void validate(EmailPlainTextType emailType) throws BaseException {
     }
 
     /**
-     * <p>getTemplate.</p>
+     * Returns {@link TemplateFullType} with given parameters.
+     *
+     * @param templateKey
+     *            key of template
+     * @param parameters
+     *            template params
+     * @param language
+     *            template language
+     * @return {@code TemplateFullType}
+     * @throws BaseException
+     *             if template cannot be found
      */
     protected abstract TemplateFullType getTemplate(String templateKey, List<KeyValueBasicType> parameters, String language) throws BaseException;
 }

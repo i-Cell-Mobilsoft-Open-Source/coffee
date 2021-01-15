@@ -46,10 +46,9 @@ import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 import hu.icellmobilsoft.coffee.module.notification.action.email.annotation.EmailOnly;
 
 /**
- * Alap e-mail kikuldeset kezeli. Apache commons-email {@link https://commons.apache.org/proper/commons-email} csomagbol indul ki.<br>
- * Minden exception a sajat BaseException-ra van forditva<br>
- * Hogyha a tartalom sima text, akkor a <br>
- * Minta hasznalat
+ * Handles basic e-mail sending, based on Apache commons-email <a href="https://commons.apache.org/proper/commons-email">https://commons.apache.org/proper/commons-email</a> package.<br>
+ * All exceptions are converted to {@link BaseException}.<br>
+ * Usage example for simple text content: <br>
  *
  * <pre>
  * private static final String MAIL_SERVICE_JNDI = "java:/TraconMail";
@@ -69,9 +68,9 @@ import hu.icellmobilsoft.coffee.module.notification.action.email.annotation.Emai
  *         emailBase.setFrom("imrich.scheffer@gmail.com");
  *         emailBase.setSubject("test");
  *
- *         // sima text tartalom vagy html
+ *         // basic text content or html
  *         emailBase.setBody("test body");
- *         // emailBase.setBody("&ltHTML>&ltHEAD>&ltTITLE>test html title&lt/TITLE>&lt/HEAD>&ltBODY>test html body&lt/BODY>&lt/HTML>");
+ *         // emailBase.setBody("&lt;HTML&gt;&lt;HEAD&gt;&lt;TITLE&gt;test html title&lt;/TITLE&gt;&lt;/HEAD&gt;&lt;BODY&gt;test html body&lt;/BODY&gt;&lt;/HTML&gt;");
  *
  *         File file = new File("c:/TEMP/photo_1417611404439.jpg");
  *         byte[] fileByte = FileUtils.readFileToByteArray(file);
@@ -105,18 +104,22 @@ public class EmailBase {
     private String to;
 
     /**
-     * <p>setMailSession.</p>
+     * Setter for {@code mailSession} field of {@link Email}.
+     * 
+     * @param mailSession
+     *            mailSession to set
      */
     public void setMailSession(Session mailSession) {
         getEmail().setMailSession(mailSession);
     }
 
     /**
-     * <p>addTo.</p>
+     * Adds {@code to} field to {@link Email}.
      *
      * @param to
-     *            lehet {@value #EMAIL_LIST_DELIMITER} karaketerrel elvalasztott lista string is
+     *            can be multiple to-s by separating them with {@value #EMAIL_LIST_DELIMITER}
      * @throws BaseException
+     *             if email exception occurs
      */
     public void addTo(String to) throws BaseException {
         if (StringUtils.isBlank(to)) {
@@ -135,7 +138,12 @@ public class EmailBase {
     }
 
     /**
-     * <p>setFrom.</p>
+     * Adds {@code from} field to {@link Email}.
+     *
+     * @param from
+     *            if empty, uses system property "swarm.mail.mail-sessions.project-default.from" 
+     * @throws BaseException
+     *             if email exception
      */
     public void setFrom(String from) throws BaseException {
         try {
@@ -150,11 +158,12 @@ public class EmailBase {
     }
 
     /**
-     * <p>addCc.</p>
+     * Adds CC field to {@link Email}.
      *
      * @param cc
-     *            lehet {@value #EMAIL_LIST_DELIMITER} karaketerrel elvalasztott lista string is
+     *            can be multiple cc-s by separating them with {@value #EMAIL_LIST_DELIMITER}
      * @throws BaseException
+     *             if email exception occurs
      */
     public void addCc(String cc) throws BaseException {
         if (StringUtils.isBlank(cc)) {
@@ -168,11 +177,12 @@ public class EmailBase {
     }
 
     /**
-     * <p>addBcc.</p>
+     * Adds BCC field to {@link Email}.
      *
      * @param bcc
-     *            lehet {@value #EMAIL_LIST_DELIMITER} karaketerrel elvalasztott lista string is
+     *            can be multiple bcc-s by separating them with {@value #EMAIL_LIST_DELIMITER}
      * @throws BaseException
+     *             if email exception
      */
     public void addBcc(String bcc) throws BaseException {
         if (StringUtils.isBlank(bcc)) {
@@ -190,20 +200,22 @@ public class EmailBase {
     }
 
     /**
-     * Email targy
+     * Setter for subject field of {@link Email}.
      *
      * @param subject
+     *            subject to set
      */
     public void setSubject(String subject) {
         getEmail().setSubject(subject);
     }
 
     /**
-     * Email tartalom. Ellenorzi hogy a tartalom "&lt" karakterrel kezdodik es vegzodik ">" karakterrel, ha igen akkor html body-kent rakja be
+     * Sets {@link Email} body content. If given content is between "&lt;" and "&gt;" characters, sets the content type to HTML.
      *
      * @param bodyContent
-     *            vagy sima szoveg, vahu html formatumuban levo szoveg
+     *            basic text or HTML content
      * @throws BaseException
+     *             if email exception occurs
      */
     public void setBody(String bodyContent) throws BaseException {
         boolean isHtml = StringUtils.startsWith(bodyContent, "<") && StringUtils.endsWith(bodyContent, ">");
@@ -215,12 +227,12 @@ public class EmailBase {
     }
 
     /**
-     * Email tartalma es kodolasa
+     * Sets {@link Email} body and content type.
      *
      * @param body
-     *            pl.: email szoveges tartalma
+     *            text content
      * @param contentType
-     *            pl.: "text/html; charset=utf-8"
+     *            eg.: "text/html; charset=utf-8"
      */
     public void setContent(Object body, String contentType) {
         content = body;
@@ -228,18 +240,22 @@ public class EmailBase {
     }
 
     /**
-     * Html email tartalom ("text/html; charset=utf-8")
+     * Sets {@link Email} body and HTML content type (text/html; charset=utf-8).
      *
      * @param htmlBody
+     *            HTML content
      */
     public void setHtmlContent(String htmlBody) {
         setContent(htmlBody, "text/html; charset=utf-8");
     }
 
     /**
-     * text email tartalom "plain/text; charset=utf-8"
+     * Sets {@link Email} body and plain text content type (plain/text; charset=utf-8).
      *
      * @param textBody
+     *            text content
+     * @throws BaseException
+     *             if email exception occurs
      */
     public void setTextContent(String textBody) throws BaseException {
         try {
@@ -251,10 +267,13 @@ public class EmailBase {
     }
 
     /**
-     * Regi kompatibilitas vegett lett ide is atemelve
+     * Adds attachments to the email. This method is implemented for compatibility reasons.
      *
      * @param attachments
+     *            attachments to add
      * @throws BaseException
+     *             if email is not a {@link MultiPartEmail}, or messaging/email exception occurs
+     * @see #addAttachment(String, byte[])
      */
     public void addAttachments(List<AttachmentBean> attachments) throws BaseException {
         if (attachments != null) {
@@ -265,13 +284,14 @@ public class EmailBase {
     }
 
     /**
-     * Tartalom hozza adasa az emailhez
+     * Adds attachment to the email.
      *
      * @param name
-     *            mondjuk fajlnev, vagy egyeb megnevezes ami alatt szerepeljen a tartalom
+     *            attachment name (filename)
      * @param data
-     *            tartalom adat
+     *            attachment
      * @throws BaseException
+     *             if email is not a {@link MultiPartEmail}, or messaging/email exception occurs
      */
     public void addAttachment(String name, byte[] data) throws BaseException {
         MimeBodyPart part = new MimeBodyPart();
@@ -297,10 +317,12 @@ public class EmailBase {
     }
 
     /**
-     * Email elkuldese
+     * Sends email.
      *
-     * @return {@link Email#send()}
+     * @return message id
      * @throws BaseException
+     *             if email fields are empty or email exception occurs
+     * @see Email#send()
      */
     public String send() throws BaseException {
         try {
@@ -331,10 +353,13 @@ public class EmailBase {
     }
 
     /**
-     * Osszegyujti az email objektum adatait egy String-be
+     * Collects and returns the fields and data of the {@link Email} object to a {@link String}. Osszegyujti az email objektum adatait egy String-be
      *
      * @param email
+     *            email object
+     * @return email {@code String}
      * @throws BaseException
+     *             exception
      */
     public String emailString(Email email) throws BaseException {
         StringBuffer msg = new StringBuffer();
@@ -390,7 +415,10 @@ public class EmailBase {
     }
 
     /**
-     * Ha nem volt megadva, akkor alapbol org.apache.commons.mail.MultiPartEmail tipust hoz letre. Kezzel allithato mas fajtara a set-en keresztul
+     * Getter for the field {@code email}. If it's not initialized yet, creates an {@link org.apache.commons.mail.MultiPartEmail} instance. For a
+     * different {@link Email} class, use {@link #setEmail(Email)}.
+     *
+     * @return {@code email}
      */
     public Email getEmail() {
         if (email == null) {
@@ -401,28 +429,35 @@ public class EmailBase {
     }
 
     /**
-     * <p>Setter for the field <code>email</code>.</p>
+     * Setter for the field {@code email}.
+     *
+     * @param email
+     *            email to set
      */
     public void setEmail(Email email) {
         this.email = email;
     }
 
     /**
-     * <p>Getter for the field <code>content</code>.</p>
+     * Getter for the field {@code content}.
+     *
+     * @return {@code content}
      */
     public Object getContent() {
         return content;
     }
 
     /**
-     * <p>Getter for the field <code>to</code>.</p>
+     * Getter for the field {@code to}.
+     *
+     * @return {@code to}
      */
     public String getTo() {
         return to;
     }
 
     /**
-     * <p>clear.</p>
+     * Clears {@code to}, {@code content} and {@code email} fields of this.
      */
     public void clear() {
         to = null;

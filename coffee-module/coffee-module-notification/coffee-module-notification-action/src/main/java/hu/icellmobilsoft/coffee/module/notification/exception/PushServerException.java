@@ -23,7 +23,7 @@ import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 
 /**
- * <p>PushServerException class.</p>
+ * PushServerException class.
  *
  * @author imre.scheffer
  * @since 1.0.0
@@ -33,21 +33,37 @@ public class PushServerException extends TechnicalException {
     private static final long serialVersionUID = 1L;
 
     /**
-     * <p>Constructor for PushServerException.</p>
+     * Constructor for PushServerException with given exception message, default fault type {@link CoffeeFaultType#OPERATION_FAILED} and no
+     * {@link Throwable}.
+     *
+     * @param message
+     *            exception message to set
      */
     public PushServerException(String message) {
         this(CoffeeFaultType.OPERATION_FAILED, message, null);
     }
 
     /**
-     * <p>Constructor for PushServerException.</p>
+     * Constructor for PushServerException with given exception message, fault type and no {@link Throwable}.
+     *
+     * @param faultTypeEnum
+     *            fault type enum to set
+     * @param message
+     *            exception message to set
      */
     public PushServerException(Enum<?> faultTypeEnum, String message) {
         this(faultTypeEnum, message, null);
     }
 
     /**
-     * <p>Constructor for PushServerException.</p>
+     * Constructor for PushServerException with given exception message, fault type and {@link Throwable}.
+     *
+     * @param faultTypeEnum
+     *            fault type enum to set
+     * @param message
+     *            exception message to set
+     * @param e
+     *            {@code Throwable} to set
      */
     public PushServerException(Enum<?> faultTypeEnum, String message, Throwable e) {
         super(faultTypeEnum, message, e);

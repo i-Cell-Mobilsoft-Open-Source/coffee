@@ -54,10 +54,14 @@ public class RecipientService extends BaseService<Recipient> implements Serializ
     private RecipientRepository recipientRepository;
 
     /**
-     * Find Recipient by recipient.
+     * Find {@link Recipient} by recipient.
      *
-     * @param Recipient
+     * @param recipient
+     *            recipient
+     * @return {@code Recipient} or null if input is null
      * @throws BaseException
+     *             if {@code Recipient} not found or exception occurs in {@link RecipientRepository} call.
+     * @see RecipientRepository#findByRecipient(String)
      */
     public Recipient findByRecipient(String recipient) throws BaseException {
         log.trace(">> RecipientService.findByRecipient(recipient: [{0}])", recipient);
