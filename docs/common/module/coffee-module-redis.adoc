@@ -35,3 +35,18 @@ A fenti konfig-hoz tartozó RedisService használata:
 @RedisConnection(configKey = "auth")
 private RedisService authRedisService;
 ----
+
+== Redis műveletek
+
+=== hscan
+
+Végigiterál a kiválasztott redis db-ben lévő objektumon kulcs alapján. A művelet közben változhat az adat, nem blokkol (ez az előny az SMEMBERS művelettel szemben).
+Arra nincs garancia hogy minden elemet visszaad, a redisben tárolt objektumok méretétől függ.
+Ha meghaladja a limitet akkor a default COUNT értéke 10 lesz, ennél több elemet nem fog visszaadni egy kérésben.
+Lehetőség van paraméterezni a COUNT értékét, ha meghaladnánk a méret korlátot.
+Bővebb leírás a korlátokról: https://redis.io/commands/scan
+
+[source,java]
+----
+authRedisService.hscanRedisData("key", 10, 100);
+----

@@ -33,6 +33,7 @@ import hu.icellmobilsoft.coffee.se.logging.Logger;
 import hu.icellmobilsoft.coffee.tool.gson.JsonUtil;
 
 import redis.clients.jedis.Jedis;
+import redis.clients.jedis.ScanParams;
 import redis.clients.jedis.ScanResult;
 
 /**
@@ -284,6 +285,24 @@ public abstract class AbstractRedisService {
         return result.getResult();
     }
 
+    /**
+     * <p>hscanRedisData.</p>
+     *
+     * @see Jedis#hscan(String, String, ScanParams)
+     * @param redisKey
+     * @param secondsToExpire
+     * @param count
+     */
+    public List<Map.Entry<String, String>> hscanRedisData(String redisKey, int secondsToExpire, int count) throws BaseException {
+        if (StringUtils.isBlank(redisKey)) {
+            throw new BONotFoundException("Redis key is empty.");
+        }
+        RedisRepository repository = new RedisRepository(getJedis());
+        ScanResult<Map.Entry<String, String>> result = repository.hscan(redisKey, RedisRepository.CURSOR_0, secondsToExpire,
+                new ScanParams().count(count));
+        return result.getResult();
+    }
+    
     /**
      * <p>setRedisData.</p>
      *

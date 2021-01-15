@@ -2,7 +2,7 @@
  * #%L
  * Coffee
  * %%
- * Copyright (C) 2020 i-Cell Mobilsoft Zrt.
+ * Copyright (C) 2020 - 2021 i-Cell Mobilsoft Zrt.
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,34 +19,24 @@
  */
 package hu.icellmobilsoft.coffee.module.redisstream.config;
 
-import hu.icellmobilsoft.coffee.dto.common.LogConstants;
-
 /**
- * Redis stream constants
+ * Redis Stream message parameters
  * 
- * @author imre.scheffer
- * @since 1.3.0
+ * @author imre.scheffer 1.3.0
  */
-public interface IRedisStreamConstant {
-
+public enum StreamMessageParameter {
     /**
-     * Common values
-     * 
-     * @author imre.scheffer
-     * @since 1.3.0
+     * Stream message time to live. Value is epoch time millis. If value is < now, then message is expired
      */
-    interface Common {
-        /**
-         * Key for redis stream message data
-         */
-        String DATA_KEY_MESSAGE = "message";
-        /**
-         * Key for redis stream message flow ID
-         */
-        String DATA_KEY_FLOW_ID = LogConstants.LOG_SESSION_ID;
-        /**
-         * Key for redis stream message timeout in epoch time
-         */
-        String DATA_KEY_TTL = "ttl";
+    TTL(IRedisStreamConstant.Common.DATA_KEY_TTL);
+
+    String messageKey;
+
+    private StreamMessageParameter(String messageKey) {
+        this.messageKey = messageKey;
+    }
+
+    public String getMessageKey() {
+        return messageKey;
     }
 }
