@@ -37,8 +37,7 @@ import redis.clients.jedis.ScanParams;
 import redis.clients.jedis.ScanResult;
 
 /**
- * Abstract class for redis repository service. Main target is use multiple Redis connection (for cache, for authentication, for other businness
- * logic)
+ * Abstract class for redis repository service. Main target is use multiple Redis connection (for cache, for authentication, for other business logic)
  *
  * @author imre.scheffer
  * @since 1.0.0
@@ -48,7 +47,17 @@ public abstract class AbstractRedisService {
     private static Logger LOGGER = hu.icellmobilsoft.coffee.cdi.logger.LogProducer.getStaticDefaultLogger(AbstractRedisService.class);
 
     /**
-     * <p>getRedisData.</p>
+     * Returns data of given key from {@link RedisRepository}.
+     *
+     * @param redisKey
+     *            key of redis data to find
+     * @param c
+     *            return object class
+     * @param <T>
+     *            return object type
+     * @return redis data
+     * @throws BONotFoundException
+     *             if invalid parameters, data not found or data is invalid
      */
     @SuppressWarnings("unchecked")
     public <T> T getRedisData(String redisKey, Class<T> c) throws BaseException {
@@ -75,12 +84,19 @@ public abstract class AbstractRedisService {
     }
 
     /**
-     * {@link #getRedisData(String, Class)} eredménye, csak BONotFOundException helyett emptyOptional-t ad vissza.
+     * Returns data of given key from {@link RedisRepository}. Same as {@link #getRedisData(String, Class)}, but returns an empty {@link Optional}
+     * instead of {@link BONotFoundException}.
      *
      * @param redisKey
+     *            key of redis data to find
      * @param c
+     *            return object class
      * @param <T>
-     * @throws BaseException
+     *            return object type
+     * @return redis data or empty {@code Optional}
+     * @throws BONotFoundException
+     *             if key param is empty
+     * @see #getRedisData(String, Class)
      */
     @SuppressWarnings("unchecked")
     public <T> Optional<T> getRedisDataOpt(String redisKey, Class<T> c) throws BaseException {
@@ -102,7 +118,20 @@ public abstract class AbstractRedisService {
     }
 
     /**
-     * <p>setRedisData.</p>
+     * Sets data with given key to {@link RedisRepository} and sets a timeout on the specified key.
+     *
+     * @param redisKey
+     *            key to set
+     * @param secondsToExpire
+     *            timeout on the key given in seconds
+     * @param redisData
+     *            data to set
+     * @param <T>
+     *            data object type
+     * @return status code reply
+     * @throws BONotFoundException
+     *             if key or data param is empty
+     * @see RedisRepository#setex(String, int, String)
      */
     public <T> String setRedisData(String redisKey, int secondsToExpire, T redisData) throws BaseException {
         if (StringUtils.isBlank(redisKey)) {
@@ -121,7 +150,13 @@ public abstract class AbstractRedisService {
     }
 
     /**
-     * <p>removeRedisData.</p>
+     * Removes the specified key. If the given key does not exist no operation is performed for this key.
+     *
+     * @param redisKey
+     *            key to delete
+     * @throws BONotFoundException
+     *             if key param is empty
+     * @see Jedis#del(String...)
      */
     public void removeRedisData(String redisKey) throws BaseException {
         if (StringUtils.isBlank(redisKey)) {
@@ -134,7 +169,13 @@ public abstract class AbstractRedisService {
     }
 
     /**
-     * <p>removeAllRedisData.</p>
+     * Removes the specified Redis keys. If a given key does not exist no operation is performed for this key.
+     *
+     * @param redisKeys
+     *            keys to delete
+     * @throws BONotFoundException
+     *             if key param is empty
+     * @see Jedis#del(String...)
      */
     public void removeAllRedisData(List<String> redisKeys) throws BaseException {
         if (redisKeys == null || redisKeys.isEmpty()) {
@@ -149,12 +190,18 @@ public abstract class AbstractRedisService {
     }
 
     /**
-     * Redis data mar a raw data ami megy a redisbe, rpush nal mar nem kell convertalni
+     * Adds given redis data to the tail of the list stored at key then sets a timeout on the specified key. If the key does not exist an empty list
+     * is created just before the append operation.
      *
      * @param redisKey
+     *            redis key to set session id for
      * @param redisData
+     *            redis data to set
      * @param secondsToExpire
-     * @throws BaseException
+     *            timeout on the key given in seconds
+     * @throws BONotFoundException
+     *             if key param is empty or data param is null
+     * @see Jedis#rpush(String, String...)
      */
     public void rpushRedisData(String redisKey, String redisData, int secondsToExpire) throws BaseException {
         if (StringUtils.isBlank(redisKey)) {
@@ -170,7 +217,14 @@ public abstract class AbstractRedisService {
     }
 
     /**
-     * <p>listRedisData.</p>
+     * Returns all elements of the list stored at the specified Redis key.
+     *
+     * @param redisKey
+     *            key to return elements of
+     * @return {@link List} of elements with the given key
+     * @throws BONotFoundException
+     *             if key param is empty
+     * @see Jedis#lrange(String, long, long)
      */
     public List<String> listRedisData(String redisKey) throws BaseException {
         if (StringUtils.isBlank(redisKey)) {
@@ -181,7 +235,15 @@ public abstract class AbstractRedisService {
     }
 
     /**
-     * <p>expireRedisData.</p>
+     * Sets a timeout on the specified Redis key. After the timeout the key will be automatically deleted by the server.
+     *
+     * @param redisKey
+     *            key to expire
+     * @param seconds
+     *            timeout given in seconds
+     * @throws BONotFoundException
+     *             if key param is empty, or result of expire command is not 1
+     * @see Jedis#expire(String, int)
      */
     public void expireRedisData(String redisKey, int seconds) throws BaseException {
         if (StringUtils.isBlank(redisKey)) {
@@ -195,8 +257,9 @@ public abstract class AbstractRedisService {
     }
 
     /**
-     * <p>removeAllRedisData.</p>
+     * Deletes all the keys of the currently selected DB.
      *
+     * @return OK
      * @see Jedis#flushDB()
      */
     public String removeAllRedisData() {
@@ -205,12 +268,18 @@ public abstract class AbstractRedisService {
     }
 
     /**
-     * <p>setnxRedisData.</p>
+     * Sets given Redis key to hold given value if key does not exist, then sets a timeout on the specified key.
      *
-     * @see Jedis#setnx(String, int, String)
      * @param redisKey
+     *            key to set value for
      * @param redisData
+     *            value to set
      * @param secondsToExpire
+     *            timeout on the key given in seconds
+     * @return 1 if the key was set successfully; 0 if the key was not set (key already exists)
+     * @throws BONotFoundException
+     *             if key or value is empty
+     * @see Jedis#setnx(String, String)
      */
     public Long setnxRedisData(String redisKey, String redisData, int secondsToExpire) throws BaseException {
         if (StringUtils.isBlank(redisKey)) {
@@ -225,9 +294,12 @@ public abstract class AbstractRedisService {
     }
 
     /**
-     * Get info from Redis
+     * Returns info from Redis server.
      *
+     * @return Redis server info
      * @throws BaseException
+     *             exception
+     * @see Jedis#info()
      */
     public String redisInfo() throws BaseException {
         RedisRepository repository = new RedisRepository(getJedis());
@@ -235,12 +307,15 @@ public abstract class AbstractRedisService {
     }
 
     /**
-     * Get section info from Redis
+     * Returns section info from Redis server.
      *
-     * @see <a href="https://redis.io/commands/INFO">https://redis.io/commands/INFO</a>
      * @param section
      *            available: server, clients, memory, persistence, stats, replication, cpu, commandstats, cluster, keyspace
+     * @return Redis server info section
      * @throws BaseException
+     *             exception
+     * @see Jedis#info(String)
+     * @see <a href="https://redis.io/commands/INFO">https://redis.io/commands/INFO</a>
      */
     public String redisInfo(String section) throws BaseException {
         RedisRepository repository = new RedisRepository(getJedis());
@@ -248,13 +323,20 @@ public abstract class AbstractRedisService {
     }
 
     /**
-     * <p>hsetnxRedisData.</p>
+     * Sets the specified hash field to the specified value if the field does not exist.
      *
-     * @see Jedis#hsetnx(String, String, String)
      * @param redisKey
+     *            key to set field for
      * @param field
+     *            field to set value for
      * @param redisData
+     *            value to set
      * @param secondsToExpire
+     *            timeout on the key given in seconds
+     * @return 1 if the key was set successfully; 0 if the key was not set (key already exists)
+     * @throws BONotFoundException
+     *             if key param is empty or data param is null
+     * @see Jedis#hsetnx(String, String, String)
      */
     public Long hsetnxRedisData(String redisKey, String field, String redisData, int secondsToExpire) throws BaseException {
         if (StringUtils.isBlank(redisKey)) {
@@ -270,11 +352,16 @@ public abstract class AbstractRedisService {
     }
 
     /**
-     * <p>hscanRedisData.</p>
+     * Executes Redis HSCAN operation which incrementally iterates over a collection of elements.
      *
-     * @see Jedis#hscan(String, String)
      * @param redisKey
+     *            redis key
      * @param secondsToExpire
+     *            timeout on the key given in seconds
+     * @return hscan result
+     * @throws BONotFoundException
+     *             if key param is empty
+     * @see Jedis#hscan(String, String)
      */
     public List<Map.Entry<String, String>> hscanRedisData(String redisKey, int secondsToExpire) throws BaseException {
         if (StringUtils.isBlank(redisKey)) {
@@ -286,12 +373,18 @@ public abstract class AbstractRedisService {
     }
 
     /**
-     * <p>hscanRedisData.</p>
+     * Executes Redis HSCAN operation which incrementally iterates over a collection of elements.
      *
-     * @see Jedis#hscan(String, String, ScanParams)
      * @param redisKey
+     *            redis key
      * @param secondsToExpire
+     *            timeout on the key given in seconds
      * @param count
+     *            count param
+     * @return hscan result
+     * @throws BONotFoundException
+     *             if key param is empty
+     * @see Jedis#hscan(String, String, ScanParams)
      */
     public List<Map.Entry<String, String>> hscanRedisData(String redisKey, int secondsToExpire, int count) throws BaseException {
         if (StringUtils.isBlank(redisKey)) {
@@ -302,11 +395,20 @@ public abstract class AbstractRedisService {
                 new ScanParams().count(count));
         return result.getResult();
     }
-    
+
     /**
-     * <p>setRedisData.</p>
+     * Sets data with given key to {@link RedisRepository}.
      *
-     * @see Jedis#set(String, String) ()
+     * @param redisKey
+     *            key to set
+     * @param redisData
+     *            data to set
+     * @param <T>
+     *            data object type
+     * @return status code reply
+     * @throws BONotFoundException
+     *             if key or data param is empty
+     * @see RedisRepository#setex(String, int, String)
      */
     public <T> String setRedisData(String redisKey, T redisData) throws BaseException {
         if (StringUtils.isBlank(redisKey)) {
@@ -325,7 +427,9 @@ public abstract class AbstractRedisService {
     }
 
     /**
-     * <p>getJedis.</p>
+     * Returns {@link Jedis} Redis client instance.
+     * 
+     * @return {@code Jedis}
      */
     protected abstract Jedis getJedis();
 }

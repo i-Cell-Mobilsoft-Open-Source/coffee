@@ -53,7 +53,13 @@ public class JedisConnectionProducer {
     private Logger log;
 
     /**
-     * Creates or gets jedis resource for the given configKey
+     * Creates or returns {@link Jedis} resource for the given configKey.
+     * 
+     * @param injectionPoint
+     *            injection metadata
+     * @return {@code Jedis}
+     * @throws BaseException
+     *             if Jedis unavailable or cannot be created
      */
     @Produces
     @Dependent
@@ -78,6 +84,9 @@ public class JedisConnectionProducer {
 
     /**
      * Close connection when jedis is disposed
+     * 
+     * @param jedis
+     *            {@link Jedis} to close
      */
     public void returnResource(@Disposes @RedisConnection(configKey = "") Jedis jedis) {
         if (jedis != null) {

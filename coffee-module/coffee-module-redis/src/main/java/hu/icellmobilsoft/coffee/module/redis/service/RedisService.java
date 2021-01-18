@@ -44,7 +44,10 @@ public class RedisService extends AbstractRedisService implements Closeable {
     }
 
     /**
-     * <p>Setter for the field <code>jedis</code>.</p>
+     * Setter for the field {@code jedis}.
+     *
+     * @param jedis
+     *            jedis to set
      */
     public void setJedis(Jedis jedis) {
         this.jedis = jedis;
