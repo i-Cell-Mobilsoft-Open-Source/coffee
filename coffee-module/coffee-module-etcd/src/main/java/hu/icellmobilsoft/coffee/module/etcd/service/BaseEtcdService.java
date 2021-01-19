@@ -60,9 +60,15 @@ public class BaseEtcdService<T> {
     private EtcdRepository etcdRepository;
 
     /**
-     * <p>
-     * getEtcdData.
-     * </p>
+     * Returns value from ETCD.
+     *
+     * @param key
+     *            key of value to return
+     * @param c
+     *            class of value to return
+     * @return ETCD value
+     * @throws BaseException
+     *             if given key param is empty, value is not found, value type is unsupported or technical error occurs
      */
     @SuppressWarnings("unchecked")
     public T getEtcdData(String key, Class<T> c) throws BaseException {
@@ -92,9 +98,14 @@ public class BaseEtcdService<T> {
     }
 
     /**
-     * <p>
-     * setEtcdData.
-     * </p>
+     * Sets value of given key in ETCD.
+     *
+     * @param key
+     *            key to set value of
+     * @param value
+     *            value to set
+     * @throws BaseException
+     *             if given key or value param is empty, or technical error occurs
      */
     public void setEtcdData(String key, String value) throws BaseException {
         // IS: a value lehetne generikum is, ha szukseg lessz ra, csak akkor meg kell allapodni mikent fogjuk tarolni (pl json)
@@ -116,9 +127,15 @@ public class BaseEtcdService<T> {
     }
 
     /**
-     * <p>
-     * getEtcdDataList.
-     * </p>
+     * Returns values of keys between the two given keys from ETCD.
+     *
+     * @param startKeyStr
+     *            start key
+     * @param endKeyStr
+     *            end key (exclusive)
+     * @return response key-value pairs in a {@link Map}
+     * @throws BaseException
+     *             if technical error occurs
      */
     @SuppressWarnings("unchecked")
     public Map<String, T> getEtcdDataList(String startKeyStr, String endKeyStr) throws BaseException {
@@ -149,9 +166,14 @@ public class BaseEtcdService<T> {
     }
 
     /**
-     * <p>
-     * deleteEtcdData.
-     * </p>
+     * Deletes value from ETCD.
+     *
+     * @param key
+     *            key of value to delete
+     * @param c
+     *            class of value to delete
+     * @throws BaseException
+     *             if value is not found or technical error occurs
      */
     public void deleteEtcdData(String key, Class<T> c) throws BaseException {
         log.debug(">> ExtEtcdService.deleteEtcdData(key : [{0}])", key);

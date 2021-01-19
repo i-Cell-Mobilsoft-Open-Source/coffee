@@ -53,8 +53,8 @@ public class ConfigEtcdService {
     /**
      * ETCD service initialization
      * 
-     * @param etcdRepository
-     *            ETCD repository
+     * @param etcdService
+     *            ETCD service
      */
     public void init(EtcdService etcdService) {
         this.etcdService = etcdService;
@@ -111,7 +111,7 @@ public class ConfigEtcdService {
      * @param key
      *            key in ETCD
      * @param value
-     *            value save to ETCD. Null value means {@value #EMPTY_VALUE} (empty String)
+     *            value save to ETCD. Null value means {@value EtcdService#EMPTY_VALUE} (empty String)
      * @throws BaseException
      *             technical error
      */
