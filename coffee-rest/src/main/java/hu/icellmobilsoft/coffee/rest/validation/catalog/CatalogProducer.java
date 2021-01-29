@@ -21,8 +21,12 @@ package hu.icellmobilsoft.coffee.rest.validation.catalog;
 
 import java.net.URI;
 import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
+import javax.enterprise.inject.Any;
+import javax.enterprise.inject.Instance;
 import javax.enterprise.inject.Model;
 import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
@@ -56,24 +60,52 @@ public class CatalogProducer {
     @Inject
     private ApplicationConfiguration applicationConfiguration;
 
+    @Any
+    @Inject
+    private Instance<ICatalogRegistry> registries;
+
     /**
      * Producer for @Inject Catalog feature
      *
      * @throws BaseException
      */
     @Produces
-    public Catalog publicCatalogResolver() throws BaseException {
+    public List<Catalog> publicCatalogResolver() throws BaseException {
+        List<Catalog> catalogs = new ArrayList<Catalog>();
+        List<String> paths = findCatalogPaths();
+
         Optional<String> xmlCatalogPath = applicationConfiguration.getOptionalString(IConfigKey.CATALOG_XML_PATH);
         String path = xmlCatalogPath
                 .orElseThrow(() -> new TechnicalException(MessageFormat.format("The config of [{0}] not found!", IConfigKey.CATALOG_XML_PATH)));
-        try {
-            URI catalogUri = CatalogProducer.class.getClassLoader().getResource(path).toURI();
+        paths.add(path);
 
-            return CatalogManager.catalog(CatalogFeatures.defaults(), catalogUri);
-        } catch (Exception e) {
-            String msg = MessageFormat.format("Can not resolve catalog:[{0}], [{1}]", path, e.getLocalizedMessage());
-            log.error(msg, e);
-            throw new XsdProcessingException(CoffeeFaultType.OPERATION_FAILED, msg, e);
+        for (String catalogPath : paths) {
+            try {
+                URI catalogUri = CatalogProducer.class.getClassLoader().getResource(catalogPath).toURI();
+
+                catalogs.add(CatalogManager.catalog(CatalogFeatures.defaults(), catalogUri));
+                log.debug("Catalog [{0}] added!", catalogUri);
+            } catch (Exception e) {
+                String msg = MessageFormat.format("Can not resolve catalog:[{0}], [{1}]", catalogPath, e.getLocalizedMessage());
+                log.error(msg, e);
+                throw new XsdProcessingException(CoffeeFaultType.OPERATION_FAILED, msg, e);
+            }
+            }
+        return catalogs;
+    }
+
+    private List<String> findCatalogPaths() throws BaseException {
+        List<String> list = new ArrayList<String>();
+        for (ICatalogRegistry cr : registries) {
+            log.info("Catalog registry found: [{0}]", cr.getClass().getName());
+            List<String> pathList = cr.getSchemaCatalogList();
+            for (String path : pathList) {
+                if (!list.contains(path)) {
+                    log.info("Registered catalog path found: [{0}]", path);
+                    list.add(path);
+                    }
+                }
         }
+        return list;
     }
 }

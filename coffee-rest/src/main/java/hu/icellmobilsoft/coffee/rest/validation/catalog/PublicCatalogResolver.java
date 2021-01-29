@@ -21,6 +21,7 @@ package hu.icellmobilsoft.coffee.rest.validation.catalog;
 
 import java.io.StringReader;
 import java.util.Iterator;
+import java.util.List;
 
 import javax.inject.Inject;
 import javax.xml.catalog.Catalog;
@@ -45,7 +46,7 @@ import hu.icellmobilsoft.coffee.rest.validation.xml.utils.IXsdResourceResolver;
 public class PublicCatalogResolver implements LSResourceResolver, IXsdResourceResolver {
 
     @Inject
-    private Catalog catalog;
+    private List<Catalog> catalogs;
 
     @Inject
     @ThisLogger
@@ -55,14 +56,13 @@ public class PublicCatalogResolver implements LSResourceResolver, IXsdResourceRe
      * Implements the EntityResolver interface
      */
     public InputSource resolveEntity(String publicId, String systemId) {
-
-        String resolvedSystemId = resolve(catalog, publicId, systemId);
-
-        if (resolvedSystemId != null) {
-
-            return new InputSource(resolvedSystemId);
+        String resolvedSystemId = null;
+        for (Catalog catalog : catalogs) {
+            resolvedSystemId = resolve(catalog, publicId, systemId);
+            if (resolvedSystemId != null) {
+                return new InputSource(resolvedSystemId);
+            }
         }
-
         // no action, allow the parser to continue
         return new InputSource(new StringReader(""));
     }
