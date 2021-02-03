@@ -266,7 +266,8 @@ public class JaxbTool {
      * Vissza adja request version-t. Nem érdemes felülírni, helyette a CDI lehetőségeit kell használni, mégpedig implementálni a
      * IXmlRequestVersionReader osztályt és alternative-ként aktiválni
      *
-     * @param entityStream http REST entity
+     * @param entityStream
+     *            http REST entity
      * @return request version
      * @throws XsdProcessingException
      *             if invalid input or cannot read request version

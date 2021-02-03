@@ -31,7 +31,6 @@ import java.util.Map;
 
 import javax.enterprise.inject.Model;
 
-
 /**
  * Container for logging.
  *
@@ -80,7 +79,6 @@ public class LogContainer {
         logs.add(new Log(LogLevel.TRACE, message));
     }
 
-
     /**
      * Logs debug log with message.
      *
@@ -90,7 +88,6 @@ public class LogContainer {
     public void debug(String msg) {
         logs.add(new Log(LogLevel.DEBUG, msg));
     }
-
 
     /**
      * Logs debug log with format and one or more arguments.
@@ -118,7 +115,6 @@ public class LogContainer {
         logs.add(new Log(LogLevel.DEBUG, message));
     }
 
-
     /**
      * Logs info log with message.
      *
@@ -128,7 +124,6 @@ public class LogContainer {
     public void info(String msg) {
         logs.add(new Log(LogLevel.INFO, msg));
     }
-
 
     /**
      * Logs info log with format and one or more arguments.
@@ -156,7 +151,6 @@ public class LogContainer {
         logs.add(new Log(LogLevel.INFO, message));
     }
 
-
     /**
      * Logs warn log with message.
      *
@@ -166,7 +160,6 @@ public class LogContainer {
     public void warn(String msg) {
         logs.add(new Log(LogLevel.WARN, msg));
     }
-
 
     /**
      * Logs warn log with format and one or more arguments.
@@ -194,7 +187,6 @@ public class LogContainer {
         logs.add(new Log(LogLevel.WARN, message));
     }
 
-
     /**
      * Logs error log with message.
      *
@@ -204,7 +196,6 @@ public class LogContainer {
     public void error(String msg) {
         logs.add(new Log(LogLevel.ERROR, msg));
     }
-
 
     /**
      * Logs error log with format and onr or more arguments.

@@ -195,7 +195,7 @@ public class ConfigurationHelper {
 
     /**
      * Getting optional value by key from config sources
-
+     * 
      * @param <T>
      *            return object type
      * @param key

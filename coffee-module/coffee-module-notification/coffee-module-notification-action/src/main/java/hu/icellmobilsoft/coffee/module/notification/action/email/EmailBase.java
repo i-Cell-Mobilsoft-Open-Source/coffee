@@ -46,7 +46,8 @@ import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 import hu.icellmobilsoft.coffee.module.notification.action.email.annotation.EmailOnly;
 
 /**
- * Handles basic e-mail sending, based on Apache commons-email <a href="https://commons.apache.org/proper/commons-email">https://commons.apache.org/proper/commons-email</a> package.<br>
+ * Handles basic e-mail sending, based on Apache commons-email
+ * <a href="https://commons.apache.org/proper/commons-email">https://commons.apache.org/proper/commons-email</a> package.<br>
  * All exceptions are converted to {@link BaseException}.<br>
  * Usage example for simple text content: <br>
  *
@@ -141,7 +142,7 @@ public class EmailBase {
      * Adds {@code from} field to {@link Email}.
      *
      * @param from
-     *            if empty, uses system property "swarm.mail.mail-sessions.project-default.from" 
+     *            if empty, uses system property "swarm.mail.mail-sessions.project-default.from"
      * @throws BaseException
      *             if email exception
      */

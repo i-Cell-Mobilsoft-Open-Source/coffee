@@ -128,8 +128,10 @@ public class MongoDbHandler {
     /**
      * Sets mongo collection.
      *
-     * @param collection collection to set
-     * @throws BaseException exception
+     * @param collection
+     *            collection to set
+     * @throws BaseException
+     *             exception
      */
     public void setCollection(String collection) throws BaseException {
         getMongoService().setMongoCollection(getDatabase().getCollection(collection, BasicDBObject.class));

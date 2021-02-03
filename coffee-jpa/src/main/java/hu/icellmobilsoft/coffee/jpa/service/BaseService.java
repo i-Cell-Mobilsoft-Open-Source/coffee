@@ -49,11 +49,13 @@ import hu.icellmobilsoft.coffee.tool.common.FunctionalInterfaces.BaseExceptionFu
 import hu.icellmobilsoft.coffee.tool.common.FunctionalInterfaces.BaseExceptionSupplier;
 
 /**
- * <p>BaseService class.</p>
+ * <p>
+ * BaseService class.
+ * </p>
  *
  * @author imre.scheffer
  * @param <T>
- *     entity
+ *            entity
  * @since 1.0.0
  */
 @Dependent
@@ -727,8 +729,8 @@ public class BaseService<T> {
     }
 
     /**
-     * Wraps the business logic method call in order to handle common logging and exception handling with one non-empty parameter and an {@link Optional}
-     * response.
+     * Wraps the business logic method call in order to handle common logging and exception handling with one non-empty parameter and an
+     * {@link Optional} response.
      *
      * @param function
      *            the function doing business logic
@@ -923,8 +925,7 @@ public class BaseService<T> {
     }
 
     /**
-     * Wraps the business logic method call in order to handle common logging and exception handling with two parameters and a {@link List}
-     * response.
+     * Wraps the business logic method call in order to handle common logging and exception handling with two parameters and a {@link List} response.
      *
      * @param function
      *            the function doing business logic
@@ -1768,9 +1769,9 @@ public class BaseService<T> {
      * Adds log entry for method return if trace is enabled.
      *
      * @param methodInfo
-     *          method info format {@link String} with method and param names, and placeholders for parameter values
+     *            method info format {@link String} with method and param names, and placeholders for parameter values
      * @param params
-     *          parameter values in matching order with methodInfo
+     *            parameter values in matching order with methodInfo
      */
     protected void logReturn(String methodInfo, Object... params) {
         if (log.isTraceEnabled()) {
@@ -1782,9 +1783,9 @@ public class BaseService<T> {
      * Adds log entry for method enter if trace is enabled.
      *
      * @param methodInfo
-     *          method info format {@link String} with method and param names, and placeholders for param values
+     *            method info format {@link String} with method and param names, and placeholders for param values
      * @param params
-     *          parameter values in matching order with methodInfo
+     *            parameter values in matching order with methodInfo
      */
     protected void logEnter(String methodInfo, Object... params) {
         if (log.isTraceEnabled()) {
@@ -1828,9 +1829,9 @@ public class BaseService<T> {
      * Creates {@link BONotFoundException}.
      *
      * @param methodInfo
-     *          method info format {@link String} with method and param names, and placeholders for param values
+     *            method info format {@link String} with method and param names, and placeholders for param values
      * @param params
-     *          parameter values in matching order with methodInfo
+     *            parameter values in matching order with methodInfo
      * @return {@link BONotFoundException} with message from methodInfo.
      */
     protected BONotFoundException notFound(String methodInfo, Object... params) {
@@ -1842,11 +1843,11 @@ public class BaseService<T> {
      * Creates {@link TechnicalException} with {@link CoffeeFaultType#REPOSITORY_FAILED} fault type.
      *
      * @param e
-     *          cause {@link Exception}
+     *            cause {@link Exception}
      * @param methodInfo
-     *          method info format {@link String} with method and param names, and placeholders for param values
+     *            method info format {@link String} with method and param names, and placeholders for param values
      * @param params
-     *          parameter values in matching order with methodInfo
+     *            parameter values in matching order with methodInfo
      * @return {@link TechnicalException} with message from methodInfo.
      */
     protected TechnicalException repositoryFailed(Exception e, String methodInfo, Object... params) {
@@ -1860,9 +1861,9 @@ public class BaseService<T> {
      * Creates {@link BaseException} with {@link CoffeeFaultType#WRONG_OR_MISSING_PARAMETERS} fault type.
      *
      * @param methodInfo
-     *          method info format {@link String} with method and param names, and placeholders for param values
+     *            method info format {@link String} with method and param names, and placeholders for param values
      * @param params
-     *          parameter values in matching order with methodInfo
+     *            parameter values in matching order with methodInfo
      * @return {@link BaseException} with message from methodInfo.
      */
     protected BaseException invalidParameter(String methodInfo, Object... params) {

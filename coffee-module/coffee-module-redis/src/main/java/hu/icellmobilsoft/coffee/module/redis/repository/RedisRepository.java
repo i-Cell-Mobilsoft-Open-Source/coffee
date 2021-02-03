@@ -251,7 +251,7 @@ public class RedisRepository {
         getJedis().expire(key, secondsToExpire);
         return result;
     }
-    
+
     /**
      * Executes Redis HSCAN operation which incrementally iterates over a collection of elements.
      *
@@ -271,7 +271,7 @@ public class RedisRepository {
         getJedis().expire(key, secondsToExpire);
         return result;
     }
-    
+
     /**
      * Deletes all the keys of the currently selected DB.
      *

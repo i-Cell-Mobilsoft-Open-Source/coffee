@@ -191,7 +191,7 @@ public class DateUtil {
      * Sets given {@link Date}'s time part to end of day (23:59:59:999) then returns it.
      *
      * @param day
-     * {@code Date} to calculate with
+     *            {@code Date} to calculate with
      * @return end time of {@code day} or null if {@code day} is null
      */
     public static Date endTimeOfDate(Date day) {

@@ -20,7 +20,9 @@
 package hu.icellmobilsoft.coffee.dto.exception.enums;
 
 /**
- * <p>Severity class.</p>
+ * <p>
+ * Severity class.
+ * </p>
  *
  * @author imre.scheffer
  * @since 1.0.0

@@ -26,11 +26,12 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for QueryMetaData complex type.
+ * <p>
+ * Java class for QueryMetaData complex type.
  *
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  *
  * <pre>
  * &lt;complexType name="QueryMetaData"&gt;
@@ -80,8 +81,7 @@ public class QueryMetaData {
      * Sets the value of the totalRows property.
      *
      * @param value
-     *     allowed object is
-     *     {@link BigInteger }
+     *            allowed object is {@link BigInteger }
      */
     public void setTotalRows(BigInteger value) {
         this.totalRows = value;
@@ -100,8 +100,7 @@ public class QueryMetaData {
      * Sets the value of the maxPage property.
      *
      * @param value
-     *     allowed object is
-     *     {@link BigInteger }
+     *            allowed object is {@link BigInteger }
      */
     public void setMaxPage(BigInteger value) {
         this.maxPage = value;
@@ -120,8 +119,7 @@ public class QueryMetaData {
      * Sets the value of the rows property.
      *
      * @param value
-     *     allowed object is
-     *     {@link BigInteger }
+     *            allowed object is {@link BigInteger }
      */
     public void setRows(BigInteger value) {
         this.rows = value;
@@ -140,8 +138,7 @@ public class QueryMetaData {
      * Sets the value of the page property.
      *
      * @param value
-     *     allowed object is
-     *     {@link BigInteger }
+     *            allowed object is {@link BigInteger }
      */
     public void setPage(BigInteger value) {
         this.page = value;

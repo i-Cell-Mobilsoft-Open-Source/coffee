@@ -270,7 +270,7 @@ public class DateXmlUtil {
     }
 
     /**
-     * Creates a new {@link XMLGregorianCalendar} instance from a {@link Calendar} with timezone overwritten to UTC. 
+     * Creates a new {@link XMLGregorianCalendar} instance from a {@link Calendar} with timezone overwritten to UTC.
      *
      * @see #toDateAsLocal(XMLGregorianCalendar)
      * @param c
@@ -372,9 +372,8 @@ public class DateXmlUtil {
     }
 
     /**
-     * Sets the input {@link Calendar}'s time zone to UTC, then applies {@link #toXMLGregorianCalendar(Calendar)}. 
-     * A bejovo Calendar ido zonajat "UTC"-re alitja, igy a benne levo datum is transformalodik (+/- ido) es a sima
-     *  '2018-03-07T14:15:01.000Z' formatumra rakja az XMLGregorianCalendar objektumot
+     * Sets the input {@link Calendar}'s time zone to UTC, then applies {@link #toXMLGregorianCalendar(Calendar)}. Transforming time to UTC can result
+     * time differences.
      *
      * @param cal
      *            {@code Calendar} to transform

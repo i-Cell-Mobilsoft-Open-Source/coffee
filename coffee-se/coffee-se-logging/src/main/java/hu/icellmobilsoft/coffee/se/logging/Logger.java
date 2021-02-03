@@ -53,7 +53,9 @@ public interface Logger {
      * <p>
      * setLogger.
      * </p>
-     * @param logger {@link java.util.logging.Logger} instance
+     * 
+     * @param logger
+     *            {@link java.util.logging.Logger} instance
      */
     void setLogger(java.util.logging.Logger logger);
 
@@ -61,6 +63,7 @@ public interface Logger {
      * <p>
      * getLogger.
      * </p>
+     * 
      * @return {@link java.util.logging.Logger} instance
      */
     java.util.logging.Logger getLogger();

@@ -66,6 +66,7 @@ public class LocalDateXmlAdapter extends XmlAdapter<String, LocalDate> {
      * {@inheritDoc}
      *
      * Marshalling LocalDate to String. Output format is '2011-12-03'.
+     * 
      * @see DateTimeFormatter#ISO_DATE
      */
     @Override

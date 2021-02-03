@@ -69,6 +69,7 @@ public class OffsetTimeXmlAdapter extends XmlAdapter<String, OffsetTime> {
      * {@inheritDoc}
      *
      * OffsetTime to String. Output format is '10:15:30+01:00'.
+     * 
      * @see DateTimeFormatter#ISO_OFFSET_TIME
      */
     @Override
