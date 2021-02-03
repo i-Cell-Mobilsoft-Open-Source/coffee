@@ -33,7 +33,8 @@ import javax.inject.Qualifier;
 
 /**
  * Verzió szerinti annotáció jelölés. Minta használat:
- * <table border=1px>
+ * <TABLE border="1">
+ * <caption>Verzió szerinti annotáció jelölés</caption>
  * <tr>
  * <th>Példa</th>
  * <th>Érvényes</th>
@@ -50,11 +51,11 @@ import javax.inject.Qualifier;
  * <td>1.6.1.1, 1.6.2, 1.7 ...</td>
  * </tr>
  * <tr>
- * <td>@Version(include = {@Range(from = "1.0", to = "1.6"), @Range(from = "2.0")})</td>
+ * <td>@Version(include = { @Range(from = "1.0", to = "1.6"), @Range(from = "2.0") })</td>
  * <td>1.0-1.6, 1.6.0, 2.0+ ...</td>
  * <td>1.6.1, 1.9 ...</td>
  * </tr>
- * </table>
+ * </TABLE>
  *
  * @author imre.scheffer
  * @see Range
@@ -67,9 +68,9 @@ import javax.inject.Qualifier;
 public @interface Version {
 
     /**
-     * Megadott verziókra (beleérve) aktiválódik a feltétel.
+     * The condition is activated for specified versions (inclusive).
      * 
-     * @return
+     * @return {@link Range} array, what represents the range of versions
      */
     @Nonbinding
     Range[] include() default {};
@@ -111,6 +112,7 @@ public @interface Version {
          * Create annotation with paramaters
          * 
          * @param include
+         *            range array what contains include ranges.
          */
         public VersionLiteral(final Range[] include) {
             this.include = include;

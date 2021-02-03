@@ -33,7 +33,7 @@ import javax.enterprise.inject.Model;
 
 
 /**
- * Logglasra szolgalo container
+ * Container for logging.
  *
  * @author ischeffer
  * @since 1.0.0
@@ -45,14 +45,22 @@ public class LogContainer {
     private Map<String, Object> customParam = new HashMap<String, Object>();
 
     /**
-     * <p>trace.</p>
+     * Logs trace log with message.
+     *
+     * @param msg
+     *            log message
      */
     public void trace(String msg) {
         logs.add(new Log(LogLevel.TRACE, msg));
     }
 
     /**
-     * <p>trace.</p>
+     * Logs trace log with format and one or more arguments.
+     *
+     * @param format
+     *            format of error message
+     * @param arguments
+     *            one or more arguments
      */
     public void trace(String format, Object... arguments) {
         String message = format(format, arguments);
@@ -60,7 +68,12 @@ public class LogContainer {
     }
 
     /**
-     * <p>trace.</p>
+     * Logs trace log with message and Throwable.
+     *
+     * @param msg
+     *            message
+     * @param t
+     *            throwable error
      */
     public void trace(String msg, Throwable t) {
         String message = getFullStackTrace(msg, t);
@@ -69,7 +82,10 @@ public class LogContainer {
 
 
     /**
-     * <p>debug.</p>
+     * Logs debug log with message.
+     *
+     * @param msg
+     *            log message
      */
     public void debug(String msg) {
         logs.add(new Log(LogLevel.DEBUG, msg));
@@ -77,7 +93,12 @@ public class LogContainer {
 
 
     /**
-     * <p>debug.</p>
+     * Logs debug log with format and one or more arguments.
+     *
+     * @param format
+     *            format of error message
+     * @param arguments
+     *            one or more arguments
      */
     public void debug(String format, Object... arguments) {
         String message = format(format, arguments);
@@ -85,7 +106,12 @@ public class LogContainer {
     }
 
     /**
-     * <p>debug.</p>
+     * Logs debug log with message and Throwable.
+     *
+     * @param msg
+     *            message
+     * @param t
+     *            throwable error
      */
     public void debug(String msg, Throwable t) {
         String message = getFullStackTrace(msg, t);
@@ -94,7 +120,10 @@ public class LogContainer {
 
 
     /**
-     * <p>info.</p>
+     * Logs info log with message.
+     *
+     * @param msg
+     *            log message
      */
     public void info(String msg) {
         logs.add(new Log(LogLevel.INFO, msg));
@@ -102,7 +131,12 @@ public class LogContainer {
 
 
     /**
-     * <p>info.</p>
+     * Logs info log with format and one or more arguments.
+     *
+     * @param format
+     *            format of error message
+     * @param arguments
+     *            one or more arguments
      */
     public void info(String format, Object... arguments) {
         String message = format(format, arguments);
@@ -110,7 +144,12 @@ public class LogContainer {
     }
 
     /**
-     * <p>info.</p>
+     * Logs info log with message and Throwable.
+     *
+     * @param msg
+     *            message
+     * @param t
+     *            throwable error
      */
     public void info(String msg, Throwable t) {
         String message = getFullStackTrace(msg, t);
@@ -119,7 +158,10 @@ public class LogContainer {
 
 
     /**
-     * <p>warn.</p>
+     * Logs warn log with message.
+     *
+     * @param msg
+     *            log message
      */
     public void warn(String msg) {
         logs.add(new Log(LogLevel.WARN, msg));
@@ -127,7 +169,12 @@ public class LogContainer {
 
 
     /**
-     * <p>warn.</p>
+     * Logs warn log with format and one or more arguments.
+     *
+     * @param format
+     *            format of error message
+     * @param arguments
+     *            one or more arguments
      */
     public void warn(String format, Object... arguments) {
         String message = format(format, arguments);
@@ -135,7 +182,12 @@ public class LogContainer {
     }
 
     /**
-     * <p>warn.</p>
+     * Logs warn log with message and Throwable.
+     *
+     * @param msg
+     *            message
+     * @param t
+     *            throwable error
      */
     public void warn(String msg, Throwable t) {
         String message = getFullStackTrace(msg, t);
@@ -144,7 +196,10 @@ public class LogContainer {
 
 
     /**
-     * <p>error.</p>
+     * Logs error log with message.
+     *
+     * @param msg
+     *            log message
      */
     public void error(String msg) {
         logs.add(new Log(LogLevel.ERROR, msg));
@@ -152,7 +207,12 @@ public class LogContainer {
 
 
     /**
-     * <p>error.</p>
+     * Logs error log with format and onr or more arguments.
+     *
+     * @param format
+     *            format of error message
+     * @param arguments
+     *            one or more arguments
      */
     public void error(String format, Object... arguments) {
         String message = format(format, arguments);
@@ -160,7 +220,12 @@ public class LogContainer {
     }
 
     /**
-     * <p>error.</p>
+     * Logs error log with message and Throwable.
+     *
+     * @param msg
+     *            message
+     * @param t
+     *            throwable error
      */
     public void error(String msg, Throwable t) {
         String message = getFullStackTrace(msg, t);
@@ -168,14 +233,23 @@ public class LogContainer {
     }
 
     /**
-     * <p>getValue.</p>
+     * Returns value for given key in custom params.
+     *
+     * @param key
+     *            searched key
+     * @return value for key
      */
     public Object getValue(String key) {
         return customParam.get(key);
     }
 
     /**
-     * <p>setValue.</p>
+     * Sets value for given key in custom params.
+     *
+     * @param key
+     *            the key from key-value pair
+     * @param value
+     *            the value from key-value pair
      */
     public void setValue(String key, Object value) {
         String msg = (customParam.containsKey(key) ? "Replaced" : "Added") + " key: [" + key + "], value: [" + value + "]";
@@ -184,7 +258,10 @@ public class LogContainer {
     }
 
     /**
-     * <p>removeValue.</p>
+     * Removes given key from custom params.
+     *
+     * @param key
+     *            the key to remove
      */
     public void removeValue(String key) {
         logs.add(new Log(LogLevel.CUSTOM, "Remove key: [" + key + "]"));
@@ -226,7 +303,9 @@ public class LogContainer {
     }
 
     /**
-     * <p>getHighestLogLevel.</p>
+     * Returns highest {@link LogLevel} amongst {@code logs} list.
+     *
+     * @return highest log level in {@code logs}
      */
     public LogLevel getHighestLogLevel() {
         LogLevel highestLogLevel = LogLevel.CUSTOM;
@@ -249,7 +328,11 @@ public class LogContainer {
     }
 
     /**
-     * <p>getFullStackTrace.</p>
+     * Returns full stack trace of given {@link Throwable}.
+     *
+     * @param t
+     *            {@code Throwable} to convert into string
+     * @return parameter converted into string
      */
     public static String getFullStackTrace(Throwable t) {
         StringWriter sw = new StringWriter();
@@ -257,6 +340,9 @@ public class LogContainer {
         return sw.toString();
     }
 
+    /**
+     * Log levels definition enum.
+     */
     public enum LogLevel {
         CUSTOM, TRACE, DEBUG, INFO, WARN, ERROR;
     }
