@@ -32,6 +32,7 @@ import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.inject.spi.CDI;
 import javax.inject.Inject;
 
+import org.apache.commons.lang3.StringUtils;
 import org.jboss.weld.context.bound.BoundRequestContext;
 
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
@@ -41,6 +42,7 @@ import hu.icellmobilsoft.coffee.se.logging.Logger;
 import hu.icellmobilsoft.coffee.tool.utils.string.RandomUtil;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.StreamEntry;
+import redis.clients.jedis.exceptions.JedisDataException;
 
 /**
  * Redis stream consumer executor class
@@ -51,6 +53,11 @@ import redis.clients.jedis.StreamEntry;
  */
 @Dependent
 public class RedisStreamConsumerExecutor implements IRedisStreamConsumerExecutor {
+
+    /**
+     * Jedis driver hibakódja ha nem tálható a stream vagy a csoport
+     */
+    private static final String NOGROUP_PREFIX = "NOGROUP";
 
     @Inject
     private Logger log;
@@ -85,7 +92,8 @@ public class RedisStreamConsumerExecutor implements IRedisStreamConsumerExecutor
     public void startLoop() {
         consumerIdentifier = RandomUtil.generateId();
         endLoop = false;
-        boolean firstRun = true;
+        // óvatos futás, ellenőrzi a stream es csoport létezését
+        boolean prudentRun = true;
         while (!endLoop) {
             Optional<StreamEntry> streamEntry = Optional.empty();
             Instance<Jedis> jedisInstance = CDI.current().select(Jedis.class, new RedisConnection.Literal(redisConfigKey));
@@ -94,10 +102,10 @@ public class RedisStreamConsumerExecutor implements IRedisStreamConsumerExecutor
                 jedis = jedisInstance.get();
                 redisStreamService.setJedis(jedis);
 
-                if (firstRun) {
+                if (prudentRun) {
                     // lehethogy a csoport nem letezik
                     redisStreamService.handleGroup();
-                    firstRun = false;
+                    prudentRun = false;
                 }
 
                 streamEntry = redisStreamService.consumeOne(consumerIdentifier);
@@ -110,8 +118,22 @@ public class RedisStreamConsumerExecutor implements IRedisStreamConsumerExecutor
                 }
             } catch (BaseException e) {
                 log.error(MessageFormat.format("Exception on consume streamEntry [{0}]: [{1}]", streamEntry, e.getLocalizedMessage()), e);
+            } catch (JedisDataException e) {
+                // JedisDataException: NOGROUP No such key 'xyStream' or consumer group 'xy' in XREADGROUP with GROUP option
+                // ha elpusztul a Redis, helyre kell tudni allitani a stream es a csoportot
+                if (StringUtils.startsWith(e.getLocalizedMessage(), NOGROUP_PREFIX)) {
+                    log.error(
+                            "Detected problem on redisConfigKey [{0}] with stream group [{1}] and activating prudentRun on next cycle. Exception: [{2}]",
+                            redisConfigKey, redisStreamService.getGroup(), e.getLocalizedMessage());
+                    prudentRun = true;
+                } else {
+                    log.error(MessageFormat.format("Exception on redisConfigKey [{0}] with stream group [{1}]: [{2}]", redisConfigKey,
+                            redisStreamService.getGroup(), e.getLocalizedMessage()), e);
+                }
+                sleep();
             } catch (Exception e) {
-                log.error("Exception on consume stream: [" + e.getLocalizedMessage() + "]", e);
+                log.error(MessageFormat.format("Exception during consume on redisConfigKey [{0}] with stream group [{1}]: [{2}]", redisConfigKey,
+                        redisStreamService.getGroup(), e.getLocalizedMessage()), e);
                 sleep();
             } finally {
                 if (jedis != null) {
