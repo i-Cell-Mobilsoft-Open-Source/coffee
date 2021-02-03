@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -32,6 +32,7 @@ public interface Logger {
      *
      * @param clazz
      *            the logger category class
+     * @return {@link hu.icellmobilsoft.coffee.se.logging.Logger} instance
      */
     public static hu.icellmobilsoft.coffee.se.logging.Logger getLogger(Class<?> clazz) {
         return DefaultLogger.getLogger(clazz);
@@ -42,6 +43,7 @@ public interface Logger {
      *
      * @param name
      *            the logger category name
+     * @return {@link hu.icellmobilsoft.coffee.se.logging.Logger} instance
      */
     public static hu.icellmobilsoft.coffee.se.logging.Logger getLogger(String name) {
         return DefaultLogger.getLogger(name);
@@ -51,6 +53,7 @@ public interface Logger {
      * <p>
      * setLogger.
      * </p>
+     * @param logger {@link java.util.logging.Logger} instance
      */
     void setLogger(java.util.logging.Logger logger);
 
@@ -58,6 +61,7 @@ public interface Logger {
      * <p>
      * getLogger.
      * </p>
+     * @return {@link java.util.logging.Logger} instance
      */
     java.util.logging.Logger getLogger();
 
