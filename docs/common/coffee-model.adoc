@@ -37,7 +37,11 @@ public class SimpleEntity extends AbstractIdentifiedEntity {
 ----
 
 === Audit oszlopok
-Az audit oszlopok arra szolgálnak, hogy minden tábla szintű mozgást, pl. új rekord beszúrását vagy módosítását nyomon lehessen követni. Erre a célra használt oszlopok elkülönülnek, a beszúrást nyomon követő elemek X$$__$$INSDATE és X$$__$$INSUSER oszlopba kerülnek, a módosításnált használt elemek pedig X$$__$$MODDATE és X$$__$$MODUSER oszlopokba. Ezek előre definiálva vannak a `AbstractAuditEntity.java` osztályon és automatán töltödnek a megfelelő annotációt használva (pl. `@CreatedOn`, `@ModifiedOn`)
+Az audit oszlopok arra szolgálnak, hogy minden tábla szintű mozgást, pl. új rekord beszúrását vagy módosítását nyomon lehessen követni.
+Erre a célra használt oszlopok elkülönülnek.
+A beszúrást nyomon követő elemek X$$__$$INSDATE és X$$__$$INSUSER oszlopba kerülnek és ezen mezők értéke csak insert esetén kerül lementésre, update esetén nem.
+A módosításnál használt elemek pedig X$$__$$MODDATE és X$$__$$MODUSER oszlopokba.
+Ezek előre definiálva vannak a `AbstractAuditEntity.java` osztályon és automatán töltödnek a megfelelő annotációt használva (pl. `@CreatedOn`, `@ModifiedOn`)
 
 Példa kód olyan Entity-re ahol audit elemekre van szükség:
 [source,java]
