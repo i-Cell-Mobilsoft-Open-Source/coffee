@@ -49,7 +49,7 @@ public abstract class AbstractAuditEntity<T> extends AbstractEntity {
     @CreatedOn
     @NotNull
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "X__INSDATE")
+    @Column(name = "X__INSDATE", updatable = false)
     private Date creationDate;
 
     @ModifiedOn
@@ -59,7 +59,7 @@ public abstract class AbstractAuditEntity<T> extends AbstractEntity {
 
     @CreatedBy
     @NotNull
-    @Column(name = "X__INSUSER", length = 30)
+    @Column(name = "X__INSUSER", length = 30, updatable = false)
     private T creatorUser;
 
     @ModifiedBy
@@ -67,56 +67,72 @@ public abstract class AbstractAuditEntity<T> extends AbstractEntity {
     private T modifierUser;
 
     /**
-     * <p>Getter for the field <code>creationDate</code>.</p>
+     * <p>
+     * Getter for the field <code>creationDate</code>.
+     * </p>
      */
     public Date getCreationDate() {
         return this.creationDate;
     }
 
     /**
-     * <p>Setter for the field <code>creationDate</code>.</p>
+     * <p>
+     * Setter for the field <code>creationDate</code>.
+     * </p>
      */
     public void setCreationDate(Date creationDate) {
         this.creationDate = creationDate;
     }
 
     /**
-     * <p>Getter for the field <code>modificationDate</code>.</p>
+     * <p>
+     * Getter for the field <code>modificationDate</code>.
+     * </p>
      */
     public Date getModificationDate() {
         return this.modificationDate;
     }
 
     /**
-     * <p>Setter for the field <code>modificationDate</code>.</p>
+     * <p>
+     * Setter for the field <code>modificationDate</code>.
+     * </p>
      */
     public void setModificationDate(Date modificationDate) {
         this.modificationDate = modificationDate;
     }
 
     /**
-     * <p>Getter for the field <code>creatorUser</code>.</p>
+     * <p>
+     * Getter for the field <code>creatorUser</code>.
+     * </p>
      */
     public T getCreatorUser() {
         return this.creatorUser;
     }
 
     /**
-     * <p>Setter for the field <code>creatorUser</code>.</p>
+     * <p>
+     * Setter for the field <code>creatorUser</code>.
+     * </p>
      */
     public void setCreatorUser(T creatorUser) {
         this.creatorUser = creatorUser;
     }
 
     /**
-     * <p>Getter for the field <code>modifierUser</code>.</p>
+     * <p>
+     * Getter for the field <code>modifierUser</code>.
+     * </p>
      */
     public T getModifierUser() {
         return this.modifierUser;
     }
 
     /**
-     * <p>Setter for the field <code>modifierUser</code>.</p>
+     * <p>
+     * Setter for the field <code>modifierUser</code>.
+     * </p>
      */
     public void setModifierUser(T modifierUser) {
         this.modifierUser = modifierUser;
