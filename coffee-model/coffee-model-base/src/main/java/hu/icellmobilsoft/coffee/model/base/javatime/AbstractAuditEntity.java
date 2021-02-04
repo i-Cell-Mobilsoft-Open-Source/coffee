@@ -47,7 +47,7 @@ public abstract class AbstractAuditEntity<T extends Serializable> extends Abstra
 
     @CreatedOn
     @NotNull
-    @Column(name = "X__INSDATE")
+    @Column(name = "X__INSDATE", updatable = false)
     private OffsetDateTime creationDate;
 
     @ModifiedOn
@@ -56,7 +56,7 @@ public abstract class AbstractAuditEntity<T extends Serializable> extends Abstra
 
     @CreatedBy
     @NotNull
-    @Column(name = "X__INSUSER", length = 30)
+    @Column(name = "X__INSUSER", length = 30, updatable = false)
     private T creatorUser;
 
     @ModifiedBy

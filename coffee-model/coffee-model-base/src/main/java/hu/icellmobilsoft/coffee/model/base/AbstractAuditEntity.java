@@ -49,7 +49,7 @@ public abstract class AbstractAuditEntity<T> extends AbstractEntity {
     @CreatedOn
     @NotNull
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "X__INSDATE")
+    @Column(name = "X__INSDATE", updatable = false)
     private Date creationDate;
 
     @ModifiedOn
@@ -59,7 +59,7 @@ public abstract class AbstractAuditEntity<T> extends AbstractEntity {
 
     @CreatedBy
     @NotNull
-    @Column(name = "X__INSUSER", length = 30)
+    @Column(name = "X__INSUSER", length = 30, updatable = false)
     private T creatorUser;
 
     @ModifiedBy

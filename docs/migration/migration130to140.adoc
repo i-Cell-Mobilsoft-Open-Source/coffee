@@ -1,0 +1,16 @@
+= v1.3.0 → v1.4.0
+
+coff:ee v1.3.0 -> v1.4.0 migrációs leírás, újdonságok, változások leírása
+
+== Újdonságok
+
+== Változások
+
+=== coffee-model-base
+
+* Auditált entitások `creationDate`, `creatorUser` mezői `updatable = false` property-t kaptak,
+így a jövőben update esetén nem kerülnek a hibernate által futtatott SQL-be.
+
+==== Átállás
+
+Amennyiben van olyan entitás, amin a mezők már korábban lementett rekordon felülírásra kerülnek, úgy a felülírt értékek a továbbiakban az adatbázisba nem kerül lementésre, amennyiben erre mégis igény van, úgy projekt szinten kell saját `AbstractAuditEntity`-t implementálni.
