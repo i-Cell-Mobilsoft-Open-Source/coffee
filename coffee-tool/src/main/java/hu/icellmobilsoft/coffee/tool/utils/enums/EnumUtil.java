@@ -25,7 +25,7 @@ import org.apache.commons.lang3.EnumUtils;
 import org.apache.commons.lang3.StringUtils;
 
 /**
- * Utilites for enums
+ * Utilities for enums.
  *
  * @author imre.scheffer
  * @since 1.0.0
@@ -36,9 +36,13 @@ public class EnumUtil {
     /**
      * Enum to enum conversion
      *
+     * @param <B>
+     *            type of desired enum
      * @param source
+     *            enum to convert
      * @param targetClass
-     * @return instance of targetClass (having same name as source) - or null, if source is null
+     *            class of desired enum
+     * @return instance of {@code targetClass} (having same name as {@code source}) - or null, if source is null
      */
     public static <B extends Enum<B>> B convert(Enum<?> source, Class<B> targetClass) {
         if (source == null || targetClass == null) {
@@ -48,11 +52,13 @@ public class EnumUtil {
     }
 
     /**
-     * Enum to enum comparison
+     * Enum to enum comparison by name
      *
      * @param source
+     *            first enum to compare
      * @param target
-     * @return compared by enum names
+     *            second enum to compare
+     * @return whether enum names are equal
      */
     public static boolean equalName(Enum<?> source, Enum<?> target) {
         if (source == null && target == null) {

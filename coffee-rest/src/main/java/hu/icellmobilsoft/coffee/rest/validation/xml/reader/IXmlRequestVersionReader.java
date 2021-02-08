@@ -36,8 +36,10 @@ public interface IXmlRequestVersionReader {
      * Verziószámot állapítja meg egy általános HTTP request alapján. Lehet az HTTP entity, header, akármi...
      *
      * @param is
-     *            HTTP entity stream nyers formában
+     *            HTTP entity in raw stream format
+     * @return request version
      * @throws TechnicalException
+     *             exception
      */
     String readFromXML(InputStream is) throws TechnicalException;
 }

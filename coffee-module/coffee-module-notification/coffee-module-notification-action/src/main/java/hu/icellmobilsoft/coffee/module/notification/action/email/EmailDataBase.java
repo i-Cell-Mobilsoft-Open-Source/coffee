@@ -28,7 +28,7 @@ import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.module.notification.model.Email;
 
 /**
- * {@link EmailBase} mukodeset terjeszti ki DB mentessel. Ebben az esetben az OUTPUT_JOB tablat kezeli
+ * Extends the functionality of {@link EmailBase} with database save. Operates with OUTPUT_JOB table.
  *
  * <pre>
  * private static final String MAIL_SERVICE_JNDI = "java:/TraconMail";
@@ -47,9 +47,9 @@ import hu.icellmobilsoft.coffee.module.notification.model.Email;
  *         emailDb.setFrom("imrich.scheffer@gmail.com");
  *         emailDb.setSubject("test");
  *
- *         // sima text tartalom vagy html
+ *         // basic text or HTML content
  *         emailDb.setBody("test body");
- *         // emailDb.setBody("&ltHTML>&ltHEAD>&ltTITLE>test html title&lt/TITLE>&lt/HEAD>&ltBODY>test html body&lt/BODY>&lt/HTML>");
+ *         // emailDb.setBody("&lt;HTML&gt;&lt;HEAD&gt;&lt;TITLE&gt;test html title&lt;/TITLE&gt;&lt;/HEAD&gt;&lt;BODY&gt;test html body&lt;/BODY&gt;&lt;/HTML&gt;");
  *
  *         File file = new File("c:/TEMP/photo_1417611404439.jpg");
  *         byte[] fileByte = FileUtils.readFileToByteArray(file);

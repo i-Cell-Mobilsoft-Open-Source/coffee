@@ -61,9 +61,11 @@ public class MongoFactory {
     private Map<String, MongoClient> mongoClientMap = new HashMap<>();
 
     /**
-     * <p>
-     * produceMongoDbHandler.
-     * </p>
+     * Producer method for {@link MongoDbHandler}.
+     *
+     * @param injectionPoint
+     *            injection point
+     * @return created Mongo DB handler
      */
     @Produces
     @MongoConfiguration(urlKey = "", databaseKey = "")
@@ -95,9 +97,10 @@ public class MongoFactory {
     }
 
     /**
-     * <p>
-     * dispose.
-     * </p>
+     * Disposes given {@link MongoDbHandler}.
+     * 
+     * @param mongoDbHandler
+     *            Mongo DB handler to dispose.
      */
     public void dispose(@Disposes @MongoConfiguration(urlKey = "", databaseKey = "") MongoDbHandler mongoDbHandler) {
         try {
@@ -108,9 +111,13 @@ public class MongoFactory {
     }
 
     /**
-     * <p>
-     * getMongoClient.
-     * </p>
+     * Returns Mongo DB client.
+     *
+     * @param uri
+     *            Mongo DB uri
+     * @return {@link MongoClient}
+     * @throws BaseException
+     *             if {@code uri} param is empty or mongo client is not available
      */
     public MongoClient getMongoClient(String uri) throws BaseException {
         if (StringUtils.isBlank(uri)) {

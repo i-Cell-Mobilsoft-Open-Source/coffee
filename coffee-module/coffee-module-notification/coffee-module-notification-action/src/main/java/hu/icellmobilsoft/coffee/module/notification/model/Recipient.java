@@ -47,14 +47,19 @@ public class Recipient extends AbstractIdentifiedAuditEntity {
     private String recipient;
 
     /**
-     * <p>Getter for the field <code>recipient</code>.</p>
+     * Getter for the field {@code recipient}.
+     *
+     * @return {@code recipient}
      */
     public String getRecipient() {
         return recipient;
     }
 
     /**
-     * <p>Setter for the field <code>recipient</code>.</p>
+     * Setter for the field {@code recipient}.
+     *
+     * @param recipient
+     *            recipient to set
      */
     public void setRecipient(String recipient) {
         this.recipient = recipient;

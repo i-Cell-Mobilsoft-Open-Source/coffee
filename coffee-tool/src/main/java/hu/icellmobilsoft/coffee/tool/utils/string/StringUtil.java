@@ -47,9 +47,11 @@ public class StringUtil {
     private static RegexPatternCache patternCache = new RegexPatternCache();
 
     /**
-     * Sharp s biztonságos uppercaselése
+     * Transforms input {@link String} to upper-case. Transforms "ß" to "ẞ".
      *
      * @param string
+     *            input {@code String}
+     * @return upper-case {@code String} or null if empty input
      */
     public static String upperCase(final String string) {
         if (StringUtils.isBlank(string)) {
@@ -63,9 +65,11 @@ public class StringUtil {
     }
 
     /**
-     * URL encode string value.
+     * URL encode {@link String} value.
      *
      * @param value
+     *            {@code String} to encode
+     * @return URL encoded {@code String} or {@code value} if empty input or encoding error
      */
     public static String encodeValue(String value) {
         if (StringUtils.isBlank(value)) {
@@ -136,7 +140,7 @@ public class StringUtil {
      * Masks values belonging to properties ignore-case matching keyPattern in XML or JSON texts. ie.:<br>
      * keypattern = {@code .*?(pass).*?}
      * <table border="1">
-     * <tbody>
+     * <caption>Example input-output pairs</caption> <tbody>
      * <tr>
      * <td>text</td>
      * <td>result</td>
@@ -172,6 +176,7 @@ public class StringUtil {
      *            XML or JSON text to replace sensitive data
      * @param keyPatterns
      *            The patterns to which keys are checked
+     * @return masked {@code String}
      */
     public static String maskValueInXmlJson(String text, String... keyPatterns) {
         String result = text;
@@ -199,6 +204,7 @@ public class StringUtil {
      *            the regular expression to which this string is to be matched
      * @param replacement
      *            the string to be substituted for each match
+     * @return replaced {@code String} or input {@code text} if invalid input
      */
     public static String replaceAllIgnoreCase(String text, String regex, String replacement) {
         // replacement-re csak null-t ellenőrzünk, üres Stringre engedjük cserélni

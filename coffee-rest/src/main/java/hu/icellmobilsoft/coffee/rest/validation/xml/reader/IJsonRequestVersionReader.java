@@ -22,7 +22,7 @@ package hu.icellmobilsoft.coffee.rest.validation.xml.reader;
 import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
 
 /**
- * Interfész a JSON fájlok requestVersion értékének kiolvasásához
+ * Interface for reading the request version value of JSON files.
  *
  * @see JsonRequestVersionReader
  * @author imre.scheffer
@@ -31,13 +31,15 @@ import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
 public interface IJsonRequestVersionReader {
 
     /**
-     * Verziószámot állapítja meg egy általános HTTP request alapján. Lehet az HTTP entity, header, akármi...
+     * Determines version number value from a JSON HTTP request.
      *
      * @param <T>
      *            T object
      * @param dto
-     *            HTTP entity DTO-vá alakítva
+     *            HTTP entity converted to DTO
+     * @return request number
      * @throws TechnicalException
+     *             exception
      */
     <T> String readFromJSON(T dto) throws TechnicalException;
 }

@@ -36,13 +36,18 @@ public class Envelope<E> implements Serializable {
     private Class<E> typeOfJson;
 
     /**
-     * <p>Constructor for Envelope.</p>
+     * Constructor for Envelope.
      */
     public Envelope() {
     }
 
     /**
-     * <p>Constructor for Envelope.</p>
+     * Constructor for Envelope.
+     * 
+     * @param json
+     *            json
+     * @param typeOfJson
+     *            typeOfJson
      */
     public Envelope(final String json, final Class<E> typeOfJson) {
         this.json = json;
@@ -50,28 +55,40 @@ public class Envelope<E> implements Serializable {
     }
 
     /**
-     * <p>Getter for the field <code>json</code>.</p>
+     * Getter for the field <code>json</code>.
+     * 
+     * @return json
      */
     public String getJson() {
         return json;
     }
 
     /**
-     * <p>Setter for the field <code>json</code>.</p>
+     * <p>
+     * Setter for the field <code>json</code>.
+     * </p>
+     * 
+     * @param json
+     *            json
      */
     public void setJson(String json) {
         this.json = json;
     }
 
     /**
-     * <p>Getter for the field <code>typeOfJson</code>.</p>
+     * Getter for the field <code>typeOfJson</code>.
+     * 
+     * @return typeOfJson
      */
     public Class<E> getTypeOfJson() {
         return typeOfJson;
     }
 
     /**
-     * <p>Setter for the field <code>typeOfJson</code>.</p>
+     * Setter for the field <code>typeOfJson</code>.
+     * 
+     * @param typeOfJson
+     *            typeOfJson
      */
     public void setTypeOfJson(Class<E> typeOfJson) {
         this.typeOfJson = typeOfJson;

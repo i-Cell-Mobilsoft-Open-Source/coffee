@@ -27,7 +27,7 @@ import java.lang.annotation.Target;
 /**
  * Marks a property who modifed
  *
- * By settings {@link #onCreate()} to {@code true}, the property gets also set when the entity is persisted.
+ * By setting {@link #onCreate()} to {@code true}, the property gets also set when the entity is persisted.
  *
  * @author czenczl
  * @since 1.0.0

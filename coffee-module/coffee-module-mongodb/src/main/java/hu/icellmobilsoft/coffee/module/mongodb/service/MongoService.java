@@ -42,9 +42,7 @@ import hu.icellmobilsoft.coffee.module.mongodb.repository.MongoRepository;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
 
 /**
- * <p>
- * Base mongo service class
- * </p>
+ * Base mongo service class.
  *
  * @param <T>
  *            MongoEntity parameter
@@ -347,6 +345,7 @@ public class MongoService<T> {
      * 
      * @return MongoCollection
      * @throws BaseException
+     *             unsupported operation
      * 
      * @deprecated Use {@link hu.icellmobilsoft.coffee.module.mongodb.extension.MongoDbClient#initRepositoryCollection(java.lang.String)} instead,
      *             forRemoval = true, since = "1.1.0"

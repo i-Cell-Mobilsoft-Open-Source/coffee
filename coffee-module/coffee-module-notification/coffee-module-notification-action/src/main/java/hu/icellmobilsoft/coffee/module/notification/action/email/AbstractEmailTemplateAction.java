@@ -34,7 +34,7 @@ import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.dto.notification.notification.EmailTemplateType;
 
 /**
- * <p>Abstract AbstractEmailTemplateAction class.</p>
+ * AbstractEmailTemplateAction class.
  *
  * @since 1.0.0
  */
@@ -56,7 +56,12 @@ public abstract class AbstractEmailTemplateAction implements Serializable {
     private EmailDataBase emailDataBase;
 
     /**
-     * <p>sendAndSave.</p>
+     * Sends given {@link EmailTemplateType} and saves it to the database.
+     *
+     * @param emailType
+     *            email to send
+     * @throws BaseException
+     *             if {@code emailType} is not valid, template cannot be found, or email exception occurs
      */
     public void sendAndSave(EmailTemplateType emailType) throws BaseException {
         if (emailType == null) {
@@ -86,13 +91,28 @@ public abstract class AbstractEmailTemplateAction implements Serializable {
     }
 
     /**
-     * <p>validate.</p>
+     * Checks if given {@link EmailTemplateType} is valid.
+     *
+     * @param emailType
+     *            email to validate
+     * @throws BaseException
+     *             if {@code emailType} is invalid
      */
     public void validate(EmailTemplateType emailType) throws BaseException {
     }
 
     /**
-     * <p>getTemplate.</p>
+     * Returns {@link TemplateFullType} with given parameters.
+     *
+     * @param templateKey
+     *            key of template
+     * @param parameters
+     *            template params
+     * @param language
+     *            template language
+     * @return {@code TemplateFullType}
+     * @throws BaseException
+     *             if template cannot be found
      */
     protected abstract TemplateFullType getTemplate(String templateKey, List<KeyValueBasicType> parameters, String language) throws BaseException;
 }

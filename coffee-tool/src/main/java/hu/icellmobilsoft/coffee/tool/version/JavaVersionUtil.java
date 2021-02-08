@@ -26,7 +26,7 @@ import javax.enterprise.inject.Vetoed;
 import org.apache.commons.lang3.StringUtils;
 
 /**
- * Java version helper
+ * Java version helper.
  *
  * @author arnold.bucher
  * @since 1.0.0
@@ -35,19 +35,22 @@ import org.apache.commons.lang3.StringUtils;
 public class JavaVersionUtil {
 
     /**
-     * <p>
-     * getCurrentSystemJavaVersion.
-     * </p>
+     * Returns the {@link JavaVersion} of current system.
+     * 
+     * @return {@link JavaVersion} of current system
      */
     public static JavaVersion getCurrentSystemJavaVersion() {
         return getJavaVersion(System.getProperty("java.version"));
     }
 
     /**
-     * Convert version property to JavaVersion object
+     * Convert version property {@link String} to {@link JavaVersion}.
      *
      * @param versionProperty
-     * @return JavaVersion object
+     *            version property {@code String}
+     * @return converted {@code JavaVersion}
+     * @throws InvalidParameterException
+     *             if {@code versionProperty} cannot be converted
      */
     public static JavaVersion getJavaVersion(String versionProperty) {
         if (StringUtils.isBlank(versionProperty)) {

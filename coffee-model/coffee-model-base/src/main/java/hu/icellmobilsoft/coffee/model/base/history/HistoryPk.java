@@ -57,28 +57,38 @@ public class HistoryPk implements Serializable {
     private Date ts;
 
     /**
-     * <p>Getter for the field <code>id</code>.</p>
+     * Getter for the field {@code id}.
+     * 
+     * @return id
      */
     public String getId() {
         return id;
     }
 
     /**
-     * <p>Setter for the field <code>id</code>.</p>
+     * Setter for the field {@code id}.
+     * 
+     * @param id
+     *            id
      */
     public void setId(String id) {
         this.id = id;
     }
 
     /**
-     * <p>Getter for the field <code>ts</code>.</p>
+     * Getter for the field {@code ts}.
+     * 
+     * @return ts
      */
     public Date getTs() {
         return ts;
     }
 
     /**
-     * <p>Setter for the field <code>ts</code>.</p>
+     * Setter for the field {@code ts}.
+     * 
+     * @param ts
+     *            ts
      */
     public void setTs(Date ts) {
         this.ts = ts;

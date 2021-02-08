@@ -69,9 +69,13 @@ public class RedisCachingInterceptor {
     }
 
     /**
-     * <p>
-     * perform.
-     * </p>
+     * Returns {@link Object} from JSON using Redis cache.
+     *
+     * @param ctx
+     *            context
+     * @return {@code Object} from JSON
+     * @throws Exception
+     *             exception
      */
     @AroundInvoke
     public Object perform(final InvocationContext ctx) throws Exception {

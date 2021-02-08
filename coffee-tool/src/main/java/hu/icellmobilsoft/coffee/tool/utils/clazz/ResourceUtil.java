@@ -39,6 +39,8 @@ public class ResourceUtil {
      * Determine which JAR or WAR file a class is from
      *
      * @param clazz
+     *            class to search for
+     * @return JAR or WAR file location
      */
     public static String getAppName(Class<?> clazz) {
         if (clazz == null || clazz.getProtectionDomain() == null || clazz.getProtectionDomain().getCodeSource() == null

@@ -43,7 +43,7 @@ public interface TOtpConfigKey {
     public static final String PASSWORD_HASH_ALGORITHM = "totp.password.hash.algorithm";
 
     /**
-     * A jelszo ellenorzesekor {@link hu.icellmobilsoft.coffee.module.totp.TOtpUtil#verify} engedjen-e tovabbi idoablakokat vizsgalni<br>
+     * A jelszo ellenorzesekor {@link hu.icellmobilsoft.coffee.module.totp.TOtpVerifier#verify} engedjen-e tovabbi idoablakokat vizsgalni<br>
      * pl. 1-es ertek eseten megvizsgalja a megadott (T)OTP-t a kovetkezo es elozo idoablakban is
      */
     public static final String VERIFY_ADDITIONAL_WINDOWS_COUNT = "totp.verify.additional.windows.count";

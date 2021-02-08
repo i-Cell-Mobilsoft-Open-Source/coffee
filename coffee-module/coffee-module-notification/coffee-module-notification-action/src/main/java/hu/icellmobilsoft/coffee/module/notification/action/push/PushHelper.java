@@ -57,7 +57,23 @@ public class PushHelper implements Serializable {
     private PushDeviceService pushDeviceService;
 
     /**
-     * <p>insertToDb.</p>
+     * Inserts {@link Push} with given parameters and corresponding {@link PushDevice} list into DB.
+     *
+     * @param subject
+     *            {@code Push} subject
+     * @param body
+     *            {@code Push} body
+     * @param externalId
+     *            {@code Push} external id
+     * @param deviceList
+     *            corresponding list of {@code PushDevice}s to insert into DB
+     * @param payloads
+     *            {@code Push} payloads
+     * @return saved {@code Push}
+     * @throws BaseException
+     *             if exception occurs during entity merge
+     * @see PushService#save
+     * @see PushDeviceService#save
      */
     @Transactional
     public Push insertToDb(String subject, String body, String externalId, List<DeviceType> deviceList, List<KeyValueBasicType> payloads)
@@ -98,7 +114,19 @@ public class PushHelper implements Serializable {
     }
 
     /**
-     * <p>updateDb.</p>
+     * Updates {@link PushDevice} of given device id and {@link Push} in DB.
+     *
+     * @param pushEntity
+     *            {@code Push} entity that connects to the device which has to be updated
+     * @param deviceId
+     *            id of {@code PushDevice} to update
+     * @param success
+     *            whether push was successful
+     * @param sendResult
+     *            result message of push
+     * @throws BaseException
+     *             if exception occurs during entity merge
+     * @see PushDeviceService#save
      */
     @Transactional
     public void updateDb(Push pushEntity, String deviceId, boolean success, String sendResult) throws BaseException {

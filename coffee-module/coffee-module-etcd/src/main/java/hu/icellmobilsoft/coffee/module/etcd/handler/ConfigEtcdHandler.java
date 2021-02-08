@@ -45,9 +45,14 @@ public class ConfigEtcdHandler {
     private ConfigEtcdService configEtcdService;
 
     /**
-     * <p>
-     * getValue.
-     * </p>
+     * Returns value of given key in ETCD.
+     *
+     * @param key
+     *            key in ETCD
+     * @return value of key or empty {@link String} if key does not exist
+     * @throws BaseException
+     *             if technical error
+     * @see ConfigEtcdService#getValue(String)
      */
     public String getValue(String key) throws BaseException {
         Set<String> previousKeys = new HashSet<String>();
@@ -55,9 +60,15 @@ public class ConfigEtcdHandler {
     }
 
     /**
-     * <p>
-     * putValue.
-     * </p>
+     * Assigns given value to given key in ETCD.
+     *
+     * @param key
+     *            key in ETCD
+     * @param value
+     *            value to set, if value null, then empty {@link String} is set
+     * @throws BaseException
+     *             if technical error
+     * @see ConfigEtcdService#putValue(String, Object)
      */
     public void putValue(String key, Object value) throws BaseException {
         if (StringUtils.isBlank(key)) {

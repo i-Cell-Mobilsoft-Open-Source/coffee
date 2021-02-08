@@ -67,10 +67,12 @@ public class MongoJsonUtil {
     private static final String DATE_PROPERTY = "$date";
 
     /**
-     * Converting DTO object to JSON string without throwing exception
+     * Converts DTO object to JSON string without throwing exception.
      *
-     * @param dto DTO to convert
+     * @param dto
+     *            DTO to convert
      * @return JSON String
+     * @see #toJsonEx(Object)
      */
     public static String toJson(Object dto) {
         try {
@@ -82,12 +84,16 @@ public class MongoJsonUtil {
     }
 
     /**
-     * Converting JSON string to DTO object without throwing exception
+     * Converts JSON string to DTO object without throwing exception
      *
+     * @param <T>
+     *            JSON DTO type
      * @param json
      *            JSON String
      * @param classType
-     * @return object
+     *            DTO class
+     * @return DTO object or null if any exception occurs during conversion
+     * @see #toObjectEx(String, Class)
      */
     public static <T> T toObject(String json, Class<T> classType) {
         try {
@@ -99,11 +105,14 @@ public class MongoJsonUtil {
     }
 
     /**
-     * Converting DTO object to JSON string
+     * Converts DTO object to JSON string.
      *
      * @param dto
+     *            DTO
      * @return JSON String
      * @throws BaseException
+     *             if any exception occurs during conversion
+     * @see #toJsonGson(Object)
      */
     public static String toJsonEx(Object dto) throws BaseException {
         try {
@@ -117,13 +126,18 @@ public class MongoJsonUtil {
     }
 
     /**
-     * Converting JSON string to DTO object without throwing exception
+     * Converts JSON string to DTO object.
      *
+     * @param <T>
+     *            JSON DTO type
      * @param json
      *            JSON String
      * @param classType
-     * @return object
+     *            DTO class
+     * @return DTO object
      * @throws BaseException
+     *             if any exception occurs during conversion
+     * @see #toObjectGson(String, Class)
      */
     public static <T> T toObjectEx(String json, Class<T> classType) throws BaseException {
         try {
@@ -137,7 +151,11 @@ public class MongoJsonUtil {
     }
 
     /**
-     * <p>toJsonGson.</p>
+     * Converts DTO object to JSON string.
+     *
+     * @param dto
+     *            DTO
+     * @return JSON String
      */
     public static String toJsonGson(Object dto) {
         // ez mehetne a class konstruktorba is
@@ -148,12 +166,14 @@ public class MongoJsonUtil {
     }
 
     /**
-     * Convert JSON String to DTO object without throwing exception
+     * Converts JSON String to DTO object without throwing exception.
      *
+     * @param <T>
+     *            JSON DTO type
      * @param json
      *            in String
      * @param classType
-     *            json DTO class
+     *            JSON DTO class
      * @return DTO
      */
     public static <T> T toObjectGson(String json, Class<T> classType) {
@@ -170,7 +190,10 @@ public class MongoJsonUtil {
         }
     }
 
+    /** {@inheritDoc} */
     public static class XMLGregorianCalendarConverter implements JsonSerializer<XMLGregorianCalendar>, JsonDeserializer<XMLGregorianCalendar> {
+
+        /** {@inheritDoc} */
         public JsonElement serialize(XMLGregorianCalendar calendar, Type type, JsonSerializationContext jsonSerializationContext) {
             DateTimeFormatter f = DateTimeFormatter.ISO_INSTANT.withZone(ZoneId.systemDefault());
             String isoString = f.format(calendar.toGregorianCalendar().toInstant());
@@ -180,6 +203,7 @@ public class MongoJsonUtil {
             // return JsonPrimitive(calendar.toXMLFormat());
         }
 
+        /** {@inheritDoc} */
         public XMLGregorianCalendar deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) {
             try {
                 try {
@@ -210,10 +234,14 @@ public class MongoJsonUtil {
     }
 
     /**
-     * Convert json String to BasicDBObject and add to Bson list.
+     * Converts JSON {@link String} to {@link BasicDBObject} and adds it to given BSON list.
      *
      * @param bsonList
+     *            BSON list to add to
      * @param json
+     *            JSON to convert and add to BSON list
+     * @throws BaseException
+     *             if params are null or empty
      */
     public static void addJsonToBsonList(List<Bson> bsonList, String json) throws BaseException {
         if (bsonList == null || StringUtils.isBlank(json)) {
@@ -224,10 +252,15 @@ public class MongoJsonUtil {
     }
 
     /**
-     * Convert json String array to BasicDBObject and add to Bson list.
+     * Converts JSON {@link String} array to {@link BasicDBObject}s and adds them to given BSON list.
      *
      * @param bsonList
+     *            BSON list to add to
      * @param jsons
+     *            JSON list to convert and add to BSON list
+     * @throws BaseException
+     *             if params are null or empty
+     * @see #addJsonToBsonList(List, String)
      */
     public static void addJsonsToBsonList(List<Bson> bsonList, String... jsons) throws BaseException {
         if (bsonList == null || jsons == null || jsons.length == 0) {
@@ -239,10 +272,13 @@ public class MongoJsonUtil {
     }
 
     /**
-     * Converts Date to Mongo String.
+     * Converts {@link Date} to Mongo {@link String}.
      *
      * @param date
+     *            {@code Date} to convert
+     * @return converted {@code String}
      * @throws BaseException
+     *             if {@code date} is null
      */
     public static String dateToString(Date date) throws BaseException {
         if (date == null) {

@@ -54,7 +54,7 @@ import hu.icellmobilsoft.coffee.se.logging.Logger;
 import hu.icellmobilsoft.coffee.tool.gson.JsonUtil;
 
 /**
- * <p>BaseApacheHttpClient class.</p>
+ * BaseApacheHttpClient class.
  *
  * @author ischeffer
  * @since 1.0.0
@@ -64,9 +64,7 @@ public class BaseApacheHttpClient {
 
     private static Logger LOGGER = hu.icellmobilsoft.coffee.cdi.logger.LogProducer.getStaticDefaultLogger(BaseApacheHttpClient.class);
 
-    /**
-     * connection time-out: 1 perc alatt kell hogy valaszoljanak
-     */
+    /** constant connection time-out: 1 minute response time */
     public static final int CONNECTION_TIMEOUT_MILLIS = (int) TimeUnit.MINUTES.toMillis(1);
 
     /** Constant <code>CONTENT_TYPE_TEXT_PLAIN_UTF8</code> */
@@ -80,34 +78,58 @@ public class BaseApacheHttpClient {
     public final static String APPLICATION_JSON = "application/json";
 
     /**
-     * <p>beforeAll.</p>
+     * Method called before everything else.
+     * 
+     * @param request
+     *            http request
+     * @throws BaseException
+     *             if any exception occurs
      */
     protected void beforeAll(HttpRequestBase request) throws BaseException {
     }
 
     /**
-     * <p>beforeGet.</p>
+     * Method called before http GET.
+     *
+     * @param get
+     *            http get object
+     * @throws BaseException
+     *             if any exception occurs
      */
     protected void beforeGet(HttpGet get) throws BaseException {
         beforeAll(get);
     }
 
     /**
-     * <p>createRequestConfig.</p>
+     * Builder method for {@link RequestConfig}.
+     * 
+     * @return {@code RequestConfig.Builder}
      */
     protected RequestConfig.Builder createRequestConfig() {
         return RequestConfig.custom().setConnectionRequestTimeout(getTimeOut()).setConnectTimeout(getTimeOut()).setSocketTimeout(getTimeOut());
     }
 
     /**
-     * <p>createHttpClientBuilder.</p>
+     * Creates {@link HttpClientBuilder} based on given {@link RequestConfig}.
+     * 
+     * @param requestConfig
+     *            request config
+     * @return {@code HttpClientBuilder}
+     * @throws BaseException
+     *             if any exception occurs
      */
     protected HttpClientBuilder createHttpClientBuilder(RequestConfig requestConfig) throws BaseException {
         return HttpClientBuilder.create().setDefaultRequestConfig(requestConfig);
     }
 
     /**
-     * <p>sendClientBaseGet.</p>
+     * Send http GET request.
+     *
+     * @param url
+     *            URL
+     * @return {@link HttpResponse}
+     * @throws BaseException
+     *             if any exception occurs
      */
     public HttpResponse sendClientBaseGet(String url) throws BaseException {
         HttpGet get = new HttpGet(url);
@@ -135,14 +157,29 @@ public class BaseApacheHttpClient {
     }
 
     /**
-     * <p>beforePost.</p>
+     * Method called before http POST.
+     *
+     * @param post
+     *            http post object
+     * @throws BaseException
+     *             if any exception occurs
      */
     protected void beforePost(HttpPost post) throws BaseException {
         beforeAll(post);
     }
 
     /**
-     * <p>sendClientBasePost.</p>
+     * Send http POST request.
+     *
+     * @param url
+     *            URL
+     * @param contentType
+     *            content type
+     * @param entityObject
+     *            entity to POST
+     * @return {@link HttpResponse}
+     * @throws BaseException
+     *             if any exception occurs
      */
     public HttpResponse sendClientBasePost(String url, ContentType contentType, Object entityObject) throws BaseException {
 
@@ -177,7 +214,17 @@ public class BaseApacheHttpClient {
     }
 
     /**
-     * <p>sendClientBasePost.</p>
+     * Send http POST request.
+     *
+     * @param url
+     *            URL
+     * @param contentType
+     *            content type
+     * @param request
+     *            http request
+     * @return {@link HttpResponse}
+     * @throws BaseException
+     *             if any exception occurs
      */
     public HttpResponse sendClientBasePost(String url, ContentType contentType, byte[] request) throws BaseException {
 
@@ -210,14 +257,29 @@ public class BaseApacheHttpClient {
     }
 
     /**
-     * <p>beforePut.</p>
+     * Method called before http PUT.
+     *
+     * @param put
+     *            http put object
+     * @throws BaseException
+     *             if any exception occurs
      */
     protected void beforePut(HttpPut put) throws BaseException {
         beforeAll(put);
     }
 
     /**
-     * <p>sendClientBasePut.</p>
+     * Send http PUT request.
+     *
+     * @param url
+     *            URL
+     * @param contentType
+     *            content type
+     * @param entityObject
+     *            entity to PUT
+     * @return {@link HttpResponse}
+     * @throws BaseException
+     *             if any exception occurs
      */
     public HttpResponse sendClientBasePut(String url, ContentType contentType, Object entityObject) throws BaseException {
 
@@ -252,7 +314,17 @@ public class BaseApacheHttpClient {
     }
 
     /**
-     * <p>sendClientBasePut.</p>
+     * Send http PUT request.
+     *
+     * @param url
+     *            URL
+     * @param contentType
+     *            content type
+     * @param request
+     *            http request
+     * @return {@link HttpResponse}
+     * @throws BaseException
+     *             if any exception occurs
      */
     public HttpResponse sendClientBasePut(String url, ContentType contentType, byte[] request) throws BaseException {
 
@@ -285,14 +357,25 @@ public class BaseApacheHttpClient {
     }
 
     /**
-     * <p>beforeDelete.</p>
+     * Method called before http DELETE.
+     *
+     * @param delete
+     *            http delete object
+     * @throws BaseException
+     *             if any exception occurs
      */
     protected void beforeDelete(HttpDelete delete) throws BaseException {
         beforeAll(delete);
     }
 
     /**
-     * <p>sendClientBaseDelete.</p>
+     * Send http DELETE request.
+     * 
+     * @param url
+     *            URL
+     * @return {@link HttpResponse}
+     * @throws BaseException
+     *             if any exception occurs
      */
     public HttpResponse sendClientBaseDelete(String url) throws BaseException {
 
@@ -320,7 +403,14 @@ public class BaseApacheHttpClient {
     }
 
     /**
-     * <p>addParam.</p>
+     * Adds param with given key and value to given map.
+     * 
+     * @param map
+     *            {@code Map} to add param to
+     * @param key
+     *            param key
+     * @param value
+     *            param value
      */
     public void addParam(Map<String, Object> map, String key, Object value) {
         if (map != null && StringUtils.isNotBlank(key) && value != null) {
@@ -329,7 +419,11 @@ public class BaseApacheHttpClient {
     }
 
     /**
-     * <p>urlEncodeUTF8.</p>
+     * URL encodes given text.
+     * 
+     * @param s
+     *            text to encode
+     * @return URL encoded {@code String} or null if encoding error
      */
     public String urlEncodeUTF8(String s) {
         try {
@@ -342,7 +436,11 @@ public class BaseApacheHttpClient {
     }
 
     /**
-     * <p>urlEncodeUTF8.</p>
+     * URL encodes the elements of given map.
+     *
+     * @param map
+     *            map to encode
+     * @return URL encoded {@code String}s appended
      */
     public String urlEncodeUTF8(Map<String, Object> map) {
         StringBuilder sb = new StringBuilder();
@@ -361,12 +459,12 @@ public class BaseApacheHttpClient {
     }
 
     /**
-     * <p>logRequest.</p>
+     * Logs http request.
      *
-     * @param httpPost
-     *            lehet majd boviteni hogyha HttpRequestBase oset hasznaljuk, de most gyorsan meglegyen
+     * @param request
+     *            {@link HttpRequestBase}, could be extended to its parent object
      * @param entity
-     *            ne a inputstream-et fogdossuk...
+     *            instead of using input stream
      */
     protected void logRequest(HttpRequestBase request, String entity) {
         StringBuffer msg = createLogRequest(request);
@@ -375,17 +473,21 @@ public class BaseApacheHttpClient {
     }
 
     /**
-     * <p>logRequest.</p>
+     * Logs http request.
+     * 
+     * @param request
+     *            http request
      */
     protected void logRequest(HttpRequestBase request) {
         LOGGER.info(createLogRequest(request).toString());
     }
 
     /**
-     * <p>createLogRequest.</p>
+     * Creates log request.
      *
-     * @param HttpRequestBase
-     *            lehet majd boviteni hogyha HttpRequestBase oset hasznaljuk, de most gyorsan meglegyen
+     * @param request
+     *            {@link HttpRequestBase}, could be extended to its parent object
+     * @return log request {@link StringBuffer}
      */
     protected StringBuffer createLogRequest(HttpRequestBase request) {
         StringBuffer msg = new StringBuffer();
@@ -400,7 +502,13 @@ public class BaseApacheHttpClient {
     }
 
     /**
-     * <p>logResponse.</p>
+     * Logs http response info.
+     * 
+     * @param response
+     *            {@link HttpResponse}
+     * @param byteEntity
+     *            byte array
+     * 
      */
     public void logResponse(HttpResponse response, byte[] byteEntity) {
         StringBuffer msg = new StringBuffer();
@@ -426,22 +534,31 @@ public class BaseApacheHttpClient {
     }
 
     /**
-     * <p>handleSSL.</p>
+     * Handles SSL.
+     *
+     * @param client
+     *            http client
+     * @param uri
+     *            {@code URI}
      */
     protected void handleSSL(CloseableHttpClient client, URI uri) {
     }
 
     /**
-     * Http timeOut kezelese
+     * Getter for http time-out.
      *
-     * @return millisecond
+     * @return time-out milliseconds
      */
     public int getTimeOut() {
         return CONNECTION_TIMEOUT_MILLIS;
     }
 
     /**
-     * <p>toJsonString.</p>
+     * Converts JSON object to {@link String}.
+     * 
+     * @param object
+     *            JSON to convert
+     * @return JSON {@code String}
      */
     protected String toJsonString(Object object) {
         String entityString = "";

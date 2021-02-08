@@ -28,8 +28,9 @@ package hu.icellmobilsoft.coffee.dto.exception;
  * Példa:
  *
  * <pre>
- * public class SpecialProcessingException extends ProcessingException implements BaseExceptionWrapper<MyException> {
- *     private MyExcepotion baseException;
+ * <code>
+ * public class SpecialProcessingException extends ProcessingException implements BaseExceptionWrapper&lt;MyException&gt; {
+ *     private MyException baseException;
  *
  *     &#64;Override
  *     public void setBaseException(final MyException baseException) {
@@ -41,10 +42,14 @@ package hu.icellmobilsoft.coffee.dto.exception;
  *         return getBaseException();
  *     }
  * }
- *
+ * </code>
+ * </pre>
+ * 
+ * <pre>
+ * <code>
  * &#64;Override
- * public BasicRequestType readFrom(Class<BasicRequestType> type, Type genericType, Annotation[] annotations, MediaType mediaType,
- *         MultivaluedMap<String, String> httpHeaders, InputStream entityStream) throws IOException, WebApplicationException {
+ * public BasicRequestType readFrom(Class&lt;BasicRequestType&gt; type, Type genericType, Annotation[] annotations, MediaType mediaType,
+ *         MultivaluedMap&lt;String, String&gt; httpHeaders, InputStream entityStream) throws IOException, WebApplicationException {
  *
  *     BasicRequestType result = null;
  *     try {
@@ -54,6 +59,7 @@ package hu.icellmobilsoft.coffee.dto.exception;
  *     }
  *     return result;
  * }
+ * </code>
  * </pre>
  *
  * @param <E>
@@ -65,12 +71,17 @@ package hu.icellmobilsoft.coffee.dto.exception;
  */
 public interface BaseExceptionWrapper<E extends BaseException> {
     /**
-     * <p>setException.</p>
+     * setException.
+     * 
+     * @param exception
+     *            exception
      */
     void setException(final E exception);
 
     /**
-     * <p>getException.</p>
+     * getException.
+     * 
+     * @return E
      */
     E getException();
 }

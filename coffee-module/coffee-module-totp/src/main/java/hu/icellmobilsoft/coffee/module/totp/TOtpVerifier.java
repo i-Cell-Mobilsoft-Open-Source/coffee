@@ -23,7 +23,7 @@ import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.module.totp.enums.TOtpAlgorithm;
 
 /**
- * <p>TOtpVerifier interface.</p>
+ * TOtpVerifier interface.
  *
  * @author cstamas
  * @since 1.0.0
@@ -31,57 +31,66 @@ import hu.icellmobilsoft.coffee.module.totp.enums.TOtpAlgorithm;
 public interface TOtpVerifier {
 
     /**
-     * A parameterben kapott OTP-t a tobbi parameter segitsegevel generalt OTP-vel hasonlitja ossze
+     * Verifies given OTP against the OTP generated from the other parameters ({@code secretKey}, {@code utcTimestamp}, {@code hashAlgorithm}).
      *
      * @param secretKey
-     *            - titkos kulcs
+     *            secret key
      * @param verifiedOtp
-     *            - az ellenőrizendő OTP
+     *            OTP to verify
      * @param utcTimestamp
-     *            - UTC timestamp, amivel az ellenőrizendő OTP-t generáljuk, célszerűen NTP segítségével szinkronizált aktuális idő
+     *            UTC timestamp for OTP generation, practically NTP synchronized actual time
      * @param hashAlgorithm
-     *            - OTP generáláshoz használandó hash algoritmus
+     *            hash algorithm for OTP generation
      * @throws BaseException
+     *             if any exception occurs
      */
     public void verify(byte[] secretKey, String verifiedOtp, long utcTimestamp, TOtpAlgorithm hashAlgorithm) throws BaseException;
 
     /**
-     * A parameterben kapott OTP-t az a parameterben kapott epoch time es default konfiguracio alapjan generalt OTP-vel hasonlitja ossze
+     * Verifies given OTP against the OTP generated from the other parameters ({@code secretKey}, {@code utcTimestamp}) and config default hash
+     * algorithm.
      *
      * @param secretKey
-     *            - titkos kulcs
+     *            secret key
      * @param verifiedOtp
-     *            - az ellenőrizendő OTP
+     *            OTP to verify
      * @param utcTimestamp
-     *            - UTC timestamp, amivel az ellenőrizendő OTP-t generáljuk, célszerűen NTP segítségével szinkronizált aktuális idő
+     *            UTC timestamp for OTP generation, practically NTP synchronized actual time
      * @throws BaseException
+     *             if any exception occurs
+     * @see #verify(byte[], String, long, TOtpAlgorithm)
      */
     public void verify(byte[] secretKey, String verifiedOtp, long utcTimestamp) throws BaseException;
 
     /**
-     * A parameterben kapott OTP-t az aktualis epoch time es default konfiguracio alapjan generalt OTP-vel hasonlitja ossze
+     * Verifies given OTP against the OTP generated from {@code secretKey}, actual epoch time and config default hash algorithm.
      *
      * @param secretKey
-     *            - titkos kulcs
+     *            secret key
      * @param verifiedOtp
-     *            - az ellenőrizendő OTP
+     *            OTP to verify
      * @throws BaseException
+     *             if any exception occurs
+     * @see #verify(byte[], String, long)
      */
     public default void verify(byte[] secretKey, String verifiedOtp) throws BaseException {
         verify(secretKey, verifiedOtp, System.currentTimeMillis());
     }
 
     /**
-     * Tovabbi idoablakokban is ellenorzi a kapott TOTP-t
+     * Verifies given TOTP in additional time windows.
      *
      * @param secretKey
-     *            - titkos kulcs
+     *            secret key
      * @param utcTimestamp
-     *            - az eredeti OTP generáláshoz használmt UTC timestamp
+     *            UTC timestamp of the original OTP generation
      * @param verifiedOtp
-     *            - az ellenőrizendő OTP
+     *            OTP to verify
      * @param hashAlgorithm
-     *            - az OTP generáláshoz használt hash algoritmus
+     *            hash algorithm of the original OTP generation
+     * @return if TOTP verification is successful
+     * @throws BaseException
+     *             if any exception occurs
      */
     public boolean verifyOTPInAdditionalWindow(byte[] secretKey, long utcTimestamp, String verifiedOtp, TOtpAlgorithm hashAlgorithm)
             throws BaseException;

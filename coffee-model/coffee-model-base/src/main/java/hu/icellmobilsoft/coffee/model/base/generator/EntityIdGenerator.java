@@ -112,6 +112,8 @@ public class EntityIdGenerator implements IdentifierGenerator {
 
     /**
      * generate fix 16 length id!
+     * 
+     * @return entityId
      */
     public static String generateId() {
         int xInd = getNextIndex();

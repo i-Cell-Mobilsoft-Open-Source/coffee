@@ -76,7 +76,7 @@ public interface IExceptionMessageTranslator {
     }
 
     /**
-     * Error code -> localized message converter.
+     * Error code to localized message converter.
      *
      * @param faultType
      *            key for localized resource bundle

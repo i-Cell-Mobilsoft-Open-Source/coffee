@@ -54,7 +54,11 @@ public class JedisPoolProducer {
     private Map<String, JedisPool> jedisPoolInstances = new HashMap<>();
 
     /**
-     * Creates or gets JedisPool for the given configKey
+     * Creates or gets {@link JedisPool} for the given configKey
+     *
+     * @param injectionPoint
+     *            injection metadata
+     * @return Jedis pool
      */
     @Produces
     @Dependent
@@ -70,7 +74,8 @@ public class JedisPoolProducer {
      * pools for the same connection.
      * 
      * @param configKey
-     * @return
+     *            config key
+     * @return {@link JedisPool}
      */
     private synchronized JedisPool getInstance(String configKey) {
         return jedisPoolInstances.computeIfAbsent(configKey, this::createJedisPool);

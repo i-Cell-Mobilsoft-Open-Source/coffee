@@ -36,8 +36,7 @@ import hu.icellmobilsoft.coffee.module.mongodb.codec.time.internal.CodecsUtil;
 
 /**
  * <p>
- * Encodes and decodes {@code Duration} values to and from
- * {@code BSON Document}, such as {@code { seconds: 10, nanos: 100 }}.
+ * Encodes and decodes {@code Duration} values to and from {@code BSON Document}, such as {@code { seconds: 10, nanos: 100 }}.
  * <p>
  * The values are stored using the following structure:
  * <ul>

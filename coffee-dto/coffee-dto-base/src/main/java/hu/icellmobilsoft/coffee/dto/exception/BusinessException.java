@@ -32,21 +32,36 @@ public class BusinessException extends BaseException {
     private static final long serialVersionUID = 1L;
 
     /**
-     * <p>Constructor for BusinessException.</p>
+     * Constructor for BusinessException.
+     *
+     * @param message
+     *            message
      */
     public BusinessException(String message) {
         this(CoffeeFaultType.OPERATION_FAILED, message, null);
     }
 
     /**
-     * <p>Constructor for BusinessException.</p>
+     * Constructor for BusinessException.
+     *
+     * @param faultTypeEnum
+     *            faultTypeEnum
+     * @param message
+     *            message
      */
     public BusinessException(Enum<?> faultTypeEnum, String message) {
         this(faultTypeEnum, message, null);
     }
 
     /**
-     * <p>Constructor for BusinessException.</p>
+     * Constructor for BusinessException.
+     * 
+     * @param faultTypeEnum
+     *            faultTypeEnum
+     * @param message
+     *            message
+     * @param e
+     *            e
      */
     public BusinessException(Enum<?> faultTypeEnum, String message, Throwable e) {
         super(faultTypeEnum, message, e);

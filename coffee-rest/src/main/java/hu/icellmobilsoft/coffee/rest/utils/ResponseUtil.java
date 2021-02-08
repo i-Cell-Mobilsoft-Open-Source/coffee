@@ -47,7 +47,13 @@ public class ResponseUtil {
     }
 
     /**
-     * <p>getResponse.</p>
+     * Returns {@link Response} with given status and entity.
+     * 
+     * @param status
+     *            HTTP status code
+     * @param entity
+     *            response entity
+     * @return {@code Response}
      */
     public static Response getResponse(int status, Object entity) {
         ResponseBuilder rb = Response.status(status);
@@ -58,7 +64,13 @@ public class ResponseUtil {
     }
 
     /**
-     * <p>getResponse.</p>
+     * Returns {@link Response} with given status and entity.
+     *
+     * @param status
+     *            HTTP status code
+     * @param entity
+     *            response entity
+     * @return {@code Response}
      */
     public static Response getResponse(Status status, Object entity) {
         if (status == null) {
@@ -68,21 +80,37 @@ public class ResponseUtil {
     }
 
     /**
-     * <p>getOk.</p>
+     * Returns {@link Response} with {@link Response.Status#OK} (200) status and given entity.
+     *
+     * @param entity
+     *            response entity
+     * @return {@code Response}
      */
     public static Response getOk(Object entity) {
         return getResponse(Status.OK, entity);
     }
 
     /**
-     * <p>getInternalServerError.</p>
+     * Returns {@link Response} with {@link Response.Status#INTERNAL_SERVER_ERROR} (500) status and given entity.
+     *
+     * @param entity
+     *            response entity
+     * @return {@code Response}
      */
     public static Response getInternalServerError(Object entity) {
         return getResponse(Status.INTERNAL_SERVER_ERROR, entity);
     }
 
     /**
-     * <p>getFileResponse.</p>
+     * Returns {@link Response} with given entity, file and content type.
+     *
+     * @param entity
+     *            response entity
+     * @param fileName
+     *            name of the file
+     * @param contentType
+     *            content type
+     * @return {@code Response}
      */
     public static Response getFileResponse(Object entity, String fileName, String contentType) {
         return Response.ok(entity).header(HttpHeaders.CONTENT_TYPE, contentType)
@@ -91,59 +119,102 @@ public class ResponseUtil {
     }
 
     /**
-     * <p>getXMLResponse.</p>
+     * Returns XML {@link Response} with given entity and file.
+     *
+     * @param entity
+     *            response entity
+     * @param fileName
+     *            name of the file
+     * @return {@code Response} with {@link MediaType#APPLICATION_XML} content type
      */
     public static Response getXMLResponse(Object entity, String fileName) {
         return getFileResponse(entity, fileName, MediaType.APPLICATION_XML);
     }
 
     /**
-     * <p>getPDFResponse.</p>
+     * Returns PDF {@link Response} with given entity and file.
+     *
+     * @param entity
+     *            response entity
+     * @param fileName
+     *            name of the file
+     * @return {@code Response} with PDF content type
      */
     public static Response getPDFResponse(Object entity, String fileName) {
         return getFileResponse(entity, fileName, "application/pdf");
     }
 
     /**
-     * <p>getXLSXResponse.</p>
+     * Returns XLSX {@link Response} with given entity and file.
+     *
+     * @param entity
+     *            response entity
+     * @param fileName
+     *            name of the file
+     * @return {@code Response} with XLSX content type
      */
     public static Response getXLSXResponse(Object entity, String fileName) {
         return getFileResponse(entity, fileName, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
     }
 
     /**
-     * <p>getCSVResponse.</p>
+     * Returns CSV {@link Response} with given entity and file.
+     *
+     * @param entity
+     *            response entity
+     * @param fileName
+     *            name of the file
+     * @return {@code Response} with UTF-8 CSV content type
      */
     public static Response getCSVResponse(Object entity, String fileName) {
         return getFileResponse(entity, fileName, "text/csv;charset=UTF-8");
     }
 
     /**
-     * {@value #MEDIATYPE_APPLICATION_ZIP} típusú csatolmányt ad vissza válaszként.
+     * Returns ZIP {@link Response} with given entity and file.
      *
      * @param entity
+     *            response entity
      * @param fileName
+     *            name of the file
+     * @return {@code Response} with {@link #MEDIATYPE_APPLICATION_ZIP} content type
      */
     public static Response getZipResponse(Object entity, String fileName) {
         return getFileResponse(entity, fileName, MEDIATYPE_APPLICATION_ZIP);
     }
 
     /**
-     * <p>isInStatus.</p>
+     * Returns if status of the given {@link Response} is equal to the given {@code status}.
+     * 
+     * @param response
+     *            {@code Response} to check
+     * @param status
+     *            status to check
+     * @return if {@code Response}'s status code is equal to {@code status}.
      */
     public static boolean isInStatus(Response response, int status) {
         return response != null && response.getStatus() == status;
     }
 
     /**
-     * <p>isInStatus.</p>
+     * Returns if status of the given {@link Response} is equal to the given {@code status}.
+     *
+     * @param response
+     *            {@code Response} to check
+     * @param status
+     *            status to check
+     * @return if {@code Response}'s status code is equal to {@code status}.
      */
     public static boolean isInStatus(Response response, Status status) {
         return status != null && isInStatus(response, status.getStatusCode());
     }
 
     /**
-     * <p>isOk.</p>
+     * Returns if status of the given {@link Response} is {@link Status#OK} (200).
+     *
+     * @param response
+     *            {@code Response} to check
+     * @return if {@code Response}'s status code is OK (200).
      */
     public static boolean isOk(Response response) {
         return isInStatus(response, Status.OK);

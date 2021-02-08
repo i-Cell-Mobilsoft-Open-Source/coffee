@@ -41,7 +41,7 @@ import com.google.common.cache.LoadingCache;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
 
 /**
- * <p>PropertyReader class.</p>
+ * PropertyReader class.
  *
  * @since 1.0.0
  */
@@ -65,13 +65,15 @@ public class PropertyReader {
             });
 
     /**
-     * <p>Constructor for PropertyReader.</p>
+     * Constructor for PropertyReader.
      */
     protected PropertyReader() {
     }
 
     /**
-     * <p>Getter for the field <code>instance</code>.</p>
+     * Getter for the field <code>instance</code>.
+     *
+     * @return {@link PropertyReader}
      */
     public static PropertyReader getInstance() {
         if (instance == null) {
@@ -81,14 +83,28 @@ public class PropertyReader {
     }
 
     /**
-     * <p>getSystemProperty.</p>
+     * Returns system property of the given key.
+     *
+     * @param c
+     *            class part of system property key
+     * @param keyPart
+     *            key part of desired system property
+     * @return system property
      */
     public String getSystemProperty(Class<?> c, String keyPart) {
         return getSystemProperty(c, keyPart, null);
     }
 
     /**
-     * <p>getSystemProperty.</p>
+     * Returns system property of the given key.
+     *
+     * @param c
+     *            class part of system property key
+     * @param keyPart
+     *            key part of desired system property
+     * @param defaultValue
+     *            key part of desired system property
+     * @return system property
      */
     public String getSystemProperty(Class<?> c, String keyPart, String defaultValue) {
         String key = c == null ? keyPart : c.getName() + DELIMITER + keyPart;

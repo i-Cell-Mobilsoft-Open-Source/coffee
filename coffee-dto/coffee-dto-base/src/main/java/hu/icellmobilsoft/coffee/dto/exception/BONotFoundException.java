@@ -34,21 +34,38 @@ public class BONotFoundException extends BaseException {
     private static final long serialVersionUID = 1L;
 
     /**
-     * <p>Constructor for BONotFoundException.</p>
+     * <p>
+     * Constructor for BONotFoundException.
+     * </p>
+     *
+     * @param message
+     *            message
      */
     public BONotFoundException(String message) {
         this(CoffeeFaultType.ENTITY_NOT_FOUND, message, null);
     }
 
     /**
-     * <p>Constructor for BONotFoundException.</p>
+     * Constructor for BONotFoundException.
+     *
+     * @param faultTypeEnum
+     *            faultTypeEnum
+     * @param message
+     *            message
      */
     public BONotFoundException(Enum<?> faultTypeEnum, String message) {
         this(faultTypeEnum, message, null);
     }
 
     /**
-     * <p>Constructor for BONotFoundException.</p>
+     * Constructor for BONotFoundException.
+     *
+     * @param faultTypeEnum
+     *            faultTypeEnum
+     * @param message
+     *            message
+     * @param e
+     *            e
      */
     public BONotFoundException(Enum<?> faultTypeEnum, String message, Throwable e) {
         super(faultTypeEnum, message, e);

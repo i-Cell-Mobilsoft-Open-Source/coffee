@@ -28,7 +28,7 @@ import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.model.base.AbstractIdentifiedAuditEntity;
 
 /**
- * ${@link CommonIdListType} dto <-> ${@link List<AbstractIdentifiedAuditEntity>} entity converter
+ * {@link CommonIdListType} dto &lt;-&gt; {@link AbstractIdentifiedAuditEntity} list converter
  *
  * @author karoly.tamas
  * @since 1.0.0
@@ -45,6 +45,7 @@ public class CommonIdListTypeConverter {
      *            list of entity
      * @return CommonIdListType filled with entity.id
      * @throws BaseException
+     *             exception
      */
     public <T extends AbstractIdentifiedAuditEntity> CommonIdListType convert(List<T> sourceEntities) throws BaseException {
         CommonIdListType commonIdListType = new CommonIdListType();
@@ -61,8 +62,8 @@ public class CommonIdListTypeConverter {
      *            exist XML id list type class
      * @param sourceEntities
      *            list of entity
-     * @return CommonIdListType filled with entity.id
      * @throws BaseException
+     *             exception
      */
     public <T extends AbstractIdentifiedAuditEntity> void convert(CommonIdListType commonIdListType, List<T> sourceEntities) throws BaseException {
         for (T entity : sourceEntities) {

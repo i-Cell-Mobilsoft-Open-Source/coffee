@@ -57,7 +57,9 @@ import hu.icellmobilsoft.coffee.tool.utils.annotation.bean.TestQualifier;
 @Tag("weld")
 public class AnnotationUtilTest {
 
+    /** Constant <code>TEST_STRING_FOR_SELECT = "Value for inject"</code> */
     public static final String TEST_STRING_FOR_INJECT = "Value for inject";
+    /** Constant <code>TEST_STRING_FOR_SELECT = "Value for select"</code> */
     public static final String TEST_STRING_FOR_SELECT = "Value for select";
 
     @WeldSetup

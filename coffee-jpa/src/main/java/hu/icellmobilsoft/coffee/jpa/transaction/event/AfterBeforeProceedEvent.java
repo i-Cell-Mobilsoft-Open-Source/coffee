@@ -31,16 +31,25 @@ public class AfterBeforeProceedEvent {
 
 	private EntityManager entityManager;
 
-	/**
-	 * <p>Constructor for AfterBeforeProceedEvent.</p>
-	 */
+    /**
+     * <p>
+     * Constructor for AfterBeforeProceedEvent.
+     * </p>
+     * 
+     * @param entityManager
+     *            entity manager
+     */
 	public AfterBeforeProceedEvent(EntityManager entityManager) {
 		this.entityManager = entityManager;
 	}
 
-	/**
-	 * <p>Getter for the field <code>entityManager</code>.</p>
-	 */
+    /**
+     * <p>
+     * Getter for the field <code>entityManager</code>.
+     * </p>
+     * 
+     * @return entity manager
+     */
 	public EntityManager getEntityManager() {
 		return entityManager;
 	}

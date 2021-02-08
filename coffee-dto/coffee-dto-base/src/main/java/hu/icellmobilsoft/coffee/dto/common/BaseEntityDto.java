@@ -40,28 +40,38 @@ public class BaseEntityDto<E extends Serializable, CONTEXT extends Serializable>
     private E entity;
 
     /**
-     * <p>Getter for the field <code>context</code>.</p>
+     * Getter for the field <code>context</code>.
+     * 
+     * @return context
      */
     public CONTEXT getContext() {
         return context;
     }
 
     /**
-     * <p>Setter for the field <code>context</code>.</p>
+     * Setter for the field <code>context</code>.
+     * 
+     * @param context
+     *            context
      */
     public void setContext(CONTEXT context) {
         this.context = context;
     }
 
     /**
-     * <p>Getter for the field <code>entity</code>.</p>
+     * Getter for the field <code>entity</code>.
+     * 
+     * @return entity
      */
     public E getEntity() {
         return entity;
     }
 
     /**
-     * <p>Setter for the field <code>entity</code>.</p>
+     * Setter for the field <code>entity</code>.
+     * 
+     * @param entity
+     *            entity
      */
     public void setEntity(E entity) {
         this.entity = entity;

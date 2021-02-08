@@ -27,7 +27,9 @@ import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 import hu.icellmobilsoft.coffee.dto.exception.enums.Severity;
 
 /**
- * <p>BaseException class.</p>
+ * <p>
+ * BaseException class.
+ * </p>
  *
  * @author imre.scheffer
  * @since 1.0.0
@@ -43,35 +45,64 @@ public class BaseException extends Exception {
     private List<Serializable> messageParameters;
 
     /**
-     * <p>Constructor for BaseException.</p>
+     * Constructor for BaseException.
+     * 
+     * @param message
+     *            message
      */
     public BaseException(String message) {
         this(CoffeeFaultType.OPERATION_FAILED, message, null, null);
     }
 
     /**
-     * <p>Constructor for BaseException.</p>
+     * Constructor for BaseException.
+     * 
+     * @param message
+     *            message
+     * @param e
+     *            e
      */
     public BaseException(String message, Throwable e) {
         this(CoffeeFaultType.OPERATION_FAILED, message, e, null);
     }
 
     /**
-     * <p>Constructor for BaseException.</p>
+     * Constructor for BaseException.
+     *
+     * @param faultTypeEnum
+     *            faultTypeEnum
+     * @param message
+     *            message
      */
     public BaseException(Enum<?> faultTypeEnum, String message) {
         this(faultTypeEnum, message, null, null);
     }
 
     /**
-     * <p>Constructor for BaseException.</p>
+     * Constructor for BaseException.
+     *
+     * @param faultTypeEnum
+     *            faultTypeEnum
+     * @param message
+     *            message
+     * @param e
+     *            e
      */
     public BaseException(Enum<?> faultTypeEnum, String message, Throwable e) {
         this(faultTypeEnum, message, e, null);
     }
 
     /**
-     * <p>Constructor for BaseException.</p>
+     * Constructor for BaseException.
+     * 
+     * @param faultTypeEnum
+     *            faultTypeEnum
+     * @param message
+     *            message
+     * @param e
+     *            e
+     * @param severity
+     *            severity
      */
     public BaseException(Enum<?> faultTypeEnum, String message, Throwable e, Severity severity) {
         super(message, e);
@@ -85,20 +116,26 @@ public class BaseException extends Exception {
      * Add one message parameter to the message parameter list.
      *
      * @param messageParameter
+     *            messageParameter
      */
     public void addMessageParameter(Serializable messageParameter) {
         getMessageParameters().add(messageParameter);
     }
 
     /**
-     * <p>getFaultTypeEnum.</p>
+     * getFaultTypeEnum.
+     * 
+     * @return faultType
      */
     public Enum<?> getFaultTypeEnum() {
         return faultType;
     }
 
     /**
-     * <p>Setter for the field <code>faultType</code>.</p>
+     * Setter for the field <code>faultType</code>.
+     * 
+     * @param faultTypeEnum
+     *            faultTypeEnum
      */
     public void setFaultType(Enum<?> faultTypeEnum) {
         if (faultTypeEnum != null) {
@@ -107,21 +144,28 @@ public class BaseException extends Exception {
     }
 
     /**
-     * <p>Getter for the field <code>severity</code>.</p>
+     * Getter for the field <code>severity</code>.
+     * 
+     * @return severity
      */
     public Severity getSeverity() {
         return severity;
     }
 
     /**
-     * <p>Setter for the field <code>severity</code>.</p>
+     * Setter for the field <code>severity</code>.
+     * 
+     * @param severity
+     *            severity
      */
     public void setSeverity(Severity severity) {
         this.severity = severity;
     }
 
     /**
-     * <p>Getter for the field <code>messageParameters</code>.</p>
+     * Getter for the field <code>messageParameters</code>.
+     * 
+     * @return messageParameters
      */
     public List<Serializable> getMessageParameters() {
         if (messageParameters == null) {
@@ -131,7 +175,10 @@ public class BaseException extends Exception {
     }
 
     /**
-     * <p>Setter for the field <code>messageParameters</code>.</p>
+     * Setter for the field <code>messageParameters</code>.
+     * 
+     * @param messageParameters
+     *            messageParameters
      */
     public void setMessageParameters(List<Serializable> messageParameters) {
         this.messageParameters = messageParameters;

@@ -56,12 +56,13 @@ public class RawAction {
     private TemplateDataService templateDataService;
 
     /**
-     * get template raw data from DB
+     * Returns raw template data from DB.
      *
      * @param templateDataId
      *            templateData.id
      * @return file response with templateData.data content
      * @throws BaseException
+     *             if invalid parameter or query exception occurs
      */
     public Response findRaw(String templateDataId) throws BaseException {
         if (StringUtils.isBlank(templateDataId)) {
@@ -73,7 +74,7 @@ public class RawAction {
     }
 
     /**
-     * Warning: Transaction required!
+     * Updates raw template of given id with file content given as {@link InputStream}. Warning: Transaction required!
      *
      * @param templateDataId
      *            templateData.id
@@ -81,6 +82,7 @@ public class RawAction {
      *            stream with new templateData.data content
      * @return String message
      * @throws BaseException
+     *             if invalid parameters or query/update/IO exception occurs
      */
     public String updateRaw(String templateDataId, InputStream inputStream) throws BaseException {
         if (StringUtils.isBlank(templateDataId) || inputStream == null) {

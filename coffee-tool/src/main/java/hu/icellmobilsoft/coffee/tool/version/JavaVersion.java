@@ -33,56 +33,76 @@ public class JavaVersion {
     private Integer patchUpdate;
 
     /**
-     * <p>Getter for the field <code>major</code>.</p>
+     * Getter for the field <code>major</code>.
+     *
+     * @return {@code major}
      */
     public Integer getMajor() {
         return major;
     }
 
     /**
-     * <p>Setter for the field <code>major</code>.</p>
+     * Setter for the field <code>major</code>.
+     * 
+     * @param major
+     *            {@code major}
      */
     public void setMajor(Integer major) {
         this.major = major;
     }
 
     /**
-     * <p>Getter for the field <code>feature</code>.</p>
+     * Getter for the field <code>feature</code>.
+     * 
+     * @return {@code feature}
      */
     public Integer getFeature() {
         return feature;
     }
 
     /**
-     * <p>Setter for the field <code>feature</code>.</p>
+     * Setter for the field <code>feature</code>.
+     *
+     * @param feature
+     *            {@code feature}
      */
     public void setFeature(Integer feature) {
         this.feature = feature;
     }
 
     /**
-     * <p>Getter for the field <code>patch</code>.</p>
+     * Getter for the field <code>patch</code>.
+     *
+     * @return {@code patch}
      */
     public String getPatch() {
         return patch;
     }
 
     /**
-     * <p>Setter for the field <code>patch</code>.</p>
+     * Setter for the field <code>patch</code>.
+     *
+     * @param patch
+     *            {@code patch}
      */
     public void setPatch(String patch) {
         this.patch = patch;
     }
 
     /**
-     * <p>Getter for the field <code>patchUpdate</code>.</p>
+     * Getter for the field <code>patchUpdate</code>.
+     *
+     * @return {@code patchUpdate}
      */
     public Integer getPatchUpdate() {
         return patchUpdate;
     }
 
     /**
-     * <p>Setter for the field <code>patchUpdate</code>.</p>
+     * Setter for the field <code>patchUpdate</code>.
+     * 
+     * @param patchUpdate
+     *            {@code patchUpdate}
      */
     public void setPatchUpdate(Integer patchUpdate) {
         this.patchUpdate = patchUpdate;

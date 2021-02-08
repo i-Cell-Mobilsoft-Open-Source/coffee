@@ -26,7 +26,7 @@ import java.util.Map;
 import javax.enterprise.inject.Model;
 
 /**
- * Common request scope container
+ * Common request scope container.
  *
  * @author imre.scheffer
  * @since 1.0.0
@@ -41,7 +41,9 @@ public class BaseRequestContainer implements Serializable {
     private Map<String, Object> objectMap;
 
     /**
-     * <p>Getter for the field <code>objectMap</code>.</p>
+     * Getter for the field <code>objectMap</code>.
+     * 
+     * @return object map
      */
     public Map<String, Object> getObjectMap() {
         if (objectMap == null) {
@@ -51,14 +53,19 @@ public class BaseRequestContainer implements Serializable {
     }
 
     /**
-     * <p>Getter for the field <code>requestObject</code>.</p>
+     * Getter for the field <code>requestObject</code>.
+     * 
+     * @return request object
      */
     public Object getRequestObject() {
         return requestObject;
     }
 
     /**
-     * <p>Setter for the field <code>requestObject</code>.</p>
+     * Setter for the field <code>requestObject</code>.
+     * 
+     * @param requestObject
+     *            request object
      */
     public void setRequestObject(Object requestObject) {
         this.requestObject = requestObject;

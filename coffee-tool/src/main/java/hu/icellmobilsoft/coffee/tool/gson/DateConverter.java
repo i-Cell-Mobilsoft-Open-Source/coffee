@@ -34,7 +34,7 @@ import com.google.gson.JsonSerializer;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
 
 /**
- * Json <-> Date
+ * Json &lt;-&gt; Date converter.
  *
  * @author imre.scheffer
  * @since 1.0.0

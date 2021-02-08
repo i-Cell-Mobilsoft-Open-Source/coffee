@@ -41,7 +41,11 @@ import hu.icellmobilsoft.coffee.tool.utils.annotation.AnnotationUtil;
 public class RedisConfigProducer {
 
     /**
-     * Creates ManagedRedisConfig for the injected configkey
+     * Creates {@link ManagedRedisConfig} for the injected config key
+     *
+     * @param injectionPoint
+     *            injection metadata
+     * @return managed Redis config
      */
     @Produces
     @Dependent

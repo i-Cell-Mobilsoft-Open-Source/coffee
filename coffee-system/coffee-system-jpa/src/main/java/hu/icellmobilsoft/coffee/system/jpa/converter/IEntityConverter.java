@@ -41,6 +41,7 @@ public interface IEntityConverter<ENTITY extends AbstractEntity, DTO> {
      *            entity
      * @return new dto
      * @throws BaseException
+     *             exception
      */
     public DTO convert(ENTITY entity) throws BaseException;
 
@@ -51,6 +52,7 @@ public interface IEntityConverter<ENTITY extends AbstractEntity, DTO> {
      *            data transfer object
      * @return new entity
      * @throws BaseException
+     *             exception
      */
     public ENTITY convert(DTO dto) throws BaseException;
 
@@ -62,6 +64,7 @@ public interface IEntityConverter<ENTITY extends AbstractEntity, DTO> {
      * @param sourceEntity
      *            entity
      * @throws BaseException
+     *             exception
      */
     public void convert(DTO destinationDto, ENTITY sourceEntity) throws BaseException;
 
@@ -73,6 +76,7 @@ public interface IEntityConverter<ENTITY extends AbstractEntity, DTO> {
      * @param sourceDto
      *            dto
      * @throws BaseException
+     *             exception
      */
     public void convert(ENTITY destinationEntity, DTO sourceDto) throws BaseException;
 }

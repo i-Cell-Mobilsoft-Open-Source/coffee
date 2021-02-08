@@ -28,7 +28,7 @@ package hu.icellmobilsoft.coffee.jpa.sql.batch.enums;
 public enum Status {
 
     /**
-     * Processed successfully, at least one row was affected (RESULT_CODE > 0)
+     * Processed successfully, at least one row was affected (RESULT_CODE &gt; 0)
      */
     SUCCESS(1),
     /**
@@ -56,7 +56,13 @@ public enum Status {
     }
 
     /**
-     * <p>Setter for the field <code>rowsAffected</code>.</p>
+     * <p>
+     * Setter for the field <code>rowsAffected</code>.
+     * </p>
+     * 
+     * @param rowsAffected
+     *            number of affected rows
+     * @return {@link Status}
      */
     public Status setRowsAffected(int rowsAffected) {
         this.rowsAffected = rowsAffected;
@@ -64,7 +70,11 @@ public enum Status {
     }
 
     /**
-     * <p>Getter for the field <code>rowsAffected</code>.</p>
+     * <p>
+     * Getter for the field <code>rowsAffected</code>.
+     * </p>
+     * 
+     * @return number of affected rows
      */
     public int getRowsAffected() {
         return this.rowsAffected;

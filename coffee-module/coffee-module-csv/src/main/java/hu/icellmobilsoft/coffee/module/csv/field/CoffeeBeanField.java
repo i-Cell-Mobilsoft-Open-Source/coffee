@@ -28,7 +28,9 @@ package hu.icellmobilsoft.coffee.module.csv.field;
 public interface CoffeeBeanField<T> {
 
     /**
-     * <p>getPosition.</p>
+     * Getter for position field.
+     *
+     * @return position
      */
     Integer getPosition();
 }

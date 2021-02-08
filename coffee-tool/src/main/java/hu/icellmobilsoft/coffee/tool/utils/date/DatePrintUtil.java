@@ -42,6 +42,8 @@ public class DatePrintUtil {
      * TemporalAccessor (LocalDate) to String. Output format is '2011-12-03'.
      *
      * @param temporal
+     *            {@link TemporalAccessor} (interface for java.time types) to be formatted
+     * @return {@link DateTimeFormatter#ISO_DATE} formatted {@code String}
      * @see DateTimeFormatter#ISO_DATE
      */
     public static String isoDate(TemporalAccessor temporal) {
@@ -55,6 +57,8 @@ public class DatePrintUtil {
      * OffsetTime to String. Output format is '10:15:30+01:00'.
      *
      * @param temporal
+     *            {@link TemporalAccessor} (interface for java.time types) to be formatted
+     * @return {@link DateTimeFormatter#ISO_OFFSET_TIME} formatted {@code String}
      * @see DateTimeFormatter#ISO_OFFSET_TIME
      */
     public static String isoOffsetTime(TemporalAccessor temporal) {
@@ -68,7 +72,9 @@ public class DatePrintUtil {
      * TemporalAccessor to String. Output format is '2011-12-03T10:15:30+01:00'.
      *
      * @param temporal
-     * @return {@link DateTimeFormatter.ISO_OFFSET_DATE_TIME}
+     *            {@link TemporalAccessor} (interface for java.time types) to be formatted
+     * @return {@link DateTimeFormatter#ISO_OFFSET_DATE_TIME} formatted {@code String}
+     * @see DateTimeFormatter#ISO_OFFSET_DATE_TIME
      */
     public static String isoOffsetDateTime(TemporalAccessor temporal) {
         if (temporal == null) {
@@ -81,9 +87,10 @@ public class DatePrintUtil {
      * Prints java time in custom format.
      *
      * @param temporalAccessor
-     *            java.time all date types
+     *            {@link TemporalAccessor} (interface for java.time types) to be formatted
      * @param pattern
-     *            nullable, then TemporalAccessor.toString() which is ISO
+     *            nullable custom date format pattern, if null then toString() is used which is ISO.
+     * @return {@code String} in desired format
      */
     public static String printDate(TemporalAccessor temporalAccessor, String pattern) {
         if (temporalAccessor == null) {
@@ -98,11 +105,13 @@ public class DatePrintUtil {
     }
 
     /**
-     * Prints Date in custom format.
+     * Prints {@code Date} in custom format.
      *
      * @param date
+     *            {@code Date} to print
      * @param pattern
-     *            nullable, then Date.toString()
+     *            nullable custom date format pattern, if null then {@link Date#toString()} is used
+     * @return {@code String} in desired format
      */
     public static String printDate(Date date, String pattern) {
         if (date == null) {
@@ -116,11 +125,13 @@ public class DatePrintUtil {
     }
 
     /**
-     * Prints Calendar in custom format.
+     * Prints {@code Calendar} in custom format.
      *
      * @param cal
+     *            {@code Calendar} to print
      * @param pattern
-     *            nullable, then Calendar.getTime().toString()
+     *            nullable custom date format pattern
+     * @return {@code String} in desired format
      */
     public static String printCalendar(Calendar cal, String pattern) {
         if (cal == null) {

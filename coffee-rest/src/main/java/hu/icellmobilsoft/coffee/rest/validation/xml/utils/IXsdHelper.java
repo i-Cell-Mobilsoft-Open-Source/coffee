@@ -29,7 +29,7 @@ import org.xml.sax.SAXException;
 import hu.icellmobilsoft.coffee.rest.validation.xml.exception.XsdProcessingException;
 
 /**
- * Segéd xsd függvényekhez
+ * XSD helper methods.
  *
  * @see XsdHelper
  * @author ferenc.lutischan
@@ -37,12 +37,30 @@ import hu.icellmobilsoft.coffee.rest.validation.xml.exception.XsdProcessingExcep
  */
 public interface IXsdHelper {
     /**
-     * <p>getJAXBContext.</p>
+     * Returns {@link JAXBContext} for given class.
+     * 
+     * @param forClass
+     *            class of desired {@code JAXBContext}
+     * @return {@code JAXBContext}
+     * @throws JAXBException
+     *             if JAXB exception occurs
+     * @throws XsdProcessingException
+     *             if XSD processing exception occurs
      */
     JAXBContext getJAXBContext(Class<?> forClass) throws JAXBException, XsdProcessingException;
 
     /**
-     * <p>getSchema.</p>
+     * Returns {@link Schema} for given XSD.
+     * 
+     * @param xsd
+     *            path to XSD
+     * @param lsResourceResolver
+     *            resolver
+     * @return {@code Schema}
+     * @throws XsdProcessingException
+     *             if XSD processing exception occurs
+     * @throws SAXException
+     *             if SAX exception occurs
      */
     Schema getSchema(String xsd, LSResourceResolver lsResourceResolver) throws XsdProcessingException, SAXException;
 }

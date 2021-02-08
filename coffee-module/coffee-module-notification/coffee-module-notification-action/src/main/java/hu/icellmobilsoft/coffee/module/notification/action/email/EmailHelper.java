@@ -60,7 +60,15 @@ public class EmailHelper implements Serializable {
     private EmailService emailService;
 
     /**
-     * <p>insertToDb.</p>
+     * Inserts {@link EmailDataBase} into DB.
+     *
+     * @param emailDataBase
+     *            {@code emailDataBase} to insert
+     * @return saved {@link Email}
+     * @throws BaseException
+     *             if exception occurs during entity merge
+     * @see EmailService#save
+     * @see EmailRecipientService#save
      */
     @Transactional
     public Email insertToDb(EmailDataBase emailDataBase) throws BaseException {
@@ -113,7 +121,18 @@ public class EmailHelper implements Serializable {
     }
 
     /**
-     * <p>updateDb.</p>
+     * Updates given {@link Email} in DB.
+     *
+     * @param emailEntity
+     *            {@code Email} entity which has to be updated
+     * @param success
+     *            whether email was sent successfully
+     * @param sendResult
+     *            result message of email
+     * @return saved {@code Email}
+     * @throws BaseException
+     *             if exception occurs during entity merge
+     * @see EmailService#save
      */
     @Transactional
     public Email updateDb(Email emailEntity, boolean success, String sendResult) throws BaseException {

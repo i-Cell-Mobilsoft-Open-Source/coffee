@@ -69,84 +69,114 @@ public class Email extends AbstractIdentifiedAuditEntity {
     private String result;
 
     /**
-     * <p>Getter for the field <code>from</code>.</p>
+     * Getter for the field {@code from}.
+     *
+     * @return {@code from}
      */
     public String getFrom() {
         return from;
     }
 
     /**
-     * <p>Setter for the field <code>from</code>.</p>
+     * Setter for the field {@code from}.
+     *
+     * @param from
+     *            from to set
      */
     public void setFrom(String from) {
         this.from = from;
     }
 
     /**
-     * <p>Getter for the field <code>subject</code>.</p>
+     * Getter for the field {@code subject}.
+     *
+     * @return {@code subject}
      */
     public String getSubject() {
         return subject;
     }
 
     /**
-     * <p>Setter for the field <code>subject</code>.</p>
+     * Setter for the field {@code subject}.
+     *
+     * @param subject
+     *            subject to set
      */
     public void setSubject(String subject) {
         this.subject = subject;
     }
 
     /**
-     * <p>Getter for the field <code>body</code>.</p>
+     * Getter for the field {@code body}.
+     *
+     * @return {@code body}
      */
     public String getBody() {
         return body;
     }
 
     /**
-     * <p>Setter for the field <code>body</code>.</p>
+     * Setter for the field {@code body}.
+     *
+     * @param body
+     *            body to set
      */
     public void setBody(String body) {
         this.body = body;
     }
 
     /**
-     * <p>Getter for the field <code>sentTime</code>.</p>
+     * Getter for the field {@code sentTime}.
+     *
+     * @return {@code sentTime}
      */
     public Date getSentTime() {
         return sentTime;
     }
 
     /**
-     * <p>Setter for the field <code>sentTime</code>.</p>
+     * Setter for the field {@code sentTime}.
+     *
+     * @param sentTime
+     *            sentTime to set
      */
     public void setSentTime(Date sentTime) {
         this.sentTime = sentTime;
     }
 
     /**
-     * <p>isSuccess.</p>
+     * Getter for the field {@code success}.
+     *
+     * @return {@code success}
      */
     public boolean isSuccess() {
         return success;
     }
 
     /**
-     * <p>Setter for the field <code>success</code>.</p>
+     * Setter for the field {@code success}.
+     *
+     * @param success
+     *            success to set
      */
     public void setSuccess(boolean success) {
         this.success = success;
     }
 
     /**
-     * <p>Getter for the field <code>result</code>.</p>
+     * Getter for the field {@code result}.
+     *
+     * @return {@code result}
      */
     public String getResult() {
         return result;
     }
 
     /**
-     * <p>Setter for the field <code>result</code>.</p>
+     * Setter for the field {@code result}.
+     *
+     * @param result
+     *            result to set
      */
     public void setResult(String result) {
         this.result = result;

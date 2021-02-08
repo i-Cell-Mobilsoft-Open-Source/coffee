@@ -39,7 +39,17 @@ import hu.icellmobilsoft.coffee.module.document.model.enums.TemplateDataType;
 public interface TemplateDataRepository extends EntityRepository<TemplateData, String> {
 
     /**
-     * <p>find.</p>
+     * Finds {@link TemplateData} by template key, data type and language and validity date.
+     *
+     * @param templateKey
+     *            value of template key
+     * @param dataType
+     *            value of template data type
+     * @param language
+     *            value of language
+     * @param date
+     *            searching date
+     * @return entity
      */
     @Query("SELECT td FROM TemplateData td WHERE td.templateKey = :templateKey AND td.dataType = :dataType AND td.language = :language "
             + "AND ((:date BETWEEN td.validFrom AND td.validTo) OR (:date >= td.validFrom AND td.validTo IS NULL))")

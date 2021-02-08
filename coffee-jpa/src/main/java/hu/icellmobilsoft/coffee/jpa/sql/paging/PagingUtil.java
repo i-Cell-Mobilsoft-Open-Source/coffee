@@ -27,7 +27,9 @@ import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
 /**
- * <p>PagingUtil class.</p>
+ * <p>
+ * PagingUtil class.
+ * </p>
  *
  * @author Karoly
  * @since 1.0.0
@@ -51,6 +53,9 @@ public final class PagingUtil {
      *            Page index.
      * @param rows
      *            Row counter.
+     * @param <T>
+     *            entity
+     * @return Paging result.
      */
     public static <T> PagingResult<T> getPagingResult(final TypedQuery<T> query, final Long count, long page, long rows) {
         return getPagingResultAndSetQueryDetails(query, count, page, rows, new QueryMetaData());
@@ -69,7 +74,7 @@ public final class PagingUtil {
      *            Row counter.
      * @param details
      *            Query details.
-     * @return
+     * @return Paging result.
      */
     private static <T> PagingResult<T> getPagingResultAndSetQueryDetails(final TypedQuery<T> query, Long count, long page, long rows,
             QueryMetaData details) {
@@ -135,6 +140,9 @@ public final class PagingUtil {
      *            Page index.
      * @param rows
      *            Row counter.
+     * @param <T>
+     *            Entity.
+     * @return Paging result.
      */
     public static <T> PagingResult<T> getPagingResult(final Query query, final Query countQuery, long page, long rows) {
         return getPagingResultAndSetQueryDetails(query, countQuery, page, rows, new QueryMetaData());
@@ -153,6 +161,9 @@ public final class PagingUtil {
      *            Row counter.
      * @param details
      *            Query details.
+     * @param <T>
+     *            Entity.
+     * @return Paging result.
      */
     @SuppressWarnings("unchecked")
     public static <T> PagingResult<T> getPagingResultAndSetQueryDetails(final Query query, final Query countQuery, long page, long rows,
@@ -199,12 +210,17 @@ public final class PagingUtil {
     }
 
     /**
-     * Creates the QueryMetaData with the given parameters override with default values, if needed
+     * Creates the {@link QueryMetaData} with the given parameters.
      *
      * @param maxCount
+     *            Total row count.
      * @param resultCount
+     *            Total result count.
      * @param page
+     *            Page index.
      * @param rows
+     *            Row counter.
+     * @return Query metadata.
      */
     public static QueryMetaData createDetails(final long maxCount, final long resultCount, final long page, final long rows) {
         long currentPage = PagingUtil.getCurrentPage(page);
@@ -219,10 +235,14 @@ public final class PagingUtil {
     }
 
     /**
-     * Return the number of pages.
+     * Returns the number of pages.
      *
      * @param sum
+     *            Total result count.
      * @param rows
+     *            Number of rows per page.
+     * 
+     * @return Page count.
      */
     public static long getPageCount(long sum, long rows) {
         return (rows == 0) ? 0L : (long) Math.ceil((double) sum / (double) rows);

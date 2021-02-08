@@ -83,9 +83,8 @@ public class RestClientResponseException extends BaseException {
      * Creates {@link RestClientResponseException} from {@link BaseExceptionResultType}.
      *
      * @param baseExceptionResultType
-     *          {@link BaseExceptionResultType}
-     * @return
-     *          {@link RestClientResponseException} initialized with data from input {@link BaseExceptionResultType}.
+     *            {@link BaseExceptionResultType}
+     * @return {@link RestClientResponseException} initialized with data from input {@link BaseExceptionResultType}.
      */
     public static RestClientResponseException fromExceptionResult(BaseExceptionResultType baseExceptionResultType) {
         if (baseExceptionResultType == null) {

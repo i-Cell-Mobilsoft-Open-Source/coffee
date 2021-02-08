@@ -29,6 +29,8 @@ public interface EtcdConfig {
 
     /**
      * ETCD configuration url, example: "http://localhost1:2379,http://localhost2:2379"
+     *
+     * @return ETCD url
      */
     String[] getUrl();
 }

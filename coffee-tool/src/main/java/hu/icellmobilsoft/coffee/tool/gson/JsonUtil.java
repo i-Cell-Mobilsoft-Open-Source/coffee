@@ -54,6 +54,7 @@ public class JsonUtil {
      * Converting DTO object to JSON string without throwing exception
      *
      * @param dto
+     *            DTO object
      * @return JSON String
      */
     public static String toJson(Object dto) {
@@ -68,9 +69,12 @@ public class JsonUtil {
     /**
      * Converting JSON string to DTO object without throwing exception
      *
+     * @param <T>
+     *            type of returned object
      * @param json
      *            JSON String
      * @param classType
+     *            class of returned object
      * @return object
      */
     public static <T> T toObject(String json, Class<T> classType) {
@@ -86,8 +90,10 @@ public class JsonUtil {
      * Converting DTO object to JSON string
      *
      * @param dto
+     *            DTO object
      * @return JSON String
      * @throws BaseException
+     *             exception
      */
     public static String toJsonEx(Object dto) throws BaseException {
         try {
@@ -102,11 +108,15 @@ public class JsonUtil {
     /**
      * Converting JSON string to DTO object without throwing exception
      *
+     * @param <T>
+     *            type of returned object
      * @param json
      *            JSON String
      * @param classType
+     *            class of returned object
      * @return object
      * @throws BaseException
+     *             exception
      */
     public static <T> T toObjectEx(String json, Class<T> classType) throws BaseException {
         try {
@@ -119,7 +129,11 @@ public class JsonUtil {
     }
 
     /**
-     * <p>toJsonGson.</p>
+     * Converting DTO object to JSON string
+     *
+     * @param dto
+     *            DTO object
+     * @return JSON String
      */
     public static String toJsonGson(Object dto) {
         Gson gson = initGson();
@@ -130,10 +144,12 @@ public class JsonUtil {
     /**
      * Convert JSON String to DTO object without throwing exception
      *
+     * @param <T>
+     *            type of returned object
      * @param json
-     *            in String
+     *            JSON String
      * @param classType
-     *            json DTO class
+     *            class of returned object
      * @return DTO
      */
     public static <T> T toObjectGson(String json, Class<T> classType) {
@@ -152,10 +168,12 @@ public class JsonUtil {
     /**
      * Convert JSON String to DTO object without throwing exception
      *
-     * @param json
-     *            in String
+     * @param <T>
+     *            type of returned object
+     * @param reader
+     *            JSON reader
      * @param classType
-     *            json DTO class
+     *            class of returned object
      * @return DTO
      */
     public static <T> T toObjectGson(Reader reader, Class<T> classType) {

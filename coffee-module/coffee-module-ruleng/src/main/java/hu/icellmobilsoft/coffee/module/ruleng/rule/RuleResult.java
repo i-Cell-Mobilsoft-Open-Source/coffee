@@ -33,14 +33,19 @@ public class RuleResult {
     private Long index;
 
     /**
-     * Ha listában történik a kiértékelés melyik indexhez tartozik. Ezzel lehet összekötni az adattal amit kiértékelünk
+     * Getter for the field {@code description}. When evaluating in a list, {@code index} connects the evaluation with the result data.
+     *
+     * @return index
      */
     public Long getIndex() {
         return index;
     }
 
     /**
-     * <p>Setter for the field <code>index</code>.</p>
+     * Setter for the field {@code index}.
+     *
+     * @param index
+     *            index
      */
     public void setIndex(Long index) {
         this.index = index;

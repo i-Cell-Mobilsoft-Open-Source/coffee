@@ -30,7 +30,7 @@ import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 
 /**
- * Json <-> Class
+ * Json &lt;-&gt; Class converter.
  *
  * @author imre.scheffer
  * @since 1.0.0

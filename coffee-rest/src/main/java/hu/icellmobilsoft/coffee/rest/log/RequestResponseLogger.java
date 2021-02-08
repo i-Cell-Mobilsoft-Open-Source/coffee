@@ -64,9 +64,9 @@ public class RequestResponseLogger {
 
     /** Constant <code>NOTIFICATION_PREFIX="* "</code> */
     public static final String NOTIFICATION_PREFIX = "* ";
-    /** Constant <code>REQUEST_PREFIX="> "</code> */
+    /** Constant <code>REQUEST_PREFIX="&gt; "</code> */
     public static final String REQUEST_PREFIX = "> ";
-    /** Constant <code>RESPONSE_PREFIX="< "</code> */
+    /** Constant <code>RESPONSE_PREFIX="&lt; "</code> */
     public static final String RESPONSE_PREFIX = "< ";
 
     /** Constant <code>BYTECODE_MAX_LOG=5000</code> */
@@ -88,10 +88,11 @@ public class RequestResponseLogger {
     private AppLogger log;
 
     /**
-     * Print request header to String. Masking password
+     * Prints request headers to {@link String}. Masks password.
      *
      * @param headerValues
      *            http header key and list of values
+     * @return HTTP request header or null if invalid parameter
      */
     protected String printRequestHeaders(Map<String, List<String>> headerValues) {
         StringBuffer sb = new StringBuffer();
@@ -110,9 +111,11 @@ public class RequestResponseLogger {
     }
 
     /**
-     * Print http headers info from ContainerRequestContext
+     * Prints http headers info from {@link ContainerRequestContext}.
      *
-     * @param servletRequest
+     * @param requestContext
+     *            context
+     * @return HTTP headers info or null if invalid parameter
      */
     public String printRequestHeaders(ContainerRequestContext requestContext) {
         if (requestContext == null) {
@@ -122,9 +125,11 @@ public class RequestResponseLogger {
     }
 
     /**
-     * Print http headers info from HttpServletRequest
+     * Prints http headers info from {@link HttpServletRequest}.
      *
      * @param servletRequest
+     *            request
+     * @return HTTP headers info or null if invalid parameter
      */
     public String printRequestHeaders(HttpServletRequest servletRequest) {
         if (servletRequest == null) {
@@ -141,7 +146,7 @@ public class RequestResponseLogger {
     }
 
     /**
-     * Print http request url line
+     * Prints http request url line.
      *
      * @param method
      *            POST, GET, PUT, ...
@@ -151,6 +156,7 @@ public class RequestResponseLogger {
      *            path parameters
      * @param queryParameters
      *            query parameters
+     * @return HTTP request URL line
      */
     protected String printRequestLine(String method, String fullPath, Map<String, List<String>> pathParameters,
             Map<String, List<String>> queryParameters) {
@@ -173,9 +179,11 @@ public class RequestResponseLogger {
     }
 
     /**
-     * Print http path info from HttpServletRequest
+     * Print http path info from {@link HttpServletRequest}.
      *
      * @param servletRequest
+     *            context
+     * @return HTTP path info or null if invalid parameter
      */
     public String printRequestLine(HttpServletRequest servletRequest) {
         if (servletRequest == null) {
@@ -190,9 +198,11 @@ public class RequestResponseLogger {
     }
 
     /**
-     * Print http path info from ContainerRequestContext
+     * Prints http path info from {@link ContainerRequestContext}.
      *
      * @param requestContext
+     *            context
+     * @return HTTP path info or null if invalid parameter
      */
     public String printRequestLine(ContainerRequestContext requestContext) {
         if (requestContext == null) {
@@ -204,26 +214,33 @@ public class RequestResponseLogger {
     }
 
     /**
-     * Print request entity to String. Masking password
+     * Prints request entity to {@link String}. Masks password.
      *
      * @param entity
+     *            entity
      * @param maxLogSize
      *            max size for log
      * @throws IOException
+     *             if cannot be read
+     * @return request entity
+     * @see #printEntity(byte[], Integer, String)
      */
     public String printRequestEntity(byte[] entity, Integer maxLogSize) throws IOException {
         return printEntity(entity, maxLogSize, REQUEST_PREFIX);
     }
 
     /**
-     * Print request entity to String. Masking password
+     * Prints request entity to {@link String}. Masks password.
      *
      * @param entity
+     *            entity
      * @param maxLogSize
      *            max size for log
      * @param prefix
      *            prefix for log
+     * @return entity {@code String}
      * @throws IOException
+     *             if cannot be read
      */
     public String printEntity(byte[] entity, Integer maxLogSize, String prefix) throws IOException {
         String requestText = entityToString(entity, maxLogSize);
@@ -248,9 +265,11 @@ public class RequestResponseLogger {
     }
 
     /**
-     * Print http entity from ContainerRequestContext
+     * Prints http entity from {@link ContainerRequestContext}.
      *
      * @param requestContext
+     *            context
+     * @return HTTP entity or null if invalid parameter or exception when reading the entity
      */
     public String printRequestEntity(ContainerRequestContext requestContext) {
         if (requestContext == null) {
@@ -280,9 +299,11 @@ public class RequestResponseLogger {
     }
 
     /**
-     * Print http entity from HttpServletRequest
+     * Prints http entity from {@link HttpServletRequest}.
      *
-     * @param requestContext
+     * @param servletRequest
+     *            request
+     * @return HTTP entity or null if invalid parameter or exception when reading the entity
      */
     public String printRequestEntity(HttpServletRequest servletRequest) {
         if (servletRequest == null) {
@@ -307,7 +328,7 @@ public class RequestResponseLogger {
     }
 
     /**
-     * Print response url line
+     * Prints response URL line.
      *
      * @param fullPath
      *            full url path from request
@@ -317,6 +338,7 @@ public class RequestResponseLogger {
      *            OK, ERROR
      * @param mediaType
      *            application/json, text/xml, ...
+     * @return response URL line
      */
     protected String printResponseLine(String fullPath, int httpStatus, String statusInfo, String mediaType) {
         StringBuffer sb = new StringBuffer();
@@ -327,10 +349,14 @@ public class RequestResponseLogger {
     }
 
     /**
-     * Print response url line
+     * Prints response URL line.
      *
      * @param requestContext
+     *            request context
      * @param responseContext
+     *            response context
+     * @return response URL line
+     * @see #printResponseLine(String, int, String, String)
      */
     public String printResponseLine(ContainerRequestContext requestContext, ContainerResponseContext responseContext) {
         if (requestContext == null || responseContext == null) {
@@ -341,9 +367,11 @@ public class RequestResponseLogger {
     }
 
     /**
-     * Print response header values
+     * Prints response header values.
      *
      * @param headerValues
+     *            {@link Map} of header values
+     * @return header parameter values
      */
     public String printResponseHeaders(Map<String, List<Object>> headerValues) {
         StringBuffer sb = new StringBuffer();
@@ -358,7 +386,7 @@ public class RequestResponseLogger {
     }
 
     /**
-     * Print response entity object. Try it print as String or jsonobject
+     * Prints response entity object. Tries to print as String or json object.
      *
      * @param entity
      *            entity to log
@@ -373,7 +401,7 @@ public class RequestResponseLogger {
     }
 
     /**
-     * Print entity object. Try it print as String or jsonobject
+     * Prints entity object. Tries to print as String or json object.
      *
      * @param entity
      *            entity to log
@@ -416,10 +444,13 @@ public class RequestResponseLogger {
     }
 
     /**
-     * Skipping default specified url and mediaType for entity logging
+     * Skipping default specified url and mediaType for entity logging.
      *
      * @param fullPath
+     *            URL path to skip
      * @param mediaType
+     *            media type to skip
+     * @return if entity logging is skipped
      */
     protected boolean skipLoggingForPathOrMediaType(String fullPath, MediaType mediaType) {
         return mediaType != null && (StringUtils.containsIgnoreCase(mediaType.getSubtype(), SKIP_MEDIATYPE_SUBTYPE_PDF)
@@ -430,12 +461,15 @@ public class RequestResponseLogger {
     }
 
     /**
-     * Print response from ContainerResponseContext. Printing is disabled in some stream situation
+     * Print response from {@link WriterInterceptorContext}. Printing is disabled in some stream situation.
      *
      * @param fullPath
+     *            URL path
      * @param writerInterceptorContext
+     *            context
      * @param entityCopy
-     * @throws IOException
+     *            entity
+     * @return response
      */
     public String printResponseEntity(String fullPath, WriterInterceptorContext writerInterceptorContext, byte[] entityCopy) {
         StringBuffer sb = new StringBuffer();

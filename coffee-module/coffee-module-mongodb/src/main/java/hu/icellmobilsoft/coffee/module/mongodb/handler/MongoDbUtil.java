@@ -46,13 +46,14 @@ import hu.icellmobilsoft.coffee.module.mongodb.codec.time.xmlgregoriancalendar.X
 public class MongoDbUtil {
 
     /**
-     * Getting mongoDb client. Optimally this is called only in internal by this class
+     * Returns mongoDb client. Optimally this should be called internally by this class only.
      *
      * @param uriString
      *            pl.:
      *            "mongodb://login:pass@dev01.icellmobilsoft.hu:27017,dev02.icellmobilsoft.hu:27017/db?replicaSet=icellmobilsoft.dev.mongocluster.db"
      * @return mongo client
      * @throws BaseException
+     *             if {@code uriString} param is empty or mongo client is not available
      */
     public static MongoClient getMongoClient(String uriString) throws BaseException {
         if (StringUtils.isBlank(uriString)) {
@@ -69,12 +70,16 @@ public class MongoDbUtil {
     }
 
     /**
-     * Get mongoDb database with handling exceptions
+     * Returns mongoDb database with handling exceptions.
      *
-     * @see MongoClient#getDatabase(String)
+     * @param mongoClient
+     *            mongo DB client
      * @param databaseName
-     * @return mongodatabase
+     *            name of DB to return
+     * @return mongo database
      * @throws BaseException
+     *             if params are empty or Mongo DB unavailable
+     * @see MongoClient#getDatabase(String)
      */
     public static MongoDatabase getDatabase(MongoClient mongoClient, String databaseName) throws BaseException {
         try {
@@ -88,10 +93,13 @@ public class MongoDbUtil {
     }
 
     /**
-     * Close mongo client connection
+     * Closes mongo client connection.
      *
-     * @see MongoClient#close()
+     * @param mongoClient
+     *            mongo DB client
      * @throws BaseException
+     *             if any exception occurs during close
+     * @see MongoClient#close()
      */
     public static void close(MongoClient mongoClient) throws BaseException {
         if (mongoClient != null) {
@@ -104,10 +112,11 @@ public class MongoDbUtil {
     }
 
     /**
-     * Setting codecs for mongoDB, pay attention to registration order (first default, then custom, last base pojo)
+     * Sets codecs for mongoDB, pay attention to registration order (first default, then custom, last base pojo).
      *
      * @param database
-     * @return
+     *            mongo DB to set codecs for
+     * @return mongo BD
      */
     private static MongoDatabase setCodecs(MongoDatabase database) {
         return database.withCodecRegistry(

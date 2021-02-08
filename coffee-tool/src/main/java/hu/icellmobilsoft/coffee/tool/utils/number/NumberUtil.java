@@ -34,38 +34,48 @@ public class NumberUtil {
     private static final double DEFAUT_DOUBLE_VALUE = 0d;
 
     /**
-     * Number > int
+     * Converts {@link Number} to {@code int}.
      *
      * @param number
+     *            {@code Number} to convert
+     * @return converted {@code int} or {@code DEFAUT_INT_VALUE} if {@code number} is null
      */
     public static int toInt(Number number) {
         return toInt(number, DEFAUT_INT_VALUE);
     }
 
     /**
-     * Number > int
+     * Converts {@link Number} to {@code int}.
      *
      * @param number
+     *            {@code Number} to convert
      * @param defaultValue
+     *            default {@code int} value
+     * @return converted {@code int} or {@code defaultValue} if {@code number} is null
      */
     public static int toInt(Number number, int defaultValue) {
         return number != null ? number.intValue() : defaultValue;
     }
 
     /**
-     * Number > double
+     * Converts {@link Number} to {@code double}.
      *
      * @param number
+     *            {@code Number} to convert
+     * @return converted {@code double} or {@code DEFAUT_DOUBLE_VALUE} if {@code number} is null
      */
     public static double toDouble(Number number) {
         return toDouble(number, DEFAUT_DOUBLE_VALUE);
     }
 
     /**
-     * Number > double
+     * Converts {@link Number} to {@code double}.
      *
      * @param number
+     *            {@code Number} to convert
      * @param defaultValue
+     *            default {@code double} value
+     * @return converted {@code double} or {@code defaultValue} if {@code number} is null
      */
     public static double toDouble(Number number, double defaultValue) {
         return number != null ? number.doubleValue() : defaultValue;

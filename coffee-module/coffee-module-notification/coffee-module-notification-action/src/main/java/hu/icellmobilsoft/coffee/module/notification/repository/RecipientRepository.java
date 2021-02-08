@@ -34,7 +34,11 @@ import hu.icellmobilsoft.coffee.module.notification.model.Recipient;
 public interface RecipientRepository extends EntityRepository<Recipient, String> {
 
     /**
-     * <p>findByRecipient.</p>
+     * Find {@link Recipient} by recipient.
+     *
+     * @param recipient
+     *            recipient
+     * @return {@code Recipient}
      */
     Recipient findByRecipient(String recipient);
 

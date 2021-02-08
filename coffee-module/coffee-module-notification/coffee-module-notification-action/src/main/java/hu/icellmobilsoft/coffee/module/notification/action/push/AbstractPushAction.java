@@ -61,7 +61,12 @@ public abstract class AbstractPushAction implements Serializable {
     private PushHelper pushHelper;
 
     /**
-     * <p>send.</p>
+     * Sends given {@link PushType}.
+     *
+     * @param pushType
+     *            push type to send
+     * @throws BaseException
+     *             if exception occurs during push type validation, push template retrieval, or push sending.
      */
     public void send(PushType pushType) throws BaseException {
         if (pushType == null) {
@@ -73,7 +78,14 @@ public abstract class AbstractPushAction implements Serializable {
     }
 
     /**
-     * <p>push.</p>
+     * Sends given {@link PushType} using given {@link TemplateFullType}.
+     *
+     * @param pushType
+     *            push type to send
+     * @param templateFullType
+     *            template to use
+     * @throws BaseException
+     *             if exception occurs during push saving or sending
      */
     protected void push(PushType pushType, TemplateFullType templateFullType) throws BaseException {
         Push pushEntity = pushHelper.insertToDb(templateFullType.getSubject(), new String(templateFullType.getData(), StandardCharsets.UTF_8),
@@ -113,27 +125,46 @@ public abstract class AbstractPushAction implements Serializable {
     }
 
     /**
-     * <p>validate.</p>
+     * Validates given {@link PushType}.
+     *
+     * @param pushType
+     *            {@code PushType} to validate
+     * @throws BaseException
+     *             if {@code PushType} is invalid
      */
     public void validate(PushType pushType) throws BaseException {
     }
 
     /**
-     * <p>androidChannels.</p>
+     * Finds android channels for given {@link PushType}.
+     *
+     * @param pushType
+     *            {@code PushType} to find channels for
+     * @return {@link List} of android channels
      */
     public List<String> androidChannels(PushType pushType) {
         return findChannels(pushType, DeviceOSType.ANDROID);
     }
 
     /**
-     * <p>iosChannels.</p>
+     * Finds IOS channels for given {@link PushType}.
+     *
+     * @param pushType
+     *            {@code PushType} to find channels for
+     * @return {@link List} of IOS channels
      */
     public List<String> iosChannels(PushType pushType) {
         return findChannels(pushType, DeviceOSType.IOS);
     }
 
     /**
-     * <p>findChannels.</p>
+     * Finds channels for given {@link PushType} and {@link DeviceOSType}.
+     *
+     * @param pushType
+     *            {@code PushType} to find channels for
+     * @param deviceOSType
+     *            {@code DeviceOSType} to find channels for
+     * @return {@link List} of channels
      */
     protected List<String> findChannels(PushType pushType, DeviceOSType deviceOSType) {
         if (pushType == null) {
@@ -143,19 +174,57 @@ public abstract class AbstractPushAction implements Serializable {
     }
 
     /**
-     * <p>sendAndroidPush.</p>
+     * Sends push to android with given parameters.
+     *
+     * @param channel
+     *            channel to send to
+     * @param payloads
+     *            push payloads
+     * @param templateFullType
+     *            push template
+     * @param expireInSecond
+     *            push expiry time in seconds
+     * @return push response message
+     * @throws PushClientException
+     *             if exception occurs on the client
+     * @throws PushServerException
+     *             if exception occurs on the server
      */
     public abstract String sendAndroidPush(String channel, List<KeyValueBasicType> payloads, TemplateFullType templateFullType, Integer expireInSecond)
             throws PushClientException, PushServerException;
 
     /**
-     * <p>sendIosPush.</p>
+     * Sends push to IOS with given parameters.
+     *
+     * @param channel
+     *            channel to send to
+     * @param payloads
+     *            push payloads
+     * @param templateFullType
+     *            push template
+     * @param expireInSecond
+     *            push expiry time in seconds
+     * @return push response message
+     * @throws PushClientException
+     *             if exception occurs on the client
+     * @throws PushServerException
+     *             if exception occurs on the server
      */
     public abstract String sendIosPush(String channel, List<KeyValueBasicType> payloads, TemplateFullType templateFullType, Integer expireInSecond)
             throws PushClientException, PushServerException;
 
     /**
-     * <p>getTemplate.</p>
+     * Returns {@link TemplateFullType} with given parameters.
+     * 
+     * @param templateKey
+     *            key of template
+     * @param parameters
+     *            template params
+     * @param language
+     *            template language
+     * @return {@code TemplateFullType}
+     * @throws BaseException
+     *             if template cannot be found
      */
     protected abstract TemplateFullType getTemplate(String templateKey, List<KeyValueBasicType> parameters, String language) throws BaseException;
 }

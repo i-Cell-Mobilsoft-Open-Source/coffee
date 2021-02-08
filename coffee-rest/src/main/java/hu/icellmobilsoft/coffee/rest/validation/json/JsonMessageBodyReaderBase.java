@@ -52,7 +52,7 @@ import hu.icellmobilsoft.coffee.tool.gson.JsonUtil;
  * &#64;Provider
  * &#64;Consumes({ MediaType.APPLICATION_JSON })
  * &#64;Priority(Priorities.ENTITY_CODER)
- * public class JsonRequestMessageBodyReader extends JsonMessageBodyReaderBase<BasicRequestType> {
+ * public class JsonRequestMessageBodyReader extends JsonMessageBodyReaderBase&lt;BasicRequestType&gt; {
  * }
  * </pre>
  *

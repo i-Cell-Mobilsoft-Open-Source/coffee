@@ -57,9 +57,11 @@ public class CatalogProducer {
     private ApplicationConfiguration applicationConfiguration;
 
     /**
-     * Producer for @Inject Catalog feature
+     * Producer for {@code @Inject {@link Catalog}} feature
      *
+     * @return {@code Catalog} object
      * @throws BaseException
+     *             exception
      */
     @Produces
     public Catalog publicCatalogResolver() throws BaseException {

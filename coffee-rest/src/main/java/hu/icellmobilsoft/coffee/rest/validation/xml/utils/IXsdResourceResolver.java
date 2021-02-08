@@ -22,8 +22,7 @@ package hu.icellmobilsoft.coffee.rest.validation.xml.utils;
 import org.w3c.dom.ls.LSResourceResolver;
 
 /**
- * LSResourceResolver interfészt terjeszti ki<br>
- * Alap implementációja a:<br>
+ * Extends the functionality of {@link LSResourceResolver}.
  *
  * @see XsdResourceResolver
  * @author ferenc.lutischan
@@ -32,9 +31,10 @@ import org.w3c.dom.ls.LSResourceResolver;
 public interface IXsdResourceResolver extends LSResourceResolver {
 
     /**
-     * A paraméterben kapott Xsd elérési útvonalat lementi egy belső változóba (ha szükséges).
+     * Saves given XSD directory path into a variable if needed.
      *
      * @param xsdDirPath
+     *            XSD directory path
      */
     void setXsdDirPath(String xsdDirPath);
 }

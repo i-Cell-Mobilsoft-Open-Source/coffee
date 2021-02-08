@@ -38,14 +38,19 @@ public abstract class AbstractMongoEntity implements Serializable {
     private ObjectId id;
 
     /**
-     * <p>Getter for the field <code>id</code>.</p>
+     * Getter for the field {@code id}.
+     *
+     * @return {@code id}
      */
     public ObjectId getId() {
         return id;
     }
 
     /**
-     * <p>Setter for the field <code>id</code>.</p>
+     * Setter for the field {@code id}.
+     *
+     * @param id
+     *            id to set
      */
     public void setId(ObjectId id) {
         this.id = id;

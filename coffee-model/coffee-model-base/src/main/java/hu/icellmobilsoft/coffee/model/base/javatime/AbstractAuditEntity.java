@@ -64,72 +64,76 @@ public abstract class AbstractAuditEntity<T extends Serializable> extends Abstra
     private T modifierUser;
 
     /**
-     * <p>
-     * Getter for the field <code>creationDate</code>.
-     * </p>
+     * Getter for the field {@code creationDate}.
+     * 
+     * @return creationDate
      */
     public OffsetDateTime getCreationDate() {
         return this.creationDate;
     }
 
     /**
-     * <p>
-     * Setter for the field <code>creationDate</code>.
-     * </p>
+     * Setter for the field {@code creationDate}.
+     * 
+     * @param creationDate
+     *            creationDate
      */
     public void setCreationDate(OffsetDateTime creationDate) {
         this.creationDate = creationDate;
     }
 
     /**
-     * <p>
-     * Getter for the field <code>modificationDate</code>.
-     * </p>
+     * Getter for the field {@code modificationDate}.
+     * 
+     * @return modificationDate
      */
     public OffsetDateTime getModificationDate() {
         return this.modificationDate;
     }
 
     /**
-     * <p>
-     * Setter for the field <code>modificationDate</code>.
-     * </p>
+     * Setter for the field {@code modificationDate}.
+     * 
+     * @param modificationDate
+     *            modificationDate
      */
     public void setModificationDate(OffsetDateTime modificationDate) {
         this.modificationDate = modificationDate;
     }
 
     /**
-     * <p>
-     * Getter for the field <code>creatorUser</code>.
-     * </p>
+     * Getter for the field {@code creatorUser}.
+     * 
+     * @return creatorUser
      */
     public T getCreatorUser() {
         return this.creatorUser;
     }
 
     /**
-     * <p>
-     * Setter for the field <code>creatorUser</code>.
-     * </p>
+     * Setter for the field {@code creatorUser}.
+     * 
+     * @param creatorUser
+     *            creatorUser
      */
     public void setCreatorUser(T creatorUser) {
         this.creatorUser = creatorUser;
     }
 
     /**
-     * <p>
-     * Getter for the field <code>modifierUser</code>.
-     * </p>
+     * Getter for the field {@code modifierUser}.
+     * 
+     * @return modifierUser
      */
     public T getModifierUser() {
         return this.modifierUser;
     }
 
     /**
-     * <p>
-     * Setter for the field <code>modifierUser</code>.
-     * </p>
+     * Setter for the field {@code modifierUser}.
+     * 
+     * @param modifierUser
+     *            modifierUser
      */
     public void setModifierUser(T modifierUser) {
         this.modifierUser = modifierUser;

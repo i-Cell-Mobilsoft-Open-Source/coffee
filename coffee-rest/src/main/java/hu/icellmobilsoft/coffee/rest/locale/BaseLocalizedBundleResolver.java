@@ -33,7 +33,7 @@ import hu.icellmobilsoft.coffee.cdi.logger.AppLogger;
 import hu.icellmobilsoft.coffee.cdi.logger.ThisLogger;
 
 /**
- * Szótár kezelésére szolgáló általános osztály
+ * Szótár kezelésére szolgáló általános osztály.
  *
  * @author imre.scheffer
  * @since 1.0.0
@@ -55,11 +55,14 @@ public abstract class BaseLocalizedBundleResolver {
      * <code>
      * hello=Hello, %s is %d
      * </code><br>
-     * can use this syntax: <code><br>
-     * messageTemplate("{hello}", "now", date) <code><br>
+     * can use this syntax:<br>
+     * <code>
+     * messageTemplate("{hello}", "now", date)
+     * </code><br>
      * getting something like: "Hello, now is 2016-12-12 12:12:12"
      *
-     * @see {@link http://deltaspike.apache.org/documentation/core.html#CreatingMessageInstances}
+     * @see <a href=
+     *      "http://deltaspike.apache.org/documentation/core.html#CreatingMessageInstances">http://deltaspike.apache.org/documentation/core.html#CreatingMessageInstances</a>
      * @param template
      *            key from properties file
      * @param arguments
@@ -76,11 +79,14 @@ public abstract class BaseLocalizedBundleResolver {
      * <code>
      * hello=Hello, %s is %d
      * </code><br>
-     * can use this syntax: <code><br>
-     * messageTemplate("{hello}", "now", date) <code><br>
+     * can use this syntax:<br>
+     * <code>
+     * messageTemplate("{hello}", "now", date)
+     * </code><br>
      * getting something like: "Hello, now is 2016-12-12 12:12:12"
      *
-     * @see {@link http://deltaspike.apache.org/documentation/core.html#CreatingMessageInstances}
+     * @see <a href=
+     *      "http://deltaspike.apache.org/documentation/core.html#CreatingMessageInstances">http://deltaspike.apache.org/documentation/core.html#CreatingMessageInstances</a>
      * @param template
      *            key from properties file
      * @param arguments
@@ -93,31 +99,43 @@ public abstract class BaseLocalizedBundleResolver {
     }
 
     /**
-     * Message by enum value
+     * Message by enum value.
      *
      * @param enumm
+     *            enum to add to the message
      * @param arguments
+     *            arguments to add to the message
+     * @return message {@code String}
      */
     public String message(Enum<?> enumm, Serializable... arguments) {
         return message(enumm.getClass(), enumm.name(), arguments);
     }
 
     /**
-     * Message by enum value
+     * Message by enum value.
      *
      * @param enumm
+     *            enum to add to the message
      * @param arguments
+     *            arguments to add to the message
+     * @return message {@code String}
      */
     public String messageArray(Enum<?> enumm, Serializable[] arguments) {
         return messageArray(enumm.getClass(), enumm.name(), arguments);
     }
 
     /**
-     * message by class, key and arguments
+     * Message by class, key and arguments.
      *
+     * @param <T>
+     *            class type
      * @param clazz
+     *            class to add to the message
      * @param key
+     *            key to add to the message
      * @param arguments
+     *            arguments to add to the message
+     * @return message {@code String}
      */
     public <T> String message(Class<T> clazz, String key, Serializable... arguments) {
         if (clazz == null) {
@@ -129,9 +147,15 @@ public abstract class BaseLocalizedBundleResolver {
     /**
      * message array by class, key and arguments
      *
+     * @param <T>
+     *            class type
      * @param clazz
+     *            class to add to the message
      * @param key
+     *            key to add to the message
      * @param arguments
+     *            arguments to add to the message
+     * @return message {@code String}
      */
     public <T> String messageArray(Class<T> clazz, String key, Serializable[] arguments) {
         if (clazz == null) {
@@ -141,7 +165,15 @@ public abstract class BaseLocalizedBundleResolver {
     }
 
     /**
-     * <p>messageByLanguage.</p>
+     * Message by language.
+     *
+     * @param language
+     *            language to base the message on
+     * @param template
+     *            template to base the message on
+     * @param arguments
+     *            arguments to add to the message
+     * @return message {@code String}
      */
     public String messageByLanguage(String language, String template, Serializable... arguments) {
         LocaleResolver customLocaleResolver = new LocaleResolver() {
@@ -157,7 +189,9 @@ public abstract class BaseLocalizedBundleResolver {
     }
 
     /**
-     * <p>getSources.</p>
+     * Configures locale resources.
+     * 
+     * @return {@code String[]} of resources.
      */
     protected abstract String[] getSources();
 

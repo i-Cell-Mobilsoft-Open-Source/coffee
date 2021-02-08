@@ -22,12 +22,13 @@ package hu.icellmobilsoft.coffee.jpa.sql.paging;
 import java.util.List;
 
 /**
- * <p>PagingResult class.</p>
+ * <p>
+ * PagingResult class.
+ * </p>
  *
  * @author Karoly
- *
- *         Paging result counter.
  * @param <T>
+ *            entity
  * @since 1.0.0
  */
 public class PagingResult<T> {
@@ -36,29 +37,47 @@ public class PagingResult<T> {
 	private QueryMetaData metaData;
 
 	/**
-	 * <p>Getter for the field <code>results</code>.</p>
-	 */
+     * <p>
+     * Getter for the field <code>results</code>.
+     * </p>
+     *
+     * @return paging result list
+     */
 	public List<T> getResults() {
 		return results;
 	}
 
-	/**
-	 * <p>Setter for the field <code>results</code>.</p>
-	 */
+    /**
+     * <p>
+     * Setter for the field <code>results</code>.
+     * </p>
+     * 
+     * @param results
+     *            paging result list
+     */
 	public void setResults(List<T> results) {
 		this.results = results;
 	}
 
-	/**
-	 * <p>getDetails.</p>
-	 */
+    /**
+     * <p>
+     * getDetails.
+     * </p>
+     * 
+     * @return query metadata
+     */
 	public QueryMetaData getDetails() {
 		return metaData;
 	}
 
-	/**
-	 * <p>setDetails.</p>
-	 */
+    /**
+     * <p>
+     * setDetails.
+     * </p>
+     *
+     * @param metaData
+     *            query metadata
+     */
 	public void setDetails(QueryMetaData metaData) {
 		this.metaData = metaData;
 	}

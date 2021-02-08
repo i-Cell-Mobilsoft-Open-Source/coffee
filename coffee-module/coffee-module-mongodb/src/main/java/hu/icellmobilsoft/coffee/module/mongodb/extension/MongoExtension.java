@@ -102,7 +102,8 @@ public class MongoExtension implements javax.enterprise.inject.spi.Extension {
     /**
      * processInjectionTarget CDI event, collect MongoService types
      * 
-     * @param <T> The managed bean class
+     * @param <T>
+     *            The managed bean class
      * @param pit
      *            Java EE component class supporting injection that may be instantiated by the container at runtime.
      */

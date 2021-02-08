@@ -44,9 +44,11 @@ public class EncodeUtil {
     private static Logger LOGGER = hu.icellmobilsoft.coffee.cdi.logger.LogProducer.getStaticDefaultLogger(EncodeUtil.class);
 
     /**
-     * Encode input String with SHA-512
+     * Encodes input {@link String} with SHA-512.
      *
      * @param str
+     *            input {@code String}
+     * @return encoded {@code String} or null if invalid input or encoding error
      */
     public static String Sha512(String str) {
         if (StringUtils.isBlank(str)) {
@@ -69,9 +71,11 @@ public class EncodeUtil {
     }
 
     /**
-     * Format input byte[] to HEX String
+     * Format input {@code byte[]} to HEX {@link String}
      *
      * @param hash
+     *            byte array
+     * @return HEX {@code String}
      */
     public static String byteToHex(final byte[] hash) {
         if (Objects.isNull(hash)) {

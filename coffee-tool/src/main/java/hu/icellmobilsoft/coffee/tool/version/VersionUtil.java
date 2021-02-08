@@ -24,7 +24,7 @@ import javax.enterprise.inject.Vetoed;
 import org.apache.commons.lang3.StringUtils;
 
 /**
- * Version helper method
+ * Version helper methods.
  *
  * @author czenczl
  * @since 1.0.0
@@ -33,13 +33,16 @@ import org.apache.commons.lang3.StringUtils;
 public class VersionUtil {
 
     /**
-     * version compare
+     * Compares {@code version1} and {@code version2} as {@link ComparableVersion}s. Returns whether {@code version1} is equal or above
+     * {@code version2}.
      *
      * @param version1
+     *            the first version parameter to compare
      * @param version2
-     * @return true if version1 >= version2 <br>
-     * false if version1 < version2 <br>
-     * false if version1 or version2 is blank
+     *            the second version parameter to compare
+     * @return true if version1 &gt;= version2 <br>
+     *         false if version1 &lt; version2 <br>
+     *         false if version1 or version2 is blank
      */
     public static boolean equalOrAbove(String version1, String version2) {
         if (StringUtils.isAnyBlank(version1, version2)) {
@@ -52,13 +55,15 @@ public class VersionUtil {
     }
 
     /**
-     * version compare
+     * Compares {@code version1} and {@code version2} as {@link ComparableVersion}s. Returns whether {@code version1} is below {@code version2}.
      *
      * @param version1
+     *            the first version parameter to compare
      * @param version2
-     * @return true if version1 < version2 <br>
-     * false if version1 >= version2 <br>
-     * false if version1 or version2 is blank
+     *            the second version parameter to compare
+     * @return true if version1 &lt; version2 <br>
+     *         false if version1 &gt;= version2 <br>
+     *         false if version1 or version2 is blank
      */
     public static boolean below(String version1, String version2) {
         return !equalOrAbove(version1, version2);

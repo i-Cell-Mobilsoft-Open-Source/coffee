@@ -31,8 +31,7 @@ import java.lang.annotation.Target;
 import javax.inject.Qualifier;
 
 /**
- * Eredeti AppLogger osztaly qualifier. Igazabol azert kell, hogy lehessen
- * hasznalni a nativ Logger producer-t
+ * Eredeti AppLogger osztaly qualifier. Igazabol azert kell, hogy lehessen hasznalni a nativ Logger producer-t
  *
  * @author ischeffer
  * @since 1.0.0

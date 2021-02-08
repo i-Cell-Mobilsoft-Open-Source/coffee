@@ -30,7 +30,7 @@ import org.bson.conversions.Bson;
 import com.mongodb.client.MongoCollection;
 
 /**
- * <p>MongoRepository class.</p>
+ * MongoRepository class.
  *
  * @author imre.scheffer
  * @since 1.0.0
@@ -43,42 +43,80 @@ public class MongoRepository<T> implements Serializable {
     private MongoCollection<T> mongoCollection;
 
     /**
-     * <p>findFirst.</p>
+     * Finds first document in the collection matching given query filter.
+     *
+     * @param filter
+     *            query filter
+     * @return found document
+     * @see MongoCollection#find(Bson)
      */
     public T findFirst(Bson filter) {
         return findFirst(filter, null);
     }
 
     /**
-     * <p>findFirst.</p>
+     * Finds first document in the collection matching given query filter sorted by given order.
+     *
+     * @param filter
+     *            query filter
+     * @param order
+     *            sort order
+     * @return found document
+     * @see MongoCollection#find(Bson)
      */
     public T findFirst(Bson filter, Bson order) {
         return mongoCollection.find(filter).sort(order).first();
     }
 
     /**
-     * <p>findAll.</p>
+     * Finds all documents in the collection matching given query filter.
+     * 
+     * @param filter
+     *            query filter
+     * @return found document {@link List}
+     * @see MongoCollection#find(Bson)
      */
     public List<T> findAll(Bson filter) {
         return mongoCollection.find(filter).into(new ArrayList<>());
     }
 
     /**
-     * <p>insertOne.</p>
+     * Inserts the provided document.
+     *
+     * @param document
+     *            document to insert
+     * @see MongoCollection#insertOne(Object)
      */
     public void insertOne(T document) {
         mongoCollection.insertOne(document);
     }
 
     /**
-     * <p>insertMany.</p>
+     * Inserts one or more documents.
+     *
+     * @param documents
+     *            documents to insert
+     * @see MongoCollection#insertMany(List)
      */
     public void insertMany(List<T> documents) {
         mongoCollection.insertMany(documents);
     }
 
     /**
-     * <p>find.</p>
+     * Finds all documents in the collection.
+     *
+     * @param filter
+     *            query filter
+     * @param order
+     *            sorting order
+     * @param rows
+     *            number of rows per page
+     * @param page
+     *            page index to return
+     * @param clazz
+     *            class to decode each document into
+     * @return found document {@link List}
+     * @see MongoCollection#find(Bson, Class)
      */
     public List<T> find(Bson filter, Bson order, int rows, int page, Class<T> clazz) {
         int skips = rows * (page - 1);
@@ -86,21 +124,31 @@ public class MongoRepository<T> implements Serializable {
     }
 
     /**
-     * <p>count.</p>
+     * Counts the number of documents in the collection according to the given options.
+     *
+     * @param filter
+     *            query filter
+     * @return number of documents in the collection
+     * @see MongoCollection#countDocuments(Bson)
      */
     public long count(Bson filter) {
         return mongoCollection.countDocuments(filter);
     }
 
     /**
-     * <p>Getter for the field <code>mongoCollection</code>.</p>
+     * Getter for the field {@code mongoCollection}.
+     *
+     * @return {@code mongoCollection}
      */
     public MongoCollection<T> getMongoCollection() {
         return mongoCollection;
     }
 
     /**
-     * <p>Setter for the field <code>mongoCollection</code>.</p>
+     * Setter for the field {@code mongoCollection}.
+     *
+     * @param mongoCollection
+     *            mongoCollection to set
      */
     public void setMongoCollection(MongoCollection<T> mongoCollection) {
         this.mongoCollection = mongoCollection;

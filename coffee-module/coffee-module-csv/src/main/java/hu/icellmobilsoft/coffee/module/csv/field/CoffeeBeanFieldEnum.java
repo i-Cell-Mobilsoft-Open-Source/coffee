@@ -31,8 +31,10 @@ import com.opencsv.exceptions.CsvDataTypeMismatchException;
 import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
 
 /**
- * <p>CoffeeBeanFieldEnum class.</p>
+ * CoffeeBeanFieldEnum class.
  *
+ * @param <T>
+ *            type of the bean
  * @author imre.scheffer
  * @since 1.0.0
  */
@@ -42,7 +44,12 @@ public class CoffeeBeanFieldEnum<T> extends AbstractBeanField<T> implements Coff
     private Integer position;
 
     /**
-     * <p>Constructor for CoffeeBeanFieldEnum.</p>
+     * Constructor for {@code CoffeeBeanFieldEnum}.
+     *
+     * @param field
+     *            value for {@code field} field
+     * @param position
+     *            value for {@code position} field
      */
     public CoffeeBeanFieldEnum(Field field, int position) {
         super(field);
@@ -60,9 +67,7 @@ public class CoffeeBeanFieldEnum<T> extends AbstractBeanField<T> implements Coff
         return Enum.valueOf(enumType, value);
     }
 
-    /**
-     * <p>Getter for the field <code>position</code>.</p>
-     */
+    /** {@inheritDoc} */
     public Integer getPosition() {
         return position;
     }

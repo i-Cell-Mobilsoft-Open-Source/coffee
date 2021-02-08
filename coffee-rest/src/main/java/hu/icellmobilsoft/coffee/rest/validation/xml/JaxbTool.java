@@ -39,7 +39,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.w3c.dom.ls.LSResourceResolver;
 import org.xml.sax.SAXException;
 
-import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 import hu.icellmobilsoft.coffee.rest.validation.xml.annotation.ValidateXML;
@@ -51,7 +50,7 @@ import hu.icellmobilsoft.coffee.rest.validation.xml.utils.IXsdResourceResolver;
 import hu.icellmobilsoft.coffee.tool.utils.annotation.RangeUtil;
 
 /**
- * JAXB (un)mashaller es jaxb kapcsolatos muveletek
+ * JAXB (un)marshaller es jaxb kapcsolatos muveletek
  *
  * @author attila.nyers
  * @author ferenc.lutischan
@@ -65,6 +64,8 @@ public class JaxbTool {
     /**
      * Deszerializálja az objektumot, és validálja a megadott XSD séma alapján
      *
+     * @param <T>
+     *            Visszatérő típus
      * @param type
      *            Milyen típusba illeszkedik a bejövő adat
      * @param entityStream
@@ -72,7 +73,8 @@ public class JaxbTool {
      * @param validateXMLs
      *            Az XSD validációhoz kapcsolódó annotációk
      * @return A eredményobjektum
-     * @throws BaseException
+     * @throws XsdProcessingException
+     *             if invalid input or cannot be unmarshalled
      */
     public <T> T unmarshalXML(Class<T> type, InputStream entityStream, ValidateXML[] validateXMLs) throws XsdProcessingException {
         if (type == null || entityStream == null) {
@@ -95,6 +97,7 @@ public class JaxbTool {
      *            a bemeneti adatokat tartalmazó folyam
      * @return xml-nek megfelelő objektum a felolvasott értékekkel.
      * @throws XsdProcessingException
+     *             if invalid input or cannot be unmarshalled
      */
     public <T> T unmarshalXML(Class<T> type, InputStream inputStream) throws XsdProcessingException {
         return unmarshalXML(type, inputStream, (String) null);
@@ -140,6 +143,7 @@ public class JaxbTool {
      *            séma elérési útja
      * @return xml-nek megfelelő objektum a felolvasott értékekkel.
      * @throws XsdProcessingException
+     *             if invalid input or cannot be unmarshalled
      */
     public <T> T unmarshalXML(Class<T> type, InputStream inputStream, String schemaPath) throws XsdProcessingException {
         if (type == null || inputStream == null) {
@@ -173,19 +177,20 @@ public class JaxbTool {
     }
 
     /**
-     * Objektum XML -> String konvertálása<br>
-     * Fixen beállítja a következő paramétereket a konverzióhoz:
+     * Marshals given XML {@link Object} to {@link String}. <br>
+     * Sets the following fix parameters for the conversion:
      * <ul>
      * <li>jaxb.formatted.output - TRUE ({@link Marshaller#JAXB_FORMATTED_OUTPUT})</li>
      * <li>jaxb.fragment - TRUE ({@link Marshaller#JAXB_FRAGMENT})</li>
      * </ul>
      *
      * @param obj
-     *            eretedi objektum
+     *            XML {@code Object}
      * @param schemaPath
-     *            nullable, ha null, nincs validálás
+     *            path to XSD to validate on, if null, then validation is not executed
      * @return XML String
      * @throws XsdProcessingException
+     *             if invalid input or cannot be marshalled
      */
     public String marshalXML(Object obj, String schemaPath) throws XsdProcessingException {
         Map<String, Object> properties = new HashMap<>();
@@ -195,14 +200,18 @@ public class JaxbTool {
     }
 
     /**
-     * Objektum XML -> String konvertálása paraméterek megadásával<br>
+     *
+     * Marshals given XML {@link Object} to {@link String} with given parameters.
      *
      * @param obj
-     *            eretedi objektum
+     *            XML {@code Object}
      * @param schemaPath
-     *            nullable, ha null, nincs validálás
+     *            path to XSD to validate on, if null, then validation is not executed
+     * @param marshallerProperties
+     *            marshaller properties
      * @return XML String
      * @throws XsdProcessingException
+     *             if invalid input or cannot be marshalled
      */
     public String marshalXML(Object obj, String schemaPath, Map<String, Object> marshallerProperties) throws XsdProcessingException {
         if (obj == null) {
@@ -235,16 +244,15 @@ public class JaxbTool {
     }
 
     /**
-     * Visszatér egy LSResourceResolver példánnyal.<br>
-     * Így lehetővé válik, hogy ennek a felülírásával saját LSResourceResolver implementációt alkalmazzunk az XSD-k megtalálására.<br>
-     * A felülíráshoz a IXsdResourceResolver-t kell implementálni (@Alternative és @Modell annotációval).<br>
-     * Valamint a beans.xml-be be kell jegyezni, mint <alternative> <class>-t.<br>
+     * Visszatér egy {@link LSResourceResolver} példánnyal.<br>
+     * Így lehetővé válik, hogy ennek a felülírásával saját {@code LSResourceResolver} implementációt alkalmazzunk az XSD-k megtalálására.<br>
+     * A felülíráshoz a {@link IXsdResourceResolver}-t kell implementálni (@Alternative és @Modell annotációval).<br>
+     * Valamint a {@code beans.xml}-be be kell jegyezni, mint alternative class-t.<br>
+     * Kapcsolódó dokumentáció: /docs/howto/xsd_xml_validation_depend_on_version.adoc
      *
-     * @see /docs/howto/xsd_xml_validation_depend_on_version.adoc
      * @param schemaPath
      *            séma elérési útja
-     * @return Új LSResourceResolver implementáció példánya
-     * @throws XsdProcessingException
+     * @return Új {@code LSResourceResolver} implementáció példánya
      */
     protected LSResourceResolver createLSResourceResolverInstance(String schemaPath) {
         IXsdResourceResolver resourceResolver = createCDIInstance(IXsdResourceResolver.class);
@@ -258,8 +266,11 @@ public class JaxbTool {
      * Vissza adja request version-t. Nem érdemes felülírni, helyette a CDI lehetőségeit kell használni, mégpedig implementálni a
      * IXmlRequestVersionReader osztályt és alternative-ként aktiválni
      *
-     * @param entityStream http REST entity
+     * @param entityStream
+     *            http REST entity
+     * @return request version
      * @throws XsdProcessingException
+     *             if invalid input or cannot read request version
      */
     public String getRequestVersion(InputStream entityStream) throws XsdProcessingException {
         if (entityStream == null) {
@@ -284,6 +295,7 @@ public class JaxbTool {
      *            keresett verzió
      * @return definiált XSD path
      * @throws XsdProcessingException
+     *             if invalid input or cannot read xsd path
      */
     public String getXsdPath(ValidateXML[] validateXMLs, String requestVersion) throws XsdProcessingException {
         if (validateXMLs == null) {
@@ -301,8 +313,11 @@ public class JaxbTool {
     /**
      * CDI util
      *
-     * @param <I> class type
-     * @param type class
+     * @param <I>
+     *            class type
+     * @param type
+     *            class
+     * @return class
      */
     protected static <I> I createCDIInstance(Class<I> type) {
         CDI<Object> cdi = CDI.current();

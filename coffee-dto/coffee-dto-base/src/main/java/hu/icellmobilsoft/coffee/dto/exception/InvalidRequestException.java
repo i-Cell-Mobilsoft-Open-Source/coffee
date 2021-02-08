@@ -39,14 +39,24 @@ public class InvalidRequestException extends BaseException {
     private List<XMLValidationError> errors = new ArrayList<XMLValidationError>();
 
     /**
-     * <p>Constructor for InvalidRequestException.</p>
+     * <p>
+     * Constructor for InvalidRequestException.
+     * </p>
+     * 
+     * @param message
+     *            message
+     * @param e
+     *            e
      */
     public InvalidRequestException(String message, Throwable e) {
         super(CoffeeFaultType.INVALID_REQUEST, message, e);
     }
 
     /**
-     * <p>Constructor for InvalidRequestException.</p>
+     * Constructor for InvalidRequestException.
+     * 
+     * @param errors
+     *            errors
      */
     public InvalidRequestException(List<XMLValidationError> errors) {
         super(CoffeeFaultType.INVALID_REQUEST, "Cannot construct valid object");
@@ -54,7 +64,12 @@ public class InvalidRequestException extends BaseException {
     }
 
     /**
-     * <p>Constructor for InvalidRequestException.</p>
+     * Constructor for InvalidRequestException.
+     * 
+     * @param errors
+     *            errors
+     * @param e
+     *            e
      */
     public InvalidRequestException(List<XMLValidationError> errors, Throwable e) {
         super(CoffeeFaultType.INVALID_REQUEST, "Cannot construct valid object", e);
@@ -62,14 +77,19 @@ public class InvalidRequestException extends BaseException {
     }
 
     /**
-     * <p>Getter for the field <code>errors</code>.</p>
+     * Getter for the field <code>errors</code>.
+     *
+     * @return errors
      */
     public List<XMLValidationError> getErrors() {
         return errors;
     }
 
     /**
-     * <p>Setter for the field <code>errors</code>.</p>
+     * Setter for the field <code>errors</code>.
+     * 
+     * @param errors
+     *            errors
      */
     public void setErrors(List<XMLValidationError> errors) {
         this.errors = errors;

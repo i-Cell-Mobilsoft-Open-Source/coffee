@@ -34,12 +34,12 @@ import hu.icellmobilsoft.coffee.cdi.logger.ThisLogger;
 import hu.icellmobilsoft.coffee.rest.validation.xml.utils.IXsdResourceResolver;
 
 /**
- * Implements CatalogResolver. <br/>
- * This class implements a SAX EntityResolver, StAX XMLResolver, Schema Validation LSResourceResolver and Transform URIResolver. <br/>
+ * Implements CatalogResolver. <br>
+ * This class implements a SAX EntityResolver, StAX XMLResolver, Schema Validation LSResourceResolver and Transform URIResolver.
+ * See {@link javax.xml.catalog.Util} {@link javax.xml.catalog.CatalogResolverImpl}
  *
  * @author imre.scheffer
  * @author mark.petrenyi
- * @see Inspired by javax.xml.catalog.CatalogResolverImpl, javax.xml.catalog.Util
  * @since 1.0.0
  */
 public class PublicCatalogResolver implements LSResourceResolver, IXsdResourceResolver {

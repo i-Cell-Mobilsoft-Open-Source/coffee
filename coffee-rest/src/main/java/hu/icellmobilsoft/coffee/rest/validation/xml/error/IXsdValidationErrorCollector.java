@@ -35,12 +35,14 @@ import hu.icellmobilsoft.coffee.dto.exception.XMLValidationError;
  */
 public interface IXsdValidationErrorCollector extends ValidationEventHandler {
     /**
-     * <p>clearErrors.</p>
+     * Clears XSD validation errors.
      */
     void clearErrors();
 
     /**
-     * <p>getErrors.</p>
+     * Returns {@link List} of XSD validation errors.
+     *
+     * @return {@code XMLValidationError} list.
      */
     List<XMLValidationError> getErrors();
 }

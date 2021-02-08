@@ -43,8 +43,7 @@ public class CachedEtcdConfigSource extends DefaultEtcdConfigSource {
     /**
      * Visszaadja a config-source-okon elérhető kulcsokat, az első hívás eredményét cacheli, minden továbbit a cache-ből szolgál ki
      * 
-     * <br/>
-     * <br/>
+     * <br>
      * {@inheritDoc}
      */
     @Override

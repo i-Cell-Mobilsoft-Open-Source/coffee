@@ -51,9 +51,13 @@ public class RedisServiceProducer {
     private Logger log;
 
     /**
-     * Produces RedisService for the redis connection specified by the given configKey
+     * Produces {@link RedisService} for the redis connection specified by the given configKey.
      *
      * @param injectionPoint
+     *            injection point metadata
+     * @return Redis service
+     * @throws BaseException
+     *             if Redis service unavailable or cannot be created
      */
     @Dependent
     @Produces
@@ -74,7 +78,10 @@ public class RedisServiceProducer {
     }
 
     /**
-     * Close connection when jedis is disposed
+     * Closes connection when jedis is disposed.
+     *
+     * @param redisService
+     *            redis service
      */
     public void returnResource(@Disposes @RedisConnection(configKey = "") RedisService redisService) {
         if (redisService != null) {

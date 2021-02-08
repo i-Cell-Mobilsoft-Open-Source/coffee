@@ -64,6 +64,7 @@ public interface IStreamGroupConfig {
      * 
      * @return true - enabled, default
      * @throws BaseException
+     *             if any exception occurs
      */
     boolean isEnabled() throws BaseException;
 }

@@ -55,6 +55,8 @@ import hu.icellmobilsoft.coffee.module.csv.field.CoffeeBeanFieldPrimitiveTypes;
 /**
  * Kellett, mert a "gyári" nem tudott sorrendezést, ami tudott, az nem gyártott headert
  *
+ * @param <T>
+ *            type of the bean to be returned
  * @author andras.bognar
  * @since 1.0.0
  */
@@ -63,13 +65,16 @@ import hu.icellmobilsoft.coffee.module.csv.field.CoffeeBeanFieldPrimitiveTypes;
 public class CustomHeaderColumnNameMappingStrategy<T> extends HeaderColumnNameMappingStrategy<T> {
 
     /**
-     * <p>Constructor for CustomHeaderColumnNameMappingStrategy.</p>
+     * Constructor for CustomHeaderColumnNameMappingStrategy.
      */
     public CustomHeaderColumnNameMappingStrategy() {
     }
 
     /**
-     * <p>Constructor for CustomHeaderColumnNameMappingStrategy.</p>
+     * Constructor for CustomHeaderColumnNameMappingStrategy.
+     *
+     * @param clazz
+     *            value for {@code type} field
      */
     public CustomHeaderColumnNameMappingStrategy(Class<? extends T> clazz) {
         this.setType(clazz);

@@ -54,10 +54,11 @@ public class MarshallingUtil {
     private static Map<String, JAXBContext> jaxbContextCache = new ConcurrentHashMap<>();
 
     /**
-     * Marshalls an object to a string xml.
+     * Marshals an object to a {@code String} xml.
      *
-     * @param object Source object.
-     * @return Xml string or null.
+     * @param object
+     *            source object
+     * @return marshalled xml {@code String} or null if marshalling error
      */
     public static String marshall(Object object) {
         try {
@@ -70,10 +71,13 @@ public class MarshallingUtil {
     }
 
     /**
-     * Marshalls an object to a string xml.
+     * Marshals an object to a {@code String} xml.
      *
-     * @param object Source object.
+     * @param object
+     *            source object
+     * @return marshalled xml {@code String} or null if invalid input
      * @throws JAXBException
+     *             on marshalling exception
      */
     public static String marshallUncheckedXml(Object object) throws JAXBException {
         if (object == null) {
@@ -96,11 +100,17 @@ public class MarshallingUtil {
     }
 
     /**
-     * Marshalls an object to a string xml.
+     * Marshals an object to a {@code String} xml.
      *
+     * @param <T>
+     *            object type
      * @param object
+     *            source object
      * @param c
+     *            object class
+     * @return marshalled xml {@code String} or null if invalid input
      * @throws JAXBException
+     *             if marshalling error
      */
     public static <T> String marshallUncheckedXml(Object object, Class<T> c) throws JAXBException {
         if (object == null || c == null) {
@@ -113,11 +123,15 @@ public class MarshallingUtil {
     }
 
     /**
-     * Marshalls an object to a string xml.
+     * Marshals an object to a {@code String} xml.
      *
-     * @param object Source object.
-     * @param m      Marshaller.
+     * @param object
+     *            source object
+     * @param m
+     *            marshaller
+     * @return marshalled xml {@code String} or null if invalid input
      * @throws JAXBException
+     *             if marshalling error
      */
     public static String marshallUncheckedXml(Object object, Marshaller m) throws JAXBException {
         if (object == null) {
@@ -132,10 +146,12 @@ public class MarshallingUtil {
     }
 
     /**
-     * Marshalls an object to a stream.
+     * Marshals an object to a stream.
      *
-     * @param object Source object.
+     * @param object
+     *            source object
      * @param s
+     *            output stream
      */
     public static void marshall(Object object, OutputStream s) {
         try {
@@ -146,7 +162,16 @@ public class MarshallingUtil {
     }
 
     /**
-     * <p>marshall.</p>
+     * Marshals an object to a stream.
+     *
+     * @param <T>
+     *            object type
+     * @param object
+     *            source object
+     * @param s
+     *            output stream
+     * @param c
+     *            object class
      */
     public static <T> void marshall(Object object, OutputStream s, Class<T> c) {
         try {
@@ -157,11 +182,14 @@ public class MarshallingUtil {
     }
 
     /**
-     * Marshalls an object to a stream.
+     * Marshals an object to a stream.
      *
-     * @param object Source object.
+     * @param object
+     *            source object
      * @param s
+     *            output stream
      * @throws JAXBException
+     *             if marshalling error
      */
     public static void marshallUncheckedXml(Object object, OutputStream s) throws JAXBException {
         if (object == null || s == null) {
@@ -172,7 +200,18 @@ public class MarshallingUtil {
     }
 
     /**
-     * <p>marshallUncheckedXml.</p>
+     * Marshals an object to a stream.
+     *
+     * @param <T>
+     *            object type
+     * @param object
+     *            source object
+     * @param s
+     *            output stream
+     * @param c
+     *            object class
+     * @throws JAXBException
+     *             if marshalling error
      */
     public static <T> void marshallUncheckedXml(Object object, OutputStream s, Class<T> c) throws JAXBException {
         if (object == null || s == null || c == null) {
@@ -185,10 +224,15 @@ public class MarshallingUtil {
     }
 
     /**
-     * Unmarshalls an object from a string.
+     * Unmarshalls an object from a {@code String}.
      *
-     * @param str String source.
-     * @param c   Object type.
+     * @param <T>
+     *            object type
+     * @param str
+     *            {@code String} source
+     * @param c
+     *            object class
+     * @return unmarshalled dto object or null if unmarshalling error
      */
     public static <T> T unmarshall(String str, Class<T> c) {
         try {
@@ -200,11 +244,15 @@ public class MarshallingUtil {
     }
 
     /**
-     * Unmarshalls an object from an xml string.
+     * Unmarshalls an object from an xml {@code String}.
      *
-     * @param str String source.
-     * @param c   Object type.
-     * @throws JAXBException
+     * @param <T>
+     *            object type
+     * @param str
+     *            {@code String} source
+     * @param c
+     *            object class
+     * @return unmarshalled dto object or null if invalid input or unmarshalling error
      */
     @SuppressWarnings("unchecked")
     public static <T> T unmarshallUncheckedXml(String str, Class<T> c) {
@@ -226,9 +274,14 @@ public class MarshallingUtil {
     /**
      * Set the value of the database field if it is necessary.
      *
-     * @param lhs    left hand side of the assign (the dto object)
-     * @param rhs    right hand side of the assign (the input value)
-     * @param setter the setter method of the right hand side field (the dto setter)
+     * @param <T>
+     *            dto object type
+     * @param lhs
+     *            left hand side of the assign (the dto object)
+     * @param rhs
+     *            right hand side of the assign (the input value)
+     * @param setter
+     *            the setter method of the right hand side field (the dto setter)
      */
     public static <T> void fillOptionalField(T lhs, JAXBElement<T> rhs, Consumer<T> setter) {
         if (rhs == null) {

@@ -30,7 +30,7 @@ import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 
 /**
- * Json <-> byte[]
+ * Json &lt;-&gt; byte[] converter.
  *
  * @author imre.scheffer
  * @since 1.0.0

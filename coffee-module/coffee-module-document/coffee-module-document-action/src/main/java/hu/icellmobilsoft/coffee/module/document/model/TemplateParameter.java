@@ -60,56 +60,76 @@ public class TemplateParameter extends AbstractIdentifiedAuditEntity {
     private String defaultValue;
 
     /**
-     * <p>Getter for the field <code>templateKey</code>.</p>
+     * Getter for the field {@code templateKey}.
+     *
+     * @return templateKey
      */
     public String getTemplateKey() {
         return templateKey;
     }
 
     /**
-     * <p>Setter for the field <code>templateKey</code>.</p>
+     * Setter for the field {@code templateKey}.
+     *
+     * @param templateKey
+     *            templateKey to set
      */
     public void setTemplateKey(String templateKey) {
         this.templateKey = templateKey;
     }
 
     /**
-     * <p>Getter for the field <code>language</code>.</p>
+     * Getter for the field {@code language}.
+     *
+     * @return language
      */
     public String getLanguage() {
         return language;
     }
 
     /**
-     * <p>Setter for the field <code>language</code>.</p>
+     * Setter for the field {@code language}.
+     *
+     * @param language
+     *            language to set
      */
     public void setLanguage(String language) {
         this.language = language;
     }
 
     /**
-     * <p>Getter for the field <code>parameterKey</code>.</p>
+     * Getter for the field {@code parameterKey}.
+     *
+     * @return parameterKey
      */
     public String getParameterKey() {
         return parameterKey;
     }
 
     /**
-     * <p>Setter for the field <code>parameterKey</code>.</p>
+     * Setter for the field {@code parameterKey}.
+     *
+     * @param parameterKey
+     *            parameterKey to set
      */
     public void setParameterKey(String parameterKey) {
         this.parameterKey = parameterKey;
     }
 
     /**
-     * <p>Getter for the field <code>defaultValue</code>.</p>
+     * Getter for the field {@code defaultValue}.
+     *
+     * @return defaultValue
      */
     public String getDefaultValue() {
         return defaultValue;
     }
 
     /**
-     * <p>Setter for the field <code>defaultValue</code>.</p>
+     * Setter for the field {@code defaultValue}.
+     * 
+     * @param defaultValue
+     *            defaultValue to set
      */
     public void setDefaultValue(String defaultValue) {
         this.defaultValue = defaultValue;

@@ -72,10 +72,10 @@ public @interface LogSpecifier {
      * 
      * @return Array of:
      *         <ul>
-     *         <li>{@link LogSpecifierTarget#REQUEST} => server request-re vonatkozik</li>
-     *         <li>{@link LogSpecifierTarget#RESPONSE} => server response-ra vonatkozik</li>
-     *         <li>{@link LogSpecifierTarget#CLIENT_REQUEST} => mp client request-re vonatkozik</li>
-     *         <li>{@link LogSpecifierTarget#CLIENT_RESPONSE} => mp client response-ra vonatkozik</li>
+     *         <li>{@link LogSpecifierTarget#REQUEST} =&gt; server request-re vonatkozik</li>
+     *         <li>{@link LogSpecifierTarget#RESPONSE} =&gt; server response-ra vonatkozik</li>
+     *         <li>{@link LogSpecifierTarget#CLIENT_REQUEST} =&gt; mp client request-re vonatkozik</li>
+     *         <li>{@link LogSpecifierTarget#CLIENT_RESPONSE} =&gt; mp client response-ra vonatkozik</li>
      *         </ul>
      */
     @Nonbinding
@@ -87,9 +87,9 @@ public @interface LogSpecifier {
      * 
      * @return
      *         <ul>
-     *         <li>&lt;0 => unlimit</li>
-     *         <li>=0 => nincs loggolas</li>
-     *         <li>>0 => loggolas korlatozas</li>
+     *         <li>&lt;0 =&gt; unlimit</li>
+     *         <li>=0 =&gt; nincs loggolas</li>
+     *         <li>&gt;0 =&gt; loggolas korlatozas</li>
      *         </ul>
      */
     @Nonbinding
@@ -100,8 +100,8 @@ public @interface LogSpecifier {
      * 
      * @return
      *         <ul>
-     *         <li>false (default) => van loggolás</li>
-     *         <li>true=> nincs loggolás a {@link #target()}-re</li>
+     *         <li>false (default) =&gt; van loggolás</li>
+     *         <li>true =&gt; nincs loggolás a {@link #target()}-re</li>
      *         </ul>
      */
     @Nonbinding

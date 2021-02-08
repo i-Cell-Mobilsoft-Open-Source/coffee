@@ -82,11 +82,15 @@ public class DefaultLoggerClientResponseFilter implements ClientResponseFilter {
     }
 
     /**
-     * HTTP status adatok loggolasa
+     * Logs HTTP status data.
      *
      * @param requestContext
+     *            request context
      * @param responseContext
+     *            response context
+     * @return status {@link String}
      * @throws IOException
+     *             exception
      */
     protected String logStatus(ClientRequestContext requestContext, ClientResponseContext responseContext) throws IOException {
         StringBuilder msg = new StringBuilder();
@@ -101,11 +105,15 @@ public class DefaultLoggerClientResponseFilter implements ClientResponseFilter {
     }
 
     /**
-     * HTTP header adatok loggolasa
+     * Logs HTTP header data.
      *
      * @param requestContext
+     *            request context
      * @param responseContext
+     *            response context
+     * @return header {@link String}
      * @throws IOException
+     *             exception
      */
     protected String logHeader(ClientRequestContext requestContext, ClientResponseContext responseContext) throws IOException {
         StringBuilder msg = new StringBuilder();
@@ -125,11 +133,16 @@ public class DefaultLoggerClientResponseFilter implements ClientResponseFilter {
     }
 
     /**
-     * Entitas loggolasa
+     * Logs entity.
      *
      * @param requestContext
+     *            request context
      * @param responseContext
+     *            response context
+     * @return entity {@link String}
      * @throws IOException
+     *             exception
+     * @see RequestResponseLogger#printEntity(byte[], Integer, String)
      */
     protected String logEntity(ClientRequestContext requestContext, ClientResponseContext responseContext) throws IOException {
         if (requestContext == null || responseContext == null) {

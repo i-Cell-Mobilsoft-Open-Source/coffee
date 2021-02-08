@@ -57,9 +57,13 @@ public class EtcdConfigSourceCache {
             });
 
     /**
+     * Returns value of given property.
+     * 
      * @param propertyName
-     * @return
+     *            property to return value of
+     * @return {@link Optional} value of property
      * @throws BaseException
+     *             if cannot return property
      */
     public Optional<String> getValue(String propertyName) throws BaseException {
         try {

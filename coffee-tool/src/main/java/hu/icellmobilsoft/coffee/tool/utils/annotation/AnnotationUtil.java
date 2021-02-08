@@ -35,11 +35,16 @@ import javax.enterprise.inject.spi.InjectionPoint;
 public class AnnotationUtil {
 
     /**
-     * Osztály annotációját keresi, proxyzott osztály beleszámítva
+     * Finds the {@code Annotation} instance of annotationClazz, including proxied class
      *
      * @see <a href="https://developer.jboss.org/message/964608#964608">https://developer.jboss.org/message/964608#964608</a>
+     * @param <A>
+     *            type of returned {@link Annotation}
      * @param clazz
+     *            class on which the desired {@code Annotation} is searched
      * @param annotationClass
+     *            class of returned {@code Annotation}
+     * @return {@code Annotation} instance
      */
     public static <A extends Annotation> A getAnnotation(Class<?> clazz, Class<A> annotationClass) {
         final A annotation = clazz.getAnnotation(annotationClass);
@@ -54,10 +59,13 @@ public class AnnotationUtil {
     /**
      * Finds the annotation instance of annotationClazz on the given InjectionPoint.
      *
-     * @param injectionPoint
-     * @param annotationClazz
      * @param <A>
-     * @return Optional instance of the annotationCLazz, can be empty
+     *            type of returned {@code Annotation}
+     * @param injectionPoint
+     *            injection point on which the desired {@code Annotation} is searched
+     * @param annotationClazz
+     *            class of returned {@code Annotation}
+     * @return {@code Optional} instance of {@code annotationClazz}, can be empty
      */
     public static <A extends Annotation> Optional<A> getAnnotation(InjectionPoint injectionPoint, Class<A> annotationClazz) {
         if (injectionPoint == null || annotationClazz == null) {

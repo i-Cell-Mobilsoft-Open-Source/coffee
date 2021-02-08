@@ -24,7 +24,7 @@ import java.util.Arrays;
 import javax.enterprise.inject.Vetoed;
 
 /**
- * Tulajdonkeppen csak arra szolgal hogy a byte[] tombnek legyen neve.<br>
+ * Encapsulates a byte array with a name.
  *
  * @author imre.scheffer
  * @since 1.0.0
@@ -36,13 +36,18 @@ public class AttachmentBean {
     private byte[] data;
 
     /**
-     * <p>Constructor for AttachmentBean.</p>
+     * No-args constructor for AttachmentBean.
      */
     public AttachmentBean() {
     }
 
     /**
-     * <p>Constructor for AttachmentBean.</p>
+     * Constructor for AttachmentBean with attachment name and data.
+     *
+     * @param name
+     *            attachment name (filename)
+     * @param data
+     *            attachment data
      */
     public AttachmentBean(String name, byte[] data) {
         super();
@@ -51,28 +56,38 @@ public class AttachmentBean {
     }
 
     /**
-     * <p>Getter for the field <code>name</code>.</p>
+     * Getter for the field {@code name}.
+     *
+     * @return {@code name}
      */
     public String getName() {
         return name;
     }
 
     /**
-     * <p>Setter for the field <code>name</code>.</p>
+     * Setter for the field {@code name}.
+     *
+     * @param name
+     *            name to set
      */
     public void setName(String name) {
         this.name = name;
     }
 
     /**
-     * <p>Getter for the field <code>data</code>.</p>
+     * Getter for the field {@code data}.
+     *
+     * @return {@code data}
      */
     public byte[] getData() {
         return data;
     }
 
     /**
-     * <p>Setter for the field <code>data</code>.</p>
+     * Setter for the field {@code data}.
+     *
+     * @param data
+     *            data to set
      */
     public void setData(byte[] data) {
         this.data = Arrays.copyOf(data, data.length);

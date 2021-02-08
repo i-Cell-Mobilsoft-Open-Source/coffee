@@ -30,23 +30,39 @@ import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 public interface RedisConfig {
 
     /**
-     * <p>getHost.</p>
+     * Returns Redis host.
+     *
+     * @return host
+     * @throws BaseException
+     *             exception
      */
     String getHost() throws BaseException;
 
     /**
-     * <p>getPort.</p>
+     * Returns Redis post.
+     *
+     * @return post
+     * @throws BaseException
+     *             exception
      */
     Integer getPort() throws BaseException;
 
     /**
-     * <p>getPassword.</p>
+     * Returns Redis password.
+     * 
+     * @return password
+     * @throws BaseException
+     *             exception
      */
     String getPassword() throws BaseException;
 
     /**
      * The maximum number of objects that can be allocated by the pool (checked out to clients, or idle awaiting checkout) at a given time. When
      * negative, there is no limit to the number of objects that can be managed by the pool at one time.
+     *
+     * @return max pool instances
+     * @throws BaseException
+     *             exception
      */
     Integer getPoolMaxTotal() throws BaseException;
 
@@ -54,18 +70,30 @@ public interface RedisConfig {
      * The cap on the number of "idle" instances in the pool. If maxIdle is set too low on heavily loaded systems it is possible you will see objects
      * being destroyed and almost immediately new objects being created. This is a result of the active threads momentarily returning objects faster
      * than they are requesting them, causing the number of idle objects to rise above maxIdle.
+     *
+     * @return max idle instances
+     * @throws BaseException
+     *             exception
      */
     Integer getPoolMaxIdle() throws BaseException;
 
     /**
-     * The number of the selected database to connect with default value: 0 (According to Redis settings)
+     * The number of the selected database to connect with, default value: 0 (According to Redis settings).
+     *
+     * @return database
+     * @throws BaseException
+     *             exception
      */
     default Integer getDatabase() throws BaseException {
         return 0;
     }
 
     /**
-     * Redis connection timout in millisec with default value 5000
+     * Redis connection timeout in milliseconds with default value 5000.
+     *
+     * @return connection timeout
+     * @throws BaseException
+     *             exception
      */
     default Integer getTimeout() throws BaseException {
         return 5000;

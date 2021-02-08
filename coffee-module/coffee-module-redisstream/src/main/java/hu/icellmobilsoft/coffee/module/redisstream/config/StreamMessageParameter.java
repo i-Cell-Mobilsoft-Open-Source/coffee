@@ -26,7 +26,7 @@ package hu.icellmobilsoft.coffee.module.redisstream.config;
  */
 public enum StreamMessageParameter {
     /**
-     * Stream message time to live. Value is epoch time millis. If value is < now, then message is expired
+     * Stream message time to live. Value is epoch time millis. If value is &lt; now, then message is expired
      */
     TTL(IRedisStreamConstant.Common.DATA_KEY_TTL);
 

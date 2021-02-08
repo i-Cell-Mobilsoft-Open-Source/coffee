@@ -56,7 +56,7 @@ public class AesGcmUtil {
     /**
      * Generates a secure random 256 bit length key
      * 
-     * @return
+     * @return random secure key as byte array
      */
     public static byte[] generateKey() {
         byte[] key = new byte[KEY_BYTE_LENGTH];
@@ -68,7 +68,7 @@ public class AesGcmUtil {
     /**
      * Generates a secure random 12 byte length iv
      *
-     * @return
+     * @return random secure key as byte array
      */
     public static byte[] generateIv() {
         byte[] key = new byte[IV_BYTE_LENGTH];
@@ -86,6 +86,7 @@ public class AesGcmUtil {
      *            - byte array to encrypt
      * @return the encrypted data as byte array
      * @throws BaseException
+     *             exception
      */
     public static byte[] encryptWithAes256GcmNoPadding(byte[] oneTimeKey, byte[] plainText) throws BaseException {
         return encryptWithAes256GcmNoPadding(oneTimeKey, plainText, DEFAULT_IV);
@@ -102,6 +103,7 @@ public class AesGcmUtil {
      *            - initialization vector (NEVER use the same key-iv pair more than once)
      * @return the encrypted data as byte array
      * @throws BaseException
+     *             exception
      */
     public static byte[] encryptWithAes256GcmNoPadding(byte[] key, byte[] plainText, byte[] iv) throws BaseException {
         checkKeyAndIVSize(key, iv);
@@ -126,6 +128,7 @@ public class AesGcmUtil {
      *            - byte array to decrypt
      * @return decrypted data as byte array
      * @throws BaseException
+     *             exception
      */
     public static byte[] decryptWithAes256GcmNoPadding(byte[] oneTimeKey, byte[] encryptedBytes) throws BaseException {
         return decryptWithAes256GcmNoPadding(oneTimeKey, encryptedBytes, DEFAULT_IV);
@@ -142,6 +145,7 @@ public class AesGcmUtil {
      *            - initialization vector
      * @return decrypted data as byte array
      * @throws BaseException
+     *             exception
      */
     public static byte[] decryptWithAes256GcmNoPadding(byte[] key, byte[] encryptedBytes, byte[] iv) throws BaseException {
         checkKeyAndIVSize(key, iv);

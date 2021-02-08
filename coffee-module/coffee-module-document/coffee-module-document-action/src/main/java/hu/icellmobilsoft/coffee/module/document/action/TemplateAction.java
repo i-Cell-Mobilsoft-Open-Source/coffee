@@ -62,7 +62,13 @@ public class TemplateAction {
     private TemplateParameterService templateParameterService;
 
     /**
-     * <p>getTemplate.</p>
+     * Returns {@link TemplateFullType} by given {@link TemplateType}.
+     * 
+     * @param templateType
+     *            dto
+     * @return {@code TemplateFullType} dto
+     * @throws BaseException
+     *             if invalid parameter or processing error
      */
     public TemplateFullType getTemplate(TemplateType templateType) throws BaseException {
         if (templateType == null) {
@@ -108,7 +114,7 @@ public class TemplateAction {
     }
 
     /**
-     * Processing TEXT template. Replacing template parameters
+     * Processes TEXT template. Replaces template parameters.
      * 
      * @param templateData
      *            entity
@@ -118,6 +124,7 @@ public class TemplateAction {
      *            parameters from request
      * @return replaced templateData.data value with defined values
      * @throws BaseException
+     *             if text cannot be processed
      */
     private byte[] processText(TemplateData templateData, List<TemplateParameter> templateParameters, List<KeyValueBasicType> requestParameters)
             throws BaseException {
@@ -147,7 +154,15 @@ public class TemplateAction {
     }
 
     /**
-     * <p>getParameterValue.</p>
+     * Returns value for given key from given collection of {@link KeyValueBasicType}s.
+     *
+     * @param key
+     *            key of the desired parameter
+     * @param requestParameters
+     *            parameters to search in
+     * @param defaultValue
+     *            default parameter value
+     * @return desired parameter or default parameter if desired parameter is null or cannot be found
      */
     public static String getParameterValue(String key, Collection<KeyValueBasicType> requestParameters, String defaultValue) {
         if (requestParameters == null) {

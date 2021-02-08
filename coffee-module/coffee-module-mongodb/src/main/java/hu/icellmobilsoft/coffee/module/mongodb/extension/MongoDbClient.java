@@ -81,8 +81,10 @@ public class MongoDbClient {
      * insertOne.
      * </p>
      * 
-     * @param document BasicDBObject to insert
-     * @throws BaseException If insert fail.
+     * @param document
+     *            BasicDBObject to insert
+     * @throws BaseException
+     *             If insert fail.
      */
     public void insertOne(BasicDBObject document) throws BaseException {
         mongoService.insertOne(document);
@@ -96,7 +98,8 @@ public class MongoDbClient {
      * @param filter
      *            mongo select filter
      * @return BasicDBObject
-     * @throws BaseException Missing filter, or mongo select failed.
+     * @throws BaseException
+     *             Missing filter, or mongo select failed.
      */
     public BasicDBObject findFirst(Bson filter) throws BaseException {
         return mongoService.findFirst(filter);
@@ -110,7 +113,8 @@ public class MongoDbClient {
      * @param mongoId
      *            Mongo document object id
      * @return BasicDBObject
-     * @throws BaseException Mongo select failed.
+     * @throws BaseException
+     *             Mongo select failed.
      */
     public BasicDBObject findById(String mongoId) throws BaseException {
         return mongoService.findById(mongoId);

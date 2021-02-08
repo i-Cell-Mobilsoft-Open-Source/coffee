@@ -26,7 +26,7 @@ import org.apache.commons.lang3.CharUtils;
 import org.apache.commons.lang3.StringUtils;
 
 /**
- * Util class for password
+ * Util class for password.
  *
  * @author imre.scheffer
  * @since 1.0.0
@@ -35,9 +35,11 @@ import org.apache.commons.lang3.StringUtils;
 public class PasswordUtil {
 
     /**
-     * Encode string (password)
+     * Encodes given {@code String} to create password.
      *
-     * @param string to encode
+     * @param string
+     *            {@code String} to encode
+     * @return encoded password
      */
     public static String encodeString(String string) {
         if (StringUtils.isBlank(string)){
@@ -48,18 +50,25 @@ public class PasswordUtil {
     }
 
     /**
-     * Compares raw and encoded String
+     * Compares given raw and encoded {@code String}s.
      *
-     * @param string        raw String to
-     * @param encodedString encoded String
-     * @return true is raw String is same as encoded
+     * @param string
+     *            raw {@code String} to compare
+     * @param encodedString
+     *            encoded {@code String} to compare
+     * @return whether raw String is same as encoded
      */
     public static boolean isSame(String string, String encodedString) {
         return StringUtils.equals(encodeString(string), encodedString);
     }
 
     /**
-     * Check password strong, minimum 8 characters, 1 upper and 1 lower alpha , 1 numeric, 1 special.
+     * Checks if password is considered strong. A strong password is minimum 8 characters, contains at least 1 upper and 1 lower alpha, 1 numeric and
+     * 1 special character.
+     * 
+     * @param password
+     *            password to check
+     * @return true if password is strong, false otherwise
      */
     public static boolean isStrong(String password) {
         if (StringUtils.isBlank(password) || password.length() < 8) {

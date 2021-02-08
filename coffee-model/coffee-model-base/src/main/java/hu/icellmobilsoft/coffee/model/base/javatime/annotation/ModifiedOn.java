@@ -26,8 +26,7 @@ import java.lang.annotation.Target;
 
 /**
  *
- * Marks a property which should be updated with a timestamp when the entity gets updated. By setting {@link #onCreate()} to {@code true}, the
- * property gets also set when the entity is persisted.
+ * Marks a property which should be updated with a timestamp when the entity gets updated.
  *
  * @author mark.petrenyi
  * @since 1.0.0

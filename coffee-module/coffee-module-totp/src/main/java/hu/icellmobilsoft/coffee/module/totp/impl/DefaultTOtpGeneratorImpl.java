@@ -104,8 +104,11 @@ public class DefaultTOtpGeneratorImpl implements TOtpGenerator {
     }
 
     /**
+     * Converts hexadecimal {@link String} to byte arary.
+     * 
      * @param hex
-     * @return
+     *            hexadecimal representation
+     * @return byte array representation
      */
     private byte[] hexStr2Bytes(String hex) {
         byte[] bArray = new BigInteger("10" + hex, 16).toByteArray();

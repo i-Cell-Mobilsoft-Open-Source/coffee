@@ -71,84 +71,114 @@ public class PushDevice extends AbstractIdentifiedAuditEntity {
     private String result;
 
     /**
-     * <p>Getter for the field <code>pushId</code>.</p>
+     * Getter for the field {@code pushId}.
+     *
+     * @return {@code pushId}
      */
     public String getPushId() {
         return pushId;
     }
 
     /**
-     * <p>Setter for the field <code>pushId</code>.</p>
+     * Setter for the field {@code pushId}.
+     *
+     * @param pushId
+     *            pushId to set
      */
     public void setPushId(String pushId) {
         this.pushId = pushId;
     }
 
     /**
-     * <p>Getter for the field <code>deviceId</code>.</p>
+     * Getter for the field {@code deviceId}.
+     *
+     * @return {@code deviceId}
      */
     public String getDeviceId() {
         return deviceId;
     }
 
     /**
-     * <p>Setter for the field <code>deviceId</code>.</p>
+     * Setter for the field {@code deviceId}.
+     *
+     * @param deviceId
+     *            deviceId to set
      */
     public void setDeviceId(String deviceId) {
         this.deviceId = deviceId;
     }
 
     /**
-     * <p>Getter for the field <code>deviceType</code>.</p>
+     * Getter for the field {@code deviceType}.
+     *
+     * @return {@code deviceType}
      */
     public DeviceType getDeviceType() {
         return deviceType;
     }
 
     /**
-     * <p>Setter for the field <code>deviceType</code>.</p>
+     * Setter for the field {@code deviceType}.
+     *
+     * @param deviceType
+     *            deviceType to set
      */
     public void setDeviceType(DeviceType deviceType) {
         this.deviceType = deviceType;
     }
 
     /**
-     * <p>Getter for the field <code>sentTime</code>.</p>
+     * Getter for the field {@code sentTime}.
+     *
+     * @return {@code sentTime}
      */
     public Date getSentTime() {
         return sentTime;
     }
 
     /**
-     * <p>Setter for the field <code>sentTime</code>.</p>
+     * Setter for the field {@code sentTime}.
+     *
+     * @param sentTime
+     *            sentTime to set
      */
     public void setSentTime(Date sentTime) {
         this.sentTime = sentTime;
     }
 
     /**
-     * <p>isSuccess.</p>
+     * Getter for the field {@code success}.
+     *
+     * @return {@code success}
      */
     public boolean isSuccess() {
         return success;
     }
 
     /**
-     * <p>Setter for the field <code>success</code>.</p>
+     * Setter for the field {@code success}.
+     *
+     * @param success
+     *            success to set
      */
     public void setSuccess(boolean success) {
         this.success = success;
     }
 
     /**
-     * <p>Getter for the field <code>result</code>.</p>
+     * Getter for the field {@code result}.
+     *
+     * @return {@code result}
      */
     public String getResult() {
         return result;
     }
 
     /**
-     * <p>Setter for the field <code>result</code>.</p>
+     * Setter for the field {@code result}.
+     *
+     * @param result
+     *            result to set
      */
     public void setResult(String result) {
         this.result = result;

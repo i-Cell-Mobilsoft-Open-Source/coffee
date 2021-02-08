@@ -34,21 +34,36 @@ public class SaxParseBaseException extends InvalidRequestException {
     private static final long serialVersionUID = 1L;
 
     /**
-     * <p>Constructor for SaxParseBaseException.</p>
+     * <p>
+     * Constructor for SaxParseBaseException.
+     * </p>
+     * 
+     * @param message
+     *            message
+     * @param e
+     *            e
      */
     public SaxParseBaseException(String message, Throwable e) {
         super(message, e);
     }
 
     /**
-     * <p>Constructor for SaxParseBaseException.</p>
+     * Constructor for SaxParseBaseException.
+     *
+     * @param errors
+     *            errors
      */
     public SaxParseBaseException(List<XMLValidationError> errors) {
         super(errors);
     }
 
     /**
-     * <p>Constructor for SaxParseBaseException.</p>
+     * Constructor for SaxParseBaseException.
+     * 
+     * @param errors
+     *            errors
+     * @param e
+     *            e
      */
     public SaxParseBaseException(List<XMLValidationError> errors, Throwable e) {
         super(errors, e);

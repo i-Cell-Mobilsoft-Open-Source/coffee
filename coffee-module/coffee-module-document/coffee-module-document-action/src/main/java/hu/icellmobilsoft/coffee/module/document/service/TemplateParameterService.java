@@ -52,7 +52,7 @@ public class TemplateParameterService extends BaseService<TemplateParameter> {
     private TemplateParameterRepository templateParameterRepository;
 
     /**
-     * <p>findAll.</p>
+     * Returns all {@link TemplateParameter}s with given template key and language.
      *
      * @param templateKey
      *            not null value of template key
@@ -60,6 +60,7 @@ public class TemplateParameterService extends BaseService<TemplateParameter> {
      *            not null value of language
      * @return entity
      * @throws BaseException
+     *             if invalid parameters or the query throws exception
      */
     public List<TemplateParameter> findAll(String templateKey, String language) throws BaseException {
         log.trace(">> findAll(templateKey: [{0}] ,language: [{1}]", templateKey, language);

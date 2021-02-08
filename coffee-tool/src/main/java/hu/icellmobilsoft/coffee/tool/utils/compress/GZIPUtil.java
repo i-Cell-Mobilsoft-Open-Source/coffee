@@ -45,7 +45,7 @@ import hu.icellmobilsoft.coffee.tool.gson.JsonUtil;
  *
  * <pre>
  * public static void main(String[] args) {
- *     String source = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><xmlRoot><xmlChild xmlField=\"xmlValue\">anotherXmlValue</xmlChild></xmlRoot>";
+ *     String source = "&lt;?xml version=\"1.0\" encoding=\"UTF-8\"?&gt;&lt;xmlRoot&gt;&lt;xmlChild xmlField=\"xmlValue\"&gt;anotherXmlValue&lt;/xmlChild&gt;&lt;/xmlRoot&gt;";
  *     try {
  *         System.out.println("source size: " + source.getBytes(StandardCharsets.UTF_8).length);
  *         long start = System.currentTimeMillis();
@@ -75,6 +75,10 @@ public class GZIPUtil {
      * Compress the source byte array content
      *
      * @param data
+     *            input byte array
+     * @return compressed byte array
+     * @throws BaseException
+     *             exception
      */
     public static byte[] compress(byte[] data) throws BaseException {
         if (data == null || data.length == 0) {
@@ -101,7 +105,10 @@ public class GZIPUtil {
      * Decompress the compressed byte array content
      *
      * @param data
+     *            input byte array
+     * @return decompressed byte array
      * @throws BaseException
+     *             exception
      */
     public static byte[] decompress(byte[] data) throws BaseException {
         if (data == null || data.length == 0) {
@@ -129,11 +136,17 @@ public class GZIPUtil {
     }
 
     /**
-     * unzip and convert result from byte[]
+     * Unzip and convert result from byte[].
      *
+     * @param <T>
+     *            destination type
      * @param data
+     *            input byte array
      * @param clazz
+     *            destination class
+     * @return unzipped and converted object
      * @throws BaseException
+     *             exception
      */
     public static <T> T decompress(byte[] data, Class<T> clazz) throws BaseException {
         if (data == null || data.length == 0) {
@@ -145,14 +158,15 @@ public class GZIPUtil {
     }
 
     /**
-     * Vissza adja a GZIP eredeti meretet. Valojaban nem mindig lehet szamolni vele, de megis van valami. Minta:
+     * Visszaadja a GZIP eredeti meretet. Valojaban nem mindig lehet szamolni vele, de megis van valami. Minta:
      *
      * @param data
-     * @throws BaseException
+     *            input adat
+     * @return eredeti meret
      * @see <a href=
-     * "https://stackoverflow.com/questions/7317243/gets-the-uncompressed-size-of-this-gzipinputstream">https://stackoverflow.com/questions/7317243/gets-the-uncompressed-size-of-this-gzipinputstream</a>
+     *      "https://stackoverflow.com/questions/7317243/gets-the-uncompressed-size-of-this-gzipinputstream">https://stackoverflow.com/questions/7317243/gets-the-uncompressed-size-of-this-gzipinputstream</a>
      */
-    public static int decompressedSize(byte[] data) throws BaseException {
+    public static int decompressedSize(byte[] data) {
         if (data == null || data.length < 4) {
             return 0;
         }
@@ -168,13 +182,14 @@ public class GZIPUtil {
     }
 
     /**
-     * Determines if a byte array is compressed. The java.util.zip GZip implementaiton does not expose the GZip header so it is difficult to determine
-     * if a string is compressed.
+     * Determines if a byte array is compressed. The {@link java.util.zip} GZip implementaiton does not expose the GZip header so it is difficult to
+     * determine if a string is compressed.
      *
-     * @param bytes an array of bytes
+     * @param bytes
+     *            an array of bytes
      * @return true if the array is compressed or false otherwise
      * @see <a href=
-     * "https://stackoverflow.com/questions/4818468/how-to-check-if-inputstream-is-gzipped">https://stackoverflow.com/questions/4818468/how-to-check-if-inputstream-is-gzipped</a>
+     *      "https://stackoverflow.com/questions/4818468/how-to-check-if-inputstream-is-gzipped">https://stackoverflow.com/questions/4818468/how-to-check-if-inputstream-is-gzipped</a>
      */
     public static boolean isCompressed(byte[] bytes) {
         if (bytes == null || bytes.length < 2) {

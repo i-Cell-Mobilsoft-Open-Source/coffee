@@ -32,8 +32,7 @@ import org.apache.deltaspike.jpa.impl.transaction.BeanManagedUserTransactionStra
 import org.hibernate.engine.transaction.jta.platform.internal.JBossAppServerJtaPlatform;
 
 /**
- * Ez akkor kell amikor egy threadban akarjuk hasznalni a @Transactional
- * annotaciot
+ * Ez akkor kell amikor egy threadban akarjuk hasznalni a @Transactional annotaciot
  *
  * @author ischeffer
  * @since 1.0.0
