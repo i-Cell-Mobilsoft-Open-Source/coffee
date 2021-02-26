@@ -37,8 +37,11 @@ import org.jboss.weld.context.bound.BoundRequestContext;
 
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.module.redis.annotation.RedisConnection;
+import hu.icellmobilsoft.coffee.module.redisstream.annotation.RedisStreamConsumer;
+import hu.icellmobilsoft.coffee.module.redisstream.config.StreamGroupConfig;
 import hu.icellmobilsoft.coffee.module.redisstream.service.RedisStreamService;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
+import hu.icellmobilsoft.coffee.tool.utils.annotation.AnnotationUtil;
 import hu.icellmobilsoft.coffee.tool.utils.string.RandomUtil;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.StreamEntry;
@@ -70,6 +73,9 @@ public class RedisStreamConsumerExecutor implements IRedisStreamConsumerExecutor
 
     @Inject
     private BoundRequestContext boundRequestContext;
+
+    @Inject
+    private StreamGroupConfig streamGroupConfig;
 
     private String consumerIdentifier;
 
@@ -111,7 +117,7 @@ public class RedisStreamConsumerExecutor implements IRedisStreamConsumerExecutor
                 streamEntry = redisStreamService.consumeOne(consumerIdentifier);
 
                 if (streamEntry.isPresent()) {
-                    executeProcess(streamEntry.get());
+                    executeProcess(streamEntry.get(), 1);
 
                     // ack
                     redisStreamService.ack(streamEntry.get().getID());
@@ -145,6 +151,42 @@ public class RedisStreamConsumerExecutor implements IRedisStreamConsumerExecutor
     }
 
     /**
+     * Process execution with retry count. If retry {@code RedisStreamConsumer#retryCount()} &gt; count then on processing exception trying run again
+     * and again
+     * 
+     * @param streamEntry
+     *            Redis stream entry
+     * @param counter
+     *            currently run count
+     * @throws BaseException
+     *             exceptin is error
+     */
+    protected void executeProcess(StreamEntry streamEntry, int counter) throws BaseException {
+        try {
+            executeProcessInRequestScope(streamEntry);
+        } catch (BaseException e) {
+            RedisStreamConsumer redisStreamConsumerAnnotation = AnnotationUtil.getAnnotation(consumerBean.getBeanClass(), RedisStreamConsumer.class);
+            streamGroupConfig.setConfigKey(redisStreamConsumerAnnotation.group());
+            int retryCount = streamGroupConfig.getRetryCount().orElse(redisStreamConsumerAnnotation.retryCount());
+            if (counter < retryCount) {
+                String msg = MessageFormat.format("Exception occured on running class [{0}], trying again [{1}]/[{2}]", consumerBean.getBeanClass(),
+                        counter + 1, retryCount);
+                if (log.isDebugEnabled()) {
+                    log.debug(msg, e);
+                } else {
+                    String info = MessageFormat.format("{0}: [{1}], cause: [{2}]", msg, e.getLocalizedMessage(),
+                            Optional.ofNullable(e.getCause()).map(Throwable::getLocalizedMessage).orElse(null));
+                    // do not spam the info log
+                    log.info(info);
+                }
+                executeProcess(streamEntry, counter + 1);
+            } else {
+                throw e;
+            }
+        }
+    }
+
+    /**
      * Process execution wrapper. Running process in self started request scope
      * 
      * @param streamEntry
@@ -152,7 +194,7 @@ public class RedisStreamConsumerExecutor implements IRedisStreamConsumerExecutor
      * @throws BaseException
      *             exceptin is error
      */
-    protected void executeProcess(StreamEntry streamEntry) throws BaseException {
+    protected void executeProcessInRequestScope(StreamEntry streamEntry) throws BaseException {
         // get reference for the consumerBean
         IRedisStreamConsumer consumer = (IRedisStreamConsumer) beanManager.getReference(consumerBean, consumerBean.getBeanClass(),
                 beanManager.createCreationalContext(consumerBean));

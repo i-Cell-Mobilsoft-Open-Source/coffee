@@ -32,6 +32,7 @@ coffee:
                    timeoutmillis: 60000 #default: 60000 <3>
            consumer:
                threadsCount: 2 #default: 1 <4>
+               retryCount: 2 #default: 1 <5>
 ----
 <1> A stream csoport egyedi neve. Minden mező opcionális.
 <2> A stream maximális mérete.
@@ -41,6 +42,8 @@ akkor is ha fel vagy nem volt az dolgozva.
 Ha nem érkezik üzenet a streamben ennyi ms ideig,
 akkor lezárja a connectiont és egy új iterációban újra nyit egy új connectiont.
 <4> Az adott csoport (sampleGroup) consumer mennyi független szálban induljon el.
+<5> (Coff:ee 1.4.0+) Az adott csoport (sampleGroup) consumer hányszor próbálkozzon újra `BaseException` esetén.
+Más hibáknál mely nem `BaseException`-ből származnak nincs figyelembe véve ez a beállítás.
 
 Ehhez tartozik EE szintű beállítás is,
 ami akkor kell ha az extra szálak indításánál nem elég a default (pl. maximális thread count).

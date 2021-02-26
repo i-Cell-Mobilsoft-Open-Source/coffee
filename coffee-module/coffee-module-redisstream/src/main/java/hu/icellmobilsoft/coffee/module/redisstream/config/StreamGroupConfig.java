@@ -76,6 +76,11 @@ public class StreamGroupConfig implements IStreamGroupConfig {
     public static final String CONSUMER_THREADS_COUNT = "consumer.threadsCount";
 
     /**
+     * Default 1 retry count {@link #getRetryCount()}}
+     */
+    public static final String RETRY_COUNT = "consumer.retryCount";
+
+    /**
      * Default true {@link #isEnabled()}}
      */
     public static final String ENABLED = "enabled";
@@ -98,6 +103,11 @@ public class StreamGroupConfig implements IStreamGroupConfig {
     @Override
     public Optional<Integer> getConsumerThreadsCount() {
         return config.getOptionalValue(joinKey(CONSUMER_THREADS_COUNT), Integer.class);
+    }
+
+    @Override
+    public Optional<Integer> getRetryCount() {
+        return config.getOptionalValue(joinKey(RETRY_COUNT), Integer.class);
     }
 
     @Override
