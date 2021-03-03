@@ -77,9 +77,17 @@ public @interface RedisStreamConsumer {
     int consumerThreadsCount() default 1;
 
     /**
+     * How many times to try again if an exception occurs in the consumer process
+     * 
+     * @return retry process count
+     */
+    @Nonbinding
+    int retryCount() default 1;
+
+    /**
      * Default empty literal
      */
-    AnnotationLiteral<RedisStreamConsumer> LITERAL = new Literal("", "", 0);
+    AnnotationLiteral<RedisStreamConsumer> LITERAL = new Literal("", "", 0, 0);
 
     /**
      * AnnotationLiteral for RedisStreamConsumer annotation
@@ -94,12 +102,14 @@ public @interface RedisStreamConsumer {
         final String configKey;
         final String group;
         final int consumerThreadsCount;
+        final int retryCount;
 
-        public Literal(String configKey, String group, int consumerThreadsCount) {
+        public Literal(String configKey, String group, int consumerThreadsCount, int retryCount) {
             super();
             this.configKey = configKey;
             this.group = group;
             this.consumerThreadsCount = consumerThreadsCount;
+            this.retryCount = retryCount;
         }
 
         @Nonbinding
@@ -118,6 +128,12 @@ public @interface RedisStreamConsumer {
         @Override
         public int consumerThreadsCount() {
             return consumerThreadsCount;
+        }
+
+        @Nonbinding
+        @Override
+        public int retryCount() {
+            return retryCount;
         }
     }
 }

@@ -14,3 +14,9 @@ coff:ee v1.3.0 -> v1.4.0 migrációs leírás, újdonságok, változások leír�
 ==== Átállás
 
 Amennyiben van olyan entitás, amin a mezők már korábban lementett rekordon felülírásra kerülnek, úgy a felülírt értékek a továbbiakban az adatbázisba nem kerül lementésre, amennyiben erre mégis igény van, úgy projekt szinten kell saját `AbstractAuditEntity`-t implementálni.
+
+== coffee-module-redisstream
+Bevezetésre került a Consumer *retryCount* beállítás mint `@RedisStreamConsumer` úgy a configurációban is.
+
+==== Átállás
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.

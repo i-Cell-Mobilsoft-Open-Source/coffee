@@ -60,6 +60,15 @@ public interface IStreamGroupConfig {
     Optional<Integer> getConsumerThreadsCount() throws BaseException;
 
     /**
+     * How many times to try again if an exception occurs in the consumer process. This value override {@link RedisStreamConsumer#retryCount()}
+     * 
+     * @return retry process count
+     * @throws BaseException
+     *             Exception on read properties
+     */
+    Optional<Integer> getRetryCount() throws BaseException;
+
+    /**
      * Enable/Disable any part of stream function for any reason. This is only for project logic, no have direct use-case in coffee
      * 
      * @return true - enabled, default
