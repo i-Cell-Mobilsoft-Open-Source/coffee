@@ -2,8 +2,6 @@
 
 coff:ee v1.3.0 -> v1.4.0 migrációs leírás, újdonságok, változások leírása
 
-== Újdonságok
-
 == Változások
 
 === coffee-model-base
@@ -17,6 +15,13 @@ Amennyiben van olyan entitás, amin a mezők már korábban lementett rekordon f
 
 == coffee-module-redisstream
 Bevezetésre került a Consumer *retryCount* beállítás mint `@RedisStreamConsumer` úgy a configurációban is.
+
+==== Átállás
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+== coffee-module-redis
+Bevezetésre került a *lpop* művelet a `RedisService` osztályba.
+Az *rpushRedisData* művelet a `RedisService` osztályban ezentúl válaszolja a lista méretét.
 
 ==== Átállás
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.

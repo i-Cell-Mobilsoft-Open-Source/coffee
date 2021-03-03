@@ -31,7 +31,6 @@ import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.module.redis.repository.RedisRepository;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
 import hu.icellmobilsoft.coffee.tool.gson.JsonUtil;
-
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.ScanParams;
 import redis.clients.jedis.ScanResult;
@@ -44,7 +43,7 @@ import redis.clients.jedis.ScanResult;
  */
 public abstract class AbstractRedisService {
 
-    private static Logger LOGGER = hu.icellmobilsoft.coffee.cdi.logger.LogProducer.getStaticDefaultLogger(AbstractRedisService.class);
+    private static Logger log = Logger.getLogger(AbstractRedisService.class);
 
     /**
      * Returns data of given key from {@link RedisRepository}.
@@ -145,7 +144,7 @@ public abstract class AbstractRedisService {
         String redisDataString = JsonUtil.toJson(redisData);
         RedisRepository redisRepository = new RedisRepository(getJedis());
         String result = redisRepository.setex(redisKey, secondsToExpire, redisDataString);
-        LOGGER.trace("Redis key [{0}] value [{1}] expire [{2}] setted", redisKey, redisData, secondsToExpire);
+        log.trace("Redis key [{0}] value [{1}] expire [{2}] setted", redisKey, redisData, secondsToExpire);
         return result;
     }
 
@@ -165,7 +164,7 @@ public abstract class AbstractRedisService {
 
         RedisRepository redisRepository = new RedisRepository(getJedis());
         Long count = redisRepository.del(redisKey);
-        LOGGER.trace("Redis key [{0}] remove count: [{1}]", redisKey, count);
+        log.trace("Redis key [{0}] remove count: [{1}]", redisKey, count);
     }
 
     /**
@@ -186,7 +185,7 @@ public abstract class AbstractRedisService {
         keys = redisKeys.toArray(keys);
         RedisRepository redisRepository = new RedisRepository(getJedis());
         Long count = redisRepository.del(keys);
-        LOGGER.trace("Redis key remove count: {0}", count);
+        log.trace("Redis key remove count: {0}", count);
     }
 
     /**
@@ -199,11 +198,12 @@ public abstract class AbstractRedisService {
      *            redis data to set
      * @param secondsToExpire
      *            timeout on the key given in seconds
+     * @return number of element in key list
      * @throws BONotFoundException
      *             if key param is empty or data param is null
      * @see Jedis#rpush(String, String...)
      */
-    public void rpushRedisData(String redisKey, String redisData, int secondsToExpire) throws BaseException {
+    public Long rpushRedisData(String redisKey, String redisData, int secondsToExpire) throws BaseException {
         if (StringUtils.isBlank(redisKey)) {
             throw new BONotFoundException("Redis key is empty.");
         }
@@ -212,8 +212,35 @@ public abstract class AbstractRedisService {
             throw new BONotFoundException("Data to store in redis is null!");
         }
         RedisRepository redisRepository = new RedisRepository(getJedis());
-        redisRepository.rpush(redisKey, redisData, secondsToExpire);
-        LOGGER.trace("Redis key [{0}] value [{1}] expire [{2}] pushed", redisKey, redisData, secondsToExpire);
+        Long result = redisRepository.rpush(redisKey, redisData, secondsToExpire);
+        log.trace("Redis key [{0}] value [{1}] result [{2}] expire [{3}] pushed", redisKey, redisData, result, secondsToExpire);
+        return result;
+    }
+
+    /**
+     * Atomically return and remove the first (LPOP) or last (RPOP) element of the list. For example if the list contains the elements "a","b","c"
+     * LPOP will return "a" and the list will become "b","c".
+     * <p>
+     * If the key does not exist or the list is already empty the special value 'nil' is returned.
+     * 
+     * @param redisKey
+     *            key of list
+     * 
+     * @return next first value from list
+     * @throws BONotFoundException
+     *             if key param is empty or list is empty
+     * @see Jedis#lpop(String)
+     */
+    public String lpopRedisData(String redisKey) throws BaseException {
+        if (StringUtils.isBlank(redisKey)) {
+            throw new BONotFoundException("Redis key is empty.");
+        }
+        RedisRepository redisRepository = new RedisRepository(getJedis());
+        String result = redisRepository.lpop(redisKey);
+        if (result == null) {
+            throw new BONotFoundException("Redis data by key: [" + redisKey + "] not found!");
+        }
+        return result;
     }
 
     /**
@@ -422,7 +449,7 @@ public abstract class AbstractRedisService {
         String redisDataString = JsonUtil.toJson(redisData);
         RedisRepository redisRepository = new RedisRepository(getJedis());
         String result = redisRepository.set(redisKey, redisDataString);
-        LOGGER.trace(MessageFormat.format("Redis key [{0}] value [{1}] setted", redisKey, redisData));
+        log.trace(MessageFormat.format("Redis key [{0}] value [{1}] setted", redisKey, redisData));
         return result;
     }
 

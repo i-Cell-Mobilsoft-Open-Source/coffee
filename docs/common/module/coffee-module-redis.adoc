@@ -48,5 +48,31 @@ Bővebb leírás a korlátokról: https://redis.io/commands/scan
 
 [source,java]
 ----
-authRedisService.hscanRedisData("key", 10, 100);
+redisService.hscanRedisData("key", 10, 100);
 ----
+
+=== rpush
+
+A kulcs-ként megadott listába pakolja az értéket
+és beállítja a lista lejárati értékét másodpercben.
+Válaszban a listában lévő tételek mennyisége.
+Bővebb leírás: https://redis.io/commands/rpush + https://redis.io/commands/expire
+
+[source,java]
+----
+redisService.rpushRedisData("key", "element", 100);
+----
+
+=== lpop
+
+(coffee v1.4+)
+A kulcs-ként megadott listából kiszedi és válaszolja az első értéket a sorból.
+Ha már üres a lista a Redis automatán törli azt.
+Ha nem létező listából (közben kiürült és a Redis törölte) kérjük az adatot a rendszer `BONotFoundException` hibát fog dobni.
+Bővebb leírás a korlátokról: https://redis.io/commands/lpop
+
+[source,java]
+----
+redisService.lpopRedisData("key");
+----
+

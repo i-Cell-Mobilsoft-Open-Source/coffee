@@ -43,7 +43,7 @@ public class RedisRepository {
     }
 
     /** Constant <code>CURSOR_0="0"</code> */
-    public final static String CURSOR_0 = "0";
+    public static final String CURSOR_0 = "0";
 
     private Jedis jedis;
 
@@ -79,16 +79,35 @@ public class RedisRepository {
      * is created just before the append operation.
      *
      * @param key
-     *            key to set session id for
-     * @param sessionId
-     *            session id to set
+     *            key to set elementValue for
+     * @param elementValue
+     *            element value to set
      * @param secondsToExpire
      *            timeout on the key given in seconds
+     * @return number of element in key list
+     *
      * @see Jedis#rpush(String, String...)
      */
-    public void rpush(final String key, final String sessionId, int secondsToExpire) {
-        getJedis().rpush(key, sessionId);
+    public Long rpush(final String key, final String elementValue, int secondsToExpire) {
+        Long result = getJedis().rpush(key, elementValue);
         getJedis().expire(key, secondsToExpire);
+        return result;
+    }
+
+    /**
+     * Atomically return and remove the first (LPOP) or last (RPOP) element of the list. For example if the list contains the elements "a","b","c"
+     * LPOP will return "a" and the list will become "b","c".
+     * <p>
+     * If the key does not exist or the list is already empty the special value 'nil' is returned.
+     * 
+     * @param key
+     *            key of list
+     * 
+     * @return next first value from list
+     * @see Jedis#lpop(String)
+     */
+    public String lpop(final String key) {
+        return getJedis().lpop(key);
     }
 
     /**
