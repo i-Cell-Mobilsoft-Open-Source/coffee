@@ -2,7 +2,7 @@
  * #%L
  * Coffee
  * %%
- * Copyright (C) 2020 i-Cell Mobilsoft Zrt.
+ * Copyright (C) 2020 - 2021 i-Cell Mobilsoft Zrt.
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,24 +19,12 @@
  */
 package hu.icellmobilsoft.coffee.module.redisstream.consumer;
 
-import hu.icellmobilsoft.coffee.dto.exception.BaseException;
-import redis.clients.jedis.StreamEntry;
-
 /**
- * Stream consumer interface
+ * Basic Redis Stream consumer interface
  * 
  * @author imre.scheffer
- * @since 1.3.0
+ * @since 1.5.0
  */
-public interface IRedisStreamConsumer extends IRedisStreamBaseConsumer {
+public interface IRedisStreamBaseConsumer {
 
-    /**
-     * Incoming event handle logic. Executed in separated request scope
-     * 
-     * @param streamEntry
-     *            stream message
-     * @throws BaseException
-     *             technical error
-     */
-    void onStream(StreamEntry streamEntry) throws BaseException;
 }

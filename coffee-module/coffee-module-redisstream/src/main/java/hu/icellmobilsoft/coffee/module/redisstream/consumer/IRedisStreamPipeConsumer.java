@@ -2,7 +2,7 @@
  * #%L
  * Coffee
  * %%
- * Copyright (C) 2020 i-Cell Mobilsoft Zrt.
+ * Copyright (C) 2020 - 2021 i-Cell Mobilsoft Zrt.
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,24 +19,40 @@
  */
 package hu.icellmobilsoft.coffee.module.redisstream.consumer;
 
+import java.util.Map;
+
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import redis.clients.jedis.StreamEntry;
 
 /**
- * Stream consumer interface
+ * Stream pipe consumer interface
  * 
  * @author imre.scheffer
- * @since 1.3.0
+ * @since 1.5.0
  */
-public interface IRedisStreamConsumer extends IRedisStreamBaseConsumer {
+public interface IRedisStreamPipeConsumer extends IRedisStreamBaseConsumer {
 
     /**
      * Incoming event handle logic. Executed in separated request scope
      * 
      * @param streamEntry
      *            stream message
+     * @return result data which can be used after the request scope destroying
+     * @throws BaseException
+     *             hiba eset
+     */
+    Map<String, Object> onStream(StreamEntry streamEntry) throws BaseException;
+
+    /**
+     * Running after Redis ACK. Executed in separated request scope
+     * 
+     * @param streamEntry
+     *            stream event Redis object
+     * @param onStreamResult
+     *            input from {@code #onStream(StreamEntry)} result
      * @throws BaseException
      *             technical error
      */
-    void onStream(StreamEntry streamEntry) throws BaseException;
+    default void afterAck(StreamEntry streamEntry, Map<String, Object> onStreamResult) throws BaseException {
+    }
 }

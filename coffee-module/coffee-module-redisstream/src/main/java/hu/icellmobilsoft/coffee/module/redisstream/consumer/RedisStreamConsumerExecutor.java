@@ -20,6 +20,7 @@
 package hu.icellmobilsoft.coffee.module.redisstream.consumer;
 
 import java.text.MessageFormat;
+import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
@@ -45,6 +46,7 @@ import hu.icellmobilsoft.coffee.tool.utils.annotation.AnnotationUtil;
 import hu.icellmobilsoft.coffee.tool.utils.string.RandomUtil;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.StreamEntry;
+import redis.clients.jedis.StreamEntryID;
 import redis.clients.jedis.exceptions.JedisDataException;
 
 /**
@@ -83,10 +85,10 @@ public class RedisStreamConsumerExecutor implements IRedisStreamConsumerExecutor
 
     private boolean endLoop;
 
-    private Bean<? super IRedisStreamConsumer> consumerBean;
+    private Bean<? super IRedisStreamBaseConsumer> consumerBean;
 
     @Override
-    public void init(String redisConfigKey, String group, Bean<? super IRedisStreamConsumer> consumerBean) {
+    public void init(String redisConfigKey, String group, Bean<? super IRedisStreamBaseConsumer> consumerBean) {
         this.redisConfigKey = redisConfigKey;
         redisStreamService.setGroup(group);
         this.consumerBean = consumerBean;
@@ -156,11 +158,22 @@ public class RedisStreamConsumerExecutor implements IRedisStreamConsumerExecutor
     protected void consumeStreamEntry(Optional<StreamEntry> optional) throws BaseException {
         if (optional.isPresent()) {
             StreamEntry streamEntry = optional.get();
-            executeProcess(streamEntry, 1);
+            Optional<Map<String, Object>> result = executeOnStream(streamEntry, 1);
 
             // ack
-            redisStreamService.ack(streamEntry.getID());
+            ack(streamEntry.getID());
+            afterAckInRequestScope(streamEntry, result.orElse(Collections.emptyMap()));
         }
+    }
+
+    /**
+     * Stream entry ACK
+     * 
+     * @param streamEntryID
+     *            Jedis StreamEntry ID
+     */
+    protected void ack(StreamEntryID streamEntryID) {
+        redisStreamService.ack(streamEntryID);
     }
 
     /**
@@ -171,12 +184,13 @@ public class RedisStreamConsumerExecutor implements IRedisStreamConsumerExecutor
      *            Redis stream entry
      * @param counter
      *            currently run count
+     * @return {@code Optional} result data from {@code IRedisStreamPipeConsumer#onStream(StreamEntry)}
      * @throws BaseException
      *             exceptin is error
      */
-    protected void executeProcess(StreamEntry streamEntry, int counter) throws BaseException {
+    protected Optional<Map<String, Object>> executeOnStream(StreamEntry streamEntry, int counter) throws BaseException {
         try {
-            executeProcessInRequestScope(streamEntry);
+            return onStreamInRequestScope(streamEntry);
         } catch (BaseException e) {
             RedisStreamConsumer redisStreamConsumerAnnotation = AnnotationUtil.getAnnotation(consumerBean.getBeanClass(), RedisStreamConsumer.class);
             streamGroupConfig.setConfigKey(redisStreamConsumerAnnotation.group());
@@ -192,7 +206,7 @@ public class RedisStreamConsumerExecutor implements IRedisStreamConsumerExecutor
                     // do not spam the info log
                     log.info(info);
                 }
-                executeProcess(streamEntry, counter + 1);
+                return executeOnStream(streamEntry, counter + 1);
             } else {
                 throw e;
             }
@@ -204,19 +218,54 @@ public class RedisStreamConsumerExecutor implements IRedisStreamConsumerExecutor
      * 
      * @param streamEntry
      *            Redis stream entry
+     * @return {@code Optional} result data from {@code IRedisStreamPipeConsumer#onStream(StreamEntry)}
      * @throws BaseException
      *             exceptin is error
      */
-    protected void executeProcessInRequestScope(StreamEntry streamEntry) throws BaseException {
+    protected Optional<Map<String, Object>> onStreamInRequestScope(StreamEntry streamEntry) throws BaseException {
         // get reference for the consumerBean
-        IRedisStreamConsumer consumer = (IRedisStreamConsumer) beanManager.getReference(consumerBean, consumerBean.getBeanClass(),
-                beanManager.createCreationalContext(consumerBean));
+        Object consumer = beanManager.getReference(consumerBean, consumerBean.getBeanClass(), beanManager.createCreationalContext(consumerBean));
 
         Map<String, Object> requestScopeStore = null;
         try {
             requestScopeStore = new ConcurrentHashMap<>();
             startRequestScope(requestScopeStore);
-            consumer.onStream(streamEntry);
+            if (consumer instanceof IRedisStreamConsumer) {
+                ((IRedisStreamConsumer) consumer).onStream(streamEntry);
+            } else if (consumer instanceof IRedisStreamPipeConsumer) {
+                Map<String, Object> result = ((IRedisStreamPipeConsumer) consumer).onStream(streamEntry);
+                return Optional.of(result);
+            }
+            return Optional.empty();
+        } finally {
+            endRequestScope(requestScopeStore);
+        }
+    }
+
+    /**
+     * Process execution wrapper. Running {@code IRedisStreamPipeConsumer#afterAck(StreamEntry, Map)} process in self started request scope
+     * 
+     * @param streamEntry
+     *            Redis stream entry
+     * @param onStreamResult
+     *            result of {@code IRedisStreamPipeConsumer#onStream(StreamEntry)}
+     * @throws BaseException
+     *             exceptin is error
+     */
+    protected void afterAckInRequestScope(StreamEntry streamEntry, Map<String, Object> onStreamResult) throws BaseException {
+        if (!consumerBean.getBeanClass().isAssignableFrom(IRedisStreamPipeConsumer.class)) {
+            return;
+        }
+        // get reference for the consumerBean
+        Object consumer = beanManager.getReference(consumerBean, consumerBean.getBeanClass(), beanManager.createCreationalContext(consumerBean));
+
+        Map<String, Object> requestScopeStore = null;
+        try {
+            requestScopeStore = new ConcurrentHashMap<>();
+            startRequestScope(requestScopeStore);
+            if (consumer instanceof IRedisStreamPipeConsumer) {
+                ((IRedisStreamPipeConsumer) consumer).afterAck(streamEntry, onStreamResult);
+            }
         } finally {
             endRequestScope(requestScopeStore);
         }
@@ -273,5 +322,9 @@ public class RedisStreamConsumerExecutor implements IRedisStreamConsumerExecutor
     @Override
     public void run() {
         startLoop();
+    }
+
+    public Bean<? super IRedisStreamBaseConsumer> getConsumerBean() {
+        return consumerBean;
     }
 }

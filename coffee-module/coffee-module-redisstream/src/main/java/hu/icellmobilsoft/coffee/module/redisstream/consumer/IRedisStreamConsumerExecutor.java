@@ -40,6 +40,6 @@ public interface IRedisStreamConsumerExecutor extends Runnable {
      * @param consumerBean
      *            stream consumer bean
      */
-    void init(String redisConfigKey, String group, Bean<? super IRedisStreamConsumer> consumerBean);
+    void init(String redisConfigKey, String group, Bean<? super IRedisStreamBaseConsumer> consumerBean);
 
 }
