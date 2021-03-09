@@ -118,7 +118,9 @@ public class RedisStreamConsumerExecutor implements IRedisStreamConsumerExecutor
 
                 streamEntry = redisStreamService.consumeOne(consumerIdentifier);
 
-                consumeStreamEntry(streamEntry);
+                if (streamEntry.isPresent()) {
+                    consumeStreamEntry(streamEntry.get());
+                }
             } catch (BaseException e) {
                 log.error(MessageFormat.format("Exception on consume streamEntry [{0}]: [{1}]", streamEntry, e.getLocalizedMessage()), e);
             } catch (JedisDataException e) {
@@ -150,20 +152,17 @@ public class RedisStreamConsumerExecutor implements IRedisStreamConsumerExecutor
     /**
      * It represents one iteration on one stream (even empty). If the process exists and runs successfully, it sends the ACK
      * 
-     * @param optional
-     *            Stream event element. If the read lock timeout has elapsed, it may be empty
+     * @param streamEntry
+     *            Stream event element
      * @throws BaseException
      *             Technical exception
      */
-    protected void consumeStreamEntry(Optional<StreamEntry> optional) throws BaseException {
-        if (optional.isPresent()) {
-            StreamEntry streamEntry = optional.get();
-            Optional<Map<String, Object>> result = executeOnStream(streamEntry, 1);
+    protected void consumeStreamEntry(StreamEntry streamEntry) throws BaseException {
+        Optional<Map<String, Object>> result = executeOnStream(streamEntry, 1);
 
-            // ack
-            ack(streamEntry.getID());
-            afterAckInRequestScope(streamEntry, result.orElse(Collections.emptyMap()));
-        }
+        // ack
+        ack(streamEntry.getID());
+        afterAckInRequestScope(streamEntry, result.orElse(Collections.emptyMap()));
     }
 
     /**
