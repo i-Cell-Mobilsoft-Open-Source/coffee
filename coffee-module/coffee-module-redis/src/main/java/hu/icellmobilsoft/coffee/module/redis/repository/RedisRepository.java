@@ -111,6 +111,22 @@ public class RedisRepository {
     }
 
     /**
+     * Atomically return and remove the first (LPOP) or last (RPOP) element of the list. For example if the list contains the elements "a","b","c"
+     * LPOP will return "a" and the list will become "b","c".
+     * <p>
+     * If the key does not exist or the list is already empty the special value 'nil' is returned.
+     * 
+     * @param key
+     *            key of list
+     * 
+     * @return next last value from list
+     * @see Jedis#rpop(String)
+     */
+    public String rpop(final String key) {
+        return getJedis().rpop(key);
+    }
+
+    /**
      * Returns all elements of the list stored at the specified key.
      *
      * @param key
