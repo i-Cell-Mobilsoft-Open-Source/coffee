@@ -4,7 +4,7 @@ coff:ee v1.2.0 -> v1.3.0 migrációs leírás, újdonságok, változások leír�
 
 == Újdonságok
 
-== coffee-module-redisstream
+=== coffee-module-redisstream
 Új modul, mely a redis stream megoldásra ad enterprise CDI alap keretet,
 bővebb infó a leírásban
 

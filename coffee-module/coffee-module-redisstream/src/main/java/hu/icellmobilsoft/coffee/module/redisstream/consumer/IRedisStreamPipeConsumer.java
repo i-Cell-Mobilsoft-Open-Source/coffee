@@ -25,10 +25,15 @@ import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import redis.clients.jedis.StreamEntry;
 
 /**
- * Stream pipe consumer interface
+ * Stream pipe consumer interface. The main thing is to be able to run the stream consumer and the post-ACK operation separately in their own request
+ * scope. The two operations {@code #onStream(StreamEntry)} and {@code #afterAck(StreamEntry, Map)} are completely isolated from each other, only the
+ * output and input parameters are common objects<br>
+ * <br>
+ * If need simple version, see {@link IRedisStreamConsumer}
  * 
  * @author imre.scheffer
  * @since 1.5.0
+ * @see IRedisStreamConsumer
  */
 public interface IRedisStreamPipeConsumer extends IRedisStreamBaseConsumer {
 
@@ -39,7 +44,7 @@ public interface IRedisStreamPipeConsumer extends IRedisStreamBaseConsumer {
      *            stream message
      * @return result data which can be used after the request scope destroying
      * @throws BaseException
-     *             hiba eset
+     *             technical error
      */
     Map<String, Object> onStream(StreamEntry streamEntry) throws BaseException;
 
@@ -53,6 +58,5 @@ public interface IRedisStreamPipeConsumer extends IRedisStreamBaseConsumer {
      * @throws BaseException
      *             technical error
      */
-    default void afterAck(StreamEntry streamEntry, Map<String, Object> onStreamResult) throws BaseException {
-    }
+    void afterAck(StreamEntry streamEntry, Map<String, Object> onStreamResult) throws BaseException;
 }
