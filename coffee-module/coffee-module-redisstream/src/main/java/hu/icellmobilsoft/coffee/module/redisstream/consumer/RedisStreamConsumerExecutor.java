@@ -180,12 +180,12 @@ public class RedisStreamConsumerExecutor implements IRedisStreamConsumerExecutor
      * and again
      * 
      * @param streamEntry
-     *            Redis stream entry
+     *            Redis stream input entry
      * @param counter
      *            currently run count
      * @return {@code Optional} result data from {@code IRedisStreamPipeConsumer#onStream(StreamEntry)}
      * @throws BaseException
-     *             exceptin is error
+     *             exception is error
      */
     protected Optional<Map<String, Object>> executeOnStream(StreamEntry streamEntry, int counter) throws BaseException {
         try {
@@ -216,10 +216,10 @@ public class RedisStreamConsumerExecutor implements IRedisStreamConsumerExecutor
      * Process execution wrapper. Running process in self started request scope
      * 
      * @param streamEntry
-     *            Redis stream entry
+     *            Redis stream input entry
      * @return {@code Optional} result data from {@code IRedisStreamPipeConsumer#onStream(StreamEntry)}
      * @throws BaseException
-     *             exceptin is error
+     *             exception is error
      */
     protected Optional<Map<String, Object>> onStreamInRequestScope(StreamEntry streamEntry) throws BaseException {
         // get reference for the consumerBean
@@ -245,11 +245,11 @@ public class RedisStreamConsumerExecutor implements IRedisStreamConsumerExecutor
      * Process execution wrapper. Running {@code IRedisStreamPipeConsumer#afterAck(StreamEntry, Map)} process in self started request scope
      * 
      * @param streamEntry
-     *            Redis stream entry
+     *            Redis stream input entry
      * @param onStreamResult
      *            result of {@code IRedisStreamPipeConsumer#onStream(StreamEntry)}
      * @throws BaseException
-     *             exceptin is error
+     *             exception is error
      */
     protected void afterAckInRequestScope(StreamEntry streamEntry, Map<String, Object> onStreamResult) throws BaseException {
         if (!consumerBean.getBeanClass().isAssignableFrom(IRedisStreamPipeConsumer.class)) {
@@ -303,16 +303,16 @@ public class RedisStreamConsumerExecutor implements IRedisStreamConsumerExecutor
     }
 
     /**
-     * Egyedi stream consumer azonosito
+     * Uniq stream consumer identifier
      * 
-     * @return azonosito
+     * @return identifier
      */
     public String getConsumerIdentifier() {
         return consumerIdentifier;
     }
 
     /**
-     * Végtelen stream olvasása leállítása
+     * Stop endless stream reading
      */
     public void stopLoop() {
         endLoop = true;
