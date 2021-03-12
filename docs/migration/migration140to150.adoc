@@ -25,7 +25,7 @@ Bevezetésre került a *lpop* opcionális változata a `RedisService` osztályba
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
 
 === coffee-module-redisstream
-A stream konzumer kezelése további minor változáson esett át hogy könyebben lehessen a projekten teszre szabni.
+A stream konzumer kezelése további minor változáson esett át hogy könyebben lehessen a projekten testre szabni.
 Létrejött egy `IRedisStreamPipeConsumer` mely célja a kiterjesztett stream fogyasztás lehetősége.
 
 ==== Átállás
