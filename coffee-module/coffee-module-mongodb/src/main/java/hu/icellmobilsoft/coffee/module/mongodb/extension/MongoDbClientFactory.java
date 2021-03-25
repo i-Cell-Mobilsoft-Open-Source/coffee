@@ -45,6 +45,7 @@ import hu.icellmobilsoft.coffee.cdi.logger.ThisLogger;
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 import hu.icellmobilsoft.coffee.tool.utils.annotation.AnnotationUtil;
+import hu.icellmobilsoft.coffee.tool.utils.string.StringUtil;
 
 /**
  * Factory class to produce @MongoDbClient
@@ -102,7 +103,7 @@ public class MongoDbClientFactory {
 
     /**
      * Create mongoClient and put in the container if not exist with the given configKey, thread safe
-     * 
+     *
      * @param mongoConfigHelper The initialized helper class with mongo connection parameters.
      * @throws BaseException If MongoClient cannot be created.
      */
@@ -121,7 +122,7 @@ public class MongoDbClientFactory {
      */
     private MongoClient createMongoClient(MongoConfigHelper mongoConfigHelper) throws BaseException {
         try {
-            log.info("MongoDB uri [{0}]", mongoConfigHelper.getUri());
+            log.info("MongoDB uri [{0}]", StringUtil.maskUriAuthenticationCredentials(mongoConfigHelper.getUri()));
 
             MongoClientOptions.Builder builder = new MongoClientOptions.Builder();
             builder.maxConnectionIdleTime(mongoConfigHelper.getMaxConnectionIdleTime());
