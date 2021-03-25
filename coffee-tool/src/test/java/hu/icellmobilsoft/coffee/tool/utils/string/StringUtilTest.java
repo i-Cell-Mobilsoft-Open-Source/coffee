@@ -139,6 +139,17 @@ public class StringUtilTest {
         Assertions.assertEquals(expected, actual);
     }
 
+    @DisplayName("Testing maskUriAuthenticationCredentials(String uri)")
+    @ParameterizedTest(name = "Testing maskUriAuthenticationCredentials(\"{0}\"); expected:[{1}]")
+    // given
+    @MethodSource("maskUriAuthenticationCredentialsTestParams")
+    void maskUriAuthenticationCredentials(String uri, String expected) {
+        // when
+        String actual = StringUtil.maskUriAuthenticationCredentials(uri);
+        // then
+        Assertions.assertEquals(expected, actual);
+    }
+
     static Stream<Arguments> maskPropertyValueTestParams() {
         return Stream.of(//
                 // Arguments.arguments(key, value, keyPattern, expected)
@@ -161,6 +172,18 @@ public class StringUtilTest {
                 Arguments.arguments("\"userName\":\"abc\"", null, "\"userName\":\"abc\""), //
                 Arguments.arguments(null, TEST_PATTERN, null), //
                 Arguments.arguments("\"userPassword\":\"abc\"", null, "\"userPassword\":\"abc\"")//
+        );
+    }
+
+    static Stream<Arguments> maskUriAuthenticationCredentialsTestParams() {
+        return Stream.of(//
+                // Arguments.arguments(uri, expected)
+                Arguments.arguments("mongodb://username:password@localhost:12345", "mongodb://*:*@localhost:12345"), //
+                Arguments.arguments("ftp://user:name:pass:word@localhost:12345", "ftp://*:*@localhost:12345"), //
+                Arguments.arguments("any:////user:?[name#@:p]ass:word@@localhost:12345", "any://*:*@localhost:12345"), //
+                Arguments.arguments("http://localhost:12345", "http://localhost:12345"), //
+                Arguments.arguments(null, null), //
+                Arguments.arguments("", "")//
         );
     }
 }
