@@ -213,11 +213,12 @@ public class StringUtil {
     /**
      * Mask authentication credentials in URI connection string.
      *
-     * This function replaces the "username:password" part between the "//" and "@" signs in the URI with "*:*". E.g.:<br/>
-     * "mongodb://username:password@localhost:12345" -> "mongodb://*:*@localhost:12345"
+     * This function replaces the "username:password" part between the "//" and "@" signs in the URI with "*:*". E.g.:<br>
+     * "mongodb://username:password@localhost:12345" becomes "mongodb://*:*@localhost:12345"
      *
      * @param uri
      *            the uri to mask
+     * @return masked URI or unchanged if invalid input
      */
     public static String maskUriAuthenticationCredentials(String uri) {
         if (StringUtils.isBlank(uri)) {
@@ -226,5 +227,4 @@ public class StringUtil {
         String regex = "//.*@";
         return uri.replaceAll(regex, "//*:*@");
     }
-
 }
