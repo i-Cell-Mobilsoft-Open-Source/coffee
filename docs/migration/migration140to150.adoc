@@ -1,0 +1,11 @@
+= v1.4.0 → v1.5.0
+
+coff:ee v1.4.0 -> v1.5.0 migrációs leírás, újdonságok, változások leírása
+
+== Változások
+
+=== coffee-tool
+Bevezetésre került a *maskUriAuthenticationCredentials* függvény a `StringUtil` osztályba.
+
+==== Átállás
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
