@@ -230,7 +230,13 @@ public class StringUtil {
         if (StringUtils.isBlank(uri)) {
             return uri;
         }
+
         String regex = "//.*@";
-        return uri.replaceAll(regex, "//*:*@");
+        String replacement = "//*:*@";
+
+        Pattern pattern = patternCache.getPattern(regex);
+        Matcher matcher = pattern.matcher(uri);
+
+        return matcher.replaceAll(replacement);
     }
 }
