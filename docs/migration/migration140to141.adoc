@@ -1,0 +1,18 @@
+= v1.4.0 → v1.4.1
+
+coff:ee v1.4.0 -> v1.4.1 migrációs leírás, újdonságok, változások leírása
+
+== Változások
+
+=== coffee-tool
+Bevezetésre került a `StringUtil.maskUriAuthenticationCredentials` függvény.
+
+==== Átállás
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+=== coffee-module-mongodb
+Alkalmazva lett a `StringUtil.maskUriAuthenticationCredentials` függvény a `MongoDbClientFactory.createMongoClient`-ben
+MongoDB uri maszkolásra log-oláskor.
+
+==== Átállás
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
