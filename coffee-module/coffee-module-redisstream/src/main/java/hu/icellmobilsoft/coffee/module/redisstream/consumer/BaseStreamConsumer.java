@@ -27,6 +27,8 @@ import java.util.Map;
 import javax.annotation.Resource;
 import javax.inject.Inject;
 
+import org.apache.commons.lang3.StringUtils;
+
 import hu.icellmobilsoft.coffee.dto.common.LogConstants;
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.module.redisstream.config.IRedisStreamConstant;
@@ -88,7 +90,7 @@ public class BaseStreamConsumer {
     protected boolean isExpiredTtl(StreamEntry streamEntry) throws BaseException {
         Map<String, String> fieldMap = streamEntry.getFields();
         String ttl = fieldMap.get(IRedisStreamConstant.Common.DATA_KEY_TTL);
-        if (ttl != null) {
+        if (StringUtils.isNotBlank(ttl)) {
             try {
                 LocalDateTime ttlDate = LocalDateTime.ofInstant(Instant.ofEpochMilli(Long.parseLong(ttl)), ZoneId.systemDefault());
                 if (ttlDate.isBefore(LocalDateTime.now())) {
