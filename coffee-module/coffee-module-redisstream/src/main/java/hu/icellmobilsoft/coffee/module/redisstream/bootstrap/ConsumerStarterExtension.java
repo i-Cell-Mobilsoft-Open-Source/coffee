@@ -35,7 +35,7 @@ import javax.naming.NamingException;
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.module.redisstream.annotation.RedisStreamConsumer;
 import hu.icellmobilsoft.coffee.module.redisstream.config.StreamGroupConfig;
-import hu.icellmobilsoft.coffee.module.redisstream.consumer.IRedisStreamConsumer;
+import hu.icellmobilsoft.coffee.module.redisstream.consumer.IRedisStreamBaseConsumer;
 import hu.icellmobilsoft.coffee.module.redisstream.consumer.IRedisStreamConsumerExecutor;
 import hu.icellmobilsoft.coffee.module.redisstream.consumer.RedisStreamConsumerExecutor;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
@@ -64,7 +64,7 @@ public class ConsumerStarterExtension implements Extension {
     void validate(@Observes AfterDeploymentValidation adv, BeanManager beanManager) {
         LOG.debug("Checking consumer for RedisStreamConsumer...");
         // kiszedjuk az osszes olyan osztalyt, ami a IRedisStreamConsumer interfeszt implementalja
-        Set<Bean<?>> beans = beanManager.getBeans(IRedisStreamConsumer.class, RedisStreamConsumer.LITERAL);
+        Set<Bean<?>> beans = beanManager.getBeans(IRedisStreamBaseConsumer.class, RedisStreamConsumer.LITERAL);
         LOG.info("Found [{0}] RedisStreamConsumer bean...", beans.size());
         if (!beans.isEmpty()) {
             Instance<StreamGroupConfig> iconfig = beanManager.createInstance().select(StreamGroupConfig.class);
@@ -104,7 +104,8 @@ public class ConsumerStarterExtension implements Extension {
 
     @SuppressWarnings("unchecked")
     private void startThread(IRedisStreamConsumerExecutor executor, RedisStreamConsumer redisStreamConsumerAnnotation, Bean<?> bean) {
-        executor.init(redisStreamConsumerAnnotation.configKey(), redisStreamConsumerAnnotation.group(), (Bean<? super IRedisStreamConsumer>) bean);
+        executor.init(redisStreamConsumerAnnotation.configKey(), redisStreamConsumerAnnotation.group(),
+                (Bean<? super IRedisStreamBaseConsumer>) bean);
         LOG.info("Starting Redis stream consumer with executor, class [{0}] for configKey [{1}], group [{2}]...", bean.getBeanClass(),
                 redisStreamConsumerAnnotation.configKey(), redisStreamConsumerAnnotation.group());
 

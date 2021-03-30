@@ -31,7 +31,7 @@ import javax.inject.Inject;
 
 import hu.icellmobilsoft.coffee.module.redisstream.annotation.RedisStreamConsumer;
 import hu.icellmobilsoft.coffee.module.redisstream.config.StreamGroupConfig;
-import hu.icellmobilsoft.coffee.module.redisstream.consumer.IRedisStreamConsumer;
+import hu.icellmobilsoft.coffee.module.redisstream.consumer.IRedisStreamBaseConsumer;
 import hu.icellmobilsoft.coffee.module.redisstream.consumer.IRedisStreamConsumerExecutor;
 import hu.icellmobilsoft.coffee.module.redisstream.consumer.RedisStreamConsumerExecutor;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
@@ -100,11 +100,10 @@ public class BaseRedisConsumerStarter {
 
     /**
      * Start Redis consumers in separate long running managed threads
-     * 
      */
     public void start() {
         // kiszedjuk az osszes olyan osztalyt, ami a IRedisStreamConsumer interfeszt implementalja
-        Set<Bean<?>> beans = beanManager.getBeans(IRedisStreamConsumer.class, RedisStreamConsumer.LITERAL);
+        Set<Bean<?>> beans = beanManager.getBeans(IRedisStreamBaseConsumer.class, RedisStreamConsumer.LITERAL);
         beans.stream().forEach(this::handleConsumerBean);
     }
 
@@ -124,8 +123,10 @@ public class BaseRedisConsumerStarter {
         }
     }
 
+    @SuppressWarnings("unchecked")
     protected void startThread(IRedisStreamConsumerExecutor executor, RedisStreamConsumer redisStreamConsumerAnnotation, Bean<?> bean) {
-        executor.init(redisStreamConsumerAnnotation.configKey(), redisStreamConsumerAnnotation.group(), (Bean<? super IRedisStreamConsumer>) bean);
+        executor.init(redisStreamConsumerAnnotation.configKey(), redisStreamConsumerAnnotation.group(),
+                (Bean<? super IRedisStreamBaseConsumer>) bean);
         log.info("Starting Redis stream consumer with executor, class [{0}] for configKey [{1}], group [{2}]...", bean.getBeanClass(),
                 redisStreamConsumerAnnotation.configKey(), redisStreamConsumerAnnotation.group());
 

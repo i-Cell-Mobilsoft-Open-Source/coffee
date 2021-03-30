@@ -2,7 +2,7 @@
  * #%L
  * Coffee
  * %%
- * Copyright (C) 2020 i-Cell Mobilsoft Zrt.
+ * Copyright (C) 2020 - 2021 i-Cell Mobilsoft Zrt.
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,27 +19,12 @@
  */
 package hu.icellmobilsoft.coffee.module.redisstream.consumer;
 
-import javax.enterprise.inject.spi.Bean;
-
 /**
- * Stream consumer executor interface
+ * Basic Redis Stream consumer interface
  * 
  * @author imre.scheffer
- * @author czenczl
- * @since 1.3.0
+ * @since 1.5.0
  */
-public interface IRedisStreamConsumerExecutor extends Runnable {
-
-    /**
-     * Stream consumer executor inicializacioja
-     * 
-     * @param redisConfigKey
-     *            kulcs ami a redis konfiguraciot celozza, @RedisConnection-ba hasznalja fel
-     * @param group
-     *            stream consumer group nev
-     * @param consumerBean
-     *            stream consumer bean
-     */
-    void init(String redisConfigKey, String group, Bean<? super IRedisStreamBaseConsumer> consumerBean);
+public interface IRedisStreamBaseConsumer {
 
 }
