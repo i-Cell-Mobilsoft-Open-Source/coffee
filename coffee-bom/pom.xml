@@ -21,7 +21,7 @@
 
 		<version.org.jboss.logging.jboss-logging>3.3.2.Final</version.org.jboss.logging.jboss-logging>
 		<version.org.apache.commons.commons-lang3>3.9</version.org.apache.commons.commons-lang3>
-		<version.com.google.guava>25.1-jre</version.com.google.guava>
+		<version.com.google.guava>29.0-jre</version.com.google.guava>
 		<version.commons-beanutils>1.9.4</version.commons-beanutils>
 		<version.commons-codec>1.10</version.commons-codec>
 		<version.commons-collections>3.2.2</version.commons-collections>
