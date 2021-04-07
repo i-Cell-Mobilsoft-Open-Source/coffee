@@ -19,7 +19,7 @@ Bevezetésre került a Consumer *retryCount* beállítás mint `@RedisStreamCons
 ==== Átállás
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
 
-== coffee-module-redis
+=== coffee-module-redis
 Bevezetésre került a *lpop* művelet a `RedisService` osztályba.
 Az *rpushRedisData* művelet a `RedisService` osztályban ezentúl válaszolja a lista méretét.
 

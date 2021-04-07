@@ -16,3 +16,17 @@ MongoDB uri maszkolásra log-oláskor.
 
 ==== Átállás
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+=== coffee-module-redis
+Bevezetésre került a *lpop* opcionális változata a `RedisService` osztályba,
+és a párja *rpop*.
+
+==== Átállás
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+=== coffee-module-redisstream
+A stream konzumer kezelése további minor változáson esett át hogy könyebben lehessen a projekten testre szabni.
+Létrejött egy `IRedisStreamPipeConsumer` mely célja a kiterjesztett stream fogyasztás lehetősége.
+
+==== Átállás
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
