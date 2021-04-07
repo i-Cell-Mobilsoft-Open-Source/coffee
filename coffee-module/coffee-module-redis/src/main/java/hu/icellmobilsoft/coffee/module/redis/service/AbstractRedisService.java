@@ -218,8 +218,8 @@ public abstract class AbstractRedisService {
     }
 
     /**
-     * Atomically return and remove the first (LPOP) or last (RPOP) element of the list. For example if the list contains the elements "a","b","c"
-     * LPOP will return "a" and the list will become "b","c".
+     * Atomically return and remove the first (LPOP) element of the list. For example if the list contains the elements "a","b","c" LPOP will return
+     * "a" and the list will become "b","c".
      * <p>
      * If the key does not exist or the list is already empty the special value 'nil' is returned.
      * 
@@ -241,6 +241,76 @@ public abstract class AbstractRedisService {
             throw new BONotFoundException("Redis data by key: [" + redisKey + "] not found!");
         }
         return result;
+    }
+
+    /**
+     * Atomically return and remove the first (LPOP) element of the list. For example if the list contains the elements "a","b","c" LPOP will return
+     * "a" and the list will become "b","c".
+     * <p>
+     * If the key does not exist or the list is already empty the special value 'nil' is returned.
+     * 
+     * @param redisKey
+     *            key of list
+     * 
+     * @return next first value from list
+     * @throws BaseException
+     *             if technical error occured
+     * @see Jedis#lpop(String)
+     */
+    public Optional<String> lpopRedisDataOpt(String redisKey) throws BaseException {
+        if (StringUtils.isBlank(redisKey)) {
+            return Optional.empty();
+        }
+        RedisRepository redisRepository = new RedisRepository(getJedis());
+        return Optional.ofNullable(redisRepository.lpop(redisKey));
+    }
+
+    /**
+     * Atomically return and remove the last (RPOP) element of the list. For example if the list contains the elements "a","b","c" RPOP will return
+     * "c" and the list will become "a","b".
+     * <p>
+     * If the key does not exist or the list is already empty the special value 'nil' is returned.
+     * 
+     * @param redisKey
+     *            key of list
+     * 
+     * @return next last value from list
+     * @throws BONotFoundException
+     *             if key param is empty or list is empty
+     * @see Jedis#rpop(String)
+     */
+    public String rpopRedisData(String redisKey) throws BaseException {
+        if (StringUtils.isBlank(redisKey)) {
+            throw new BONotFoundException("Redis key is empty.");
+        }
+        RedisRepository redisRepository = new RedisRepository(getJedis());
+        String result = redisRepository.rpop(redisKey);
+        if (result == null) {
+            throw new BONotFoundException("Redis data by key: [" + redisKey + "] not found!");
+        }
+        return result;
+    }
+
+    /**
+     * Atomically return and remove the last (RPOP) element of the list. For example if the list contains the elements "a","b","c" RPOP will return
+     * "c" and the list will become "a","b".
+     * <p>
+     * If the key does not exist or the list is already empty the special value 'nil' is returned.
+     * 
+     * @param redisKey
+     *            key of list
+     * 
+     * @return next last value from list
+     * @throws BaseException
+     *             if technical error occured
+     * @see Jedis#rpop(String)
+     */
+    public Optional<String> rpopRedisDataOpt(String redisKey) throws BaseException {
+        if (StringUtils.isBlank(redisKey)) {
+            return Optional.empty();
+        }
+        RedisRepository redisRepository = new RedisRepository(getJedis());
+        return Optional.ofNullable(redisRepository.rpop(redisKey));
     }
 
     /**

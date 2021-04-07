@@ -108,7 +108,7 @@ esetben érdemes lehet összegyűjteni a message-eket, és azokat listaként át
 
 A fenti konfig-hoz tartozó SampleConsumer használata:
 
-.SampleConsumer.class
+.IRedisStreamConsumer.class
 [source,java]
 ----
 package hu.icellmobilsoft.redis.consume;
@@ -153,6 +153,14 @@ public class SampleConsumer implements IRedisStreamConsumer {
 <1> A Counter osztály RequestScope-ban működik
 <2> A CounterDependent osztály Dependent-ként működik
 <3> A CounterApplication osztály ApplicationScope-ban működik
+
+.IRedisStreamPipeConsumer.class
+Létezik egy komplexebb `IRedisStreamPipeConsumer`,
+mely célja a kiterjesztett stream fogyasztás lehetősége.
+Az `IRedisStreamConsumer`-hez képest annyi a változás,
+hogy az `Map<String, Object> onStream(StreamEntry streamEntry)` visszatérő értéke
+a `void afterAck(StreamEntry streamEntry, Map<String, Object> onStreamResult)` bemenete.
+A kettő funkció teljesen elkülönített saját requestScope-ban fut.
 
 EE környezetben szükséges egyéb logikával is kiegészíteni a consumert,
 ami például a folyamat azonosító, egyedi meta adatok,

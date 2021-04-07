@@ -23,21 +23,23 @@ import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import redis.clients.jedis.StreamEntry;
 
 /**
- * Stream consumer interface
+ * Stream consumer interface. After successfully running {@code #onStream(StreamEntry)}, the ACK is sent.<br>
+ * <br>
+ * If need complex version, see {@link IRedisStreamPipeConsumer}
  * 
  * @author imre.scheffer
  * @since 1.3.0
+ * @see IRedisStreamPipeConsumer
  */
-public interface IRedisStreamConsumer {
+public interface IRedisStreamConsumer extends IRedisStreamBaseConsumer {
 
     /**
-     * A kapott uzenet uzleto logika kezelese
+     * Incoming event handle logic. Executed in separated own request scope
      * 
      * @param streamEntry
      *            stream message
      * @throws BaseException
-     *             hiba eset
+     *             technical error
      */
     void onStream(StreamEntry streamEntry) throws BaseException;
-
 }
