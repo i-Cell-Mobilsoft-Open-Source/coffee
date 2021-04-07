@@ -4,6 +4,12 @@ coff:ee v1.4.0 -> v1.5.0 migrációs leírás, újdonságok, változások leír�
 
 == Változások
 
+* Bump guava 25.1-jre -> 29.0-jre - A frissítést a https://github.com/advisories/GHSA-5mg8-w23w-74h3 indította.
+Mivel a coff:ee csak használt dependencyket köti be,
+engedélyezni kellett com.google.guava:failureaccess függőséget,
+ami a https://github.com/google/guava/releases/tag/v27.0 verzióval kötelezővé vált:
+https://groups.google.com/g/guava-announce/c/Km82fZG68Sw .
+
 === coffee-tool
 Bevezetésre került a `StringUtil.maskUriAuthenticationCredentials` függvény.
 
