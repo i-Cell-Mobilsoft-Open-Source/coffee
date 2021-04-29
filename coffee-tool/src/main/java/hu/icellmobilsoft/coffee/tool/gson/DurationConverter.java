@@ -43,10 +43,14 @@ public class DurationConverter implements JsonSerializer<Duration>, JsonDeserial
 
     private static Logger LOGGER = hu.icellmobilsoft.coffee.cdi.logger.LogProducer.getStaticDefaultLogger(DurationConverter.class);
 
+    /** {@inheritDoc} */
+    @Override
     public JsonElement serialize(Duration duration, Type type, JsonSerializationContext jsonSerializationContext) {
         return new JsonPrimitive(String.valueOf(duration));
     }
 
+    /** {@inheritDoc} */
+    @Override
     public Duration deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) {
         try {
             return DatatypeFactory.newInstance().newDuration(jsonElement.getAsString());
