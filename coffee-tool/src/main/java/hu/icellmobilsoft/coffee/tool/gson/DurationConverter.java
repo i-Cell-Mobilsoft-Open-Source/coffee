@@ -37,7 +37,7 @@ import hu.icellmobilsoft.coffee.se.logging.Logger;
  * Json &lt;-&gt; Date converter.
  *
  * @author bence.agocsi-kiss
- * @since 1.2.0
+ * @since 1.5.0
  */
 public class DurationConverter implements JsonSerializer<Duration>, JsonDeserializer<Duration> {
 
