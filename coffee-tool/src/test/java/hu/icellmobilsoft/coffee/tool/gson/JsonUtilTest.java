@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -37,6 +37,7 @@ import java.util.TimeZone;
 
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
+import javax.xml.datatype.Duration;
 import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.junit.jupiter.api.DisplayName;
@@ -50,7 +51,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
-import hu.icellmobilsoft.coffee.tool.gson.JsonUtil;
 
 /**
  * @author mark.petrenyi
@@ -71,13 +71,15 @@ class JsonUtilTest {
             "\"clazz\":\"hu.icellmobilsoft.coffee.tool.gson.JsonUtilTest\"," + //
             "\"offsetDateTime\":\"2019-02-11T15:23:34.051Z\"," + //
             "\"offsetTime\":\"15:23:34.051Z\"," + //
-            "\"localDate\":\"2019-02-11\"" + //
+            "\"localDate\":\"2019-02-11\"," + //
+            "\"duration\":\"P1Y1M1DT1H1M1S\"" + //
             "}";
 
     private TestObject givenWeHaveTestObject() throws DatatypeConfigurationException {
         TestObject testObject = new TestObject();
         ZonedDateTime zonedDateTime = ZonedDateTime.of(2019, 02, 11, 15, 23, 34, 51000000, ZoneOffset.UTC);
         Calendar gregorianCalendar = GregorianCalendar.getInstance(TimeZone.getTimeZone("UTC"));
+        Duration duration = DatatypeFactory.newInstance().newDuration(true,1,1,1,1,1,1);
         gregorianCalendar.setTime(Date.from(zonedDateTime.toInstant()));
 
         Date date = new Date(Long.parseLong(DATE_AS_LONG));
@@ -89,6 +91,7 @@ class JsonUtilTest {
         testObject.setOffsetDateTime(zonedDateTime.toOffsetDateTime());
         testObject.setOffsetTime(zonedDateTime.toOffsetDateTime().toOffsetTime());
         testObject.setLocalDate(zonedDateTime.toLocalDate());
+        testObject.setDuration(duration);
         return testObject;
     }
 
@@ -317,6 +320,7 @@ class JsonUtilTest {
         OffsetDateTime offsetDateTime;
         OffsetTime offsetTime;
         LocalDate localDate;
+        Duration duration;
 
         public XMLGregorianCalendar getXmlGregorianCalendar() {
             return xmlGregorianCalendar;
@@ -382,6 +386,14 @@ class JsonUtilTest {
             this.localDate = localDate;
         }
 
+        public Duration getDuration() {
+            return duration;
+        }
+
+        public void setDuration(Duration duration) {
+            this.duration = duration;
+        }
+
         @Override
         public boolean equals(Object o) {
             if (this == o) {
@@ -397,19 +409,20 @@ class JsonUtilTest {
                     && Objects.deepEquals(bytes, other.bytes)//
                     && Objects.equals(string, other.string)//
                     && Objects.equals(clazz, other.clazz) && Objects.equals(offsetDateTime, other.offsetDateTime)
-                    && Objects.equals(offsetTime, other.offsetTime) && Objects.equals(localDate, other.localDate);
+                    && Objects.equals(offsetTime, other.offsetTime) && Objects.equals(localDate, other.localDate)
+                    && Objects.equals(duration, other.duration);
         }
 
         @Override
         public int hashCode() {
-            return Objects.hash(xmlGregorianCalendar, date, bytes, string, clazz, offsetDateTime, offsetTime, localDate);
+            return Objects.hash(xmlGregorianCalendar, date, bytes, string, clazz, offsetDateTime, offsetTime, localDate, duration);
         }
 
         @Override
         public String toString() {
             return "TestObject{" + "xmlGregorianCalendar=" + xmlGregorianCalendar + ", date=" + date + ", bytes=" + Arrays.toString(bytes)
                     + ", string='" + string + '\'' + ", clazz=" + clazz + "offsetDateTime=" + offsetDateTime + ", offsetTime=" + offsetTime
-                    + ", localDate=" + localDate + '}';
+                    + ", localDate=" + localDate + ", duration=" + duration + '}';
         }
 
     }
