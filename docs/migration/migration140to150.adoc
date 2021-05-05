@@ -13,8 +13,15 @@ https://groups.google.com/g/guava-announce/c/Km82fZG68Sw .
 === coffee-tool
 Bevezetésre került a `StringUtil.maskUriAuthenticationCredentials` függvény.
 
+Bevezetésre került a Duration-ök szerializálásának/deszerializálásának támogatása a JsonUtil-ban (DurationConverter.class).
+
 ==== Átállás
-A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+A változtatások hatására a Duration Json deszerializálása megváltozott.
+Eddigi formátum: "duration":{"signum":1,"years":1,"months":1,"days":1,"hours":1,"minutes":1,"seconds":1}
+Jelenlegi formátum: "duration":"P1Y1M1DT1H1M1S" (ISO 8601 szabvány szerinti)
+
+Ennek értelmében a változtatás visszafele nem teljesen kompatibilis. A változtatások átállási munkálatokat eredményezhetnek.
+Az átállás segítésére és a könnyebb megértése érdekében kibővült a dokumentáció a 'Json támogatás' leírásával a link:../common/core/coffee-rest.adoc[coffee-rest] modulban
 
 === coffee-module-mongodb
 Alkalmazva lett a `StringUtil.maskUriAuthenticationCredentials` függvény a `MongoDbClientFactory.createMongoClient`-ben

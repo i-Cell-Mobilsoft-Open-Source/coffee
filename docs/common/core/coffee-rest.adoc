@@ -275,6 +275,51 @@ coffee:
 ----
 Ezekután készen is vagyunk és XSD Catalog szerint fog történni a XSD séma felolvasás.
 
+== Json támogatás
+
+A keretrendszer támogatja a REST kommunikáció során a JSON formátumú üzeneteket is az XML mellett.
+Ezen üzenetek szerializálására/deszerializálására egy külső modult használ, a Google által karbantartott https://github.com/google/gson[Gson]-t A keretrendszer kiegészíti/felüldefiniálja a Gson-t néhány saját adapterrel.
+Alább látható egy példa JSON, és a saját hozzáadott adapterek.
+Az idővel kapcsolatos értékeknél egy eset kivételével az ISO 8601 szabvány került alkalmazásra.
+A ```Date``` osztály esetén a formátum az egyetemes UNIX epoch lett milliszekundumban
+
+.example.json
+[source,json]
+----
+{
+    "date": 1549898614051,
+    "xmlGregorianCalendar": "2019-02-11T15:23:34.051Z",
+    "bytes": "dGVzdFN0cmluZw==",
+    "string": "test1",
+    "clazz": "hu.icellmobilsoft.coffee.tool.gson.JsonUtilTest",
+    "offsetDateTime": "2019-02-11T15:23:34.051Z",
+    "offsetTime": "15:23:34.051Z",
+    "localDate": "2019-02-11",
+    "duration": "P1Y1M1DT1H1M1S"
+}
+----
+
+.Saját hozzáadott adapterek szerializálásának formátuma az egyes típusoknál
+|===
+| Java típus | Formátum
+
+| `Class` | A ```Class.getName()``` metódusának visszatérési értéke.
+
+| `XMLGregorianCalendar` | A ```XMLGregorianCalendar.toXMLFormat()``` metódusának visszatérési értéke.
+Alapértelmezetten a ```XMLGregorianCalendarImpl``` az elérhető leszármazott ehhez az absztrakt osztályhoz.
+
+| `Date` | Az 1970-01-01T00:00:00.000 óta eltelt időt adja meg milliszekundumban.
+
+| `OffsetDateTime` | A ```DateTimeFormatter.ISO_OFFSET_DATE_TIME``` metódusának visszatérési értéke, ahol a zóna helyett offset kerül megjelölésre.
+| `OffsetTime` | A ```DateTimeFormatter.ISO_OFFSET_TIME``` metódusának visszatérési értéke, ahol a zóna helyett offset kerül megjelölésre.
+| `LocalDate` | A ```DateTimeFormatter.ISO_DATE``` metódusának visszatérési értéke.
+| `Duration` | A ```javax.xml.datatype.Duration.toString()``` metódusának visszatérési értéke.
+| `byte[]` | A ```Base64.getName().encodeToString()``` metódusának visszatérési értéke.
+Alapértelmezett kódoló: RFC4648
+|===
+
+Megjegyzés: A JSON-höz köthető műveletek többsége util jellegű és publikusan elérhető a link:coffee-tool.adoc[cofee-tool] alatt a `JsonUtil` osztályban.
+
 == Nyelvesítés
 Nyelvesítés funkciója egy backend rendszerben több szemszögből hasznos, például hibakódok, 
 enum fordítások vagy akár dokumentumok nyelvesített generálása.

@@ -27,6 +27,7 @@ import java.time.OffsetTime;
 import java.util.Date;
 
 import javax.enterprise.inject.Vetoed;
+import javax.xml.datatype.Duration;
 import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.apache.commons.lang3.StringUtils;
@@ -197,6 +198,7 @@ public class JsonUtil {
                 .registerTypeAdapter(OffsetDateTime.class, new OffsetDateTimeConverter()) //
                 .registerTypeAdapter(OffsetTime.class, new OffsetTimeConverter()) //
                 .registerTypeAdapter(LocalDate.class, new LocalDateConverter()) //
+                .registerTypeAdapter(Duration.class, new DurationConverter()) //
                 .registerTypeHierarchyAdapter(byte[].class, new ByteArrayConverter()) //
                 .create();
     }
