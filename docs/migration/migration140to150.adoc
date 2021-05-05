@@ -9,7 +9,9 @@ Mivel a coff:ee csak használt dependencyket köti be,
 engedélyezni kellett com.google.guava:failureaccess függőséget,
 ami a https://github.com/google/guava/releases/tag/v27.0 verzióval kötelezővé vált:
 https://groups.google.com/g/guava-announce/c/Km82fZG68Sw .
-
+* Bump guava 29.0-jre -> 30.1.1-jre
+* Bump commons-io 2.6 -> 2.8.0
+ 
 === coffee-tool
 Bevezetésre került a `StringUtil.maskUriAuthenticationCredentials` függvény.
 
