@@ -9,6 +9,7 @@ Mivel a coff:ee csak használt dependencyket köti be,
 engedélyezni kellett com.google.guava:failureaccess függőséget,
 ami a https://github.com/google/guava/releases/tag/v27.0 verzióval kötelezővé vált:
 https://groups.google.com/g/guava-announce/c/Km82fZG68Sw .
+* WildFly 23 kompatibilitás
 
 === coffee-tool
 Bevezetésre került a `StringUtil.maskUriAuthenticationCredentials` függvény.
