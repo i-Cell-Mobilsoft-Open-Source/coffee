@@ -11,7 +11,8 @@ ami a https://github.com/google/guava/releases/tag/v27.0 verzióval kötelezőv�
 https://groups.google.com/g/guava-announce/c/Km82fZG68Sw .
 * Bump guava 29.0-jre -> 30.1.1-jre
 * Bump commons-io 2.6 -> 2.8.0
- 
+* WildFly 23 kompatibilitás
+
 === coffee-tool
 Bevezetésre került a `StringUtil.maskUriAuthenticationCredentials` függvény.
 

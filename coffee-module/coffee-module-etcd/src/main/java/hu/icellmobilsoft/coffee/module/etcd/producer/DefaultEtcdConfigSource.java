@@ -24,6 +24,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.microprofile.config.spi.ConfigSource;
@@ -65,6 +66,11 @@ public class DefaultEtcdConfigSource implements ConfigSource {
             log.error(MessageFormat.format("Error in getting all values from ETCD: [{0}]", e.getLocalizedMessage()), e);
         }
         return Collections.emptyMap();
+    }
+
+    @Override
+    public Set<String> getPropertyNames() {
+        return getProperties().keySet();
     }
 
     private static ConfigEtcdService getConfigEtcdService() {
