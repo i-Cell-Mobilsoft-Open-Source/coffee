@@ -70,6 +70,9 @@ public class BaseApacheHttpClient {
     /** Constant <code>CONTENT_TYPE_TEXT_PLAIN_UTF8</code> */
     public static final ContentType CONTENT_TYPE_TEXT_PLAIN_UTF8 = ContentType.create("text/plain", Consts.UTF_8);
 
+    /** Constant <code>ABBREVIATE_MAX_WIDTH</code> for the maximum width setting for abbreviation in []byte logs **/
+    public static final int ABBREVIATE_MAX_WIDTH = 80;
+
     /** "application/xml" */
     public final static String APPLICATION_XML = "application/xml";
     /** "text/xml" */
@@ -246,7 +249,7 @@ public class BaseApacheHttpClient {
             // modositasi lehetoseg
             beforePost(post);
             // kiloggoljuk a requestet
-            logRequest(post, org.apache.commons.lang3.StringUtils.abbreviate(new String(request), 80));
+            logRequestAbbreviated(post, request);
             // kuldjuk
             return client.execute(post);
         } catch (ClientProtocolException e) {
@@ -346,7 +349,7 @@ public class BaseApacheHttpClient {
             // modositasi lehetoseg
             beforePut(put);
             // kiloggoljuk a requestet
-            logRequest(put, org.apache.commons.lang3.StringUtils.abbreviate(new String(request), 80));
+            logRequestAbbreviated(put, request);
             // kuldjuk
             return client.execute(put);
         } catch (ClientProtocolException e) {
@@ -482,6 +485,32 @@ public class BaseApacheHttpClient {
         LOGGER.info(createLogRequest(request).toString());
     }
 
+    /**
+     * Logs http request. As a byte[] can be too long for log purposes at the {@link hu.icellmobilsoft.coffee.se.logging.JulLevel#INFO} level, it is
+     * enough to log only the first {@link BaseApacheHttpClient#ABBREVIATE_MAX_WIDTH} bytes. At
+     * {@link hu.icellmobilsoft.coffee.se.logging.JulLevel#DEBUG} and {@link hu.icellmobilsoft.coffee.se.logging.JulLevel#TRACE} instead of the
+     * abbreviated string, the entire byte[] should be printed
+     *
+     * @param request
+     *            http request
+     * @param entityAsByteArray
+     *            instead of using input stream
+     */
+    protected void logRequestAbbreviated(HttpRequestBase request, byte[] entityAsByteArray) {
+
+        if (LOGGER.isTraceEnabled() || LOGGER.isDebugEnabled()) {
+            String entity = new String(entityAsByteArray);
+            StringBuffer msg = createLogRequest(request);
+            msg.append("> entity: [").append(entity).append("]\n");
+            LOGGER.debug(msg.toString());
+        } else {
+            String entity = org.apache.commons.lang3.StringUtils.abbreviate(new String(entityAsByteArray), ABBREVIATE_MAX_WIDTH);
+            StringBuffer msg = createLogRequest(request);
+            msg.append("> entity: [").append(entity).append("]\n");
+            LOGGER.info(msg.toString());
+        }
+    }
+    
     /**
      * Creates log request.
      *

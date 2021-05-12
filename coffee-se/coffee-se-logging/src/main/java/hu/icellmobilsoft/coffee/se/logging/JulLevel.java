@@ -49,7 +49,7 @@ public final class JulLevel extends Level {
      */
     public static final JulLevel ERROR = new JulLevel("ERROR", 1000);
     /**
-     * The JulLevel WARN, inicating protential problems of misconfiguration.
+     * The JulLevel WARN, indicating potential problems of misconfiguration.
      */
     public static final JulLevel WARN = new JulLevel("WARN", 900);
     /**
@@ -62,7 +62,7 @@ public final class JulLevel extends Level {
      */
     public static final JulLevel DEBUG = new JulLevel("DEBUG", 500);
     /**
-     * The JulLevel TRACE, providing fine grade trce information.
+     * The JulLevel TRACE, providing fine grade trace information.
      */
     public static final JulLevel TRACE = new JulLevel("TRACE", 400);
 
