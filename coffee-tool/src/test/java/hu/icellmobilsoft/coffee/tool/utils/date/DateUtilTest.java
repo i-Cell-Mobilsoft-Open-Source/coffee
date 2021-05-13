@@ -531,7 +531,7 @@ class DateUtilTest {
 
     @Test
     @DisplayName("Testing null conversions")
-    void testNullConversions() throws BaseException {
+    void testNullConversions() throws Exception {
         // given
         Date nullDate = null;
         Calendar nullCalendar = null;
