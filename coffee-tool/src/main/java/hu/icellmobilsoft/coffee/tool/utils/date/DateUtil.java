@@ -19,14 +19,18 @@
  */
 package hu.icellmobilsoft.coffee.tool.utils.date;
 
+import java.text.MessageFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.Month;
 import java.time.OffsetDateTime;
+import java.time.Year;
 import java.time.YearMonth;
 import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -39,6 +43,8 @@ import javax.enterprise.inject.Vetoed;
 
 import org.apache.commons.lang3.StringUtils;
 
+import hu.icellmobilsoft.coffee.dto.exception.BaseException;
+import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
 
 /**
@@ -300,6 +306,21 @@ public class DateUtil {
     }
 
     /**
+     * {@link LocalDateTime} - {@link OffsetDateTime} converter with system default zone id
+     *
+     * @param localDateTime
+     *            {@code LocalDateTime} to convert
+     * @return {@code OffsetDateTime} the offset date time in UTC
+     */
+    public static OffsetDateTime toOffsetDateTime(LocalDateTime localDateTime) {
+        if (localDateTime == null) {
+            return null;
+        }
+        ZonedDateTime serverZonedDateTime = localDateTime.atZone(ZoneId.systemDefault());
+        return serverZonedDateTime.withZoneSameInstant(ZoneOffset.UTC).toOffsetDateTime();
+    }
+
+    /**
      * {@link Date} to {@link LocalDate} converter with system default zone id
      *
      * @param date
@@ -441,5 +462,95 @@ public class DateUtil {
             return null;
         }
         return Date.from(localDate.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
+    }
+
+    /**
+     * Actual date + time in UTC. When it is serialized, the local 2020-08-26 10:34:28 "2020-08-26T08:34:28.955024Z" format takes place instead of the
+     * default "2020-08-26T10:34:28.955024+02:00"
+     *
+     * @return {@code OffsetDateTime}, example: "2020-08-26T08:34:28.955024Z"
+     */
+    public static OffsetDateTime nowUTC() {
+        return OffsetDateTime.now(ZoneOffset.UTC);
+    }
+
+    /**
+     * Actual date + time in UTC. When it is serialized, the local 2020-08-26 10:34:28 "2020-08-26T08:34:28.955024Z" format takes place instead of the
+     * default "2020-08-26T10:34:28.955024+02:00"
+     *
+     * @return {@code OffsetDateTime}, example: "2020-08-26T08:34:28.955Z"
+     */
+    public static OffsetDateTime nowUTCTruncatedToMillis() {
+        return OffsetDateTime.now(ZoneOffset.UTC).truncatedTo(ChronoUnit.MILLIS);
+    }
+
+    /**
+     * Returns the last day of the month of the target date.
+     *
+     * @param baseDate
+     *            {@code LocalDate} the base date
+     * @return {@code LocalDate}, the last day of the month of the target date.
+     */
+    public static LocalDate lastDayOfMonth(LocalDate baseDate) {
+        if (baseDate == null) {
+            return null;
+        }
+        return LocalDate.of(baseDate.getYear(), baseDate.getMonth(), baseDate.lengthOfMonth());
+    }
+
+    /**
+     * Returns the last day of quarter-year of the target date.
+     *
+     * @param baseDate
+     *            {@code LocalDate} the base date
+     * @return {@code LocalDate}, the last day of quarter-year of the target date.
+     */
+    public static LocalDate lastDayOfQuarter(LocalDate baseDate) {
+        if (baseDate == null) {
+            return null;
+        }
+        // Same year
+        int year = baseDate.getYear();
+        // First month of the quarter
+        Month firstMonthOfQuarter = baseDate.getMonth().firstMonthOfQuarter();
+        // Last month of the quarter
+        Month lastMonthOfTheQuarter = firstMonthOfQuarter.plus(2);
+        return LocalDate.of(year, lastMonthOfTheQuarter, lastMonthOfTheQuarter.length(Year.isLeap(year)));
+    }
+
+    /**
+     * Returns the last day of the target date's year.
+     * 
+     * @param baseDate
+     *            {@code LocalDate} the base date
+     * @return {@code LocalDate} the last day of the target date's year. (yyyy.12.31)
+     */
+    public static LocalDate lastDayOfYear(LocalDate baseDate) {
+        if (baseDate == null) {
+            return null;
+        }
+        int year = baseDate.getYear();
+        return LocalDate.of(year, Month.DECEMBER, 31);
+    }
+
+    /**
+     * Parses a date as {@link DateTimeFormatter#ISO_OFFSET_DATE_TIME} format. In case of any formatting problem, it throws {@link BaseException}.
+     *
+     * @param isoDateTime
+     *            date to be parsed {@code String}
+     * @return {@code OffsetDateTime} date time object
+     * @throws BaseException
+     *             in case of bad date format
+     */
+    public static OffsetDateTime tryToParseToOffsetDateTime(String isoDateTime) throws BaseException {
+        if (StringUtils.isBlank(isoDateTime)) {
+            return null;
+        }
+
+        try {
+            return OffsetDateTime.parse(isoDateTime, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+        } catch (DateTimeParseException e) {
+            throw new BaseException(CoffeeFaultType.INVALID_INPUT, MessageFormat.format("Invalid ISO date time format: [{0}]", isoDateTime));
+        }
     }
 }

@@ -15,6 +15,16 @@ Bevezetésre került a `StringUtil.maskUriAuthenticationCredentials` függvény.
 
 Bevezetésre került a Duration-ök szerializálásának/deszerializálásának támogatása a JsonUtil-ban (DurationConverter.class).
 
+Bevezetésre került több metódus a `DateUtil`-ban, melyek segítik a dátumkezelést.
+
+* `public static OffsetDateTime nowUTC()`
+* `public static OffsetDateTime nowUTCTruncatedToMillis()`
+* `public static LocalDate lastDayOfMonth(LocalDate baseDate)`
+* `public static LocalDate lastDayOfQuarter(LocalDate baseDate)`
+* `public static LocalDate lastDayOfYear(LocalDate baseDate)`
+* `public static OffsetDateTime tryToParse(String isoDateTime)`
+* `public static OffsetDateTime toOffsetDateTime(LocalDateTime localDateTime)`
+
 ==== Átállás
 A változtatások hatására a Duration Json deszerializálása megváltozott.
 Eddigi formátum: "duration":{"signum":1,"years":1,"months":1,"days":1,"hours":1,"minutes":1,"seconds":1}

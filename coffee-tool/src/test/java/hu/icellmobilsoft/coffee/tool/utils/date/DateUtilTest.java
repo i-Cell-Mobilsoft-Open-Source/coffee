@@ -22,6 +22,7 @@ package hu.icellmobilsoft.coffee.tool.utils.date;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.Clock;
@@ -43,6 +44,8 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+
+import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 
 /**
  * @author mark.petrenyi
@@ -67,6 +70,9 @@ class DateUtilTest {
     private static Date datePlusTwoMonths;
     private static ZonedDateTime startOfMonth;
     private static ZonedDateTime endOfMonth;
+    private static LocalDate lastDayOfQuarter;
+    private static LocalDate lastDayOfYear;
+    private static String isoDateTime;
 
     @BeforeAll
     static void setUpBeforeClass() {
@@ -103,6 +109,11 @@ class DateUtilTest {
 
         startOfMonth = ZonedDateTime.of(2019, 2, 1, 0, 0, 0, 0, ZoneId.systemDefault());
         endOfMonth = ZonedDateTime.of(2019, 2, 28, 23, 59, 59, 999999999, ZoneId.systemDefault());
+
+        lastDayOfQuarter = LocalDate.of(2019, 3, 31);
+        lastDayOfYear = LocalDate.of(2019, 12, 31);
+
+        isoDateTime = "2019-02-11T16:23:34.051+01:00"; // ISO-8601 standard
     }
 
     @Nested
@@ -223,11 +234,23 @@ class DateUtilTest {
 
     @Test
     @DisplayName("Testing toOffsetDateTime() from Date")
-    void toOffsetDateTime() {
+    void toOffsetDateTimeFromDate() {
         // given
 
         // when
         OffsetDateTime actual = DateUtil.toOffsetDateTime(date);
+
+        // then
+        assertTrue(offsetDateTime.isEqual(actual));
+    }
+
+    @Test
+    @DisplayName("Testing toOffsetDateTime() from LocalDateTime")
+    void toOffsetDateTimeFromLocalDateTime() {
+        // given
+
+        // when
+        OffsetDateTime actual = DateUtil.toOffsetDateTime(localDateTime);
 
         // then
         assertTrue(offsetDateTime.isEqual(actual));
@@ -422,8 +445,93 @@ class DateUtilTest {
     }
 
     @Test
+    @DisplayName("Testing nowUTC()")
+    void nowUtc() {
+        // given
+
+        // when
+        OffsetDateTime actual = DateUtil.nowUTC();
+
+        // then
+        assertNotNull(actual);
+    }
+
+    @Test
+    @DisplayName("Testing nowUTCTruncatedToMillis()")
+    void nowUTCTruncatedToMillis() {
+        // given
+
+        // when
+        OffsetDateTime actual = DateUtil.nowUTCTruncatedToMillis();
+
+        // then
+        assertNotNull(actual);
+    }
+
+    @Test
+    @DisplayName("Testing lastDayOfMonth() from LocalDate")
+    void lastDayOfMonth() {
+        // given
+        LocalDate expected = endOfMonth.toLocalDate();
+        // when
+        LocalDate actual = DateUtil.lastDayOfMonth(localDate);
+        // then
+        assertEquals(actual.compareTo(expected), 0);
+    }
+
+    @Test
+    @DisplayName("Testing lastDayOfQuarter() from LocalDate")
+    void lastDayOfQuarter() {
+        // given
+
+        // when
+        LocalDate actual = DateUtil.lastDayOfQuarter(localDate);
+        // then
+        assertEquals(actual.compareTo(lastDayOfQuarter), 0);
+    }
+
+    @Test
+    @DisplayName("Testing lastDayOfYear() from LocalDate")
+    void lastDayOfYearTest() {
+        // given
+
+        // when
+        LocalDate actual = DateUtil.lastDayOfYear(localDate);
+        // then
+        assertEquals(actual.compareTo(lastDayOfYear), 0);
+    }
+
+    @Nested
+    @DisplayName("Testing tryToParseToOffsetDateTime()")
+    class TryToParseToOffsetDateTimeTest {
+
+        @Test
+        @DisplayName("Testing tryToParseToOffsetDateTime() from valid isoDateTime")
+        void tryToParseToOffsetDateTime() throws Exception {
+            // given
+
+            // when
+            OffsetDateTime actual = DateUtil.tryToParseToOffsetDateTime(isoDateTime);
+
+            // then
+            assertEquals(actual.compareTo(offsetDateTime), 0);
+        }
+
+        @Test
+        @DisplayName("Testing tryToParseToOffsetDateTime() from valid isoDateTime")
+        void tryToParseToOffsetDateTimeShouldThrowException() throws Exception {
+            // given
+            String invalidIsoDateTime = "invalidIsoDate";
+            // when
+
+            // then
+            assertThrows(BaseException.class, () -> DateUtil.tryToParseToOffsetDateTime(invalidIsoDateTime));
+        }
+    }
+
+    @Test
     @DisplayName("Testing null conversions")
-    void testNullConversions() {
+    void testNullConversions() throws BaseException {
         // given
         Date nullDate = null;
         Calendar nullCalendar = null;
@@ -458,8 +566,13 @@ class DateUtilTest {
         assertNull(DateUtil.toLocalDateTime(null));
         assertNull(DateUtil.toDate(nullLocalDateTime));
         assertNull(DateUtil.toOffsetDateTime(nullDate));
+        assertNull(DateUtil.toOffsetDateTime(nullLocalDateTime));
         assertNull(DateUtil.toDate(nullOffsetDateTime));
         assertNull(DateUtil.toDate(nullLocalDate));
+        assertNull(DateUtil.lastDayOfMonth(nullLocalDate));
+        assertNull(DateUtil.lastDayOfQuarter(nullLocalDate));
+        assertNull(DateUtil.lastDayOfYear(nullLocalDate));
+        assertNull(DateUtil.tryToParseToOffsetDateTime(null));
     }
 
 }
