@@ -43,3 +43,12 @@ Létrejött egy `IRedisStreamPipeConsumer` mely célja a kiterjesztett stream fo
 
 ==== Átállás
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+=== coffee-rest
+
+A `BaseApacheHttpClient`-ben módosítás történt a logolással kapcsolatban.
+Mostantól a POST és PUT műveletek, `byte[]` body paraméter esetén a logolás szintjétől függően logolják az üzenetet.
+TRACE és DEBUG esetén a teljes üzenet kerül logolásra, míg INFO szinten csak az első 80 karakter.
+
+==== Átállás
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
