@@ -76,7 +76,7 @@ class DateUtilTest {
 
     @BeforeAll
     static void setUpBeforeClass() {
-        // TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
+        TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
         // Base dateTime is // 2019-02-11T15:23:34.051Z -- in epoch millis(UTC): 1549898614051
         zonedDateTime = ZonedDateTime.of(2019, 2, 11, 15, 23, 34, 51000000, ZoneOffset.UTC);
 
@@ -113,7 +113,7 @@ class DateUtilTest {
         lastDayOfQuarter = LocalDate.of(2019, 3, 31);
         lastDayOfYear = LocalDate.of(2019, 12, 31);
 
-        isoDateTime = "2019-02-11T16:23:34.051+01:00"; // ISO-8601 standard
+        isoDateTime = "2019-02-11T15:23:34.051Z"; // ISO-8601 standard
     }
 
     @Nested
@@ -489,7 +489,8 @@ class DateUtilTest {
 
             // when
             OffsetDateTime actual = DateUtil.tryToParseToOffsetDateTime(isoDateTime);
-
+            System.out.println(isoDateTime);
+            System.out.println(actual);
             // then
             assertEquals(actual.compareTo(offsetDateTime), 0);
         }
