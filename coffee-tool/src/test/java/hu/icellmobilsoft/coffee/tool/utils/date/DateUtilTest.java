@@ -444,29 +444,6 @@ class DateUtilTest {
         assertEquals(dateOnly.getTime(), actual);
     }
 
-    @Test
-    @DisplayName("Testing nowUTC()")
-    void nowUtc() {
-        // given
-
-        // when
-        OffsetDateTime actual = DateUtil.nowUTC();
-
-        // then
-        assertNotNull(actual);
-    }
-
-    @Test
-    @DisplayName("Testing nowUTCTruncatedToMillis()")
-    void nowUTCTruncatedToMillis() {
-        // given
-
-        // when
-        OffsetDateTime actual = DateUtil.nowUTCTruncatedToMillis();
-
-        // then
-        assertNotNull(actual);
-    }
 
     @Test
     @DisplayName("Testing lastDayOfMonth() from LocalDate")
