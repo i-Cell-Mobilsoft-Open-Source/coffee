@@ -58,6 +58,11 @@ Ezek a beállítások az alkalmazás szerverek szerint változnak, például:
 
 ** konfiguráció https://docs.thorntail.io/2.7.0.Final/#_ee
 
+.MDC
+A rendszer MDC szinten "retryCounter" néven loggolja hogy,
+hányadik iterációban tart az újra próbálkozás
+(`coffee.redisstream.sampleGroup.consumer.retryCount` konfiguráció).
+
 === RedisStreamService
 
 Minden Redis stream művelet a

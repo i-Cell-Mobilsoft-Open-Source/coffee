@@ -41,8 +41,12 @@ Bevezetésre került a *lpop* opcionális változata a `RedisService` osztályba
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
 
 === coffee-module-redisstream
-A stream konzumer kezelése további minor változáson esett át hogy könyebben lehessen a projekten testre szabni.
+* A stream konzumer kezelése további minor változáson esett át hogy könyebben lehessen a projekten testre szabni.
 Létrejött egy `IRedisStreamPipeConsumer` mely célja a kiterjesztett stream fogyasztás lehetősége.
+* RedisStreamConsumerExecutor szintre lett hozva az MDC beállítás,
+így a loggolásban az elszálások is azonos sid-et kapnak.
+Továbbá be lett vezetve egy "retryCounter" MDC,
+ami azt számolja hogy hányadik iterációban tart ha abból több lenne.
 
 ==== Átállás
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.

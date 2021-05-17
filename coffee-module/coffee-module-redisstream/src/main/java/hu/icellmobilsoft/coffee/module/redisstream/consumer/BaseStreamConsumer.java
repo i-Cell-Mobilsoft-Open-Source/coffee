@@ -28,6 +28,7 @@ import javax.annotation.Resource;
 import javax.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 
 import hu.icellmobilsoft.coffee.dto.common.LogConstants;
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
@@ -59,10 +60,8 @@ public class BaseStreamConsumer {
     protected void handleMDC(StreamEntry streamEntry) {
         MDC.put(LogConstants.LOG_SERVICE_NAME, applicationName);
 
-        Map<String, String> fieldMap = streamEntry.getFields();
-        String mainData = fieldMap.get(IRedisStreamConstant.Common.DATA_KEY_MESSAGE);
-        String flowId = fieldMap.getOrDefault(IRedisStreamConstant.Common.DATA_KEY_FLOW_ID, mainData);
-        MDC.put(LogConstants.LOG_SESSION_ID, flowId);
+        var retryCount = NumberUtils.toInt(MDC.get(IRedisStreamConstant.Log.RETRY_COUNTER));
+        MDC.put(IRedisStreamConstant.Log.RETRY_COUNTER, String.valueOf(retryCount + 1));
     }
 
     /**

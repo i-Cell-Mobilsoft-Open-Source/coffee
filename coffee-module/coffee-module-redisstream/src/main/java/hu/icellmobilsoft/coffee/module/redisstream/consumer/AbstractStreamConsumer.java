@@ -40,17 +40,13 @@ public abstract class AbstractStreamConsumer extends BaseStreamConsumer implemen
      */
     @Override
     public void onStream(StreamEntry streamEntry) throws BaseException {
-        try {
-            handleMDC(streamEntry);
+        handleMDC(streamEntry);
 
-            if (customize(streamEntry)) {
-                return;
-            }
-            String mainData = streamEntry.getFields().get(IRedisStreamConstant.Common.DATA_KEY_MESSAGE);
-            doWork(mainData);
-        } finally {
-            MDC.clear();
+        if (customize(streamEntry)) {
+            return;
         }
+        String mainData = streamEntry.getFields().get(IRedisStreamConstant.Common.DATA_KEY_MESSAGE);
+        doWork(mainData);
     }
 
     /**
