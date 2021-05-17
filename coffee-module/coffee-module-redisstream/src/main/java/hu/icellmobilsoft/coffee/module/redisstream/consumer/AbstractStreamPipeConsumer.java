@@ -42,17 +42,13 @@ public abstract class AbstractStreamPipeConsumer extends BaseStreamConsumer impl
      */
     @Override
     public Map<String, Object> onStream(StreamEntry streamEntry) throws BaseException {
-        try {
-            handleMDC(streamEntry);
+        handleMDC(streamEntry);
 
-            if (customize(streamEntry)) {
-                return Collections.emptyMap();
-            }
-            String mainData = streamEntry.getFields().get(IRedisStreamConstant.Common.DATA_KEY_MESSAGE);
-            return doWork(mainData);
-        } finally {
-            MDC.clear();
+        if (customize(streamEntry)) {
+            return Collections.emptyMap();
         }
+        String mainData = streamEntry.getFields().get(IRedisStreamConstant.Common.DATA_KEY_MESSAGE);
+        return doWork(mainData);
     }
 
     /**

@@ -36,12 +36,15 @@ import javax.inject.Inject;
 import org.apache.commons.lang3.StringUtils;
 import org.jboss.weld.context.bound.BoundRequestContext;
 
+import hu.icellmobilsoft.coffee.dto.common.LogConstants;
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.module.redis.annotation.RedisConnection;
 import hu.icellmobilsoft.coffee.module.redisstream.annotation.RedisStreamConsumer;
+import hu.icellmobilsoft.coffee.module.redisstream.config.IRedisStreamConstant;
 import hu.icellmobilsoft.coffee.module.redisstream.config.StreamGroupConfig;
 import hu.icellmobilsoft.coffee.module.redisstream.service.RedisStreamService;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
+import hu.icellmobilsoft.coffee.se.logging.mdc.MDC;
 import hu.icellmobilsoft.coffee.tool.utils.annotation.AnnotationUtil;
 import hu.icellmobilsoft.coffee.tool.utils.string.RandomUtil;
 import redis.clients.jedis.Jedis;
@@ -119,7 +122,9 @@ public class RedisStreamConsumerExecutor implements IRedisStreamConsumerExecutor
                 streamEntry = redisStreamService.consumeOne(consumerIdentifier);
 
                 if (streamEntry.isPresent()) {
-                    consumeStreamEntry(streamEntry.get());
+                    var entry = streamEntry.get();
+                    handleMDC(entry);
+                    consumeStreamEntry(entry);
                 }
             } catch (BaseException e) {
                 log.error(MessageFormat.format("Exception on consume streamEntry [{0}]: [{1}]", streamEntry, e.getLocalizedMessage()), e);
@@ -145,6 +150,7 @@ public class RedisStreamConsumerExecutor implements IRedisStreamConsumerExecutor
                     // el kell engedni a connectiont
                     jedisInstance.destroy(jedis);
                 }
+                MDC.clear();
             }
         }
     }
@@ -300,6 +306,19 @@ public class RedisStreamConsumerExecutor implements IRedisStreamConsumerExecutor
                 log.warn("Exception during interrupt.", ex);
             }
         }
+    }
+
+    /**
+     * Logging MDC handling, setting variables
+     * 
+     * @param streamEntry
+     *            {@link IRedisStreamConsumer#onStream(StreamEntry)}
+     */
+    protected void handleMDC(StreamEntry streamEntry) {
+        Map<String, String> fieldMap = streamEntry.getFields();
+        String flowId = fieldMap.getOrDefault(IRedisStreamConstant.Common.DATA_KEY_FLOW_ID,
+                fieldMap.get(IRedisStreamConstant.Common.DATA_KEY_MESSAGE));
+        MDC.put(LogConstants.LOG_SESSION_ID, flowId);
     }
 
     /**

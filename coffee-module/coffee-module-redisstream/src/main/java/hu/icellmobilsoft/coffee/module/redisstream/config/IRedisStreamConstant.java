@@ -30,6 +30,20 @@ import hu.icellmobilsoft.coffee.dto.common.LogConstants;
 public interface IRedisStreamConstant {
 
     /**
+     * Logging keys in MDC
+     * 
+     * @author Imre Scheffer
+     *
+     * @since 1.5.0
+     */
+    interface Log {
+        /**
+         * Key for redis stream retry counter
+         */
+        String RETRY_COUNTER = "retryCounter";
+    }
+
+    /**
      * Common values
      * 
      * @author imre.scheffer
