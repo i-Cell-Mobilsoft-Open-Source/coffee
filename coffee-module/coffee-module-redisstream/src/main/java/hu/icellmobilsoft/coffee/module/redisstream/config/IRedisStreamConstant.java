@@ -62,5 +62,9 @@ public interface IRedisStreamConstant {
          * Key for redis stream message timeout in epoch time
          */
         String DATA_KEY_TTL = "ttl";
+        /**
+         * {@code #DATA_KEY_FLOW_ID} message extension for logging searching
+         */
+        String FLOW_ID_EXTENSION = "flowIdExtension";
     }
 }
