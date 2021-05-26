@@ -95,7 +95,10 @@ redisStreamHandler.publishPublications(List.of(
 long expiry = Instant.now().plus(5, ChronoUnit.MINUTES).toEpochMilli();
 Map<String, String> map = Map.ofEntries(RedisStreamHandler.parameterOf(StreamMessageParameter.TTL, expiry));
 redisStreamHandler.publish("message", parameters); //<3>
-));
+
+// vagy
+RedisStreamPublication publication = RedisStreamPublication.of(id).withTTL(defaultTTL).withParameter(StreamMessageParameter.FLOW_ID_EXTENSION, id))
+redisStreamHandler.publishPublication(publication); //<4>
 ----
 <1> "group" nem kötelező minden esetben
 <2> Maga a "message" tartalom egyfajta coffee stream message struktúrába fog kerülni,
@@ -104,10 +107,25 @@ Maga a message kiegészült még extra információval, mint pl. folyamat azonos
 <3> Lehetséges egyedi projekt specifikus paramétereket is megadni.
 A rendszer nyújtotta lehetőségeket a `hu.icellmobilsoft.coffee.module.redisstream.config.StreamMessageParameter`
 enum osztályon keresztül lehet elérni
+<4> A `RedisStreamPublication` All-in-one szerepet játszik az üzenet küldésénél,
+beállított paraméterek felülcsapják a `redisStreamHandler`-ben beállított _group_-ot.
 
 TIP: Minden egyes `publish` hívás külön Jedis connection-ön történik, ezért adott
 esetben érdemes lehet összegyűjteni a message-eket, és azokat listaként átadni.
 
+.RedisStreamPublication
+Hogyha egyszerre több üzenetet kell beküldeni akkor érdemes használni a
+`hu.icellmobilsoft.coffee.module.redisstream.common.RedisStreamPublication` osztályt,
+mely arra van felkészítve hogy minden üzenet saját paraméterekkel legyen kiegészítve,
+vagy akár másik streamekre legyen küldve az üzenetek,
+mint ami a `RedisStreamHandler` injectnél történik.
+
+Ilyenek például a:
+
+* `StreamMessageParameter.TTL` - Üzenet lejárati ideje
+* `StreamMessageParameter.FLOW_ID_EXTENSION` - szerepe hogy a SID loggolást egészíti ki
+a könnyebb logok böngészése érdekében
+* + egyéb egyedi beállítások
 
 === Consumer
 

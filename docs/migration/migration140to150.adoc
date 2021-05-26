@@ -57,6 +57,10 @@ Létrejött egy `IRedisStreamPipeConsumer` mely célja a kiterjesztett stream fo
 így a loggolásban az elszálások is azonos sid-et kapnak.
 Továbbá be lett vezetve egy "retryCounter" MDC,
 ami azt számolja hogy hányadik iterációban tart ha abból több lenne.
+* Központi szerepet kapott a `hu.icellmobilsoft.coffee.module.redisstream.common.RedisStreamPublication`
+Stream message wrapper osztály, kiegészítve a TTL és egyedi üzenet paraméterekkel
+* Bevezetésre került a `StreamMessageParameter.FLOW_ID_EXTENSION` üzenet paraméter,
+ami a SID loggolást egészíti ki.
 
 ==== Átállás
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
