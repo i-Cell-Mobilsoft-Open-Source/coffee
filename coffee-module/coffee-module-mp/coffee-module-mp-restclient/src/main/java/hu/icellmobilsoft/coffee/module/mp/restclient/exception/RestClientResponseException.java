@@ -100,6 +100,7 @@ public class RestClientResponseException extends BaseException {
                 FaultTypeParser.parseFaultType(baseExceptionResultType.getFaultType()), baseExceptionResultType.getMessage(), causedBy);
         exception.setClassName(baseExceptionResultType.getClassName());
         exception.setException(baseExceptionResultType.getException());
+        exception.setService(baseExceptionResultType.getService());
         return exception;
     }
 }
