@@ -28,7 +28,11 @@ public enum StreamMessageParameter {
     /**
      * Stream message time to live. Value is epoch time millis. If value is &lt; now, then message is expired
      */
-    TTL(IRedisStreamConstant.Common.DATA_KEY_TTL);
+    TTL(IRedisStreamConstant.Common.DATA_KEY_TTL),
+    /**
+     * Logging {@code IRedisStreamConstant.Common#DATA_KEY_FLOW_ID} message extension
+     */
+    FLOW_ID_EXTENSION(IRedisStreamConstant.Common.FLOW_ID_EXTENSION);
 
     String messageKey;
 
