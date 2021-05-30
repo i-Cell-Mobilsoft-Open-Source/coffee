@@ -171,16 +171,6 @@
 						</dependency>
 					</dependencies>
 				</plugin>
-               <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-javadoc-plugin</artifactId>
-                    <version>3.2.0</version>
-                    <configuration>
-                        <failOnError>true</failOnError>
-                        <failOnWarnings>true</failOnWarnings>
-                        <excludePackageNames>hu.icellmobilsoft.coffee.dto.*</excludePackageNames>
-                    </configuration>
-                </plugin>
 			</plugins>
 		</pluginManagement>
 
