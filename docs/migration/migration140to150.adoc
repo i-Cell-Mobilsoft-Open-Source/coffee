@@ -64,3 +64,11 @@ ami a SID loggolást egészíti ki.
 
 ==== Átállás
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+=== coffee-rest
+* A `hu.icellmobilsoft.coffee.rest.exception.DefaultExceptionMessageTranslator` addCommonInfo metódus Exception paramétere Throwable lett.
+Erre a getCause által visszaadott érték kezeléséhez volt szükség, mert innentől rekurzívan az összes getCause érték is belekerül a `hu.icellmobilsoft.coffee.dto.common.commonservice.BaseExceptionResultType`-ba.
+* A "service.name" konfigurációs paraméter belekerült ugyancsak a BaseExceptionResultType-ba, ezzel együtt a "java:app/AppName" használatát felváltotta a "service.name".
+
+==== Átállás
+A "service.name" konfigurációs paramétert be kell állítani a futtatandó modulok esetében.
