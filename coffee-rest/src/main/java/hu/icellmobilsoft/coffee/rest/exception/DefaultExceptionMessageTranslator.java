@@ -20,20 +20,17 @@
 package hu.icellmobilsoft.coffee.rest.exception;
 
 import javax.inject.Inject;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
 import javax.xml.bind.JAXBException;
 
 import org.apache.deltaspike.core.api.projectstage.ProjectStage;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 
-import hu.icellmobilsoft.coffee.cdi.logger.AppLogger;
-import hu.icellmobilsoft.coffee.cdi.logger.LogProducer;
-import hu.icellmobilsoft.coffee.cdi.logger.ThisLogger;
 import hu.icellmobilsoft.coffee.dto.common.commonservice.BaseExceptionResultType;
 import hu.icellmobilsoft.coffee.dto.common.commonservice.FunctionCodeType;
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 import hu.icellmobilsoft.coffee.rest.locale.LocalizedMessage;
+import hu.icellmobilsoft.coffee.se.logging.Logger;
 
 /**
  * Default exception translator implementation for exception throwing
@@ -44,8 +41,8 @@ import hu.icellmobilsoft.coffee.rest.locale.LocalizedMessage;
 public class DefaultExceptionMessageTranslator implements IExceptionMessageTranslator {
 
     @Inject
-    @ThisLogger
-    private AppLogger log;
+    @ConfigProperty(name = "service.name")
+    private String serviceName;
 
     /** Constant <code>HTTP_STATUS_I_AM_A_TEAPOT=418</code> */
     public static final int HTTP_STATUS_I_AM_A_TEAPOT = 418;
@@ -86,19 +83,15 @@ public class DefaultExceptionMessageTranslator implements IExceptionMessageTrans
         // nyelvesitett valasz kell a faultype szerint
         dto.setMessage(getLocalizedMessage(faultType));
 
-        try {
-            String applicationName = InitialContext.doLookup("java:app/AppName");
-            dto.setService(applicationName);
-        } catch (NamingException e) {
-            log.debug("Error in getting JNDI value of 'java:app/AppName'", e);
-        }
+        // TODO check with more client calls
+        dto.setService(serviceName);
     }
 
     /** {@inheritDoc} */
     @Override
     public String getLocalizedMessage(Enum<?> faultType) {
         if (faultType == null) {
-            LogProducer.getStaticDefaultLogger(DefaultExceptionMessageTranslator.class)
+            Logger.getLogger(DefaultExceptionMessageTranslator.class)
                     .warn("FaultType is null, proceeding with faultType: [" + CoffeeFaultType.OPERATION_FAILED + "]");
             return localizedMessage.message(CoffeeFaultType.OPERATION_FAILED);
         }

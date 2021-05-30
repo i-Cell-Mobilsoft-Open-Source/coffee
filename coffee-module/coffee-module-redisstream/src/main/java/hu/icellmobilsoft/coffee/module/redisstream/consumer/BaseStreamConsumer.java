@@ -24,11 +24,11 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Map;
 
-import javax.annotation.Resource;
 import javax.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import hu.icellmobilsoft.coffee.dto.common.LogConstants;
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
@@ -48,8 +48,9 @@ public class BaseStreamConsumer {
     @Inject
     private Logger log;
 
-    @Resource(lookup = "java:app/AppName")
-    private String applicationName;
+    @Inject
+    @ConfigProperty(name = "service.name")
+    private String serviceName;
 
     /**
      * Logging MDC handling, setting variables
@@ -58,7 +59,7 @@ public class BaseStreamConsumer {
      *            {@link IRedisStreamConsumer#onStream(StreamEntry)}
      */
     protected void handleMDC(StreamEntry streamEntry) {
-        MDC.put(LogConstants.LOG_SERVICE_NAME, applicationName);
+        MDC.put(LogConstants.LOG_SERVICE_NAME, serviceName);
 
         var retryCount = NumberUtils.toInt(MDC.get(IRedisStreamConstant.Log.RETRY_COUNTER));
         MDC.put(IRedisStreamConstant.Log.RETRY_COUNTER, String.valueOf(retryCount + 1));

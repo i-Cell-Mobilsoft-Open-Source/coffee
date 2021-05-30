@@ -22,7 +22,6 @@ package hu.icellmobilsoft.coffee.rest.log;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import javax.annotation.Resource;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.container.ContainerRequestContext;
@@ -35,6 +34,7 @@ import javax.ws.rs.ext.WriterInterceptor;
 import javax.ws.rs.ext.WriterInterceptorContext;
 
 import org.apache.commons.lang3.StringUtils;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import hu.icellmobilsoft.coffee.cdi.logger.AppLogger;
 import hu.icellmobilsoft.coffee.cdi.logger.ThisLogger;
@@ -57,8 +57,9 @@ public abstract class BaseRestLogger implements ContainerRequestFilter, WriterIn
     @ThisLogger
     private AppLogger log;
 
-    @Resource(lookup = "java:app/AppName")
-    private String applicationName;
+    @Inject
+    @ConfigProperty(name = "service.name")
+    private String serviceName;
 
     @Inject
     private RequestResponseLogger requestResponseLogger;
@@ -73,7 +74,7 @@ public abstract class BaseRestLogger implements ContainerRequestFilter, WriterIn
     @Override
     public void filter(ContainerRequestContext requestContext) throws IOException {
         MDC.clear();
-        MDC.put(LogConstants.LOG_SERVICE_NAME, applicationName);
+        MDC.put(LogConstants.LOG_SERVICE_NAME, serviceName);
         processRequest(requestContext);
     }
 
