@@ -138,11 +138,16 @@ public class RedisRepository {
      *            LEFT or RIGHT POP from source list
      * @param to
      *            LEFT or RIGHT POP to destination list
+     * @param secondsToExpire
+     *            timeout on the destinationKey given in seconds
      * @return moved value
      * @see Jedis#lmove(String, String, ListDirection, ListDirection)
      */
-    public String lmove(final String sourceKey, final String destinationKey, final ListDirection from, final ListDirection to) {
-        return getJedis().lmove(sourceKey, destinationKey, from, to);
+    public String lmove(final String sourceKey, final String destinationKey, final ListDirection from, final ListDirection to,
+            final long secondsToExpire) {
+        String value = getJedis().lmove(sourceKey, destinationKey, from, to);
+        getJedis().expire(destinationKey, secondsToExpire);
+        return value;
     }
 
     /**

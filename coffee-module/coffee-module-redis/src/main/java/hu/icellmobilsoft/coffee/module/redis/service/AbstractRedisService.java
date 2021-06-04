@@ -346,17 +346,20 @@ public abstract class AbstractRedisService {
      *            LEFT or RIGHT POP from source list
      * @param to
      *            LEFT or RIGHT POP to destination list
+     * @param secondsToExpire
+     *            timeout on the destinationKey given in seconds
      * @return moved value
      * @throws BONotFoundException
      *             if key param is empty or source list is empty
      * @see Jedis#lmove(String, String, ListDirection, ListDirection)
      */
-    public String lmoveRedisData(String sourceKey, String destinationKey, ListDirection from, ListDirection to) throws BaseException {
+    public String lmoveRedisData(String sourceKey, String destinationKey, ListDirection from, ListDirection to, long secondsToExpire)
+            throws BaseException {
         if (StringUtils.isAnyBlank(sourceKey, destinationKey) || from == null || to == null) {
             throw new BONotFoundException("One or more input from sourceKey, destinationKey, from, to is empty.");
         }
         RedisRepository redisRepository = new RedisRepository(getJedis());
-        String result = redisRepository.lmove(sourceKey, destinationKey, from, to);
+        String result = redisRepository.lmove(sourceKey, destinationKey, from, to, secondsToExpire);
         if (result == null) {
             throw new BONotFoundException("Data in sourceKey: [" + sourceKey + "] not found!");
         }
@@ -374,17 +377,20 @@ public abstract class AbstractRedisService {
      *            LEFT or RIGHT POP from source list
      * @param to
      *            LEFT or RIGHT POP to destination list
+     * @param secondsToExpire
+     *            timeout on the destinationKey given in seconds
      * @return moved value
      * @throws BaseException
      *             if technical error occured
      * @see Jedis#lmove(String, String, ListDirection, ListDirection)
      */
-    public Optional<String> lmoveRedisDataOpt(String sourceKey, String destinationKey, ListDirection from, ListDirection to) throws BaseException {
+    public Optional<String> lmoveRedisDataOpt(String sourceKey, String destinationKey, ListDirection from, ListDirection to, long secondsToExpire)
+            throws BaseException {
         if (StringUtils.isAnyBlank(sourceKey, destinationKey) || from == null || to == null) {
             throw new BONotFoundException("One or more input from sourceKey, destinationKey, from, to is empty.");
         }
         RedisRepository redisRepository = new RedisRepository(getJedis());
-        return Optional.ofNullable(redisRepository.lmove(sourceKey, destinationKey, from, to));
+        return Optional.ofNullable(redisRepository.lmove(sourceKey, destinationKey, from, to, secondsToExpire));
     }
 
     /**

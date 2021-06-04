@@ -1,0 +1,21 @@
+= v1.5.0 → v1.6.0
+
+coff:ee v1.5.0 -> v1.6.0 migrációs leírás, újdonságok, változások leírása
+
+== Változások
+
+* Bump Jedis 3.3.0 -> 3.6.0 - Natív java 8 és Redis 6.2 support
+
+=== coffee-module-redis
+Redis 6.2 upgrade változást hozott hogy a timeout megadása int-ről long-ra változott.
+Ez át lett vezetve a rendszerben is,
+de mivel a java lekezeli az int->long típust,
+nincs feltehetően projekt kód ütközés.
+
+Bevezetésre került funkciók:
+
+* *lmove* - (Redis 6.2) egy lépésben POP + PUSH másik listába
+* *removeValueFromList* (*lrem*) - lista elem törlése érték szerint
+
+==== Átállás
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
