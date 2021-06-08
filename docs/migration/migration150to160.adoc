@@ -5,6 +5,8 @@ coff:ee v1.5.0 -> v1.6.0 migrációs leírás, újdonságok, változások leír�
 == Változások
 
 * Bump Jedis 3.3.0 -> 3.6.0 - Natív java 8 és Redis 6.2 support
+* Bump apache httpcore 4.4.5 -> 4.4.13 - https://archive.apache.org/dist/httpcomponents/httpcore/RELEASE_NOTES-4.4.x.txt
+* Bump apache httpclient 4.5.4 -> 4.5.13 - https://archive.apache.org/dist/httpcomponents/httpclient/RELEASE_NOTES-4.5.x.txt
 
 === coffee-module-redis
 Redis 6.2 upgrade változást hozott hogy a timeout megadása int-ről long-ra változott.
