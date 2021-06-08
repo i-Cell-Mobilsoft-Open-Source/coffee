@@ -34,6 +34,7 @@ import hu.icellmobilsoft.coffee.tool.gson.JsonUtil;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.ScanParams;
 import redis.clients.jedis.ScanResult;
+import redis.clients.jedis.args.ListDirection;
 
 /**
  * Abstract class for redis repository service. Main target is use multiple Redis connection (for cache, for authentication, for other business logic)
@@ -130,9 +131,9 @@ public abstract class AbstractRedisService {
      * @return status code reply
      * @throws BONotFoundException
      *             if key or data param is empty
-     * @see RedisRepository#setex(String, int, String)
+     * @see RedisRepository#setex(String, long, String)
      */
-    public <T> String setRedisData(String redisKey, int secondsToExpire, T redisData) throws BaseException {
+    public <T> String setRedisData(String redisKey, long secondsToExpire, T redisData) throws BaseException {
         if (StringUtils.isBlank(redisKey)) {
             throw new BONotFoundException("Redis key is empty.");
         }
@@ -189,6 +190,27 @@ public abstract class AbstractRedisService {
     }
 
     /**
+     * Remove the all occurrences of the value element from the list.
+     * 
+     * @param listKey
+     *            key of list
+     * @param value
+     *            value to remove
+     * @throws BaseException
+     *             if input param is empty
+     * @see Jedis#lrem(String, long, String)
+     */
+    public void removeValueFromList(String listKey, String value) throws BaseException {
+        if (StringUtils.isAnyBlank(listKey, value)) {
+            throw new BONotFoundException("Redis list key or value is empty.");
+        }
+
+        RedisRepository redisRepository = new RedisRepository(getJedis());
+        Long count = redisRepository.lrem(listKey, 0, value);
+        log.trace("Removed [{0}] values from list key: [{1}]", count, listKey);
+    }
+
+    /**
      * Adds given redis data to the tail of the list stored at key then sets a timeout on the specified key. If the key does not exist an empty list
      * is created just before the append operation.
      *
@@ -203,7 +225,7 @@ public abstract class AbstractRedisService {
      *             if key param is empty or data param is null
      * @see Jedis#rpush(String, String...)
      */
-    public Long rpushRedisData(String redisKey, String redisData, int secondsToExpire) throws BaseException {
+    public Long rpushRedisData(String redisKey, String redisData, long secondsToExpire) throws BaseException {
         if (StringUtils.isBlank(redisKey)) {
             throw new BONotFoundException("Redis key is empty.");
         }
@@ -314,6 +336,64 @@ public abstract class AbstractRedisService {
     }
 
     /**
+     * Pop an element from a list, push it to another list and return it
+     * 
+     * @param sourceKey
+     *            source list key
+     * @param destinationKey
+     *            destination list key
+     * @param from
+     *            LEFT or RIGHT POP from source list
+     * @param to
+     *            LEFT or RIGHT POP to destination list
+     * @param secondsToExpire
+     *            timeout on the destinationKey given in seconds
+     * @return moved value
+     * @throws BONotFoundException
+     *             if key param is empty or source list is empty
+     * @see Jedis#lmove(String, String, ListDirection, ListDirection)
+     */
+    public String lmoveRedisData(String sourceKey, String destinationKey, ListDirection from, ListDirection to, long secondsToExpire)
+            throws BaseException {
+        if (StringUtils.isAnyBlank(sourceKey, destinationKey) || from == null || to == null) {
+            throw new BONotFoundException("One or more input from sourceKey, destinationKey, from, to is empty.");
+        }
+        RedisRepository redisRepository = new RedisRepository(getJedis());
+        String result = redisRepository.lmove(sourceKey, destinationKey, from, to, secondsToExpire);
+        if (result == null) {
+            throw new BONotFoundException("Data in sourceKey: [" + sourceKey + "] not found!");
+        }
+        return result;
+    }
+
+    /**
+     * Pop an element from a list, push it to another list and return it
+     * 
+     * @param sourceKey
+     *            source list key
+     * @param destinationKey
+     *            destination list key
+     * @param from
+     *            LEFT or RIGHT POP from source list
+     * @param to
+     *            LEFT or RIGHT POP to destination list
+     * @param secondsToExpire
+     *            timeout on the destinationKey given in seconds
+     * @return moved value
+     * @throws BaseException
+     *             if technical error occured
+     * @see Jedis#lmove(String, String, ListDirection, ListDirection)
+     */
+    public Optional<String> lmoveRedisDataOpt(String sourceKey, String destinationKey, ListDirection from, ListDirection to, long secondsToExpire)
+            throws BaseException {
+        if (StringUtils.isAnyBlank(sourceKey, destinationKey) || from == null || to == null) {
+            throw new BONotFoundException("One or more input from sourceKey, destinationKey, from, to is empty.");
+        }
+        RedisRepository redisRepository = new RedisRepository(getJedis());
+        return Optional.ofNullable(redisRepository.lmove(sourceKey, destinationKey, from, to, secondsToExpire));
+    }
+
+    /**
      * Returns all elements of the list stored at the specified Redis key.
      *
      * @param redisKey
@@ -340,9 +420,9 @@ public abstract class AbstractRedisService {
      *            timeout given in seconds
      * @throws BONotFoundException
      *             if key param is empty, or result of expire command is not 1
-     * @see Jedis#expire(String, int)
+     * @see Jedis#expire(String, long)
      */
-    public void expireRedisData(String redisKey, int seconds) throws BaseException {
+    public void expireRedisData(String redisKey, long seconds) throws BaseException {
         if (StringUtils.isBlank(redisKey)) {
             throw new BONotFoundException("Redis key is empty. key: " + redisKey);
         }
@@ -378,7 +458,7 @@ public abstract class AbstractRedisService {
      *             if key or value is empty
      * @see Jedis#setnx(String, String)
      */
-    public Long setnxRedisData(String redisKey, String redisData, int secondsToExpire) throws BaseException {
+    public Long setnxRedisData(String redisKey, String redisData, long secondsToExpire) throws BaseException {
         if (StringUtils.isBlank(redisKey)) {
             throw new BONotFoundException("Redis key is empty.");
         }
@@ -435,7 +515,7 @@ public abstract class AbstractRedisService {
      *             if key param is empty or data param is null
      * @see Jedis#hsetnx(String, String, String)
      */
-    public Long hsetnxRedisData(String redisKey, String field, String redisData, int secondsToExpire) throws BaseException {
+    public Long hsetnxRedisData(String redisKey, String field, String redisData, long secondsToExpire) throws BaseException {
         if (StringUtils.isBlank(redisKey)) {
             throw new BONotFoundException("Redis key is empty.");
         }
@@ -460,7 +540,7 @@ public abstract class AbstractRedisService {
      *             if key param is empty
      * @see Jedis#hscan(String, String)
      */
-    public List<Map.Entry<String, String>> hscanRedisData(String redisKey, int secondsToExpire) throws BaseException {
+    public List<Map.Entry<String, String>> hscanRedisData(String redisKey, long secondsToExpire) throws BaseException {
         if (StringUtils.isBlank(redisKey)) {
             throw new BONotFoundException("Redis key is empty.");
         }
@@ -483,7 +563,7 @@ public abstract class AbstractRedisService {
      *             if key param is empty
      * @see Jedis#hscan(String, String, ScanParams)
      */
-    public List<Map.Entry<String, String>> hscanRedisData(String redisKey, int secondsToExpire, int count) throws BaseException {
+    public List<Map.Entry<String, String>> hscanRedisData(String redisKey, long secondsToExpire, int count) throws BaseException {
         if (StringUtils.isBlank(redisKey)) {
             throw new BONotFoundException("Redis key is empty.");
         }
@@ -505,7 +585,7 @@ public abstract class AbstractRedisService {
      * @return status code reply
      * @throws BONotFoundException
      *             if key or data param is empty
-     * @see RedisRepository#setex(String, int, String)
+     * @see RedisRepository#setex(String, long, String)
      */
     public <T> String setRedisData(String redisKey, T redisData) throws BaseException {
         if (StringUtils.isBlank(redisKey)) {
