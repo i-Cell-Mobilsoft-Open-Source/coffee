@@ -21,6 +21,7 @@ package hu.icellmobilsoft.coffee.module.redisstream.service;
 
 import java.io.Closeable;
 import java.time.Duration;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.AbstractMap;
@@ -47,6 +48,7 @@ import redis.clients.jedis.StreamEntryID;
 import redis.clients.jedis.StreamGroupInfo;
 import redis.clients.jedis.StreamPendingEntry;
 import redis.clients.jedis.exceptions.JedisDataException;
+import redis.clients.jedis.params.XAddParams;
 
 /**
  * Service class for redis stream logic
@@ -97,7 +99,15 @@ public class RedisStreamService implements Closeable {
         if (values == null) {
             throw new BaseException(CoffeeFaultType.INVALID_INPUT, "publish values is null");
         }
-        StreamEntryID streamEntryID = getJedis().xadd(streamKey(), null, values, config.getStreamMaxLen(), false);
+        XAddParams params = XAddParams.xAddParams();
+        if (config.getProducerMaxLen().isPresent()) {
+            params.maxLen(config.getProducerMaxLen().get());
+        }
+        if (config.getProducerTTL().isPresent()) {
+            StreamEntryID before = new StreamEntryID(Instant.now().minusMillis(config.getProducerTTL().get()).toEpochMilli(), 0);
+            params.minId(before.toString());
+        }
+        StreamEntryID streamEntryID = getJedis().xadd(streamKey(), values, params);
         if (log.isTraceEnabled()) {
             log.trace("Published streamEntryID: [{0}] into [{1}]", streamEntryID, streamKey());
         }
