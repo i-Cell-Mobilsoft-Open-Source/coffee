@@ -21,3 +21,15 @@ Bevezetésre került funkciók:
 
 ==== Átállás
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+=== coffee-module-redisstream
+* Átnevezésre került a konfigurációs kulcs: `stream.maxlen` -> `producer.maxlen`-re.
+* Az átnevezett `producer.maxlen` kulcsnak volt egy default 1.000.000 értéke,
+mely el lett távolítva, tehát ha nincs megadva a konfigurációs kulcs,
+végtelen mennyiségű kulcs marad a streamben (Redis korlátain belül).
+* Bevezetésre került a `producer.ttl` kulcs,
+amelynek szerepe van az új üzenet publikálásánál az adott stream-re.
+Minden régebbi üzenet a streamen mely a `producer.ttl` (millisec) idősebb - törlésre kerül.
+
+==== Átállás
+A `stream.maxlen` kulcs átnevezését a konfigurációkban át kell vezetni.
