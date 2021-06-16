@@ -61,9 +61,14 @@ public class StreamGroupConfig implements IStreamGroupConfig {
     public static final String REDISSTREAM_PREFIX = "coffee.redisstream";
 
     /**
-     * Default 1.000.000 {@link #getStreamMaxLen()}}
+     * Default is no limit. See {@link #getProducerMaxLen()}}
      */
-    public static final String STREAM_MAXLEN = "stream.maxlen";
+    public static final String PRODUCER_MAXLEN = "producer.maxlen";
+
+    /**
+     * Default no ttl, value in millisecond. See {@link #getProducerTTL()}}
+     */
+    public static final String PRODUCER_TTL = "producer.ttl";
 
     /**
      * Default 1 minute {@link #getStreamReadTimeoutMillis()}}
@@ -91,8 +96,13 @@ public class StreamGroupConfig implements IStreamGroupConfig {
     private String configKey;
 
     @Override
-    public Long getStreamMaxLen() {
-        return config.getOptionalValue(joinKey(STREAM_MAXLEN), Long.class).orElse(1_000_000L);
+    public Optional<Long> getProducerMaxLen() {
+        return config.getOptionalValue(joinKey(PRODUCER_MAXLEN), Long.class);
+    }
+
+    @Override
+    public Optional<Long> getProducerTTL() {
+        return config.getOptionalValue(joinKey(PRODUCER_TTL), Long.class);
     }
 
     @Override

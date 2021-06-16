@@ -27,6 +27,7 @@ import javax.enterprise.inject.Vetoed;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.ScanParams;
 import redis.clients.jedis.ScanResult;
+import redis.clients.jedis.args.ListDirection;
 
 /**
  * Redis java Jedis client functions handler
@@ -70,7 +71,7 @@ public class RedisRepository {
      * @return status code reply
      * @see Jedis#setex(String, int, String)
      */
-    public String setex(final String key, final int secondsToExpire, final String json) {
+    public String setex(final String key, final long secondsToExpire, final String json) {
         return getJedis().setex(key, secondsToExpire, json);
     }
 
@@ -88,7 +89,7 @@ public class RedisRepository {
      *
      * @see Jedis#rpush(String, String...)
      */
-    public Long rpush(final String key, final String elementValue, int secondsToExpire) {
+    public Long rpush(final String key, final String elementValue, long secondsToExpire) {
         Long result = getJedis().rpush(key, elementValue);
         getJedis().expire(key, secondsToExpire);
         return result;
@@ -124,6 +125,49 @@ public class RedisRepository {
      */
     public String rpop(final String key) {
         return getJedis().rpop(key);
+    }
+
+    /**
+     * Pop an element from a list, push it to another list and return it
+     * 
+     * @param sourceKey
+     *            source list key
+     * @param destinationKey
+     *            destination list key
+     * @param from
+     *            LEFT or RIGHT POP from source list
+     * @param to
+     *            LEFT or RIGHT POP to destination list
+     * @param secondsToExpire
+     *            timeout on the destinationKey given in seconds
+     * @return moved value
+     * @see Jedis#lmove(String, String, ListDirection, ListDirection)
+     */
+    public String lmove(final String sourceKey, final String destinationKey, final ListDirection from, final ListDirection to,
+            final long secondsToExpire) {
+        String value = getJedis().lmove(sourceKey, destinationKey, from, to);
+        getJedis().expire(destinationKey, secondsToExpire);
+        return value;
+    }
+
+    /**
+     * Remove the first count occurrences of the value element from the list. If count is zero all the elements are removed. If count is negative
+     * elements are removed from tail to head, instead to go from head to tail that is the normal behaviour. So for example LREM with count -2 and
+     * hello as value to remove against the list (a,b,c,hello,x,hello,hello) will leave the list (a,b,c,hello,x). The number of removed elements is
+     * returned as an integer, see below for more information about the returned value. Note that non existing keys are considered like empty lists by
+     * LREM, so LREM against non existing keys will always return 0.
+     * 
+     * @param key
+     *            key of list
+     * @param count
+     *            how many hit values to remove, 0 all, -x from the end of the list, +x from the beginning of the list
+     * @param value
+     *            value to remove
+     * @return Integer Reply, specifically: The number of removed elements if the operation succeeded
+     * @see Jedis#lrem(String, long, String)
+     */
+    public Long lrem(final String key, final long count, final String value) {
+        return getJedis().lrem(key, count, value);
     }
 
     /**
@@ -184,7 +228,7 @@ public class RedisRepository {
      * @return 1, if timeout was set; 0 if key does not exist or timeout was not set successfully
      * @see Jedis#expire(String, int)
      */
-    public Long expire(final String key, int seconds) {
+    public Long expire(final String key, long seconds) {
         return getJedis().expire(key, seconds);
     }
 
@@ -241,7 +285,7 @@ public class RedisRepository {
      * @return 1 if the key was set successfully; 0 if the key was not set (key already exists)
      * @see Jedis#setnx(String, String)
      */
-    public Long setnx(String key, String value, int secondsToExpire) {
+    public Long setnx(String key, String value, long secondsToExpire) {
         Long result = getJedis().setnx(key, value);
         if (RedisResultCode.SUCCESSFUL.equals(result)) {
             getJedis().expire(key, secondsToExpire);
@@ -263,7 +307,7 @@ public class RedisRepository {
      * @return 1 if the key was set successfully; 0 if the key was not set (key already exists)
      * @see Jedis#hsetnx(String, String, String)
      */
-    public Long hsetnx(String key, String field, String value, int secondsToExpire) {
+    public Long hsetnx(String key, String field, String value, long secondsToExpire) {
         Long result = getJedis().hsetnx(key, field, value);
         getJedis().expire(key, secondsToExpire);
         return result;
@@ -281,7 +325,7 @@ public class RedisRepository {
      * @return hscan result
      * @see Jedis#hscan(String, String)
      */
-    public ScanResult<Map.Entry<String, String>> hscan(String key, String cursor, int secondsToExpire) {
+    public ScanResult<Map.Entry<String, String>> hscan(String key, String cursor, long secondsToExpire) {
         ScanResult<Map.Entry<String, String>> result = getJedis().hscan(key, cursor);
         getJedis().expire(key, secondsToExpire);
         return result;
@@ -301,7 +345,7 @@ public class RedisRepository {
      * @return hscan result
      * @see Jedis#hscan(String, String, ScanParams)
      */
-    public ScanResult<Map.Entry<String, String>> hscan(String key, String cursor, int secondsToExpire, ScanParams scanParams) {
+    public ScanResult<Map.Entry<String, String>> hscan(String key, String cursor, long secondsToExpire, ScanParams scanParams) {
         ScanResult<Map.Entry<String, String>> result = getJedis().hscan(key, cursor, scanParams);
         getJedis().expire(key, secondsToExpire);
         return result;

@@ -82,3 +82,34 @@ redisService.rpopRedisDataOpt("key"); <2>
 ----
 <1> Ha nem talál értéket akkor `BONotFoundException` 
 <2> Ha nem talál értéket akkor `Optional.empty()`
+
+=== lmove
+
+A pop+push kombinációja egyben és beállítja a lista lejárati értékét másodpercben.
+Valójában átpakolja a lista elemet másik listába.
+Ha nem létezik a lista létrehozza,
+ha a forrás és cél lista ugyan az,
+akkor képes a lista elejéről a végére pakolni a elemet, vagy ahogy szeretnénk.
+Válaszban a tétel lessz.
+Bővebb leírás: https://redis.io/commands/lmove + https://redis.io/commands/expire
+
+[source,java]
+----
+// sourceListKey elejéről a destinationListKey lista végére
+redisService.lmoveRedisData("sourceListKey", "destinationListKey", ListDirection.LEFT, ListDirection.RIGHT); <1>
+// elejéről a végére
+redisService.lmoveRedisDataOpt("sourceListKey", "sourceListKey", ListDirection.LEFT, ListDirection.RIGHT);
+// végéről az elejére
+redisService.lmoveRedisDataOpt("sourceListKey", "sourceListKey", ListDirection.RIGHT, ListDirection.LEFT);
+----
+<1> Ha nem talál értéket akkor `BONotFoundException` 
+
+=== removeValueFromList
+
+A megadott listából törli az összes paraméterrel egyező tételt.
+Bővebb leírás: https://redis.io/commands/lrem
+
+[source,java]
+----
+redisService.removeValueFromList(listKey, "removeValue");
+----
