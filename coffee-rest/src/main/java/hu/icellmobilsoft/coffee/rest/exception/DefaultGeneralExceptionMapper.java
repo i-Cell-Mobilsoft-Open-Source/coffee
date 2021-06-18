@@ -22,8 +22,6 @@ package hu.icellmobilsoft.coffee.rest.exception;
 import java.util.function.BiConsumer;
 
 import javax.inject.Inject;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.ForbiddenException;
@@ -41,6 +39,7 @@ import javax.xml.bind.UnmarshalException;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.deltaspike.core.api.projectstage.ProjectStage;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.jboss.resteasy.spi.InternalServerErrorException;
 
 import hu.icellmobilsoft.coffee.cdi.logger.AppLogger;
@@ -65,6 +64,10 @@ public class DefaultGeneralExceptionMapper implements ExceptionMapper<Exception>
     @Inject
     @ThisLogger
     private AppLogger log;
+
+    @Inject
+    @ConfigProperty(name = "service.name")
+    private String serviceName;
 
     @Context
     private HttpServletRequest servletRequest;
@@ -195,12 +198,7 @@ public class DefaultGeneralExceptionMapper implements ExceptionMapper<Exception>
         // MDC ezekben az esetekben nem volt tisztitva, mert nem is volt request loggolas
         MDC.clear();
         // feltoltjuk a szokasos adatokkal
-        try {
-            String applicationName = InitialContext.doLookup("java:app/AppName");
-            MDC.put(LogConstants.LOG_SERVICE_NAME, applicationName);
-        } catch (NamingException e) {
-            log.warn("Error in getting JNDI value of 'java:app/AppName'", e);
-        }
+        MDC.put(LogConstants.LOG_SERVICE_NAME, serviceName);
         String sessionId = servletRequest.getHeader(LogConstants.LOG_SESSION_ID);
         MDC.put(LogConstants.LOG_SESSION_ID, StringUtils.defaultIfBlank(sessionId, RandomUtil.generateId()));
         // kiloggoljuk a request-et
