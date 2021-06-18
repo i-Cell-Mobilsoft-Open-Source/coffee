@@ -34,11 +34,11 @@ import javax.ws.rs.ext.WriterInterceptor;
 import javax.ws.rs.ext.WriterInterceptorContext;
 
 import org.apache.commons.lang3.StringUtils;
-import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import hu.icellmobilsoft.coffee.cdi.logger.AppLogger;
 import hu.icellmobilsoft.coffee.cdi.logger.ThisLogger;
 import hu.icellmobilsoft.coffee.dto.common.LogConstants;
+import hu.icellmobilsoft.coffee.rest.cdi.BaseApplicationContainer;
 import hu.icellmobilsoft.coffee.rest.log.annotation.LogSpecifier;
 import hu.icellmobilsoft.coffee.rest.log.annotation.enumeration.LogSpecifierTarget;
 import hu.icellmobilsoft.coffee.rest.utils.RestLoggerUtil;
@@ -58,8 +58,7 @@ public abstract class BaseRestLogger implements ContainerRequestFilter, WriterIn
     private AppLogger log;
 
     @Inject
-    @ConfigProperty(name = "service.name")
-    private String serviceName;
+    private BaseApplicationContainer baseApplicationContainer;
 
     @Inject
     private RequestResponseLogger requestResponseLogger;
@@ -74,7 +73,7 @@ public abstract class BaseRestLogger implements ContainerRequestFilter, WriterIn
     @Override
     public void filter(ContainerRequestContext requestContext) throws IOException {
         MDC.clear();
-        MDC.put(LogConstants.LOG_SERVICE_NAME, serviceName);
+        MDC.put(LogConstants.LOG_SERVICE_NAME, baseApplicationContainer.getCoffeeAppName());
         processRequest(requestContext);
     }
 

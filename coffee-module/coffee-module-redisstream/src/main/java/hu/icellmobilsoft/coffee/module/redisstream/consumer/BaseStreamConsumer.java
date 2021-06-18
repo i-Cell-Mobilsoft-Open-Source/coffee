@@ -28,11 +28,11 @@ import javax.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
-import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import hu.icellmobilsoft.coffee.dto.common.LogConstants;
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.module.redisstream.config.IRedisStreamConstant;
+import hu.icellmobilsoft.coffee.rest.cdi.BaseApplicationContainer;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
 import hu.icellmobilsoft.coffee.se.logging.mdc.MDC;
 import redis.clients.jedis.StreamEntry;
@@ -49,8 +49,7 @@ public class BaseStreamConsumer {
     private Logger log;
 
     @Inject
-    @ConfigProperty(name = "service.name")
-    private String serviceName;
+    private BaseApplicationContainer baseApplicationContainer;
 
     /**
      * Logging MDC handling, setting variables
@@ -59,7 +58,7 @@ public class BaseStreamConsumer {
      *            {@link IRedisStreamConsumer#onStream(StreamEntry)}
      */
     protected void handleMDC(StreamEntry streamEntry) {
-        MDC.put(LogConstants.LOG_SERVICE_NAME, serviceName);
+        MDC.put(LogConstants.LOG_SERVICE_NAME, baseApplicationContainer.getCoffeeAppName());
 
         var retryCount = NumberUtils.toInt(MDC.get(IRedisStreamConstant.Log.RETRY_COUNTER));
         MDC.put(IRedisStreamConstant.Log.RETRY_COUNTER, String.valueOf(retryCount + 1));

@@ -23,12 +23,12 @@ import javax.inject.Inject;
 import javax.xml.bind.JAXBException;
 
 import org.apache.deltaspike.core.api.projectstage.ProjectStage;
-import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import hu.icellmobilsoft.coffee.dto.common.commonservice.BaseExceptionResultType;
 import hu.icellmobilsoft.coffee.dto.common.commonservice.FunctionCodeType;
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
+import hu.icellmobilsoft.coffee.rest.cdi.BaseApplicationContainer;
 import hu.icellmobilsoft.coffee.rest.locale.LocalizedMessage;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
 
@@ -41,8 +41,7 @@ import hu.icellmobilsoft.coffee.se.logging.Logger;
 public class DefaultExceptionMessageTranslator implements IExceptionMessageTranslator {
 
     @Inject
-    @ConfigProperty(name = "service.name")
-    private String serviceName;
+    private BaseApplicationContainer baseApplicationContainer;
 
     /** Constant <code>HTTP_STATUS_I_AM_A_TEAPOT=418</code> */
     public static final int HTTP_STATUS_I_AM_A_TEAPOT = 418;
@@ -84,7 +83,7 @@ public class DefaultExceptionMessageTranslator implements IExceptionMessageTrans
         dto.setMessage(getLocalizedMessage(faultType));
 
         // TODO check with more client calls
-        dto.setService(serviceName);
+        dto.setService(baseApplicationContainer.getCoffeeAppName());
     }
 
     /** {@inheritDoc} */
