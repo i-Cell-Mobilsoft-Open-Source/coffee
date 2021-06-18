@@ -39,7 +39,6 @@ import javax.xml.bind.UnmarshalException;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.deltaspike.core.api.projectstage.ProjectStage;
-import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.jboss.resteasy.spi.InternalServerErrorException;
 
 import hu.icellmobilsoft.coffee.cdi.logger.AppLogger;
@@ -49,6 +48,7 @@ import hu.icellmobilsoft.coffee.dto.common.commonservice.TechnicalFault;
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.dto.exception.BaseExceptionWrapper;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
+import hu.icellmobilsoft.coffee.rest.cdi.BaseApplicationContainer;
 import hu.icellmobilsoft.coffee.rest.log.RequestResponseLogger;
 import hu.icellmobilsoft.coffee.se.logging.mdc.MDC;
 import hu.icellmobilsoft.coffee.tool.utils.string.RandomUtil;
@@ -66,8 +66,7 @@ public class DefaultGeneralExceptionMapper implements ExceptionMapper<Exception>
     private AppLogger log;
 
     @Inject
-    @ConfigProperty(name = "service.name")
-    private String serviceName;
+    private BaseApplicationContainer baseApplicationContainer;
 
     @Context
     private HttpServletRequest servletRequest;
@@ -198,7 +197,7 @@ public class DefaultGeneralExceptionMapper implements ExceptionMapper<Exception>
         // MDC ezekben az esetekben nem volt tisztitva, mert nem is volt request loggolas
         MDC.clear();
         // feltoltjuk a szokasos adatokkal
-        MDC.put(LogConstants.LOG_SERVICE_NAME, serviceName);
+        MDC.put(LogConstants.LOG_SERVICE_NAME, baseApplicationContainer.getCoffeeAppName());
         String sessionId = servletRequest.getHeader(LogConstants.LOG_SESSION_ID);
         MDC.put(LogConstants.LOG_SESSION_ID, StringUtils.defaultIfBlank(sessionId, RandomUtil.generateId()));
         // kiloggoljuk a request-et
