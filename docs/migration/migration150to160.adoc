@@ -20,7 +20,7 @@ Bevezetésre került funkciók:
 * *removeValueFromList* (*lrem*) - lista elem törlése érték szerint
 
 ==== Átállás
-* A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
 
 === coffee-module-redisstream
 * Átnevezésre került a konfigurációs kulcs: `stream.maxlen` -> `producer.maxlen`-re.

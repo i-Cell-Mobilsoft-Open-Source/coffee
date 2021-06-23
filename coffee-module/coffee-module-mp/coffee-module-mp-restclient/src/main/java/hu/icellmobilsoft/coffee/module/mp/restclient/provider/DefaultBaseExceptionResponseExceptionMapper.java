@@ -52,8 +52,8 @@ public class DefaultBaseExceptionResponseExceptionMapper implements ResponseExce
 
         BaseExceptionResultType dto = readEntity(response, BaseExceptionResultType.class);
         if (dto != null) {
-            var restClientResponseException = new RestClientResponseException("REST client exception! Calling: " + response.getLocation(),
-                    fromExceptionResult(dto, responseStatus));
+            var restClientResponseException = new RestClientResponseException(
+                    MessageFormat.format("REST client exception! ResponseStatus [{0}].", responseStatus), fromExceptionResult(dto, responseStatus));
             restClientResponseException.setClassName(dto.getClassName());
             restClientResponseException.setException(dto.getException());
             restClientResponseException.setService(dto.getService());
