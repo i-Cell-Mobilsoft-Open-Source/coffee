@@ -65,20 +65,18 @@ public class DefaultExceptionMessageTranslator implements IExceptionMessageTrans
         boolean putExceptionToResponse = !ProjectStage.Production.equals(projectStage);
         if (putExceptionToResponse) {
             if (t instanceof JAXBException) {
-                dto.setMessage(getLinkedExceptionLocalizedMessage((JAXBException) t));
+                dto.setException(getLinkedExceptionLocalizedMessage((JAXBException) t));
             } else {
-                dto.setMessage(t.getLocalizedMessage());
+                dto.setException(t.getLocalizedMessage());
             }
 
             if (t.getCause() != null) {
                 var causedBy = new BaseExceptionResultType();
-                if (t.getCause() instanceof BaseException) {
-                    addCommonInfo(causedBy, (BaseException) t.getCause());
-                } else {
-                    addCommonInfo(causedBy, t.getCause(), faultType);
-                }
+                addCausedByInfo(causedBy, t.getCause(), faultType);
                 dto.setCausedBy(causedBy);
             }
+
+            dto.setClassName(t.getClass().getName());
         }
         dto.setFaultType(faultType.name());
         dto.setFuncCode(FunctionCodeType.ERROR);
@@ -89,16 +87,25 @@ public class DefaultExceptionMessageTranslator implements IExceptionMessageTrans
         if (t instanceof RestClientResponseException) {
             var restClientResponseException = (RestClientResponseException) t;
             dto.setService(restClientResponseException.getService());
-            if (putExceptionToResponse) {
-                dto.setClassName(restClientResponseException.getClassName());
-                dto.setException(restClientResponseException.getException());
-            }
         } else {
             dto.setService(baseApplicationContainer.getCoffeeAppName());
-            if (putExceptionToResponse) {
-                dto.setClassName(t.getClass().getName());
-                dto.setException(t.getMessage());
-            }
+        }
+    }
+
+    private void addCausedByInfo(BaseExceptionResultType dto, Throwable t, Enum<?> faultType) {
+        dto.setClassName(t.getClass().getName());
+        dto.setMessage(t.getLocalizedMessage());
+        if (t instanceof BaseException) {
+            dto.setFaultType(((BaseException) t).getFaultTypeEnum().name());
+        } else {
+            dto.setFaultType(faultType.name());
+        }
+        dto.setFuncCode(FunctionCodeType.ERROR);
+
+        if (t.getCause() != null) {
+            var causedBy = new BaseExceptionResultType();
+            addCausedByInfo(causedBy, t.getCause(), faultType);
+            dto.setCausedBy(causedBy);
         }
     }
 

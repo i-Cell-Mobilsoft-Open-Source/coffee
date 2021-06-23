@@ -77,13 +77,6 @@ public class DefaultBaseExceptionResponseExceptionMapper implements ResponseExce
         return null;
     }
 
-    /**
-     * Creates {@link BaseException} from {@link BaseExceptionResultType}.
-     *
-     * @param baseExceptionResultType
-     *            {@link BaseExceptionResultType}
-     * @return {@link BaseException} initialized with data from input {@link BaseExceptionResultType}.
-     */
     private BaseException fromExceptionResult(BaseExceptionResultType baseExceptionResultType, int responseStatus) {
         if (baseExceptionResultType == null) {
             return null;
@@ -91,23 +84,23 @@ public class DefaultBaseExceptionResponseExceptionMapper implements ResponseExce
 
         if (responseStatus == HTTP_STATUS_I_AM_A_TEAPOT) {
             return new BONotFoundException(FaultTypeParser.parseFaultType(baseExceptionResultType.getFaultType()),
-                    concatExceptionMessage(baseExceptionResultType), fromExceptionResult(baseExceptionResultType.getCausedBy(), responseStatus));
+                    concatExceptionMessage(baseExceptionResultType), fromExceptionResultCausedBy(baseExceptionResultType.getCausedBy()));
         } else if (responseStatus == Response.Status.UNAUTHORIZED.getStatusCode()) {
             return new AccessDeniedException(FaultTypeParser.parseFaultType(baseExceptionResultType.getFaultType()),
-                    concatExceptionMessage(baseExceptionResultType), fromExceptionResult(baseExceptionResultType.getCausedBy(), responseStatus));
+                    concatExceptionMessage(baseExceptionResultType), fromExceptionResultCausedBy(baseExceptionResultType.getCausedBy()));
         } else {
             return new BaseException(FaultTypeParser.parseFaultType(baseExceptionResultType.getFaultType()),
-                    concatExceptionMessage(baseExceptionResultType), fromExceptionResult(baseExceptionResultType.getCausedBy(), responseStatus));
+                    concatExceptionMessage(baseExceptionResultType), fromExceptionResultCausedBy(baseExceptionResultType.getCausedBy()));
         }
     }
 
-    private BaseException fromExceptionResult(BaseExceptionResultType baseExceptionResultType) {
+    private BaseException fromExceptionResultCausedBy(BaseExceptionResultType baseExceptionResultType) {
         if (baseExceptionResultType == null) {
             return null;
         }
 
         return new BaseException(FaultTypeParser.parseFaultType(baseExceptionResultType.getFaultType()),
-                concatExceptionMessage(baseExceptionResultType), fromExceptionResult(baseExceptionResultType.getCausedBy()));
+                concatExceptionMessage(baseExceptionResultType), fromExceptionResultCausedBy(baseExceptionResultType.getCausedBy()));
 
     }
 
