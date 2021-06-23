@@ -35,9 +35,8 @@ Minden régebbi üzenet a streamen mely a `producer.ttl` (millisec) idősebb - t
 A `stream.maxlen` kulcs átnevezését a konfigurációkban át kell vezetni.
 
 === coffee-rest
-* A RestClient-ek `hu.icellmobilsoft.coffee.dto.exception.RestClientResponseException`-be csomagolva adják vissza a hívott modul által adott hibát, így például a korábban visszakapott `hu.icellmobilsoft.coffee.dto.exception.BONotFoundException` a RestClientResponseException causedBy-ba került.
-* A `hu.icellmobilsoft.coffee.rest.exception.DefaultExceptionMessageTranslator` addCommonInfo metódus Exception paramétere Throwable lett.
-Erre a getCause által visszaadott érték kezeléséhez volt szükség, mert innentől rekurzívan az összes getCause érték is belekerül a `hu.icellmobilsoft.coffee.dto.common.commonservice.BaseExceptionResultType`-ba.
+* A RestClient-ek `hu.icellmobilsoft.coffee.dto.exception.RestClientResponseException`-be csomagolva adják vissza a hívott modul által adott hibát, így például a korábban visszakapott `hu.icellmobilsoft.coffee.dto.exception.BONotFoundException` a RestClientResponseException caused-ba került.
+* A `hu.icellmobilsoft.coffee.rest.exception.DefaultExceptionMessageTranslator` rekurzívan az összes cause értéket belarakja a `hu.icellmobilsoft.coffee.dto.common.commonservice.BaseExceptionResultType`-ba.
 * A "service" elem értéke a BaseExceptionResultType-ban a "coffee.app.name" paraméterben megadható, alapértelmezetten a "java:app/AppName" van használva.
 
 ==== Átállás

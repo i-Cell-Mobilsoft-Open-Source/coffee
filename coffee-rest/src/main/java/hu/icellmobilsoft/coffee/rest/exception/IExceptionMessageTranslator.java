@@ -50,12 +50,12 @@ public interface IExceptionMessageTranslator {
      *
      * @param dto
      *            Coffee DTO exception type to fill
-     * @param t
-     *            throwed Throwable
+     * @param e
+     *            throwed Exception
      * @param faultType
      *            to mark data with error code
      */
-    void addCommonInfo(BaseExceptionResultType dto, Throwable t, Enum<?> faultType);
+    void addCommonInfo(BaseExceptionResultType dto, Exception e, Enum<?> faultType);
 
     /**
      * Get linked exception message

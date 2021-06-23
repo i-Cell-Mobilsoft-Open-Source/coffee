@@ -61,22 +61,22 @@ public class DefaultExceptionMessageTranslator implements IExceptionMessageTrans
 
     /** {@inheritDoc} */
     @Override
-    public void addCommonInfo(BaseExceptionResultType dto, Throwable t, Enum<?> faultType) {
+    public void addCommonInfo(BaseExceptionResultType dto, Exception e, Enum<?> faultType) {
         boolean putExceptionToResponse = !ProjectStage.Production.equals(projectStage);
         if (putExceptionToResponse) {
-            if (t instanceof JAXBException) {
-                dto.setException(getLinkedExceptionLocalizedMessage((JAXBException) t));
+            if (e instanceof JAXBException) {
+                dto.setException(getLinkedExceptionLocalizedMessage((JAXBException) e));
             } else {
-                dto.setException(t.getLocalizedMessage());
+                dto.setException(e.getLocalizedMessage());
             }
 
-            if (t.getCause() != null) {
+            if (e.getCause() != null) {
                 var causedBy = new BaseExceptionResultType();
-                addCausedByInfo(causedBy, t.getCause(), faultType);
+                addCausedByInfo(causedBy, e.getCause(), faultType);
                 dto.setCausedBy(causedBy);
             }
 
-            dto.setClassName(t.getClass().getName());
+            dto.setClassName(e.getClass().getName());
         }
         dto.setFaultType(faultType.name());
         dto.setFuncCode(FunctionCodeType.ERROR);
@@ -84,8 +84,8 @@ public class DefaultExceptionMessageTranslator implements IExceptionMessageTrans
         // nyelvesitett valasz kell a faultype szerint
         dto.setMessage(getLocalizedMessage(faultType));
 
-        if (t instanceof RestClientResponseException) {
-            var restClientResponseException = (RestClientResponseException) t;
+        if (e instanceof RestClientResponseException) {
+            var restClientResponseException = (RestClientResponseException) e;
             dto.setService(restClientResponseException.getService());
         } else {
             dto.setService(baseApplicationContainer.getCoffeeAppName());
