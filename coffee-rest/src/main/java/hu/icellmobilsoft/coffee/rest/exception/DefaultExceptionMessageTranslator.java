@@ -27,6 +27,7 @@ import org.apache.deltaspike.core.api.projectstage.ProjectStage;
 import hu.icellmobilsoft.coffee.dto.common.commonservice.BaseExceptionResultType;
 import hu.icellmobilsoft.coffee.dto.common.commonservice.FunctionCodeType;
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
+import hu.icellmobilsoft.coffee.dto.exception.RestClientResponseException;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 import hu.icellmobilsoft.coffee.rest.cdi.BaseApplicationContainer;
 import hu.icellmobilsoft.coffee.rest.locale.LocalizedMessage;
@@ -68,22 +69,37 @@ public class DefaultExceptionMessageTranslator implements IExceptionMessageTrans
             } else {
                 dto.setMessage(t.getLocalizedMessage());
             }
-            dto.setClassName(t.getClass().getName());
-            dto.setException(t.getMessage());
 
             if (t.getCause() != null) {
-                BaseExceptionResultType causedBy = new BaseExceptionResultType();
-                addCommonInfo(causedBy, t.getCause(), faultType);
+                var causedBy = new BaseExceptionResultType();
+                if (t.getCause() instanceof BaseException) {
+                    addCommonInfo(causedBy, (BaseException) t.getCause());
+                } else {
+                    addCommonInfo(causedBy, t.getCause(), faultType);
+                }
                 dto.setCausedBy(causedBy);
             }
         }
-        dto.setFuncCode(FunctionCodeType.ERROR);
         dto.setFaultType(faultType.name());
+        dto.setFuncCode(FunctionCodeType.ERROR);
+
         // nyelvesitett valasz kell a faultype szerint
         dto.setMessage(getLocalizedMessage(faultType));
 
-        // TODO check with more client calls
-        dto.setService(baseApplicationContainer.getCoffeeAppName());
+        if (t instanceof RestClientResponseException) {
+            var restClientResponseException = (RestClientResponseException) t;
+            dto.setService(restClientResponseException.getService());
+            if (putExceptionToResponse) {
+                dto.setClassName(restClientResponseException.getClassName());
+                dto.setException(restClientResponseException.getException());
+            }
+        } else {
+            dto.setService(baseApplicationContainer.getCoffeeAppName());
+            if (putExceptionToResponse) {
+                dto.setClassName(t.getClass().getName());
+                dto.setException(t.getMessage());
+            }
+        }
     }
 
     /** {@inheritDoc} */

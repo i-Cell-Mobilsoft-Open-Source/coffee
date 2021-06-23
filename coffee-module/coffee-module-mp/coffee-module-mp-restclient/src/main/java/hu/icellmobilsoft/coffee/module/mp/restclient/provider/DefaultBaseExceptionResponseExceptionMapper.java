@@ -21,7 +21,6 @@ package hu.icellmobilsoft.coffee.module.mp.restclient.provider;
 
 import java.text.MessageFormat;
 
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.apache.commons.lang3.StringUtils;
@@ -31,10 +30,10 @@ import hu.icellmobilsoft.coffee.dto.common.commonservice.BaseExceptionResultType
 import hu.icellmobilsoft.coffee.dto.exception.AccessDeniedException;
 import hu.icellmobilsoft.coffee.dto.exception.BONotFoundException;
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
+import hu.icellmobilsoft.coffee.dto.exception.RestClientResponseException;
 import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 import hu.icellmobilsoft.coffee.module.mp.restclient.exception.FaultTypeParser;
-import hu.icellmobilsoft.coffee.module.mp.restclient.exception.RestClientResponseException;
 import hu.icellmobilsoft.coffee.tool.gson.JsonUtil;
 import hu.icellmobilsoft.coffee.tool.utils.marshalling.MarshallingUtil;
 
@@ -53,16 +52,12 @@ public class DefaultBaseExceptionResponseExceptionMapper implements ResponseExce
 
         BaseExceptionResultType dto = readEntity(response, BaseExceptionResultType.class);
         if (dto != null) {
-            if (responseStatus == HTTP_STATUS_I_AM_A_TEAPOT) {
-                return new BONotFoundException(FaultTypeParser.parseFaultType(dto.getFaultType()), dto.getMessage(),
-                        RestClientResponseException.fromExceptionResult(dto));
-            } else if (responseStatus == Response.Status.UNAUTHORIZED.getStatusCode()) {
-                return new AccessDeniedException(FaultTypeParser.parseFaultType(dto.getFaultType()), dto.getMessage(),
-                        RestClientResponseException.fromExceptionResult(dto));
-            } else if (responseStatus == Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()) {
-                return new BaseException(FaultTypeParser.parseFaultType(dto.getFaultType()), dto.getMessage(),
-                        RestClientResponseException.fromExceptionResult(dto));
-            }
+            var restClientResponseException = new RestClientResponseException("REST client exception! Calling: " + response.getLocation(),
+                    fromExceptionResult(dto, responseStatus));
+            restClientResponseException.setClassName(dto.getClassName());
+            restClientResponseException.setException(dto.getException());
+            restClientResponseException.setService(dto.getService());
+            return restClientResponseException;
         }
         return new TechnicalException(CoffeeFaultType.OPERATION_FAILED,
                 MessageFormat.format("HTTP error status [{0}], content [{1}]", responseStatus, response.readEntity(String.class)));
@@ -73,12 +68,50 @@ public class DefaultBaseExceptionResponseExceptionMapper implements ResponseExce
         if (StringUtils.isBlank(entity)) {
             return null;
         }
-        MediaType mediaType = response.getMediaType();
+        var mediaType = response.getMediaType();
         if (StringUtils.equalsAnyIgnoreCase(mediaType.getSubtype(), "json")) {
             return JsonUtil.toObject(entity, dtoClass);
         } else if (StringUtils.equalsAnyIgnoreCase(mediaType.getSubtype(), "xml")) {
             return MarshallingUtil.unmarshallUncheckedXml(entity, dtoClass);
         }
         return null;
+    }
+
+    /**
+     * Creates {@link BaseException} from {@link BaseExceptionResultType}.
+     *
+     * @param baseExceptionResultType
+     *            {@link BaseExceptionResultType}
+     * @return {@link BaseException} initialized with data from input {@link BaseExceptionResultType}.
+     */
+    private BaseException fromExceptionResult(BaseExceptionResultType baseExceptionResultType, int responseStatus) {
+        if (baseExceptionResultType == null) {
+            return null;
+        }
+
+        if (responseStatus == HTTP_STATUS_I_AM_A_TEAPOT) {
+            return new BONotFoundException(FaultTypeParser.parseFaultType(baseExceptionResultType.getFaultType()),
+                    concatExceptionMessage(baseExceptionResultType), fromExceptionResult(baseExceptionResultType.getCausedBy(), responseStatus));
+        } else if (responseStatus == Response.Status.UNAUTHORIZED.getStatusCode()) {
+            return new AccessDeniedException(FaultTypeParser.parseFaultType(baseExceptionResultType.getFaultType()),
+                    concatExceptionMessage(baseExceptionResultType), fromExceptionResult(baseExceptionResultType.getCausedBy(), responseStatus));
+        } else {
+            return new BaseException(FaultTypeParser.parseFaultType(baseExceptionResultType.getFaultType()),
+                    concatExceptionMessage(baseExceptionResultType), fromExceptionResult(baseExceptionResultType.getCausedBy(), responseStatus));
+        }
+    }
+
+    private BaseException fromExceptionResult(BaseExceptionResultType baseExceptionResultType) {
+        if (baseExceptionResultType == null) {
+            return null;
+        }
+
+        return new BaseException(FaultTypeParser.parseFaultType(baseExceptionResultType.getFaultType()),
+                concatExceptionMessage(baseExceptionResultType), fromExceptionResult(baseExceptionResultType.getCausedBy()));
+
+    }
+
+    private String concatExceptionMessage(BaseExceptionResultType baseExceptionResultType) {
+        return String.join(" : ", baseExceptionResultType.getClassName(), baseExceptionResultType.getException());
     }
 }

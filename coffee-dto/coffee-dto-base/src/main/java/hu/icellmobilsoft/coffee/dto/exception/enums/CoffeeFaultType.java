@@ -205,4 +205,8 @@ public enum CoffeeFaultType implements IFaultType<CoffeeFaultType> {
      * Invalid one time password
      */
     INVALID_ONE_TIME_PASSWORD,
+    /**
+     * Rest client exception
+     */
+    REST_CLIENT_EXCEPTION,
 }
