@@ -33,6 +33,7 @@ import javax.validation.constraints.NotNull;
 
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang3.ClassUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.deltaspike.data.impl.audit.AuditEntityListener;
 
@@ -125,7 +126,7 @@ public abstract class AbstractEntity implements Serializable {
     private Method handleBoolean(PropertyDescriptor property) throws NoSuchMethodException {
         // ha nem találta a Boolean is* gettert, akkor megmutatjuk neki
         if (property.getPropertyType().equals(Boolean.class) && property.getReadMethod() == null) {
-            return this.getClass().getDeclaredMethod(IS + (property.getName().substring(0, 1).toUpperCase() + property.getName().substring(1)));
+            return this.getClass().getDeclaredMethod(IS + (StringUtils.capitalize(property.getName())));
 
         }
         return property.getReadMethod();
