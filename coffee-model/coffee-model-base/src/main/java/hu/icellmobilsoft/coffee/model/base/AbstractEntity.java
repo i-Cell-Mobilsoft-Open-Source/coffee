@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -21,6 +21,7 @@ package hu.icellmobilsoft.coffee.model.base;
 
 import java.beans.PropertyDescriptor;
 import java.io.Serializable;
+import java.lang.reflect.Method;
 
 import javax.enterprise.inject.Vetoed;
 import javax.persistence.Column;
@@ -49,6 +50,7 @@ import hu.icellmobilsoft.coffee.se.logging.Logger;
 public abstract class AbstractEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    public static final String IS = "is";
 
     @Column(name = "X__VERSION", precision = 20, scale = 0)
     @NotNull
@@ -60,7 +62,7 @@ public abstract class AbstractEntity implements Serializable {
 
     /**
      * Getter for the field {@code version}.
-     * 
+     *
      * @return version
      */
     public long getVersion() {
@@ -69,7 +71,7 @@ public abstract class AbstractEntity implements Serializable {
 
     /**
      * Setter for the field {@code version}.
-     * 
+     *
      * @param version
      *            version
      */
@@ -110,7 +112,7 @@ public abstract class AbstractEntity implements Serializable {
                 s.append(property.getName(), property.getPropertyType().getSimpleName());
             } else {
                 try {
-                    s.append(property.getName(), property.getReadMethod().invoke(this));
+                    s.append(property.getName(), handleBoolean(property).invoke(this));
                 } catch (Exception e) {
                     Logger.getLogger(getClass()).warn("Error in toString for property [{0}]: [{1}]", property.getName(), e.getLocalizedMessage());
                 }
@@ -118,5 +120,14 @@ public abstract class AbstractEntity implements Serializable {
         }
         return s.toString();
         // return ReflectionToStringBuilder.toString(this, ToStringStyle.DEFAULT_STYLE);
+    }
+
+    private Method handleBoolean(PropertyDescriptor property) throws NoSuchMethodException {
+        // ha nem találta a Boolean is* gettert, akkor megmutatjuk neki
+        if (property.getPropertyType().equals(Boolean.class) && property.getReadMethod() == null) {
+            return this.getClass().getDeclaredMethod(IS + (property.getName().substring(0, 1).toUpperCase() + property.getName().substring(1)));
+
+        }
+        return property.getReadMethod();
     }
 }
