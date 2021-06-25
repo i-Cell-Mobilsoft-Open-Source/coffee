@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -24,12 +24,14 @@ import javax.xml.bind.JAXBException;
 
 import org.apache.deltaspike.core.api.projectstage.ProjectStage;
 
-import hu.icellmobilsoft.coffee.cdi.logger.LogProducer;
 import hu.icellmobilsoft.coffee.dto.common.commonservice.BaseExceptionResultType;
 import hu.icellmobilsoft.coffee.dto.common.commonservice.FunctionCodeType;
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
+import hu.icellmobilsoft.coffee.dto.exception.RestClientResponseException;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
+import hu.icellmobilsoft.coffee.rest.cdi.BaseApplicationContainer;
 import hu.icellmobilsoft.coffee.rest.locale.LocalizedMessage;
+import hu.icellmobilsoft.coffee.se.logging.Logger;
 
 /**
  * Default exception translator implementation for exception throwing
@@ -38,6 +40,9 @@ import hu.icellmobilsoft.coffee.rest.locale.LocalizedMessage;
  * @since 1.0.0
  */
 public class DefaultExceptionMessageTranslator implements IExceptionMessageTranslator {
+
+    @Inject
+    private BaseApplicationContainer baseApplicationContainer;
 
     /** Constant <code>HTTP_STATUS_I_AM_A_TEAPOT=418</code> */
     public static final int HTTP_STATUS_I_AM_A_TEAPOT = 418;
@@ -60,24 +65,55 @@ public class DefaultExceptionMessageTranslator implements IExceptionMessageTrans
         boolean putExceptionToResponse = !ProjectStage.Production.equals(projectStage);
         if (putExceptionToResponse) {
             if (e instanceof JAXBException) {
-                dto.setMessage(getLinkedExceptionLocalizedMessage((JAXBException) e));
+                dto.setException(getLinkedExceptionLocalizedMessage((JAXBException) e));
             } else {
-                dto.setMessage(e.getLocalizedMessage());
+                dto.setException(e.getLocalizedMessage());
             }
+
+            if (e.getCause() != null) {
+                var causedBy = new BaseExceptionResultType();
+                addCausedByInfo(causedBy, e.getCause(), faultType);
+                dto.setCausedBy(causedBy);
+            }
+
             dto.setClassName(e.getClass().getName());
-            dto.setException(e.getLocalizedMessage());
         }
-        dto.setFuncCode(FunctionCodeType.ERROR);
         dto.setFaultType(faultType.name());
+        dto.setFuncCode(FunctionCodeType.ERROR);
+
         // nyelvesitett valasz kell a faultype szerint
         dto.setMessage(getLocalizedMessage(faultType));
+
+        if (e instanceof RestClientResponseException) {
+            var restClientResponseException = (RestClientResponseException) e;
+            dto.setService(restClientResponseException.getService());
+        } else {
+            dto.setService(baseApplicationContainer.getCoffeeAppName());
+        }
+    }
+
+    private void addCausedByInfo(BaseExceptionResultType dto, Throwable t, Enum<?> faultType) {
+        dto.setClassName(t.getClass().getName());
+        dto.setMessage(t.getLocalizedMessage());
+        if (t instanceof BaseException) {
+            dto.setFaultType(((BaseException) t).getFaultTypeEnum().name());
+        } else {
+            dto.setFaultType(faultType.name());
+        }
+        dto.setFuncCode(FunctionCodeType.ERROR);
+
+        if (t.getCause() != null) {
+            var causedBy = new BaseExceptionResultType();
+            addCausedByInfo(causedBy, t.getCause(), faultType);
+            dto.setCausedBy(causedBy);
+        }
     }
 
     /** {@inheritDoc} */
     @Override
     public String getLocalizedMessage(Enum<?> faultType) {
         if (faultType == null) {
-            LogProducer.getStaticDefaultLogger(DefaultExceptionMessageTranslator.class)
+            Logger.getLogger(DefaultExceptionMessageTranslator.class)
                     .warn("FaultType is null, proceeding with faultType: [" + CoffeeFaultType.OPERATION_FAILED + "]");
             return localizedMessage.message(CoffeeFaultType.OPERATION_FAILED);
         }

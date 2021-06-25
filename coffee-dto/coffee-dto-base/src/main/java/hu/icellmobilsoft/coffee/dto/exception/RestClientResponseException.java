@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,10 +17,9 @@
  * limitations under the License.
  * #L%
  */
-package hu.icellmobilsoft.coffee.module.mp.restclient.exception;
+package hu.icellmobilsoft.coffee.dto.exception;
 
-import hu.icellmobilsoft.coffee.dto.common.commonservice.BaseExceptionResultType;
-import hu.icellmobilsoft.coffee.dto.exception.BaseException;
+import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 import hu.icellmobilsoft.coffee.dto.exception.enums.Severity;
 
 /**
@@ -36,11 +35,11 @@ public class RestClientResponseException extends BaseException {
     private String exception;
 
     public RestClientResponseException(String message) {
-        super(message);
+        super(CoffeeFaultType.REST_CLIENT_EXCEPTION, message);
     }
 
     public RestClientResponseException(String message, Throwable e) {
-        super(message, e);
+        super(CoffeeFaultType.REST_CLIENT_EXCEPTION, message, e);
     }
 
     public RestClientResponseException(Enum<?> faultTypeEnum, String message) {
@@ -55,48 +54,60 @@ public class RestClientResponseException extends BaseException {
         super(faultTypeEnum, message, e, severity);
     }
 
-    public String getService() {
-        return service;
-    }
-
-    public void setService(String service) {
-        this.service = service;
-    }
-
+    /**
+     * Getter for the field <code>className</code>.
+     *
+     * @return className
+     */
     public String getClassName() {
         return className;
     }
 
+    /**
+     * Setter for the field <code>className</code>.
+     *
+     * @param className
+     *            className
+     */
     public void setClassName(String className) {
         this.className = className;
     }
 
+    /**
+     * Getter for the field <code>exception</code>.
+     *
+     * @return exception
+     */
     public String getException() {
         return exception;
     }
 
+    /**
+     * Setter for the field <code>exception</code>.
+     *
+     * @param exception
+     *            exception
+     */
     public void setException(String exception) {
         this.exception = exception;
     }
 
     /**
-     * Creates {@link RestClientResponseException} from {@link BaseExceptionResultType}.
+     * Getter for the field <code>service</code>.
      *
-     * @param baseExceptionResultType
-     *            {@link BaseExceptionResultType}
-     * @return {@link RestClientResponseException} initialized with data from input {@link BaseExceptionResultType}.
+     * @return service
      */
-    public static RestClientResponseException fromExceptionResult(BaseExceptionResultType baseExceptionResultType) {
-        if (baseExceptionResultType == null) {
-            return null;
-        }
-        RestClientResponseException exception = new RestClientResponseException(FaultTypeParser.parseFaultType(baseExceptionResultType.getFaultType()), baseExceptionResultType.getMessage());
-        exception.setService(baseExceptionResultType.getService());
-        exception.setClassName(baseExceptionResultType.getClassName());
-        exception.setException(baseExceptionResultType.getException());
-        if (baseExceptionResultType.isSetCausedBy()) {
-            exception.initCause(fromExceptionResult(baseExceptionResultType.getCausedBy()));
-        }
-        return exception;
+    public String getService() {
+        return service;
+    }
+
+    /**
+     * Setter for the field <code>service</code>.
+     *
+     * @param service
+     *            service
+     */
+    public void setService(String service) {
+        this.service = service;
     }
 }
