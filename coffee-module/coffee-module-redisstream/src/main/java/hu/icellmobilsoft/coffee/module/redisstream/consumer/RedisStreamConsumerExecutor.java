@@ -103,11 +103,12 @@ public class RedisStreamConsumerExecutor implements IRedisStreamConsumerExecutor
     public void startLoop() {
         consumerIdentifier = RandomUtil.generateId();
         endLoop = false;
+        CDI<Object> cdi = CDI.current();
         // óvatos futás, ellenőrzi a stream es csoport létezését
         boolean prudentRun = true;
         while (!endLoop) {
             Optional<StreamEntry> streamEntry = Optional.empty();
-            Instance<Jedis> jedisInstance = CDI.current().select(Jedis.class, new RedisConnection.Literal(redisConfigKey));
+            Instance<Jedis> jedisInstance = cdi.select(Jedis.class, new RedisConnection.Literal(redisConfigKey));
             Jedis jedis = null;
             try {
                 jedis = jedisInstance.get();
@@ -150,6 +151,7 @@ public class RedisStreamConsumerExecutor implements IRedisStreamConsumerExecutor
                     // el kell engedni a connectiont
                     jedisInstance.destroy(jedis);
                 }
+                cdi.destroy(this);
                 MDC.clear();
             }
         }

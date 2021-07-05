@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import javax.enterprise.inject.Instance;
 import javax.enterprise.inject.Vetoed;
 import javax.enterprise.inject.spi.CDI;
 import javax.persistence.EntityManager;
@@ -84,8 +85,13 @@ public class EntityHelper {
         if (entity == null) {
             return null;
         }
-        EntityManager em = CDI.current().select(EntityManager.class).get();
-        return (String) em.getEntityManagerFactory().getPersistenceUnitUtil().getIdentifier(entity);
+        Instance<EntityManager> instance = CDI.current().select(EntityManager.class);
+        EntityManager em = instance.get();
+        try {
+            return (String) em.getEntityManagerFactory().getPersistenceUnitUtil().getIdentifier(entity);
+        } finally {
+            instance.destroy(em);
+        }
     }
 
     /**

@@ -19,6 +19,7 @@
  */
 package hu.icellmobilsoft.coffee.module.mongodb.handler;
 
+import javax.annotation.PreDestroy;
 import javax.enterprise.context.Dependent;
 import javax.enterprise.inject.spi.CDI;
 import javax.inject.Inject;
@@ -80,6 +81,16 @@ public class MongoDbHandler {
             throw new TechnicalException(CoffeeFaultType.WRONG_OR_MISSING_PARAMETERS, "mongoDbConfig is not set!");
         }
         return mongoFactory.getMongoClient(mongoDbConfig.getUri());
+    }
+
+    /**
+     * Disposes the managed {@link #mongoService} field
+     */
+    @PreDestroy
+    public void dispose() {
+        if (mongoService != null) {
+            CDI.current().destroy(mongoService);
+        }
     }
 
     /**
