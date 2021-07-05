@@ -108,6 +108,18 @@ public class DefaultEtcdFactory {
     }
 
     /**
+     * Disposes the managed EtcdService
+     *
+     * @param etcdService
+     *            object to dispose
+     */
+    public void disposeEtcdService(@Disposes EtcdService etcdService) {
+        if (etcdService != null) {
+            CDI.current().destroy(etcdService.getEtcdRepository());
+        }
+    }
+
+    /**
      * Producer for default ConfigEtcdService
      * 
      * @return ConfigEtcdService
@@ -119,5 +131,17 @@ public class DefaultEtcdFactory {
         EtcdService etcdService = CDI.current().select(EtcdService.class).get();
         configEtcdService.init(etcdService);
         return configEtcdService;
+    }
+
+    /**
+     * Disposes the managed ConfigEtcdService
+     *
+     * @param configEtcdService
+     *            object to dispose
+     */
+    public void disposeConfigEtcdService(@Disposes ConfigEtcdService configEtcdService) {
+        if (configEtcdService != null) {
+            CDI.current().destroy(configEtcdService.getEtcdService());
+        }
     }
 }

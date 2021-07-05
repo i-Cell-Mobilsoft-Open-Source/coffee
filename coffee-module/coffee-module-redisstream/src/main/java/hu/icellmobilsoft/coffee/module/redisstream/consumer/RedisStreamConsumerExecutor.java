@@ -339,7 +339,11 @@ public class RedisStreamConsumerExecutor implements IRedisStreamConsumerExecutor
 
     @Override
     public void run() {
-        startLoop();
+        try {
+            startLoop();
+        } finally {
+            CDI.current().destroy(this);
+        }
     }
 
     public Bean<? super IRedisStreamBaseConsumer> getConsumerBean() {

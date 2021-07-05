@@ -25,6 +25,7 @@ import java.util.Optional;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.Dependent;
 import javax.enterprise.inject.Disposes;
+import javax.enterprise.inject.Instance;
 import javax.enterprise.inject.Produces;
 import javax.enterprise.inject.spi.CDI;
 import javax.enterprise.inject.spi.InjectionPoint;
@@ -68,7 +69,8 @@ public class JedisConnectionProducer {
         Optional<RedisConnection> annotation = AnnotationUtil.getAnnotation(injectionPoint, RedisConnection.class);
         String configKey = annotation.map(RedisConnection::configKey).orElse(null);
 
-        JedisPool jedisPool = CDI.current().select(JedisPool.class, new RedisConnection.Literal(configKey)).get();
+        Instance<JedisPool> jedisPoolInstance = CDI.current().select(JedisPool.class, new RedisConnection.Literal(configKey));
+        JedisPool jedisPool = jedisPoolInstance.get();
         if (jedisPool != null) {
             try {
                 return jedisPool.getResource();
@@ -76,6 +78,8 @@ public class JedisConnectionProducer {
                 String msg = MessageFormat.format("Problems trying to get the Redis connection for the configKey:[{0}]", configKey);
                 log.error(msg, ex);
                 throw new TechnicalException(CoffeeFaultType.REPOSITORY_FAILED, msg, ex);
+            } finally {
+                jedisPoolInstance.destroy(jedisPool);
             }
         }
         String msg = MessageFormat.format("Could not create Redis connection for the configKey:[{0}]! Jedis pool is null", configKey);

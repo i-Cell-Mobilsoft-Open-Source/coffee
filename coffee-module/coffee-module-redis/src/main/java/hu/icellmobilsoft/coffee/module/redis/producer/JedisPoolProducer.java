@@ -27,6 +27,7 @@ import java.util.Optional;
 import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.Dependent;
+import javax.enterprise.inject.Instance;
 import javax.enterprise.inject.Produces;
 import javax.enterprise.inject.spi.CDI;
 import javax.enterprise.inject.spi.InjectionPoint;
@@ -82,9 +83,10 @@ public class JedisPoolProducer {
     }
 
     private JedisPool createJedisPool(String configKey) {
+        log.info("Creating JedisPool for configKey:[{0}]", configKey);
+        Instance<ManagedRedisConfig> instance = CDI.current().select(ManagedRedisConfig.class, new RedisConnection.Literal(configKey));
+        ManagedRedisConfig managedRedisConfig = instance.get();
         try {
-            log.info("Creating JedisPool for configKey:[{0}]", configKey);
-            ManagedRedisConfig managedRedisConfig = CDI.current().select(ManagedRedisConfig.class, new RedisConnection.Literal(configKey)).get();
             String host = managedRedisConfig.getHost();
             int port = managedRedisConfig.getPort();
             int database = managedRedisConfig.getDatabase();
@@ -96,6 +98,8 @@ public class JedisPoolProducer {
         } catch (Exception e) {
             log.error(MessageFormat.format("Exception on initializing JedisPool for configKey:[{0}], [{1}]", configKey, e.getLocalizedMessage()), e);
             return null;
+        } finally {
+            instance.destroy(managedRedisConfig);
         }
     }
 

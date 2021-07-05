@@ -23,11 +23,14 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.ParameterizedType;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.context.Dependent;
 import javax.enterprise.inject.Instance;
 import javax.enterprise.inject.spi.CDI;
 import javax.enterprise.inject.spi.InjectionPoint;
 
 import org.apache.commons.lang3.StringUtils;
+
+import com.mongodb.client.MongoCollection;
 
 import hu.icellmobilsoft.coffee.module.mongodb.service.MongoService;
 
@@ -51,6 +54,7 @@ public class MongoServiceProducerFactory {
      * @return MongoService
      */
     @SuppressWarnings("unchecked")
+    @Dependent
     @MongoServiceConfiguration(configKey = "", collectionKey = "")
     public <T> MongoService<T> mongoServiceTemplateProducer(final InjectionPoint injectionPoint) {
         MongoServiceConfiguration annotation = injectionPoint.getAnnotated().getAnnotation(MongoServiceConfiguration.class);
@@ -65,11 +69,7 @@ public class MongoServiceProducerFactory {
         // create config helper
         Annotation qualifier = new MongoClientConfiguration.Literal(configKey);
         Instance<MongoDbClient> instance = CDI.current().select(MongoDbClient.class, qualifier);
-
         MongoDbClient mongoDbClient = instance.get();
-
-        // destroy dependent bean from instances
-        CDI.current().destroy(instance);
 
         // get type under inject
         Class<? extends MongoService<T>> pType = (Class<? extends MongoService<T>>) injectionPoint.getAnnotated().getBaseType();
@@ -81,8 +81,13 @@ public class MongoServiceProducerFactory {
         // select concrate implementation
         MongoService<T> mongoService = (MongoService<T>) CDI.current().select(pType).get();
 
-        // init repositroy with collection
-        mongoService.initRepositoryCollection(mongoDbClient.getMongoDatabase().getCollection(collectionKey, valueClass));
+        MongoCollection<T> collection = mongoDbClient.getMongoDatabase().getCollection(collectionKey, valueClass);
+
+        // destroy dependent bean from instances
+        instance.destroy(mongoDbClient);
+
+        // init repository with collection
+        mongoService.initRepositoryCollection(collection);
         return mongoService;
     }
 

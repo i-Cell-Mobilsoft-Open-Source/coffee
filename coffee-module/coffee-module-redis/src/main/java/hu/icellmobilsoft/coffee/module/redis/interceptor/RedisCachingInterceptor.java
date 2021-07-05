@@ -130,6 +130,10 @@ public class RedisCachingInterceptor {
         } catch (Exception e) {
             log.error("Exception on Redis [{0}]", e.getMessage(), e);
             objectToReturn = ctx.proceed();
+        } finally {
+            if (redisService != null) {
+                CDI.current().destroy(redisService);
+            }
         }
         return objectToReturn;
     }
