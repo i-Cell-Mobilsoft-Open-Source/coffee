@@ -1,11 +1,11 @@
 = coff:ee
 
-A coff:ee egy JavaEE framework, melynek célja, hogy az enterprise világ gyakori algoritmusait összegyűjtse,
+A coff:ee egy JakartaEE framework, melynek célja, hogy az enterprise világ gyakori algoritmusait összegyűjtse,
 azokra egy alapvető megoldást nyújtson, melyet, ha szükséges saját igényeinkre szabhatunk.
 
 A projekt ezeken a technológiákon alapszik:
 
-* JAVA EE 8+
+* Jakarta EE 8+
 * Java 11+
 * CDI 2.0+
 

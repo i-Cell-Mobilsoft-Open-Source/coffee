@@ -8,6 +8,9 @@ coff:ee v1.5.0 -> v1.6.0 migrációs leírás, újdonságok, változások leír�
 * Bump apache httpcore 4.4.5 -> 4.4.13 - https://archive.apache.org/dist/httpcomponents/httpcore/RELEASE_NOTES-4.4.x.txt
 * Bump apache httpclient 4.5.4 -> 4.5.13 - https://archive.apache.org/dist/httpcomponents/httpclient/RELEASE_NOTES-4.5.x.txt
 * `CDI#select`-tel létrehozott dependent scope-ú objektumok felszabadítása
+* Java EE 8 -> Jakarta EE 8 átállás - upgrade Jakarta EE 8 API-ra, amely alapvetően visszafele kompatibilis. Átállási munkát
+csak abban az esetben eredményez, ha a `jaxb-api` verziója nem volt definiálva projekt szinten. Ekkor azt vagy definiálni kell,
+vagy az újonnan behúzott `jakarta.xml.bind-api`-t használni helyette.
 
 === coffee-module-redis
 Redis 6.2 upgrade változást hozott hogy a timeout megadása int-ről long-ra változott.
