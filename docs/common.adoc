@@ -5,7 +5,7 @@ Minden cég kifejleszt valami saját keretrendszert amely a projekteket próbál
 
 Ez a keretrendszer alkalmas mind a SOA, mind a Microservice architektúra kiszolgálására. A felépítése moduláris, és felülírható projekt szinten szinte minden. A keretrendszer az alábbi rendszereken alapul, amelyek meghatározóak az egész működésre:
 
-* JAVA EE 8+
+* Jakarta EE 8+
 * Java 11+
 * CDI 2.0+
 * Apache deltaspike 1.9+

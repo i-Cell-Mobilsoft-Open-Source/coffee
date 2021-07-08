@@ -12,10 +12,11 @@
 	<properties>
 		<version.apache.deltaspike>1.9.1</version.apache.deltaspike>
 
-		<version.javaee>8.0</version.javaee>
-		<version.javax.xml.bind.jaxb-api>2.3.1</version.javax.xml.bind.jaxb-api>
-		<version.com.sun.xml.bind.jaxb-api>2.3.1</version.com.sun.xml.bind.jaxb-api>
+		<version.jakartaee>8.0.0</version.jakartaee>
+		<version.jakarta.xml.bind.jaxb-api>2.3.2</version.jakarta.xml.bind.jaxb-api>
+		<version.com.sun.xml.bind.jaxb-api>2.3.2</version.com.sun.xml.bind.jaxb-api>
 		<version.com.sun.xml.bind.jaxb-core>2.3.0</version.com.sun.xml.bind.jaxb-core>
+		<version.jakarta.activation-api>1.2.1</version.jakarta.activation-api>
 
 		<version.google.code.gson>2.8.3</version.google.code.gson>
 
@@ -52,15 +53,15 @@
 			</dependency>
 
 			<dependency>
-				<groupId>javax</groupId>
-				<artifactId>javaee-api</artifactId>
-				<version>${version.javaee}</version>
+				<groupId>jakarta.platform</groupId>
+				<artifactId>jakarta.jakartaee-api</artifactId>
+				<version>${version.jakartaee}</version>
 				<scope>provided</scope>
 			</dependency>
 			<dependency>
-				<groupId>javax.xml.bind</groupId>
-				<artifactId>jaxb-api</artifactId>
-				<version>${version.javax.xml.bind.jaxb-api}</version>
+				<groupId>jakarta.xml.bind</groupId>
+				<artifactId>jakarta.xml.bind-api</artifactId>
+				<version>${version.jakarta.xml.bind.jaxb-api}</version>
 			</dependency>
 			<dependency>
 				<groupId>com.sun.xml.bind</groupId>
@@ -71,6 +72,11 @@
 				<groupId>com.sun.xml.bind</groupId>
 				<artifactId>jaxb-core</artifactId>
 				<version>${version.com.sun.xml.bind.jaxb-core}</version>
+			</dependency>
+			<dependency>
+				<groupId>jakarta.activation</groupId>
+				<artifactId>jakarta.activation-api</artifactId>
+				<version>${version.jakarta.activation-api}</version>
 			</dependency>
 
 			<dependency>
