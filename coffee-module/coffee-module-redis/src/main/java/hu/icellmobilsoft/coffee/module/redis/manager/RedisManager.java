@@ -42,8 +42,7 @@ import hu.icellmobilsoft.coffee.tool.common.FunctionalInterfaces.BaseExceptionFu
 import redis.clients.jedis.Jedis;
 
 /**
- * Redis műveleteket összefogó osztaly
- * 
+ * Handle redis operations, jedis connection, exceptions and logging
  * 
  * @author czenczl
  * @since 1.7.0

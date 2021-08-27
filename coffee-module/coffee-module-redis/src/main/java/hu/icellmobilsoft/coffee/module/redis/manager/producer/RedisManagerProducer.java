@@ -67,10 +67,10 @@ public class RedisManagerProducer {
 
         String configKey = annotation.map(RedisConnection::configKey).orElse(null);
         if (StringUtils.isBlank(configKey)) {
-            throw new IllegalStateException("configKey is requered for redis");
+            throw new IllegalStateException("configKey is required for redis");
         }
 
-        log.trace("Creating RedisManager...");
+        log.info("Creating RedisManager...");
         RedisManager redisManager = CDI.current().select(RedisManager.class).get();
         redisManager.setConfigKey(configKey);
         return redisManager;
