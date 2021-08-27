@@ -36,6 +36,46 @@ A fenti konfig-hoz tartozó RedisService használata:
 private RedisService authRedisService;
 ----
 
+== RedisManager
+
+Bevezetésre került a `RedisManager` osztály és hozzá tartozó `RedisManagerProducer`. A producer legyártja a RedisManager-t a hívott configKey értékkel, ezzel elérhetővé válik a Jedis kikérése a JedisPool-ból, akkkor amikor a redis-en valamilyen műveletet szeretnénk végezni.
+RedisManager feladata hogy összefogja a Jedis funkciók használatát, ami közös logolást, hibakezelést, connection használatot kezel.
+A definiált metódusok Jedis funkciókat várnak amiket lefuttatnak, ez megtehető az initConnection() és closeConnection() használatával, vagy a runWithConnection metódusokon kereszül. Ez a megközelítés lehetővé teszi hogy a Redis kapcsolatok addig legyenek használva amíg szükségesek, így sok erőforrást megspórol a használata.
+
+Példa több redis művelet használatára. Ez jellemzően set/get kombinálva az expire művelettel. Ilyen esetben nem kérünk a pool-ból feleslegesen Jedis példányt és ha végeztünk be is zárjuk.
+
+[source,java]
+----
+@Inject
+@RedisConnection(configKey = "auth")
+private RedisManager redisManager;
+
+try {
+    redisManager.initConnection(); #<1>
+    redisManager.run(Jedis::set, "set", "key", "value");
+    redisManager.run(Jedis::expire, "expire", "key", 300);
+} finally {
+    redisManager.closeConnection(); #<2>
+}
+
+----
+<1> Jedis példány inicializálása amin a műveleteket végezzük
+<2> Jedis példány lezárása amin a műveleteket elvégeztük 
+
+Példa egy művelet végrehajtására.
+
+[source,java]
+----
+@Inject
+@RedisConnection(configKey = "auth")
+private RedisManager redisManager;
+
+redisManager.runWithConnection(Jedis::set, "set", "key", "value"); #<1>
+
+----
+
+<1> Művelet végrehajtása, keretrendszer kezeli a kapcsolat nyitását és zárását.
+
 == Redis műveletek
 
 === hscan
