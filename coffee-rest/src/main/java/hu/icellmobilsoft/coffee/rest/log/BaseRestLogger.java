@@ -22,7 +22,6 @@ package hu.icellmobilsoft.coffee.rest.log;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import javax.annotation.Resource;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.container.ContainerRequestContext;
@@ -39,6 +38,7 @@ import org.apache.commons.lang3.StringUtils;
 import hu.icellmobilsoft.coffee.cdi.logger.AppLogger;
 import hu.icellmobilsoft.coffee.cdi.logger.ThisLogger;
 import hu.icellmobilsoft.coffee.dto.common.LogConstants;
+import hu.icellmobilsoft.coffee.rest.cdi.BaseApplicationContainer;
 import hu.icellmobilsoft.coffee.rest.log.annotation.LogSpecifier;
 import hu.icellmobilsoft.coffee.rest.log.annotation.enumeration.LogSpecifierTarget;
 import hu.icellmobilsoft.coffee.rest.utils.RestLoggerUtil;
@@ -57,8 +57,8 @@ public abstract class BaseRestLogger implements ContainerRequestFilter, WriterIn
     @ThisLogger
     private AppLogger log;
 
-    @Resource(lookup = "java:app/AppName")
-    private String applicationName;
+    @Inject
+    private BaseApplicationContainer baseApplicationContainer;
 
     @Inject
     private RequestResponseLogger requestResponseLogger;
@@ -73,7 +73,7 @@ public abstract class BaseRestLogger implements ContainerRequestFilter, WriterIn
     @Override
     public void filter(ContainerRequestContext requestContext) throws IOException {
         MDC.clear();
-        MDC.put(LogConstants.LOG_SERVICE_NAME, applicationName);
+        MDC.put(LogConstants.LOG_SERVICE_NAME, baseApplicationContainer.getCoffeeAppName());
         processRequest(requestContext);
     }
 

@@ -20,8 +20,11 @@
 package hu.icellmobilsoft.coffee.module.redis.producer;
 
 import java.text.MessageFormat;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
+import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.Dependent;
 import javax.enterprise.inject.Disposes;
 import javax.enterprise.inject.Produces;
@@ -44,11 +47,13 @@ import redis.clients.jedis.Jedis;
  * @author mark.petrenyi
  * @since 1.0.0
  */
-@Dependent
+@ApplicationScoped
 public class RedisServiceProducer {
 
     @Inject
     private Logger log;
+
+    private final Map<RedisService, Jedis> jedisMap = new HashMap<>();
 
     /**
      * Produces {@link RedisService} for the redis connection specified by the given configKey.
@@ -71,6 +76,7 @@ public class RedisServiceProducer {
             log.trace("Creating RedisService...");
             RedisService redisService = CDI.current().select(RedisService.class).get();
             redisService.setJedis(jedis);
+            jedisMap.put(redisService, jedis);
             return redisService;
         }
         throw new TechnicalException(CoffeeFaultType.REPOSITORY_FAILED,
@@ -86,6 +92,8 @@ public class RedisServiceProducer {
     public void returnResource(@Disposes @RedisConnection(configKey = "") RedisService redisService) {
         if (redisService != null) {
             log.trace("Closing RedisService...");
+            Jedis jedis = jedisMap.remove(redisService);
+            CDI.current().destroy(jedis);
             redisService.close();
         }
     }

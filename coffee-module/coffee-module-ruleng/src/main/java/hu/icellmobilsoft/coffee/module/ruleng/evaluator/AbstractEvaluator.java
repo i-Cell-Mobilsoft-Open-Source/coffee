@@ -29,6 +29,7 @@ import java.util.Map.Entry;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import javax.annotation.PreDestroy;
 import javax.enterprise.inject.Instance;
 import javax.enterprise.inject.spi.CDI;
 import javax.enterprise.util.TypeLiteral;
@@ -254,6 +255,22 @@ public abstract class AbstractEvaluator<INPUT, RULERESULT extends RuleResult> im
             validationResults.addAll(ruleResults);
         }
         return validationResults;
+    }
+
+    /**
+     * Destroys rule CDI instances
+     */
+    @PreDestroy
+    public void dispose() {
+        if (groupedRules == null) {
+            return;
+        }
+        CDI<Object> cdi = CDI.current();
+        for (List<IRule<INPUT, RULERESULT>> rules : groupedRules.values()) {
+            for (IRule<INPUT, RULERESULT> rule : rules) {
+                cdi.destroy(rule);
+            }
+        }
     }
 
     /**

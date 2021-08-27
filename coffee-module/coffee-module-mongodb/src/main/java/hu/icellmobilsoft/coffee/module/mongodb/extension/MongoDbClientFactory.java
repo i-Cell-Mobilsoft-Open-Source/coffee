@@ -84,7 +84,9 @@ public class MongoDbClientFactory {
         String configKey = annotation.map(MongoClientConfiguration::configKey).orElse(null);
 
         // create config helper
-        MongoConfigHelper mongoConfigHelper = CDI.current().select(MongoConfigHelper.class).get();
+        Instance<MongoConfigHelper> configHelperInstance = CDI.current().select(MongoConfigHelper.class);
+        MongoConfigHelper mongoConfigHelper = configHelperInstance.get();
+        configHelperInstance.destroy(mongoConfigHelper);
         mongoConfigHelper.setConfigKey(configKey);
 
         // check if client already exist, synchronized will prevent connection leak

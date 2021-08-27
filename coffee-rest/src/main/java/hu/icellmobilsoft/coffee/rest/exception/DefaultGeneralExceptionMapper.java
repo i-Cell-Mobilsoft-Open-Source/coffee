@@ -22,8 +22,6 @@ package hu.icellmobilsoft.coffee.rest.exception;
 import java.util.function.BiConsumer;
 
 import javax.inject.Inject;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.ForbiddenException;
@@ -50,6 +48,7 @@ import hu.icellmobilsoft.coffee.dto.common.commonservice.TechnicalFault;
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.dto.exception.BaseExceptionWrapper;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
+import hu.icellmobilsoft.coffee.rest.cdi.BaseApplicationContainer;
 import hu.icellmobilsoft.coffee.rest.log.RequestResponseLogger;
 import hu.icellmobilsoft.coffee.se.logging.mdc.MDC;
 import hu.icellmobilsoft.coffee.tool.utils.string.RandomUtil;
@@ -65,6 +64,9 @@ public class DefaultGeneralExceptionMapper implements ExceptionMapper<Exception>
     @Inject
     @ThisLogger
     private AppLogger log;
+
+    @Inject
+    private BaseApplicationContainer baseApplicationContainer;
 
     @Context
     private HttpServletRequest servletRequest;
@@ -195,12 +197,7 @@ public class DefaultGeneralExceptionMapper implements ExceptionMapper<Exception>
         // MDC ezekben az esetekben nem volt tisztitva, mert nem is volt request loggolas
         MDC.clear();
         // feltoltjuk a szokasos adatokkal
-        try {
-            String applicationName = InitialContext.doLookup("java:app/AppName");
-            MDC.put(LogConstants.LOG_SERVICE_NAME, applicationName);
-        } catch (NamingException e) {
-            log.warn("Error in getting JNDI value of 'java:app/AppName'", e);
-        }
+        MDC.put(LogConstants.LOG_SERVICE_NAME, baseApplicationContainer.getCoffeeAppName());
         String sessionId = servletRequest.getHeader(LogConstants.LOG_SESSION_ID);
         MDC.put(LogConstants.LOG_SESSION_ID, StringUtils.defaultIfBlank(sessionId, RandomUtil.generateId()));
         // kiloggoljuk a request-et

@@ -7,6 +7,7 @@ coff:ee v1.5.0 -> v1.6.0 migrációs leírás, újdonságok, változások leír�
 * Bump Jedis 3.3.0 -> 3.6.0 - Natív java 8 és Redis 6.2 support
 * Bump apache httpcore 4.4.5 -> 4.4.13 - https://archive.apache.org/dist/httpcomponents/httpcore/RELEASE_NOTES-4.4.x.txt
 * Bump apache httpclient 4.5.4 -> 4.5.13 - https://archive.apache.org/dist/httpcomponents/httpclient/RELEASE_NOTES-4.5.x.txt
+* `CDI#select`-tel létrehozott dependent scope-ú objektumok felszabadítása
 
 === coffee-module-redis
 Redis 6.2 upgrade változást hozott hogy a timeout megadása int-ről long-ra változott.
@@ -33,3 +34,12 @@ Minden régebbi üzenet a streamen mely a `producer.ttl` (millisec) idősebb - t
 
 ==== Átállás
 A `stream.maxlen` kulcs átnevezését a konfigurációkban át kell vezetni.
+
+=== coffee-rest
+* A RestClient-ek `hu.icellmobilsoft.coffee.dto.exception.RestClientResponseException`-be csomagolva adják vissza a hívott modul által adott hibát, így például a korábban visszakapott `hu.icellmobilsoft.coffee.dto.exception.BONotFoundException` a RestClientResponseException cause-ba került.
+* A `hu.icellmobilsoft.coffee.rest.exception.DefaultExceptionMessageTranslator` rekurzívan az összes cause értéket belarakja a `hu.icellmobilsoft.coffee.dto.common.commonservice.BaseExceptionResultType`-ba.
+* A "service" elem értéke a BaseExceptionResultType-ban a "coffee.app.name" paraméterben megadható, alapértelmezetten a "java:app/AppName" van használva.
+
+==== Átállás
+* A hiba kezelésnél RestClientResponseException-re kell számítani.
+* A "coffee.app.name" konfigurációs paramétert be lehet állítani a futtatandó modulok esetében, de nem kötelező, a "java:app/AppName" a default.
