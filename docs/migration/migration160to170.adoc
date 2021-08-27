@@ -1,0 +1,12 @@
+= v1.5.0 → v1.6.0
+
+coff:ee v1.6.0 -> v1.7.0 migrációs leírás, újdonságok, változások leírása
+
+== Változások
+
+=== coffee-dto
+* Létrejött az UtcOffsetDateTimeXmlAdapter és az UtcOffsetTimeXmlAdapter.
+
+==== Átállás
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
