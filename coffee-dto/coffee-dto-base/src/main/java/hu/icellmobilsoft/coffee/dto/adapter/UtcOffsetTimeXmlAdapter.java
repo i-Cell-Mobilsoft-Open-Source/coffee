@@ -21,7 +21,6 @@ package hu.icellmobilsoft.coffee.dto.adapter;
 
 import java.time.OffsetTime;
 import java.time.ZoneOffset;
-import java.time.temporal.ChronoUnit;
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 
 /**
@@ -38,13 +37,15 @@ public class UtcOffsetTimeXmlAdapter extends OffsetTimeXmlAdapter {
     /**
      * {@inheritDoc}
      * <p>
-     * OffsetTime to String. Output format is '10:48:18Z'.
+     * OffsetTime to String.
+     * Input format is '14:57:22.9692699+02:00'.
+     * Output format is '2:57:22.972269200Z'.
      */
     @Override
-    public String marshal(OffsetTime offsetTime) throws Exception {
+    public String marshal(OffsetTime offsetTime) {
         if (offsetTime == null) {
             return null;
         }
-        return OffsetTime.now().truncatedTo(ChronoUnit.SECONDS).withOffsetSameInstant(ZoneOffset.UTC).toString();
+        return OffsetTime.now().withOffsetSameInstant(ZoneOffset.UTC).toString();
     }
 }
