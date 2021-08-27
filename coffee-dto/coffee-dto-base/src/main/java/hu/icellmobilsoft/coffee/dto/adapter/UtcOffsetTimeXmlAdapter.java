@@ -38,8 +38,8 @@ public class UtcOffsetTimeXmlAdapter extends OffsetTimeXmlAdapter {
      * {@inheritDoc}
      * <p>
      * OffsetTime to String.
-     * Input format is '14:57:22.9692699+02:00'.
-     * Output format is '2:57:22.972269200Z'.
+     * Input format is '15:07:34.2160856+02:00'.
+     * Output format is '13:07:34.216085600Z'.
      */
     @Override
     public String marshal(OffsetTime offsetTime) {
