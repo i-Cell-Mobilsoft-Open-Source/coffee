@@ -19,7 +19,6 @@
  */
 package hu.icellmobilsoft.coffee.module.redis.manager;
 
-import java.text.MessageFormat;
 import java.util.Optional;
 
 import javax.enterprise.context.Dependent;
@@ -113,7 +112,7 @@ public class RedisManager {
                 index++;
             }
         }
-        return functionInfo.toString() + ")";
+        return functionInfo.append(")").toString();
     }
 
     /**
@@ -128,8 +127,7 @@ public class RedisManager {
     protected TechnicalException repositoryFailed(Exception e, String functionInfo) {
         StringBuilder sb = new StringBuilder();
         sb.append("Error occurred when calling redis operation ").append(functionInfo).append(" : [").append(e.getLocalizedMessage()).append("]");
-        String msg = MessageFormat.format(sb.toString(), functionInfo);
-        return new TechnicalException(CoffeeFaultType.REDIS_OPERATION_FAILED, msg, e);
+        return new TechnicalException(CoffeeFaultType.REDIS_OPERATION_FAILED, sb.toString(), e);
     }
 
     /**

@@ -70,7 +70,7 @@ public class RedisManagerProducer {
             throw new IllegalStateException("configKey is required for redis");
         }
 
-        log.info("Creating RedisManager...");
+        log.trace("Creating RedisManager with configKey: [{0}]", configKey);
         RedisManager redisManager = CDI.current().select(RedisManager.class).get();
         redisManager.setConfigKey(configKey);
         return redisManager;

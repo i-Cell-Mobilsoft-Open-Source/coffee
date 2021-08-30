@@ -38,9 +38,9 @@ private RedisService authRedisService;
 
 == RedisManager
 
-Bevezetésre került a `RedisManager` osztály és hozzá tartozó `RedisManagerProducer`. A producer legyártja a RedisManager-t a hívott configKey értékkel, ezzel elérhetővé válik a Jedis kikérése a JedisPool-ból, akkkor amikor a redis-en valamilyen műveletet szeretnénk végezni.
+Bevezetésre került a `RedisManager` osztály és hozzá tartozó `RedisManagerProducer`. A producer legyártja a RedisManager-t a hívott configKey értékkel, ezzel elérhetővé válik a Jedis kikérése a JedisPool-ból, akkor amikor a redis-en valamilyen műveletet szeretnénk végezni.
 RedisManager feladata hogy összefogja a Jedis funkciók használatát, ami közös logolást, hibakezelést, connection használatot kezel.
-A definiált metódusok Jedis funkciókat várnak amiket lefuttatnak, ez megtehető az initConnection() és closeConnection() használatával, vagy a runWithConnection metódusokon kereszül. Ez a megközelítés lehetővé teszi hogy a Redis kapcsolatok addig legyenek használva amíg szükségesek, így sok erőforrást megspórol a használata.
+A definiált metódusok Jedis funkciókat várnak amiket lefuttatnak, ez megtehető az initConnection() és closeConnection() használatával, vagy a runWithConnection metódusokon keresztül. Ez a megközelítés lehetővé teszi hogy a Redis kapcsolatok addig legyenek használva amíg szükségesek, így sok erőforrást megspórol a használata.
 
 Példa több redis művelet használatára. Ez jellemzően set/get kombinálva az expire művelettel. Ilyen esetben nem kérünk a pool-ból feleslegesen Jedis példányt és ha végeztünk be is zárjuk.
 
