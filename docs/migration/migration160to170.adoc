@@ -2,7 +2,7 @@
 
 coff:ee v1.6.0 -> v1.7.0 migrációs leírás, újdonságok, változások leírása
 
-== Változások
+== Újdonságok
 
 === coffee-module-redis
 Bevezetésre került a RedisManager.
