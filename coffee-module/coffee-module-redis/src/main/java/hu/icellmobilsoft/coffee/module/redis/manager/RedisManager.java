@@ -184,7 +184,7 @@ public class RedisManager {
         }
         try {
             R response = function.apply(jedis, p1);
-            logReturn(functionName, p1.getClass().getTypeName());
+            logReturn(functionName, p1);
             return Optional.ofNullable(response);
         } catch (Exception e) {
             throw repositoryFailed(e, functionName);
@@ -222,7 +222,7 @@ public class RedisManager {
         }
         try {
             R response = function.apply(jedis, p1, p2);
-            logReturn(functionName, p1);
+            logReturn(functionName, p1, p2);
             return Optional.ofNullable(response);
         } catch (Exception e) {
             throw repositoryFailed(e, functionName);
@@ -312,7 +312,7 @@ public class RedisManager {
         }
         try {
             R response = function.apply(jedis, p1, p2, p3, p4);
-            logReturn(functionName, p1);
+            logReturn(functionName, p1, p2, p3, p4);
             return Optional.ofNullable(response);
         } catch (Exception e) {
             throw repositoryFailed(e, functionName);
