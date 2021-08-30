@@ -1,0 +1,15 @@
+= v1.6.0 → v1.7.0
+
+coff:ee v1.6.0 -> v1.7.0 migrációs leírás, újdonságok, változások leírása
+
+== Változások
+
+=== coffee-module-redis
+Bevezetésre került a RedisManager.
+
+* Egyéges hibakezelés
+* Egységes connection kezelés
+* Teljesen CDI Jedis kezelés
+
+==== Átállás
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
