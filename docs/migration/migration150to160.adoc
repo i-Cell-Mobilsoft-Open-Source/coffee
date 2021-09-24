@@ -9,6 +9,16 @@ coff:ee v1.5.0 -> v1.6.0 migrációs leírás, újdonságok, változások leír�
 * Bump apache httpclient 4.5.4 -> 4.5.13 - https://archive.apache.org/dist/httpcomponents/httpclient/RELEASE_NOTES-4.5.x.txt
 * `CDI#select`-tel létrehozott dependent scope-ú objektumok felszabadítása
 
+=== coffee-module-ruleng
+Az `AbstractEvaluator`-ban átalakításra került a `dispose` metódus,
+alapértelmezetten nem destroy-olja a selectelt IRule-okat, mert nem ismert azok scope-ja.
+Bevezetésre került a `preDestroy` metódus, amit felülírva projekt szinten megoldható a rule-okon a CDI destroy.
+
+==== Átállás
+Amennyiben nem volt `Dependent` implementációja az `IRule` interface-nek,
+úgy változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+Ellenkező esetben az `AbstractEvaluator.preDestroy`-t kell projekt szinten felülírni a `Dependent` példányok felszabadítására.
+
 === coffee-module-redis
 Redis 6.2 upgrade változást hozott hogy a timeout megadása int-ről long-ra változott.
 Ez át lett vezetve a rendszerben is,
