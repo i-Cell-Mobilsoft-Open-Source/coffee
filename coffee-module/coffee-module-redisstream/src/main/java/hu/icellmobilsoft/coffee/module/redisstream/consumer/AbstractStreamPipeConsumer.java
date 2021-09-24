@@ -22,9 +22,9 @@ package hu.icellmobilsoft.coffee.module.redisstream.consumer;
 import java.util.Collections;
 import java.util.Map;
 
+import hu.icellmobilsoft.coffee.cdi.trace.annotation.RedisStreamConsumerTraced;
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.module.redisstream.config.IRedisStreamConstant;
-import hu.icellmobilsoft.coffee.se.logging.mdc.MDC;
 import redis.clients.jedis.StreamEntry;
 
 /**
@@ -40,6 +40,7 @@ public abstract class AbstractStreamPipeConsumer extends BaseStreamConsumer impl
      * <br>
      * Input is full Redis Stream message
      */
+    @RedisStreamConsumerTraced
     @Override
     public Map<String, Object> onStream(StreamEntry streamEntry) throws BaseException {
         handleMDC(streamEntry);

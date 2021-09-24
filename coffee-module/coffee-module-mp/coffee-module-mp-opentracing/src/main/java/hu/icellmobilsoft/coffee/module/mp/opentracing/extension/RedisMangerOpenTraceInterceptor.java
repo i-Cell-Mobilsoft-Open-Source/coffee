@@ -24,23 +24,23 @@ import javax.interceptor.AroundInvoke;
 import javax.interceptor.Interceptor;
 import javax.interceptor.InvocationContext;
 
-import hu.icellmobilsoft.coffee.cdi.trace.annotation.Traced;
+import hu.icellmobilsoft.coffee.cdi.trace.annotation.RedisManagerTraced;
 import io.opentracing.Tracer;
 import io.opentracing.tag.Tags;
 
 /**
- * Default interceptor for {@link Traced} binding
+ * Interceptor for {@link RedisManagerTraced} binding
  * 
  * @author czenczl
  * @since 1.3.0
  */
-@Traced
+@RedisManagerTraced
 @Interceptor
 @Priority(value = Interceptor.Priority.APPLICATION)
-public class OpenTraceInterceptor extends BaseOpenTraceInterceptor {
+public class RedisMangerOpenTraceInterceptor extends BaseOpenTraceInterceptor {
 
     /**
-     * Intercept and handle span creation with called method name
+     * Intercept and handle span creation with redis functionName parameter
      * 
      * @param ctx
      *            {@link InvocationContext} context
@@ -50,13 +50,23 @@ public class OpenTraceInterceptor extends BaseOpenTraceInterceptor {
      */
     @AroundInvoke
     public Object wrap(InvocationContext ctx) throws Exception {
-
         Tracer tracer = getTracer();
 
-        String methodName = ctx.getMethod().getName();
-        Tracer.SpanBuilder spanBuilder = tracer.buildSpan(methodName);
-        spanBuilder.withTag(Tags.COMPONENT.getKey(), "default");
-        spanBuilder.withTag(Tags.SPAN_KIND.getKey(), Tags.COMPONENT.getKey());
+        // redis manager operations needs to join an underlying jaxrs request or redis stream consuming event
+        if (!isActiveSpan()) {
+            return finish(ctx);
+        }
+
+        // if functionName not exist, use class name
+        String functionName = ctx.getClass().getCanonicalName();
+        if (ctx.getParameters().length > 1) {
+            functionName = String.valueOf(ctx.getParameters()[1]);
+        }
+
+        Tracer.SpanBuilder spanBuilder = tracer.buildSpan(functionName);
+        spanBuilder.withTag(Tags.COMPONENT.getKey(), "jedis");
+        spanBuilder.withTag(Tags.SPAN_KIND.getKey(), Tags.SPAN_KIND_CLIENT);
+        spanBuilder.withTag(Tags.DB_TYPE.getKey(), "redis");
 
         return handleSpan(ctx, spanBuilder);
 

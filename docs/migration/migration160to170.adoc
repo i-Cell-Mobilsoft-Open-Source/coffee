@@ -23,3 +23,11 @@ Bevezetésre került a RedisManager.
 
 ==== Átállás
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+=== coffee-module-opentracing
+Redis műveletek és Redis stream consumerek becsatornázódnak a meglévő opentrace flowba.
+
+
+==== Átállás
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+

@@ -24,23 +24,23 @@ import javax.interceptor.AroundInvoke;
 import javax.interceptor.Interceptor;
 import javax.interceptor.InvocationContext;
 
-import hu.icellmobilsoft.coffee.cdi.trace.annotation.Traced;
+import hu.icellmobilsoft.coffee.cdi.trace.annotation.RedisStreamConsumerTraced;
 import io.opentracing.Tracer;
 import io.opentracing.tag.Tags;
 
 /**
- * Default interceptor for {@link Traced} binding
+ * Interceptor for {@link RedisStreamConsumerTraced} binding
  * 
  * @author czenczl
  * @since 1.3.0
  */
-@Traced
+@RedisStreamConsumerTraced
 @Interceptor
 @Priority(value = Interceptor.Priority.APPLICATION)
-public class OpenTraceInterceptor extends BaseOpenTraceInterceptor {
+public class RedisStreamOpenTraceInterceptor extends BaseOpenTraceInterceptor {
 
     /**
-     * Intercept and handle span creation with called method name
+     * Intercept and handle span creation with redisStream consumer name
      * 
      * @param ctx
      *            {@link InvocationContext} context
@@ -50,16 +50,14 @@ public class OpenTraceInterceptor extends BaseOpenTraceInterceptor {
      */
     @AroundInvoke
     public Object wrap(InvocationContext ctx) throws Exception {
-
         Tracer tracer = getTracer();
-
-        String methodName = ctx.getMethod().getName();
-        Tracer.SpanBuilder spanBuilder = tracer.buildSpan(methodName);
-        spanBuilder.withTag(Tags.COMPONENT.getKey(), "default");
-        spanBuilder.withTag(Tags.SPAN_KIND.getKey(), Tags.COMPONENT.getKey());
-
+        // class name represent onStream consumer
+        String className = ctx.getTarget().getClass().getSuperclass().getCanonicalName();
+        Tracer.SpanBuilder spanBuilder = tracer.buildSpan(className);
+        spanBuilder.withTag(Tags.COMPONENT.getKey(), "redis-stream");
+        spanBuilder.withTag(Tags.SPAN_KIND.getKey(), Tags.SPAN_KIND_CONSUMER);
+        spanBuilder.withTag(Tags.DB_TYPE.getKey(), "redis");
         return handleSpan(ctx, spanBuilder);
-
     }
 
 }

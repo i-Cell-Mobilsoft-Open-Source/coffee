@@ -1,10 +1,25 @@
 [#common_core_coffee-cdi_trace]
 = Trace
 
-A `@Traceable` annotáción keresztül lehetőséget biztosít a moduloknak hogy trace információt szolgáltassanak.
+A `hu.icellmobilsoft.coffee.cdi.trace.annotation` csomagban található annotációk lehetővé teszik hogy a coff::ee moduljai trace információt szolgáltassanak.
+
+
+* Default Trace használat
+
+** A `@Traceable` annotáción keresztül lehetőséget biztosít a moduloknak hogy trace információt szolgáltassanak.
 A class összes metódusa trace-elhetővé válik.
 
-.minta 
+** A `@Traced` annotáció lehetővé teszi hogy metóduson definialjuk a trace-elhetőséget.
+
+* Redis Trace használat
+
+** `@RedisManagerTraced` annotáción keresztül a `@RedisManager` trace adatokat képes adni. A redis manager lambda hyvásainak lekezelésére jött létre, a bemenő paraméterek általánosan megadják a hívott function nevét, ezt használja ki.
+
+** `@RedisStreamConsumerTraced` annotáción keresztül a stream consumer-ek trace adatokat képes adni.
+
+
+
+.minta @Traceable
 [source,java]
 ----
 @Traceable
@@ -12,3 +27,23 @@ public class ConfigEtcdHandler {
 ...
 }
 ----
+
+.minta @RedisManagerTraced
+[source,java]
+----
+@RedisManagerTraced
+public <P1, R> Optional<R> run(BaseExceptionFunction2<Jedis, P1, R> function, String functionName, P1 p1) throws BaseException {
+...
+}
+----
+
+.minta @RedisStreamConsumerTraced
+[source,java]
+----
+@RedisStreamConsumerTraced
+@Override
+public void onStream(StreamEntry streamEntry) throws BaseException {
+...
+}
+----
+

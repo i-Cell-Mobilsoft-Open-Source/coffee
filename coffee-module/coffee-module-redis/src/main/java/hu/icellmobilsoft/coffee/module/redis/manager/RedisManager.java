@@ -28,6 +28,7 @@ import javax.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
 
+import hu.icellmobilsoft.coffee.cdi.trace.annotation.RedisManagerTraced;
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
@@ -143,6 +144,7 @@ public class RedisManager {
      * @throws BaseException
      *             in case of any exception caught inside
      */
+    @RedisManagerTraced
     public <R> Optional<R> run(BaseExceptionFunction<Jedis, R> function, String functionName) throws BaseException {
         if (jedis == null) {
             throw new TechnicalException(CoffeeFaultType.REDIS_OPERATION_FAILED, JEDIS_NOT_INITIALIZED_MSG);
@@ -174,6 +176,7 @@ public class RedisManager {
      * @throws BaseException
      *             in case of any exception caught inside
      */
+    @RedisManagerTraced
     public <P1, R> Optional<R> run(BaseExceptionFunction2<Jedis, P1, R> function, String functionName, P1 p1) throws BaseException {
         if (jedis == null) {
             throw new TechnicalException(CoffeeFaultType.REDIS_OPERATION_FAILED, JEDIS_NOT_INITIALIZED_MSG);
@@ -212,6 +215,7 @@ public class RedisManager {
      * @throws BaseException
      *             in case of any exception caught inside
      */
+    @RedisManagerTraced
     public <P1, P2, R> Optional<R> run(BaseExceptionFunction3<Jedis, P1, P2, R> function, String functionName, P1 p1, P2 p2) throws BaseException {
         if (jedis == null) {
             throw new TechnicalException(CoffeeFaultType.REDIS_OPERATION_FAILED, JEDIS_NOT_INITIALIZED_MSG);
@@ -254,6 +258,7 @@ public class RedisManager {
      * @throws BaseException
      *             in case of any exception caught inside
      */
+    @RedisManagerTraced
     public <P1, P2, P3, R> Optional<R> run(BaseExceptionFunction4<Jedis, P1, P2, P3, R> function, String functionName, P1 p1, P2 p2, P3 p3)
             throws BaseException {
         if (jedis == null) {
@@ -301,6 +306,7 @@ public class RedisManager {
      * @throws BaseException
      *             in case of any exception caught inside
      */
+    @RedisManagerTraced
     public <P1, P2, P3, P4, R> Optional<R> run(BaseExceptionFunction5<Jedis, P1, P2, P3, P4, R> function, String functionName, P1 p1, P2 p2, P3 p3,
             P4 p4) throws BaseException {
         if (jedis == null) {
@@ -332,6 +338,7 @@ public class RedisManager {
      * @throws BaseException
      *             in case of any exception caught inside
      */
+    @RedisManagerTraced
     public <R> Optional<R> runWithConnection(BaseExceptionFunction<Jedis, R> function, String functionName) throws BaseException {
         try {
             initConnection();
@@ -359,6 +366,7 @@ public class RedisManager {
      * @throws BaseException
      *             in case of any exception caught inside
      */
+    @RedisManagerTraced
     public <P1, R> Optional<R> runWithConnection(BaseExceptionFunction2<Jedis, P1, R> function, String functionName, P1 p1) throws BaseException {
         try {
             initConnection();
@@ -390,6 +398,7 @@ public class RedisManager {
      * @throws BaseException
      *             in case of any exception caught inside
      */
+    @RedisManagerTraced
     public <P1, P2, R> Optional<R> runWithConnection(BaseExceptionFunction3<Jedis, P1, P2, R> function, String functionName, P1 p1, P2 p2)
             throws BaseException {
         try {
@@ -426,6 +435,7 @@ public class RedisManager {
      * @throws BaseException
      *             in case of any exception caught inside
      */
+    @RedisManagerTraced
     public <P1, P2, P3, R> Optional<R> runWithConnection(BaseExceptionFunction4<Jedis, P1, P2, P3, R> function, String functionName, P1 p1, P2 p2,
             P3 p3) throws BaseException {
         try {
@@ -466,6 +476,7 @@ public class RedisManager {
      * @throws BaseException
      *             in case of any exception caught inside
      */
+    @RedisManagerTraced
     public <P1, P2, P3, P4, R> Optional<R> runWithConnection(BaseExceptionFunction5<Jedis, P1, P2, P3, P4, R> function, String functionName, P1 p1,
             P2 p2, P3 p3, P4 p4) throws BaseException {
         try {

@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package hu.icellmobilsoft.coffee.module.mp.opentracing.extension;
+package hu.icellmobilsoft.coffee.cdi.trace.annotation;
 
 import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.ElementType.TYPE;
@@ -26,26 +26,17 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-import javax.enterprise.util.Nonbinding;
 import javax.interceptor.InterceptorBinding;
 
 /**
- * InterceptorBinding to trace methods
- * <p>
- * Based on org.eclipse.microprofile.opentracing.Traced
+ * InterceptorBinding to trace Redis manager operations
  * 
  * @author czenczl
- * @since 1.3.0
+ * @since 1.7.0
  */
 @InterceptorBinding
 @Target({ TYPE, METHOD })
 @Retention(RUNTIME)
-public @interface Traced {
-
-    @Nonbinding
-    boolean value() default true;
-
-    @Nonbinding
-    String operationName() default "";
+public @interface RedisManagerTraced {
 
 }

@@ -8,14 +8,24 @@ A modul célja a microprofile opentracing támogatása mely tartalmazza a követ
 * Jelenleg saját osztályokat használunk mivel nem lehet extension szinten jól kezelni azt hogy melyik komponens adjon trace információkat.
 
 == microprofile-opentracing
-Alapja a https://github.com/eclipse/microprofile-opentracing valamint a
-https://github.com/opentracing-contrib/java-interceptors projekt.
-Az `org.eclipse.microprofile.opentracing.Traced` annotáció helyett saját bindingot használunk, mivel jelenleg a beépített interceptor
-nem tudja felolvasni a dinamikusan hozzáadott InterceptorBindingot.
+Alapja a https://github.com/eclipse/microprofile-opentracing  valamint a
+https://github.com/opentracing-contrib/java-interceptors  projekt.
+Az `org.eclipse.microprofile.opentracing.Traced` annotáció helyett saját bindingot használunk, mivel így teljesen le tudjuk választani a moduljaink trace-elhetőségét.
 
 == Core
-Az extension azokat a classokat amik `@Traceable` annotációval vannak jelölve, megkapják a `hu.icellmobilsoft.coffee.module.mp.opentracing.extension.Traced` bindingot.
+Az extension-ben található bindingok szolgálnak arra hogy a modulok különböző technológiáit trace-elhetővé tegye.
+
+
+=== OpenTraceInterceptor
+Az extension azokat a classokat amik `@Traceable` annotációval vannak jelölve, megkapják a `hu.icellmobilsoft.coffee.cdi.trace.annotation.Traced` bindingot.
 Ezt használja fel az `OpenTraceInterceptor`. Ezzel a megoldással később könnyen lehet cserélni/módosítani a trace interceptor működését.
+
+=== RedisMangerOpenTraceInterceptor
+Az interceptor a `@RedisManagerTraced` binding-ot felhasználva traceli a `@RedisManager` műveleteit, a functional interface hívásból a functionName paramétert használja arra hogy megadja a trace span nevét.
+
+=== @RedisStreamOpenTraceInterceptor
+Az interceptor a `@RedisStreamConsumerTraced` binding-ot felhasználva traceli a stream consumerek műveleteit, a trace span neve a consumert implementáló osztaly neve lesz. Az onStream metóduson alkalmazható.
+
 
 === coffee-module-etcd trace
 A `ConfigEtcdHandler` lett annotálva, az ebben lévő metódushívások adnak trace adatot.
