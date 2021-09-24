@@ -45,7 +45,7 @@ import io.opentracing.tag.Tags;
 public abstract class BaseOpenTraceInterceptor {
 
     /**
-     * handle snap joint based on {@link io.opentracing.contrib.interceptors.OpenTracingInterceptor#SPAN_CONTEXT}
+     * handle snap join to parent based on {@link io.opentracing.contrib.interceptors.OpenTracingInterceptor#SPAN_CONTEXT}
      */
     public static final String SPAN_CONTEXT = OpenTracingInterceptor.SPAN_CONTEXT;
 
