@@ -32,7 +32,7 @@ import io.opentracing.tag.Tags;
  * Interceptor for {@link RedisStreamConsumerTraced} binding
  * 
  * @author czenczl
- * @since 1.3.0
+ * @since 1.7.0
  */
 @RedisStreamConsumerTraced
 @Interceptor
