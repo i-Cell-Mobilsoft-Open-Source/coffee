@@ -82,6 +82,10 @@ public enum CoffeeFaultType implements IFaultType<CoffeeFaultType> {
      */
     REPOSITORY_FAILED,
     /**
+     * redis operation failed
+     */
+    REDIS_OPERATION_FAILED,
+    /**
      * WRONG_OR_MISSING_PARAMETERS
      */
     WRONG_OR_MISSING_PARAMETERS,

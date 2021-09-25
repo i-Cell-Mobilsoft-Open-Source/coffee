@@ -258,19 +258,22 @@ public abstract class AbstractEvaluator<INPUT, RULERESULT extends RuleResult> im
     }
 
     /**
-     * Destroys rule CDI instances
+     * Dispose evaluator
      */
     @PreDestroy
     public void dispose() {
-        if (groupedRules == null) {
-            return;
-        }
-        CDI<Object> cdi = CDI.current();
-        for (List<IRule<INPUT, RULERESULT>> rules : groupedRules.values()) {
-            for (IRule<INPUT, RULERESULT> rule : rules) {
-                cdi.destroy(rule);
-            }
-        }
+        preDestroy(groupedRules);
+    }
+
+    /**
+     * Rule disposal method, does nothing by default, child classes can override it if manual rule destroy is necessary (ie.: in case of Dependent
+     * scoped rule implementations)
+     *
+     * @param groupedRules
+     *            the rules to dispose
+     */
+    protected void preDestroy(Map<Enum<?>, List<IRule<INPUT, RULERESULT>>> groupedRules) {
+        // do nothing by default
     }
 
     /**

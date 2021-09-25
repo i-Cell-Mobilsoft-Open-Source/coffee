@@ -2,11 +2,30 @@
 
 coff:ee v1.6.0 -> v1.7.0 migrációs leírás, újdonságok, változások leírása
 
-== Változások
+== Újdonságok
+
+=== coffee-module-ruleng
+Az `AbstractEvaluator`-ban átalakításra került a `dispose` metódus,
+alapértelmezetten nem destroy-olja a selectelt IRule-okat, mert nem ismert azok scope-ja.
+Bevezetésre került a `preDestroy` metódus, amit felülírva projekt szinten megoldható a rule-okon a CDI destroy.
+
+==== Átállás
+Amennyiben nem volt `Dependent` implementációja az `IRule` interface-nek,
+úgy változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+Ellenkező esetben az `AbstractEvaluator.preDestroy`-t kell projekt szinten felülírni a `Dependent` példányok felszabadítására.
+
+=== coffee-module-redis
+Bevezetésre került a RedisManager.
+
+* Egyéges hibakezelés
+* Egységes connection kezelés
+* Teljesen CDI Jedis kezelés
+
+==== Átállás
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
 
 === coffee-dto
 * Létrejött az UtcOffsetDateTimeXmlAdapter és az UtcOffsetTimeXmlAdapter.
 
 ==== Átállás
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
-
