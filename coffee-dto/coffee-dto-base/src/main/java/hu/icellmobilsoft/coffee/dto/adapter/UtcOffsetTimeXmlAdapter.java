@@ -46,6 +46,6 @@ public class UtcOffsetTimeXmlAdapter extends OffsetTimeXmlAdapter {
         if (offsetTime == null) {
             return null;
         }
-        return OffsetTime.now().withOffsetSameInstant(ZoneOffset.UTC).toString();
+        return offsetTime.withOffsetSameInstant(ZoneOffset.UTC).toString();
     }
 }
