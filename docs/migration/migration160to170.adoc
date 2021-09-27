@@ -23,3 +23,11 @@ Bevezetésre került a RedisManager.
 
 ==== Átállás
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+=== coffee-jpa
+BatchService-ben előfordulhat, hogy az executeBatch által visszaadott tömb kevesebb elemből áll, mint ahány entitásra futott a batchService.
+Eddig ez esetben `IllegalArgumentException`-nel elszálltunk, ez javításra került, ezentúl `UNKNOWN` státusszal jelöljük azokat a rekordokat,
+amire nem adott eredményt az executeBatch.
+
+==== Átállás
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.

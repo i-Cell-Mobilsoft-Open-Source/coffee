@@ -668,28 +668,37 @@ public class BatchService {
     private void addBatchResult(Map<String, Status> result, List<String> entityIds, int[] batchResult) {
         if (CollectionUtils.isEmpty(entityIds)) {
             return;
-        } else if (entityIds.size() != batchResult.length) {
-            throw new IllegalArgumentException("Each entityId must have an associated batchResult!");
+        } else if (entityIds.size() < batchResult.length) {
+            throw new IllegalArgumentException("Each batchResult must have an associated entityId!");
         }
 
         for (int i = 0; i < entityIds.size(); i++) {
-            int resultCode = batchResult[i];
-            if (resultCode > 0) {
-                result.put(entityIds.get(i), Status.SUCCESS.setRowsAffected(resultCode));
+            Status status;
+            if (i < batchResult.length) {
+                int resultCode = batchResult[i];
+                status = getStatus(resultCode);
             } else {
-                switch (resultCode) {
-                case 0:
-                    result.put(entityIds.get(i), Status.SUCCESS_NO_UPDATE);
-                    break;
-                case Statement.SUCCESS_NO_INFO:
-                    result.put(entityIds.get(i), Status.SUCCESS_NO_INFO);
-                    break;
-                case Statement.EXECUTE_FAILED:
-                    result.put(entityIds.get(i), Status.EXECUTE_FAILED);
-                    break;
-                default:
-                    result.put(entityIds.get(i), Status.UNKNOWN);
-                }
+                // kevesebb batchResult jött vissza, mint entityId (pl Oracle hajlamos erre, ha a batch utolsó eleme failel el, és log error reject
+                // limittel fut), nem tudjuk mi lett a hiányzó rekorddal, UNKNOWN státuszt jelölünk
+                status = Status.UNKNOWN;
+            }
+            result.put(entityIds.get(i), status);
+        }
+    }
+
+    private Status getStatus(int resultCode) {
+        if (resultCode > 0) {
+            return Status.SUCCESS.setRowsAffected(resultCode);
+        } else {
+            switch (resultCode) {
+            case 0:
+                return Status.SUCCESS_NO_UPDATE;
+            case Statement.SUCCESS_NO_INFO:
+                return Status.SUCCESS_NO_INFO;
+            case Statement.EXECUTE_FAILED:
+                return Status.EXECUTE_FAILED;
+            default:
+                return Status.UNKNOWN;
             }
         }
     }
