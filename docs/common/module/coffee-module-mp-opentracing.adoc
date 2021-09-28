@@ -3,7 +3,7 @@
 
 A modul célja a microprofile opentracing támogatása mely tartalmazza a következő alapelveket:
 
-* Coffee kompatibilizás - lehetőséget biztosít hogy a coffee moduljai trace információkat szolgáltassanak. A benne lévő interceptor a coff:ee moduljait képes kezelni, továbbfejleszthető saját tagek bevezetésével, amik a coffee-cdi modulban találhatóak.
+* Coffee kompatibilitás - lehetőséget biztosít hogy a coffee moduljai trace információkat szolgáltassanak. A benne lévő interceptor a coff:ee moduljait képes kezelni, továbbfejleszthető saját tagek bevezetésével, amik a coffee-cdi modulban találhatóak.
 * Metrika és logolást egészíti ki a teljes observability érdekében.
 * Jelenleg saját osztályokat használunk mivel nem lehet extension szinten jól kezelni azt hogy melyik komponens adjon trace információkat.
 
