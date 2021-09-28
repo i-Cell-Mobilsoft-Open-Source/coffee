@@ -3,7 +3,7 @@
 
 A modul célja a microprofile opentracing támogatása mely tartalmazza a következő alapelveket:
 
-* Coffee kompatibilizás - lehetőséget biztosít hogy a coffee moduljai trace információkat szolgáltassanak.
+* Coffee kompatibilizás - lehetőséget biztosít hogy a coffee moduljai trace információkat szolgáltassanak. A benne lévő interceptor a coff:ee moduljait képes kezelni, továbbfejleszthető saját tagek bevezetésével, amik a coffee-cdi modulban találhatóak.
 * Metrika és logolást egészíti ki a teljes observability érdekében.
 * Jelenleg saját osztályokat használunk mivel nem lehet extension szinten jól kezelni azt hogy melyik komponens adjon trace információkat.
 
@@ -19,13 +19,15 @@ Az extension-ben található bindingok szolgálnak arra hogy a modulok különb�
 === OpenTraceInterceptor
 Az extension azokat a classokat amik `@Traceable` annotációval vannak jelölve, megkapják a `hu.icellmobilsoft.coffee.cdi.trace.annotation.Traced` bindingot.
 Ezt használja fel az `OpenTraceInterceptor`. Ezzel a megoldással később könnyen lehet cserélni/módosítani a trace interceptor működését.
+Jelenleg a `@Traced` annotációra építjük a modulok kezelését, osztály szinten használható `@Traceable` annotáció csak a default működést fogja eredményezni, pontos span adatok nélkül.
 
-=== RedisMangerOpenTraceInterceptor
-Az interceptor a `@RedisManagerTraced` binding-ot felhasználva traceli a `@RedisManager` műveleteit, a functional interface hívásból a functionName paramétert használja arra hogy megadja a trace span nevét.
+=== coffee-module-redis trace
+Az `OpenTraceInterceptor` a `@Traced` annotációban kitöltött span értékekkel dolgozik. Ha az annotációban található `@Traced.component` értéke 'Jedis'
+akkor az interceptor a functionName paramétert fogja alapul venni amiből meghatározza a span nevét, egyébként az annotált metódus osztaly neve lesz felhasználva. Ez az érték dönti el hogy a Jedis client művelet egy meglévő trace folyamba csatlakozzon be, ne kezdjen magától uj trace folyamatot. Ez a működés a `RedisManager`-en keresztül lett megvalósítva.
 
-=== @RedisStreamOpenTraceInterceptor
-Az interceptor a `@RedisStreamConsumerTraced` binding-ot felhasználva traceli a stream consumerek műveleteit, a trace span neve a consumert implementáló osztaly neve lesz. Az onStream metóduson alkalmazható.
-
+=== coffee-module-redisstream trace
+Annotálva lett az `AbstractStreamConsumer.onStream` metódus valamint az `AbstractStreamPipeConsumer.onStream` metódus.
+A `@Traced` annotáción keresztül megadott Tag értékekkel indít új trace folyamatot. Magába foglalja automatikusan az innen kimenő Rest hívásokat, és Jedis műveleteket. A span operáció neve az annotált metódust tartalmazó class neve lesz.
 
 === coffee-module-etcd trace
 A `ConfigEtcdHandler` lett annotálva, az ebben lévő metódushívások adnak trace adatot.

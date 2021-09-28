@@ -21,11 +21,28 @@ Bevezetésre került a RedisManager.
 * Egységes connection kezelés
 * Teljesen CDI Jedis kezelés
 
+RedisManager run és runWithConnection metódusai @Traced annotációt kaptak.
+
 ==== Átállás
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
 
+=== coffee-module-redisstream
+* AbstractStreamConsumer.onStream metódusa @Traced annotációt kapott
+* AbstractStreamPipeConsumer.onStream metódusa @Traced annotációt kapott
+
+==== Átállás
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+=== coffee-cdi
+* Traced annotáció bővült, span értékek adhatók meg trace pontosításhoz.
+* Traced annotáció átkerült a coffee-cdi modulba.
+
+==== Átállás
+* Átállási munkálatokat a coff:ee-ben eredményezett, 2 modul lett bekötve, coffee-redis, coffee-redisstream
+* Traced annotáció import: hu.icellmobilsoft.coffee.module.mp.opentracing.extension -> hu.icellmobilsoft.coffee.cdi.trace.annotation
+
 === coffee-module-opentracing
-Redis műveletek és Redis stream consumerek becsatornázódnak a meglévő opentrace flowba.
+* Redis műveletek és Redis stream consumerek becsatornázódnak a meglévő opentrace flowba.
 
 
 ==== Átállás

@@ -42,10 +42,32 @@ import javax.interceptor.InterceptorBinding;
 @Retention(RUNTIME)
 public @interface Traced {
 
+    /**
+     * Trace tag component, represents io.opentracing.tag.Tags.COMPONENT <br>
+     * low-cardinality identifier of the module, library, or package that is instrumented.
+     * 
+     * @return component
+     */
     @Nonbinding
-    boolean value() default true;
+    String component() default "";
 
+    /**
+     * Trace tag kind, represents io.opentracing.tag.Tags.SPAN_KIND <br>
+     * hints at the relationship between spans, e.g. client/server.
+     * 
+     * @return kind
+     */
     @Nonbinding
-    String operationName() default "";
+    String kind() default "";
+
+    /**
+     * Trace tag dbType, represents io.opentracing.tag.Tags.DB_TYPE <br>
+     * 
+     * DB_TYPE indicates the type of Database, e.g. "redis"
+     * 
+     * @return dbType
+     */
+    @Nonbinding
+    String dbType() default "";
 
 }
