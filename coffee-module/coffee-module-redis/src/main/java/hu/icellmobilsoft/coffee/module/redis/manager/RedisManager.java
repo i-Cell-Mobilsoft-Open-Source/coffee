@@ -503,7 +503,9 @@ public class RedisManager {
      */
     public void closeConnection() {
         if (jedis != null) {
-            jedisInstance.destroy(jedis);
+            Jedis destroyable = jedis;
+            jedisInstance.destroy(destroyable);
+            jedis = null;
         }
     }
 
