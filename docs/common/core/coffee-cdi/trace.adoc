@@ -1,14 +1,40 @@
 [#common_core_coffee-cdi_trace]
 = Trace
 
-A `@Traceable` annotáción keresztül lehetőséget biztosít a moduloknak hogy trace információt szolgáltassanak.
-A class összes metódusa trace-elhetővé válik.
+A `hu.icellmobilsoft.coffee.cdi.trace.annotation` csomagban található annotációk lehetővé teszik hogy a coff::ee moduljai trace információt szolgáltassanak. Az annotácoók azt a célt szolgálják hogy a coff::ee moduljai képesek legyenek becsatlakozni egy meglévő trace flow-ba vagy új flow tudjanak indítani.
 
-.minta 
+
+* Trace használat
+
+** A `@Traceable` annotáción keresztül lehetőséget biztosít hogy a class összes metódusa trace-elhetővé váljon.
+
+** A `@Traced` annotáció lehetővé teszi hogy metódus trace-elhetővé váljon.
+
+*** Tags - összeköti a coff:ee modulok span adatait a mp-opentracing io.opentracing.tag.Tags értékeivel
+
+**** component - modul azonosító ami a trace része, pl redis-stream
+
+**** kind - span-ek típusát adhatja meg, pl consumer
+
+**** dbType - adatbázis típusa, pl redis
+
+
+.minta @Traceable
 [source,java]
 ----
 @Traceable
 public class ConfigEtcdHandler {
 ...
 }
+----
+
+.minta @Traced
+[source,java]
+----
+@Traced(component = Tags.Redis.Stream.COMPONENT, kind = Tags.Redis.Stream.KIND, dbType = Tags.Redis.DB_TYPE)
+@Override
+public void onStream(StreamEntry streamEntry) throws BaseException {
+...
+}
+
 ----

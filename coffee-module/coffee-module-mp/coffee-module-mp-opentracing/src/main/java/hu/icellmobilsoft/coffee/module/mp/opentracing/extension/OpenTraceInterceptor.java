@@ -22,26 +22,26 @@ package hu.icellmobilsoft.coffee.module.mp.opentracing.extension;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.annotation.Priority;
-import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 import javax.interceptor.AroundInvoke;
 import javax.interceptor.Interceptor;
 import javax.interceptor.InvocationContext;
 
+import org.apache.commons.lang3.StringUtils;
+
+import hu.icellmobilsoft.coffee.cdi.trace.annotation.Traced;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
 import io.opentracing.Scope;
 import io.opentracing.Span;
-import io.opentracing.SpanContext;
 import io.opentracing.Tracer;
-import io.opentracing.contrib.tracerresolver.TracerResolver;
+import io.opentracing.Tracer.SpanBuilder;
 import io.opentracing.tag.Tags;
 
 /**
- * Interceptor for {@link Traced} binding
- * <p>
- * based on io.opentracing.contrib.interceptors.OpenTracingInterceptor
+ * Default interceptor for {@link Traced} binding
  * 
  * @author czenczl
  * @since 1.3.0
@@ -51,109 +51,97 @@ import io.opentracing.tag.Tags;
 @Priority(value = Interceptor.Priority.APPLICATION)
 public class OpenTraceInterceptor {
 
-    public static final String SPAN_CONTEXT = "__opentracing_span_context";
-    private static final Logger LOGGER = Logger.getLogger(OpenTraceInterceptor.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(OpenTraceInterceptor.class);
 
     @Inject
-    Instance<Tracer> tracerInstance;
+    private OpenTraceResolver openTraceResolver;
 
-    private volatile Tracer tracer = null;
-
+    /**
+     * Intercept and handle span creation with called method name
+     * 
+     * @param ctx
+     *            {@link InvocationContext} context
+     * @return InvocationContext {@link InvocationContext#proceed()}
+     * @throws Exception
+     *             if error
+     */
     @AroundInvoke
     public Object wrap(InvocationContext ctx) throws Exception {
-        Tracer tracer = getTracer();
-        Tracer.SpanBuilder spanBuilder = tracer.buildSpan(getOperationName(ctx.getMethod()));
+        if(ctx == null) {
+            LOGGER.debug("ctx is null, skip OpenTraceInterceptor");
+        }
+        Tracer tracer = openTraceResolver.resolveTracer();
 
-        int contextParameterIndex = -1;
-        for (int i = 0; i < ctx.getParameters().length; i++) {
-            Object parameter = ctx.getParameters()[i];
-            if (parameter instanceof SpanContext) {
-                LOGGER.debug("Found parameter as span context. Using it as the parent of this new span");
-                spanBuilder.asChildOf((SpanContext) parameter);
-                contextParameterIndex = i;
-                break;
-            }
+        Optional<SpanBuilder> spanBuilderO = createSpanBuilder(ctx, tracer);
 
-            if (parameter instanceof Span) {
-                LOGGER.debug("Found parameter as span. Using it as the parent of this new span");
-                spanBuilder.asChildOf((Span) parameter);
-                contextParameterIndex = i;
-                break;
-            }
+        // no span builder skip tracing
+        if (spanBuilderO.isEmpty()) {
+            return ctx.proceed();
         }
 
-        if (contextParameterIndex < 0) {
-            LOGGER.debug("No parent found. Trying to get span context from context data");
-            Object ctxParentSpan = ctx.getContextData().get(SPAN_CONTEXT);
-            if (ctxParentSpan instanceof SpanContext) {
-                LOGGER.debug("Found span context from context data.");
-                SpanContext parentSpan = (SpanContext) ctxParentSpan;
-                spanBuilder.asChildOf(parentSpan);
-            }
-        }
+        return handleSpanCreation(ctx, tracer, spanBuilderO.get());
+    }
 
-        Scope scope = spanBuilder.startActive(true);
+    private Object handleSpanCreation(InvocationContext ctx, Tracer tracer, SpanBuilder spanBuilder) throws Exception {
+        Span span = spanBuilder.start();
+        Scope scope = tracer.activateSpan(span);
         try {
-            LOGGER.debug("Adding span context into the invocation context.");
-            ctx.getContextData().put(SPAN_CONTEXT, scope.span().context());
-
-            if (contextParameterIndex >= 0) {
-                LOGGER.debug("Overriding the original span context with our new context.");
-                for (int i = 0; i < ctx.getParameters().length; i++) {
-                    if (ctx.getParameters()[contextParameterIndex] instanceof Span) {
-                        ctx.getParameters()[contextParameterIndex] = scope.span();
-                    }
-
-                    if (ctx.getParameters()[contextParameterIndex] instanceof SpanContext) {
-                        ctx.getParameters()[contextParameterIndex] = scope.span().context();
-                    }
-                }
-            }
-
             return ctx.proceed();
         } catch (Exception e) {
-            logException(scope.span(), e);
+            logException(span, e);
             throw e;
         } finally {
+            span.finish();
             scope.close();
         }
     }
 
-    // uses volatile read and synchronized block to avoid possible duplicate creation of Tracer in multi-threaded env
-    public Tracer getTracer() {
-        Tracer val = tracer;
-        if (val != null) {
-            return val;
+    private Optional<SpanBuilder> createSpanBuilder(InvocationContext ctx, Tracer tracer) {
+        if (ctx.getParameters() == null) {
+            return Optional.empty();
         }
-        synchronized (this) {
-            if (tracer == null) {
-                if (null != tracerInstance && !tracerInstance.isUnsatisfied()) {
-                    tracer = this.tracerInstance.get();
-                } else {
-                    tracer = TracerResolver.resolveTracer();
-                }
+
+        Method method = ctx.getMethod();
+        Traced methodTraced = method.getAnnotation(Traced.class);
+        String operationName = ctx.getTarget().getClass().getSuperclass().getCanonicalName();
+
+        // in case of jedis component, extract operation name from method, and check if there is an active span
+        if (checkJedisComponent(methodTraced.component())) {
+            // jedis operation needs active span to join
+            if (!isActiveSpan(tracer)) {
+                LOGGER.debug("Skipping trace, no active span to join the jedis call.");
+                return Optional.empty();
             }
-            return tracer;
+            // jedis operation name by functionName parameter
+            if (ctx.getParameters() != null && ctx.getParameters().length > 1) {
+                operationName = String.valueOf(ctx.getParameters()[1]);
+            }
         }
+        return Optional.of(createSpanBuilder(tracer, methodTraced, operationName));
+
     }
 
-    private String getOperationName(Method method) {
-        Traced classTraced = method.getDeclaringClass().getAnnotation(Traced.class);
-        Traced methodTraced = method.getAnnotation(Traced.class);
-        if (methodTraced != null && methodTraced.operationName().length() > 0) {
-            return methodTraced.operationName();
-        } else if (classTraced != null && classTraced.operationName().length() > 0) {
-            return classTraced.operationName();
-        }
-        return String.format("%s.%s", method.getDeclaringClass().getName(), method.getName());
+    private boolean isActiveSpan(Tracer tracer) {
+        return tracer.activeSpan() != null;
+    }
+
+    private SpanBuilder createSpanBuilder(Tracer tracer, Traced traced, String operationName) {
+        SpanBuilder spanBuilder = tracer.buildSpan(operationName);
+        spanBuilder.withTag(Tags.SPAN_KIND.getKey(), traced.kind());
+        spanBuilder.withTag(Tags.COMPONENT.getKey(), traced.component());
+        spanBuilder.withTag(Tags.DB_TYPE.getKey(), traced.dbType());
+        return spanBuilder;
+    }
+
+    private boolean checkJedisComponent(String component) {
+        return StringUtils.equals(component, hu.icellmobilsoft.coffee.cdi.trace.constants.Tags.Redis.Jedis.COMPONENT);
     }
 
     private void logException(Span span, Exception e) {
-        Map<String, Object> errorLogs = new HashMap<String, Object>(2);
+        Map<String, Object> errorLogs = new HashMap<>(2);
         errorLogs.put("event", Tags.ERROR.getKey());
         errorLogs.put("error.object", e);
         span.log(errorLogs);
         Tags.ERROR.set(span, true);
     }
-
 }
