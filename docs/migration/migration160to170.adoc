@@ -54,9 +54,4 @@ A változtatások nem eredményeznek átállási munkálatokat, visszafelé komp
 
 ==== Átállás
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
-=== coffee-dto
-* Létrejött az UtcOffsetDateTimeXmlAdapter és az UtcOffsetTimeXmlAdapter.
-
-==== Átállás
-A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
 
