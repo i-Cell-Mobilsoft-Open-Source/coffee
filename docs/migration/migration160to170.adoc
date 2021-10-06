@@ -52,7 +52,6 @@ A változtatások nem eredményeznek átállási munkálatokat, visszafelé komp
 === coffee-module-opentracing
 * Redis műveletek és Redis stream consumerek becsatornázódnak a meglévő opentrace flowba.
 
-
 ==== Átállás
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
 
