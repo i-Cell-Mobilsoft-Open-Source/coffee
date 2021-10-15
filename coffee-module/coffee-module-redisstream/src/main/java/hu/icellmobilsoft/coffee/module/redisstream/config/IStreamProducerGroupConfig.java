@@ -22,31 +22,22 @@ package hu.icellmobilsoft.coffee.module.redisstream.config;
 import java.util.Optional;
 
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
-import hu.icellmobilsoft.coffee.module.redisstream.annotation.RedisStreamConsumer;
 
 /**
- * Redis stream group configuration interface
+ * Redis producer stream group configuration interface
  * 
  * @author imre.scheffer
  * @since 1.3.0
  */
-public interface IStreamGroupConfig {
+public interface IStreamProducerGroupConfig {
 
-    /**
-     * See https://redis.io/commands/xreadgroup and https://redis.io/commands/xread BLOCK option
-     * 
-     * @return timeout on stream read in millis. Waiting on stream until this time for new message or return null
-     * @throws BaseException
-     *             Exception on read properties
-     */
-    Long getStreamReadTimeoutMillis() throws BaseException;
 
     /**
      * Max elements in stream, oldest will be removed. See https://redis.io/commands/xadd MAXLEN parameter. <br>
      * <br>
      * This parameter has higher priority than {@link #getProducerTTL()}, if both setted, this parameter is applied and {@link #getProducerTTL()}
      * ignored.
-     * 
+     *
      * @return Max elements in stream
      * @throws BaseException
      *             Exception on read properties
@@ -58,37 +49,21 @@ public interface IStreamGroupConfig {
      * https://redis.io/commands/xadd MINID parameter. <br>
      * <br>
      * The parameter {@link #getProducerMaxLen()} has higher priority, if both setted, this parameter is ignored.
-     * 
+     *
      * @return millisec ttl
      * @throws BaseException
      *             Exception on read properties
      */
     Optional<Long> getProducerTTL() throws BaseException;
 
-    /**
-     * How many threads start to listening on stream group. This value override {@link RedisStreamConsumer#consumerThreadsCount()}
-     * 
-     * @return threads count
-     * @throws BaseException
-     *             Exception on read properties
-     */
-    Optional<Integer> getConsumerThreadsCount() throws BaseException;
-
-    /**
-     * How many times to try again if an exception occurs in the consumer process. This value override {@link RedisStreamConsumer#retryCount()}
-     * 
-     * @return retry process count
-     * @throws BaseException
-     *             Exception on read properties
-     */
-    Optional<Integer> getRetryCount() throws BaseException;
 
     /**
      * Enable/Disable any part of stream function for any reason. This is only for project logic, no have direct use-case in coffee
-     * 
+     *
      * @return true - enabled, default
      * @throws BaseException
      *             if any exception occurs
      */
     boolean isEnabled() throws BaseException;
+
 }

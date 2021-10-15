@@ -40,7 +40,9 @@ import org.apache.commons.lang3.StringUtils;
 
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
+import hu.icellmobilsoft.coffee.module.redisstream.config.StreamConsumerGroupConfig;
 import hu.icellmobilsoft.coffee.module.redisstream.config.StreamGroupConfig;
+import hu.icellmobilsoft.coffee.module.redisstream.config.StreamProducerGroupConfig;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.StreamEntry;
@@ -67,7 +69,9 @@ public class RedisStreamService implements Closeable {
      * {@link StreamGroupConfig#setConfigKey(String)} is setted in {@link #setGroup(String)}
      */
     @Inject
-    private StreamGroupConfig config;
+    private StreamProducerGroupConfig producerConfig;
+    @Inject
+    private StreamConsumerGroupConfig consumerConfig;
 
     private Jedis jedis;
 
@@ -100,11 +104,11 @@ public class RedisStreamService implements Closeable {
             throw new BaseException(CoffeeFaultType.INVALID_INPUT, "publish values is null");
         }
         XAddParams params = XAddParams.xAddParams();
-        if (config.getProducerMaxLen().isPresent()) {
-            params.maxLen(config.getProducerMaxLen().get());
+        if (producerConfig.getProducerMaxLen().isPresent()) {
+            params.maxLen(producerConfig.getProducerMaxLen().get());
         }
-        if (config.getProducerTTL().isPresent()) {
-            StreamEntryID before = new StreamEntryID(Instant.now().minusMillis(config.getProducerTTL().get()).toEpochMilli(), 0);
+        if (producerConfig.getProducerTTL().isPresent()) {
+            StreamEntryID before = new StreamEntryID(Instant.now().minusMillis(producerConfig.getProducerTTL().get()).toEpochMilli(), 0);
             params.minId(before.toString());
         }
         StreamEntryID streamEntryID = getJedis().xadd(streamKey(), values, params);
@@ -194,7 +198,7 @@ public class RedisStreamService implements Closeable {
         Entry<String, StreamEntryID> streamQuery = new AbstractMap.SimpleImmutableEntry<>(streamKey(), StreamEntryID.UNRECEIVED_ENTRY);
         // kepes tobb streambol is egyszerre olvasni, de mi 1-re hasznaljuk
         @SuppressWarnings("unchecked")
-        List<Entry<String, List<StreamEntry>>> result = getJedis().xreadGroup(getGroup(), consumerIdentifier, 1, config.getStreamReadTimeoutMillis(),
+        List<Entry<String, List<StreamEntry>>> result = getJedis().xreadGroup(getGroup(), consumerIdentifier, 1, consumerConfig.getStreamReadTimeoutMillis(),
                 false, streamQuery);
         if (result == null || result.isEmpty()) {
             // nincs uj uzenet
@@ -389,7 +393,7 @@ public class RedisStreamService implements Closeable {
 
     public void setGroup(String group) {
         this.group = group;
-        config.setConfigKey(group);
+        producerConfig.setConfigKey(group);
     }
 
     /**

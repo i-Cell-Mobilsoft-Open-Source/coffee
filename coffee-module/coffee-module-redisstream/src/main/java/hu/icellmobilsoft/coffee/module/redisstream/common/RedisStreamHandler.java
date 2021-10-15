@@ -36,9 +36,9 @@ import hu.icellmobilsoft.coffee.dto.common.LogConstants;
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.module.redisstream.config.IRedisStreamConstant;
-import hu.icellmobilsoft.coffee.module.redisstream.config.IStreamGroupConfig;
 import hu.icellmobilsoft.coffee.module.redisstream.config.StreamGroupConfig;
 import hu.icellmobilsoft.coffee.module.redisstream.config.StreamMessageParameter;
+import hu.icellmobilsoft.coffee.module.redisstream.config.StreamProducerGroupConfig;
 import hu.icellmobilsoft.coffee.module.redisstream.service.RedisStreamService;
 import hu.icellmobilsoft.coffee.se.logging.mdc.MDC;
 import redis.clients.jedis.Jedis;
@@ -58,7 +58,7 @@ public class RedisStreamHandler {
     private RedisStreamService redisStreamService;
 
     @Inject
-    private StreamGroupConfig config;
+    private StreamProducerGroupConfig config;
 
     private Instance<Jedis> jedisInstance;
 
@@ -78,7 +78,7 @@ public class RedisStreamHandler {
     }
 
     /**
-     * Is enabled Redis stream? {@link IStreamGroupConfig#isEnabled()}
+     * Is enabled Redis stream? {@link StreamProducerGroupConfig#isEnabled()}
      * 
      * @return true - enabled
      */

@@ -4,9 +4,14 @@ coff:ee v1.7.0 -> v1.8.0 migrációs leírás, újdonságok, változások leír�
 
 == Újdonságok
 
-
 === coffee-dto
+
 * Létrejött az UtcOffsetDateTimeXmlAdapter és az UtcOffsetTimeXmlAdapter.
 
+=== coffee-module-redis
+
+* Szét lett választva a consumer és a producer config. Külön poolból dolgoznak.
+
 ==== Átállás
-A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+* A változtatások nem érintik a korábbi konfigurációs kulcsok szerkezetét, nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.

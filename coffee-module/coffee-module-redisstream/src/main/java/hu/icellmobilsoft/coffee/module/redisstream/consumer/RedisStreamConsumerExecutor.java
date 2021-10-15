@@ -41,6 +41,7 @@ import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.module.redis.annotation.RedisConnection;
 import hu.icellmobilsoft.coffee.module.redisstream.annotation.RedisStreamConsumer;
 import hu.icellmobilsoft.coffee.module.redisstream.config.IRedisStreamConstant;
+import hu.icellmobilsoft.coffee.module.redisstream.config.StreamConsumerGroupConfig;
 import hu.icellmobilsoft.coffee.module.redisstream.config.StreamGroupConfig;
 import hu.icellmobilsoft.coffee.module.redisstream.service.RedisStreamService;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
@@ -80,7 +81,7 @@ public class RedisStreamConsumerExecutor implements IRedisStreamConsumerExecutor
     private BoundRequestContext boundRequestContext;
 
     @Inject
-    private StreamGroupConfig streamGroupConfig;
+    private StreamConsumerGroupConfig streamGroupConfig;
 
     private String consumerIdentifier;
 
