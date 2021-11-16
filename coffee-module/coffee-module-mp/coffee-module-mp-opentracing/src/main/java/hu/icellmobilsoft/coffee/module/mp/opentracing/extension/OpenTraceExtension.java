@@ -20,12 +20,14 @@
 package hu.icellmobilsoft.coffee.module.mp.opentracing.extension;
 
 import javax.enterprise.event.Observes;
+import javax.enterprise.inject.spi.AfterBeanDiscovery;
 import javax.enterprise.inject.spi.ProcessAnnotatedType;
 
 import org.apache.deltaspike.core.util.metadata.AnnotationInstanceProvider;
 import org.apache.deltaspike.core.util.metadata.builder.AnnotatedTypeBuilder;
 
 import hu.icellmobilsoft.coffee.cdi.trace.annotation.Traceable;
+import hu.icellmobilsoft.coffee.cdi.trace.annotation.Traced;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
 import hu.icellmobilsoft.coffee.tool.utils.annotation.AnnotationUtil;
 
@@ -39,6 +41,24 @@ public class OpenTraceExtension implements javax.enterprise.inject.spi.Extension
 
     private static final Logger LOGGER = Logger.getLogger(OpenTraceExtension.class);
 
+    /**
+     * Logging if the extesnion is activated
+     * 
+     * @param abd
+     *            {@link AfterBeanDiscovery}
+     */
+    public void afterBeanDiscovery(@Observes final AfterBeanDiscovery abd) {
+        LOGGER.info("OpenTraceExtension is active");
+    }
+
+    /**
+     * Classes annoteted with {@link Traceable} will be traced by {@link OpenTraceInterceptor}
+     * 
+     * @param <T>
+     *            The class being annotated
+     * @param pat
+     *            {@link ProcessAnnotatedType}
+     */
     public <T> void processAnnotatedType(@Observes ProcessAnnotatedType<T> pat) {
         // if the class is traceable add Traced interceptor binding
         Traceable traceable = AnnotationUtil.getAnnotation(pat.getAnnotatedType().getJavaClass(), Traceable.class);
@@ -51,6 +71,7 @@ public class OpenTraceExtension implements javax.enterprise.inject.spi.Extension
             pat.setAnnotatedType(builder.create());
 
         }
+
     }
 
 }

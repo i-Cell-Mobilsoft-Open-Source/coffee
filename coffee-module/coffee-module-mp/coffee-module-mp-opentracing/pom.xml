@@ -3,13 +3,13 @@
 	<parent>
 		<groupId>hu.icellmobilsoft.coffee</groupId>
 		<artifactId>coffee-module-mp</artifactId>
-		<version>1.6.0-SNAPSHOT</version>
+		<version>1.8.0-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>coffee-module-mp-opentracing</artifactId>
 
 	<properties>
-		<opentracing-tracerresolver>0.1.5</opentracing-tracerresolver>
+		<opentracing-tracerresolver>0.1.8</opentracing-tracerresolver>
 	</properties>
 
 	<dependencies>
@@ -25,7 +25,6 @@
 			<groupId>io.opentracing.contrib</groupId>
 			<artifactId>opentracing-tracerresolver</artifactId>
 			<version>${opentracing-tracerresolver}</version>
-			<scope>compile</scope>
 		</dependency>
 		<!-- TEST -->
 		<dependency>

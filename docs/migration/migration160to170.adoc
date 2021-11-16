@@ -1,0 +1,57 @@
+= v1.6.0 → v1.7.0
+
+coff:ee v1.6.0 -> v1.7.0 migrációs leírás, újdonságok, változások leírása
+
+== Újdonságok
+
+=== coffee-module-ruleng
+Az `AbstractEvaluator`-ban átalakításra került a `dispose` metódus,
+alapértelmezetten nem destroy-olja a selectelt IRule-okat, mert nem ismert azok scope-ja.
+Bevezetésre került a `preDestroy` metódus, amit felülírva projekt szinten megoldható a rule-okon a CDI destroy.
+
+==== Átállás
+Amennyiben nem volt `Dependent` implementációja az `IRule` interface-nek,
+úgy változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+Ellenkező esetben az `AbstractEvaluator.preDestroy`-t kell projekt szinten felülírni a `Dependent` példányok felszabadítására.
+
+=== coffee-module-redis
+Bevezetésre került a RedisManager.
+
+* Egyéges hibakezelés
+* Egységes connection kezelés
+* Teljesen CDI Jedis kezelés
+
+RedisManager run és runWithConnection metódusai @Traced annotációt kaptak.
+
+==== Átállás
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+=== coffee-jpa
+BatchService-ben előfordulhat, hogy az executeBatch által visszaadott tömb kevesebb elemből áll, mint ahány entitásra futott a batchService.
+Eddig ez esetben `IllegalArgumentException`-nel elszálltunk, ez javításra került, ezentúl `UNKNOWN` státusszal jelöljük azokat a rekordokat,
+amire nem adott eredményt az executeBatch.
+
+==== Átállás
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+=== coffee-module-redisstream
+* AbstractStreamConsumer.onStream metódusa @Traced annotációt kapott
+* AbstractStreamPipeConsumer.onStream metódusa @Traced annotációt kapott
+
+==== Átállás
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+=== coffee-cdi
+* Traced annotáció bővült, span értékek adhatók meg trace pontosításhoz.
+* Traced annotáció átkerült a coffee-cdi modulba.
+
+==== Átállás
+* Átállási munkálatokat a coff:ee-ben eredményezett, 2 modul lett bekötve, coffee-redis, coffee-redisstream
+* Traced annotáció import: hu.icellmobilsoft.coffee.module.mp.opentracing.extension -> hu.icellmobilsoft.coffee.cdi.trace.annotation
+
+=== coffee-module-opentracing
+* Redis műveletek és Redis stream consumerek becsatornázódnak a meglévő opentrace flowba.
+
+==== Átállás
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
