@@ -36,7 +36,7 @@ import org.hibernate.annotations.GenericGenerator;
  */
 @Vetoed
 @MappedSuperclass
-public abstract class AbstractIdentifiedAuditEntity extends AbstractAuditEntity<String> implements IIdentifiedAuditEntity<Date> {
+public abstract class AbstractIdentifiedAuditEntity extends AbstractAuditEntity<String> implements IIdentifiedAuditEntity<String, String, Date> {
 
     private static final long serialVersionUID = 1L;
 

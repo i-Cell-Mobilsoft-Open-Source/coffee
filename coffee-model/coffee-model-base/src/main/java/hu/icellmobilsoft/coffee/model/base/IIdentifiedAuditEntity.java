@@ -19,28 +19,32 @@
  */
 package hu.icellmobilsoft.coffee.model.base;
 
+import java.io.Serializable;
+
 /**
  * Interface for the identified audit entities. Contains setters, getters for id, version, and for the basic audit fields.
  *
+ * @param <ID> The type of the entity id
+ * @param <USER> The type of the creator and modifier user
  * @param <DATE> The type of the date. E.g.: {@link java.util.Date}, {@link java.time.OffsetDateTime}, {@link java.time.Instant}
  * @author martin.nagy
  * @since 1.8.0
  */
-public interface IIdentifiedAuditEntity<DATE> {
+public interface IIdentifiedAuditEntity<ID extends Serializable, USER, DATE> {
 
     /**
      * Returns the id of the entity
      *
      * @return the id of the entity
      */
-    String getId();
+    ID getId();
 
     /**
      * Sets the id of the entity
      *
      * @param id the new id
      */
-    void setId(String id);
+    void setId(ID id);
 
     /**
      * Returns the version of the entity
@@ -89,26 +93,26 @@ public interface IIdentifiedAuditEntity<DATE> {
      *
      * @return the creator user of the entity
      */
-    String getCreatorUser();
+    USER getCreatorUser();
 
     /**
      * Sets the creator user of the entity
      *
      * @param creatorUser the new creator user
      */
-    void setCreatorUser(String creatorUser);
+    void setCreatorUser(USER creatorUser);
 
     /**
      * Returns the modification user of the entity
      *
      * @return the modification user of the entity
      */
-    String getModifierUser();
+    USER getModifierUser();
 
     /**
      * Sets the modification user of the entity
      *
      * @param modifierUser the new modification user
      */
-    void setModifierUser(String modifierUser);
+    void setModifierUser(USER modifierUser);
 }
