@@ -10,3 +10,9 @@ coff:ee v1.7.0 -> v1.8.0 migrációs leírás, újdonságok, változások leír�
 
 ==== Átállás
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+=== coffee-jpa
+* A `BatchService` automatán beállítja az átadott entitások verzióját
+
+==== Átállás
+* Ha a batch mentés után kézzel lett a verzió növelve, azt meg kell szüntetni
