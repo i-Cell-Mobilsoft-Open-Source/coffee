@@ -19,6 +19,7 @@
  */
 package hu.icellmobilsoft.coffee.model.base.javatime;
 
+import java.time.OffsetDateTime;
 import javax.enterprise.inject.Vetoed;
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
@@ -28,6 +29,8 @@ import javax.persistence.MappedSuperclass;
 
 import org.hibernate.annotations.GenericGenerator;
 
+import hu.icellmobilsoft.coffee.model.base.IIdentifiedAuditEntity;
+
 /**
  * Base class for id + audited (X__ID, X__INSDATE, X__MODDATE, X__INSUSER, X__MODUSER) entities.
  *
@@ -36,7 +39,7 @@ import org.hibernate.annotations.GenericGenerator;
  */
 @Vetoed
 @MappedSuperclass
-public abstract class AbstractIdentifiedAuditEntity extends AbstractAuditEntity<String> {
+public abstract class AbstractIdentifiedAuditEntity extends AbstractAuditEntity<String> implements IIdentifiedAuditEntity<OffsetDateTime> {
 
     private static final long serialVersionUID = 1L;
 
