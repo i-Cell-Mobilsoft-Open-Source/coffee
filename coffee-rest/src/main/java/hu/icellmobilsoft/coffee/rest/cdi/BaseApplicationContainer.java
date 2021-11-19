@@ -21,6 +21,7 @@ package hu.icellmobilsoft.coffee.rest.cdi;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.annotation.Resource;
 import javax.enterprise.context.ApplicationScoped;
@@ -69,8 +70,12 @@ public class BaseApplicationContainer {
         if (getObjectMap().containsKey(COFFEE_APP_NAME) && getObjectMap().get(COFFEE_APP_NAME) instanceof String) {
             coffeeAppName = (String) getObjectMap().get(COFFEE_APP_NAME);
         } else {
-            String coffeeAppNameConfig = ConfigProvider.getConfig().getValue(COFFEE_APP_NAME, String.class);
-            coffeeAppName = StringUtils.defaultIfBlank(coffeeAppNameConfig, appName);
+            Optional<String> coffeeAppNameConfig = ConfigProvider.getConfig().getOptionalValue(COFFEE_APP_NAME, String.class);
+            if (coffeeAppNameConfig.isEmpty()) {
+                coffeeAppName = appName;
+            } else {
+                coffeeAppName = StringUtils.defaultIfBlank(coffeeAppNameConfig.get(), appName);
+            }
             getObjectMap().put(COFFEE_APP_NAME, coffeeAppName);
         }
 

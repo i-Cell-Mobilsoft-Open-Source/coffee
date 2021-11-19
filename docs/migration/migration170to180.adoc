@@ -11,6 +11,14 @@ coff:ee v1.7.0 -> v1.8.0 migrációs leírás, újdonságok, változások leír�
 ==== Átállás
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
 
+== Változások
+
+=== coffee-rest
+* "coffee.app.name" paraméterben megadható érték már nem kötelező, alapértelmezetten a "java:app/AppName" van használva.
+
+==== Átállás
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
 === coffee-jpa
 * A `BatchService` automatán beállítja az átadott entitások verzióját
 
