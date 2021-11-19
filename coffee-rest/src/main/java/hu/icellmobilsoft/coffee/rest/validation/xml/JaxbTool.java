@@ -200,7 +200,7 @@ public class JaxbTool {
             throw new XsdProcessingException(CoffeeFaultType.WRONG_OR_MISSING_PARAMETERS, "type or inputStream is null!");
         }
         IXsdValidationErrorCollector errorCollector = createCDIInstance(IXsdValidationErrorCollector.class);
-        try (inputStream) {
+        try {
             IXsdHelper xsdHelper = createCDIInstance(IXsdHelper.class);
             JAXBContext jaxbContext = xsdHelper.getJAXBContext(type);
             Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
@@ -223,8 +223,6 @@ public class JaxbTool {
             throw new XsdProcessingException(errorCollector.getErrors(), e);
         } catch (JAXBException | SAXException e) {
             throw new XsdProcessingException(CoffeeFaultType.INVALID_INPUT, e.getLocalizedMessage(), e);
-        } catch (IOException e) {
-            throw new XsdProcessingException(CoffeeFaultType.OPERATION_FAILED, e.getLocalizedMessage(), e);
         }
     }
 
