@@ -15,6 +15,7 @@ A változtatások nem eredményeznek átállási munkálatokat, visszafelé komp
 
 === coffee-rest
 * "coffee.app.name" paraméterben megadható érték már nem kötelező, alapértelmezetten a "java:app/AppName" van használva.
+* JaxbTool kiegészítése `byte[]` fogadására képes unmarshalXML metódusokkal
 
 ==== Átállás
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
