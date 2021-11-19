@@ -19,12 +19,14 @@
  */
 package hu.icellmobilsoft.coffee.rest.validation.xml;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 
 import javax.enterprise.inject.Instance;
 import javax.enterprise.inject.Model;
@@ -35,6 +37,7 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.UnmarshalException;
 import javax.xml.bind.Unmarshaller;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.w3c.dom.ls.LSResourceResolver;
 import org.xml.sax.SAXException;
@@ -56,10 +59,13 @@ import hu.icellmobilsoft.coffee.tool.utils.annotation.RangeUtil;
  * @author ferenc.lutischan
  * @author imre.scheffer
  * @author m.petrenyi
+ * @author balazs.joo
  * @since 1.0.0
  */
 @Model
 public class JaxbTool {
+
+    public static final String ERR_MSG_TYPE_OR_BINARY_IS_NULL_OR_EMPTY = "type or binary is null or empty!";
 
     /**
      * Deszerializálja az objektumot, és validálja a megadott XSD séma alapján
@@ -87,6 +93,29 @@ public class JaxbTool {
     }
 
     /**
+     * Deszerializálja az objektumot, és validálja a megadott XSD séma alapján
+     *
+     * @param <T>
+     *            Visszatérő típus
+     * @param type
+     *            Milyen típusba illeszkedik a bejövő adat
+     * @param binary
+     *            A feldolgozandó bemeneti bináris
+     * @param validateXMLs
+     *            Az XSD validációhoz kapcsolódó annotációk
+     * @return A eredményobjektum
+     * @throws XsdProcessingException
+     *             if invalid input or cannot be unmarshalled
+     */
+    public <T> T unmarshalXML(Class<T> type, byte[] binary, ValidateXML[] validateXMLs) throws XsdProcessingException {
+        if (Objects.isNull(type) || ArrayUtils.isEmpty(binary)) {
+            throw new XsdProcessingException(CoffeeFaultType.WRONG_OR_MISSING_PARAMETERS, ERR_MSG_TYPE_OR_BINARY_IS_NULL_OR_EMPTY);
+        }
+        ByteArrayInputStream inputStream = new ByteArrayInputStream(binary);
+        return unmarshalXML(type, inputStream, validateXMLs);
+    }
+
+    /**
      * XML objektummá alakítás séma validáció nélkül.
      *
      * @param <T>
@@ -101,6 +130,27 @@ public class JaxbTool {
      */
     public <T> T unmarshalXML(Class<T> type, InputStream inputStream) throws XsdProcessingException {
         return unmarshalXML(type, inputStream, (String) null);
+    }
+
+    /**
+     * XML objektummá alakítás séma validáció nélkül.
+     *
+     * @param <T>
+     *            visszatérő típus
+     * @param type
+     *            xml objektumot reprezentáló osztály típusa
+     * @param binary
+     *            a bemeneti adatokat tartalmazó bináris
+     * @return xml-nek megfelelő objektum a felolvasott értékekkel.
+     * @throws XsdProcessingException
+     *             if invalid input or cannot be unmarshalled
+     */
+    public <T> T unmarshalXML(Class<T> type, byte[] binary) throws XsdProcessingException {
+        if (Objects.isNull(type) || ArrayUtils.isEmpty(binary)) {
+            throw new XsdProcessingException(CoffeeFaultType.WRONG_OR_MISSING_PARAMETERS, ERR_MSG_TYPE_OR_BINARY_IS_NULL_OR_EMPTY);
+        }
+        ByteArrayInputStream inputStream = new ByteArrayInputStream(binary);
+        return unmarshalXML(type, inputStream);
     }
 
     /**
@@ -150,7 +200,7 @@ public class JaxbTool {
             throw new XsdProcessingException(CoffeeFaultType.WRONG_OR_MISSING_PARAMETERS, "type or inputStream is null!");
         }
         IXsdValidationErrorCollector errorCollector = createCDIInstance(IXsdValidationErrorCollector.class);
-        try {
+        try (inputStream) {
             IXsdHelper xsdHelper = createCDIInstance(IXsdHelper.class);
             JAXBContext jaxbContext = xsdHelper.getJAXBContext(type);
             Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
@@ -173,7 +223,32 @@ public class JaxbTool {
             throw new XsdProcessingException(errorCollector.getErrors(), e);
         } catch (JAXBException | SAXException e) {
             throw new XsdProcessingException(CoffeeFaultType.INVALID_INPUT, e.getLocalizedMessage(), e);
+        } catch (IOException e) {
+            throw new XsdProcessingException(CoffeeFaultType.OPERATION_FAILED, e.getLocalizedMessage(), e);
         }
+    }
+
+    /**
+     * XML objektummá alakítás séma validációval.
+     *
+     * @param <T>
+     *            visszatérő típus
+     * @param type
+     *            xml objektumot reprezentáló osztály típusa
+     * @param binary
+     *            a bemeneti adatokat tartalmazó bináris
+     * @param schemaPath
+     *            séma elérési útja
+     * @return xml-nek megfelelő objektum a felolvasott értékekkel.
+     * @throws XsdProcessingException
+     *             if invalid input or cannot be unmarshalled
+     */
+    public <T> T unmarshalXML(Class<T> type, byte[] binary, String schemaPath) throws XsdProcessingException {
+        if (Objects.isNull(type) || ArrayUtils.isEmpty(binary)) {
+            throw new XsdProcessingException(CoffeeFaultType.WRONG_OR_MISSING_PARAMETERS, ERR_MSG_TYPE_OR_BINARY_IS_NULL_OR_EMPTY);
+        }
+        ByteArrayInputStream inputStream = new ByteArrayInputStream(binary);
+        return unmarshalXML(type, inputStream, schemaPath);
     }
 
     /**
