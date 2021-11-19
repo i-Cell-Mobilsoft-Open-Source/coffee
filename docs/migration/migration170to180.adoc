@@ -19,6 +19,13 @@ A változtatások nem eredményeznek átállási munkálatokat, visszafelé komp
 ==== Átállás
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
 
+=== coffee-jpa
+* A `BatchService` automatán beállítja az átadott entitások verzióját
+
+==== Átállás
+* Ha a batch mentés után kézzel lett a verzió növelve, azt meg kell szüntetni
+
+
 === coffee-model-base
 * A 2 `AbstractIdentifiedAuditEntity` osztály (`java.util.Date` és `OffsetDateTime`-on alapuló) kapott egy közös generikus interface-t
 

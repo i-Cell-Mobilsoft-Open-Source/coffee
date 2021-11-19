@@ -481,16 +481,15 @@ public class BatchService {
      */
     protected <E> void setParametersForUpdate(PreparedStatement ps, SingleTableEntityPersister persister, E entity) throws SQLException {
         int i = 1;
-        Long version = (Long) persister.getVersion(entity);
-        int versionIndex = persister.getVersionProperty();
+
+        // Update version
+        Object oldVersion = persister.getVersion(entity);
+        Object newVersion = persister.getVersionType().next(oldVersion, null);
+        persister.setPropertyValue(entity, persister.getVersionProperty(), newVersion);
+
         for (String name : persister.getPropertyNames()) {
             // remeljuk az index es a persister.getPropertyNames() osszhangban van
             int index = persister.getPropertyIndex(name);
-            if (versionIndex == index) {
-                ps.setLong(i, version + 1);
-                i++;
-                continue;
-            }
             Object value = persister.getPropertyValue(entity, index);
             Type type = persister.getPropertyType(name);
             setPsObject(ps, i, type, value);
@@ -498,7 +497,7 @@ public class BatchService {
         }
         // where
         ps.setObject(i++, persister.getIdentifier(entity));
-        ps.setObject(i, persister.getVersion(entity));
+        ps.setObject(i, oldVersion);
     }
 
     /**
@@ -517,23 +516,22 @@ public class BatchService {
      */
     protected <E> void setParametersForInsert(PreparedStatement ps, SingleTableEntityPersister persister, E entity) throws SQLException {
         int i = 1;
-        int versionIndex = persister.getVersionProperty();
+
         // elso a PK
         String entityId = (String) persister.getIdentifier(entity);
-        // String entityId = getId(entity);
         if (entityId == null) {
             entityId = generateId();
             persister.setIdentifier(entity, entityId, (SharedSessionContractImplementor) null);
         }
         setPsObject(ps, i++, StringType.INSTANCE, entityId);
+
+        // Init version
+        Object version = persister.getVersionType().seed(null);
+        persister.setPropertyValue(entity, persister.getVersionProperty(), version);
+
         for (String name : persister.getPropertyNames()) {
             // remeljuk az index es a persister.getPropertyNames() osszhangban van
             int index = persister.getPropertyIndex(name);
-            if (versionIndex == index) {
-                ps.setLong(i, 0);
-                i++;
-                continue;
-            }
             Object value = persister.getPropertyValue(entity, index);
             Type type = persister.getPropertyType(name);
             setPsObject(ps, i, type, value);
