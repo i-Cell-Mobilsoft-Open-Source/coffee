@@ -80,7 +80,7 @@ public class JaxbTool {
      *            Az XSD validációhoz kapcsolódó annotációk
      * @return A eredményobjektum
      * @throws XsdProcessingException
-     *             if invalid input or cannot be unmarshalled
+     *             érvénytelen bemenet esetén, vagy ha nem lehet feldolgozni a bemeneti adatot
      */
     public <T> T unmarshalXML(Class<T> type, InputStream entityStream, ValidateXML[] validateXMLs) throws XsdProcessingException {
         if (type == null || entityStream == null) {
@@ -105,7 +105,7 @@ public class JaxbTool {
      *            Az XSD validációhoz kapcsolódó annotációk
      * @return A eredményobjektum
      * @throws XsdProcessingException
-     *             if invalid input or cannot be unmarshalled
+     *             érvénytelen bemenet esetén, vagy ha nem lehet feldolgozni a bemeneti adatot
      */
     public <T> T unmarshalXML(Class<T> type, byte[] binary, ValidateXML[] validateXMLs) throws XsdProcessingException {
         if (Objects.isNull(type) || ArrayUtils.isEmpty(binary)) {
@@ -126,7 +126,7 @@ public class JaxbTool {
      *            a bemeneti adatokat tartalmazó folyam
      * @return xml-nek megfelelő objektum a felolvasott értékekkel.
      * @throws XsdProcessingException
-     *             if invalid input or cannot be unmarshalled
+     *             érvénytelen bemenet esetén, vagy ha nem lehet feldolgozni a bemeneti adatot
      */
     public <T> T unmarshalXML(Class<T> type, InputStream inputStream) throws XsdProcessingException {
         return unmarshalXML(type, inputStream, (String) null);
@@ -143,7 +143,7 @@ public class JaxbTool {
      *            a bemeneti adatokat tartalmazó bináris
      * @return xml-nek megfelelő objektum a felolvasott értékekkel.
      * @throws XsdProcessingException
-     *             if invalid input or cannot be unmarshalled
+     *             érvénytelen bemenet esetén, vagy ha nem lehet feldolgozni a bemeneti adatot
      */
     public <T> T unmarshalXML(Class<T> type, byte[] binary) throws XsdProcessingException {
         if (Objects.isNull(type) || ArrayUtils.isEmpty(binary)) {
@@ -193,7 +193,7 @@ public class JaxbTool {
      *            séma elérési útja
      * @return xml-nek megfelelő objektum a felolvasott értékekkel.
      * @throws XsdProcessingException
-     *             if invalid input or cannot be unmarshalled
+     *             érvénytelen bemenet esetén, vagy ha nem lehet feldolgozni a bemeneti adatot
      */
     public <T> T unmarshalXML(Class<T> type, InputStream inputStream, String schemaPath) throws XsdProcessingException {
         if (type == null || inputStream == null) {
@@ -241,7 +241,7 @@ public class JaxbTool {
      *            séma elérési útja
      * @return xml-nek megfelelő objektum a felolvasott értékekkel.
      * @throws XsdProcessingException
-     *             if invalid input or cannot be unmarshalled
+     *             érvénytelen bemenet esetén, vagy ha nem lehet feldolgozni a bemeneti adatot
      */
     public <T> T unmarshalXML(Class<T> type, byte[] binary, String schemaPath) throws XsdProcessingException {
         if (Objects.isNull(type) || ArrayUtils.isEmpty(binary)) {
