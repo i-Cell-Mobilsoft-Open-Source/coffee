@@ -30,7 +30,7 @@ import java.io.Serializable;
  * @author martin.nagy
  * @since 1.8.0
  */
-public interface IIdentifiedAuditEntity<ID extends Serializable, USER, DATE> {
+public interface IIdentifiedAuditEntity<ID extends Serializable, USER, DATE> extends IVersionable {
 
     /**
      * Returns the id of the entity
@@ -45,20 +45,6 @@ public interface IIdentifiedAuditEntity<ID extends Serializable, USER, DATE> {
      * @param id the new id
      */
     void setId(ID id);
-
-    /**
-     * Returns the version of the entity
-     *
-     * @return the version of the entity
-     */
-    long getVersion();
-
-    /**
-     * Sets the version of the entity
-     *
-     * @param version the new version
-     */
-    void setVersion(long version);
 
     /**
      * Returns the creation date of the entity
