@@ -25,3 +25,9 @@ A változtatások nem eredményeznek átállási munkálatokat, visszafelé komp
 
 ==== Átállás
 * Ha a batch mentés után kézzel lett a verzió növelve, azt meg kell szüntetni
+
+=== coffee-module-csv
+* opencsv upgrade 3.9 -> 5.5.2
+
+==== Átállás
+* `@CsvBind` annotációkat cserélni kell `@CsvBindByNamePosition`-re
