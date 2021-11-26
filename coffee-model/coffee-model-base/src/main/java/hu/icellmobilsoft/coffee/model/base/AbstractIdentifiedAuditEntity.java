@@ -19,6 +19,7 @@
  */
 package hu.icellmobilsoft.coffee.model.base;
 
+import java.util.Date;
 import javax.enterprise.inject.Vetoed;
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
@@ -35,7 +36,7 @@ import org.hibernate.annotations.GenericGenerator;
  */
 @Vetoed
 @MappedSuperclass
-public abstract class AbstractIdentifiedAuditEntity extends AbstractAuditEntity<String> {
+public abstract class AbstractIdentifiedAuditEntity extends AbstractAuditEntity<String> implements IIdentifiedAuditEntity<String, String, Date> {
 
     private static final long serialVersionUID = 1L;
 
