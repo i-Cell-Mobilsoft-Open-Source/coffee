@@ -23,7 +23,6 @@ import java.io.Serializable;
 import java.lang.management.ManagementFactory;
 import java.util.Date;
 import java.util.Random;
-
 import javax.enterprise.inject.Vetoed;
 
 import org.apache.commons.lang3.StringUtils;
@@ -31,7 +30,7 @@ import org.hibernate.HibernateException;
 import org.hibernate.engine.spi.SharedSessionContractImplementor;
 import org.hibernate.id.IdentifierGenerator;
 
-import hu.icellmobilsoft.coffee.model.base.AbstractIdentifiedAuditEntity;
+import hu.icellmobilsoft.coffee.model.base.IIdentifiedAuditEntity;
 
 /**
  * Entity identifier generator.
@@ -44,17 +43,9 @@ public class EntityIdGenerator implements IdentifierGenerator {
 
     /** {@inheritDoc} */
     @Override
-    public Serializable generate(SharedSessionContractImplementor arg0, Object arg1) throws HibernateException {
-        if (arg1 instanceof AbstractIdentifiedAuditEntity) {
-            AbstractIdentifiedAuditEntity entity = (AbstractIdentifiedAuditEntity) arg1;
-            if (entity.getId() == null) {
-                return generateId();
-            }
-            return entity.getId();
-        } else
-        // java8 dátumos AbstractIdentifiedAuditEntity
-        if (arg1 instanceof hu.icellmobilsoft.coffee.model.base.javatime.AbstractIdentifiedAuditEntity) {
-            hu.icellmobilsoft.coffee.model.base.javatime.AbstractIdentifiedAuditEntity entity = (hu.icellmobilsoft.coffee.model.base.javatime.AbstractIdentifiedAuditEntity) arg1;
+    public Serializable generate(SharedSessionContractImplementor session, Object object) throws HibernateException {
+        if (object instanceof IIdentifiedAuditEntity) {
+            IIdentifiedAuditEntity<?, ?, ?> entity = (IIdentifiedAuditEntity<?, ?, ?>) object;
             if (entity.getId() == null) {
                 return generateId();
             }
@@ -63,7 +54,7 @@ public class EntityIdGenerator implements IdentifierGenerator {
         return generateId();
     }
 
-    private static final long DATE_2013_01_01 = 1356998400000l;
+    private static final long DATE_2013_01_01 = 1356998400000L;
 
     // [0-9a-zA-Z]
     private static final int MAX_NUM_SYS = 62;
