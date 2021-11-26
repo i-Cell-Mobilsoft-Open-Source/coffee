@@ -13,5 +13,35 @@ coff:ee v1.7.0 -> v1.8.0 migrációs leírás, újdonságok, változások leír�
 * Szét lett választva a consumer és a producer config. Külön poolból dolgoznak.
 
 ==== Átállás
-
-* A változtatások nem érintik a korábbi konfigurációs kulcsok szerkezetét, nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+* Az új verzióban ha azt szertnénk, hogy a producerünk vagy consumerünk önálló pool-al rendelkezzen, az inject-nél még fel kell annotálni az új Qualifierek egyikével:
+@ConsumerPool/@ProducerPool.
+Ha mindkettővel alátnánk, akkor azt a StreamAnnotationProcessor elbuktatná.
+* A változtatások érintik a korábbi konfigurációs kulcsok szerkezetét.
+régi:
+```
+coffee:
+    redisstream:
+        enabled: true
+        sampleGroup:
+    stream:
+        maxlen: 10
+        read:
+            timeoutmillis: 60000
+    consumer:
+        threadsCount: 2
+```
+új:
+```
+coffee:
+    redisstream:
+        sampleGroup: #
+            stream:
+                read:
+                    timeoutmillis: 60000 #default: 60000
+            producer:
+                maxlen: 10000 #default none
+                ttl: 300000 #millisec, default none
+            consumer:
+                threadsCount: 2 #default: 1
+                retryCount: 2 #default: 1
+```

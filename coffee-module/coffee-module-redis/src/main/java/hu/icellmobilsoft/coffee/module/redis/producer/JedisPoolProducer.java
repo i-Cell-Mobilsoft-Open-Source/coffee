@@ -33,6 +33,8 @@ import javax.enterprise.inject.spi.CDI;
 import javax.enterprise.inject.spi.InjectionPoint;
 import javax.inject.Inject;
 
+import hu.icellmobilsoft.coffee.module.redis.annotation.ConsumerPool;
+import hu.icellmobilsoft.coffee.module.redis.annotation.ProducerPool;
 import hu.icellmobilsoft.coffee.module.redis.annotation.RedisConnection;
 import hu.icellmobilsoft.coffee.module.redis.config.ManagedRedisConfig;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
@@ -48,6 +50,9 @@ import redis.clients.jedis.JedisPoolConfig;
  */
 @ApplicationScoped
 public class JedisPoolProducer {
+
+    private static final String PRODUCER_POSTFIX = "_producer";
+    private static final String CONSUMER_POSTFIX = "_consumer";
 
     @Inject
     private Logger log;
@@ -66,7 +71,11 @@ public class JedisPoolProducer {
     @RedisConnection(configKey = "")
     public JedisPool getJedisPool(InjectionPoint injectionPoint) {
         Optional<RedisConnection> annotation = AnnotationUtil.getAnnotation(injectionPoint, RedisConnection.class);
+        Optional<ConsumerPool> producerAnnotation = AnnotationUtil.getAnnotation(injectionPoint, ConsumerPool.class);
+        Optional<ProducerPool> consumerAnnotation = AnnotationUtil.getAnnotation(injectionPoint, ProducerPool.class);
         String configKey = annotation.map(RedisConnection::configKey).orElse(null);
+        configKey = producerAnnotation.isPresent() ? configKey + PRODUCER_POSTFIX : configKey;
+        configKey = consumerAnnotation.isPresent() ? configKey + CONSUMER_POSTFIX : configKey;
         return getInstance(configKey);
     }
 
