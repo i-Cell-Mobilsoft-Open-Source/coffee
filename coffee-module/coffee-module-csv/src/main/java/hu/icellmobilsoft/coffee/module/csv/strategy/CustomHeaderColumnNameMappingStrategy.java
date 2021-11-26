@@ -21,7 +21,6 @@ package hu.icellmobilsoft.coffee.module.csv.strategy;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -32,6 +31,8 @@ import org.apache.commons.collections4.ListValuedMap;
 import org.apache.commons.lang3.StringUtils;
 
 import com.opencsv.bean.BeanFieldSingleValue;
+import com.opencsv.bean.CsvBindByPosition;
+import com.opencsv.bean.CsvBindByPositions;
 import com.opencsv.bean.CsvConverter;
 import com.opencsv.bean.HeaderColumnNameMappingStrategy;
 import com.opencsv.exceptions.CsvBadConverterException;
@@ -52,33 +53,34 @@ public class CustomHeaderColumnNameMappingStrategy<T> extends HeaderColumnNameMa
 
     private HashMap<String, Integer> fieldIndexByName;
 
-    /**
-     * Constructor for CustomHeaderColumnNameMappingStrategy.
-     */
-    public CustomHeaderColumnNameMappingStrategy() {
-    }
-
-    /**
-     * Constructor for CustomHeaderColumnNameMappingStrategy.
-     *
-     * @param clazz
-     *            value for {@code type} field
-     */
-    public CustomHeaderColumnNameMappingStrategy(Class<? extends T> clazz) {
-        this.setType(clazz);
-    }
-
     @Override
     protected void loadFieldMap() throws CsvBadConverterException {
         fieldIndexByName = new HashMap<>();
-        writeOrder = Comparator.comparing(fieldIndexByName::get);
+        writeOrder = this::compare;
         super.loadFieldMap();
+    }
+
+    private int compare(String column1, String column2) {
+        Integer position1 = fieldIndexByName.get(column1);
+        Integer position2 = fieldIndexByName.get(column2);
+        if (position1 != null && position2 != null) {
+            return position1.compareTo(position2);
+        }
+        if (position1 != null) {
+            return -1;
+        }
+        if (position2 != null) {
+            return 1;
+        }
+        return 0;
     }
 
     @Override
     protected Set<Class<? extends Annotation>> getBindingAnnotations() {
         Set<Class<? extends Annotation>> bindingAnnotations = super.getBindingAnnotations();
         bindingAnnotations.add(CsvBindByNamePosition.class);
+        bindingAnnotations.add(CsvBindByPosition.class);
+        bindingAnnotations.add(CsvBindByPositions.class);
         return bindingAnnotations;
     }
 
@@ -94,13 +96,29 @@ public class CustomHeaderColumnNameMappingStrategy<T> extends HeaderColumnNameMa
                 CsvBindByNamePosition annotation = selectAnnotationForProfile(localField.getAnnotationsByType(CsvBindByNamePosition.class),
                         CsvBindByNamePosition::profiles);
                 if (annotation != null) {
-                    registerCustomBinding(annotation, localType, localField);
+                    registerBinding(annotation, localType, localField);
+                }
+            } else if (localField.isAnnotationPresent(CsvBindByPosition.class) || localField.isAnnotationPresent(CsvBindByPositions.class)) {
+                CsvBindByPosition annotation = selectAnnotationForProfile(localField.getAnnotationsByType(CsvBindByPosition.class),
+                        CsvBindByPosition::profiles);
+                if (annotation != null) {
+                    registerBinding(annotation, localType, localField);
                 }
             }
         }
     }
 
-    private void registerCustomBinding(CsvBindByNamePosition annotation, Class<?> localType, Field localField) {
+    private void registerBinding(CsvBindByPosition annotation, Class<?> localType, Field localField) {
+        String fieldLocale = annotation.locale();
+        String fieldWriteLocale = annotation.writeLocaleEqualsReadLocale() ? fieldLocale : annotation.writeLocale();
+        String columnName = getFieldName(localField);
+        CsvConverter converter = determineConverter(localField, localField.getType(), fieldLocale, fieldWriteLocale, null);
+        fieldMap.put(columnName, new BeanFieldSingleValue<>(localType, localField, annotation.required(), errorLocale, converter,
+                annotation.capture(), annotation.format()));
+        fieldIndexByName.put(columnName, annotation.position());
+    }
+
+    private void registerBinding(CsvBindByNamePosition annotation, Class<?> localType, Field localField) {
         CsvConverter converter = determineConverter(localField, localField.getType(), annotation.locale(), annotation.locale(), null);
         int position = annotation.position();
         String columnName = getColumnName(annotation, localField);
@@ -113,9 +131,13 @@ public class CustomHeaderColumnNameMappingStrategy<T> extends HeaderColumnNameMa
     private String getColumnName(CsvBindByNamePosition annotation, Field localField) {
         String columnName = annotation.column().toUpperCase().trim();
         if (StringUtils.isEmpty(columnName)) {
-            return localField.getName().toUpperCase();
+            return getFieldName(localField);
         }
         return columnName;
+    }
+
+    private String getFieldName(Field localField) {
+        return localField.getName().toUpperCase();
     }
 
 }
