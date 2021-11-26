@@ -26,6 +26,13 @@ A változtatások nem eredményeznek átállási munkálatokat, visszafelé komp
 ==== Átállás
 * Ha a batch mentés után kézzel lett a verzió növelve, azt meg kell szüntetni
 
+
+=== coffee-model-base
+* A 2 `AbstractIdentifiedAuditEntity` osztály (`java.util.Date` és `OffsetDateTime`-on alapuló) kapott egy közös generikus interface-t
+
+==== Átállás
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
 === coffee-module-csv
 * opencsv upgrade 3.9 -> 5.5.2
 
