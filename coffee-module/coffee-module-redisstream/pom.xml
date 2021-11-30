@@ -22,7 +22,17 @@
 			<groupId>org.jboss.weld</groupId>
 			<artifactId>weld-api</artifactId>
 			<version>3.0.Final</version>
-		</dependency>
+			<exclusions>
+				<exclusion>
+					<groupId>javax.enterprise</groupId>
+					<artifactId>cdi-api</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>javax.inject</groupId>
+					<artifactId>javax.inject</artifactId>
+				</exclusion>
+			</exclusions>
+    </dependency>
 
 		<!--Test dependecies -->
 		<dependency>

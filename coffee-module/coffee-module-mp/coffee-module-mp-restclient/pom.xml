@@ -20,6 +20,12 @@
 		<dependency>
 			<groupId>org.eclipse.microprofile.rest.client</groupId>
 			<artifactId>microprofile-rest-client-api</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>javax.inject</groupId>
+					<artifactId>javax.inject</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 		<dependency>

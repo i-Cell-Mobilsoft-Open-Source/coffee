@@ -13,6 +13,63 @@ A változtatások nem eredményeznek átállási munkálatokat, visszafelé komp
 
 == Változások
 
+* Java EE 8 -> Jakarta EE 8 átállás - Az elsőként kiadott jakarta verzió package és osztály szinten teljesen megegyezik
+a korábbi Java EE 8-cal, csupán maven koordinátákban tér el. Ennek megfelelően az átálláshoz az alábbi lépéseket kell
+megtenni:
+** Le kell cserélni a `javax`  dependency-ket a https://wiki.eclipse.org/Jakarta_EE_Maven_Coordinates[megfelelő
+`jakarta` párjára], például:
++
+.javax
+[source,xml]
+----
+<dependency>
+    <groupId>javax</groupId>
+    <artifactId>javaee-api</artifactId>
+    <version>8.0</version>
+    <scope>provided</scope>
+</dependency>
+----
++
+.jakarta
+[source,xml]
+----
+
+<dependency>
+    <groupId>jakarta.platform</groupId>
+    <artifactId>jakarta.jakartaee-api</artifactId>
+    <version>8.0.0</version>
+    <scope>provided</scope>
+</dependency>
+----
+
+** Ellenőrizni kell a tranzitíven behúzott függőségeket is, az átállás után a projektben nem maradhat `javax`-os függőség,
+mert ez nem várt hibákat eredményezhet. Ehhez használhatjuk a maven dependency-plugin `dependency:tree` goal-ját.
+Az így talált `javax` artifact-okat exclude-olni kell. Ha egy exclude-olt függőségre szükségünk van, vegyük fel a
+`jakarta` párját, például:
++
+.javax
+[source,xml]
+----
+<dependency>
+    <groupId>javax</groupId>
+    <artifactId>javaee-api</artifactId>
+    <version>8.0</version>
+    <scope>provided</scope>
+</dependency>
+----
++
+.jakarta
+[source,xml]
+----
+
+<dependency>
+    <groupId>jakarta.platform</groupId>
+    <artifactId>jakarta.jakartaee-api</artifactId>
+    <version>8.0.0</version>
+    <scope>provided</scope>
+</dependency>
+----
+
 === coffee-rest
 * "coffee.app.name" paraméterben megadható érték már nem kötelező, alapértelmezetten a "java:app/AppName" van használva.
 * JaxbTool kiegészítése `byte[]` fogadására képes unmarshalXML metódusokkal
