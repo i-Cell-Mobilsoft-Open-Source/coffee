@@ -8,8 +8,10 @@ coff:ee v1.7.0 -> v1.8.0 migrációs leírás, újdonságok, változások leír�
 
 * Létrejött az UtcOffsetDateTimeXmlAdapter és az UtcOffsetTimeXmlAdapter.
 
-=== coffee-module-redis
+==== Átállás
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
 
+=== coffee-module-redis
 * Szét lett választva a consumer és a producer config. Külön poolból dolgoznak.
 
 ==== Átállás
@@ -45,3 +47,25 @@ coffee:
                 threadsCount: 2 #default: 1
                 retryCount: 2 #default: 1
 ```
+
+== Változások
+
+=== coffee-rest
+* "coffee.app.name" paraméterben megadható érték már nem kötelező, alapértelmezetten a "java:app/AppName" van használva.
+* JaxbTool kiegészítése `byte[]` fogadására képes unmarshalXML metódusokkal
+
+==== Átállás
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+=== coffee-jpa
+* A `BatchService` automatán beállítja az átadott entitások verzióját
+
+==== Átállás
+* Ha a batch mentés után kézzel lett a verzió növelve, azt meg kell szüntetni
+
+
+=== coffee-model-base
+* A 2 `AbstractIdentifiedAuditEntity` osztály (`java.util.Date` és `OffsetDateTime`-on alapuló) kapott egy közös generikus interface-t
+
+==== Átállás
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
