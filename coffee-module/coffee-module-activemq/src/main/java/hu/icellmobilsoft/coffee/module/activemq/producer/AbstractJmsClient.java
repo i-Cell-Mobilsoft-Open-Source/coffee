@@ -87,7 +87,7 @@ public abstract class AbstractJmsClient implements Serializable {
      *             if JMS exception occurs
      */
     public void sendSimpleDelayed(String content, long delayInMillis, int priority) throws TechnicalException {
-        log.debug(">> JmsClient.sendSimpleDelayed(content: [" + content + "], delayInMillis: [" + delayInMillis + "], priority: [" + priority + "]");
+        log.debug(">> JmsClient.sendSimpleDelayed(content: [{0}], delayInMillis: [{1}], priority: [{2}]", content, delayInMillis, priority);
         try {
             jmsHandler.init(getConnectionFactory());
             jmsHandler.setMessageProducer(getQueue());
@@ -102,8 +102,7 @@ public abstract class AbstractJmsClient implements Serializable {
         } finally {
             JmsUtil.close(jmsHandler.getMessageProducer());
             jmsHandler.closeConnection();
-            log.debug("<< JmsClient.sendSimpleDelayed(content: [" + content + "], delayInMillis: [" + delayInMillis + "], priority: [" + priority
-                    + "]");
+            log.debug("<< JmsClient.sendSimpleDelayed(content: [{0}], delayInMillis: [{1}], priority: [{2}]", content, delayInMillis, priority);
         }
     }
 
@@ -116,7 +115,7 @@ public abstract class AbstractJmsClient implements Serializable {
      *             if JMS exception occurs
      */
     public void sendSimple(String content) throws TechnicalException {
-        log.debug(">> JmsClient.sendSimple(content: [" + content + "]");
+        log.debug(">> JmsClient.sendSimple(content: [{0}]", content);
         try {
             jmsHandler.init(getConnectionFactory());
             jmsHandler.setMessageProducer(getQueue());
@@ -130,7 +129,7 @@ public abstract class AbstractJmsClient implements Serializable {
         } finally {
             JmsUtil.close(jmsHandler.getMessageProducer());
             jmsHandler.closeConnection();
-            log.debug("<< JmsClient.sendSimple(content: [" + content + "]");
+            log.debug("<< JmsClient.sendSimple(content: [{0}]", content);
         }
     }
 

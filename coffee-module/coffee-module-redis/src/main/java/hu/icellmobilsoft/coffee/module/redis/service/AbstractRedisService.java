@@ -19,7 +19,6 @@
  */
 package hu.icellmobilsoft.coffee.module.redis.service;
 
-import java.text.MessageFormat;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -599,7 +598,7 @@ public abstract class AbstractRedisService {
         String redisDataString = JsonUtil.toJson(redisData);
         RedisRepository redisRepository = new RedisRepository(getJedis());
         String result = redisRepository.set(redisKey, redisDataString);
-        log.trace(MessageFormat.format("Redis key [{0}] value [{1}] setted", redisKey, redisData));
+        log.trace("Redis key [{0}] value [{1}] set", redisKey, redisData);
         return result;
     }
 
