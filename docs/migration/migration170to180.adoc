@@ -16,9 +16,30 @@ A változtatások nem eredményeznek átállási munkálatokat, visszafelé komp
 === coffee-rest
 * "coffee.app.name" paraméterben megadható érték már nem kötelező, alapértelmezetten a "java:app/AppName" van használva.
 * JaxbTool kiegészítése `byte[]` fogadására képes unmarshalXML metódusokkal
+* DefaultBaseExceptionMapper létrehozása a beépített BaseException-k kezelésére
 
 ==== Átállás
-A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+* A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+* Kivétel a DefaultBaseExceptionMapper-re átállás. Ha van projekt specifikus kivétel amit kezelni szeretnénk, akkor ki
+kell terjeszteni a mappert az alábbi módon:
+[source,java]
+----
+@Provider
+@Priority(Interceptor.Priority.APPLICATION + 10) // <1>
+public class BaseExceptionMapper extends DefaultBaseExceptionMapper {
+
+    @Override // <2>
+    protected Response handleException(BaseException e) {
+        if (e instanceof SampleException) {
+            return createResponse(e, Response.Status.BAD_REQUEST, new BusinessFault());
+        }
+
+        return super.handleException(e);
+    }
+}
+----
+<1> @Priority szükséges, mivel enélkül figyelmen kívül hagyja az egész osztályt, és a DefaultBaseExceptionMapper működése marad életben
+<2> handleException @Override, ha szükséges projekt specifikus exception mappelése
 
 === coffee-jpa
 * A `BatchService` automatán beállítja az átadott entitások verzióját
