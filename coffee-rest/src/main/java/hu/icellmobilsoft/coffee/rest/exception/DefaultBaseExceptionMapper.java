@@ -24,7 +24,6 @@ import java.util.Collection;
 import javax.inject.Inject;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
-import javax.ws.rs.ext.Provider;
 
 import org.apache.deltaspike.core.util.CollectionUtils;
 
@@ -52,7 +51,6 @@ import hu.icellmobilsoft.coffee.rest.validation.xml.exception.XsdProcessingExcep
  * @author balazs.joo
  * @since 1.8.0
  */
-@Provider
 public class DefaultBaseExceptionMapper implements ExceptionMapper<BaseException> {
 
     @Inject

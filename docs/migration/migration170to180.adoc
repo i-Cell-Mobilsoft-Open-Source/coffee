@@ -24,8 +24,7 @@ A változtatások nem eredményeznek átállási munkálatokat, visszafelé komp
 kell terjeszteni a mappert az alábbi módon:
 [source,java]
 ----
-@Provider
-@Priority(Interceptor.Priority.APPLICATION + 10) // <1>
+@Provider // <1>
 public class BaseExceptionMapper extends DefaultBaseExceptionMapper {
 
     @Override // <2>
@@ -38,7 +37,7 @@ public class BaseExceptionMapper extends DefaultBaseExceptionMapper {
     }
 }
 ----
-<1> @Priority szükséges, mivel enélkül figyelmen kívül hagyja az egész osztályt, és a DefaultBaseExceptionMapper működése marad életben
+<1> @Provider-ként szükséges kiterjeszteni a DefaultBaseExceptionMapper
 <2> handleException @Override, ha szükséges projekt specifikus exception mappelése
 
 === coffee-jpa
