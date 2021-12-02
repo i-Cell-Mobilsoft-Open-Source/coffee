@@ -46,7 +46,7 @@ import hu.icellmobilsoft.coffee.se.logging.Logger;
 @Vetoed
 @MappedSuperclass
 @EntityListeners(AuditEntityListener.class)
-public abstract class AbstractEntity implements Serializable {
+public abstract class AbstractEntity implements IVersionable, Serializable {
 
     private static final long serialVersionUID = 1L;
 
