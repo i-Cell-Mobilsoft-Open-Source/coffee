@@ -97,13 +97,13 @@ public class XsdResourceResolver implements LSResourceResolver, IXsdResourceReso
             if (resStream == null) {
                 try {
                     Enumeration<URL> urlEnum = PropertyFileUtils.resolvePropertyFiles(path);
-                    log.trace("2: deltaspike PropertyFileUtils found xsd file [" + urlEnum.hasMoreElements() + "]");
+                    log.trace("2: deltaspike PropertyFileUtils found xsd file [{0}]", urlEnum.hasMoreElements());
                     if (urlEnum.hasMoreElements()) {
                         resStream = urlEnum.nextElement().openStream();
                         log.trace("2.1: finding path: [{0}], resStream [{1}]", path, resStream);
                     }
                 } catch (IOException e) {
-                    log.trace("2.2: " + e.getLocalizedMessage());
+                    log.trace("2.2: {0}", e.getLocalizedMessage());
                 }
             }
         }
@@ -120,13 +120,13 @@ public class XsdResourceResolver implements LSResourceResolver, IXsdResourceReso
                 if (resStream == null) {
                     try {
                         Enumeration<URL> urlEnum = PropertyFileUtils.resolvePropertyFiles(path);
-                        log.trace("4: deltaspike PropertyFileUtils found xsd file [" + urlEnum.hasMoreElements() + "]");
+                        log.trace("4: deltaspike PropertyFileUtils found xsd file [{0}]", urlEnum.hasMoreElements());
                         if (urlEnum.hasMoreElements()) {
                             resStream = urlEnum.nextElement().openStream();
                             log.trace("4.1: finding path: [{0}], resStream [{1}]", path, resStream);
                         }
                     } catch (IOException e) {
-                        log.trace("4.2: " + e.getLocalizedMessage());
+                        log.trace("4.2: {0}", e.getLocalizedMessage());
                     }
                 }
             }

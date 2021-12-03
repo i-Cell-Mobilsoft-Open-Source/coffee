@@ -190,7 +190,7 @@ public class ConfigurationHelper {
      */
     public <T> T getConfigValue(String key, Class<T> clazz) {
         Optional<T> microprofileConfigValue = getConfigOptionalValue(key, clazz);
-        return microprofileConfigValue.isPresent() ? microprofileConfigValue.get() : null;
+        return microprofileConfigValue.orElse(null);
     }
 
     /**
@@ -213,7 +213,9 @@ public class ConfigurationHelper {
         if (container != null) {
             Object value = container.getObjectMap().get(key);
             if (value != null) {
-                log.debug("RequestScope cached Key [{0}] value [{1}]", key, StringHelper.maskPropertyValue(key, value));
+                if (log.isDebugEnabled()) {
+                    log.debug("RequestScope cached Key [{0}] value [{1}]", key, StringHelper.maskPropertyValue(key, value));
+                }
                 return Optional.of((T) value);
             }
         }
@@ -221,9 +223,13 @@ public class ConfigurationHelper {
         if (microprofileConfigValue.isPresent() && container != null) {
             T value = microprofileConfigValue.get();
             container.getObjectMap().put(key, value);
-            log.trace("Key [{0}] value [{1}] stored in RequestScope cache.", key, StringHelper.maskPropertyValue(key, value));
+            if (log.isTraceEnabled()) {
+                log.trace("Key [{0}] value [{1}] stored in RequestScope cache.", key, StringHelper.maskPropertyValue(key, value));
+            }
         }
-        log.debug("Key [{0}] value [{1}]", key, StringHelper.maskPropertyValue(key, microprofileConfigValue));
+        if (log.isDebugEnabled()) {
+            log.debug("Key [{0}] value [{1}]", key, StringHelper.maskPropertyValue(key, microprofileConfigValue));
+        }
         return microprofileConfigValue;
     }
 
