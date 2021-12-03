@@ -40,7 +40,6 @@ import hu.icellmobilsoft.coffee.dto.exception.BONotFoundException;
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.dto.exception.BusinessException;
 import hu.icellmobilsoft.coffee.dto.exception.DtoConversionException;
-import hu.icellmobilsoft.coffee.dto.exception.InvalidRequestException;
 import hu.icellmobilsoft.coffee.dto.exception.ServiceUnavailableException;
 import hu.icellmobilsoft.coffee.dto.exception.XMLValidationError;
 import hu.icellmobilsoft.coffee.rest.validation.xml.exception.XsdProcessingException;
@@ -83,9 +82,6 @@ public class DefaultBaseExceptionMapper implements ExceptionMapper<BaseException
             return createResponse(e, IExceptionMessageTranslator.HTTP_STATUS_I_AM_A_TEAPOT, new BONotFound());
         } else if (e instanceof DtoConversionException) {
             return createResponse(e, Response.Status.BAD_REQUEST, new BusinessFault());
-        } else if (e instanceof InvalidRequestException) {
-            InvalidRequestException ire = (InvalidRequestException) e;
-            return createValidationErrorResponse(e, ire.getErrors());
         } else if (e instanceof ServiceUnavailableException) {
             return createResponse(e, Response.Status.SERVICE_UNAVAILABLE, new BusinessFault());
         } else if (e instanceof XsdProcessingException) {

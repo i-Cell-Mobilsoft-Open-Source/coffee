@@ -19,8 +19,8 @@ A változtatások nem eredményeznek átállási munkálatokat, visszafelé komp
 * DefaultBaseExceptionMapper létrehozása a beépített BaseException-k kezelésére
 
 ==== Átállás
-* A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
-* Kivétel a DefaultBaseExceptionMapper-re átállás. Ha van projekt specifikus kivétel amit kezelni szeretnénk, akkor ki
+* A deprecated InvalidRequestException és SaxParseBaseException törlésre került, helyettük a XsdProcessingException használata ajánlott
+* DefaultBaseExceptionMapper-re átállás. Ha van projekt specifikus kivétel amit kezelni szeretnénk, akkor ki
 kell terjeszteni a mappert az alábbi módon:
 [source,java]
 ----
