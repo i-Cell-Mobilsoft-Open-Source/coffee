@@ -33,3 +33,9 @@ A változtatások nem eredményeznek átállási munkálatokat, visszafelé komp
 
 ==== Átállás
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+=== coffee-module-csv
+* opencsv upgrade 3.9 -> 5.5.2
+
+==== Átállás
+* `@CsvBind` annotációkat cserélni kell `@CsvBindByNamePosition`-re

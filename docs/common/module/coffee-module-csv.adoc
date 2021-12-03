@@ -1,0 +1,52 @@
+[#common_module_coffee-module-csv]
+= coffee-module-csv
+
+Modul célja Java bean-ekből binding annotációk segítségével CSV fájlt tudjunk generálni,
+vagy egy CSV fájlt parsolva elő tudjuk állítani a bean-eket.
+
+A bean annotálás így néz ki:
+[source,java]
+----
+public class TestBean {
+
+    @CsvBindByNamePosition(position = 0, column = "IDENTIFIER")
+    private long id;
+
+    @CsvBindByNamePosition(position = 4)
+    private String name;
+
+    @CsvBindByNamePosition(position = 2)
+    private boolean active;
+
+    @CsvDate("yyyy-MM-dd")
+    @CsvBindByNamePosition(position = 3)
+    private LocalDate creationDate;
+
+    @CsvBindByNamePosition(position = 1)
+    private Status status;
+
+    // getters, setters...
+}
+----
+
+A modul által nyújtott `@CsvBindByNamePosition` annotációval lehet megadni a CSV oszlop pozícióját és nevét.
+
+Egy ilyen osztály példányaiból álló listát az alábbi hívással lehet CSV-re konvertálni:
+[source,java]
+----
+String csv = CsvUtil.toCsv(beans, TestBean.class);
+----
+
+A fenti hívás eredménye:
+[source,csv]
+----
+"IDENTIFIER";"STATUS";"ACTIVE";"CREATIONDATE";"NAME"
+"11";"IN_PROGRESS";"true";"2021-11-23";"foo"
+"12";"DONE";"false";"2020-01-02";"bar"
+----
+
+A visszafelé konverzióhoz az alábbi hívás használható:
+[source,java]
+----
+List<TestBean> beans = CsvUtil.toBean(csv, TestBean.class);
+----
