@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -264,7 +264,7 @@ public class BaseService<T> {
 
     /**
      * Getter of {@link EntityManager}.
-     * 
+     *
      * @return {@link EntityManager}
      */
     protected EntityManager getEntityManager() {
@@ -442,7 +442,7 @@ public class BaseService<T> {
 
     private <P1, P2, RESPONSE> Optional<RESPONSE> wrapOptional(BaseExceptionFunction2<P1, P2, RESPONSE> function, P1 p1, P2 p2, String methodName,
             String p1Name, String p2Name, boolean validate) throws BaseException {
-        String methodInfo = getCalledMethodWithOnlyPathParams(methodName, p1Name);
+        String methodInfo = getCalledMethodWithOnlyPathParams(methodName, p1Name, p2Name);
         logEnter(methodInfo, p1, p2);
         if (validate) {
             if (isNullOrBlankAnyParameter(p1, p2)) {
@@ -1796,7 +1796,7 @@ public class BaseService<T> {
     /**
      * Puts any number of input param {@link Object}s in an array. Note: collection parameters are handled on one level of depth. This method could be
      * rewritten in a recursive way if necessary.
-     * 
+     *
      * @param params
      *            input params
      * @return array of params
@@ -1872,7 +1872,7 @@ public class BaseService<T> {
     }
 
     /**
-     * 
+     *
      * @param methodName
      *            the REST method name e.g getCustomerInfoByUserId
      * @param paramNames
