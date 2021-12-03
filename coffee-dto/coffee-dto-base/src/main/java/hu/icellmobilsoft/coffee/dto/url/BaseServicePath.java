@@ -22,7 +22,6 @@ package hu.icellmobilsoft.coffee.dto.url;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -102,7 +101,7 @@ public class BaseServicePath {
             return path;
         }
         if (queryParams == null || queryParams.isEmpty()) {
-            log.debug(MessageFormat.format("No query parameter arrived to add to path [{0}] ", path));
+            log.debug("No query parameter arrived to add to path [{0}] ", path);
             return path;
         }
 

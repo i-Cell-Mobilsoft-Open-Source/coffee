@@ -4,6 +4,7 @@ coff:ee v1.7.0 -> v1.8.0 migrációs leírás, újdonságok, változások leír�
 
 == Újdonságok
 
+* log level optimalizáció
 
 === coffee-dto
 * Létrejött az UtcOffsetDateTimeXmlAdapter és az UtcOffsetTimeXmlAdapter.
@@ -52,3 +53,9 @@ public class BaseExceptionMapper extends DefaultBaseExceptionMapper {
 
 ==== Átállás
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+=== coffee-module-csv
+* opencsv upgrade 3.9 -> 5.5.2
+
+==== Átállás
+* `@CsvBind` annotációkat cserélni kell `@CsvBindByNamePosition`-re

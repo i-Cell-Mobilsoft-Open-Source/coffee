@@ -248,7 +248,9 @@ public class ApplicationConfiguration {
         }
         try {
             Optional<T> value = (Optional<T>) cache.get(new CompositeCacheLoaderKey(key, clazz));
-            log.trace(MSG_ETCD_VALUE_FOR_KEY, key, StringHelper.maskPropertyValue(key, value));
+            if (log.isTraceEnabled()) {
+                log.trace(MSG_ETCD_VALUE_FOR_KEY, key, StringHelper.maskPropertyValue(key, value));
+            }
             return value;
         } catch (ExecutionException e) {
             if (e.getCause() instanceof BONotFoundException) {

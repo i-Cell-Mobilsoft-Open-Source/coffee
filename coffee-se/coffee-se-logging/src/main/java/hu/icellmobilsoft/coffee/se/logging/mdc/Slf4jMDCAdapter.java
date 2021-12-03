@@ -58,7 +58,7 @@ public class Slf4jMDCAdapter implements MDCAdapter {
         try {
             put.invoke(null, key, val);
         } catch (Exception e) {
-            log.debug(MessageFormat.format("Could not put key:[{0}] with val:[{1}] into slf4j MDC:[{2]}", key, val, e.getLocalizedMessage()), e);
+            log.debug(MessageFormat.format("Could not put key:[{0}] with val:[{1}] into slf4j MDC:[{2}]", key, val, e.getLocalizedMessage()), e);
         }
     }
 
@@ -68,7 +68,7 @@ public class Slf4jMDCAdapter implements MDCAdapter {
         try {
             return (String) get.invoke(null, key);
         } catch (Exception e) {
-            log.debug(MessageFormat.format("Could not get key:[{0}] from slf4j MDC:[{1]}", key, e.getLocalizedMessage()), e);
+            log.debug(MessageFormat.format("Could not get key:[{0}] from slf4j MDC:[{1}]", key, e.getLocalizedMessage()), e);
         }
         return null;
     }
@@ -79,7 +79,7 @@ public class Slf4jMDCAdapter implements MDCAdapter {
         try {
             remove.invoke(null, key);
         } catch (Exception e) {
-            log.debug(MessageFormat.format("Could not remove key:[{0}] from slf4j MDC:[{1]}", key, e.getLocalizedMessage()), e);
+            log.debug(MessageFormat.format("Could not remove key:[{0}] from slf4j MDC:[{1}]", key, e.getLocalizedMessage()), e);
         }
     }
 
@@ -89,7 +89,7 @@ public class Slf4jMDCAdapter implements MDCAdapter {
         try {
             return (Map<String, String>) getMap.invoke(null);
         } catch (Exception e) {
-            log.debug(MessageFormat.format("Could not getMap from slf4j MDC:[{0]}", e.getLocalizedMessage()), e);
+            log.debug(MessageFormat.format("Could not getMap from slf4j MDC:[{0}]", e.getLocalizedMessage()), e);
         }
         return Collections.emptyMap();
     }
@@ -100,7 +100,7 @@ public class Slf4jMDCAdapter implements MDCAdapter {
         try {
             clear.invoke(null);
         } catch (Exception e) {
-            log.debug(MessageFormat.format("Could not clear slf4j MDC:[{0]}", e.getLocalizedMessage()), e);
+            log.debug(MessageFormat.format("Could not clear slf4j MDC:[{0}]", e.getLocalizedMessage()), e);
         }
     }
 
