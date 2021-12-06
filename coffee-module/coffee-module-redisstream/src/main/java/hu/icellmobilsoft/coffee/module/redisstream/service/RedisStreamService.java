@@ -198,7 +198,7 @@ public class RedisStreamService implements Closeable {
         Entry<String, StreamEntryID> streamQuery = new AbstractMap.SimpleImmutableEntry<>(streamKey(), StreamEntryID.UNRECEIVED_ENTRY);
         // kepes tobb streambol is egyszerre olvasni, de mi 1-re hasznaljuk
         @SuppressWarnings("unchecked")
-        List<Entry<String, List<StreamEntry>>> result = getJedis().xreadGroup(getGroup(), consumerIdentifier, 1, consumerConfig.getStreamReadTimeoutMillis(),
+        List<Entry<String, List<StreamEntry>>> result = getJedis().xreadGroup(getGroup(), consumerIdentifier, 1, consumerConfig.getReadTimeoutMillis(),
                 false, streamQuery);
         if (result == null || result.isEmpty()) {
             // nincs uj uzenet

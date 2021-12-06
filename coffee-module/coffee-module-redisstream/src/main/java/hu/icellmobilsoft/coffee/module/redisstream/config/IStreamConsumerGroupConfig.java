@@ -50,14 +50,4 @@ public interface IStreamConsumerGroupConfig {
      *             Exception on read properties
      */
     Optional<Integer> getRetryCount() throws BaseException;
-
-    /**
-     * See https://redis.io/commands/xreadgroup and https://redis.io/commands/xread BLOCK option
-     *
-     * @return timeout on stream read in millis. Waiting on stream until this time for new message or return null
-     * @throws BaseException
-     *             Exception on read properties
-     */
-    Long getStreamReadTimeoutMillis() throws BaseException;
-
 }

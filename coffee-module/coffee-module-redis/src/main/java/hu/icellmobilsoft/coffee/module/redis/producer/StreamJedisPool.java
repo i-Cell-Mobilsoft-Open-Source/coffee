@@ -2,14 +2,14 @@
  * #%L
  * Coffee
  * %%
- * Copyright (C) 2020 i-Cell Mobilsoft Zrt.
+ * Copyright (C) 2020 - 2021 i-Cell Mobilsoft Zrt.
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * 
  *      http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,25 +17,17 @@
  * limitations under the License.
  * #L%
  */
-package hu.icellmobilsoft.coffee.module.redis.annotation;
+package hu.icellmobilsoft.coffee.module.redis.producer;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
 
-import javax.inject.Qualifier;
+import redis.clients.jedis.JedisPool;
 
 /**
- * Qualifier for separate ProducerPool creation
- *
- * @author peter.kovacs
- * @since 1.8.0
+ * Non-overridable child of JedisPool, in order to be able to produce distinctly.
+ * see hu.icellmobilsoft.coffee.module.redisstream.common.RedisStreamHandlerProducer
+ * @see hu.icellmobilsoft.coffee.module.redis.producer.JedisPoolProducer
+ * see hu.icellmobilsoft.coffee.module.redisstream.consumer.RedisStreamConsumerExecutor
  */
-@Qualifier
-@Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER, ElementType.TYPE})
-public @interface ProducerPool {
-
+public final class StreamJedisPool extends JedisPool {
 
 }

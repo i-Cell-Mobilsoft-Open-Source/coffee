@@ -78,6 +78,15 @@ public interface RedisConfig {
     Integer getPoolMaxIdle() throws BaseException;
 
     /**
+     * The configuration parameters for jedis pool settings incl. max-total pool size and max-idle pool number.
+     * 
+     * @param key
+     *            param.
+     * @return RedisPoolConfig redis pool config POJO.
+     */
+    RedisPoolConfig getRedisPoolConfig(String key);
+
+    /**
      * The number of the selected database to connect with, default value: 0 (According to Redis settings).
      *
      * @return database

@@ -32,15 +32,19 @@ import hu.icellmobilsoft.coffee.dto.exception.BaseException;
  * coffee:
  * redisstream:
  *     sampleGroup: #
- *         stream:
- *             read:
- *                 timeoutmillis: 60000 #default: 60000
- *         producer:
- *             maxlen: 10000 #default none
- *             ttl: 300000 #millisec, default none
- *         consumer:
- *             threadsCount: 2 #default: 1
- *             retryCount: 2 #default: 1
+ *        stream:
+ *            read:
+ *                timeoutmillis: 60000 #default: 60000 (2)
+ *            connection:
+ *                key: auth # connection referencia
+ *        producer:
+ *            maxlen: 10000 #default none (3)
+ *            ttl: 300000 #millisec, default none (4)
+ *            pool: custom1 # default default - pool referencia
+ *        consumer:
+ *            threadsCount: 2 #default: 1 (5)
+ *            retryCount: 2 #default: 1 (6)
+ *            pool: custom2 # default default - pool referencia
  * </pre>
  * 
  * @author imre.scheffer
@@ -65,19 +69,48 @@ public class StreamProducerGroupConfig extends StreamGroupConfig implements IStr
      * Default true {@link #isEnabled()}}
      */
     public static final String ENABLED = "enabled";
+    private static final String PRODUCER_POOL = "producer.pool";
 
+
+    /**
+     * Is stream enabled.
+     * @return isEnabled value.
+     */
     @Override
     public boolean isEnabled() {
         return config.getOptionalValue(joinKey(ENABLED), Boolean.class).orElse(true);
     }
 
+    /**
+     * Max elements in stream, oldest will be removed. See https://redis.io/commands/xadd MAXLEN parameter. <br>
+     * <br>
+     * This parameter has higher priority than {@link #getProducerTTL()}, if both setted, this parameter is applied and {@link #getProducerTTL()}
+     * ignored.
+     *
+     * @return Max elements in stream
+     */
     @Override
     public Optional<Long> getProducerMaxLen() {
         return config.getOptionalValue(super.joinKey(PRODUCER_MAXLEN), Long.class);
     }
-
+    /**
+     * Millisec TTL. When a new entry is produced, all old entries are deleted which have identifier time older than (sysdate - millisecond). See
+     * https://redis.io/commands/xadd MINID parameter. <br>
+     * <br>
+     * The parameter {@link #getProducerMaxLen()} has higher priority, if both setted, this parameter is ignored.
+     *
+     * @return millisec ttl
+     */
     @Override
     public Optional<Long> getProducerTTL() {
         return super.config.getOptionalValue(super.joinKey(PRODUCER_TTL), Long.class);
+    }
+    /**
+     * Configuration parameter key for defining producer-stream settings.
+     * @return a string.
+     */
+    @Override
+    public String getStreamTypeKey() {
+        return PRODUCER_POOL;
     }
 }

@@ -31,7 +31,6 @@ import javax.inject.Inject;
 
 import hu.icellmobilsoft.coffee.module.redisstream.annotation.RedisStreamConsumer;
 import hu.icellmobilsoft.coffee.module.redisstream.config.StreamConsumerGroupConfig;
-import hu.icellmobilsoft.coffee.module.redisstream.config.StreamGroupConfig;
 import hu.icellmobilsoft.coffee.module.redisstream.consumer.IRedisStreamBaseConsumer;
 import hu.icellmobilsoft.coffee.module.redisstream.consumer.IRedisStreamConsumerExecutor;
 import hu.icellmobilsoft.coffee.module.redisstream.consumer.RedisStreamConsumerExecutor;

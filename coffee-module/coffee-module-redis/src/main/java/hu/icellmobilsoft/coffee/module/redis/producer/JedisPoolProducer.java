@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -33,10 +33,10 @@ import javax.enterprise.inject.spi.CDI;
 import javax.enterprise.inject.spi.InjectionPoint;
 import javax.inject.Inject;
 
-import hu.icellmobilsoft.coffee.module.redis.annotation.ConsumerPool;
-import hu.icellmobilsoft.coffee.module.redis.annotation.ProducerPool;
 import hu.icellmobilsoft.coffee.module.redis.annotation.RedisConnection;
+import hu.icellmobilsoft.coffee.module.redis.annotation.RedisStreamConnection;
 import hu.icellmobilsoft.coffee.module.redis.config.ManagedRedisConfig;
+import hu.icellmobilsoft.coffee.module.redis.config.RedisPoolConfig;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
 import hu.icellmobilsoft.coffee.tool.utils.annotation.AnnotationUtil;
 import redis.clients.jedis.JedisPool;
@@ -50,9 +50,6 @@ import redis.clients.jedis.JedisPoolConfig;
  */
 @ApplicationScoped
 public class JedisPoolProducer {
-
-    private static final String PRODUCER_POSTFIX = "_producer";
-    private static final String CONSUMER_POSTFIX = "_consumer";
 
     @Inject
     private Logger log;
@@ -71,38 +68,67 @@ public class JedisPoolProducer {
     @RedisConnection(configKey = "")
     public JedisPool getJedisPool(InjectionPoint injectionPoint) {
         Optional<RedisConnection> annotation = AnnotationUtil.getAnnotation(injectionPoint, RedisConnection.class);
-        Optional<ConsumerPool> producerAnnotation = AnnotationUtil.getAnnotation(injectionPoint, ConsumerPool.class);
-        Optional<ProducerPool> consumerAnnotation = AnnotationUtil.getAnnotation(injectionPoint, ProducerPool.class);
         String configKey = annotation.map(RedisConnection::configKey).orElse(null);
-        configKey = producerAnnotation.isPresent() ? configKey + PRODUCER_POSTFIX : configKey;
-        configKey = consumerAnnotation.isPresent() ? configKey + CONSUMER_POSTFIX : configKey;
         return getInstance(configKey);
+    }
+
+    /**
+     * Creates or gets {@link StreamJedisPool} for the given configKey
+     *
+     * @param injectionPoint
+     *            injection metadata
+     * @return StreamJedisPool pool
+     */
+    @Produces
+    @Dependent
+    @RedisStreamConnection(configKey = "", poolConfigKey = "", connectionConfigKey = "")
+    public StreamJedisPool getStreamJedisPool(InjectionPoint injectionPoint) {
+        Optional<RedisStreamConnection> annotation = AnnotationUtil.getAnnotation(injectionPoint, RedisStreamConnection.class);
+        String configKey = annotation.map(RedisStreamConnection::configKey).orElse(null);
+
+        String poolConfigKey = annotation.map(RedisStreamConnection::poolConfigKey).orElse(null);
+        return (StreamJedisPool) getInstance(configKey, poolConfigKey);
     }
 
     /**
      * Returns the jedisPool for the given configKey. Returned pools are cached by the configKey. Synchronized in order to prevent creating multiple
      * pools for the same connection.
-     * 
+     *
      * @param configKey
      *            config key
      * @return {@link JedisPool}
      */
     private synchronized JedisPool getInstance(String configKey) {
-        return jedisPoolInstances.computeIfAbsent(configKey, this::createJedisPool);
+        return jedisPoolInstances.computeIfAbsent(configKey, v -> createJedisPool(configKey, "default"));
     }
 
-    private JedisPool createJedisPool(String configKey) {
+    /**
+     * Returns the jedisPool for the given configKey and poolConfigKey. Returned pools are cached by the configKey + poolConfigKey. Synchronized in
+     * order to prevent creating multiple pools for the same connection.
+     *
+     * @param configKey
+     *            config key
+     * @param poolConfigKey
+     *            config key for jedis pool
+     * @return {@link JedisPool}
+     */
+    private synchronized JedisPool getInstance(String configKey, String poolConfigKey) {
+        return jedisPoolInstances.computeIfAbsent(configKey + poolConfigKey, v -> createJedisPool(configKey, poolConfigKey));
+    }
+
+    private JedisPool createJedisPool(String configKey, String poolConfigKey) {
         log.info("Creating JedisPool for configKey:[{0}]", configKey);
         Instance<ManagedRedisConfig> instance = CDI.current().select(ManagedRedisConfig.class, new RedisConnection.Literal(configKey));
         ManagedRedisConfig managedRedisConfig = instance.get();
         try {
+            RedisPoolConfig redisPoolConfig = managedRedisConfig.getRedisPoolConfig(configKey);
             String host = managedRedisConfig.getHost();
             int port = managedRedisConfig.getPort();
             int database = managedRedisConfig.getDatabase();
             log.info("Redis host [{0}], port: [{1}], database: [{2}]", host, port, database);
             JedisPoolConfig poolConfig = new JedisPoolConfig();
-            poolConfig.setMaxTotal(managedRedisConfig.getPoolMaxTotal());
-            poolConfig.setMaxIdle(managedRedisConfig.getPoolMaxIdle());
+            poolConfig.setMaxTotal(redisPoolConfig.getPoolMaxTotal());
+            poolConfig.setMaxIdle(redisPoolConfig.getPoolMaxIdle());
             return new JedisPool(poolConfig, host, port, managedRedisConfig.getTimeout(), managedRedisConfig.getPassword(), database);
         } catch (Exception e) {
             log.error(MessageFormat.format("Exception on initializing JedisPool for configKey:[{0}], [{1}]", configKey, e.getLocalizedMessage()), e);
