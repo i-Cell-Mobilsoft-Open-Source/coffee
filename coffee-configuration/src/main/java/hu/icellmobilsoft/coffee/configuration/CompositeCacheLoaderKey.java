@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package hu.icellmobilsoft.coffee.rest.configuration;
+package hu.icellmobilsoft.coffee.configuration;
 
 import java.util.Objects;
 
@@ -27,6 +27,7 @@ import javax.enterprise.inject.Vetoed;
  * Összetett kulcs osztály létrehozása az ApplicationConfiguration osztály cache - jéhez.
  *
  * @author csaba.suli
+ * @since 1.1.0
  */
 @Vetoed
 public class CompositeCacheLoaderKey {

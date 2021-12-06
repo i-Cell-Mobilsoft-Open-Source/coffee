@@ -6,6 +6,16 @@ coff:ee v1.7.0 -> v1.8.0 migrációs leírás, újdonságok, változások leír�
 
 * log level optimalizáció
 
+
+=== coffee-configuration
+* Létrejött a modul, kivált a `coffee-rest` modulból
+* A `ConfigurationHelper` már nem használja a `BaseRequestContainer`-t (így megszűntetve a dupla cache-elést).
+Config cache-eléshez a `ApplicationConfiguration` használatos, ami guava cache-t használ.
+
+==== Átállás
+* Az importokat át kell írni `hu.icellmobilsoft.coffee.rest.configuration`-ről `hu.icellmobilsoft.coffee.configuration`-re.
+
+
 === coffee-dto
 * Létrejött az UtcOffsetDateTimeXmlAdapter és az UtcOffsetTimeXmlAdapter.
 
@@ -54,8 +64,17 @@ public class BaseExceptionMapper extends DefaultBaseExceptionMapper {
 ==== Átállás
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
 
+
+=== coffee-module-localization
+* Létrejött a modul, kivált a `coffee-rest` modulból
+
+==== Átállás
+* Az importokat át kell írni `hu.icellmobilsoft.coffee.rest.locale`-ról `hu.icellmobilsoft.coffee.module.localization`-re.
+
+
 === coffee-module-csv
 * opencsv upgrade 3.9 -> 5.5.2
+* CsvUtil lokalizáció kezelés impelmentálása
 
 ==== Átállás
 * `@CsvBind` annotációkat cserélni kell `@CsvBindByNamePosition`-re

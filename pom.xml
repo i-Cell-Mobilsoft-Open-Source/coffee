@@ -218,6 +218,7 @@
 	<modules>
 		<module>coffee-bom</module>
 		<module>coffee-cdi</module>
+		<module>coffee-configuration</module>
 		<module>coffee-dto</module>
 		<module>coffee-tool</module>
 		<module>coffee-model</module>

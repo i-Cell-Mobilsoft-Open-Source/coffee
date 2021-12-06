@@ -27,6 +27,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import javax.enterprise.inject.Vetoed;
+import javax.enterprise.inject.spi.CDI;
 
 import org.apache.commons.collections4.multimap.ArrayListValuedHashMap;
 import org.apache.commons.lang3.StringUtils;
@@ -47,13 +48,15 @@ import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.dto.exception.BusinessException;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
-import hu.icellmobilsoft.coffee.module.csv.strategy.CustomHeaderColumnNameMappingStrategy;
+import hu.icellmobilsoft.coffee.module.csv.localization.LocalizedHeaderColumnNameWithPositionMappingStrategy;
+import hu.icellmobilsoft.coffee.module.csv.strategy.HeaderColumnNameWithPositionMappingStrategy;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
 
 /**
  * Csv utility.
  *
  * @author karoly.tamas
+ * @author martin.nagy
  * @since 1.0.0
  */
 @Vetoed
@@ -76,13 +79,62 @@ public class CsvUtil {
      *             if CSV file cannot be generated from beans.
      */
     public static <T> String toCsv(List<T> beans, Class<T> clazz) throws BaseException {
-        if (beans == null || clazz == null) {
-            throw new BaseException(CoffeeFaultType.INVALID_INPUT, "beans or clazz is null!");
+        return toCsv(beans, clazz, getDefaultMappingStrategy(clazz));
+    }
+
+    /**
+     * Converts bean list to localized CSV.
+     *
+     * @param <T>
+     *            type of beans
+     * @param beans
+     *            {@link List} of beans to convert
+     * @param clazz
+     *            class of beans
+     * @param language
+     *            the language of the CSV
+     * @return converted CSV text
+     * @throws BaseException
+     *             if CSV file cannot be generated from beans.
+     */
+    public static <T> String toLocalizedCsv(List<T> beans, Class<T> clazz, String language) throws BaseException {
+        if (beans == null || clazz == null || language == null) {
+            throw new BaseException(CoffeeFaultType.INVALID_INPUT, "beans or clazz or language is null!");
+        }
+        CDI<Object> cdi = CDI.current();
+        LocalizedHeaderColumnNameWithPositionMappingStrategy<T> mappingStrategy = cdi
+                .select(LocalizedHeaderColumnNameWithPositionMappingStrategy.class).get();
+        mappingStrategy.setLanguage(language);
+        try {
+            return toCsv(beans, clazz, mappingStrategy);
+        } finally {
+            cdi.destroy(mappingStrategy);
+        }
+    }
+
+    /**
+     * Converts bean list to CSV.
+     *
+     * @param <T>
+     *            type of beans
+     * @param beans
+     *            {@link List} of beans to convert
+     * @param clazz
+     *            class of beans
+     * @param mappingStrategy
+     *            the object that handle translating between the columns in the CSV file to an actual object
+     * @return converted CSV text
+     * @throws BaseException
+     *             if CSV file cannot be generated from beans
+     */
+    public static <T> String toCsv(List<T> beans, Class<T> clazz, MappingStrategy<T> mappingStrategy) throws BaseException {
+        if (beans == null || clazz == null || mappingStrategy == null) {
+            throw new BaseException(CoffeeFaultType.INVALID_INPUT, "beans or clazz or mappingStrategy is null!");
         }
         StringWriter sw = new StringWriter();
         CSVWriter csvWriter = new CSVWriter(sw, DEFAULT_SEPARATOR, ICSVWriter.DEFAULT_QUOTE_CHARACTER, ICSVWriter.DEFAULT_ESCAPE_CHARACTER,
                 ICSVWriter.DEFAULT_LINE_END);
-        StatefulBeanToCsv<T> bc = new StatefulBeanToCsv<>(getMappingStrategy(clazz), new ExceptionHandlerThrow(), true, csvWriter,
+        StatefulBeanToCsv<T> bc = new StatefulBeanToCsv<>(initMappingStrategy(mappingStrategy, clazz), new ExceptionHandlerThrow(), true, csvWriter,
                 new ArrayListValuedHashMap<>(), null);
 
         try {
@@ -159,13 +211,17 @@ public class CsvUtil {
 
     private static <T> List<T> toBean(CSVReader csvReader, Class<? extends T> clazz) {
         CsvToBean<T> csvToBean = new CsvToBean<>();
-        csvToBean.setMappingStrategy(getMappingStrategy(clazz));
+        csvToBean.setMappingStrategy(getDefaultMappingStrategy(clazz));
         csvToBean.setCsvReader(csvReader);
         return csvToBean.parse();
     }
 
-    private static <T> MappingStrategy<T> getMappingStrategy(Class<T> clazz) {
-        MappingStrategy<T> mappingStrategy = new CustomHeaderColumnNameMappingStrategy<>();
+    private static <T> MappingStrategy<T> getDefaultMappingStrategy(Class<T> clazz) {
+        MappingStrategy<T> mappingStrategy = new HeaderColumnNameWithPositionMappingStrategy<>();
+        return initMappingStrategy(mappingStrategy, clazz);
+    }
+
+    private static <T> MappingStrategy<T> initMappingStrategy(MappingStrategy<T> mappingStrategy, Class<T> clazz) {
         mappingStrategy.setType(clazz);
         return mappingStrategy;
     }
