@@ -59,3 +59,9 @@ A változtatások nem eredményeznek átállási munkálatokat, visszafelé komp
 
 ==== Átállás
 * `@CsvBind` annotációkat cserélni kell `@CsvBindByNamePosition`-re
+
+=== coffee-module-redisstream
+* `RedisStreamConsumerExecutor` már log-ol minden `Throwable`-t, nem csak `Exception`-t
+
+==== Átállás
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
