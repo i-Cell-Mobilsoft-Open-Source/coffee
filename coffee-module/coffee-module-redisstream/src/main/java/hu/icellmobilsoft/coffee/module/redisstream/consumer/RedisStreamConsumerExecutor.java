@@ -41,7 +41,7 @@ import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.module.redis.annotation.RedisStreamConnection;
 import hu.icellmobilsoft.coffee.module.redisstream.annotation.RedisStreamConsumer;
 import hu.icellmobilsoft.coffee.module.redisstream.config.IRedisStreamConstant;
-import hu.icellmobilsoft.coffee.module.redisstream.config.StreamConsumerGroupConfig;
+import hu.icellmobilsoft.coffee.module.redisstream.config.StreamGroupConfig;
 import hu.icellmobilsoft.coffee.module.redisstream.service.RedisStreamService;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
 import hu.icellmobilsoft.coffee.se.logging.mdc.MDC;
@@ -80,7 +80,7 @@ public class RedisStreamConsumerExecutor implements IRedisStreamConsumerExecutor
     private BoundRequestContext boundRequestContext;
 
     @Inject
-    private StreamConsumerGroupConfig streamGroupConfig;
+    private StreamGroupConfig streamGroupConfig;
 
     private String consumerIdentifier;
 
@@ -108,7 +108,7 @@ public class RedisStreamConsumerExecutor implements IRedisStreamConsumerExecutor
         while (!endLoop) {
             Optional<StreamEntry> streamEntry = Optional.empty();
             Instance<Jedis> jedisInstance = CDI.current().select(Jedis.class, new RedisStreamConnection.Literal(redisConfigKey,
-                    streamGroupConfig.getPool(), streamGroupConfig.getConnectionKeyReference().orElse(redisConfigKey)));
+                    streamGroupConfig.getConsumerPool(), streamGroupConfig.getConnectionKey().orElse(redisConfigKey)));
             Jedis jedis = null;
             try {
                 jedis = jedisInstance.get();

@@ -15,37 +15,66 @@ A változtatások nem eredményeznek átállási munkálatokat, visszafelé komp
 * Szét lett választva a consumer és a producer config. Külön poolból dolgoznak.
 
 ==== Átállás
-* Az új verzióban ha azt szertnénk, hogy a producerünk vagy consumerünk önálló pool-al rendelkezzen, az inject-nél még fel kell annotálni az új Qualifierek egyikével:
-@ConsumerPool/@ProducerPool.
-Ha mindkettővel alátnánk, akkor azt a StreamAnnotationProcessor elbuktatná.
-* A változtatások érintik a korábbi konfigurációs kulcsok szerkezetét.
+* A változtatások érintik a korábbi konfigurációs kulcsok szerkezetét mind a redis connection - mind a redisstream esetében.
 régi:
 ```
 coffee:
-    redisstream:
-        enabled: true
-        sampleGroup:
-    stream:
-        maxlen: 10
-        read:
-            timeoutmillis: 60000
-    consumer:
-        threadsCount: 2
+  redis:
+    auth:
+      host: sample-sandbox.icellmobilsoft.hu
+      port: 6380
+      password: ****
+      database: 1
+      pool:
+        maxtotal: 128
+        maxidle: 32
+      timeout: 5000
+  redisstream:
+    enabled: true
+      sampleGroup:
+        stream:
+          maxlen: 10
+          read:
+           timeoutmillis: 60000
+        consumer:
+            threadsCount: 2
 ```
 új:
+https://gitlab.k8s.icellmobilsoft.hu/-/snippets/10
 ```
 coffee:
+    redis:
+        auth:
+            host: hubphq-icon-sandbox-d001.icellmobilsoft.hu
+            port: 6380
+            password: authpw
+            database: 1
+            pool:
+                default:
+                    maxtotal: 64
+                    maxidle: 16
+                custom1:
+                    maxtotal: 128
+                    maxidle: 32
+                custom2:
+                    maxtotal: 256
+                    maxidle: 64
     redisstream:
-        sampleGroup: #
-            stream:
-                read:
-                    timeoutmillis: 60000 #default: 60000
-            producer:
-                maxlen: 10000 #default none
-                ttl: 300000 #millisec, default none
-            consumer:
-                threadsCount: 2 #default: 1
-                retryCount: 2 #default: 1
+       sampleGroup: #(1)
+           stream:
+               read:
+                   timeoutmillis: 60000 #default: 60000 (2)
+               connection:
+                   key: auth # connection referencia
+           producer:
+               maxlen: 10000 #default none (3)
+               ttl: 300000 #millisec, default none (4)
+               pool: custom1 # default default - pool referencia
+           consumer:
+               threadsCount: 2 #default: 1 (5)
+               retryCount: 2 #default: 1 (6)
+               pool: custom2 # default default - pool referencia
+
 ```
 
 == Változások

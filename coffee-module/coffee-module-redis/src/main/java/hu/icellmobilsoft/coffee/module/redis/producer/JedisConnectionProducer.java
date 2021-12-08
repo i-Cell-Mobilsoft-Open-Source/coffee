@@ -35,6 +35,7 @@ import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 import hu.icellmobilsoft.coffee.module.redis.annotation.RedisConnection;
+import hu.icellmobilsoft.coffee.module.redis.annotation.RedisStreamConnection;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
 import hu.icellmobilsoft.coffee.tool.utils.annotation.AnnotationUtil;
 import redis.clients.jedis.Jedis;
@@ -65,12 +66,26 @@ public class JedisConnectionProducer {
     @Produces
     @Dependent
     @RedisConnection(configKey = "")
+    @RedisStreamConnection(configKey = "", poolConfigKey = "", connectionConfigKey = "")
     public Jedis getJedis(InjectionPoint injectionPoint) throws BaseException {
         Optional<RedisConnection> annotation = AnnotationUtil.getAnnotation(injectionPoint, RedisConnection.class);
         String configKey = annotation.map(RedisConnection::configKey).orElse(null);
 
-        Instance<JedisPool> jedisPoolInstance = CDI.current().select(JedisPool.class, new RedisConnection.Literal(configKey));
-        JedisPool jedisPool = jedisPoolInstance.get();
+        Optional<RedisStreamConnection> streamAnnotation = AnnotationUtil.getAnnotation(injectionPoint, RedisStreamConnection.class);
+        String poolConfigKey = streamAnnotation.map(RedisStreamConnection::poolConfigKey).orElse(null);
+        String connectionConfigKey = streamAnnotation.map(RedisStreamConnection::connectionConfigKey).orElse(null);
+        JedisPool jedisPool;
+        Instance<JedisPool> jedisPoolInstance;
+        if (streamAnnotation.isPresent()) {
+            configKey = streamAnnotation.map(RedisStreamConnection::configKey).orElse(null);
+            jedisPoolInstance = CDI.current().select(JedisPool.class,
+                    new RedisStreamConnection.Literal(configKey, poolConfigKey, connectionConfigKey));
+            jedisPool = jedisPoolInstance.get();
+        } else {
+            jedisPoolInstance = CDI.current().select(JedisPool.class, new RedisConnection.Literal(configKey));
+            jedisPool = jedisPoolInstance.get();
+        }
+
         if (jedisPool != null) {
             try {
                 return jedisPool.getResource();

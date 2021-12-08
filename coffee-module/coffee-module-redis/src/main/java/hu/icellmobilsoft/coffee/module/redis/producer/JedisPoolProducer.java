@@ -36,7 +36,6 @@ import javax.inject.Inject;
 import hu.icellmobilsoft.coffee.module.redis.annotation.RedisConnection;
 import hu.icellmobilsoft.coffee.module.redis.annotation.RedisStreamConnection;
 import hu.icellmobilsoft.coffee.module.redis.config.ManagedRedisConfig;
-import hu.icellmobilsoft.coffee.module.redis.config.RedisPoolConfig;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
 import hu.icellmobilsoft.coffee.tool.utils.annotation.AnnotationUtil;
 import redis.clients.jedis.JedisPool;
@@ -82,12 +81,12 @@ public class JedisPoolProducer {
     @Produces
     @Dependent
     @RedisStreamConnection(configKey = "", poolConfigKey = "", connectionConfigKey = "")
-    public StreamJedisPool getStreamJedisPool(InjectionPoint injectionPoint) {
+    public JedisPool getStreamJedisPool(InjectionPoint injectionPoint) {
         Optional<RedisStreamConnection> annotation = AnnotationUtil.getAnnotation(injectionPoint, RedisStreamConnection.class);
         String configKey = annotation.map(RedisStreamConnection::configKey).orElse(null);
 
         String poolConfigKey = annotation.map(RedisStreamConnection::poolConfigKey).orElse(null);
-        return (StreamJedisPool) getInstance(configKey, poolConfigKey);
+        return getInstance(configKey, poolConfigKey);
     }
 
     /**
@@ -121,14 +120,13 @@ public class JedisPoolProducer {
         Instance<ManagedRedisConfig> instance = CDI.current().select(ManagedRedisConfig.class, new RedisConnection.Literal(configKey));
         ManagedRedisConfig managedRedisConfig = instance.get();
         try {
-            RedisPoolConfig redisPoolConfig = managedRedisConfig.getRedisPoolConfig(configKey);
             String host = managedRedisConfig.getHost();
             int port = managedRedisConfig.getPort();
             int database = managedRedisConfig.getDatabase();
             log.info("Redis host [{0}], port: [{1}], database: [{2}]", host, port, database);
             JedisPoolConfig poolConfig = new JedisPoolConfig();
-            poolConfig.setMaxTotal(redisPoolConfig.getPoolMaxTotal());
-            poolConfig.setMaxIdle(redisPoolConfig.getPoolMaxIdle());
+            poolConfig.setMaxTotal(managedRedisConfig.getPoolMaxTotal(poolConfigKey));
+            poolConfig.setMaxIdle(managedRedisConfig.getPoolMaxIdle(poolConfigKey));
             return new JedisPool(poolConfig, host, port, managedRedisConfig.getTimeout(), managedRedisConfig.getPassword(), database);
         } catch (Exception e) {
             log.error(MessageFormat.format("Exception on initializing JedisPool for configKey:[{0}], [{1}]", configKey, e.getLocalizedMessage()), e);

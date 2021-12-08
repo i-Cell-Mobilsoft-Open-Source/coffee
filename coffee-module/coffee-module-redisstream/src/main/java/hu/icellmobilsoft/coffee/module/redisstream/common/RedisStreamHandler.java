@@ -28,6 +28,7 @@ import java.util.Optional;
 
 import javax.enterprise.context.Dependent;
 import javax.enterprise.inject.Instance;
+import javax.enterprise.inject.spi.CDI;
 import javax.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
@@ -35,10 +36,10 @@ import org.apache.commons.lang3.StringUtils;
 import hu.icellmobilsoft.coffee.dto.common.LogConstants;
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
+import hu.icellmobilsoft.coffee.module.redis.annotation.RedisStreamConnection;
 import hu.icellmobilsoft.coffee.module.redisstream.config.IRedisStreamConstant;
 import hu.icellmobilsoft.coffee.module.redisstream.config.StreamGroupConfig;
 import hu.icellmobilsoft.coffee.module.redisstream.config.StreamMessageParameter;
-import hu.icellmobilsoft.coffee.module.redisstream.config.StreamProducerGroupConfig;
 import hu.icellmobilsoft.coffee.module.redisstream.service.RedisStreamService;
 import hu.icellmobilsoft.coffee.se.logging.mdc.MDC;
 import redis.clients.jedis.Jedis;
@@ -58,7 +59,7 @@ public class RedisStreamHandler {
     private RedisStreamService redisStreamService;
 
     @Inject
-    private StreamProducerGroupConfig config;
+    private StreamGroupConfig config;
 
     private Instance<Jedis> jedisInstance;
 
@@ -67,18 +68,23 @@ public class RedisStreamHandler {
     /**
      * Initialization
      * 
-     * @param jedisInstance
-     *            Jedis bean instance
+     * @param cdi
+     *            Current cdi instance
+     * @param configKey
+     *            configKey
      * @param streamGroup
      *            stream group for setting in {@link RedisStreamService}
      */
-    public void init(Instance<Jedis> jedisInstance, String streamGroup) {
-        this.jedisInstance = jedisInstance;
+    public void init(CDI<Object> cdi, String configKey, String streamGroup) {
+        config.setConfigKey(configKey);
+        this.jedisInstance = cdi.select(Jedis.class,
+                new RedisStreamConnection.Literal(configKey, config.getProducerPool(), config.getConnectionKey().orElse(streamGroup)));
         this.streamGroup = streamGroup;
+
     }
 
     /**
-     * Is enabled Redis stream? {@link StreamProducerGroupConfig#isEnabled()}
+     * Is enabled Redis stream? {@link StreamGroupConfig#isEnabled()}
      * 
      * @return true - enabled
      */

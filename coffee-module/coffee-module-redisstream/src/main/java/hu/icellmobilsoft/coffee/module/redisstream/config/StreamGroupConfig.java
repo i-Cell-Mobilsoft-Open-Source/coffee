@@ -19,26 +19,75 @@
  */
 package hu.icellmobilsoft.coffee.module.redisstream.config;
 
+import java.time.Duration;
 import java.util.Optional;
 
+import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
 import org.eclipse.microprofile.config.Config;
 
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
+import hu.icellmobilsoft.coffee.module.redisstream.annotation.RedisStreamConsumer;
 
+/**
+ * Redis consumer stream group configuration implementation. Key-value par has standard format like yaml file:
+ *
+ * <pre>
+ * coffee:
+ *    redis:
+ *        auth:
+ *            host: hubphq-icon-sandbox-d001.icellmobilsoft.hu
+ *            port: 6380
+ *            password: authpw
+ *            database: 1
+ *            pool:
+ *                default:
+ *                    maxtotal: 64
+ *                    maxidle: 16
+ *                custom1:
+ *                    maxtotal: 128
+ *                    maxidle: 32
+ *                custom2:
+ *                    maxtotal: 256
+ *                    maxidle: 64
+ *    redisstream:
+ *       sampleGroup: #(1)
+ *           stream:
+ *               read:
+ *                   timeoutmillis: 60000 #default: 60000 (2)
+ *               connection:
+ *                   key: auth # connection referencia
+ *           producer:
+ *               maxlen: 10000 #default none (3)
+ *               ttl: 300000 #millisec, default none (4)
+ *               pool: custom1 # default default - pool referencia
+ *           consumer:
+ *               threadsCount: 2 #default: 1 (5)
+ *               retryCount: 2 #default: 1 (6)
+ *               pool: custom2 # default default - pool referencia
+ *
+ * </pre>
+ *
+ * @author imre.scheffer
+ * @since 1.3.0
+ *
+ */
 /**
  * Redis stream group configuration implementation. Key-value par has standard format like yaml file:
  *
  * @author imre.scheffer
  * @since 1.3.0
  */
-public abstract class StreamGroupConfig {
+@Dependent
+public class StreamGroupConfig implements IStreamGroupConfig {
 
     /**
      * Config delimiter
      */
     public static final String KEY_DELIMITER = ".";
+    private static final String DEFAULT = "default";
+
 
     @Inject
     protected Config config;
@@ -50,28 +99,50 @@ public abstract class StreamGroupConfig {
      */
     public static final String REDISSTREAM_PREFIX = "coffee.redisstream";
 
-    public static final String STREAM_PREFIX = "stream";
+    /**
+     * Default is no limit. See {@link #getProducerMaxLen()}}
+     */
+    public static final String PRODUCER_MAXLEN = "producer.maxlen";
 
-    public static final String READ_PREFIX = "read";
+    /**
+     * Default no ttl, value in millisecond. See {@link #getProducerTTL()}}
+     */
+    public static final String PRODUCER_TTL = "producer.ttl";
 
-    public static final String CONNECTION_PREFIX = "connection";
-
-    public static final String KEY_PREFIX = "key";
-
-    public static final String TIMEOUT_PREFIX = "timeoutmillis";
-
-    public static final String POOL_PREFIX = "pool";
+    /**
+     * Defines the redis connection pool configuration key to be used.
+     */
+    public static final String PRODUCER_POOL = "producer.pool";
 
     /**
      * Prefix for stream.read.timeoutmillis config
      */
-    public static final String TIMEOUT_KEY_PATH = STREAM_PREFIX + KEY_DELIMITER + READ_PREFIX + KEY_DELIMITER + TIMEOUT_PREFIX;
+    public static final String STREAM_READ_TIMEOUTMILLIS = "stream.read.timeoutmillis";
 
     /**
      * Prefix for stream.connection.key config
      */
-    public static final String CONNECTION_KEY_PATH = STREAM_PREFIX + KEY_DELIMITER + CONNECTION_PREFIX + KEY_DELIMITER + KEY_PREFIX;
+    public static final String CONNECTION = "stream.connection.key";
 
+    /**
+     * Default 1 thread {@link #getConsumerThreadsCount()}}
+     */
+    public static final String CONSUMER_THREADS_COUNT = "consumer.threadsCount";
+
+    /**
+     * Default 1 retry count {@link #getRetryCount()}}
+     */
+    public static final String RETRY_COUNT = "consumer.retryCount";
+
+    /**
+     * Defines the redis connection pool configuration key to be used.
+     */
+    public static final String CONSUMER_POOL = "consumer.pool";
+
+    /**
+     * Default true {@link #isEnabled()}}
+     */
+    public static final String ENABLED = "enabled";
     /**
      * Getter for the field {@code configKey}.
      *
@@ -91,50 +162,60 @@ public abstract class StreamGroupConfig {
         this.configKey = configKey;
     }
 
-    /**
-     * Defines the redis connection pool configuration key to be used.
-     *
-     * @return pool config.
-     */
-    public String getPool() {
-        return config.getOptionalValue(joinKey(getPoolKeyPath()), String.class).orElse("default");
-    }
-
-    /**
-     * See https://redis.io/commands/xreadgroup and https://redis.io/commands/xread BLOCK option
-     *
-     * @return timeout on stream read in millis. Waiting on stream until this time for new message or return null
-     */
+    // stream common
+    @Override
     public Long getReadTimeoutMillis() {
-        return config.getOptionalValue(joinKey(TIMEOUT_KEY_PATH), Long.class).orElse(6000L);
+        return config.getOptionalValue(joinKey(STREAM_READ_TIMEOUTMILLIS), Long.class).orElse(Duration.ofMinutes(1).toMillis());
     }
 
-    /**
-     * Defines the redis connection configuration key to be used.
-     *
-     * @return redis key.
-     */
-    public Optional<String> getConnectionKeyReference() {
-        return config.getOptionalValue(joinKey(CONNECTION_KEY_PATH), String.class);
+    @Override
+    public Optional<String> getConnectionKey() {
+        return config.getOptionalValue(joinKey(CONNECTION), String.class);
     }
 
-    private String getPoolKeyPath() {
-        return getStreamTypePath() + KEY_DELIMITER + POOL_PREFIX;
+    // producer
+    @Override
+    public Optional<Long> getProducerMaxLen()  {
+        return config.getOptionalValue(joinKey(PRODUCER_MAXLEN), Long.class);
     }
 
-    private String getStreamTypePath() {
-        return config.getValue(joinKey(getStreamTypeKey()), String.class);
-
+    @Override
+    public Optional<Long> getProducerTTL() {
+        return config.getOptionalValue(joinKey(PRODUCER_TTL), Long.class);
     }
 
-    /**
-     * Configuration parameter key for defining consumer- or producer -stream settings.
-     *
-     * @return streamType.
-     */
-    public abstract String getStreamTypeKey();
+
+    @Override
+    public String getProducerPool() {
+        return config.getOptionalValue(joinKey(PRODUCER_POOL), String.class).orElse(DEFAULT);
+    }
+
+    // consumer
+    @Override
+    public Optional<Integer> getConsumerThreadsCount() {
+        return config.getOptionalValue(joinKey(CONSUMER_THREADS_COUNT), Integer.class);
+    }
+
+    @Override
+    public Optional<Integer> getRetryCount() throws BaseException {
+        return config.getOptionalValue(joinKey(RETRY_COUNT), Integer.class);
+    }
+
+    @Override
+    public String getConsumerPool() {
+        return config.getOptionalValue(joinKey(CONSUMER_POOL), String.class).orElse(DEFAULT);
+    }
 
     protected String joinKey(String key) {
         return String.join(KEY_DELIMITER, REDISSTREAM_PREFIX, getConfigKey(), key);
     }
+
+    /**
+     * Default true {@link #isEnabled()}}
+     */
+    @Override
+    public boolean isEnabled() {
+        return config.getOptionalValue(joinKey(ENABLED), Boolean.class).orElse(true);
+    }
+
 }

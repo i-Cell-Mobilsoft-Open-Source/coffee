@@ -34,7 +34,6 @@ import javax.naming.NamingException;
 
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.module.redisstream.annotation.RedisStreamConsumer;
-import hu.icellmobilsoft.coffee.module.redisstream.config.StreamConsumerGroupConfig;
 import hu.icellmobilsoft.coffee.module.redisstream.config.StreamGroupConfig;
 import hu.icellmobilsoft.coffee.module.redisstream.consumer.IRedisStreamBaseConsumer;
 import hu.icellmobilsoft.coffee.module.redisstream.consumer.IRedisStreamConsumerExecutor;
@@ -68,8 +67,8 @@ public class ConsumerStarterExtension implements Extension {
         Set<Bean<?>> beans = beanManager.getBeans(IRedisStreamBaseConsumer.class, RedisStreamConsumer.LITERAL);
         LOG.info("Found [{0}] RedisStreamConsumer bean...", beans.size());
         if (!beans.isEmpty()) {
-            Instance<StreamConsumerGroupConfig> iconfig = beanManager.createInstance().select(StreamConsumerGroupConfig.class);
-            StreamConsumerGroupConfig config = iconfig.get();
+            Instance<StreamGroupConfig> iconfig = beanManager.createInstance().select(StreamGroupConfig.class);
+            StreamGroupConfig config = iconfig.get();
             initManagedExecutorService(adv);
             if (managedExecutorService == null) {
                 return;
@@ -87,7 +86,7 @@ public class ConsumerStarterExtension implements Extension {
         }
     }
 
-    private void handleConsumerBean(Bean<?> bean, StreamConsumerGroupConfig config) {
+    private void handleConsumerBean(Bean<?> bean, StreamGroupConfig config) {
         LOG.debug("Handling [{0}] bean", bean.getBeanClass());
         RedisStreamConsumer redisStreamConsumerAnnotation = AnnotationUtil.getAnnotation(bean.getBeanClass(), RedisStreamConsumer.class);
         // a coffee.redisstream beallitasok kellenek, annal a group a kulcs

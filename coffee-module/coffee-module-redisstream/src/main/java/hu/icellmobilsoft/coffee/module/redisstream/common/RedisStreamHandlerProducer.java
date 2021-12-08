@@ -25,10 +25,12 @@ import javax.enterprise.inject.Instance;
 import javax.enterprise.inject.Produces;
 import javax.enterprise.inject.spi.CDI;
 import javax.enterprise.inject.spi.InjectionPoint;
+import javax.inject.Inject;
 
+import hu.icellmobilsoft.coffee.module.redis.annotation.RedisConnection;
 import hu.icellmobilsoft.coffee.module.redis.annotation.RedisStreamConnection;
 import hu.icellmobilsoft.coffee.module.redisstream.annotation.RedisStreamProducer;
-import hu.icellmobilsoft.coffee.module.redisstream.config.StreamProducerGroupConfig;
+import hu.icellmobilsoft.coffee.module.redisstream.config.StreamGroupConfig;
 import hu.icellmobilsoft.coffee.tool.utils.annotation.AnnotationUtil;
 import redis.clients.jedis.Jedis;
 
@@ -50,14 +52,12 @@ public class RedisStreamHandlerProducer {
      */
     @Produces
     @Dependent
+    @RedisStreamProducer(configKey = "", group = "")
     public RedisStreamHandler produce(InjectionPoint injectionPoint) {
         RedisStreamProducer annotation = AnnotationUtil.getAnnotation(injectionPoint, RedisStreamProducer.class).get();
-        Instance<StreamProducerGroupConfig> configInstance =  CDI.current().select(StreamProducerGroupConfig.class, new RedisStreamProducer.Literal(annotation.configKey(), annotation.group()));
-        StreamProducerGroupConfig config = configInstance.get();
         CDI<Object> cdi = CDI.current();
         RedisStreamHandler redisStreamHandler = cdi.select(RedisStreamHandler.class).get();
-        Instance<Jedis> jedisInstance = cdi.select(Jedis.class, new RedisStreamConnection.Literal(annotation.configKey(), config.getPool(), config.getConnectionKeyReference().orElse(annotation.configKey())));
-        redisStreamHandler.init(jedisInstance, annotation.group());
+        redisStreamHandler.init(cdi, annotation.configKey(), annotation.group());
         return redisStreamHandler;
     }
 }

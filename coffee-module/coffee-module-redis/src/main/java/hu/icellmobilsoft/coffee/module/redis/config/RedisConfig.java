@@ -60,31 +60,26 @@ public interface RedisConfig {
      * The maximum number of objects that can be allocated by the pool (checked out to clients, or idle awaiting checkout) at a given time. When
      * negative, there is no limit to the number of objects that can be managed by the pool at one time.
      *
+     * @param poolKey
+     *            key.
      * @return max pool instances
      * @throws BaseException
      *             exception
      */
-    Integer getPoolMaxTotal() throws BaseException;
+    Integer getPoolMaxTotal(String poolKey) throws BaseException;
 
     /**
      * The cap on the number of "idle" instances in the pool. If maxIdle is set too low on heavily loaded systems it is possible you will see objects
      * being destroyed and almost immediately new objects being created. This is a result of the active threads momentarily returning objects faster
      * than they are requesting them, causing the number of idle objects to rise above maxIdle.
      *
+     * @param poolKey
+     *            key.
      * @return max idle instances
      * @throws BaseException
      *             exception
      */
-    Integer getPoolMaxIdle() throws BaseException;
-
-    /**
-     * The configuration parameters for jedis pool settings incl. max-total pool size and max-idle pool number.
-     * 
-     * @param key
-     *            param.
-     * @return RedisPoolConfig redis pool config POJO.
-     */
-    RedisPoolConfig getRedisPoolConfig(String key);
+    Integer getPoolMaxIdle(String poolKey) throws BaseException;
 
     /**
      * The number of the selected database to connect with, default value: 0 (According to Redis settings).
@@ -107,4 +102,5 @@ public interface RedisConfig {
     default Integer getTimeout() throws BaseException {
         return 5000;
     }
+
 }

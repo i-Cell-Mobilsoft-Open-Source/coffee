@@ -94,11 +94,11 @@ public class ManagedRedisConfig implements RedisConfig {
     /**
      * Constant <code>POOL_MAXTOTAL="pool.maxtotal"</code>
      */
-    public static final String POOL_MAXTOTAL = "pool.maxtotal";
+    public static final String POOL_MAXTOTAL = "maxtotal";
     /**
      * Constant <code>POOL_MAXIDLE="pool.maxidle"</code>
      */
-    public static final String POOL_MAXIDLE = "pool.maxidle";
+    public static final String POOL_MAXIDLE = "maxidle";
     /**
      * Constant <code>TIMEOUT="timeout"</code>
      */
@@ -164,8 +164,8 @@ public class ManagedRedisConfig implements RedisConfig {
      * negative, there is no limit to the number of objects that can be managed by the pool at one time.
      */
     @Override
-    public Integer getPoolMaxTotal() {
-        return config.getOptionalValue(joinKey(POOL_MAXTOTAL), Integer.class).orElse(64);
+    public Integer getPoolMaxTotal(String poolKey) {
+        return config.getOptionalValue(joinKey(POOL + KEY_DELIMITER + poolKey + POOL_MAXTOTAL), Integer.class).orElse(64);
     }
 
     /**
@@ -176,27 +176,8 @@ public class ManagedRedisConfig implements RedisConfig {
      * than they are requesting them, causing the number of idle objects to rise above maxIdle.
      */
     @Override
-    public Integer getPoolMaxIdle() {
-        return config.getOptionalValue(joinKey(POOL_MAXIDLE), Integer.class).orElse(64);
-    }
-
-    /**
-     * The configuration parameters for jedis pool settings incl. max-total pool size and max-idle pool number.
-     * 
-     * @param key
-     *            param.
-     * @return RedisPoolConfig redis pool config POJO.
-     */
-    @Override
-    public RedisPoolConfig getRedisPoolConfig(String key) {
-        return config.getOptionalValue(joinKey(POOL + KEY_DELIMITER + key), RedisPoolConfig.class).orElse(getDefaultRedisPoolConfig());
-    }
-
-    private RedisPoolConfig getDefaultRedisPoolConfig() {
-        RedisPoolConfig defaultPoolConfig = new RedisPoolConfig();
-        defaultPoolConfig.setPoolMaxIdle(16);
-        defaultPoolConfig.setPoolMaxTotal(64);
-        return defaultPoolConfig;
+    public Integer getPoolMaxIdle(String poolKey) {
+        return config.getOptionalValue(joinKey(POOL + KEY_DELIMITER + poolKey + POOL_MAXIDLE), Integer.class).orElse(16);
     }
 
     /**
