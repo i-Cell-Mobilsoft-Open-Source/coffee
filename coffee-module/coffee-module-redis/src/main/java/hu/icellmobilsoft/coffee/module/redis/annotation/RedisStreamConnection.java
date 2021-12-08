@@ -32,7 +32,7 @@ import javax.inject.Qualifier;
  * Qualifier for instantiating RedisStreamProducer and Consumer with connection.
  *
  * @author peter.kovacs
- * @since 1.0.0
+ * @since 1.8.0
  */
 @Qualifier
 @Retention(RetentionPolicy.RUNTIME)

@@ -90,7 +90,7 @@ public class StreamGroupConfig implements IStreamGroupConfig {
 
 
     @Inject
-    protected Config config;
+    private Config config;
 
     private String configKey;
 
