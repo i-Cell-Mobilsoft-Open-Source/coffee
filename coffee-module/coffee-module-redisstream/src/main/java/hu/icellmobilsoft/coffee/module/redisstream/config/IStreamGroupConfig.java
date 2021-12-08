@@ -37,6 +37,7 @@ public interface IStreamGroupConfig {
      * See https://redis.io/commands/xreadgroup and https://redis.io/commands/xread BLOCK option
      *
      * @return timeout on stream read in millis. Waiting on stream until this time for new message or return null
+     * @throws BaseException Exception on read properties
      */
     Long getReadTimeoutMillis() throws BaseException;
 
@@ -44,6 +45,7 @@ public interface IStreamGroupConfig {
      * Defines the redis connection configuration key to be used.
      *
      * @return redis key.
+     * @throws BaseException Exception on read properties
      */
     Optional<String> getConnectionKey() throws BaseException;
 
@@ -115,6 +117,7 @@ public interface IStreamGroupConfig {
      * Defines the redis connection pool configuration key to be used.
      *
      * @return pool config.
+     * @throws BaseException Exception on read properties
      */
     String getConsumerPool() throws BaseException;
 
