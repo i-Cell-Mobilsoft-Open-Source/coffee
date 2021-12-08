@@ -38,6 +38,8 @@
 		<version.org.mockito>3.2.0</version.org.mockito>
 		<version.glassfish.javax.el>2.2.4</version.glassfish.javax.el>
 		<version.smallrye-config>2.0.2</version.smallrye-config>
+		<version.org.osgi.service.cdi>1.0.0</version.org.osgi.service.cdi>
+		<version.osgi.annotation>7.0.0</version.osgi.annotation>
 	</properties>
 
 	<dependencyManagement>
@@ -415,6 +417,19 @@
 						<artifactId>commons-logging</artifactId>
 					</exclusion>
 				</exclusions>
+			</dependency>
+
+			<dependency>
+				<groupId>org.osgi</groupId>
+				<artifactId>org.osgi.service.cdi</artifactId>
+				<version>${version.org.osgi.service.cdi}</version>
+				<scope>provided</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.osgi</groupId>
+				<artifactId>osgi.annotation</artifactId>
+				<version>${version.osgi.annotation}</version>
+				<scope>provided</scope>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
