@@ -72,7 +72,7 @@ public class JedisPoolProducer {
     }
 
     /**
-     * Creates or gets {@link StreamJedisPool} for the given configKey
+     * Creates or gets {@link JedisPool} for the given configKey
      *
      * @param injectionPoint
      *            injection metadata
