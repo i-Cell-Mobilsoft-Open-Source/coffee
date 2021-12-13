@@ -8,9 +8,10 @@ coff:ee v1.7.0 -> v1.8.0 migrációs leírás, újdonságok, változások leír�
 
 === coffee-dto
 * Létrejött az UtcOffsetDateTimeXmlAdapter és az UtcOffsetTimeXmlAdapter.
+* `ContextType`-ból kikerült a `user` field, valamint a `requestId`-ban meg lehet adni UUID-kat is.
 
 ==== Átállás
-A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+* `ContextType`-ból kikerült a `user` field, és megszünt a `commonservice`-es `UserType`. Az ezekre való hivatkozásokat meg kell szüntetni.
 
 == Változások
 
