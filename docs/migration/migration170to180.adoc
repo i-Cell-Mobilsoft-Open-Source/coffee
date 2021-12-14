@@ -18,9 +18,10 @@ Config cache-eléshez a `ApplicationConfiguration` használatos, ami guava cache
 
 === coffee-dto
 * Létrejött az UtcOffsetDateTimeXmlAdapter és az UtcOffsetTimeXmlAdapter.
+* `ContextType`-ból kikerült a `user` field, valamint a `requestId`-ban meg lehet adni UUID-kat is.
 
 ==== Átállás
-A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+* `ContextType`-ból kikerült a `user` field, és megszünt a `commonservice`-es `UserType`. Az ezekre való hivatkozásokat meg kell szüntetni.
 
 == Változások
 
@@ -78,3 +79,9 @@ A változtatások nem eredményeznek átállási munkálatokat, visszafelé komp
 
 ==== Átállás
 * `@CsvBind` annotációkat cserélni kell `@CsvBindByNamePosition`-re
+
+=== coffee-module-redisstream
+* `RedisStreamConsumerExecutor` már log-ol minden `Throwable`-t, nem csak `Exception`-t
+
+==== Átállás
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
