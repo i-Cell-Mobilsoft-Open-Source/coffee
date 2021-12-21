@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package hu.icellmobilsoft.coffee.rest.configuration;
+package hu.icellmobilsoft.coffee.configuration;
 
 import java.text.MessageFormat;
 import java.util.Optional;
@@ -227,7 +227,7 @@ public class ApplicationConfiguration {
      */
     public <T> T getValue(String key, Class<T> clazz) {
         Optional<T> value = getOptionalValue(key, clazz);
-        return value.isPresent() ? value.get() : null;
+        return value.orElse(null);
     }
 
     /**

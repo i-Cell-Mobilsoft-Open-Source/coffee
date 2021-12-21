@@ -13,6 +13,7 @@
 		<version.apache.deltaspike>1.9.1</version.apache.deltaspike>
 
 		<version.javaee>8.0</version.javaee>
+		<version.jakartaee>8.0.0</version.jakartaee>
 		<version.javax.xml.bind.jaxb-api>2.3.1</version.javax.xml.bind.jaxb-api>
 		<version.com.sun.xml.bind.jaxb-api>2.3.1</version.com.sun.xml.bind.jaxb-api>
 		<version.com.sun.xml.bind.jaxb-core>2.3.0</version.com.sun.xml.bind.jaxb-core>
@@ -55,6 +56,12 @@
 				<groupId>javax</groupId>
 				<artifactId>javaee-api</artifactId>
 				<version>${version.javaee}</version>
+				<scope>provided</scope>
+			</dependency>
+			<dependency>
+				<groupId>jakarta.platform</groupId>
+				<artifactId>jakarta.jakartaee-api</artifactId>
+				<version>${version.jakartaee}</version>
 				<scope>provided</scope>
 			</dependency>
 			<dependency>
@@ -171,6 +178,16 @@
 			<dependency>
 				<groupId>hu.icellmobilsoft.coffee</groupId>
 				<artifactId>coffee-module-etcd</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>hu.icellmobilsoft.coffee</groupId>
+				<artifactId>coffee-configuration</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>hu.icellmobilsoft.coffee</groupId>
+				<artifactId>coffee-module-localization</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>

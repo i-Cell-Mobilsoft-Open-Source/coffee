@@ -26,7 +26,7 @@ import java.lang.annotation.Target;
 import java.util.regex.Matcher;
 
 /**
- * Kellett, mert a "gyári" nem tudott sorrendezést, ami tudott, az nem gyártott headert
+ * Specifies a binding between a column name and index of the CSV input and a field in a bean.
  *
  * @author andras.bognar
  * @since 1.0.0

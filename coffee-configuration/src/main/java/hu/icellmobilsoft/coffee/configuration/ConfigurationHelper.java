@@ -17,33 +17,23 @@
  * limitations under the License.
  * #L%
  */
-package hu.icellmobilsoft.coffee.rest.configuration;
+package hu.icellmobilsoft.coffee.configuration;
 
 import java.util.Optional;
 
 import javax.enterprise.context.Dependent;
-import javax.enterprise.inject.Instance;
-import javax.enterprise.inject.spi.CDI;
-import javax.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.microprofile.config.ConfigProvider;
 
-import hu.icellmobilsoft.coffee.rest.cdi.BaseRequestContainer;
-import hu.icellmobilsoft.coffee.se.logging.Logger;
-import hu.icellmobilsoft.coffee.tool.utils.string.StringHelper;
-
 /**
- * RequestScope stored configuration value helper. Caching, reading, etc
+ * Configuration value helper
  *
  * @author imre.scheffer
  * @since 1.0.0
  */
 @Dependent
 public class ConfigurationHelper {
-
-    @Inject
-    private Logger log;
 
     /**
      * Get String type, @RequestScope cached value from config sources
@@ -204,37 +194,11 @@ public class ConfigurationHelper {
      *            return class type
      * @return {@code Optional<T>} value
      */
-    @SuppressWarnings("unchecked")
     public <T> Optional<T> getConfigOptionalValue(String key, Class<T> clazz) {
         if (StringUtils.isBlank(key)) {
             return Optional.empty();
         }
-        BaseRequestContainer container = getRequestContainer();
-        if (container != null) {
-            Object value = container.getObjectMap().get(key);
-            if (value != null) {
-                if (log.isDebugEnabled()) {
-                    log.debug("RequestScope cached Key [{0}] value [{1}]", key, StringHelper.maskPropertyValue(key, value));
-                }
-                return Optional.of((T) value);
-            }
-        }
-        Optional<T> microprofileConfigValue = ConfigProvider.getConfig().getOptionalValue(key, clazz);
-        if (microprofileConfigValue.isPresent() && container != null) {
-            T value = microprofileConfigValue.get();
-            container.getObjectMap().put(key, value);
-            if (log.isTraceEnabled()) {
-                log.trace("Key [{0}] value [{1}] stored in RequestScope cache.", key, StringHelper.maskPropertyValue(key, value));
-            }
-        }
-        if (log.isDebugEnabled()) {
-            log.debug("Key [{0}] value [{1}]", key, StringHelper.maskPropertyValue(key, microprofileConfigValue));
-        }
-        return microprofileConfigValue;
+        return ConfigProvider.getConfig().getOptionalValue(key, clazz);
     }
 
-    private BaseRequestContainer getRequestContainer() {
-        Instance<BaseRequestContainer> instance = CDI.current().select(BaseRequestContainer.class);
-        return instance.get();
-    }
 }

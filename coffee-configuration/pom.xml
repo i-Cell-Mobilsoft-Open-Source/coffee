@@ -6,7 +6,7 @@
 		<version>1.8.0-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>coffee-rest</artifactId>
+	<artifactId>coffee-configuration</artifactId>
 
 	<dependencyManagement>
 		<dependencies>
@@ -22,36 +22,13 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>hu.icellmobilsoft.coffee</groupId>
-			<artifactId>coffee-module-localization</artifactId>
+			<groupId>jakarta.platform</groupId>
+			<artifactId>jakarta.jakartaee-api</artifactId>
 		</dependency>
+
 		<dependency>
 			<groupId>hu.icellmobilsoft.coffee</groupId>
 			<artifactId>coffee-tool</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>org.jboss.resteasy</groupId>
-			<artifactId>resteasy-jaxrs</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>commons-io</groupId>
-			<artifactId>commons-io</artifactId>
-		</dependency>
-
-		<!-- apache-http -->
-		<dependency>
-			<groupId>org.apache.httpcomponents</groupId>
-			<artifactId>httpclient</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.httpcomponents</groupId>
-			<artifactId>httpcore</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.httpcomponents</groupId>
-			<artifactId>httpmime</artifactId>
 		</dependency>
 
 		<!--Test dependecies -->
@@ -73,17 +50,5 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<configuration>
-					<!-- LogSpecifiersAnnotationProcessor végett kell, különben még compile 
-						előtt megpróbálná önmagára lefuttatni -->
-					<compilerArgument>-proc:none</compilerArgument>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
+
 </project>

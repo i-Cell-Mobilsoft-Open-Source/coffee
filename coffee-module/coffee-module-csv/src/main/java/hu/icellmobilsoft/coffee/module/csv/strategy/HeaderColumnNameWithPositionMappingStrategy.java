@@ -30,6 +30,8 @@ import javax.enterprise.inject.Vetoed;
 import org.apache.commons.collections4.ListValuedMap;
 import org.apache.commons.lang3.StringUtils;
 
+import com.opencsv.bean.AbstractBeanField;
+import com.opencsv.bean.BeanField;
 import com.opencsv.bean.BeanFieldSingleValue;
 import com.opencsv.bean.CsvBindByPosition;
 import com.opencsv.bean.CsvBindByPositions;
@@ -38,9 +40,10 @@ import com.opencsv.bean.HeaderColumnNameMappingStrategy;
 import com.opencsv.exceptions.CsvBadConverterException;
 
 import hu.icellmobilsoft.coffee.module.csv.annotation.CsvBindByNamePosition;
+import hu.icellmobilsoft.coffee.module.csv.annotation.CsvCustomBindByNamePosition;
 
 /**
- * Kellett, mert a "gyári" nem tudott sorrendezést, ami tudott, az nem gyártott headert
+ * Maps data to objects using the column names in the first row of the CSV file as reference. With this class the column order can also be given.
  *
  * @param <T>
  *            type of the bean to be returned
@@ -49,9 +52,9 @@ import hu.icellmobilsoft.coffee.module.csv.annotation.CsvBindByNamePosition;
  * @since 1.0.0
  */
 @Vetoed
-public class CustomHeaderColumnNameMappingStrategy<T> extends HeaderColumnNameMappingStrategy<T> {
+public class HeaderColumnNameWithPositionMappingStrategy<T> extends HeaderColumnNameMappingStrategy<T> {
 
-    private HashMap<String, Integer> fieldIndexByName;
+    protected HashMap<String, Integer> fieldIndexByName;
 
     @Override
     protected void loadFieldMap() throws CsvBadConverterException {
@@ -79,6 +82,7 @@ public class CustomHeaderColumnNameMappingStrategy<T> extends HeaderColumnNameMa
     protected Set<Class<? extends Annotation>> getBindingAnnotations() {
         Set<Class<? extends Annotation>> bindingAnnotations = super.getBindingAnnotations();
         bindingAnnotations.add(CsvBindByNamePosition.class);
+        bindingAnnotations.add(CsvCustomBindByNamePosition.class);
         bindingAnnotations.add(CsvBindByPosition.class);
         bindingAnnotations.add(CsvBindByPositions.class);
         return bindingAnnotations;
@@ -98,6 +102,12 @@ public class CustomHeaderColumnNameMappingStrategy<T> extends HeaderColumnNameMa
                 if (annotation != null) {
                     registerBinding(annotation, localType, localField);
                 }
+            } else if (localField.isAnnotationPresent(CsvCustomBindByNamePosition.class)) {
+                CsvCustomBindByNamePosition annotation = selectAnnotationForProfile(
+                        localField.getAnnotationsByType(CsvCustomBindByNamePosition.class), CsvCustomBindByNamePosition::profiles);
+                if (annotation != null) {
+                    registerBinding(annotation, localType, localField);
+                }
             } else if (localField.isAnnotationPresent(CsvBindByPosition.class) || localField.isAnnotationPresent(CsvBindByPositions.class)) {
                 CsvBindByPosition annotation = selectAnnotationForProfile(localField.getAnnotationsByType(CsvBindByPosition.class),
                         CsvBindByPosition::profiles);
@@ -106,6 +116,20 @@ public class CustomHeaderColumnNameMappingStrategy<T> extends HeaderColumnNameMa
                 }
             }
         }
+    }
+
+    private void registerBinding(CsvCustomBindByNamePosition annotation, Class<?> localType, Field localField) {
+        Class<? extends AbstractBeanField<T, String>> converter = (Class<? extends AbstractBeanField<T, String>>) annotation.converter();
+        String columnName = getFieldName(localField);
+        int position = annotation.position();
+
+        BeanField<T, String> bean = instantiateCustomConverter(converter);
+        bean.setType(localType);
+        bean.setField(localField);
+        bean.setRequired(annotation.required());
+
+        getFieldMap().put(columnName, bean);
+        fieldIndexByName.put(columnName, position);
     }
 
     private void registerBinding(CsvBindByPosition annotation, Class<?> localType, Field localField) {
@@ -136,8 +160,15 @@ public class CustomHeaderColumnNameMappingStrategy<T> extends HeaderColumnNameMa
         return columnName;
     }
 
-    private String getFieldName(Field localField) {
-        return localField.getName().toUpperCase();
+    /**
+     * Returns the name of the given field
+     * 
+     * @param field
+     *            the field we search the name for
+     * @return the name of the field
+     */
+    protected String getFieldName(Field field) {
+        return field.getName().toUpperCase();
     }
 
 }

@@ -1,0 +1,52 @@
+[#common_core_coffee-configuration]
+= coffee-configuration
+
+A modul célja a Microprofile config kiegészítése pl. cache-eléssel
+
+.Konfigurációs értékek injectelése
+[source,java]
+----
+// korlátozottan használjuk ahol nem számít a sebesség és magas tranzakciószám,
+// ilyenkor a többi módszerek közül érdemes választani
+@Inject
+@ConfigProperty(name="key")
+Provider<String> keyValue;
+
+
+// hagyományos microprofile-config lekérdezés
+public String kodban() {
+    Config config = ConfigProvider.getConfig();
+    String keyValue =  config.getValue("key", String.class);
+    return keyValue;
+}
+----
+
+== ConfigurationHelper osztály
+Az osztály segítségével lehetőség van típushelyes konfigurációk lekérdezésére.
+
+.Konfiguráció lekérdezése
+[source,java]
+----
+@Inject
+private ConfigurationHelper configurationHelper;
+...
+Integer ttl = configurationHelper.getInteger("public.login.session.token.validity");
+----
+
+== ApplicationConfiguration osztály
+Hasonlóképpen a ConfigurationHelper osztályhoz, csak @ApplicationScope szintű cache-t használ,
+melyben az eltárolt értékek 30 percre tárolódnak. Lehetőséget nyújt ezeknek az eltárolt értékeknek azonnali
+felejtésére, amire további logikát lehet építeni (például külsőleg változtatni az értéken ETCD-ben,
+majd topic JMS-re elfelejteni az értékeket hogy azonnal olvassa is ki újra).
+
+.ApplicationConfiguration példa
+[source,java]
+----
+@Inject
+private ApplicationConfiguration applicationConfiguration;
+
+public String kodban() {
+    String minVersion = applicationConfiguration.getString(EtcdVal.KEY_PUBLIC_INVOICE_MIN_REQUEST_VERSION);
+    return minVersion;
+}
+----

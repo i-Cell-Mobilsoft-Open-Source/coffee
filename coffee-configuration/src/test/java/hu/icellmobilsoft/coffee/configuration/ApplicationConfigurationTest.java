@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package hu.icellmobilsoft.coffee.rest.configuration;
+package hu.icellmobilsoft.coffee.configuration;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -38,9 +38,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import hu.icellmobilsoft.coffee.cdi.logger.AppLoggerImpl;
 import hu.icellmobilsoft.coffee.cdi.logger.LogContainer;
 import hu.icellmobilsoft.coffee.cdi.logger.LogProducer;
-import hu.icellmobilsoft.coffee.rest.cdi.BaseRequestContainer;
 import hu.icellmobilsoft.coffee.tool.utils.string.RandomUtil;
-import hu.icellmobilsoft.coffee.tool.utils.string.StringHelper;
+
 import io.smallrye.config.inject.ConfigExtension;
 
 /**
@@ -65,7 +64,7 @@ class ApplicationConfigurationTest {
     @WeldSetup
     public WeldInitiator weld = WeldInitiator
             .from(WeldInitiator.createWeld().addExtensions(ConfigExtension.class).addBeanClasses(LogContainer.class, AppLoggerImpl.class,
-                    LogProducer.class, ApplicationConfiguration.class, ConfigurationHelper.class, BaseRequestContainer.class))
+                    LogProducer.class, ApplicationConfiguration.class, ConfigurationHelper.class))
             .activate(RequestScoped.class).build();
 
     @Test

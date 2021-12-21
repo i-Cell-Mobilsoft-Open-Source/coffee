@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package hu.icellmobilsoft.coffee.rest.locale;
+package hu.icellmobilsoft.coffee.module.localization;
 
 import java.util.Optional;
 
@@ -27,7 +27,7 @@ import javax.inject.Inject;
 import org.apache.commons.lang3.ArrayUtils;
 
 import hu.icellmobilsoft.coffee.cdi.config.IConfigKey;
-import hu.icellmobilsoft.coffee.rest.configuration.ApplicationConfiguration;
+import hu.icellmobilsoft.coffee.configuration.ApplicationConfiguration;
 
 /**
  * Nyelvesítés kezelésére szolgáló osztály.<br>

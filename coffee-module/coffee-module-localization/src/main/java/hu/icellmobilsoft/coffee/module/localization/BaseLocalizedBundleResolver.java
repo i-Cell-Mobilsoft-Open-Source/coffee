@@ -18,7 +18,7 @@
  * #L%
  */
 
-package hu.icellmobilsoft.coffee.rest.locale;
+package hu.icellmobilsoft.coffee.module.localization;
 
 import java.io.Serializable;
 import java.util.Locale;
