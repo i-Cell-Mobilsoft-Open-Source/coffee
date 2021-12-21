@@ -32,6 +32,12 @@ Config cache-eléshez a `ApplicationConfiguration` használatos, ami guava cache
 * smallrye-config 1.7.0 -> 2.8.1
 * opencsv 3.9 -> 5.5.2
 
+=== coffee-module-etcd
+* jetcd-core verzió frissítés <version>0.5.0</version> -> <version>0.6.1</version>
+
+==== Átállás
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
 === coffee-rest
 * "coffee.app.name" paraméterben megadható érték már nem kötelező, alapértelmezetten a "java:app/AppName" van használva.
 * JaxbTool kiegészítése `byte[]` fogadására képes unmarshalXML metódusokkal
