@@ -85,3 +85,9 @@ A változtatások nem eredményeznek átállási munkálatokat, visszafelé komp
 
 ==== Átállás
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+=== coffee-module-mongodb
+* `@MongoClientConfiguration` qualifier-rel ellátott `MongoDbClient` használatához már nem szükséges, hogy legyen aktív a request scope
+
+==== Átállás
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
