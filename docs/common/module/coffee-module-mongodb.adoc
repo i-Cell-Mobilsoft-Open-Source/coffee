@@ -23,7 +23,7 @@ CDI extension kiterjesztésen alapszik http://cdi-spec.org/[cdi-spec].
 [source,yaml]
 ----
 coffee:
-    mongo:
+    mongodb:
         xmlapi: #<1>
              database: xmlapi
              uri: mongodb://sample_xmlapi:sample_xmlapi@sample-sandbox.icellmobilsoft.hu:27017/sample_xmlapi?ssl=false
