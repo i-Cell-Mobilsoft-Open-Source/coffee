@@ -27,6 +27,7 @@
 		<version.commons-collections>3.2.2</version.commons-collections>
 		<version.commons-io>2.8.0</version.commons-io>
 		<version.org.eclipse.microprofile.config>2.0</version.org.eclipse.microprofile.config>
+		<version.osgi.annotation>7.0.0</version.osgi.annotation>
 		<version.org.jboss.resteasy>3.6.2.Final</version.org.jboss.resteasy>
 		<version.org.hibernate>5.3.7.Final</version.org.hibernate>
 		<version.org.hibernate.validator>6.0.20.Final</version.org.hibernate.validator>
@@ -37,9 +38,7 @@
 		<version.org.jboss.weld.weld-junit5>2.0.1.Final</version.org.jboss.weld.weld-junit5>
 		<version.org.mockito>3.2.0</version.org.mockito>
 		<version.glassfish.javax.el>2.2.4</version.glassfish.javax.el>
-		<version.smallrye-config>2.0.2</version.smallrye-config>
-		<version.org.osgi.service.cdi>1.0.0</version.org.osgi.service.cdi>
-		<version.osgi.annotation>7.0.0</version.osgi.annotation>
+		<version.smallrye-config>2.8.1</version.smallrye-config>
 	</properties>
 
 	<dependencyManagement>
@@ -341,6 +340,13 @@
 				<artifactId>microprofile-config-api</artifactId>
 				<version>${version.org.eclipse.microprofile.config}</version>
 			</dependency>
+			<!-- microprofile-config-api 2.0 bug: https://github.com/eclipse/microprofile-config/issues/716 javitas utan kiszedni -->
+			<dependency>
+				<groupId>org.osgi</groupId>
+				<artifactId>osgi.annotation</artifactId>
+				<version>${version.osgi.annotation}</version>
+				<scope>provided</scope>
+			</dependency>
 
 			<dependency>
 				<groupId>org.jboss.resteasy</groupId>
@@ -417,19 +423,6 @@
 						<artifactId>commons-logging</artifactId>
 					</exclusion>
 				</exclusions>
-			</dependency>
-
-			<dependency>
-				<groupId>org.osgi</groupId>
-				<artifactId>org.osgi.service.cdi</artifactId>
-				<version>${version.org.osgi.service.cdi}</version>
-				<scope>provided</scope>
-			</dependency>
-			<dependency>
-				<groupId>org.osgi</groupId>
-				<artifactId>osgi.annotation</artifactId>
-				<version>${version.osgi.annotation}</version>
-				<scope>provided</scope>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
