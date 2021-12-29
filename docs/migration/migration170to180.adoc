@@ -25,6 +25,13 @@ Config cache-eléshez a `ApplicationConfiguration` használatos, ami guava cache
 
 == Változások
 
+=== Általános
+
+==== BOM verzió emelések:
+* microprofile-config-api 1.3 -> 2.0
+* smallrye-config 1.7.0 -> 2.8.1
+* opencsv 3.9 -> 5.5.2
+
 === coffee-rest
 * "coffee.app.name" paraméterben megadható érték már nem kötelező, alapértelmezetten a "java:app/AppName" van használva.
 * JaxbTool kiegészítése `byte[]` fogadására képes unmarshalXML metódusokkal
