@@ -1,0 +1,33 @@
+= v1.8.0 → v1.9.0
+
+coff:ee v1.8.0 -> v1.9.0 migrációs leírás, újdonságok, változások leírása
+
+== Újdonságok
+
+=== JDK 17 support
+A projekt mostmár támogatja a java 17 verziót,
+így használható ilyen java alapon lévő projektben is.
+A problémás részek legtöbb helyen dependency frissítéssel megjavult,
+az egyetlen problémás rész a gson használata.
+
+.gson
+Ez a modul függőség reflection alapon működik (több hivatalos issue van ezzel kapcsolatban a gson projekten),
+ami a java17-el korlátozva van így a teszteseteknél konfigurációra van szükség.
+Várhatóan az implementált projektenél is fog kelleni a következő jvm paraméter:
+
+[source,bash]
+----
+--add-exports=java.xml/com.sun.org.apache.xerces.internal.jaxp.datatype=ALL-UNNAMED
+--add-opens=java.xml/com.sun.org.apache.xerces.internal.jaxp.datatype=ALL-UNNAMED
+----
+A későbbi verziókban felülvizsgáljuk a függőséget.
+
+.java 11 && 17
+A coff:ee 1.x.x továbra is java 11-el lessz kompilálva,
+de kap fordítási és tesztelési ellenőrzéseket java 17-re is.
+Így minimalizálni fogjuk a java verzió külömbségi problémákat.
+
+==== BOM verzió emelések:
+* google.code:gson 2.8.3 -> 2.8.9
+* junit:jupiter 5.5.2 -> 5.8.1
+* org.jboss.weld:weld-junit5 2.0.1.Final -> 2.0.2.Final
