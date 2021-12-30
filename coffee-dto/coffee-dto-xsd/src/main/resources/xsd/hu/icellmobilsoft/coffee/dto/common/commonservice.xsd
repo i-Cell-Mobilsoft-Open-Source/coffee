@@ -27,23 +27,6 @@
 		</xsd:restriction>
 	</xsd:simpleType>
 
-	<xsd:complexType name="UserType">
-		<xsd:sequence>
-			<xsd:element name="userName" type="common:EmailType">
-				<xsd:annotation>
-					<xsd:documentation>Felhasználó bejelentkezési azonosító.
-					</xsd:documentation>
-				</xsd:annotation>
-			</xsd:element>
-			<xsd:element name="password"
-				type="common:SimpleText255Type">
-				<xsd:annotation>
-					<xsd:documentation>Felhasználó bejelentkezési jelszó hash.
-					</xsd:documentation>
-				</xsd:annotation>
-			</xsd:element>
-		</xsd:sequence>
-	</xsd:complexType>
 	<xsd:complexType name="ContextType">
 		<xsd:sequence>
 			<xsd:element name="requestId" type="common:RequestIdType">
@@ -57,11 +40,6 @@
 				<xsd:annotation>
 					<xsd:documentation>A service hívás kliens időpontja.
 					</xsd:documentation>
-				</xsd:annotation>
-			</xsd:element>
-			<xsd:element name="user" type="UserType" minOccurs="0">
-				<xsd:annotation>
-					<xsd:documentation>Felhasználó adatok.</xsd:documentation>
 				</xsd:annotation>
 			</xsd:element>
 		</xsd:sequence>

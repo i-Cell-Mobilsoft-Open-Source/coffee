@@ -40,10 +40,9 @@ import com.mongodb.MongoClientOptions;
 import com.mongodb.MongoClientURI;
 import com.mongodb.client.MongoDatabase;
 
-import hu.icellmobilsoft.coffee.cdi.logger.AppLogger;
-import hu.icellmobilsoft.coffee.cdi.logger.ThisLogger;
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
+import hu.icellmobilsoft.coffee.se.logging.Logger;
 import hu.icellmobilsoft.coffee.tool.utils.annotation.AnnotationUtil;
 import hu.icellmobilsoft.coffee.tool.utils.string.StringUtil;
 
@@ -58,8 +57,7 @@ import hu.icellmobilsoft.coffee.tool.utils.string.StringUtil;
 public class MongoDbClientFactory {
 
     @Inject
-    @ThisLogger
-    private AppLogger log;
+    private Logger log;
 
     @Inject
     private MongoClientContainer mongoClientContainer;
@@ -129,7 +127,9 @@ public class MongoDbClientFactory {
      */
     private MongoClient createMongoClient(MongoConfigHelper mongoConfigHelper) throws BaseException {
         try {
-            log.info("MongoDB uri [{0}]", StringUtil.maskUriAuthenticationCredentials(mongoConfigHelper.getUri()));
+            if (log.isDebugEnabled()) {
+                log.debug("MongoDB uri [{0}]", StringUtil.maskUriAuthenticationCredentials(mongoConfigHelper.getUri()));
+            }
 
             MongoClientOptions.Builder builder = new MongoClientOptions.Builder();
             builder.maxConnectionIdleTime(mongoConfigHelper.getMaxConnectionIdleTime());

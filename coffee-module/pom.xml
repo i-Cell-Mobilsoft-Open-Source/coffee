@@ -3,7 +3,7 @@
 	<parent>
 		<groupId>hu.icellmobilsoft.coffee</groupId>
 		<artifactId>coffee</artifactId>
-		<version>1.8.0-SNAPSHOT</version>
+		<version>1.9.0-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>coffee-module</artifactId>
@@ -12,6 +12,7 @@
 	<modules>
 		<module>coffee-module-mongodb</module>
 		<module>coffee-module-etcd</module>
+		<module>coffee-module-localization</module>
 		<module>coffee-module-activemq</module>
 		<module>coffee-module-redis</module>
 		<module>coffee-module-redisstream</module>

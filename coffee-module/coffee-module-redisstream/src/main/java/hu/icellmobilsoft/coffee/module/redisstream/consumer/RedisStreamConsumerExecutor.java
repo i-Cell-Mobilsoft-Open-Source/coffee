@@ -142,17 +142,26 @@ public class RedisStreamConsumerExecutor implements IRedisStreamConsumerExecutor
                             redisStreamService.getGroup(), e.getLocalizedMessage()), e);
                 }
                 sleep();
-            } catch (Exception e) {
+            } catch (Throwable e) {
                 log.error(MessageFormat.format("Exception during consume on redisConfigKey [{0}] with stream group [{1}]: [{2}]", redisConfigKey,
                         redisStreamService.getGroup(), e.getLocalizedMessage()), e);
                 sleep();
             } finally {
-                if (jedis != null) {
-                    // el kell engedni a connectiont
-                    jedisInstance.destroy(jedis);
-                }
-                MDC.clear();
+                cleanup(jedisInstance, jedis);
             }
+        }
+    }
+
+    private void cleanup(Instance<Jedis> jedisInstance, Jedis jedis) {
+        try {
+            if (jedis != null) {
+                // el kell engedni a connectiont
+                jedisInstance.destroy(jedis);
+            }
+            MDC.clear();
+        } catch (Throwable e) {
+            log.error(MessageFormat.format("Exception during jedis cleanup on redisConfigKey [{0}] with stream group [{1}]: [{2}]",
+                    redisConfigKey, redisStreamService.getGroup(), e.getLocalizedMessage()), e);
         }
     }
 

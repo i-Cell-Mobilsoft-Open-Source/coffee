@@ -36,7 +36,7 @@ import org.eclipse.microprofile.config.Config;
  *
  * <pre>
  *  coffee:
- *    mongo:
+ *    mongodb:
  *      xmlapi:
  *        database: xmlapi
  *        uri: mongodb://xmlapi:xmlapi@sample-sandbox-d001.icellmobilsoft.hu:27017/xmlapi?ssl=false

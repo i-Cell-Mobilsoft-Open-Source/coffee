@@ -9,7 +9,7 @@
 
 	<groupId>hu.icellmobilsoft.coffee</groupId>
 	<artifactId>coffee</artifactId>
-	<version>1.8.0-SNAPSHOT</version>
+	<version>1.9.0-SNAPSHOT</version>
 
 	<packaging>pom</packaging>
 
@@ -218,6 +218,7 @@
 	<modules>
 		<module>coffee-bom</module>
 		<module>coffee-cdi</module>
+		<module>coffee-configuration</module>
 		<module>coffee-dto</module>
 		<module>coffee-tool</module>
 		<module>coffee-model</module>

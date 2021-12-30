@@ -1,0 +1,98 @@
+[#common_module_coffee-module-csv]
+= coffee-module-csv
+
+Modul célja Java bean-ekből binding annotációk segítségével CSV fájlt tudjunk generálni,
+vagy egy CSV fájlt parsolva elő tudjuk állítani a bean-eket.
+
+A bean annotálás így néz ki:
+[source,java]
+----
+public class TestBean {
+
+    @CsvBindByNamePosition(position = 0, column = "IDENTIFIER")
+    private long id;
+
+    @CsvBindByNamePosition(position = 4)
+    private String name;
+
+    @CsvBindByNamePosition(position = 2)
+    private boolean active;
+
+    @CsvDate("yyyy-MM-dd")
+    @CsvBindByNamePosition(position = 3)
+    private LocalDate creationDate;
+
+    @CsvBindByNamePosition(position = 1)
+    private Status status;
+
+    // getters, setters...
+}
+----
+
+A modul által nyújtott `@CsvBindByNamePosition` annotációval lehet megadni a CSV oszlop pozícióját és nevét.
+
+Egy ilyen osztály példányaiból álló listát az alábbi hívással lehet CSV-re konvertálni:
+[source,java]
+----
+String csv = CsvUtil.toCsv(beans, TestBean.class);
+----
+
+A fenti hívás eredménye:
+[source,csv]
+----
+"IDENTIFIER";"STATUS";"ACTIVE";"CREATIONDATE";"NAME"
+"11";"IN_PROGRESS";"true";"2021-11-23";"foo"
+"12";"DONE";"false";"2020-01-02";"bar"
+----
+
+A visszafelé konverzióhoz az alábbi hívás használható:
+[source,java]
+----
+List<TestBean> beans = CsvUtil.toBean(csv, TestBean.class);
+----
+
+== Nyelvesítés
+
+Azokat a mezőköz amikben lévő értékeket nyelvesíteni szeretnénk meg kell adni a
+`LocalizationConverter`-t , amit a `@CsvCustomBind` kezdetű annotációkkal tudunk megtenni:
+
+[source,java]
+----
+@CsvCustomBindByNamePosition(position = 0, converter = LocalizationConverter.class)
+private Status status;
+
+@CsvCustomBindByNamePosition(position = 1, converter = LocalizationConverter.class)
+private boolean active;
+----
+
+TIP: Ha saját típusokat is szeretnénk nyelvesíteni, vagy a kezelt típusok nyelvesítési
+logikáját szeretnénk megváltoztatni, azt a `LocalizationConverter`-ből leszármazással megtehetjük
+
+Ezután meg kell adnunk az oszlopok, és a felannotált mezők értékeihez tartozó nyelvesítést
+(pl.: a `messages_hu.properties` fájlban):
+
+[source,properties]
+----
+java.lang.Boolean.TRUE=Igen
+java.lang.Boolean.FALSE=Nem
+hu.icellmobilsoft.coffee.module.csv.LocalizedTestBean.status=Státusz
+hu.icellmobilsoft.coffee.module.csv.LocalizedTestBean.active=Aktív
+hu.icellmobilsoft.coffee.module.csv.LocalizedTestBean$Status.IN_PROGRESS=Folyamatban
+hu.icellmobilsoft.coffee.module.csv.LocalizedTestBean$Status.DONE=Kész
+----
+
+Végezetül meg kell hívni a `CsvUtil#toLocalizedCsv` metódust a kiválasztott nyelvvel:
+
+[source,java]
+----
+String csv = CsvUtil.toLocalizedCsv(beans, TestBean.class, "hu");
+----
+
+A példákban szereplő kód az alábbi CSV-t eredményezi:
+
+[source,csv]
+----
+"STÁTUSZ";"AKTÍV"
+"Folyamatban";"Igen"
+"Kész";"Nem"
+----
