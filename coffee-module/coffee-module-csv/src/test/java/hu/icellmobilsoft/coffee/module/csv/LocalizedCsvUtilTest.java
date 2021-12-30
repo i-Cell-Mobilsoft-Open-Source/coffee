@@ -39,6 +39,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
+import hu.icellmobilsoft.coffee.module.csv.localization.LocalizedHeaderColumnNameWithPositionMappingStrategy;
 
 /**
  * Class for testing {@link CsvUtil#toLocalizedCsv}
@@ -55,8 +56,8 @@ class LocalizedCsvUtilTest {
     private static String TEST_CSV;
 
     @WeldSetup
-    public WeldInitiator weld = WeldInitiator.from(WeldInitiator.createWeld().scanClasspathEntries().enableDiscovery()).activate(RequestScoped.class)
-            .build();
+    public WeldInitiator weld = WeldInitiator.from(WeldInitiator.createWeld().addBeanClass(LocalizedHeaderColumnNameWithPositionMappingStrategy.class)
+            .scanClasspathEntries().enableDiscovery()).activate(RequestScoped.class).build();
 
     @BeforeAll
     static void beforeAll() throws IOException {
