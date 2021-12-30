@@ -38,7 +38,7 @@ import org.jboss.weld.context.bound.BoundRequestContext;
 
 import hu.icellmobilsoft.coffee.dto.common.LogConstants;
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
-import hu.icellmobilsoft.coffee.module.redis.annotation.RedisStreamConnection;
+import hu.icellmobilsoft.coffee.module.redis.annotation.RedisConnection;
 import hu.icellmobilsoft.coffee.module.redisstream.annotation.RedisStreamConsumer;
 import hu.icellmobilsoft.coffee.module.redisstream.config.IRedisStreamConstant;
 import hu.icellmobilsoft.coffee.module.redisstream.config.StreamGroupConfig;
@@ -107,7 +107,7 @@ public class RedisStreamConsumerExecutor implements IRedisStreamConsumerExecutor
         boolean prudentRun = true;
         while (!endLoop) {
             Optional<StreamEntry> streamEntry = Optional.empty();
-            Instance<Jedis> jedisInstance = CDI.current().select(Jedis.class, new RedisStreamConnection.Literal(redisConfigKey,
+            Instance<Jedis> jedisInstance = CDI.current().select(Jedis.class, new RedisConnection.Literal(redisStreamService.getGroup(),
                     streamGroupConfig.getConsumerPool(), streamGroupConfig.getConnectionKey().orElse(redisConfigKey)));
             Jedis jedis = null;
             try {
@@ -142,7 +142,7 @@ public class RedisStreamConsumerExecutor implements IRedisStreamConsumerExecutor
                             redisStreamService.getGroup(), e.getLocalizedMessage()), e);
                 }
                 sleep();
-            } catch (Throwable e) {
+            } catch (Exception e) {
                 log.error(MessageFormat.format("Exception during consume on redisConfigKey [{0}] with stream group [{1}]: [{2}]", redisConfigKey,
                         redisStreamService.getGroup(), e.getLocalizedMessage()), e);
                 sleep();

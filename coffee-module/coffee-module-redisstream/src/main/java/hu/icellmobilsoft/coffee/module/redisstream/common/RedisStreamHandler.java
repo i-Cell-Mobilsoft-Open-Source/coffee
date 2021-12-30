@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -36,7 +36,7 @@ import org.apache.commons.lang3.StringUtils;
 import hu.icellmobilsoft.coffee.dto.common.LogConstants;
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
-import hu.icellmobilsoft.coffee.module.redis.annotation.RedisStreamConnection;
+import hu.icellmobilsoft.coffee.module.redis.annotation.RedisConnection;
 import hu.icellmobilsoft.coffee.module.redisstream.config.IRedisStreamConstant;
 import hu.icellmobilsoft.coffee.module.redisstream.config.StreamGroupConfig;
 import hu.icellmobilsoft.coffee.module.redisstream.config.StreamMessageParameter;
@@ -47,7 +47,7 @@ import redis.clients.jedis.StreamEntryID;
 
 /**
  * Redis stream helper functions
- * 
+ *
  * @author imre.scheffer
  * @author martin.nagy
  * @since 1.3.0
@@ -67,7 +67,7 @@ public class RedisStreamHandler {
 
     /**
      * Initialization
-     * 
+     *
      * @param cdi
      *            Current cdi instance
      * @param configKey
@@ -77,15 +77,14 @@ public class RedisStreamHandler {
      */
     public void init(CDI<Object> cdi, String configKey, String streamGroup) {
         config.setConfigKey(configKey);
-        this.jedisInstance = cdi.select(Jedis.class,
-                new RedisStreamConnection.Literal(configKey, config.getProducerPool(), config.getConnectionKey().orElse(streamGroup)));
+        this.jedisInstance = cdi.select(Jedis.class, new RedisConnection.Literal(streamGroup, config.getProducerPool(), configKey));
         this.streamGroup = streamGroup;
 
     }
 
     /**
      * Is enabled Redis stream? {@link StreamGroupConfig#isEnabled()}
-     * 
+     *
      * @return true - enabled
      */
     public boolean isRedisstreamEnabled() {
@@ -94,7 +93,7 @@ public class RedisStreamHandler {
 
     /**
      * Publish (send) one message to stream calculated by initialized streamGroup name.
-     * 
+     *
      * @param streamMessage
      *            Message in stream. Can be String or JSON
      * @return Created Redis Stream message identifier from Redis server
@@ -107,7 +106,7 @@ public class RedisStreamHandler {
 
     /**
      * Publish (send) one message to stream calculated by initialized streamGroup name.
-     * 
+     *
      * @param streamMessage
      *            Message in stream. Can be String or JSON
      * @param parameters
@@ -123,7 +122,7 @@ public class RedisStreamHandler {
 
     /**
      * Publish (send) one message to stream calculated by input streamGroup name.
-     * 
+     *
      * @param streamGroup
      *            stream group to send (another than initialized)
      * @param streamMessage
@@ -138,7 +137,7 @@ public class RedisStreamHandler {
 
     /**
      * Publish (send) one message to stream calculated by input streamGroup name.
-     * 
+     *
      * @param streamGroup
      *            stream group to send (another than initialized)
      * @param streamMessage
@@ -295,7 +294,7 @@ public class RedisStreamHandler {
 
     /**
      * Publish (send) multiple messages to stream
-     * 
+     *
      * @param jedis
      *            Jedis instance
      * @param publications
@@ -321,7 +320,7 @@ public class RedisStreamHandler {
 
     /**
      * Publish (send) multiple messages to stream
-     * 
+     *
      * @param jedis
      *            Jedis instance
      * @param streamGroup
@@ -346,7 +345,7 @@ public class RedisStreamHandler {
 
     /**
      * Publish (send) message to stream with class initialized {@code #jedisInstance}
-     * 
+     *
      * @param streamGroup
      *            Stream group to send (another than initialized)
      * @param streamMessage
@@ -372,7 +371,7 @@ public class RedisStreamHandler {
 
     /**
      * Publish (send) message to stream
-     * 
+     *
      * @param jedis
      *            Jedis instance
      * @param streamGroup
@@ -394,7 +393,7 @@ public class RedisStreamHandler {
 
     /**
      * Create Redis Stream message structure, ready to publish
-     * 
+     *
      * @param streamMessage
      *            Message in stream. Can be String or JSON List
      * @param parameters
@@ -421,7 +420,7 @@ public class RedisStreamHandler {
 
     /**
      * Create one stream message parameter
-     * 
+     *
      * @param parameterKey
      *            system parameter enum
      * @param parameterValue

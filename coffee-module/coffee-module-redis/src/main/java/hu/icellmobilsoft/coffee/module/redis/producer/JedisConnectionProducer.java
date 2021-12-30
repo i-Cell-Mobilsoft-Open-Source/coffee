@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,6 +20,7 @@
 package hu.icellmobilsoft.coffee.module.redis.producer;
 
 import java.text.MessageFormat;
+import java.util.Objects;
 import java.util.Optional;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -35,7 +36,6 @@ import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 import hu.icellmobilsoft.coffee.module.redis.annotation.RedisConnection;
-import hu.icellmobilsoft.coffee.module.redis.annotation.RedisStreamConnection;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
 import hu.icellmobilsoft.coffee.tool.utils.annotation.AnnotationUtil;
 import redis.clients.jedis.Jedis;
@@ -56,7 +56,7 @@ public class JedisConnectionProducer {
 
     /**
      * Creates or returns {@link Jedis} resource for the given configKey.
-     * 
+     *
      * @param injectionPoint
      *            injection metadata
      * @return {@code Jedis}
@@ -65,21 +65,19 @@ public class JedisConnectionProducer {
      */
     @Produces
     @Dependent
-    @RedisConnection(configKey = "")
-    @RedisStreamConnection(configKey = "", poolConfigKey = "", connectionConfigKey = "")
+    @RedisConnection(configKey = "", poolConfigKey = "", connectionConfigKey = "")
     public Jedis getJedis(InjectionPoint injectionPoint) throws BaseException {
         Optional<RedisConnection> annotation = AnnotationUtil.getAnnotation(injectionPoint, RedisConnection.class);
-        String configKey = annotation.map(RedisConnection::configKey).orElse(null);
 
-        Optional<RedisStreamConnection> streamAnnotation = AnnotationUtil.getAnnotation(injectionPoint, RedisStreamConnection.class);
-        String poolConfigKey = streamAnnotation.map(RedisStreamConnection::poolConfigKey).orElse(null);
-        String connectionConfigKey = streamAnnotation.map(RedisStreamConnection::connectionConfigKey).orElse(null);
+        String configKey = annotation.map(RedisConnection::configKey).orElse(null);
+        String poolConfigKey = annotation.map(RedisConnection::poolConfigKey).orElse(null);
+        String connectionConfigKey = annotation.map(RedisConnection::connectionConfigKey).orElse(null);
+
         JedisPool jedisPool;
         Instance<JedisPool> jedisPoolInstance;
-        if (streamAnnotation.isPresent()) {
-            configKey = streamAnnotation.map(RedisStreamConnection::configKey).orElse(null);
+        if (Objects.nonNull(connectionConfigKey)) {
             jedisPoolInstance = CDI.current().select(JedisPool.class,
-                    new RedisStreamConnection.Literal(configKey, poolConfigKey, connectionConfigKey));
+                    new RedisConnection.Literal(configKey, poolConfigKey, connectionConfigKey));
             jedisPool = jedisPoolInstance.get();
         } else {
             jedisPoolInstance = CDI.current().select(JedisPool.class, new RedisConnection.Literal(configKey));
@@ -103,11 +101,11 @@ public class JedisConnectionProducer {
 
     /**
      * Close connection when jedis is disposed
-     * 
+     *
      * @param jedis
      *            {@link Jedis} to close
      */
-    public void returnResource(@Disposes @RedisConnection(configKey = "") Jedis jedis) {
+    public void returnResource(@Disposes @RedisConnection(configKey = "", poolConfigKey = "", connectionConfigKey = "") Jedis jedis) {
         if (jedis != null) {
             jedis.close();
         }
