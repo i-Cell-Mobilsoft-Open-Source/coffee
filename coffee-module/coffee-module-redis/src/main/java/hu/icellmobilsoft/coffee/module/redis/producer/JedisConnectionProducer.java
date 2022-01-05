@@ -75,14 +75,10 @@ public class JedisConnectionProducer {
 
         JedisPool jedisPool;
         Instance<JedisPool> jedisPoolInstance;
-        if (Objects.nonNull(connectionConfigKey)) {
-            jedisPoolInstance = CDI.current().select(JedisPool.class,
-                    new RedisConnection.Literal(configKey, poolConfigKey, connectionConfigKey));
-            jedisPool = jedisPoolInstance.get();
-        } else {
-            jedisPoolInstance = CDI.current().select(JedisPool.class, new RedisConnection.Literal(configKey));
-            jedisPool = jedisPoolInstance.get();
-        }
+        jedisPoolInstance = CDI.current().select(JedisPool.class,
+                new RedisConnection.Literal(configKey, poolConfigKey, connectionConfigKey));
+        jedisPool = jedisPoolInstance.get();
+
 
         if (jedisPool != null) {
             try {

@@ -95,6 +95,7 @@ public class RedisStreamConsumerExecutor implements IRedisStreamConsumerExecutor
         this.redisConfigKey = redisConfigKey;
         redisStreamService.setGroup(group);
         this.consumerBean = consumerBean;
+        this.streamGroupConfig.setConfigKey(group);
     }
 
     /**

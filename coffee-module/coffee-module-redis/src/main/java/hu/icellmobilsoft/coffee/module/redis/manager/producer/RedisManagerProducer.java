@@ -66,9 +66,12 @@ public class RedisManagerProducer {
         Optional<RedisConnection> annotation = AnnotationUtil.getAnnotation(injectionPoint, RedisConnection.class);
 
         String configKey = annotation.map(RedisConnection::configKey).orElse(null);
-        String connectionConfigKey = annotation.map(RedisConnection::connectionConfigKey).orElse(configKey);
+        String connectionConfigKey = annotation.map(RedisConnection::connectionConfigKey).orElse(null);
         if (StringUtils.isBlank(configKey)) {
             throw new IllegalStateException("configKey is required for redis");
+        }
+        if (StringUtils.isBlank(connectionConfigKey)) {
+            connectionConfigKey = configKey;
         }
 
         log.trace("Creating RedisManager with configKey: [{0}]", configKey);

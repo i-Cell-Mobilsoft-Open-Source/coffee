@@ -34,6 +34,8 @@ import javax.enterprise.inject.spi.CDI;
 import javax.enterprise.inject.spi.InjectionPoint;
 import javax.inject.Inject;
 
+import org.apache.commons.lang3.StringUtils;
+
 import hu.icellmobilsoft.coffee.module.redis.annotation.RedisConnection;
 import hu.icellmobilsoft.coffee.module.redis.config.ManagedRedisConfig;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
@@ -87,7 +89,7 @@ public class JedisPoolProducer {
      * @return {@link JedisPool}
      */
     private synchronized JedisPool getInstance(String configKey, String connectionConfigKey, String poolConfigKey) {
-        if (Objects.nonNull(connectionConfigKey)) {
+        if (Objects.nonNull(connectionConfigKey) && !StringUtils.isBlank(connectionConfigKey)) {
             return jedisPoolInstances.computeIfAbsent(connectionConfigKey + poolConfigKey, v -> createJedisPool(configKey, connectionConfigKey, poolConfigKey));
         }
         return jedisPoolInstances.computeIfAbsent(configKey, v -> createJedisPool(configKey, configKey,"default"));
@@ -96,7 +98,7 @@ public class JedisPoolProducer {
 
     private JedisPool createJedisPool(String configKey, String connectionConfigKey, String poolConfigKey) {
         log.info("Creating JedisPool for configKey:[{0}]", configKey);
-        Instance<ManagedRedisConfig> instance = CDI.current().select(ManagedRedisConfig.class, new RedisConnection.Literal(configKey, connectionConfigKey, poolConfigKey));
+        Instance<ManagedRedisConfig> instance = CDI.current().select(ManagedRedisConfig.class, new RedisConnection.Literal(configKey, poolConfigKey, connectionConfigKey));
         ManagedRedisConfig managedRedisConfig = instance.get();
         try {
             String host = managedRedisConfig.getHost();

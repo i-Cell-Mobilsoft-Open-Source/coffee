@@ -88,8 +88,8 @@ public @interface RedisConnection {
 
         public Literal(String configKey) {
             this.configKey = configKey;
-            this.poolConfigKey = "default";
-            this.connectionConfigKey = "default";
+            this.poolConfigKey = "";
+            this.connectionConfigKey = "";
         }
 
         @Nonbinding
