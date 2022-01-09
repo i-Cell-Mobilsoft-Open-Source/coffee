@@ -1,0 +1,148 @@
+[#common_module_coffee-module-localization]
+= coffee-module-localization
+
+== Nyelvesítés
+Nyelvesítés funkciója egy backend rendszerben több szemszögből hasznos, például hibakódok,
+enum fordítások vagy akár dokumentumok nyelvesített generálása.
+Erre a célra a deltaspike
+http://deltaspike.apache.org/documentation/core.html#Messagesandi18n[Messages and i18n]
+funkciót használja, ami még fel van javítva újabb CDI lehetőségekkel.
+
+Három komponense van:
+
+* nyelv megállapítása (LocaleResolver)
+* nyelvesítő fájlok
+* nyelvesítés kezelő (LocalizedMessage)
+
+=== Nyelv (LocaleResolver)
+Alapból a deltaspike tartalmaz egy beépített nyelv feloldást,
+ami a futó JVM locale-t adja vissza,
+persze ez nem felel meg egy rendszernek,
+így CDI segítségével kell `@Alternative`-ot készíteni például így:
+
+.ProjectLocaleResolver
+[source,java]
+----
+import java.util.Locale;
+
+import javax.annotation.Priority;
+import javax.enterprise.context.Dependent;
+import javax.enterprise.inject.Alternative;
+import javax.inject.Inject;
+import javax.interceptor.Interceptor;
+
+import org.apache.commons.lang3.StringUtils;
+import org.apache.deltaspike.core.impl.message.DefaultLocaleResolver;
+
+import hu.icellmobilsoft.coffee.cdi.logger.AppLogger;
+import hu.icellmobilsoft.coffee.cdi.logger.ThisLogger;
+import hu.icellmobilsoft.project.common.rest.header.ProjectHeader;
+
+@Dependent
+@Alternative
+@Priority(Interceptor.Priority.APPLICATION + 10)
+public class ProjectLocaleResolver extends DefaultLocaleResolver {
+
+    private static final long serialVersionUID = 1L;
+
+    public static final String DEFAULT_LANGUAGE = "hu";
+
+    @Inject
+    private ProjectHeader header;
+
+    @Inject
+    @ThisLogger
+    private AppLogger log;
+
+    @Override
+    public Locale getLocale() {
+        if (header != null) {
+            log.debug("header language: [{0}]", header.getLanguage());
+            String language = header.getLanguage();
+            if (StringUtils.isNotBlank(language)) {
+                return new Locale(language);
+            }
+        }
+        return new Locale(DEFAULT_LANGUAGE);
+    }
+}
+----
+Ebben az ezetben egy CDI `ProjectHeader` kezelt osztályból kérjük ki a nyelvet,
+amit feltöltöttünk például a REST HTTP header adataiból.
+
+Persze még a `beans.xml` fájlban ezt az `@Alternative`-ot aktiválni kell.
+
+=== Nyelvesítő fájlok
+A nyelvesítő fájlok a rendes Java által támogatott rendeszeren működik,
+tehát a
+https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/ResourceBundle.html[ResourceBundle.html]
+szerint.
+Röviden összefoglalva ha van egy szótár fájl akkor a fájl neve + postfix halmaza adja meg a nyelvi feloldást.
+
+A rendszer alapból a "*i18n.messages*" ResourceBundle nevet támogatja, példa fájl:
+
+.src/main/resources/i18n/messages_hu.properties
+[source,properties]
+----
+pattern.date.full = yyyy-MM-dd HH:mm:ss
+pattern.date = yyyy-MM-dd
+pattern.time = HH:mm:ss
+pattern.date.time = yyyy-MM-dd HH:mm
+
+hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType.GENERIC_EXCEPTION = Nem várt hiba történt!
+----
+A fájlból látható hogy a "hu" locale-ra érvényes tartalmat gyűjti öszze.
+
+A szótár fájlok mennyisége szabadon bővíthető a `*coffee.config.resource.bundles*` konfigurációs kulcsal,
+ahol felsorolva lehet megadni többet/mást is:
+
+.project-defaults.yml
+[source,yaml]
+----
+coffee:
+    config:
+        resource:
+            bundles: i18n.messages,i18n.validations <1>
+----
+<1> space és idézőjelek nélkül kell megadni
+
+Látható hogy 2 fálj csoportban van megadva a szótárázás, amelyek lehetnek például a következők:
+
+* src/main/resources/i18n/messages.properties
+* src/main/resources/i18n/messages_en.properties
+* src/main/resources/i18n/messages_hu.properties
+* src/main/resources/i18n/validations.properties
+* src/main/resources/i18n/validations_en.properties
+* src/main/resources/i18n/validations_hu.properties
+
+=== Nyelvesítés kezelő (LocalizedMessage)
+Teljes mértékben használható a deltaspike type-safe megoldása is,
+de ez legtöbbször nem felel meg a projekteken,
+ott főleg dinamikus kulcsok (pl. hibakódok) alapján kell a nyelvesített üzenetet válaszolni.
+
+Erre a célra jött létre a `LocalizedMessage` osztály.
+Tartalmaz egy pár kulcs szerinti szótar feloldást például az enumok és osztályok számára,
+szabadon bővíthető, módosítható akár @Alternative-al is.
+Pár minta a használatból:
+
+[source,java]
+----
+import hu.icellmobilsoft.coffee.module.localization.LocalizedMessage;
+
+...
+    @Inject
+    private LocalizedMessage localizedMessage;
+...
+    protected String createDateTimePattern() {
+        return StringUtils.defaultString(localizedMessage.message("{pattern.date.full}"), "yyyy.MM.dd HH:mm:ss");
+    }
+
+    protected String localizeEnum(Enum<?> enumValue) {
+        return localizedMessage.message(enumValue);
+    }
+
+    protected String getMessage(String faultType) {
+        return localizedMessage.message(GeneralExceptionMapper.class, faultType);
+    }
+...
+----

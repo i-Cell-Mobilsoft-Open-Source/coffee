@@ -1,4 +1,4 @@
-[#common_module_coffee-module-mp-restclient]
+[#common_module_coffee-module-mp-opentracing]
 = coffee-module-mp-opentracing
 
 A modul célja a microprofile opentracing támogatása mely tartalmazza a következő alapelveket:

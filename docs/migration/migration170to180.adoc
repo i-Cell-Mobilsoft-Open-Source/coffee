@@ -4,78 +4,66 @@ coff:ee v1.7.0 -> v1.8.0 migrációs leírás, újdonságok, változások leír�
 
 == Újdonságok
 
+* log level optimalizáció
+
+
+=== coffee-configuration
+* Létrejött a modul, kivált a `coffee-rest` modulból
+* A `ConfigurationHelper` már nem használja a `BaseRequestContainer`-t (így megszűntetve a dupla cache-elést).
+Config cache-eléshez a `ApplicationConfiguration` használatos, ami guava cache-t használ.
+
+==== Átállás
+* Az importokat át kell írni `hu.icellmobilsoft.coffee.rest.configuration`-ről `hu.icellmobilsoft.coffee.configuration`-re.
+
 
 === coffee-dto
 * Létrejött az UtcOffsetDateTimeXmlAdapter és az UtcOffsetTimeXmlAdapter.
+* `ContextType`-ból kikerült a `user` field, valamint a `requestId`-ban meg lehet adni UUID-kat is.
 
 ==== Átállás
-A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+* `ContextType`-ból kikerült a `user` field, és megszünt a `commonservice`-es `UserType`. Az ezekre való hivatkozásokat meg kell szüntetni.
 
 == Változások
 
-* Java EE 8 -> Jakarta EE 8 átállás - Az elsőként kiadott jakarta verzió package és osztály szinten teljesen megegyezik
-a korábbi Java EE 8-cal, csupán maven koordinátákban tér el. Ennek megfelelően az átálláshoz az alábbi lépéseket kell
-megtenni:
-** Le kell cserélni a `javax`  dependency-ket a https://wiki.eclipse.org/Jakarta_EE_Maven_Coordinates[megfelelő
-`jakarta` párjára], például:
-+
-.javax
-[source,xml]
-----
-<dependency>
-    <groupId>javax</groupId>
-    <artifactId>javaee-api</artifactId>
-    <version>8.0</version>
-    <scope>provided</scope>
-</dependency>
-----
-+
-.jakarta
-[source,xml]
-----
+=== Általános
 
-<dependency>
-    <groupId>jakarta.platform</groupId>
-    <artifactId>jakarta.jakartaee-api</artifactId>
-    <version>8.0.0</version>
-    <scope>provided</scope>
-</dependency>
-----
+==== BOM verzió emelések:
+* microprofile-config-api 1.3 -> 2.0
+* smallrye-config 1.7.0 -> 2.8.1
+* opencsv 3.9 -> 5.5.2
 
-** Ellenőrizni kell a tranzitíven behúzott függőségeket is, az átállás után a projektben nem maradhat `javax`-os függőség,
-mert ez nem várt hibákat eredményezhet. Ehhez használhatjuk a maven dependency-plugin `dependency:tree` goal-ját.
-Az így talált `javax` artifact-okat exclude-olni kell. Ha egy exclude-olt függőségre szükségünk van, vegyük fel a
-`jakarta` párját, például:
-+
-.javax
-[source,xml]
-----
-<dependency>
-    <groupId>javax</groupId>
-    <artifactId>javaee-api</artifactId>
-    <version>8.0</version>
-    <scope>provided</scope>
-</dependency>
-----
-+
-.jakarta
-[source,xml]
-----
+=== coffee-module-etcd
+* jetcd-core verzió frissítés <version>0.5.0</version> -> <version>0.6.1</version>
 
-<dependency>
-    <groupId>jakarta.platform</groupId>
-    <artifactId>jakarta.jakartaee-api</artifactId>
-    <version>8.0.0</version>
-    <scope>provided</scope>
-</dependency>
-----
+==== Átállás
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
 
 === coffee-rest
 * "coffee.app.name" paraméterben megadható érték már nem kötelező, alapértelmezetten a "java:app/AppName" van használva.
 * JaxbTool kiegészítése `byte[]` fogadására képes unmarshalXML metódusokkal
+* DefaultBaseExceptionMapper létrehozása a beépített BaseException-k kezelésére
 
 ==== Átállás
-A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+* A deprecated InvalidRequestException és SaxParseBaseException törlésre került, helyettük a XsdProcessingException használata ajánlott
+* DefaultBaseExceptionMapper-re átállás. Ha van projekt specifikus kivétel amit kezelni szeretnénk, akkor ki
+kell terjeszteni a mappert az alábbi módon:
+[source,java]
+----
+@Provider // <1>
+public class BaseExceptionMapper extends DefaultBaseExceptionMapper {
+
+    @Override // <2>
+    protected Response handleException(BaseException e) {
+        if (e instanceof SampleException) {
+            return createResponse(e, Response.Status.BAD_REQUEST, new BusinessFault());
+        }
+
+        return super.handleException(e);
+    }
+}
+----
+<1> @Provider-ként szükséges kiterjeszteni a DefaultBaseExceptionMapper
+<2> handleException @Override, ha szükséges projekt specifikus exception mappelése
 
 === coffee-jpa
 * A `BatchService` automatán beállítja az átadott entitások verzióját
@@ -86,6 +74,33 @@ A változtatások nem eredményeznek átállási munkálatokat, visszafelé komp
 
 === coffee-model-base
 * A 2 `AbstractIdentifiedAuditEntity` osztály (`java.util.Date` és `OffsetDateTime`-on alapuló) kapott egy közös generikus interface-t
+
+==== Átállás
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+
+=== coffee-module-localization
+* Létrejött a modul, kivált a `coffee-rest` modulból
+
+==== Átállás
+* Az importokat át kell írni `hu.icellmobilsoft.coffee.rest.locale`-ról `hu.icellmobilsoft.coffee.module.localization`-re.
+
+
+=== coffee-module-csv
+* opencsv upgrade 3.9 -> 5.5.2
+* CsvUtil lokalizáció kezelés impelmentálása
+
+==== Átállás
+* `@CsvBind` annotációkat cserélni kell `@CsvBindByNamePosition`-re
+
+=== coffee-module-redisstream
+* `RedisStreamConsumerExecutor` már log-ol minden `Throwable`-t, nem csak `Exception`-t
+
+==== Átállás
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+=== coffee-module-mongodb
+* `@MongoClientConfiguration` qualifier-rel ellátott `MongoDbClient` használatához már nem szükséges, hogy legyen aktív a request scope
 
 ==== Átállás
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.

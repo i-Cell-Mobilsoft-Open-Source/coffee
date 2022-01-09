@@ -26,37 +26,44 @@ import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
+import javax.enterprise.inject.Vetoed;
+import javax.enterprise.inject.spi.CDI;
+
+import org.apache.commons.collections4.multimap.ArrayListValuedHashMap;
+import org.apache.commons.lang3.StringUtils;
+
+import com.opencsv.CSVParser;
+import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReader;
+import com.opencsv.CSVReaderBuilder;
 import com.opencsv.CSVWriter;
+import com.opencsv.ICSVWriter;
 import com.opencsv.bean.CsvToBean;
+import com.opencsv.bean.MappingStrategy;
 import com.opencsv.bean.StatefulBeanToCsv;
+import com.opencsv.bean.exceptionhandler.ExceptionHandlerThrow;
 import com.opencsv.exceptions.CsvDataTypeMismatchException;
 import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
 
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.dto.exception.BusinessException;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
-import hu.icellmobilsoft.coffee.module.csv.strategy.CustomHeaderColumnNameMappingStrategy;
+import hu.icellmobilsoft.coffee.module.csv.localization.LocalizedHeaderColumnNameWithPositionMappingStrategy;
+import hu.icellmobilsoft.coffee.module.csv.strategy.HeaderColumnNameWithPositionMappingStrategy;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
 
 /**
  * Csv utility.
  *
  * @author karoly.tamas
+ * @author martin.nagy
  * @since 1.0.0
  */
+@Vetoed
 public class CsvUtil {
-
-    private static Logger LOGGER = hu.icellmobilsoft.coffee.cdi.logger.LogProducer.getStaticDefaultLogger(CsvUtil.class);
+    private static final Logger LOGGER = Logger.getLogger(CsvUtil.class);
 
     private static final char DEFAULT_SEPARATOR = ';';
-    /** Constant <code>DEFAULT_LIST_SEPARATOR=','</code> */
-    public static final char DEFAULT_LIST_SEPARATOR = ',';
-
-    /** Constant <code>SIMPLE_CSV_DATE_FORMAT="yyyy-MM-dd"</code> */
-    public static final String SIMPLE_CSV_DATE_FORMAT = "yyyy-MM-dd";
-    /** Constant <code>CSV_FILE_NAME_DATE_FORMAT="yyyyMMddHHmmss"</code> */
-    public static final String CSV_FILE_NAME_DATE_FORMAT = "yyyyMMddHHmmss";
 
     /**
      * Converts bean list to CSV.
@@ -71,14 +78,68 @@ public class CsvUtil {
      * @throws BaseException
      *             if CSV file cannot be generated from beans.
      */
-    public static <T> String toCsv(List<T> beans, Class<? extends T> clazz) throws BaseException {
-        StringWriter sw = new StringWriter();
+    public static <T> String toCsv(List<T> beans, Class<T> clazz) throws BaseException {
+        return toCsv(beans, clazz, getDefaultMappingStrategy(clazz));
+    }
+
+    /**
+     * Converts bean list to localized CSV.
+     *
+     * @param <T>
+     *            type of beans
+     * @param beans
+     *            {@link List} of beans to convert
+     * @param clazz
+     *            class of beans
+     * @param language
+     *            the language of the CSV
+     * @return converted CSV text
+     * @throws BaseException
+     *             if CSV file cannot be generated from beans.
+     */
+    public static <T> String toLocalizedCsv(List<T> beans, Class<T> clazz, String language) throws BaseException {
+        if (beans == null || clazz == null || language == null) {
+            throw new BaseException(CoffeeFaultType.INVALID_INPUT, "beans or clazz or language is null!");
+        }
+        CDI<Object> cdi = CDI.current();
+        LocalizedHeaderColumnNameWithPositionMappingStrategy<T> mappingStrategy = cdi
+                .select(LocalizedHeaderColumnNameWithPositionMappingStrategy.class).get();
+        mappingStrategy.setLanguage(language);
         try {
-            sw = new StringWriter();
-            StatefulBeanToCsv<T> bc = new StatefulBeanToCsv<>(CSVWriter.DEFAULT_ESCAPE_CHARACTER, CSVWriter.DEFAULT_LINE_END,
-                    new CustomHeaderColumnNameMappingStrategy<>(clazz), CSVWriter.DEFAULT_QUOTE_CHARACTER, DEFAULT_SEPARATOR, false, sw);
+            return toCsv(beans, clazz, mappingStrategy);
+        } finally {
+            cdi.destroy(mappingStrategy);
+        }
+    }
+
+    /**
+     * Converts bean list to CSV.
+     *
+     * @param <T>
+     *            type of beans
+     * @param beans
+     *            {@link List} of beans to convert
+     * @param clazz
+     *            class of beans
+     * @param mappingStrategy
+     *            the object that handle translating between the columns in the CSV file to an actual object
+     * @return converted CSV text
+     * @throws BaseException
+     *             if CSV file cannot be generated from beans
+     */
+    public static <T> String toCsv(List<T> beans, Class<T> clazz, MappingStrategy<T> mappingStrategy) throws BaseException {
+        if (beans == null || clazz == null || mappingStrategy == null) {
+            throw new BaseException(CoffeeFaultType.INVALID_INPUT, "beans or clazz or mappingStrategy is null!");
+        }
+        StringWriter sw = new StringWriter();
+        CSVWriter csvWriter = new CSVWriter(sw, DEFAULT_SEPARATOR, ICSVWriter.DEFAULT_QUOTE_CHARACTER, ICSVWriter.DEFAULT_ESCAPE_CHARACTER,
+                ICSVWriter.DEFAULT_LINE_END);
+        StatefulBeanToCsv<T> bc = new StatefulBeanToCsv<>(initMappingStrategy(mappingStrategy, clazz), new ExceptionHandlerThrow(), true, csvWriter,
+                new ArrayListValuedHashMap<>(), null);
+
+        try {
             bc.write(beans);
-            return sw.getBuffer().toString();
+            return sw.toString();
         } catch (CsvDataTypeMismatchException | CsvRequiredFieldEmptyException e) {
             LOGGER.error("CSV file generation error", e);
             throw new BusinessException(CoffeeFaultType.CSV_GENERATE_FAULT, e.getMessage());
@@ -99,22 +160,14 @@ public class CsvUtil {
      *             if CSV file cannot be read and converted to beans
      */
     public static <T> List<T> toBean(String csv, Class<? extends T> clazz) throws BaseException {
-        CSVReader csvReader = null;
-        try {
-            csvReader = new CSVReader(new StringReader(csv), DEFAULT_SEPARATOR);
+        if (StringUtils.isBlank(csv) || clazz == null) {
+            throw new BaseException(CoffeeFaultType.INVALID_INPUT, "csv or clazz is blank!");
+        }
+        try (CSVReader csvReader = createCsvReader(csv)) {
             return toBean(csvReader, clazz);
         } catch (Exception e) {
             LOGGER.error("CSV file read error", e);
             throw new BusinessException(CoffeeFaultType.INVALID_REQUEST, e.getMessage());
-        } finally {
-            if (csvReader != null) {
-                try {
-                    csvReader.close();
-                } catch (Exception e) {
-                    LOGGER.error("Unable to close csvReader", e);
-                    throw new BusinessException(CoffeeFaultType.OPERATION_FAILED, e.getMessage());
-                }
-            }
         }
     }
 
@@ -132,37 +185,47 @@ public class CsvUtil {
      *             if CSV file cannot be read and converted to beans
      */
     public static <T> List<T> toBean(InputStream inputStream, Class<? extends T> clazz) throws BaseException {
-        CSVReader csvReader = null;
-        InputStreamReader inputStreamReader = null;
-        try {
-            inputStreamReader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
-            csvReader = new CSVReader(inputStreamReader, DEFAULT_SEPARATOR);
+        if (inputStream == null || clazz == null) {
+            throw new BaseException(CoffeeFaultType.INVALID_INPUT, "inputStream or clazz is null!");
+        }
+        try (InputStreamReader inputStreamReader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
+                CSVReader csvReader = createCsvReader(inputStreamReader)) {
             return toBean(csvReader, clazz);
         } catch (Exception e) {
             LOGGER.error("CSV file read error", e);
             throw new BusinessException(CoffeeFaultType.INVALID_REQUEST, e.getMessage());
-        } finally {
-            if (csvReader != null) {
-                try {
-                    csvReader.close();
-                } catch (Exception e) {
-                    LOGGER.error("Unable to close csvReader", e);
-                    throw new BusinessException(CoffeeFaultType.OPERATION_FAILED, e.getMessage());
-                }
-            }
-            if (inputStreamReader != null) {
-                try {
-                    inputStreamReader.close();
-                } catch (Exception e) {
-                    LOGGER.error("Unable to close inputStreamReader", e);
-                    throw new BusinessException(CoffeeFaultType.OPERATION_FAILED, e.getMessage());
-                }
-            }
         }
     }
 
+    private static CSVReader createCsvReader(String csv) {
+        return new CSVReaderBuilder(new StringReader(csv)).withCSVParser(createCsvParser()).build();
+    }
+
+    private static CSVReader createCsvReader(InputStreamReader inputStreamReader) {
+        return new CSVReaderBuilder(inputStreamReader).withCSVParser(createCsvParser()).build();
+    }
+
+    private static CSVParser createCsvParser() {
+        return new CSVParserBuilder().withSeparator(DEFAULT_SEPARATOR).build();
+    }
+
     private static <T> List<T> toBean(CSVReader csvReader, Class<? extends T> clazz) {
-        CsvToBean<T> cb = new CsvToBean<>();
-        return cb.parse(new CustomHeaderColumnNameMappingStrategy<>(clazz), csvReader);
+        CsvToBean<T> csvToBean = new CsvToBean<>();
+        csvToBean.setMappingStrategy(getDefaultMappingStrategy(clazz));
+        csvToBean.setCsvReader(csvReader);
+        return csvToBean.parse();
+    }
+
+    private static <T> MappingStrategy<T> getDefaultMappingStrategy(Class<T> clazz) {
+        MappingStrategy<T> mappingStrategy = new HeaderColumnNameWithPositionMappingStrategy<>();
+        return initMappingStrategy(mappingStrategy, clazz);
+    }
+
+    private static <T> MappingStrategy<T> initMappingStrategy(MappingStrategy<T> mappingStrategy, Class<T> clazz) {
+        mappingStrategy.setType(clazz);
+        return mappingStrategy;
+    }
+
+    private CsvUtil() {
     }
 }

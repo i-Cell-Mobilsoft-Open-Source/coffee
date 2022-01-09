@@ -3,9 +3,13 @@
 
 include::module/coffee-module-activemq.adoc[leveloffset=+1]
 
+include::module/coffee-module-csv.adoc[leveloffset=+1]
+
 include::module/coffee-module-document.adoc[leveloffset=+1]
 
 include::module/coffee-module-etcd.adoc[leveloffset=+1]
+
+include::module/coffee-module-localization.adoc[leveloffset=+1]
 
 include::module/coffee-module-mongodb.adoc[leveloffset=+1]
 
