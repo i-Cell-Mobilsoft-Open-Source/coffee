@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -24,7 +24,6 @@ import java.text.MessageFormat;
 import java.util.GregorianCalendar;
 
 import javax.xml.datatype.DatatypeConfigurationException;
-import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 
 import com.google.gson.JsonDeserializationContext;
@@ -36,6 +35,7 @@ import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 
 import hu.icellmobilsoft.coffee.se.logging.Logger;
+import hu.icellmobilsoft.coffee.tool.utils.date.DateXmlUtil;
 
 /**
  * Json &lt;-&gt; XMLGregorianCalendar converter.
@@ -70,9 +70,9 @@ public class XMLGregorianCalendarConverter implements JsonSerializer<XMLGregoria
         try {
             GregorianCalendar calendar = new GregorianCalendar();
             calendar.setTimeInMillis(Long.parseLong(string));
-            return DatatypeFactory.newInstance().newXMLGregorianCalendar(calendar);
+            return DateXmlUtil.getDatatypeFactory().newXMLGregorianCalendar(calendar);
         } catch (NumberFormatException e) {
-            return DatatypeFactory.newInstance().newXMLGregorianCalendar(string);
+            return DateXmlUtil.getDatatypeFactory().newXMLGregorianCalendar(string);
         }
     }
 }

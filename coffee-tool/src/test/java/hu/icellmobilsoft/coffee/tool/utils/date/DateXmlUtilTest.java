@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -18,11 +18,6 @@
  * #L%
  */
 package hu.icellmobilsoft.coffee.tool.utils.date;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNotSame;
-import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
@@ -40,10 +35,16 @@ import javax.xml.datatype.DatatypeConstants;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 
+import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import hu.icellmobilsoft.coffee.tool.version.JavaVersion;
 import hu.icellmobilsoft.coffee.tool.version.JavaVersionUtil;
@@ -478,7 +479,9 @@ class DateXmlUtilTest {
         // java 9 es 10 nem erdekel, azok nem LTS
         // java 11.0.3+
         if (javaVersion.getMajor() == 11) {
-            return (javaVersion.getFeature() == 0 && Integer.valueOf(javaVersion.getPatch()) >= 3) || javaVersion.getFeature() > 0;
+            int feature = (javaVersion.getFeature() != null) ? javaVersion.getFeature() : 0;
+            int patch = (StringUtils.isNotEmpty(javaVersion.getPatch())) ? Integer.parseInt(javaVersion.getPatch()) : 0;
+            return (feature == 0 && patch >= 3) || feature > 0;
         } else {
             // java 12+
             return javaVersion.getMajor() >= 12;

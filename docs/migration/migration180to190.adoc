@@ -1,0 +1,14 @@
+= v1.8.0 → v1.9.0
+
+coff:ee v1.8.0 -> v1.9.0 migrációs leírás, újdonságok, változások leírása
+
+== Újdonságok
+
+=== coffee-tool
+* DateXmlUtil -> XmlGregorianCalendar optimalizálása: DatatypeFactory.newInstance() példány cacheből kiszolgálása performancia okokból
+
+=== coffee-module-mongodb
+* DatatypeFactory.newInstance() cachelt példány lekérése DateXmlUtil alapján
+
+==== Átállás
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
