@@ -19,12 +19,15 @@
  */
 package hu.icellmobilsoft.coffee.cdi.config;
 
+import hu.icellmobilsoft.coffee.module.configdoc.ConfigDoc;
+
 /**
  * Coffee szintű konfigurációs kulcsok gyűjtője
  *
  * @author imre.scheffer
  * @since 1.0.0
  */
+@ConfigDoc
 public interface IConfigKey {
 
     /**

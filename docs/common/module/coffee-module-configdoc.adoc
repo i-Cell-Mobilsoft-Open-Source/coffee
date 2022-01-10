@@ -1,0 +1,64 @@
+[#common_module_coffee-module-configdoc]
+= coffee-module-configdoc
+
+A modul célja, hogy a konfigurációs kulcsokat tartalmazó osztályokból dokumentációt generáljon
+
+== Használata
+
+Használatához az alabbi függőséget kell hozzáadni a `pom.xml`-hez:
+[source,xml]
+----
+<dependency>
+    <groupId>hu.icellmobilsoft.coffee</groupId>
+    <artifactId>coffee-module-configdoc</artifactId>
+</dependency>
+----
+
+Ez után a konfigurációs kulcsokat tartalmazó osztályokat kell felannotálni a `@ConfigDoc` annotációval.
+
+Ha ezzel megvagyunk fordításkor az elkészült `.jar` fájlba bekerül a generált asciidoc a `META-INF/config_keys.adoc` néven.
+A kulcsok az első pont karakter előtti prefix szerint külön táblázatokban jelennek meg.
+
+== Példa
+
+[source,java]
+----
+@ConfigDoc // <1>
+public interface ConfigDocExample {
+
+    /**
+     * test prefix
+     */
+    @ConfigDoc(exclude = true) // <2>
+    String PREFIX = "test.";
+
+    /**
+     * test2
+     */
+    String test2 = "test2.xxx";
+
+    /**
+     * Lorem ipsum dolor sit amet, consectetur adipisicing elit. Illo, placeat!
+     */
+    String foo = PREFIX + "foo";
+
+    /**
+     * Lorem ipsum dolor sit amet, consectetur adipisicing elit. Iusto, sapiente?
+     */
+    @ConfigDoc(description = "Override...") // <3>
+    String bar = PREFIX + "bar";
+
+    /**
+     * Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsam, similique?
+     */
+    @ConfigDoc(defaultValue = "5000") // <4>
+    String baz = PREFIX + "baz";
+}
+----
+<1> A generálást egy osztályon a `@ConfigDoc` annotációval aktiváljuk
+<2> Az `exclude` mezővel ki lehet hagyni a generálásból mezőket
+<3> Alapértelmezetten a javadoc leírás kerül a generált fájlba, amit felül lehet írni az annotáció `description` mezőjével
+<4> A konfighoz tartozó default érték is megadható
+
+.A fenti példa kód eredménye
+image::pic/coffee-module-configdoc-example1.png[]
