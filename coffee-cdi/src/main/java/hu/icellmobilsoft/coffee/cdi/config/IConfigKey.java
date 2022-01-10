@@ -33,6 +33,7 @@ public interface IConfigKey {
     /**
      * Coffee konfigurációk prefix-e
      */
+    @ConfigDoc(exclude = true)
     String COFFEE_CONFIG_PREFIX = "coffee.config";
 
     /**
