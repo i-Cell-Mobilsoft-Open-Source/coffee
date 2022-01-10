@@ -1,3 +1,5 @@
+ifndef::imagesdir[:imagesdir: ../../pic]
+
 [#common_module_coffee-module-configdoc]
 = coffee-module-configdoc
 
@@ -61,4 +63,4 @@ public interface ConfigDocExample {
 <4> A konfighoz tartozó default érték is megadható
 
 .A fenti példa kód eredménye
-image::pic/coffee-module-configdoc-example1.png[]
+image::coffee-module-configdoc-example1.png[]
