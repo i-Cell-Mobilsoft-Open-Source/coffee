@@ -1,0 +1,68 @@
+= v1.8.0 → v1.9.0
+
+coff:ee v1.8.0 → v1.9.0 migrációs leírás, újdonságok, változások leírása
+
+== Változások
+
+=== Általános
+
+==== Java EE 8 -> Jakarta EE 8 átállás
+Az elsőként kiadott jakarta verzió package és osztály szinten teljesen megegyezik
+a korábbi Java EE 8-cal, csupán maven koordinátákban tér el.
+
+==== Átállás
+
+* Le kell cserélni a `javax`  dependency-ket a https://wiki.eclipse.org/Jakarta_EE_Maven_Coordinates[megfelelő
+`jakarta` párjára], például:
++
+.javax
+[source,xml]
+----
+<dependency>
+    <groupId>javax</groupId>
+    <artifactId>javaee-api</artifactId>
+    <version>8.0</version>
+    <scope>provided</scope>
+</dependency>
+----
++
+.jakarta
+[source,xml]
+----
+
+<dependency>
+    <groupId>jakarta.platform</groupId>
+    <artifactId>jakarta.jakartaee-api</artifactId>
+    <version>8.0.0</version>
+    <scope>provided</scope>
+</dependency>
+----
++
+Vagy külön kezelt dependency-k esetében:
++
+.javax
+[source,xml]
+----
+<dependency>
+    <groupId>javax.xml.bind</groupId>
+    <artifactId>jaxb-api</artifactId>
+    <version>2.3.1</version>
+    <scope>provided</scope>
+</dependency>
+----
++
+.jakarta
+[source,xml]
+----
+<dependency>
+    <groupId>jakarta.xml.bind</groupId>
+    <artifactId>jakarta.xml.bind-api</artifactId>
+    <version>2.3.2</version>
+    <scope>provided</scope>
+</dependency>
+----
++
+* Ellenőrizni kell a tranzitíven behúzott függőségeket is, az átállás után a projektben nem maradhat `javax`-os függőség,
+mert ez nem várt hibákat eredményezhet. Ehhez használhatjuk a maven dependency-plugin `dependency:tree` goal-ját.
+Előfordulhat, hogy projekt szinten kihasználtuk kódban az exclude-olt tranzitív dependecy-t, ilyenkor fordítási hibát
+fogunk kapni, amit javíthatunk, ha felvesszük az exclude-olt `javax` artifact `jakarta` párját a dependency-k közé.
