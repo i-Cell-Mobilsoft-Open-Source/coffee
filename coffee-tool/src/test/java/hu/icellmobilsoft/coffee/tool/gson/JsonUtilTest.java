@@ -79,7 +79,7 @@ class JsonUtilTest {
         TestObject testObject = new TestObject();
         ZonedDateTime zonedDateTime = ZonedDateTime.of(2019, 02, 11, 15, 23, 34, 51000000, ZoneOffset.UTC);
         Calendar gregorianCalendar = GregorianCalendar.getInstance(TimeZone.getTimeZone("UTC"));
-        Duration duration = DatatypeFactory.newInstance().newDuration(true,1,1,1,1,1,1);
+        Duration duration = DatatypeFactory.newInstance().newDuration(true, 1, 1, 1, 1, 1, 1);
         gregorianCalendar.setTime(Date.from(zonedDateTime.toInstant()));
 
         Date date = new Date(Long.parseLong(DATE_AS_LONG));
@@ -203,15 +203,14 @@ class JsonUtilTest {
             void parsable() throws Exception {
                 // given
                 TestObject source = givenWeHaveTestObject();
-                JsonParser parser = new JsonParser();
                 // parse the json strings to avoid whitespace and ordering related differences
-                JsonElement expectedJSONObject = parser.parse(TEST_OBJECT_AS_JSON);
+                JsonElement expectedJSONObject = JsonParser.parseString(TEST_OBJECT_AS_JSON);
 
                 // when
                 String actual = JsonUtil.toJson(source);
 
                 // then
-                JsonElement actualJSONObject = parser.parse(actual);
+                JsonElement actualJSONObject = JsonParser.parseString(actual);
                 assertEquals(expectedJSONObject, actualJSONObject);
             }
 
@@ -241,15 +240,14 @@ class JsonUtilTest {
             void parsable() throws Exception {
                 // given
                 TestObject source = givenWeHaveTestObject();
-                JsonParser parser = new JsonParser();
                 // parse the json strings to avoid whitespace and ordering related differences
-                JsonElement expectedJSONObject = parser.parse(TEST_OBJECT_AS_JSON);
+                JsonElement expectedJSONObject = JsonParser.parseString(TEST_OBJECT_AS_JSON);
 
                 // when
                 String actual = JsonUtil.toJsonEx(source);
 
                 // then
-                JsonElement actualJSONObject = parser.parse(actual);
+                JsonElement actualJSONObject = JsonParser.parseString(actual);
                 assertEquals(expectedJSONObject, actualJSONObject);
             }
 
@@ -279,15 +277,14 @@ class JsonUtilTest {
             void parsable() throws Exception {
                 // given
                 TestObject source = givenWeHaveTestObject();
-                JsonParser parser = new JsonParser();
                 // parse the json strings to avoid whitespace and ordering related differences
-                JsonElement expectedJSONObject = parser.parse(TEST_OBJECT_AS_JSON);
+                JsonElement expectedJSONObject = JsonParser.parseString(TEST_OBJECT_AS_JSON);
 
                 // when
                 String actual = JsonUtil.toJsonGson(source);
 
                 // then
-                JsonElement actualJSONObject = parser.parse(actual);
+                JsonElement actualJSONObject = JsonParser.parseString(actual);
                 assertEquals(expectedJSONObject, actualJSONObject);
             }
 
