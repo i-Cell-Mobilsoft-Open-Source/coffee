@@ -44,6 +44,12 @@ public class JbossMDCAdapter implements MDCAdapter {
     private Method clear;
     private Method remove;
 
+    /**
+     * JbossMDCAdapter default constructor
+     * 
+     * @throws Exception
+     *             error
+     */
     public JbossMDCAdapter() throws Exception {
         Class<?> jbossMDC = Class.forName("org.jboss.logging.MDC");
         put = jbossMDC.getMethod("put", String.class, Object.class);
