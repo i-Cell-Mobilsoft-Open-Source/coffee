@@ -32,6 +32,13 @@ de kap fordítási és tesztelési ellenőrzéseket java 17-re is.
 * junit:jupiter 5.5.2 -> 5.8.1
 * org.jboss.weld:weld-junit5 2.0.1.Final -> 2.0.2.Final
 
+
+=== coffee-module-configdoc
+* Létrejött a modul
+
+==== Átállás
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
 == Változások
 
 === Általános

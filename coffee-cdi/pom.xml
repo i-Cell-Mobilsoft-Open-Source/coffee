@@ -26,6 +26,10 @@
 			<groupId>hu.icellmobilsoft.coffee</groupId>
 			<artifactId>coffee-se-logging</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>hu.icellmobilsoft.coffee</groupId>
+			<artifactId>coffee-module-configdoc</artifactId>
+		</dependency>
 
 		<!-- Deltaspike -->
 		<dependency>

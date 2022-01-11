@@ -291,6 +291,12 @@
 				<artifactId>coffee-module-totp</artifactId>
 				<version>${project.version}</version>
 			</dependency>
+			<dependency>
+				<groupId>hu.icellmobilsoft.coffee</groupId>
+				<artifactId>coffee-module-configdoc</artifactId>
+				<version>${project.version}</version>
+				<scope>provided</scope>
+			</dependency>
 
 			<dependency>
 				<groupId>org.jboss.logging</groupId>
