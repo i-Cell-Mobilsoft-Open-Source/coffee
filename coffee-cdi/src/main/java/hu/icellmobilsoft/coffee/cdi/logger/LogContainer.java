@@ -40,8 +40,8 @@ import javax.enterprise.inject.Model;
 @Model
 public class LogContainer {
 
-    private List<LogContainer.Log> logs = new ArrayList<LogContainer.Log>();
-    private Map<String, Object> customParam = new HashMap<String, Object>();
+    private final List<LogContainer.Log> logs = new ArrayList<>();
+    private final Map<String, Object> customParam = new HashMap<>();
 
     /**
      * Logs trace log with message.
@@ -335,6 +335,29 @@ public class LogContainer {
      * Log levels definition enum.
      */
     public enum LogLevel {
-        CUSTOM, TRACE, DEBUG, INFO, WARN, ERROR;
+        /**
+         * shows custom param changes
+         */
+        CUSTOM,
+        /**
+         * providing fine grade trace information
+         */
+        TRACE,
+        /**
+         * providing detailed information for debugging
+         */
+        DEBUG,
+        /**
+         * providing informational massages
+         */
+        INFO,
+        /**
+         * indicating potential problems of misconfiguration
+         */
+        WARN,
+        /**
+         * indicating some errors
+         */
+        ERROR,
     }
 }

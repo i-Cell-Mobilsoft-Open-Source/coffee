@@ -44,18 +44,22 @@ public class AppLoggerImpl implements AppLogger {
 
     private static final long serialVersionUID = 1L;
 
+    /**
+     * The wrapped logger instance
+     */
     private Logger logger;
 
+    /**
+     * Log message container
+     */
     @Inject
     private LogContainer logContainer;
 
-    /** {@inheritDoc} */
     @Override
     public void setLogger(Logger logger) {
         this.logger = logger;
     }
 
-    /** {@inheritDoc} */
     @Override
     public Logger getLogger() {
         return logger;
@@ -74,123 +78,105 @@ public class AppLoggerImpl implements AppLogger {
         }
     }
 
-    /** {@inheritDoc} */
     @Override
     public void trace(String msg) {
         logger().log(JulLevel.TRACE, msg);
         logContainer.trace(msg);
     }
 
-    /** {@inheritDoc} */
     @Override
     public void trace(String format, Object... arguments) {
         logger().log(JulLevel.TRACE, () -> MessageFormat.format(format, arguments));
         logContainer.trace(format, arguments);
     }
 
-    /** {@inheritDoc} */
     @Override
     public void trace(String msg, Throwable t) {
         logger().log(JulLevel.TRACE, msg, t);
         logContainer.trace(msg, t);
     }
 
-    /** {@inheritDoc} */
     @Override
     public boolean isTraceEnabled() {
         return logger().isLoggable(JulLevel.TRACE);
     }
 
-    /** {@inheritDoc} */
     @Override
     public void debug(String msg) {
         logger().log(JulLevel.DEBUG, msg);
         logContainer.debug(msg);
     }
 
-    /** {@inheritDoc} */
     @Override
     public void debug(String format, Object... arguments) {
         logger().log(JulLevel.DEBUG, () -> MessageFormat.format(format, arguments));
         logContainer.debug(format, arguments);
     }
 
-    /** {@inheritDoc} */
     @Override
     public void debug(String msg, Throwable t) {
         logger().log(JulLevel.DEBUG, msg, t);
         logContainer.debug(msg, t);
     }
 
-    /** {@inheritDoc} */
     @Override
     public boolean isDebugEnabled() {
         return logger().isLoggable(JulLevel.DEBUG);
     }
 
-    /** {@inheritDoc} */
     @Override
     public void info(String msg) {
         logger().log(JulLevel.INFO, msg);
         logContainer.info(msg);
     }
 
-    /** {@inheritDoc} */
     @Override
     public void info(String format, Object... arguments) {
         logger().log(JulLevel.INFO, () -> MessageFormat.format(format, arguments));
         logContainer.info(format, arguments);
     }
 
-    /** {@inheritDoc} */
     @Override
     public void info(String msg, Throwable t) {
         logger().log(JulLevel.INFO, msg, t);
         logContainer.info(msg, t);
     }
 
-    /** {@inheritDoc} */
     @Override
     public boolean isInfoEnabled() {
         return logger().isLoggable(JulLevel.INFO);
     }
 
-    /** {@inheritDoc} */
     @Override
     public void warn(String msg) {
         logger().log(JulLevel.WARN, msg);
         logContainer.warn(msg);
     }
 
-    /** {@inheritDoc} */
     @Override
     public void warn(String format, Object... arguments) {
         logger().log(JulLevel.WARN, () -> MessageFormat.format(format, arguments));
         logContainer.warn(format, arguments);
     }
 
-    /** {@inheritDoc} */
     @Override
     public void warn(String msg, Throwable t) {
         logger().log(JulLevel.WARN, msg, t);
         logContainer.warn(msg, t);
     }
 
-    /** {@inheritDoc} */
     @Override
     public void error(String msg) {
         logger().log(JulLevel.ERROR, msg);
         logContainer.error(msg);
     }
 
-    /** {@inheritDoc} */
     @Override
     public void error(String format, Object... arguments) {
         logger().log(JulLevel.ERROR, () -> MessageFormat.format(format, arguments));
         logContainer.error(format, arguments);
     }
 
-    /** {@inheritDoc} */
     @Override
     public void error(String msg, Throwable t) {
         logger().log(JulLevel.ERROR, msg, t);
@@ -242,7 +228,6 @@ public class AppLoggerImpl implements AppLogger {
         logger().log(JulLevel.ERROR, toString());
     }
 
-    /** {@inheritDoc} */
     @Override
     public void writeLog() {
         LogLevel logLevel = logContainer.getHighestLogLevel();
@@ -269,7 +254,6 @@ public class AppLoggerImpl implements AppLogger {
         }
     }
 
-    /** {@inheritDoc} */
     @Override
     public String toString() {
         String proxy = logContainer.getClass() + "@" + logContainer.hashCode() + "@@" + System.identityHashCode(logContainer);
@@ -277,13 +261,11 @@ public class AppLoggerImpl implements AppLogger {
         return proxy + " -> " + clazz + ":\n" + logContainer.toString();
     }
 
-    /** {@inheritDoc} */
     @Override
     public boolean isThereAnyError() {
         return (logContainer.getHighestLogLevel() == LogLevel.ERROR);
     }
 
-    /** {@inheritDoc} */
     @Override
     public boolean isThereAnyWarning() {
         return (logContainer.getHighestLogLevel() == LogLevel.WARN || logContainer.getHighestLogLevel() == LogLevel.ERROR);

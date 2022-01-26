@@ -40,6 +40,13 @@ import javax.inject.Qualifier;
 @Target({ ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER, ElementType.TYPE })
 public @interface MongoClientConfiguration {
 
+    /**
+     * Config key of the desired Mongo DB connection. <br>
+     * ie. if connection details are defined in the project-*.yml by the keys: {@code coffee.mongodb.exampleDB.*=...} then configKey should be
+     * "exampleDB"
+     *
+     * @return config key
+     */
     @Nonbinding
     String configKey();
 
@@ -47,6 +54,9 @@ public @interface MongoClientConfiguration {
 
         private static final long serialVersionUID = 1L;
 
+        /**
+         * config key
+         */
         final String configKey;
 
         public Literal(String configKey) {

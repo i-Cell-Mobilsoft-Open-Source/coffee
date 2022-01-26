@@ -43,6 +43,9 @@ public abstract class AbstractIdentifiedAuditEntity extends AbstractAuditEntity<
 
     private static final long serialVersionUID = 1L;
 
+    /**
+     * Primary key of the entity
+     */
     @Id
     @Column(name = "X__ID", length = 30)
     @GenericGenerator(name = "javatime-entity-id-generator", strategy = "hu.icellmobilsoft.coffee.model.base.generator.EntityIdGenerator")

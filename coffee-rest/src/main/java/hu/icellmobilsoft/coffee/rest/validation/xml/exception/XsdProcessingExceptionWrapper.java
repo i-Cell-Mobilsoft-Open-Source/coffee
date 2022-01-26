@@ -32,6 +32,9 @@ public class XsdProcessingExceptionWrapper extends javax.ws.rs.ProcessingExcepti
 
     private static final long serialVersionUID = 1L;
 
+    /**
+     * The wrapped exception
+     */
     private XsdProcessingException exception;
 
     /**

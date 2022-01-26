@@ -20,6 +20,7 @@
 package hu.icellmobilsoft.coffee.model.base;
 
 import java.util.Date;
+
 import javax.enterprise.inject.Vetoed;
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
@@ -40,6 +41,9 @@ public abstract class AbstractIdentifiedAuditEntity extends AbstractAuditEntity<
 
     private static final long serialVersionUID = 1L;
 
+    /**
+     * Primary key of the entity
+     */
     @Id
     @Column(name = "X__ID", length = 30)
     @GenericGenerator(name = "entity-id-generator", strategy = "hu.icellmobilsoft.coffee.model.base.generator.EntityIdGenerator")

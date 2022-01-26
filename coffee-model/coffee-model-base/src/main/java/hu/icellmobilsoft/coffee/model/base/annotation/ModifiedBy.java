@@ -36,6 +36,10 @@ import java.lang.annotation.Target;
 @Target({ ElementType.FIELD, ElementType.METHOD })
 public @interface ModifiedBy {
 
+    /**
+     * Returns TODO
+     * @return TODO
+     */
     boolean onCreate() default false;
 
 }

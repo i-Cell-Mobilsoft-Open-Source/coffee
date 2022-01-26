@@ -39,6 +39,9 @@ public abstract class AbstractIdentifiedEntity extends AbstractEntity {
 
     private static final long serialVersionUID = 1L;
 
+    /**
+     * Identity field of the entity
+     */
     @Id
     @Column(name = "X__ID", length = 30)
     @GenericGenerator(name = "entity-id-generator", strategy = "hu.icellmobilsoft.coffee.model.base.generator.EntityIdGenerator")

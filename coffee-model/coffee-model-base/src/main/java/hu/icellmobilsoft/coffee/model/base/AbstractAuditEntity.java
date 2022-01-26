@@ -46,22 +46,34 @@ public abstract class AbstractAuditEntity<T> extends AbstractEntity {
 
     private static final long serialVersionUID = 1L;
 
+    /**
+     * Creation date of the entity
+     */
     @CreatedOn
     @NotNull
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "X__INSDATE", updatable = false)
     private Date creationDate;
 
+    /**
+     * Last modification date of the entity
+     */
     @ModifiedOn
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "X__MODDATE")
     private Date modificationDate;
 
+    /**
+     * Creator user of the entity
+     */
     @CreatedBy
     @NotNull
     @Column(name = "X__INSUSER", length = 30, updatable = false)
     private T creatorUser;
 
+    /**
+     * The last modifier user of the entity
+     */
     @ModifiedBy
     @Column(name = "X__MODUSER", length = 30)
     private T modifierUser;
