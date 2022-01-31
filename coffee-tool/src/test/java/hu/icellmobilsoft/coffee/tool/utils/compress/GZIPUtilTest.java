@@ -23,30 +23,43 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.EnabledForJreRange;
+import org.junit.jupiter.api.condition.JRE;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
-import hu.icellmobilsoft.coffee.tool.utils.compress.GZIPUtil;
 
 /**
  * @author balazs.joo
  */
 @ExtendWith(MockitoExtension.class)
 @DisplayName("Testing GZIPUtil")
-public class GZIPUtilTest {
+class GZIPUtilTest {
 
     private static final String TEST = "test";
     private static final byte[] COMPRESSED = { 31, -117, 8, 0, 0, 0, 0, 0, 0, 0, 43, 73, 45, 46, 1, 0, 12, 126, 127, -40, 4, 0, 0, 0 };
+    // https://www.oracle.com/java/technologies/javase/16-relnotes.html
+    // Prior to JDK 16, GZIPOutputStream set the OS field in the GZIP header to 0 (meaning FAT filesystem), which does not match the default value
+    // specified in section 2.3.1.2 of the GZIP file format specification version 4.3 (RFC 1952).
+    // As of JDK 16, the GZIP OS Header Field is set to 255, which is the default value as defined in RFC 1952.
+    private static final byte[] COMPRESSEDJ16 = { 31, -117, 8, 0, 0, 0, 0, 0, 0, -1, 43, 73, 45, 46, 1, 0, 12, 126, 127, -40, 4, 0, 0, 0 };
 
     @Nested
     @DisplayName("Testing isCompressed()")
     class IsCompressed {
 
         @Test
-        @DisplayName("Testing isCompressed(byte[])")
+        @DisplayName("Testing isCompressed(byte[]), JRE < 16")
         void isCompressed() {
             Assertions.assertTrue(GZIPUtil.isCompressed(COMPRESSED));
+            Assertions.assertFalse(GZIPUtil.isCompressed(TEST.getBytes()));
+        }
+
+        @Test
+        @DisplayName("Testing isCompressed(byte[]), JRE >= 16")
+        void isCompressedJ16() {
+            Assertions.assertTrue(GZIPUtil.isCompressed(COMPRESSEDJ16));
             Assertions.assertFalse(GZIPUtil.isCompressed(TEST.getBytes()));
         }
     }
@@ -56,13 +69,21 @@ public class GZIPUtilTest {
     class Compress {
 
         @Test
-        @DisplayName("Testing compress(byte[])")
+        @DisplayName("Testing compress(byte[]), JRE < 16")
+        @EnabledForJreRange(max = JRE.JAVA_15)
+        void compressBellowJ16() throws BaseException {
+
+            byte[] compressedByte = GZIPUtil.compress(TEST.getBytes());
+            Assertions.assertArrayEquals(COMPRESSED, compressedByte);
+        }
+
+        @Test
+        @DisplayName("Testing compress(byte[]), JRE >= 16")
+        @EnabledForJreRange(min = JRE.JAVA_16)
         void compress() throws BaseException {
 
             byte[] compressedByte = GZIPUtil.compress(TEST.getBytes());
-
-            Assertions.assertArrayEquals(COMPRESSED, compressedByte);
-
+            Assertions.assertArrayEquals(COMPRESSEDJ16, compressedByte);
         }
     }
 
@@ -71,34 +92,63 @@ public class GZIPUtilTest {
     class Decompress {
 
         @Test
-        @DisplayName("Testing decompress(byte[])")
+        @DisplayName("Testing decompress(byte[]), JRE < 16")
         void decompress() throws BaseException {
 
             byte[] actual = GZIPUtil.decompress(COMPRESSED);
 
             Assertions.assertEquals(new String(actual), TEST);
-
         }
 
         @Test
-        @DisplayName("Testing decompress(byte[])")
+        @DisplayName("Testing decompress(byte[]), JRE < 16")
         void decompressWithClass() throws BaseException {
 
             String actual = GZIPUtil.decompress(COMPRESSED, String.class);
 
             Assertions.assertEquals(actual, TEST);
+        }
 
+        @Test
+        @DisplayName("Testing decompress(byte[]), JRE >= 16")
+        void decompressJ16() throws BaseException {
+
+            byte[] actual = GZIPUtil.decompress(COMPRESSEDJ16);
+
+            Assertions.assertEquals(new String(actual), TEST);
+        }
+
+        @Test
+        @DisplayName("Testing decompress(byte[]), JRE >= 16")
+        void decompressWithClassJ16() throws BaseException {
+
+            String actual = GZIPUtil.decompress(COMPRESSEDJ16, String.class);
+
+            Assertions.assertEquals(actual, TEST);
         }
     }
 
-    @Test
-    @DisplayName("Testing decompressedSize(byte[])")
-    void decompressedSize() throws BaseException {
+    @Nested
+    @DisplayName("Testing size()")
+    class SizeCheck {
 
-        int actual = GZIPUtil.decompressedSize(COMPRESSED);
+        @Test
+        @DisplayName("Testing decompressedSize(byte[]), JRE < 16")
+        void decompressedSize() throws BaseException {
 
-        Assertions.assertEquals(actual, 4);
+            int actual = GZIPUtil.decompressedSize(COMPRESSED);
 
+            Assertions.assertEquals(actual, 4);
+        }
+
+        @Test
+        @DisplayName("Testing decompressedSize(byte[]), JRE >= 16")
+        void decompressedSizeJ16() throws BaseException {
+
+            int actual = GZIPUtil.decompressedSize(COMPRESSEDJ16);
+
+            Assertions.assertEquals(actual, 4);
+        }
     }
 
     @Test

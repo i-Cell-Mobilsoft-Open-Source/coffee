@@ -1,3 +1,5 @@
+ifndef::imagesdir[:imagesdir: ../pic]
+
 [#howto_xsd_catalog]
 = XSD Catalog és generálás
 
@@ -369,7 +371,7 @@ Ebből keletkezik a generálásnál osztály - egy részlete a következő:
 A dokumentációs felhasználói felületen ez így látszódik:
 
 .swagger UI
-image::pic/XSD_catalog_swaggerUI_sample.png[]
+image::XSD_catalog_swaggerUI_sample.png[]
 
 A példában nem szerepel a xsd:documentation mert nem találtam rá megfelelő pici példát,
 de működik annak a generálása is.
@@ -433,7 +435,7 @@ Ezt a következőképpen kell megtenni:
 
 . `Window` -> `Preferences`
 . Az ablakban navigálunk: `XML` -> `XML Catalog`
-. Valami ilyesmi fogunk látni: image:pic/XSD_catalog_catalog_delete.png[title="Eclipse Catalog Törlés"]
+. Valami ilyesmi fogunk látni: image:XSD_catalog_catalog_delete.png[title="Eclipse Catalog Törlés"]
 . Kiválasztjük a `User Specified Entries` tételeket, majd `Remove`
 . Ezután újra mehet a <<howto_xsd_catalog_CatalogImport,Catalog import>>
 
