@@ -53,10 +53,16 @@ public abstract class AbstractPushAction implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    /**
+     * Logger
+     */
     @Inject
     @ThisLogger
     private AppLogger log;
 
+    /**
+     * Injected PushHelper
+     */
     @Inject
     private PushHelper pushHelper;
 

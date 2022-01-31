@@ -44,6 +44,9 @@ import hu.icellmobilsoft.coffee.tool.utils.marshalling.MarshallingUtil;
  * @since 1.2.0
  */
 public class DefaultBaseExceptionResponseExceptionMapper implements ResponseExceptionMapper<BaseException> {
+    /**
+     * <a href="https://datatracker.ietf.org/doc/html/rfc2324#section-2.3.2">RFC 2324 - section 2.3.2</a>
+     */
     public static final int HTTP_STATUS_I_AM_A_TEAPOT = 418;
 
     @Override
@@ -63,6 +66,17 @@ public class DefaultBaseExceptionResponseExceptionMapper implements ResponseExce
                 MessageFormat.format("HTTP error status [{0}], content [{1}]", responseStatus, response.readEntity(String.class)));
     }
 
+    /**
+     * Tries to unmarshall the response entity to a given class
+     * 
+     * @param response
+     *            the HTTP response
+     * @param dtoClass
+     *            the expected response entity class
+     * @param <T>
+     *            dto class type
+     * @return the unmarshalled response entity
+     */
     protected <T> T readEntity(Response response, Class<T> dtoClass) {
         String entity = response.readEntity(String.class);
         if (StringUtils.isBlank(entity)) {

@@ -41,10 +41,9 @@ public class EmailRecipientService extends BaseService<EmailRecipient> implement
 
     private static final long serialVersionUID = 1L;
 
-    @Inject
-    @ThisLogger
-    private AppLogger log;
-
+    /**
+     * Wrapped repository
+     */
     @Inject
     private EmailRecipientRepository emailRecipientRepository;
 

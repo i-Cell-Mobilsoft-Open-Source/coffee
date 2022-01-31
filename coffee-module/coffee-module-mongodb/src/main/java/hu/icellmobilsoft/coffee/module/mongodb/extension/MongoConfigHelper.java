@@ -60,6 +60,9 @@ import org.eclipse.microprofile.config.Config;
 @Dependent
 public class MongoConfigHelper {
 
+    /**
+     * Mongo db konfig key prefix
+     */
     public static final String CONFIG_PREFIX = "coffee.mongodb";
 
     /**
@@ -71,7 +74,7 @@ public class MongoConfigHelper {
      */
     public static final String URI_KEY = "uri";
     /**
-     *
+     * MongoDB client {@value} config
      */
     public static final String SOCKET_TIMEOUT_KEY = "socketTimeout";
     /**
@@ -272,10 +275,18 @@ public class MongoConfigHelper {
         return config.getOptionalValue(concatConfigKey(SERVER_SELECTION_TIMEOUT_KEY), Integer.class).orElse(DEFAULT_SERVER_SELECTION_TIMEOUT);
     }
 
+    /**
+     * Returns the current configKey value
+     * @return the current configKey value
+     */
     public String getConfigKey() {
         return configKey;
     }
 
+    /**
+     * Sets the new configKey value
+     * @param configKey new configKey value
+     */
     public void setConfigKey(String configKey) {
         this.configKey = configKey;
     }

@@ -54,12 +54,21 @@ public @interface RedisConnection {
      * @author mark.petrenyi
      *
      */
-    public static final class Literal extends AnnotationLiteral<RedisConnection> implements RedisConnection {
+    final class Literal extends AnnotationLiteral<RedisConnection> implements RedisConnection {
 
         private static final long serialVersionUID = 1L;
 
+        /**
+         * config key
+         */
         private final String configKey;
 
+        /**
+         * Instantiates the literal with configKey
+         *
+         * @param configKey
+         *            config key
+         */
         public Literal(String configKey) {
             this.configKey = configKey;
         }

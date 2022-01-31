@@ -41,10 +41,9 @@ public class PushService extends BaseService<Push> implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @Inject
-    @ThisLogger
-    private AppLogger log;
-
+    /**
+     * Wrapped repository
+     */
     @Inject
     private PushRepository pushRepository;
 

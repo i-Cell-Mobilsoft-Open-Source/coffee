@@ -38,8 +38,18 @@ import redis.clients.jedis.args.ListDirection;
 @Vetoed
 public class RedisRepository {
 
+    /**
+     * Redis response codes
+     */
     public interface RedisResultCode {
+        /**
+         * Successful action result code
+         */
         Long SUCCESSFUL = 1L;
+
+        /**
+         * Unsuccessful action result code
+         */
         Long UNSUCCESSFUL = 0L;
     }
 

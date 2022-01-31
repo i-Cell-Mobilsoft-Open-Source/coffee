@@ -84,11 +84,24 @@ public @interface RedisStreamProducer {
 
         private static final long serialVersionUID = 1L;
 
+        /**
+         * config key
+         */
         final String configKey;
+        /**
+         * redis stream group
+         */
         final String group;
 
+        /**
+         * Instantiates the literal with configKey and redis stream group
+         * 
+         * @param configKey
+         *            config key
+         * @param group
+         *            redis stream group
+         */
         public Literal(String configKey, String group) {
-            super();
             this.configKey = configKey;
             this.group = group;
         }

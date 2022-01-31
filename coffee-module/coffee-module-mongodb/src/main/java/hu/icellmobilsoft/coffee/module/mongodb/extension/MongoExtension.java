@@ -54,7 +54,7 @@ public class MongoExtension implements javax.enterprise.inject.spi.Extension {
     private final List<Type> mongoServiceTypes = new ArrayList<>();
 
     /**
-     * TODO
+     * Creates CDI producer beans for the found mongo service implementations
      * 
      * @param abd
      *            event fired by the CDI container when it has fully completed the bean discovery proces

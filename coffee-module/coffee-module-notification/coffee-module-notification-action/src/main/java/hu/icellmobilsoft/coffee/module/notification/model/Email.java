@@ -45,25 +45,43 @@ public class Email extends AbstractIdentifiedAuditEntity {
 
     private static final long serialVersionUID = 1L;
 
+    /**
+     * email sender address
+     */
     @Column(name = "email_from", length = 255)
     @Size(max = 255)
     private String from;
 
+    /**
+     * email subject
+     */
     @Column(name = "subject", nullable = false, length = 255)
     @Size(max = 255)
     @NotNull
     private String subject;
 
+    /**
+     * email body
+     */
     @Column(name = "body")
     private String body;
 
+    /**
+     * email sent time
+     */
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "sent_time")
     private Date sentTime;
 
+    /**
+     * email send was successful
+     */
     @Column(name = "success")
     private boolean success;
 
+    /**
+     * message id or exception message
+     */
     @Column(name = "result", length = 2048)
     @Size(max = 2048)
     private String result;

@@ -31,6 +31,9 @@ public class RuleException extends BaseException {
 
     private static final long serialVersionUID = 1L;
 
+    /**
+     * Rule evaluation result
+     */
     private Object ruleResult;
 
     /**

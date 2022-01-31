@@ -47,25 +47,43 @@ public class PushDevice extends AbstractIdentifiedAuditEntity {
 
     private static final long serialVersionUID = 1L;
 
+    /**
+     * Push message id
+     */
     @Column(name = "push_id", nullable = false, length = 30)
     @Size(max = 30)
     private String pushId;
 
+    /**
+     * Push device type (e.g.: Android, IOS)
+     */
     @Column(name = "device_type", nullable = false)
     @Enumerated(EnumType.STRING)
     private DeviceType deviceType;
 
+    /**
+     * Push device id
+     */
     @Column(name = "device_id", nullable = false, length = 255)
     @Size(max = 255)
     private String deviceId;
 
+    /**
+     * Push message sent time
+     */
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "sent_time")
     private Date sentTime;
 
+    /**
+     * Push send was successful
+     */
     @Column(name = "success")
     private boolean success;
 
+    /**
+     * Push result
+     */
     @Column(name = "result", length = 2048)
     @Size(max = 2048)
     private String result;

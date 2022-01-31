@@ -50,6 +50,9 @@ public @interface MongoClientConfiguration {
     @Nonbinding
     String configKey();
 
+    /**
+     * Qualifier literal instance
+     */
     final class Literal extends AnnotationLiteral<MongoClientConfiguration> implements MongoClientConfiguration {
 
         private static final long serialVersionUID = 1L;
@@ -59,6 +62,12 @@ public @interface MongoClientConfiguration {
          */
         final String configKey;
 
+        /**
+         * Instantiates the literal with configKey
+         * 
+         * @param configKey
+         *            config key
+         */
         public Literal(String configKey) {
             this.configKey = configKey;
         }

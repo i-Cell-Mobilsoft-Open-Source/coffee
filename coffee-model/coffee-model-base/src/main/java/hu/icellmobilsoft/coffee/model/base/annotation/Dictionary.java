@@ -51,7 +51,7 @@ public @interface Dictionary {
     final class Literal extends AnnotationLiteral<Dictionary> implements Dictionary {
 
         /**
-         * Literal instace
+         * Qualifier literal instance
          */
         public static final Literal INSTANCE = new Literal();
 
