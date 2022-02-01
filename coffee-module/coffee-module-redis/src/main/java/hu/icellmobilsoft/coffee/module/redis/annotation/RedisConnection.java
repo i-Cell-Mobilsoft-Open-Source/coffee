@@ -92,16 +92,19 @@ public @interface RedisConnection {
             this.connectionConfigKey = "";
         }
 
+        @Override
         @Nonbinding
         public String configKey() {
             return configKey;
         }
 
+        @Override
         @Nonbinding
         public String poolConfigKey() {
             return poolConfigKey;
         }
 
+        @Override
         @Nonbinding
         public String connectionConfigKey() {
             return connectionConfigKey;
