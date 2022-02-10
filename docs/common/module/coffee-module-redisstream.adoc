@@ -25,20 +25,20 @@ Konfiguráció yaml-ben:
 ----
 coffee:
    redisstream:
-       sampleGroup: #(1)
+       sampleGroup: #<1>
            stream:
                read:
-                   timeoutmillis: 60000 #default: 60000 (2)
+                   timeoutmillis: 60000 #default: 60000 <2>
                connection:
-                   key: auth # connection referencia (8)
-           producer:
-               maxlen: 10000 #default none (3)
-               ttl: 300000 #millisec, default none (4)
-               pool: custom1 # default default - pool referencia (7)
-           consumer:
-               threadsCount: 2 #default: 1 (5)
-               retryCount: 2 #default: 1 (6)
-               pool: custom2 # default default - pool referencia (7)
+                   key: auth #connection referencia <8>
+           custom1:
+               maxlen: 10000 #default none <3>
+               ttl: 300000 #millisec, default none <4>
+               pool: custom1 #default default - pool referencia <7>
+           custom2:
+               threadsCount: 2 #default: 1 <5>
+               retryCount: 2 #default: 1 <6>
+               pool: custom2 #default - pool referencia <7>
 
 ----
 <1> A stream csoport egyedi neve. Minden mező opcionális.

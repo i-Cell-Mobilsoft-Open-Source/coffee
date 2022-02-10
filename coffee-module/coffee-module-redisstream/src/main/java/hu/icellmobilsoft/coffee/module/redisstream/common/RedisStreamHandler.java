@@ -83,7 +83,7 @@ public class RedisStreamHandler {
     }
 
     /**
-     * Is enabled Redis stream? {@link StreamGroupConfig#isEnabled()}
+     * Is enabled Redis stream? {@link  hu.icellmobilsoft.coffee.module.redisstream.config.IStreamGroupConfig#isEnabled()}
      *
      * @return true - enabled
      */

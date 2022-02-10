@@ -25,7 +25,7 @@ import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.module.redisstream.annotation.RedisStreamConsumer;
 
 /**
- * Redis producer stream group configuration interface
+ * Redis stream group configuration interface
  * 
  * @author imre.scheffer
  * @since 1.3.0

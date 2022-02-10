@@ -143,7 +143,7 @@ public class RedisStreamConsumerExecutor implements IRedisStreamConsumerExecutor
                             redisStreamService.getGroup(), e.getLocalizedMessage()), e);
                 }
                 sleep();
-            } catch (Exception e) {
+            } catch (Throwable e) {
                 log.error(MessageFormat.format("Exception during consume on redisConfigKey [{0}] with stream group [{1}]: [{2}]", redisConfigKey,
                         redisStreamService.getGroup(), e.getLocalizedMessage()), e);
                 sleep();

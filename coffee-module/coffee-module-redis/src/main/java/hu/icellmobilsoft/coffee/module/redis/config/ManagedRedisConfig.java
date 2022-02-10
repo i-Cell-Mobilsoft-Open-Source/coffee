@@ -27,7 +27,7 @@ import org.eclipse.microprofile.config.Config;
 /**
  * Helper class for obtaining redis connection settings using microprofile config.<br>
  * General pattern is "{@code coffee.redis.${configKey}.${setting}}
- * <p>
+ *
  * ie.:
  *
  * <pre>
@@ -49,7 +49,6 @@ import org.eclipse.microprofile.config.Config;
  *                     maxtotal: 256
  *                     maxidle: 64
  * </pre>
- * <p>
  * The upper configuration is injectable with:
  *
  * <pre>
@@ -57,7 +56,6 @@ import org.eclipse.microprofile.config.Config;
  * &#64;RedisConnection(configKey = "auth")
  * ManagedRedisConfig redisConfig;
  * </pre>
- * <p>
  * or:
  *
  * <pre>
@@ -67,7 +65,7 @@ import org.eclipse.microprofile.config.Config;
  * @author mark.petrenyi
  * @since 1.0.0
  */
-@Dependent
+ @Dependent
 public class ManagedRedisConfig implements RedisConfig {
 
     /**
@@ -108,7 +106,7 @@ public class ManagedRedisConfig implements RedisConfig {
      */
     public static final String KEY_DELIMITER = ".";
     /**
-     * TODO.
+     * Constant <code>POOL="pool"</code>
      */
     private static final String POOL = "pool";
 
@@ -119,7 +117,7 @@ public class ManagedRedisConfig implements RedisConfig {
 
     /**
      * {@inheritDoc}
-     * <p>
+     *
      * The host where the selected redis is available.
      */
     @Override
@@ -129,7 +127,7 @@ public class ManagedRedisConfig implements RedisConfig {
 
     /**
      * {@inheritDoc}
-     * <p>
+     *
      * The port where the selected redis is available.
      */
     @Override
@@ -139,7 +137,7 @@ public class ManagedRedisConfig implements RedisConfig {
 
     /**
      * {@inheritDoc}
-     * <p>
+     *
      * The password of the selected redis to connect with.
      */
     @Override
@@ -149,7 +147,7 @@ public class ManagedRedisConfig implements RedisConfig {
 
     /**
      * {@inheritDoc}
-     * <p>
+     *
      * The number of the selected database to connect with.
      */
     @Override
@@ -159,7 +157,7 @@ public class ManagedRedisConfig implements RedisConfig {
 
     /**
      * {@inheritDoc}
-     * <p>
+     *
      * The maximum number of objects that can be allocated by the pool (checked out to clients, or idle awaiting checkout) at a given time. When
      * negative, there is no limit to the number of objects that can be managed by the pool at one time.
      */
@@ -170,7 +168,7 @@ public class ManagedRedisConfig implements RedisConfig {
 
     /**
      * {@inheritDoc}
-     * <p>
+     *
      * The cap on the number of "idle" instances in the pool. If maxIdle is set too low on heavily loaded systems it is possible you will see objects
      * being destroyed and almost immediately new objects being created. This is a result of the active threads momentarily returning objects faster
      * than they are requesting them, causing the number of idle objects to rise above maxIdle.
@@ -182,7 +180,7 @@ public class ManagedRedisConfig implements RedisConfig {
 
     /**
      * {@inheritDoc}
-     * <p>
+
      * Redis connection timout in millisec.
      */
     @Override

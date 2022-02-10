@@ -175,7 +175,7 @@ public class StreamGroupConfig implements IStreamGroupConfig {
 
     // producer
     @Override
-    public Optional<Long> getProducerMaxLen()  {
+    public Optional<Long> getProducerMaxLen() {
         return config.getOptionalValue(joinKey(PRODUCER_MAXLEN), Long.class);
     }
 

@@ -102,5 +102,4 @@ public interface RedisConfig {
     default Integer getTimeout() throws BaseException {
         return 5000;
     }
-
 }
