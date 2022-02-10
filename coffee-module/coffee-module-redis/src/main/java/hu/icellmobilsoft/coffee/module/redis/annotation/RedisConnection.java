@@ -61,7 +61,7 @@ public @interface RedisConnection {
     /**
      * Config key of the desired redis stream's reference connection pool. <br>
      *
-     * @return poolConfigKey
+     * @return connectionConfigKey
      */
     @Nonbinding
     String connectionConfigKey();

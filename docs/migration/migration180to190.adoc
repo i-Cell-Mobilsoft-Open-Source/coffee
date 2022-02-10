@@ -68,7 +68,6 @@ coffee:
             threadsCount: 2
 ```
 új:
-https://gitlab.k8s.icellmobilsoft.hu/-/snippets/10
 ```
 coffee:
     redis:

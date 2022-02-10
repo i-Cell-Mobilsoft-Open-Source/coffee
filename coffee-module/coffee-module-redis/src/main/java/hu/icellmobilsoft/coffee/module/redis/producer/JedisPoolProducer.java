@@ -83,7 +83,8 @@ public class JedisPoolProducer {
      *
      * @param configKey
      *            config key
-     * @param connectionConfigKey connectionConfigKey
+     * @param connectionConfigKey
+     *            connectionConfigKey
      * @param poolConfigKey
      *            config key for jedis pool
      * @return {@link JedisPool}
