@@ -108,8 +108,8 @@ public class RedisStreamConsumerExecutor implements IRedisStreamConsumerExecutor
         boolean prudentRun = true;
         while (!endLoop) {
             Optional<StreamEntry> streamEntry = Optional.empty();
-            Instance<Jedis> jedisInstance = CDI.current().select(Jedis.class, new RedisConnection.Literal(redisStreamService.getGroup(),
-                    streamGroupConfig.getConsumerPool(), streamGroupConfig.getConnectionKey().orElse(redisConfigKey)));
+            Instance<Jedis> jedisInstance = CDI.current().select(Jedis.class, new RedisConnection.Literal(this.streamGroupConfig.getConnectionKey(),
+                    streamGroupConfig.getConsumerPool()));
             Jedis jedis = null;
             try {
                 jedis = jedisInstance.get();

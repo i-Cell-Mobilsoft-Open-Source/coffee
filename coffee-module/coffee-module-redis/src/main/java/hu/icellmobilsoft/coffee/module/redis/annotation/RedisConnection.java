@@ -58,13 +58,6 @@ public @interface RedisConnection {
     @Nonbinding
     String poolConfigKey();
 
-    /**
-     * Config key of the desired redis stream's reference connection pool. <br>
-     *
-     * @return connectionConfigKey
-     */
-    @Nonbinding
-    String connectionConfigKey();
 
     /**
      * Supports inline instantiation of the {@link RedisConnection} qualifier.
@@ -78,18 +71,15 @@ public @interface RedisConnection {
 
         private final String configKey;
         private final String poolConfigKey;
-        private final String connectionConfigKey;
 
-        public Literal(String configKey, String poolConfigKey, String connectionConfigKey) {
+        public Literal(String configKey, String poolConfigKey) {
             this.configKey = configKey;
             this.poolConfigKey = poolConfigKey;
-            this.connectionConfigKey = connectionConfigKey;
         }
 
         public Literal(String configKey) {
             this.configKey = configKey;
             this.poolConfigKey = "";
-            this.connectionConfigKey = "";
         }
 
         @Override
@@ -104,11 +94,6 @@ public @interface RedisConnection {
             return poolConfigKey;
         }
 
-        @Override
-        @Nonbinding
-        public String connectionConfigKey() {
-            return connectionConfigKey;
-        }
 
     }
 

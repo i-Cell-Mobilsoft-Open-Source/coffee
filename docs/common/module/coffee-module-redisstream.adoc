@@ -31,11 +31,11 @@ coffee:
                    timeoutmillis: 60000 #default: 60000 <2>
                connection:
                    key: auth #connection referencia <3>
-           custom1:
+           producer:
                maxlen: 10000 #default none <4>
                ttl: 300000 #millisec, default none <5>
                pool: custom1 #default default - pool referencia <6>
-           custom2:
+           consumer:
                threadsCount: 2 #default: 1 <7>
                retryCount: 2 #default: 1 <8>
                pool: custom2 #default - pool referencia <6>
@@ -45,7 +45,7 @@ coffee:
 <2> Stream consumer timeoutja - meddig várjon 1 iterációban az üzenetre.
 Ha nem érkezik üzenet a streamben ennyi ms ideig,
 akkor lezárja a connectiont és egy új iterációban újra nyit egy új connectiont.
-<3> coffe.redis.* connection referencia - amennyiben ez nincs megadva, úgy a streamGroup lesz deafult-ként használva
+<3> coffe.redis.* connection referencia
 <4> Stream üzenetek maximális mérete.
 Minden új üzenet beszúrásánál kitörli a régebbi üzeneteket az adott stream-ből,
 akkor is ha fel vagy nem voltak az dolgozva.

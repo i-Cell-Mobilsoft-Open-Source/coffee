@@ -66,12 +66,13 @@ public class RedisServiceProducer {
      */
     @Dependent
     @Produces
-    @RedisConnection(configKey = "", poolConfigKey = "", connectionConfigKey = "")
+    @RedisConnection(configKey = "", poolConfigKey = "")
     public RedisService getRedisService(InjectionPoint injectionPoint) throws BaseException {
         Optional<RedisConnection> annotation = AnnotationUtil.getAnnotation(injectionPoint, RedisConnection.class);
         String configKey = annotation.map(RedisConnection::configKey).orElse(null);
+        String poolConfigKey = annotation.map(RedisConnection::poolConfigKey).orElse(null);
 
-        Jedis jedis = CDI.current().select(Jedis.class, new RedisConnection.Literal(configKey)).get();
+        Jedis jedis = CDI.current().select(Jedis.class, new RedisConnection.Literal(configKey, poolConfigKey)).get();
         if (jedis != null) {
             log.trace("Creating RedisService...");
             RedisService redisService = CDI.current().select(RedisService.class).get();
@@ -89,7 +90,7 @@ public class RedisServiceProducer {
      * @param redisService
      *            redis service
      */
-    public void returnResource(@Disposes @RedisConnection(configKey = "", poolConfigKey = "", connectionConfigKey = "") RedisService redisService) {
+    public void returnResource(@Disposes @RedisConnection(configKey = "", poolConfigKey = "") RedisService redisService) {
         if (redisService != null) {
             log.trace("Closing RedisService...");
             Jedis jedis = jedisMap.remove(redisService);

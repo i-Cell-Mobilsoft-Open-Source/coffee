@@ -49,13 +49,12 @@ public class RedisConfigProducer {
      */
     @Produces
     @Dependent
-    @RedisConnection(configKey = "", poolConfigKey = "", connectionConfigKey = "")
+    @RedisConnection(configKey = "", poolConfigKey = "")
     public ManagedRedisConfig getRedisConfig(InjectionPoint injectionPoint) {
         Optional<RedisConnection> annotation = AnnotationUtil.getAnnotation(injectionPoint, RedisConnection.class);
         String configKey = annotation.map(RedisConnection::configKey).orElse(null);
-        String connectionConfigKey = annotation.map(RedisConnection::connectionConfigKey).orElse(configKey);
         ManagedRedisConfig redisConfig = CDI.current().select(ManagedRedisConfig.class).get();
-        redisConfig.setConfigKey(connectionConfigKey);
+        redisConfig.setConfigKey(configKey);
         return redisConfig;
     }
 

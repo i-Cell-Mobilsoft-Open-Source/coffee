@@ -47,7 +47,7 @@ public interface IStreamGroupConfig {
      * @return redis key.
      * @throws BaseException Exception on read properties
      */
-    Optional<String> getConnectionKey() throws BaseException;
+    String getConnectionKey() throws BaseException;
 
 
 

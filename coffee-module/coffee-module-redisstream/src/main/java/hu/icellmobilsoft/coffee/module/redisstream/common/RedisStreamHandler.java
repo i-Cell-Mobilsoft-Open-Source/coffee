@@ -77,7 +77,7 @@ public class RedisStreamHandler {
      */
     public void init(CDI<Object> cdi, String configKey, String streamGroup) {
         config.setConfigKey(streamGroup);
-        this.jedisInstance = cdi.select(Jedis.class, new RedisConnection.Literal(configKey, config.getProducerPool(), configKey));
+        this.jedisInstance = cdi.select(Jedis.class, new RedisConnection.Literal(configKey, config.getProducerPool()));
         this.streamGroup = streamGroup;
 
     }

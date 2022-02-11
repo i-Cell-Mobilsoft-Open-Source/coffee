@@ -52,6 +52,9 @@ import redis.clients.jedis.JedisPoolConfig;
 @ApplicationScoped
 public class JedisPoolProducer {
 
+    public static final String DELIMITER = "_";
+    public static final String DEFAULT = "default";
+
     @Inject
     private Logger log;
 
@@ -66,14 +69,13 @@ public class JedisPoolProducer {
      */
     @Produces
     @Dependent
-    @RedisConnection(configKey = "", poolConfigKey = "", connectionConfigKey = "")
+    @RedisConnection(configKey = "", poolConfigKey = "")
     public JedisPool getJedisPool(InjectionPoint injectionPoint) {
         Optional<RedisConnection> annotation = AnnotationUtil.getAnnotation(injectionPoint, RedisConnection.class);
         String configKey = annotation.map(RedisConnection::configKey).orElse(null);
-        String poolConfigKey = annotation.map(RedisConnection::poolConfigKey).orElse(null);
-        String connectionConfigKey = annotation.map(RedisConnection::connectionConfigKey).orElse(null);
+        String poolConfigKey = annotation.map(RedisConnection::poolConfigKey).orElse(DEFAULT);
 
-        return getInstance(configKey, connectionConfigKey, poolConfigKey);
+        return getInstance(configKey, poolConfigKey);
     }
 
     /**
@@ -83,23 +85,17 @@ public class JedisPoolProducer {
      *
      * @param configKey
      *            config key
-     * @param connectionConfigKey
-     *            connectionConfigKey
      * @param poolConfigKey
      *            config key for jedis pool
      * @return {@link JedisPool}
      */
-    private synchronized JedisPool getInstance(String configKey, String connectionConfigKey, String poolConfigKey) {
-        if (Objects.nonNull(connectionConfigKey) && !StringUtils.isBlank(connectionConfigKey)) {
-            return jedisPoolInstances.computeIfAbsent(connectionConfigKey + poolConfigKey, v -> createJedisPool(configKey, connectionConfigKey, poolConfigKey));
-        }
-        return jedisPoolInstances.computeIfAbsent(configKey, v -> createJedisPool(configKey, configKey,"default"));
-
+    private synchronized JedisPool getInstance(String configKey, String poolConfigKey) {
+        return jedisPoolInstances.computeIfAbsent(configKey + DELIMITER + poolConfigKey, v -> createJedisPool(configKey, poolConfigKey));
     }
 
-    private JedisPool createJedisPool(String configKey, String connectionConfigKey, String poolConfigKey) {
+    private JedisPool createJedisPool(String configKey, String poolConfigKey) {
         log.info("Creating JedisPool for configKey:[{0}]", configKey);
-        Instance<ManagedRedisConfig> instance = CDI.current().select(ManagedRedisConfig.class, new RedisConnection.Literal(configKey, poolConfigKey, connectionConfigKey));
+        Instance<ManagedRedisConfig> instance = CDI.current().select(ManagedRedisConfig.class, new RedisConnection.Literal(configKey, poolConfigKey));
         ManagedRedisConfig managedRedisConfig = instance.get();
         try {
             String host = managedRedisConfig.getHost();

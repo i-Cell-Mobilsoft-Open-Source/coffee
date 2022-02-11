@@ -58,6 +58,7 @@ public class RedisManager {
     private Logger log;
 
     private String configKey;
+    private String poolConfigKey;
     private Instance<Jedis> jedisInstance;
     private Jedis jedis;
 
@@ -493,7 +494,7 @@ public class RedisManager {
      */
     public void initConnection() {
         if (jedis == null) {
-            jedisInstance = CDI.current().select(Jedis.class, new RedisConnection.Literal(configKey));
+            jedisInstance = CDI.current().select(Jedis.class, new RedisConnection.Literal(configKey, poolConfigKey));
             jedis = jedisInstance.get();
         }
     }
@@ -517,6 +518,16 @@ public class RedisManager {
      */
     public void setConfigKey(String configKey) {
         this.configKey = configKey;
+    }
+
+    /**
+     * set poolConfig key for jedis initialization
+     *
+     * @param poolConfigKey
+     *            for jedis initialization
+     */
+    public void setPoolConfigKey(String poolConfigKey) {
+        this.poolConfigKey = poolConfigKey;
     }
 
     private BaseException newInvalidParameterException(String functionName) {

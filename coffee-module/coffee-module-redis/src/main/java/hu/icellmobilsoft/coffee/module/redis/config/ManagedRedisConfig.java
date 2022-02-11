@@ -33,22 +33,23 @@ import org.eclipse.microprofile.config.Config;
  * <pre>
  *  coffee:
  *     redis:
- *         auth:
- *             host: hubphq-icon-sandbox-d001.icellmobilsoft.hu
- *             port: 6380
- *             password: authpw
- *             database: 1
- *             pool:
- *                 default:
- *                     maxtotal: 64
- *                     maxidle: 16
- *                 custom1:
- *                     maxtotal: 128
- *                     maxidle: 32
- *                 custom2:
- *                     maxtotal: 256
- *                     maxidle: 64
+*         auth:
+*         host: sample-sandbox.icellmobilsoft.hu
+*             port: 6380
+*             password: ****
+*             database: 1
+*             pool:
+*                 default:
+*                     maxtotal: 64
+*                     maxidle: 16
+*                 custom1:
+*                     maxtotal: 128
+*                     maxidle: 32
+*                 custom2:
+*                     maxtotal: 256
+*                     maxidle: 64
  * </pre>
+ * 
  * The upper configuration is injectable with:
  *
  * <pre>
@@ -56,6 +57,7 @@ import org.eclipse.microprofile.config.Config;
  * &#64;RedisConnection(configKey = "auth")
  * ManagedRedisConfig redisConfig;
  * </pre>
+ * 
  * or:
  *
  * <pre>
@@ -65,7 +67,7 @@ import org.eclipse.microprofile.config.Config;
  * @author mark.petrenyi
  * @since 1.0.0
  */
- @Dependent
+@Dependent
 public class ManagedRedisConfig implements RedisConfig {
 
     /**
@@ -180,7 +182,7 @@ public class ManagedRedisConfig implements RedisConfig {
 
     /**
      * {@inheritDoc}
-
+     * 
      * Redis connection timout in millisec.
      */
     @Override

@@ -36,21 +36,21 @@ import hu.icellmobilsoft.coffee.module.redisstream.annotation.RedisStreamConsume
  * <pre>
  * coffee:
  *    redis:
- *        auth:
- *            host: hubphq-icon-sandbox-d001.icellmobilsoft.hu
- *            port: 6380
- *            password: authpw
- *            database: 1
- *            pool:
- *                default:
- *                    maxtotal: 64
- *                    maxidle: 16
- *                custom1:
- *                    maxtotal: 128
- *                    maxidle: 32
- *                custom2:
- *                    maxtotal: 256
- *                    maxidle: 64
+ *      auth:
+ *        host: sample-sandbox.icellmobilsoft.hu
+ *        port: 6380
+ *        password: *****
+ *        database: 1
+ *        pool:
+ *          default:
+ *              maxtotal: 64
+ *              maxidle: 16
+ *          custom1:
+ *              maxtotal: 128
+ *              maxidle: 32
+ *          custom2:
+ *              maxtotal: 256
+ *              maxidle: 64
  *    redisstream:
  *       sampleGroup: #(1)
  *           stream:
@@ -169,8 +169,8 @@ public class StreamGroupConfig implements IStreamGroupConfig {
     }
 
     @Override
-    public Optional<String> getConnectionKey() {
-        return config.getOptionalValue(joinKey(CONNECTION), String.class);
+    public String getConnectionKey() {
+        return config.getValue(joinKey(CONNECTION), String.class);
     }
 
     // producer

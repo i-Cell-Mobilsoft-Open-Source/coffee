@@ -61,22 +61,21 @@ public class RedisManagerProducer {
      */
     @Dependent
     @Produces
-    @RedisConnection(configKey = "", connectionConfigKey = "", poolConfigKey = "")
+    @RedisConnection(configKey = "", poolConfigKey = "")
     public RedisManager getRedisService(InjectionPoint injectionPoint) throws BaseException {
         Optional<RedisConnection> annotation = AnnotationUtil.getAnnotation(injectionPoint, RedisConnection.class);
 
         String configKey = annotation.map(RedisConnection::configKey).orElse(null);
-        String connectionConfigKey = annotation.map(RedisConnection::connectionConfigKey).orElse(null);
+        String poolConfigKey = annotation.map(RedisConnection::poolConfigKey).orElse(null);
+
         if (StringUtils.isBlank(configKey)) {
             throw new IllegalStateException("configKey is required for redis");
-        }
-        if (StringUtils.isBlank(connectionConfigKey)) {
-            connectionConfigKey = configKey;
         }
 
         log.trace("Creating RedisManager with configKey: [{0}]", configKey);
         RedisManager redisManager = CDI.current().select(RedisManager.class).get();
-        redisManager.setConfigKey(connectionConfigKey);
+        redisManager.setConfigKey(configKey);
+        redisManager.setPoolConfigKey(poolConfigKey);
         return redisManager;
     }
 }
