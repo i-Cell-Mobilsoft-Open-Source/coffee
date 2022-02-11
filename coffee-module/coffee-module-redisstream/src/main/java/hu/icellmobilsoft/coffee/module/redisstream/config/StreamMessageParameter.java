@@ -40,6 +40,11 @@ public enum StreamMessageParameter {
         this.messageKey = messageKey;
     }
 
+    /**
+     * Returns the message key
+     * 
+     * @return the message key
+     */
     public String getMessageKey() {
         return messageKey;
     }

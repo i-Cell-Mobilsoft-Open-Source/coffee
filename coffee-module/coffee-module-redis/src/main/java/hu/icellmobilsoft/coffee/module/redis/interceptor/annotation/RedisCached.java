@@ -30,7 +30,9 @@ import javax.enterprise.util.Nonbinding;
 import javax.interceptor.InterceptorBinding;
 
 /**
- * <p>RedisCached class.</p>
+ * <p>
+ * RedisCached class.
+ * </p>
  *
  * @since 1.0.0
  */
@@ -39,6 +41,11 @@ import javax.interceptor.InterceptorBinding;
 @Target({ METHOD, TYPE })
 public @interface RedisCached {
 
+    /**
+     * Returns the redis cache expiration time in seconds
+     * 
+     * @return the redis cache expiration time in seconds
+     */
     @Nonbinding
     int expireInSeconds() default 60;
 }

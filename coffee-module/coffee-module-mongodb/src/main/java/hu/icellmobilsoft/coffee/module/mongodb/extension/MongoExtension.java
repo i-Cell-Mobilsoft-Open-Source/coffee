@@ -51,8 +51,16 @@ public class MongoExtension implements javax.enterprise.inject.spi.Extension {
 
     private static final Logger LOGGER = hu.icellmobilsoft.coffee.cdi.logger.LogProducer.getStaticDefaultLogger(MongoExtension.class);
 
-    private List<Type> mongoServiceTypes = new ArrayList<>();
+    private final List<Type> mongoServiceTypes = new ArrayList<>();
 
+    /**
+     * Creates CDI producer beans for the found mongo service implementations
+     * 
+     * @param abd
+     *            event fired by the CDI container when it has fully completed the bean discovery proces
+     * @param beanManager
+     *            object to interact directly with the CDI container
+     */
     @SuppressWarnings("unchecked")
     public void afterBeanDiscovery(@Observes final AfterBeanDiscovery abd, BeanManager beanManager) {
         // mongoservice implementation not found
@@ -74,7 +82,7 @@ public class MongoExtension implements javax.enterprise.inject.spi.Extension {
 
         // iterate mongoService impl classes and generate producers
         for (Type type : mongoServiceTypes) {
-            Bean<?> bean = beanManager.createBean(new DelegatingBeanAttributes<Object>(producerAttributes) {
+            Bean<?> bean = beanManager.createBean(new DelegatingBeanAttributes<>(producerAttributes) {
                 @Override
                 public final Set<Type> getTypes() {
                     final Set<Type> types = new HashSet<>();

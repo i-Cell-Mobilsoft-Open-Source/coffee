@@ -67,14 +67,32 @@ public class LocalizedHeaderColumnNameWithPositionMappingStrategy<T> extends Hea
         return beanField;
     }
 
+    /**
+     * Returns the localization key for the given field
+     * 
+     * @param field
+     *            reflection field object
+     * @return the localization key for the given field
+     */
     protected String getLocalizationKey(Field field) {
         return "{" + field.getDeclaringClass().getCanonicalName() + '.' + field.getName() + "}";
     }
 
+    /**
+     * Returns the value of the {@link #language} field
+     * 
+     * @return the value of the {@link #language} field
+     */
     public String getLanguage() {
         return language;
     }
 
+    /**
+     * Sets the {@link #language} field
+     * 
+     * @param language
+     *            the new value for the {@link #language} field
+     */
     public void setLanguage(String language) {
         this.language = language;
     }

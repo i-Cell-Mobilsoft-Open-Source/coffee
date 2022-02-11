@@ -41,11 +41,17 @@ public class SecurityRoleSecurityPermission extends AbstractIdentifiedAuditEntit
 
     private static final long serialVersionUID = 1L;
 
+    /**
+     * security role FK
+     */
     @Column(name = "security_role_id", nullable = false, length = 30)
     @NotNull
     @Size(max = 30)
     private String roleId;
 
+    /**
+     * security permission FK
+     */
     @Column(name = "security_permission_id", nullable = false, length = 30)
     @NotNull
     @Size(max = 30)

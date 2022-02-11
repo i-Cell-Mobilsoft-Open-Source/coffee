@@ -245,6 +245,7 @@
 							<failOnError>true</failOnError>
 							<failOnWarnings>true</failOnWarnings>
 							<excludePackageNames>hu.icellmobilsoft.coffee.dto.*</excludePackageNames>
+							<sourceFileExcludes>**/*_.java</sourceFileExcludes>
 						</configuration>
 					</plugin>
 				</plugins>

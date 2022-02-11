@@ -36,8 +36,14 @@ public class BaseRequestContainer implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    /**
+     * Request object
+     */
     private Object requestObject;
 
+    /**
+     * Request scoped object map
+     */
     private Map<String, Object> objectMap;
 
     /**

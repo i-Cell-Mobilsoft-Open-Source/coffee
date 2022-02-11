@@ -41,20 +41,32 @@ public class TemplateParameter extends AbstractIdentifiedAuditEntity {
 
     private static final long serialVersionUID = 1L;
 
+    /**
+     * template key
+     */
     @Column(name = "template_key", nullable = false, length = 30)
     @NotNull
     @Size(max = 30)
     private String templateKey;
 
+    /**
+     * template language
+     */
     @Column(name = "language", nullable = false, length = 5)
     @NotNull
     @Size(max = 5)
     private String language;
 
+    /**
+     * parameter key
+     */
     @Column(name = "parameter_key", nullable = false)
     @Size(max = 128)
     private String parameterKey;
 
+    /**
+     * template parameter default value
+     */
     @Column(name = "default_value")
     @Size(max = 255)
     private String defaultValue;

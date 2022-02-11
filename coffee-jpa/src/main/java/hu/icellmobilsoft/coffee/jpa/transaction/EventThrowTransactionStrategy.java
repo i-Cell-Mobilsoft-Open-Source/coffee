@@ -45,21 +45,25 @@ public class EventThrowTransactionStrategy extends BeanManagedUserTransactionStr
 
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * CDI event fired when {@link BeanManagedUserTransactionStrategy#beforeProceed} is called
+	 */
 	@Inject
 	private Event<AfterBeforeProceedEvent> afterBeforeProceedEvent;
 
+	/**
+	 * CDI event fired when {@link BeanManagedUserTransactionStrategy#afterProceed} is called
+	 */
 	@Inject
     private Event<AfterAfterProceedEvent> afterAfterProceedEvent;
-	
-	/** {@inheritDoc} */
+
 	@Override
 	protected void beforeProceed(InvocationContext invocationContext, EntityManagerEntry entityManagerEntry,
 			EntityTransaction transaction) {
 		super.beforeProceed(invocationContext, entityManagerEntry, transaction);
 		afterBeforeProceedEvent.fire(new AfterBeforeProceedEvent(entityManagerEntry.getEntityManager()));
 	}
-	
-	/** {@inheritDoc} */
+
 	@Override
     protected void afterProceed(InvocationContext invocationContext, EntityManagerEntry entityManagerEntry, Exception exception) {
         super.afterProceed(invocationContext, entityManagerEntry, exception);

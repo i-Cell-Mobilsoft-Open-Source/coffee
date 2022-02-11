@@ -36,6 +36,11 @@ import java.lang.annotation.Target;
 @Target({ ElementType.FIELD, ElementType.METHOD })
 public @interface ModifiedBy {
 
+    /**
+     * Returns {@code true} if the field should be updated on entity creation too
+     * 
+     * @return {@code true} if the field should be updated on entity creation too
+     */
     boolean onCreate() default false;
 
 }

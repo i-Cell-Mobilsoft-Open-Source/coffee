@@ -41,10 +41,9 @@ public class EmailService extends BaseService<Email> implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @Inject
-    @ThisLogger
-    private AppLogger log;
-
+    /**
+     * Wrapped repository
+     */
     @Inject
     private EmailRepository emailRepository;
 

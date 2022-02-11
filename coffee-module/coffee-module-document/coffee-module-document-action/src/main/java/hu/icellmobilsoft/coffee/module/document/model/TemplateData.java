@@ -48,36 +48,60 @@ public class TemplateData extends AbstractIdentifiedAuditEntity {
 
     private static final long serialVersionUID = 1L;
 
+    /**
+     * template key
+     */
     @Column(name = "template_key", nullable = false, length = 30)
     @NotNull
     @Size(max = 30)
     private String templateKey;
 
+    /**
+     * template format
+     */
     @Column(name = "data_type", nullable = false)
     @Enumerated(EnumType.STRING)
     private TemplateDataType dataType;
 
+    /**
+     * template language
+     */
     @Column(name = "language", nullable = false, length = 5)
     @NotNull
     @Size(max = 5)
     private String language;
 
+    /**
+     * template subject
+     */
     @Column(name = "subject", length = 255)
     @Size(max = 255)
     private String subject;
 
+    /**
+     * template data
+     */
     @Column(name = "data")
     private String data;
 
+    /**
+     * default file name
+     */
     @Column(name = "default_filename", length = 255)
     @Size(max = 255)
     private String defaultFilename;
 
+    /**
+     * template valid from
+     */
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "valid_from", nullable = false)
     @NotNull
     private Date validFrom;
 
+    /**
+     * template valid to
+     */
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "valid_to")
     private Date validTo;
