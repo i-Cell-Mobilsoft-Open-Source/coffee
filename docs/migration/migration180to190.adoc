@@ -38,3 +38,12 @@ de kap fordítási és tesztelési ellenőrzéseket java 17-re is.
 
 ==== Átállás
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+=== coffee-tool
+* DateXmlUtil -> XmlGregorianCalendar optimalizálása: DatatypeFactory.newInstance() példány cacheből kiszolgálása performancia okokból
+
+=== coffee-module-mongodb
+* DatatypeFactory.newInstance() cachelt példány lekérése DateXmlUtil alapján
+
+==== Átállás
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
