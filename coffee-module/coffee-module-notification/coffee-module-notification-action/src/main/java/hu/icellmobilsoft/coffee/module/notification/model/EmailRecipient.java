@@ -45,14 +45,23 @@ public class EmailRecipient extends AbstractIdentifiedAuditEntity {
 
     private static final long serialVersionUID = 1L;
 
+    /**
+     * Email FK
+     */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "email_id", nullable = false)
     private Email email;
 
+    /**
+     * Recipient FK
+     */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "recipient_id", nullable = false)
     private Recipient recipient;
 
+    /**
+     * Recipient type (TO, CC, BCC)
+     */
     @Column(name = "recipient_type", nullable = false)
     @Enumerated(EnumType.STRING)
     private RecipientType recipientType;

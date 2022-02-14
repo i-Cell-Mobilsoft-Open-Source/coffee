@@ -147,6 +147,11 @@ public class EtcdRepository {
         }
     }
 
+    /**
+     * Returns the ETCD client
+     * 
+     * @return the ETCD client
+     */
     public Client getEtcdClient() {
         return etcdClient;
     }

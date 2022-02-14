@@ -152,6 +152,9 @@ public class MongoDbClientFactory {
         }
     }
 
+    /**
+     * Closes every mongo connection in the client container
+     */
     @PreDestroy
     public void disconnectMongo() {
         if (mongoClientContainer.getClientMap().isEmpty()) {

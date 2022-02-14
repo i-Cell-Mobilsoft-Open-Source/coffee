@@ -37,6 +37,14 @@ public class CompositeCacheLoaderKey {
     @SuppressWarnings("rawtypes")
     private final Class valueClass;
 
+    /**
+     * Creates an instance with configuration key and type
+     * 
+     * @param key
+     *            configuration key
+     * @param valueClass
+     *            configuration value type
+     */
     public CompositeCacheLoaderKey(String key, Class valueClass) {
         this.key = key;
         this.valueClass = valueClass;
@@ -57,10 +65,20 @@ public class CompositeCacheLoaderKey {
         return Objects.hash(key, valueClass);
     }
 
+    /**
+     * Returns configuration key
+     * 
+     * @return configuration key
+     */
     public String getKey() {
         return key;
     }
 
+    /**
+     * Returns configuration value type
+     * 
+     * @return configuration value type
+     */
     public Class getValueClass() {
         return valueClass;
     }

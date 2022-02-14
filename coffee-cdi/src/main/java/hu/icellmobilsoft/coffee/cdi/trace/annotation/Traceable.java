@@ -26,6 +26,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
+import javax.enterprise.inject.Any;
 import javax.enterprise.util.AnnotationLiteral;
 
 /**
@@ -38,12 +39,12 @@ import javax.enterprise.util.AnnotationLiteral;
 @Target({ ANNOTATION_TYPE, TYPE })
 public @interface Traceable {
 
-    public final class TraceableLiteral extends AnnotationLiteral<Traceable> implements Traceable {
+    /**
+     * Supports inline instantiation of the {@link Traceable} qualifier.
+     */
+    final class TraceableLiteral extends AnnotationLiteral<Traceable> implements Traceable {
 
         private static final long serialVersionUID = 1L;
-
-        public TraceableLiteral() {
-        }
 
     }
 }

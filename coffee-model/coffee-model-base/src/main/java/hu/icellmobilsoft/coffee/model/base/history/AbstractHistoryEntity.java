@@ -43,10 +43,16 @@ public abstract class AbstractHistoryEntity extends AbstractAuditEntity<String> 
 
     private static final long serialVersionUID = 1L;
 
+    /**
+     * State of the entity
+     */
     @Enumerated(EnumType.STRING)
     @Column(name = "X__STATE")
     private State state;
 
+    /**
+     * Primary key of the entity
+     */
     @Id
     @Embedded
     private HistoryPk historyPk;

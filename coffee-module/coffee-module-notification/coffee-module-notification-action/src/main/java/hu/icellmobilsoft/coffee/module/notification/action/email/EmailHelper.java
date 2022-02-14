@@ -50,12 +50,21 @@ public class EmailHelper implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    /**
+     * Injected RecipientService
+     */
     @Inject
     private RecipientService recipientService;
 
+    /**
+     * Injected EmailRecipientService
+     */
     @Inject
     private EmailRecipientService emailRecipientService;
 
+    /**
+     * Injected EmailService
+     */
     @Inject
     private EmailService emailService;
 

@@ -50,9 +50,15 @@ public class PushHelper implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    /**
+     * Injected PushService
+     */
     @Inject
     private PushService pushService;
 
+    /**
+     * Injected PushDeviceService
+     */
     @Inject
     private PushDeviceService pushDeviceService;
 

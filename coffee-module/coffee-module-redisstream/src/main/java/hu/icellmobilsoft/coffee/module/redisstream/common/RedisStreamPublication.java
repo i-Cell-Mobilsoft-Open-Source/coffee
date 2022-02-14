@@ -154,14 +154,29 @@ public class RedisStreamPublication {
         this.parameters = parameters;
     }
 
+    /**
+     * Returns Stream group to send the message
+     * 
+     * @return Stream group to send the message
+     */
     public String getStreamGroup() {
         return streamGroup;
     }
 
+    /**
+     * Returns Message in stream. Can be String or JSON List
+     * 
+     * @return Message in stream. Can be String or JSON List
+     */
     public String getStreamMessage() {
         return streamMessage;
     }
 
+    /**
+     * Returns Messages parameters, nullable. Map key value is standardized in {@link StreamMessageParameter} enum value
+     * 
+     * @return Messages parameters
+     */
     public Map<String, String> getParameters() {
         return parameters;
     }

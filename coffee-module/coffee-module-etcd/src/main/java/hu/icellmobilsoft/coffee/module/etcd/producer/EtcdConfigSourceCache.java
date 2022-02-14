@@ -43,12 +43,15 @@ import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 @ThreadSafe
 public class EtcdConfigSourceCache {
 
+    /**
+     * Cache write expiration time in minutes
+     */
     public static final int CACHE_TIME_MINUTES = 30;
 
     private EtcdConfigSourceCache() {
     }
 
-    private LoadingCache<String, Optional<String>> cache = CacheBuilder.newBuilder().expireAfterWrite(CACHE_TIME_MINUTES, TimeUnit.MINUTES)
+    private final LoadingCache<String, Optional<String>> cache = CacheBuilder.newBuilder().expireAfterWrite(CACHE_TIME_MINUTES, TimeUnit.MINUTES)
             .build(new CacheLoader<String, Optional<String>>() {
                 @Override
                 public Optional<String> load(String key) throws Exception {
@@ -82,6 +85,11 @@ public class EtcdConfigSourceCache {
         public static final EtcdConfigSourceCache INSTANCE = new EtcdConfigSourceCache();
     }
 
+    /**
+     * Returns an instance of this class
+     * 
+     * @return an instance of this class
+     */
     public static EtcdConfigSourceCache instance() {
         return LazyHolder.INSTANCE;
     }

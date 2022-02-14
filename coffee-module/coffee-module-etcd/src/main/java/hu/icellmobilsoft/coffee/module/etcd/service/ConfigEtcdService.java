@@ -257,6 +257,11 @@ public class ConfigEtcdService {
         }
     }
 
+    /**
+     * Returns the ETCD service
+     * 
+     * @return the ETCD service
+     */
     public EtcdService getEtcdService() {
         return etcdService;
     }

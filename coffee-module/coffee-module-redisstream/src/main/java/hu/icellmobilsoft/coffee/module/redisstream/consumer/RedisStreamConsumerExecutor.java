@@ -159,8 +159,8 @@ public class RedisStreamConsumerExecutor implements IRedisStreamConsumerExecutor
             }
             MDC.clear();
         } catch (Throwable e) {
-            log.error(MessageFormat.format("Exception during jedis cleanup on redisConfigKey [{0}] with stream group [{1}]: [{2}]",
-                    redisConfigKey, redisStreamService.getGroup(), e.getLocalizedMessage()), e);
+            log.error(MessageFormat.format("Exception during jedis cleanup on redisConfigKey [{0}] with stream group [{1}]: [{2}]", redisConfigKey,
+                    redisStreamService.getGroup(), e.getLocalizedMessage()), e);
         }
     }
 
@@ -355,6 +355,11 @@ public class RedisStreamConsumerExecutor implements IRedisStreamConsumerExecutor
         }
     }
 
+    /**
+     * Returns the consumer bean instance
+     * 
+     * @return the consumer bean instance
+     */
     public Bean<? super IRedisStreamBaseConsumer> getConsumerBean() {
         return consumerBean;
     }

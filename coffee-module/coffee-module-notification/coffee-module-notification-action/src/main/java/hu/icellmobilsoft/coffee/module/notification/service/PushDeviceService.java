@@ -41,10 +41,9 @@ public class PushDeviceService extends BaseService<PushDevice> implements Serial
 
     private static final long serialVersionUID = 1L;
 
-    @Inject
-    @ThisLogger
-    private AppLogger log;
-
+    /**
+     * Wrapped repository
+     */
     @Inject
     private PushDeviceRepository pushDeviceRepository;
 

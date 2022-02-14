@@ -22,6 +22,7 @@
 		<module>coffee-module-ruleng</module>
 		<module>coffee-module-mp</module>
 		<module>coffee-module-totp</module>
+		<module>coffee-module-configdoc</module>
 	</modules>
 
 	<dependencyManagement>

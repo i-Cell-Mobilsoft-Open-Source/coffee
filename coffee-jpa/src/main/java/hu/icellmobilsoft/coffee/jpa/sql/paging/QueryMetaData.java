@@ -58,13 +58,24 @@ import javax.xml.bind.annotation.XmlType;
     "page"
 })
 public class QueryMetaData {
-
+    /**
+     * Total number of rows
+     */
     @XmlElement(required = true)
     protected BigInteger totalRows;
+    /**
+     * Total number of pages
+     */
     @XmlElement(required = true)
     protected BigInteger maxPage;
+    /**
+     * Current row number
+     */
     @XmlElement(required = true)
     protected BigInteger rows;
+    /**
+     * Current page number
+     */
     @XmlElement(required = true)
     protected BigInteger page;
 

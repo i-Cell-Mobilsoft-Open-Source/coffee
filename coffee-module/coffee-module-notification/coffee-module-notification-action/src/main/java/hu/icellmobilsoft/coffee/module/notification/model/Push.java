@@ -45,21 +45,36 @@ public class Push extends AbstractIdentifiedAuditEntity {
 
     private static final long serialVersionUID = 1L;
 
+    /**
+     * Push message subject
+     */
     @Column(name = "subject", nullable = false, length = 255)
     @Size(max = 255)
     @NotNull
     private String subject;
 
+    /**
+     * Push message body
+     */
     @Column(name = "body")
     private String body;
-    
+
+    /**
+     * Push message external id
+     */
     @Column(name = "external_id", nullable = true, length = 30)
     @Size(max = 30)
     private String externalId;
 
+    /**
+     * Transient map storing push devices by device id
+     */
     @Transient
-    private Map<String, PushDevice> pushDevices = new HashMap<String, PushDevice>();
+    private Map<String, PushDevice> pushDevices = new HashMap<>();
 
+    /**
+     * Push message payload
+     */
     @Column(name = "payload", nullable = true, length = 1024)
     @Size(max = 1024)
     private String payload;

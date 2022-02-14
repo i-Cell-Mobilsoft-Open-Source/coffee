@@ -43,6 +43,12 @@ public class Slf4jMDCAdapter implements MDCAdapter {
     private Method clear;
     private Method remove;
 
+    /**
+     * Slf4jMDCAdapter default constructor
+     * 
+     * @throws Exception
+     *             error
+     */
     public Slf4jMDCAdapter() throws Exception {
         Class<?> slf4jMDC = Class.forName("org.slf4j.MDC");
         put = slf4jMDC.getMethod("put", String.class, String.class);

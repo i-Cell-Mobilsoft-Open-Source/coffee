@@ -104,9 +104,15 @@ public class BaseRedisConsumerStarter {
     public void start() {
         // kiszedjuk az osszes olyan osztalyt, ami a IRedisStreamConsumer interfeszt implementalja
         Set<Bean<?>> beans = beanManager.getBeans(IRedisStreamBaseConsumer.class, RedisStreamConsumer.LITERAL);
-        beans.stream().forEach(this::handleConsumerBean);
+        beans.forEach(this::handleConsumerBean);
     }
 
+    /**
+     * Starts multiple redis stream consumer threads
+     * 
+     * @param bean
+     *            the redis stream consumer callback bean
+     */
     protected void handleConsumerBean(Bean<?> bean) {
         log.info("Found consumer: [{0}]", bean.getBeanClass());
         RedisStreamConsumer redisStreamConsumerAnnotation = AnnotationUtil.getAnnotation(bean.getBeanClass(), RedisStreamConsumer.class);
@@ -123,6 +129,16 @@ public class BaseRedisConsumerStarter {
         }
     }
 
+    /**
+     * Starts the redis stream consumer thread
+     * 
+     * @param executor
+     *            the consumer executor
+     * @param redisStreamConsumerAnnotation
+     *            the redis stream consumer annotation with configuration data
+     * @param bean
+     *            the redis stream consumer callback bean
+     */
     @SuppressWarnings("unchecked")
     protected void startThread(IRedisStreamConsumerExecutor executor, RedisStreamConsumer redisStreamConsumerAnnotation, Bean<?> bean) {
         executor.init(redisStreamConsumerAnnotation.configKey(), redisStreamConsumerAnnotation.group(),

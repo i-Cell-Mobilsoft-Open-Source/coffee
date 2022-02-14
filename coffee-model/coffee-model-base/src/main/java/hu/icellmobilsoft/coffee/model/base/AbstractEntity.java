@@ -50,11 +50,17 @@ public abstract class AbstractEntity implements IVersionable, Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    /**
+     * The version of the entity for optimistic lock checking
+     */
     @Column(name = "X__VERSION", precision = 20, scale = 0)
     @NotNull
     @Version
     private long version;
 
+    /**
+     * Transient interval version
+     */
     @Transient
     private Long internalVersion;
 

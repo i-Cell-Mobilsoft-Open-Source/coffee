@@ -41,6 +41,9 @@ public class Recipient extends AbstractIdentifiedAuditEntity {
 
     private static final long serialVersionUID = 1L;
 
+    /**
+     * Recipient
+     */
     @Column(name = "recipient", nullable = false)
     @Size(max = 255)
     @NotNull
