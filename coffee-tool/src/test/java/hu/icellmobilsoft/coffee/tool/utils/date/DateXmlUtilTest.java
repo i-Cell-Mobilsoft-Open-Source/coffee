@@ -126,7 +126,7 @@ class DateXmlUtilTest {
         }
 
         @Test
-        @DisplayName("Testing toXMLGregorianCalendar() from non GregorianCalendar, JRE >= 8")
+        @DisplayName("Testing toXMLGregorianCalendar() from non GregorianCalendar, JRE <= 8")
         @EnabledForJreRange(max = JRE.JAVA_8)
         void fromJapaneseCalendarJ8() {
             // given
