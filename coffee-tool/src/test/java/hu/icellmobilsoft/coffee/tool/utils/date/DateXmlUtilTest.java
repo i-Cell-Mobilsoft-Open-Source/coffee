@@ -19,6 +19,11 @@
  */
 package hu.icellmobilsoft.coffee.tool.utils.date;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
@@ -35,19 +40,12 @@ import javax.xml.datatype.DatatypeConstants;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 
-import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNotSame;
-import static org.junit.jupiter.api.Assertions.assertNull;
-
-import hu.icellmobilsoft.coffee.tool.version.JavaVersion;
-import hu.icellmobilsoft.coffee.tool.version.JavaVersionUtil;
+import org.junit.jupiter.api.condition.EnabledForJreRange;
+import org.junit.jupiter.api.condition.JRE;
 
 /**
  * @author balazs.joo
@@ -128,21 +126,33 @@ class DateXmlUtilTest {
         }
 
         @Test
-        @DisplayName("Testing toXMLGregorianCalendar() from non GregorianCalendar")
-        void fromJapaneseCalendar() {
-
+        @DisplayName("Testing toXMLGregorianCalendar() from non GregorianCalendar, JRE >= 8")
+        @EnabledForJreRange(max = JRE.JAVA_8)
+        void fromJapaneseCalendarJ8() {
             // given
             Calendar source = Calendar.getInstance(TimeZone.getTimeZone("UTC"), new Locale("ja", "JP", "JP"));
             source.set(Calendar.MILLISECOND, 51);
-
+            // NOTE: 8u211-es java verzióig a régi japán era miatt ezt kell használni
             // https://www.oracle.com/technetwork/java/javase/8u211-relnotes-5290139.html
-            if (hasJDKNewJapaneseEra()) {
-                // NOTE: 8u211-es java verzió után egy új japán era miatt ezt kell használni
-                source.set(1, 1, 11, 15, 23, 34);
-            } else {
-                // 8u211 elotti verzional:
-                source.set(31, 1, 11, 15, 23, 34);
-            }
+            source.set(31, 1, 11, 15, 23, 34);
+
+            // when
+            XMLGregorianCalendar actual = DateXmlUtil.toXMLGregorianCalendar(source);
+
+            // then
+            assertEquals(xmlGregorianCalendarUtc, actual);
+        }
+
+        @Test
+        @DisplayName("Testing toXMLGregorianCalendar() from non GregorianCalendar, JRE >= 11")
+        @EnabledForJreRange(min = JRE.JAVA_11)
+        void fromJapaneseCalendarJ11() {
+            // given
+            Calendar source = Calendar.getInstance(TimeZone.getTimeZone("UTC"), new Locale("ja", "JP", "JP"));
+            source.set(Calendar.MILLISECOND, 51);
+            // NOTE: 8u211-es java verzió után egy új japán era miatt ezt kell használni
+            // https://www.oracle.com/technetwork/java/javase/8u211-relnotes-5290139.html
+            source.set(1, 1, 11, 15, 23, 34);
 
             // when
             XMLGregorianCalendar actual = DateXmlUtil.toXMLGregorianCalendar(source);
@@ -470,21 +480,4 @@ class DateXmlUtilTest {
         assertNull(DateXmlUtil.clearTime(null));
     }
 
-    private boolean hasJDKNewJapaneseEra() {
-        JavaVersion javaVersion = JavaVersionUtil.getCurrentSystemJavaVersion();
-        // java 1.8u221+
-        if (javaVersion.getMajor() == 1 && javaVersion.getFeature() == 8) {
-            return javaVersion.getPatchUpdate() != null && javaVersion.getPatchUpdate() >= 211;
-        } else
-        // java 9 es 10 nem erdekel, azok nem LTS
-        // java 11.0.3+
-        if (javaVersion.getMajor() == 11) {
-            int feature = (javaVersion.getFeature() != null) ? javaVersion.getFeature() : 0;
-            int patch = (StringUtils.isNotEmpty(javaVersion.getPatch())) ? Integer.parseInt(javaVersion.getPatch()) : 0;
-            return (feature == 0 && patch >= 3) || feature > 0;
-        } else {
-            // java 12+
-            return javaVersion.getMajor() >= 12;
-        }
-    }
 }
