@@ -96,7 +96,7 @@ public class DateXmlUtil {
             return null;
         }
         XMLGregorianCalendar xmlCalendar = getDatatypeFactory().newXMLGregorianCalendarDate(calendar.get(GregorianCalendar.YEAR),
-                    calendar.get(GregorianCalendar.MONTH) + 1, calendar.get(GregorianCalendar.DAY_OF_MONTH), offsetInMinutes);
+                calendar.get(GregorianCalendar.MONTH) + 1, calendar.get(GregorianCalendar.DAY_OF_MONTH), offsetInMinutes);
 
         xmlCalendar.setHour(calendar.get(Calendar.HOUR_OF_DAY));
         xmlCalendar.setMinute(calendar.get(Calendar.MINUTE));
@@ -297,8 +297,7 @@ public class DateXmlUtil {
         if (c == null) {
             return null;
         }
-        return getDatatypeFactory().newXMLGregorianCalendarDate(c.get(Calendar.YEAR), c.get(Calendar.MONTH) + 1,
-                    c.get(Calendar.DAY_OF_MONTH), 0);
+        return getDatatypeFactory().newXMLGregorianCalendarDate(c.get(Calendar.YEAR), c.get(Calendar.MONTH) + 1, c.get(Calendar.DAY_OF_MONTH), 0);
     }
 
     /**
@@ -413,7 +412,7 @@ public class DateXmlUtil {
      * @return {@link DatatypeFactory} instance
      */
     public static DatatypeFactory getDatatypeFactory() {
-        if(datatypeFactory == null) {
+        if (datatypeFactory == null) {
             try {
                 datatypeFactory = DatatypeFactory.newInstance();
             } catch (DatatypeConfigurationException e) {
