@@ -68,22 +68,18 @@ public class RedisStreamHandler {
     /**
      * Initialization
      *
-     * @param cdi
-     *            Current cdi instance
-     * @param configKey
-     *            configKey
+     * @param jedisInstance
+     *            Jedis bean instance
      * @param streamGroup
      *            stream group for setting in {@link RedisStreamService}
      */
-    public void init(CDI<Object> cdi, String configKey, String streamGroup) {
-        config.setConfigKey(streamGroup);
-        this.jedisInstance = cdi.select(Jedis.class, new RedisConnection.Literal(configKey, config.getProducerPool()));
+    public void init(Instance<Jedis> jedisInstance, String streamGroup) {
+        this.jedisInstance = jedisInstance;
         this.streamGroup = streamGroup;
-
     }
 
     /**
-     * Is enabled Redis stream? {@link  hu.icellmobilsoft.coffee.module.redisstream.config.IStreamGroupConfig#isEnabled()}
+     * Is enabled Redis stream? {@link hu.icellmobilsoft.coffee.module.redisstream.config.IStreamGroupConfig#isEnabled()}
      *
      * @return true - enabled
      */

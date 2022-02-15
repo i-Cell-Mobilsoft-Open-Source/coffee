@@ -57,15 +57,15 @@ import hu.icellmobilsoft.coffee.module.redisstream.annotation.RedisStreamConsume
  *               read:
  *                   timeoutmillis: 60000 #default: 60000 (2)
  *               connection:
- *                   key: auth # connection referencia
+ *                   key: auth # connection reference
  *           producer:
  *               maxlen: 10000 #default none (3)
  *               ttl: 300000 #millisec, default none (4)
- *               pool: custom1 # default default - pool referencia
+ *               pool: custom1 # default - coffee.redis.*.pool config reference
  *           consumer:
  *               threadsCount: 2 #default: 1 (5)
  *               retryCount: 2 #default: 1 (6)
- *               pool: custom2 # default default - pool referencia
+ *               pool: custom2 # default - coffee.redis.*.pool config reference
  *
  * </pre>
  *
@@ -87,7 +87,6 @@ public class StreamGroupConfig implements IStreamGroupConfig {
      */
     public static final String KEY_DELIMITER = ".";
     private static final String DEFAULT = "default";
-
 
     @Inject
     private Config config;
@@ -143,6 +142,7 @@ public class StreamGroupConfig implements IStreamGroupConfig {
      * Default true {@link #isEnabled()}}
      */
     public static final String ENABLED = "enabled";
+
     /**
      * Getter for the field {@code configKey}.
      *
@@ -173,6 +173,11 @@ public class StreamGroupConfig implements IStreamGroupConfig {
         return config.getValue(joinKey(CONNECTION), String.class);
     }
 
+    @Override
+    public String getConnectionKey(String configKey) {
+        return config.getValue(joinKey(configKey, CONNECTION), String.class);
+    }
+
     // producer
     @Override
     public Optional<Long> getProducerMaxLen() {
@@ -184,10 +189,13 @@ public class StreamGroupConfig implements IStreamGroupConfig {
         return config.getOptionalValue(joinKey(PRODUCER_TTL), Long.class);
     }
 
-
     @Override
     public String getProducerPool() {
         return config.getOptionalValue(joinKey(PRODUCER_POOL), String.class).orElse(DEFAULT);
+    }
+
+    public String getProducerPool(String configKey) {
+        return config.getOptionalValue(joinKey(configKey, PRODUCER_POOL), String.class).orElse(DEFAULT);
     }
 
     // consumer
@@ -206,8 +214,17 @@ public class StreamGroupConfig implements IStreamGroupConfig {
         return config.getOptionalValue(joinKey(CONSUMER_POOL), String.class).orElse(DEFAULT);
     }
 
+    @Override
+    public String getConsumerPool(String configKey) {
+        return config.getOptionalValue(joinKey(configKey, CONSUMER_POOL), String.class).orElse(DEFAULT);
+    }
+
     protected String joinKey(String key) {
         return String.join(KEY_DELIMITER, REDISSTREAM_PREFIX, getConfigKey(), key);
+    }
+
+    protected String joinKey(String configKey, String key) {
+        return String.join(KEY_DELIMITER, REDISSTREAM_PREFIX, configKey, key);
     }
 
     /**

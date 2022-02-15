@@ -72,7 +72,7 @@ coffee:
 coffee:
     redis:
         auth:
-            host: hubphq-icon-sandbox-d001.icellmobilsoft.hu
+            host: sample-sandbox.icellmobilsoft.hu
             port: 6380
             password: authpw
             database: 1
@@ -96,10 +96,10 @@ coffee:
            producer:
                maxlen: 10000 #default none (3)
                ttl: 300000 #millisec, default none (4)
-               pool: custom1 # default default - pool referencia
+               pool: custom1 #default: default - pool referencia
            consumer:
                threadsCount: 2 #default: 1 (5)
                retryCount: 2 #default: 1 (6)
-               pool: custom2 # default default - pool referencia
+               pool: custom2 #default: default - pool referencia
 
 ```

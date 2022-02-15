@@ -32,12 +32,13 @@ import hu.icellmobilsoft.coffee.module.redisstream.annotation.RedisStreamConsume
  */
 public interface IStreamGroupConfig {
 
-    //stream
+    // stream
     /**
      * See https://redis.io/commands/xreadgroup and https://redis.io/commands/xread BLOCK option
      *
      * @return timeout on stream read in millis. Waiting on stream until this time for new message or return null
-     * @throws BaseException Exception on read properties
+     * @throws BaseException
+     *             Exception on read properties
      */
     Long getReadTimeoutMillis() throws BaseException;
 
@@ -45,11 +46,21 @@ public interface IStreamGroupConfig {
      * Defines the redis connection configuration key to be used.
      *
      * @return redis key.
-     * @throws BaseException Exception on read properties
+     * @throws BaseException
+     *             Exception on read properties
      */
     String getConnectionKey() throws BaseException;
 
-
+    /**
+     * Defines the redis connection configuration key to be used.
+     * 
+     * @param configKey
+     *            redis configuration of which pool searched for.
+     * @return redis key.
+     * @throws BaseException
+     *             Exception on read properties
+     */
+    String getConnectionKey(String configKey) throws BaseException;
 
     /**
      * Max elements in stream, oldest will be removed. See https://redis.io/commands/xadd MAXLEN parameter. <br>
@@ -79,10 +90,21 @@ public interface IStreamGroupConfig {
      * Defines the redis connection pool configuration key to be used.
      *
      * @return pool config.
-     * @throws BaseException Exception on read properties
+     * @throws BaseException
+     *             Exception on read properties
      */
     String getProducerPool() throws BaseException;
 
+    /**
+     * Defines the redis connection pool configuration key to be used.
+     * 
+     * @param configKey
+     *            redisstream configuration key.
+     * @return pool config.
+     * @throws BaseException
+     *             Exception on read properties
+     */
+    String getProducerPool(String configKey) throws BaseException;
 
     /**
      * Enable/Disable any part of stream function for any reason. This is only for project logic, no have direct use-case in coffee
@@ -93,8 +115,7 @@ public interface IStreamGroupConfig {
      */
     boolean isEnabled() throws BaseException;
 
-
-    //consumer
+    // consumer
     /**
      * How many threads start to listening on stream group. This value override {@link RedisStreamConsumer#consumerThreadsCount()}
      *
@@ -117,8 +138,20 @@ public interface IStreamGroupConfig {
      * Defines the redis connection pool configuration key to be used.
      *
      * @return pool config.
-     * @throws BaseException Exception on read properties
+     * @throws BaseException
+     *             Exception on read properties
      */
     String getConsumerPool() throws BaseException;
+
+    /**
+     * Defines the redis connection pool configuration key to be used.
+     * 
+     * @param configKey
+     *            redisstream configuration key.
+     * @return pool config.
+     * @throws BaseException
+     *             Exception on read properties
+     */
+    String getConsumerPool(String configKey) throws BaseException;
 
 }

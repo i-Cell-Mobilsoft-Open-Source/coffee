@@ -95,7 +95,6 @@ public class RedisStreamConsumerExecutor implements IRedisStreamConsumerExecutor
         this.redisConfigKey = redisConfigKey;
         redisStreamService.setGroup(group);
         this.consumerBean = consumerBean;
-        this.streamGroupConfig.setConfigKey(group);
     }
 
     /**
@@ -108,8 +107,8 @@ public class RedisStreamConsumerExecutor implements IRedisStreamConsumerExecutor
         boolean prudentRun = true;
         while (!endLoop) {
             Optional<StreamEntry> streamEntry = Optional.empty();
-            Instance<Jedis> jedisInstance = CDI.current().select(Jedis.class, new RedisConnection.Literal(this.streamGroupConfig.getConnectionKey(),
-                    streamGroupConfig.getConsumerPool()));
+            Instance<Jedis> jedisInstance = CDI.current().select(Jedis.class,
+                    new RedisConnection.Literal(redisConfigKey, streamGroupConfig.getConsumerPool(redisStreamService.getGroup())));
             Jedis jedis = null;
             try {
                 jedis = jedisInstance.get();
@@ -161,8 +160,8 @@ public class RedisStreamConsumerExecutor implements IRedisStreamConsumerExecutor
             }
             MDC.clear();
         } catch (Throwable e) {
-            log.error(MessageFormat.format("Exception during jedis cleanup on redisConfigKey [{0}] with stream group [{1}]: [{2}]",
-                    redisConfigKey, redisStreamService.getGroup(), e.getLocalizedMessage()), e);
+            log.error(MessageFormat.format("Exception during jedis cleanup on redisConfigKey [{0}] with stream group [{1}]: [{2}]", redisConfigKey,
+                    redisStreamService.getGroup(), e.getLocalizedMessage()), e);
         }
     }
 

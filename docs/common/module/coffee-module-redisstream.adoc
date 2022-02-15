@@ -34,11 +34,11 @@ coffee:
            producer:
                maxlen: 10000 #default none <4>
                ttl: 300000 #millisec, default none <5>
-               pool: custom1 #default default - pool referencia <6>
+               pool: custom1 #default: default - pool referencia <6>
            consumer:
                threadsCount: 2 #default: 1 <7>
                retryCount: 2 #default: 1 <8>
-               pool: custom2 #default - pool referencia <6>
+               pool: custom2 #default: default - pool referencia <6>
 
 ----
 <1> A stream csoport egyedi neve. Minden mező opcionális.
