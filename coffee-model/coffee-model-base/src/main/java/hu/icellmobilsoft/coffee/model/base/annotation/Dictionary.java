@@ -45,8 +45,14 @@ public @interface Dictionary {
     @Nonbinding
     DictionaryType type() default DictionaryType.NAME;
 
+    /**
+     * Literal class for {@code Dictionary} annotation
+     */
     final class Literal extends AnnotationLiteral<Dictionary> implements Dictionary {
 
+        /**
+         * Qualifier literal instance
+         */
         public static final Literal INSTANCE = new Literal();
 
         private static final long serialVersionUID = 1L;

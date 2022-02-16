@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,7 +19,6 @@
  */
 package hu.icellmobilsoft.coffee.tool.utils.date;
 
-import java.text.MessageFormat;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
@@ -37,8 +36,6 @@ import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.apache.commons.lang3.StringUtils;
 
-import hu.icellmobilsoft.coffee.se.logging.Logger;
-
 /**
  * Date XML util.
  *
@@ -48,9 +45,7 @@ import hu.icellmobilsoft.coffee.se.logging.Logger;
 @Vetoed
 public class DateXmlUtil {
 
-    private static Logger LOGGER = hu.icellmobilsoft.coffee.cdi.logger.LogProducer.getStaticDefaultLogger(DateXmlUtil.class);
-
-    private static final String TIMESTAMP_CONVERT_ERROR_MSG = "Timestamp convert [{0}] to XmlGregorianCalendar error: ";
+    private static DatatypeFactory datatypeFactory;
 
     /**
      * Converts {@link Calendar} to {@link XMLGregorianCalendar}
@@ -63,18 +58,14 @@ public class DateXmlUtil {
         if (c == null) {
             return null;
         }
-        try {
-            if (c instanceof GregorianCalendar) {
-                return DatatypeFactory.newInstance().newXMLGregorianCalendar((GregorianCalendar) c);
-            } else {
-                GregorianCalendar gc = new GregorianCalendar(c.getTimeZone());
-                gc.setTimeInMillis(c.getTimeInMillis());
-                return DatatypeFactory.newInstance().newXMLGregorianCalendar(gc);
-            }
-        } catch (DatatypeConfigurationException e) {
-            LOGGER.error(MessageFormat.format(TIMESTAMP_CONVERT_ERROR_MSG, c), e);
-            return null;
+
+        if (c instanceof GregorianCalendar) {
+            return getDatatypeFactory().newXMLGregorianCalendar((GregorianCalendar) c);
         }
+
+        GregorianCalendar gc = new GregorianCalendar(c.getTimeZone());
+        gc.setTimeInMillis(c.getTimeInMillis());
+        return getDatatypeFactory().newXMLGregorianCalendar(gc);
     }
 
     /**
@@ -104,14 +95,8 @@ public class DateXmlUtil {
         if (calendar == null) {
             return null;
         }
-        XMLGregorianCalendar xmlCalendar;
-        try {
-            xmlCalendar = DatatypeFactory.newInstance().newXMLGregorianCalendarDate(calendar.get(GregorianCalendar.YEAR),
-                    calendar.get(GregorianCalendar.MONTH) + 1, calendar.get(GregorianCalendar.DAY_OF_MONTH), offsetInMinutes);
-        } catch (DatatypeConfigurationException e) {
-            LOGGER.error(MessageFormat.format(TIMESTAMP_CONVERT_ERROR_MSG, calendar), e);
-            return null;
-        }
+        XMLGregorianCalendar xmlCalendar = getDatatypeFactory().newXMLGregorianCalendarDate(calendar.get(GregorianCalendar.YEAR),
+                calendar.get(GregorianCalendar.MONTH) + 1, calendar.get(GregorianCalendar.DAY_OF_MONTH), offsetInMinutes);
 
         xmlCalendar.setHour(calendar.get(Calendar.HOUR_OF_DAY));
         xmlCalendar.setMinute(calendar.get(Calendar.MINUTE));
@@ -177,16 +162,14 @@ public class DateXmlUtil {
         if (StringUtils.isBlank(stringISODate)) {
             return null;
         }
-        try {
-            ZonedDateTime zonedDateTime = DateUtil.toZoneDateTime(stringISODate);
-            if (zonedDateTime != null) {
-                GregorianCalendar gcal = GregorianCalendar.from(zonedDateTime);
-                return DatatypeFactory.newInstance().newXMLGregorianCalendar(gcal);
-            }
-        } catch (DatatypeConfigurationException e) {
-            LOGGER.error("Error in stringISODate convert [" + stringISODate + "] to XmlGregorianCalendar:", e);
+
+        ZonedDateTime zonedDateTime = DateUtil.toZoneDateTime(stringISODate);
+        if (zonedDateTime == null) {
+            return null;
         }
-        return null;
+
+        GregorianCalendar gcal = GregorianCalendar.from(zonedDateTime);
+        return getDatatypeFactory().newXMLGregorianCalendar(gcal);
     }
 
     /**
@@ -214,14 +197,10 @@ public class DateXmlUtil {
         if (localDate == null) {
             return null;
         }
-        try {
-            return DatatypeFactory.newInstance().newXMLGregorianCalendar(localDate.getYear(), localDate.getMonthValue(), localDate.getDayOfMonth(),
-                    DatatypeConstants.FIELD_UNDEFINED, DatatypeConstants.FIELD_UNDEFINED, DatatypeConstants.FIELD_UNDEFINED,
-                    DatatypeConstants.FIELD_UNDEFINED, 0);
-        } catch (DatatypeConfigurationException e) {
-            LOGGER.error("Error in stringISODate convert [" + localDate.toString() + "] to XmlGregorianCalendar:", e);
-        }
-        return null;
+
+        return getDatatypeFactory().newXMLGregorianCalendar(localDate.getYear(), localDate.getMonthValue(), localDate.getDayOfMonth(),
+                DatatypeConstants.FIELD_UNDEFINED, DatatypeConstants.FIELD_UNDEFINED, DatatypeConstants.FIELD_UNDEFINED,
+                DatatypeConstants.FIELD_UNDEFINED, 0);
     }
 
     /**
@@ -318,15 +297,7 @@ public class DateXmlUtil {
         if (c == null) {
             return null;
         }
-        XMLGregorianCalendar xmlCalendar;
-        try {
-            xmlCalendar = DatatypeFactory.newInstance().newXMLGregorianCalendarDate(c.get(Calendar.YEAR), c.get(Calendar.MONTH) + 1,
-                    c.get(Calendar.DAY_OF_MONTH), 0);
-        } catch (DatatypeConfigurationException e) {
-            LOGGER.error(MessageFormat.format(TIMESTAMP_CONVERT_ERROR_MSG, c), e);
-            return null;
-        }
-        return xmlCalendar;
+        return getDatatypeFactory().newXMLGregorianCalendarDate(c.get(Calendar.YEAR), c.get(Calendar.MONTH) + 1, c.get(Calendar.DAY_OF_MONTH), 0);
     }
 
     /**
@@ -433,5 +404,21 @@ public class DateXmlUtil {
             return null;
         }
         return (XMLGregorianCalendar) xmlGregorianCalendar.clone();
+    }
+
+    /**
+     * Get {@link DatatypeFactory} implementation cached instance with lazy load
+     *
+     * @return {@link DatatypeFactory} instance
+     */
+    public static DatatypeFactory getDatatypeFactory() {
+        if (datatypeFactory == null) {
+            try {
+                datatypeFactory = DatatypeFactory.newInstance();
+            } catch (DatatypeConfigurationException e) {
+                throw new IllegalStateException("Cannot create DatatypeFactory instance", e);
+            }
+        }
+        return datatypeFactory;
     }
 }

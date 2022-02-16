@@ -131,8 +131,15 @@ public class EtcdService {
         }
     }
 
+    /**
+     * Converts the passed nullable byte sequence to {@code Optional<String>}
+     * 
+     * @param byteSequence
+     *            the object to convert
+     * @return the result of the conversion
+     */
     protected Optional<String> toOptional(ByteSequence byteSequence) {
-        return byteSequence.isEmpty() ? Optional.empty() : Optional.of(byteSequence.toString(StandardCharsets.UTF_8));
+        return Optional.ofNullable(byteSequence).map(bs -> bs.toString(StandardCharsets.UTF_8));
     }
 
     /**
@@ -268,6 +275,11 @@ public class EtcdService {
         return responseText;
     }
 
+    /**
+     * Returns the ETCD repository
+     * 
+     * @return the ETCD repository
+     */
     public EtcdRepository getEtcdRepository() {
         return etcdRepository;
     }

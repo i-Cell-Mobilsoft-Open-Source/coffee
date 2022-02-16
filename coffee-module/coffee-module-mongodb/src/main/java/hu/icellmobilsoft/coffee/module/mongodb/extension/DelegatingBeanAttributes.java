@@ -38,8 +38,13 @@ public class DelegatingBeanAttributes<T> implements BeanAttributes<T> {
 
     private final BeanAttributes<?> beanAttributes;
 
+    /**
+     * Instantiates the class with the delegate object
+     * 
+     * @param delegate
+     *            the delegate object
+     */
     public DelegatingBeanAttributes(final BeanAttributes<?> delegate) {
-        super();
         beanAttributes = delegate;
     }
 

@@ -37,14 +37,29 @@ import com.mongodb.MongoClient;
 @ApplicationScoped
 public class MongoClientContainer {
 
-    private Map<String, MongoClient> clientMap = new HashMap<>();
+    private final Map<String, MongoClient> clientMap = new HashMap<>();
 
+    /**
+     * Returns the client map
+     * 
+     * @return the client map
+     */
     public Map<String, MongoClient> getClientMap() {
         return clientMap;
     }
 
-    public MongoClient put(String key, MongoClient mongoClientwrapper) {
-        return clientMap.put(key, mongoClientwrapper);
+    /**
+     * Puts entry to the client map
+     * 
+     * @param key
+     *            the key of the entry
+     * @param mongoClientWrapper
+     *            the value of the entry
+     * @return the previous value associated with {@code key}, or {@code null} if there was no mapping for {@code key}. (A {@code null} return can
+     *         also indicate that the map previously associated {@code null} with {@code key}.)
+     */
+    public MongoClient put(String key, MongoClient mongoClientWrapper) {
+        return clientMap.put(key, mongoClientWrapper);
     }
 
 }

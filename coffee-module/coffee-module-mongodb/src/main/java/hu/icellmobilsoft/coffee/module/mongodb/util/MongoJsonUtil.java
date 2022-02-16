@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -221,11 +221,11 @@ public class MongoJsonUtil {
                     if (NumberUtils.isCreatable(value)) {
                         GregorianCalendar calendar = new GregorianCalendar();
                         calendar.setTimeInMillis(Long.parseLong(value));
-                        return DatatypeFactory.newInstance().newXMLGregorianCalendar(calendar);
+                        return DateXmlUtil.getDatatypeFactory().newXMLGregorianCalendar(calendar);
                     }
                     return DateXmlUtil.toXMLGregorianCalendarFromISO(value);
                 } catch (NumberFormatException e) {
-                    return DatatypeFactory.newInstance().newXMLGregorianCalendar(jsonElement.getAsString());
+                    return DateXmlUtil.getDatatypeFactory().newXMLGregorianCalendar(jsonElement.getAsString());
                 }
             } catch (Exception e) {
                 return null;

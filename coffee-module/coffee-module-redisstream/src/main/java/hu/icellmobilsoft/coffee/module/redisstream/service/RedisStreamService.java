@@ -359,6 +359,11 @@ public class RedisStreamService implements Closeable {
         return new StreamEntryID(localDateTime.toEpochSecond(ZoneOffset.UTC), 0);
     }
 
+    /**
+     * Returns the jedis instance
+     * 
+     * @return the jedis instance
+     */
     protected Jedis getJedis() {
         return jedis;
     }
@@ -383,10 +388,21 @@ public class RedisStreamService implements Closeable {
         }
     }
 
+    /**
+     * Returns the redis stream group
+     * 
+     * @return the redis stream group
+     */
     public String getGroup() {
         return group;
     }
 
+    /**
+     * Sets the redis stream group
+     * 
+     * @param group
+     *            the new redis stream group
+     */
     public void setGroup(String group) {
         this.group = group;
         config.setConfigKey(group);

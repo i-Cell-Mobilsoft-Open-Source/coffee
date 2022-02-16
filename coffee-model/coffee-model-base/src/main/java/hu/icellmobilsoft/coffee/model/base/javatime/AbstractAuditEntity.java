@@ -45,20 +45,32 @@ public abstract class AbstractAuditEntity<T extends Serializable> extends Abstra
 
     private static final long serialVersionUID = 1L;
 
+    /**
+     * Creation date of the entity
+     */
     @CreatedOn
     @NotNull
     @Column(name = "X__INSDATE", updatable = false)
     private OffsetDateTime creationDate;
 
+    /**
+     * Last modification date of the entity
+     */
     @ModifiedOn
     @Column(name = "X__MODDATE")
     private OffsetDateTime modificationDate;
 
+    /**
+     * Creator user of the entity
+     */
     @CreatedBy
     @NotNull
     @Column(name = "X__INSUSER", length = 30, updatable = false)
     private T creatorUser;
 
+    /**
+     * The last modifier user of the entity
+     */
     @ModifiedBy
     @Column(name = "X__MODUSER", length = 30)
     private T modifierUser;

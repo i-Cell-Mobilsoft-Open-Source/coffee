@@ -60,35 +60,77 @@ import org.eclipse.microprofile.config.Config;
 @Dependent
 public class MongoConfigHelper {
 
+    /**
+     * Mongo db konfig key prefix
+     */
     public static final String CONFIG_PREFIX = "coffee.mongodb";
 
+    /**
+     * Database name
+     */
     public static final String DATA_BASE_KEY = "database";
+    /**
+     * Server uri
+     */
     public static final String URI_KEY = "uri";
+    /**
+     * MongoDB client {@value} config
+     */
     public static final String SOCKET_TIMEOUT_KEY = "socketTimeout";
+    /**
+     * MongoDB client {@value} config
+     */
     public static final String MAX_CONNECTION_IDLE_TIME_KEY = "maxConnectionIdleTime";
+    /**
+     * MongoDB client {@value} config
+     */
     public static final String MAX_CONNECTION_LIFE_TIME_KEY = "maxConnectionLifeTime";
+    /**
+     * MongoDB client {@value} config
+     */
     public static final String CONNECTIONS_PER_HOST_KEY = "connectionsPerHost";
+    /**
+     * MongoDB client {@value} config
+     */
     public static final String CONNECT_TIMEOUT_KEY = "connectTimeout";
+    /**
+     * MongoDB client {@value} config
+     */
     public static final String HEARTBEAT_CONNECT_TIMEOUT_KEY = "heartbeatConnectTimeout";
+    /**
+     * MongoDB client {@value} config
+     */
     public static final String HEARTBEAT_FREQUENCY_KEY = "heartbeatFrequency";
+    /**
+     * MongoDB client {@value} config
+     */
     public static final String HEARTBEAT_SOCKET_TIMEOUT_KEY = "heartbeatSocketTimeout";
+    /**
+     * MongoDB client {@value} config
+     */
     public static final String MIN_CONNECTIONS_PER_HOST_KEY = "minConnectionsPerHost";
+    /**
+     * MongoDB client {@value} config
+     */
     public static final String MIN_HEART_BEAT_FREQUENCY_KEY = "minHeartbeatFrequency";
+    /**
+     * MongoDB client {@value} config
+     */
     public static final String SERVER_SELECTION_TIMEOUT_KEY = "serverSelectionTimeout";
 
-    public static final Integer DEFAULT_SOCKET_TIMEOUT = 0;
-    public static final Integer DEFAULT_MAX_CONNECTION_IDLE_TIME = 20000;
-    public static final Integer DEFAULT_MAX_CONNECTION_LIFE_TIME = 20000;
-    public static final Integer DEFAULT_CONNECTIONS_PER_HOST = 100;
-    public static final Integer DEFAULT_CONNECT_TIMEOUT = 10000;
-    public static final Integer DEFAULT_HEARTBEAT_CONNECT_TIMEOUT = 20000;
-    public static final Integer DEFAULT_HEARTBEAT_FREQUENCY = 10000;
-    public static final Integer DEFAULT_HEARTBEAT_SOCKET_TIMEOUT = 20000;
-    public static final Integer DEFAULT_MIN_CONNECTIONS_PER_HOST = 0;
-    public static final Integer DEFAULT_MIN_HEART_BEAT_FREQUENCY = 500;
-    public static final Integer DEFAULT_SERVER_SELECTION_TIMEOUT = 5000;
+    private static final Integer DEFAULT_SOCKET_TIMEOUT = 0;
+    private static final Integer DEFAULT_MAX_CONNECTION_IDLE_TIME = 20000;
+    private static final Integer DEFAULT_MAX_CONNECTION_LIFE_TIME = 20000;
+    private static final Integer DEFAULT_CONNECTIONS_PER_HOST = 100;
+    private static final Integer DEFAULT_CONNECT_TIMEOUT = 10000;
+    private static final Integer DEFAULT_HEARTBEAT_CONNECT_TIMEOUT = 20000;
+    private static final Integer DEFAULT_HEARTBEAT_FREQUENCY = 10000;
+    private static final Integer DEFAULT_HEARTBEAT_SOCKET_TIMEOUT = 20000;
+    private static final Integer DEFAULT_MIN_CONNECTIONS_PER_HOST = 0;
+    private static final Integer DEFAULT_MIN_HEART_BEAT_FREQUENCY = 500;
+    private static final Integer DEFAULT_SERVER_SELECTION_TIMEOUT = 5000;
 
-    public String configKey;
+    private String configKey;
 
     @Inject
     private Config config;
@@ -233,10 +275,18 @@ public class MongoConfigHelper {
         return config.getOptionalValue(concatConfigKey(SERVER_SELECTION_TIMEOUT_KEY), Integer.class).orElse(DEFAULT_SERVER_SELECTION_TIMEOUT);
     }
 
+    /**
+     * Returns the current configKey value
+     * @return the current configKey value
+     */
     public String getConfigKey() {
         return configKey;
     }
 
+    /**
+     * Sets the new configKey value
+     * @param configKey new configKey value
+     */
     public void setConfigKey(String configKey) {
         this.configKey = configKey;
     }

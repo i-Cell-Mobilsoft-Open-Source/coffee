@@ -35,6 +35,9 @@ import java.lang.annotation.Target;
 @Target({ ElementType.TYPE, ElementType.FIELD })
 @Retention(RetentionPolicy.SOURCE)
 public @interface ConfigDoc {
+    /**
+     * File path of the generated doc
+     */
     String FILE_NAME = "META-INF/config_keys.adoc";
 
     /**

@@ -42,7 +42,6 @@ import hu.icellmobilsoft.coffee.cdi.annotation.Version;
 @Target({ ElementType.PARAMETER })
 public @interface ValidateXML {
 
-    static final class DEFAULT {};
     /**
      * Melyik verziókra aktiválódjon
      *

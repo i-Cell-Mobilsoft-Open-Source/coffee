@@ -30,6 +30,12 @@ import hu.icellmobilsoft.coffee.dto.exception.BaseExceptionWrapper;
  */
 public class ConverterException extends RuntimeException implements BaseExceptionWrapper<BaseException> {
 
+    /**
+     * Creates the exception with the given message
+     * 
+     * @param message
+     *            the exception message
+     */
     public ConverterException(String message) {
         super(new BaseException(message));
     }

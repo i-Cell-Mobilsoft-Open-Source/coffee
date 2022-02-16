@@ -30,7 +30,7 @@
 		<version.org.eclipse.microprofile.config>2.0</version.org.eclipse.microprofile.config>
 		<version.osgi.annotation>7.0.0</version.osgi.annotation>
 		<version.org.jboss.resteasy>3.6.2.Final</version.org.jboss.resteasy>
-		<version.org.hibernate>5.3.7.Final</version.org.hibernate>
+		<version.org.hibernate>5.4.24.Final</version.org.hibernate>
 		<version.org.hibernate.validator>6.0.20.Final</version.org.hibernate.validator>
 		<version.org.apache.httpcomponents.httpclient>4.5.13</version.org.apache.httpcomponents.httpclient>
 		<version.org.apache.httpcomponents.httpcore>4.4.13</version.org.apache.httpcomponents.httpcore>

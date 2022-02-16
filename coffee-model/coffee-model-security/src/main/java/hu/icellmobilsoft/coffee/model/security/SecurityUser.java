@@ -48,24 +48,39 @@ public class SecurityUser extends AbstractIdentifiedAuditEntity {
 
     private static final long serialVersionUID = 1L;
 
+    /**
+     * user login name
+     */
     @Column(name = "login", nullable = false, unique = true, length = 100)
     @Size(max = 100)
     @NotNull
     private String login;
 
+    /**
+     * user password
+     */
     @Column(name = "password", nullable = false, length = 255)
     @Size(max = 255)
     @NotNull
     private String password;
 
+    /**
+     * user status
+     */
     @Column(name = "user_status_enum_id", nullable = false)
     @Enumerated(value = EnumType.STRING)
     private UserStatus status;
 
+    /**
+     * the user's password salt
+     */
     @Column(name = "salt", length = 512)
     @Size(max = 512)
     private String salt;
 
+    /**
+     * user's last login date
+     */
     @Column(name = "last_login_date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date lastLoginDate;

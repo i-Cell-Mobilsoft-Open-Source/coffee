@@ -33,6 +33,18 @@ public class DocData {
     private final String description;
     private final String defaultValue;
 
+    /**
+     * Creates a {@code DocData} instance with the given arguments
+     * 
+     * @param key
+     *            the configuration key
+     * @param source
+     *            the source class where the configuration key can be found
+     * @param description
+     *            the description of the configuration key
+     * @param defaultValue
+     *            the default value of the configuration key
+     */
     public DocData(String key, String source, String description, String defaultValue) {
         this.key = key;
         this.source = source;
@@ -40,18 +52,38 @@ public class DocData {
         this.defaultValue = defaultValue;
     }
 
+    /**
+     * Returns the configuration key
+     * 
+     * @return the configuration key
+     */
     public String getKey() {
         return key;
     }
 
+    /**
+     * Returns the source class where the configuration key can be found
+     * 
+     * @return the source class where the configuration key can be found
+     */
     public String getSource() {
         return source;
     }
 
+    /**
+     * Returns the description of the configuration key
+     * 
+     * @return the description of the configuration key
+     */
     public String getDescription() {
         return description;
     }
 
+    /**
+     * Returns the default value of the configuration key
+     * 
+     * @return the default value of the configuration key
+     */
     public String getDefaultValue() {
         return defaultValue;
     }

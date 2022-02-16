@@ -65,7 +65,7 @@ import hu.icellmobilsoft.coffee.tool.utils.annotation.RangeUtil;
 @Model
 public class JaxbTool {
 
-    public static final String ERR_MSG_TYPE_OR_BINARY_IS_NULL_OR_EMPTY = "type or binary is null or empty!";
+    private static final String ERR_MSG_TYPE_OR_BINARY_IS_NULL_OR_EMPTY = "type or binary is null or empty!";
 
     /**
      * Deszerializálja az objektumot, és validálja a megadott XSD séma alapján

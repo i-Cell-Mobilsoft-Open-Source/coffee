@@ -40,19 +40,48 @@ import javax.inject.Qualifier;
 @Target({ ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER, ElementType.TYPE })
 public @interface MongoServiceConfiguration {
 
+    /**
+     * Config key of the desired Mongo DB connection. <br>
+     * ie. if connection details are defined in the project-*.yml by the keys: {@code coffee.mongodb.exampleDB.*=...} then configKey should be
+     * "exampleDB"
+     *
+     * @return config key
+     */
     @Nonbinding
     String configKey();
 
+    /**
+     * Returns Mongo DB collection
+     * 
+     * @return Mongo DB collection
+     */
     @Nonbinding
     String collectionKey();
 
-    public class Literal extends AnnotationLiteral<MongoServiceConfiguration> implements MongoServiceConfiguration {
+    /**
+     * {@code MongoServiceConfiguration} qualifier literal
+     */
+    final class Literal extends AnnotationLiteral<MongoServiceConfiguration> implements MongoServiceConfiguration {
 
         private static final long serialVersionUID = 1L;
 
+        /**
+         * config key
+         */
         private String configKey;
+        /**
+         * Mongo DB collection
+         */
         private String collectionKey;
 
+        /**
+         * Instantiates the literal with configKey and collectionKey
+         * 
+         * @param configKey
+         *            config key
+         * @param collectionKey
+         *            Mongo DB collection
+         */
         public Literal(String configKey, String collectionKey) {
             this.configKey = configKey;
             this.collectionKey = collectionKey;

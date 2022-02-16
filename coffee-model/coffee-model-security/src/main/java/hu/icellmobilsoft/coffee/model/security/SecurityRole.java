@@ -41,11 +41,17 @@ public class SecurityRole extends AbstractIdentifiedAuditEntity {
 
     private static final long serialVersionUID = 1L;
 
+    /**
+     * security role description
+     */
     @Column(name = "description", length = 255, nullable = false)
     @NotNull
     @Size(max = 255)
     private String description;
 
+    /**
+     * security role name
+     */
     @Column(name = "name", length = 100, nullable = false)
     @NotNull
     @Size(max = 100)
