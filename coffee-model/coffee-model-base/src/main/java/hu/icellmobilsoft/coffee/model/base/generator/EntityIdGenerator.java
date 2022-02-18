@@ -23,6 +23,7 @@ import java.io.Serializable;
 import java.lang.management.ManagementFactory;
 import java.util.Date;
 import java.util.Random;
+
 import javax.enterprise.inject.Vetoed;
 
 import org.apache.commons.lang3.StringUtils;
@@ -30,7 +31,7 @@ import org.hibernate.HibernateException;
 import org.hibernate.engine.spi.SharedSessionContractImplementor;
 import org.hibernate.id.IdentifierGenerator;
 
-import hu.icellmobilsoft.coffee.model.base.IIdentifiedAuditEntity;
+import hu.icellmobilsoft.coffee.model.base.IIdentifiedEntity;
 
 /**
  * Entity identifier generator.
@@ -44,8 +45,8 @@ public class EntityIdGenerator implements IdentifierGenerator {
     /** {@inheritDoc} */
     @Override
     public Serializable generate(SharedSessionContractImplementor session, Object object) throws HibernateException {
-        if (object instanceof IIdentifiedAuditEntity) {
-            IIdentifiedAuditEntity<?, ?, ?> entity = (IIdentifiedAuditEntity<?, ?, ?>) object;
+        if (object instanceof IIdentifiedEntity) {
+            IIdentifiedEntity<?, ?> entity = (IIdentifiedEntity<?, ?>) object;
             if (entity.getId() == null) {
                 return generateId();
             }
@@ -103,7 +104,7 @@ public class EntityIdGenerator implements IdentifierGenerator {
 
     /**
      * generate fix 16 length id!
-     * 
+     *
      * @return entityId
      */
     public static String generateId() {
