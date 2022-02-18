@@ -26,12 +26,10 @@ import java.io.Serializable;
  *
  * @param <ID>
  *            The type of the entity id
- * @param <USER>
- *            The type of the creator and modifier user
  * @author arnold.bucher
  * @since 1.8.1
  */
-public interface IIdentifiedEntity<ID extends Serializable, USER> extends IVersionable {
+public interface IIdentifiedEntity<ID extends Serializable> extends IVersionable {
 
     /**
      * Returns the id of the entity
@@ -48,33 +46,4 @@ public interface IIdentifiedEntity<ID extends Serializable, USER> extends IVersi
      */
     void setId(ID id);
 
-    /**
-     * Returns the creator user of the entity
-     *
-     * @return the creator user of the entity
-     */
-    USER getCreatorUser();
-
-    /**
-     * Sets the creator user of the entity
-     *
-     * @param creatorUser
-     *            the new creator user
-     */
-    void setCreatorUser(USER creatorUser);
-
-    /**
-     * Returns the modification user of the entity
-     *
-     * @return the modification user of the entity
-     */
-    USER getModifierUser();
-
-    /**
-     * Sets the modification user of the entity
-     *
-     * @param modifierUser
-     *            the new modification user
-     */
-    void setModifierUser(USER modifierUser);
 }

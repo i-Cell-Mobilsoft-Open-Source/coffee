@@ -42,7 +42,7 @@ import hu.icellmobilsoft.coffee.model.base.javatime.annotation.ModifiedOn;
  */
 @Vetoed
 @MappedSuperclass
-public abstract class AbstractAuditEntity<T extends Serializable> extends AbstractEntity implements IAuditEntity<OffsetDateTime> {
+public abstract class AbstractAuditEntity<T extends Serializable> extends AbstractEntity implements IAuditEntity<OffsetDateTime, T> {
 
     private static final long serialVersionUID = 1L;
 

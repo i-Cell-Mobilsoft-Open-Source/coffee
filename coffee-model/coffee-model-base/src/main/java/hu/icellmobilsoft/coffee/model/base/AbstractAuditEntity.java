@@ -42,7 +42,7 @@ import hu.icellmobilsoft.coffee.model.base.annotation.ModifiedBy;
  */
 @Vetoed
 @MappedSuperclass
-public abstract class AbstractAuditEntity<T> extends AbstractEntity implements IAuditEntity<Date> {
+public abstract class AbstractAuditEntity<T> extends AbstractEntity implements IAuditEntity<Date, T> {
 
     private static final long serialVersionUID = 1L;
 
