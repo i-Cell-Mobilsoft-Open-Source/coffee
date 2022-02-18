@@ -38,7 +38,7 @@ import hu.icellmobilsoft.coffee.model.base.IIdentifiedEntity;
  */
 @Vetoed
 @MappedSuperclass
-public abstract class AbstractIdentifiedAuditEntity extends AbstractAuditEntity<String> implements IIdentifiedEntity<String, String> {
+public abstract class AbstractIdentifiedAuditEntity extends AbstractAuditEntity<String> implements IIdentifiedEntity<String> {
 
     private static final long serialVersionUID = 1L;
 

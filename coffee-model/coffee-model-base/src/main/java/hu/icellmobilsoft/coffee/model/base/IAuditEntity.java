@@ -24,10 +24,12 @@ package hu.icellmobilsoft.coffee.model.base;
  *
  * @param <DATE>
  *            The type of the date. E.g.: {@link java.util.Date}, {@link java.time.OffsetDateTime}, {@link java.time.Instant}
+ * @param <USER>
+ *            The type of the creator and modifier user
  * @author arnold.bucher
  * @since 1.8.1
  */
-public interface IAuditEntity<DATE> extends IVersionable {
+public interface IAuditEntity<DATE, USER> extends IVersionable {
 
     /**
      * Returns the creation date of the entity
@@ -58,5 +60,35 @@ public interface IAuditEntity<DATE> extends IVersionable {
      *            the new modification date
      */
     void setModificationDate(DATE modificationDate);
+
+    /**
+     * Returns the creator user of the entity
+     *
+     * @return the creator user of the entity
+     */
+    USER getCreatorUser();
+
+    /**
+     * Sets the creator user of the entity
+     *
+     * @param creatorUser
+     *            the new creator user
+     */
+    void setCreatorUser(USER creatorUser);
+
+    /**
+     * Returns the modification user of the entity
+     *
+     * @return the modification user of the entity
+     */
+    USER getModifierUser();
+
+    /**
+     * Sets the modification user of the entity
+     *
+     * @param modifierUser
+     *            the new modification user
+     */
+    void setModifierUser(USER modifierUser);
 
 }

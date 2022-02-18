@@ -46,7 +46,7 @@ public class EntityIdGenerator implements IdentifierGenerator {
     @Override
     public Serializable generate(SharedSessionContractImplementor session, Object object) throws HibernateException {
         if (object instanceof IIdentifiedEntity) {
-            IIdentifiedEntity<?, ?> entity = (IIdentifiedEntity<?, ?>) object;
+            IIdentifiedEntity<?> entity = (IIdentifiedEntity<?>) object;
             if (entity.getId() == null) {
                 return generateId();
             }
