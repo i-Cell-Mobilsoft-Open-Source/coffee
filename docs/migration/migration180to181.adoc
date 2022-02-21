@@ -1,0 +1,14 @@
+= v1.8.0 → v1.8.1
+
+coff:ee v1.8.0 -> v1.8.1 migrációs leírás, újdonságok, változások leírása
+
+== Változások
+
+=== Általános
+
+=== coffee-model-base
+* A 2 `AbstractIdentifiedAuditEntity` osztály (`java.util.Date` és `OffsetDateTime`-on alapuló) közös generikus interface javítása jackson deserializálás hiba miatt. Külön lettek bontva `IAuditEntity` és `IIdentifiedEntity` interfacekre.
+
+==== Átállás
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
