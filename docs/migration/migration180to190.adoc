@@ -47,3 +47,9 @@ A változtatások nem eredményeznek átállási munkálatokat, visszafelé komp
 
 ==== Átállás
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+=== coffee-model-base
+* A 2 `AbstractIdentifiedAuditEntity` osztály (`java.util.Date` és `OffsetDateTime`-on alapuló) közös generikus interface javítása jackson deserializálás hiba miatt. Külön lettek bontva `IAuditEntity` és `IIdentifiedEntity` interfacekre.
+
+==== Átállás
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
