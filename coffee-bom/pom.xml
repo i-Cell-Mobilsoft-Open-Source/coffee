@@ -389,12 +389,6 @@
 				<artifactId>hibernate-validator</artifactId>
 				<version>${version.org.hibernate.validator}</version>
 				<scope>test</scope>
-				<exclusions>
-					<exclusion>
-						<groupId>javax.validation</groupId>
-						<artifactId>validation-api</artifactId>
-					</exclusion>
-				</exclusions>
 			</dependency>
 			<!-- Hibernate Validator also requires an implementation of the Unified 
 				Expression Language (JSR 341) for evaluating dynamic expressions in constraint 
