@@ -22,33 +22,6 @@
 			<groupId>hu.icellmobilsoft.coffee</groupId>
 			<artifactId>coffee-model-base</artifactId>
 		</dependency>
-
-		<!--FOR GENERATING JPA METAMODELs -->
-		<dependency>
-			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-jpamodelgen</artifactId>
-			<version>${hibernate.jpamodelgen.version}</version>
-			<scope>provided</scope>
-			<exclusions>
-				<exclusion>
-					<groupId>javax.xml.bind</groupId>
-					<artifactId>jaxb-api</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>javax.activation</groupId>
-					<artifactId>javax.activation-api</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
-			<!-- hibernate-jpamodelgen -> javax.xml.bind:jaxb-api és javax.activation:javax.activation-api helyett -->
-			<groupId>jakarta.xml.bind</groupId>
-			<artifactId>jakarta.xml.bind-api</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>jakarta.activation</groupId>
-			<artifactId>jakarta.activation-api</artifactId>
-		</dependency>
 	</dependencies>
 
 	<build>

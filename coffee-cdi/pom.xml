@@ -51,12 +51,6 @@
 			<groupId>jakarta.platform</groupId>
 			<artifactId>jakarta.jakartaee-api</artifactId>
 			<scope>compile</scope>
-			<exclusions>
-				<exclusion>
-					<groupId>com.sun.mail</groupId>
-					<artifactId>jakarta.mail</artifactId>
-				</exclusion>
-			</exclusions>
 		</dependency>
 
 		<dependency>

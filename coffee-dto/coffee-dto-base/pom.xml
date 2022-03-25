@@ -10,8 +10,6 @@
 
 	<properties>
 		<version.jakarta.xml.bind.jaxb-api>2.3.2</version.jakarta.xml.bind.jaxb-api>
-		<version.com.sun.xml.bind.jaxb-api>2.3.2</version.com.sun.xml.bind.jaxb-api>
-		<version.com.sun.xml.bind.jaxb-core>2.3.0</version.com.sun.xml.bind.jaxb-core>
 
 		<!-- Test dependency versions -->
 		<version.junit.jupiter>5.8.1</version.junit.jupiter>
@@ -23,16 +21,6 @@
 			<groupId>jakarta.xml.bind</groupId>
 			<artifactId>jakarta.xml.bind-api</artifactId>
 			<version>${version.jakarta.xml.bind.jaxb-api}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.sun.xml.bind</groupId>
-			<artifactId>jaxb-impl</artifactId>
-			<version>${version.com.sun.xml.bind.jaxb-api}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.sun.xml.bind</groupId>
-			<artifactId>jaxb-core</artifactId>
-			<version>${version.com.sun.xml.bind.jaxb-core}</version>
 		</dependency>
 		<dependency>
 			<groupId>hu.icellmobilsoft.coffee</groupId>

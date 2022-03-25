@@ -14,8 +14,6 @@
 
 		<version.jakartaee>8.0.0</version.jakartaee>
 		<version.jakarta.xml.bind.jaxb-api>2.3.2</version.jakarta.xml.bind.jaxb-api>
-		<version.com.sun.xml.bind.jaxb-api>2.3.2</version.com.sun.xml.bind.jaxb-api>
-		<version.com.sun.xml.bind.jaxb-core>2.3.0</version.com.sun.xml.bind.jaxb-core>
 		<version.jakarta.activation-api>1.2.1</version.jakarta.activation-api>
 
 		<version.google.code.gson>2.8.9</version.google.code.gson>
@@ -65,16 +63,6 @@
 				<version>${version.jakarta.xml.bind.jaxb-api}</version>
 			</dependency>
 			<dependency>
-				<groupId>com.sun.xml.bind</groupId>
-				<artifactId>jaxb-impl</artifactId>
-				<version>${version.com.sun.xml.bind.jaxb-api}</version>
-			</dependency>
-			<dependency>
-				<groupId>com.sun.xml.bind</groupId>
-				<artifactId>jaxb-core</artifactId>
-				<version>${version.com.sun.xml.bind.jaxb-core}</version>
-			</dependency>
-			<dependency>
 				<groupId>jakarta.activation</groupId>
 				<artifactId>jakarta.activation-api</artifactId>
 				<version>${version.jakarta.activation-api}</version>
@@ -103,16 +91,6 @@
 				<artifactId>weld-junit5</artifactId>
 				<version>${version.org.jboss.weld.weld-junit5}</version>
 				<scope>test</scope>
-				<exclusions>
-					<exclusion>
-						<groupId>javax.enterprise</groupId>
-						<artifactId>cdi-api</artifactId>
-					</exclusion>
-					<exclusion>
-						<groupId>javax.inject</groupId>
-						<artifactId>javax.inject</artifactId>
-					</exclusion>
-				</exclusions>
 			</dependency>
 			<dependency>
 				<groupId>org.mockito</groupId>
