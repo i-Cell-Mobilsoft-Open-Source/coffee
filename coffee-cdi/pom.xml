@@ -48,15 +48,9 @@
 
 		<!-- CDI -->
 		<dependency>
-			<groupId>javax</groupId>
-			<artifactId>javaee-api</artifactId>
+			<groupId>jakarta.platform</groupId>
+			<artifactId>jakarta.jakartaee-api</artifactId>
 			<scope>compile</scope>
-			<exclusions>
-				<exclusion>
-					<groupId>com.sun.mail</groupId>
-					<artifactId>javax.mail</artifactId>
-				</exclusion>
-			</exclusions>
 		</dependency>
 
 		<dependency>

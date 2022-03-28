@@ -1,7 +1,7 @@
 [#common_core_coffee-cdi]
 = coffee-cdi
 
-Modul célja a java EE, logger, deltaspike és microprofile-config bekötése.
+Modul célja a jakarta EE, logger, deltaspike és microprofile-config bekötése.
 
 Minden CDI alapon működik. Alábbi komponensek leírása és használati esetek:
 

@@ -9,9 +9,7 @@
 	<artifactId>coffee-dto-base</artifactId>
 
 	<properties>
-		<version.javax.xml.bind.jaxb-api>2.3.1</version.javax.xml.bind.jaxb-api>
-		<version.com.sun.xml.bind.jaxb-api>2.3.1</version.com.sun.xml.bind.jaxb-api>
-		<version.com.sun.xml.bind.jaxb-core>2.3.0</version.com.sun.xml.bind.jaxb-core>
+		<version.jakarta.xml.bind.jaxb-api>2.3.2</version.jakarta.xml.bind.jaxb-api>
 
 		<!-- Test dependency versions -->
 		<version.junit.jupiter>5.8.1</version.junit.jupiter>
@@ -20,19 +18,9 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>javax.xml.bind</groupId>
-			<artifactId>jaxb-api</artifactId>
-			<version>${version.javax.xml.bind.jaxb-api}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.sun.xml.bind</groupId>
-			<artifactId>jaxb-impl</artifactId>
-			<version>${version.com.sun.xml.bind.jaxb-api}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.sun.xml.bind</groupId>
-			<artifactId>jaxb-core</artifactId>
-			<version>${version.com.sun.xml.bind.jaxb-core}</version>
+			<groupId>jakarta.xml.bind</groupId>
+			<artifactId>jakarta.xml.bind-api</artifactId>
+			<version>${version.jakarta.xml.bind.jaxb-api}</version>
 		</dependency>
 		<dependency>
 			<groupId>hu.icellmobilsoft.coffee</groupId>

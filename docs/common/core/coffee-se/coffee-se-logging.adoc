@@ -1,7 +1,7 @@
 [#common_core_coffee-se_coffee-se-logging]
 = coffee-se-logging
 
-Loggolással és MDC-vel kapcsolatos JavaEE függőséget nem tartalmazó komponensek modulja.
+Loggolással és MDC-vel kapcsolatos JakartaEE függőséget nem tartalmazó komponensek modulja.
 
 == Loggolás
 Tartalmaz egy `java.util.logging.Logger`-t használó alap loggolási rendszert.
