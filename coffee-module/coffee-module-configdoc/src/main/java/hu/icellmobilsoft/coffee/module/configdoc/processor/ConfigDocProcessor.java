@@ -21,6 +21,9 @@ package hu.icellmobilsoft.coffee.module.configdoc.processor;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -34,12 +37,12 @@ import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import javax.tools.Diagnostic;
-import javax.tools.FileObject;
 import javax.tools.StandardLocation;
 
 import com.google.auto.service.AutoService;
 
 import hu.icellmobilsoft.coffee.module.configdoc.ConfigDoc;
+import hu.icellmobilsoft.coffee.module.configdoc.config.ConfigDocConfig;
 import hu.icellmobilsoft.coffee.module.configdoc.data.DocData;
 import hu.icellmobilsoft.coffee.module.configdoc.writer.IDocWriter;
 import hu.icellmobilsoft.coffee.module.configdoc.writer.impl.AsciiDocWriter;
@@ -55,28 +58,32 @@ public class ConfigDocProcessor extends AbstractProcessor {
 
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
+        ConfigDocConfig config = new ConfigDocConfig(processingEnv.getOptions());
+
         List<DocData> dataList = collectDocData(annotations, roundEnv);
 
         if (!dataList.isEmpty()) {
             dataList = new ArrayList<>(dataList.stream().collect(Collectors.toMap(DocData::getKey, Function.identity(), (o1, o2) -> o2)).values());
             dataList.sort(Comparator.comparing(DocData::getKey));
 
-            writeToFile(dataList, new AsciiDocWriter());
+            writeToFile(dataList, new AsciiDocWriter(), config);
         }
 
         return true;
     }
 
-    private void writeToFile(List<DocData> dataList, IDocWriter docWriter) {
-        try {
-            FileObject fileObject = processingEnv.getFiler().createResource(StandardLocation.CLASS_OUTPUT, "", ConfigDoc.FILE_NAME);
-
-            try (Writer writer = fileObject.openWriter()) {
-                docWriter.write(dataList, writer);
-            }
+    private void writeToFile(List<DocData> dataList, IDocWriter docWriter, ConfigDocConfig config) {
+        try (Writer writer = createWriter(config)) {
+            docWriter.write(dataList, writer);
         } catch (IOException e) {
             processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, e.getMessage());
         }
+    }
+
+    private Writer createWriter(ConfigDocConfig config) throws IOException {
+        Path path = Paths.get(config.getOutputDir(), config.getOutputFileName());
+        return config.isOutputToClassPath() ? processingEnv.getFiler().createResource(StandardLocation.CLASS_OUTPUT, "", path.toString()).openWriter()
+                : Files.newBufferedWriter(path);
     }
 
     private ArrayList<DocData> collectDocData(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {

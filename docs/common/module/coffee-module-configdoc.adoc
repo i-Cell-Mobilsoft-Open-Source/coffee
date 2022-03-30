@@ -18,7 +18,7 @@ Használatához az alabbi függőséget kell hozzáadni a `pom.xml`-hez:
 
 Ez után a konfigurációs kulcsokat tartalmazó osztályokat kell felannotálni a `@ConfigDoc` annotációval.
 
-Ha ezzel megvagyunk fordításkor az elkészült `.jar` fájlba bekerül a generált asciidoc a `META-INF/config_keys.adoc` néven.
+Ha ezzel megvagyunk alapértelmezetten a fordításkor az elkészült `.jar` fájlba bekerül a generált asciidoc a `META-INF/config_keys.adoc` néven.
 A kulcsok az első pont karakter előtti prefix szerint külön táblázatokban jelennek meg.
 
 == Példa
@@ -64,3 +64,31 @@ public interface ConfigDocExample {
 
 .A fenti példa kód eredménye
 image::coffee-module-configdoc-example1.png[]
+
+== Konfiguráció
+
+Mivel a generálás anntation processor-t használ, ezért konfigurálni a fordítás során a `-A` kapcsolóval lehet.
+Ezt maven esetén a `maven-compiler-plugin`-on keresztül lehet megadni:
+
+.pom.xml példa
+[source,xml]
+----
+<build>
+    <plugins>
+        <plugin>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <configuration>
+                <compilerArgs>
+                    <arg>-Acoffee.configDoc.outputDir=${project.basedir}/../docs/</arg> #<1>
+                    <arg>-Acoffee.configDoc.outputFileName=${project.name}_config.adoc</arg> #<2>
+                    <arg>-Acoffee.configDoc.outputToClassPath=false</arg> #<3>
+                </compilerArgs>
+            </configuration>
+        </plugin>
+    </plugins>
+</build>
+----
+
+<1> A mappa ahova a genrált fájlt rakjuk. Default: `META-INF/`
+<2> A generált fájl neve. Default: `config_keys.adoc`
+<3> A generált fájlt a classpath-ra kell-e rakni, azaz szeretnénk-e, hogy az elkészült jar fájlba bekerüljön. Default: `true`
