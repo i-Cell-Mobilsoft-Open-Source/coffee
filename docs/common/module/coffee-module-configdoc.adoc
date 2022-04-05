@@ -67,7 +67,7 @@ image::coffee-module-configdoc-example1.png[]
 
 == Konfiguráció
 
-Mivel a generálás anntation processor-t használ, ezért konfigurálni a fordítás során a `-A` kapcsolóval lehet.
+Mivel a generálás annotation processor-t használ, ezért konfigurálni a fordítás során a `-A` kapcsolóval lehet.
 Ezt maven esetén a `maven-compiler-plugin`-on keresztül lehet megadni:
 
 .pom.xml példa
