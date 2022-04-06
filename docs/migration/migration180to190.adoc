@@ -35,6 +35,7 @@ de kap fordítási és tesztelési ellenőrzéseket java 17-re is.
 
 === coffee-module-configdoc
 * Létrejött a modul
+* Kimeneti fájl konfigurálhatóság
 
 ==== Átállás
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
