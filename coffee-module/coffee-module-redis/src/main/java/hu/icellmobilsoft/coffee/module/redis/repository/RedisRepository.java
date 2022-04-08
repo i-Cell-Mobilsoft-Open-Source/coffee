@@ -25,9 +25,9 @@ import java.util.Map;
 import javax.enterprise.inject.Vetoed;
 
 import redis.clients.jedis.Jedis;
-import redis.clients.jedis.ScanParams;
-import redis.clients.jedis.ScanResult;
 import redis.clients.jedis.args.ListDirection;
+import redis.clients.jedis.params.ScanParams;
+import redis.clients.jedis.resps.ScanResult;
 
 /**
  * Redis java Jedis client functions handler
@@ -79,7 +79,7 @@ public class RedisRepository {
      * @param json
      *            JSON to set as value
      * @return status code reply
-     * @see Jedis#setex(String, int, String)
+     * @see Jedis#setex(String, long, String)
      */
     public String setex(final String key, final long secondsToExpire, final String json) {
         return getJedis().setex(key, secondsToExpire, json);
@@ -236,7 +236,7 @@ public class RedisRepository {
      * @param seconds
      *            timeout given in seconds
      * @return 1, if timeout was set; 0 if key does not exist or timeout was not set successfully
-     * @see Jedis#expire(String, int)
+     * @see Jedis#expire(String, long)
      */
     public Long expire(final String key, long seconds) {
         return getJedis().expire(key, seconds);

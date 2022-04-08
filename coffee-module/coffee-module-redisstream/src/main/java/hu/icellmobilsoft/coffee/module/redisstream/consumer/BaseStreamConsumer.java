@@ -35,7 +35,7 @@ import hu.icellmobilsoft.coffee.module.redisstream.config.IRedisStreamConstant;
 import hu.icellmobilsoft.coffee.rest.cdi.BaseApplicationContainer;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
 import hu.icellmobilsoft.coffee.se.logging.mdc.MDC;
-import redis.clients.jedis.StreamEntry;
+import redis.clients.jedis.resps.StreamEntry;
 
 /**
  * Basic Redis Stream consumer tools

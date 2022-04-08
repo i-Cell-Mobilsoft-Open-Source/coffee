@@ -22,7 +22,7 @@ package hu.icellmobilsoft.coffee.module.redisstream.consumer;
 import java.util.Map;
 
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
-import redis.clients.jedis.StreamEntry;
+import redis.clients.jedis.resps.StreamEntry;
 
 /**
  * Stream pipe consumer interface. The main thing is to be able to run the stream consumer and the post-ACK operation separately in their own request

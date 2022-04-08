@@ -48,9 +48,9 @@ import hu.icellmobilsoft.coffee.se.logging.mdc.MDC;
 import hu.icellmobilsoft.coffee.tool.utils.annotation.AnnotationUtil;
 import hu.icellmobilsoft.coffee.tool.utils.string.RandomUtil;
 import redis.clients.jedis.Jedis;
-import redis.clients.jedis.StreamEntry;
 import redis.clients.jedis.StreamEntryID;
 import redis.clients.jedis.exceptions.JedisDataException;
+import redis.clients.jedis.resps.StreamEntry;
 
 /**
  * Redis stream consumer executor class
