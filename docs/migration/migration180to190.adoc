@@ -31,6 +31,7 @@ de kap fordítási és tesztelési ellenőrzéseket java 17-re is.
 * google.code:gson 2.8.3 -> 2.8.9
 * junit:jupiter 5.5.2 -> 5.8.1
 * org.jboss.weld:weld-junit5 2.0.1.Final -> 2.0.2.Final
+* jedis 3.6.0 -> 4.2.1
 
 
 === coffee-module-configdoc
@@ -54,6 +55,18 @@ A változtatások nem eredményeznek átállási munkálatokat, visszafelé komp
 
 ==== Átállás
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+=== coffee-module-redis
+* jedis verzió emelés történt 3.6.0 -> 4.2.1
+
+==== Átállás
+Package változások történtek, amiket le kell követni
+
+=== coffee-module-redisstream
+* jedis verzió emelés történt 3.6.0 -> 4.2.1
+
+==== Átállás
+Package változások történtek, amiket le kell követni
 
 == Változások
 
