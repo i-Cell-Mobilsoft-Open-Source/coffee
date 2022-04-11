@@ -20,7 +20,7 @@
 package hu.icellmobilsoft.coffee.module.redisstream.consumer;
 
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
-import redis.clients.jedis.StreamEntry;
+import redis.clients.jedis.resps.StreamEntry;
 
 /**
  * Stream consumer interface. After successfully running {@code #onStream(StreamEntry)}, the ACK is sent.<br>

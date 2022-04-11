@@ -31,9 +31,9 @@ import hu.icellmobilsoft.coffee.module.redis.repository.RedisRepository;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
 import hu.icellmobilsoft.coffee.tool.gson.JsonUtil;
 import redis.clients.jedis.Jedis;
-import redis.clients.jedis.ScanParams;
-import redis.clients.jedis.ScanResult;
 import redis.clients.jedis.args.ListDirection;
+import redis.clients.jedis.params.ScanParams;
+import redis.clients.jedis.resps.ScanResult;
 
 /**
  * Abstract class for redis repository service. Main target is use multiple Redis connection (for cache, for authentication, for other business logic)
