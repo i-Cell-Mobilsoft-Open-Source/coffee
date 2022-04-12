@@ -3,7 +3,7 @@
 	<parent>
 		<groupId>hu.icellmobilsoft.coffee</groupId>
 		<artifactId>coffee-module</artifactId>
-		<version>1.9.0-SNAPSHOT</version>
+		<version>1.10.0-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>coffee-module-redisstream</artifactId>
@@ -22,7 +22,13 @@
 			<groupId>org.jboss.weld</groupId>
 			<artifactId>weld-api</artifactId>
 			<version>3.0.Final</version>
-		</dependency>
+			<exclusions>
+				<exclusion>
+					<groupId>javax.enterprise</groupId>
+					<artifactId>cdi-api</artifactId>
+				</exclusion>
+			</exclusions>
+    </dependency>
 
 		<!--Test dependecies -->
 		<dependency>

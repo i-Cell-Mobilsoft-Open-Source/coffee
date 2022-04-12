@@ -99,11 +99,35 @@ public @interface RedisStreamConsumer {
 
         private static final long serialVersionUID = 1L;
 
+        /**
+         * config key
+         */
         final String configKey;
+        /**
+         * redis stream group
+         */
         final String group;
+        /**
+         * consumer thread count
+         */
         final int consumerThreadsCount;
+        /**
+         * retry count
+         */
         final int retryCount;
 
+        /**
+         * Instantiates the literal with configKey, redis stream group, consumer thread count, and retry count
+         * 
+         * @param configKey
+         *            config key
+         * @param group
+         *            redis stream group
+         * @param consumerThreadsCount
+         *            consumer thread count
+         * @param retryCount
+         *            retry count
+         */
         public Literal(String configKey, String group, int consumerThreadsCount, int retryCount) {
             super();
             this.configKey = configKey;

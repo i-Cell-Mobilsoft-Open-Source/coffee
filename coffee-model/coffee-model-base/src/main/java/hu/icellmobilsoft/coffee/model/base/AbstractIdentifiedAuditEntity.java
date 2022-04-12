@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,7 +19,6 @@
  */
 package hu.icellmobilsoft.coffee.model.base;
 
-import java.util.Date;
 import javax.enterprise.inject.Vetoed;
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
@@ -36,10 +35,13 @@ import org.hibernate.annotations.GenericGenerator;
  */
 @Vetoed
 @MappedSuperclass
-public abstract class AbstractIdentifiedAuditEntity extends AbstractAuditEntity<String> implements IIdentifiedAuditEntity<String, String, Date> {
+public abstract class AbstractIdentifiedAuditEntity extends AbstractAuditEntity<String> implements IIdentifiedEntity<String> {
 
     private static final long serialVersionUID = 1L;
 
+    /**
+     * Primary key of the entity
+     */
     @Id
     @Column(name = "X__ID", length = 30)
     @GenericGenerator(name = "entity-id-generator", strategy = "hu.icellmobilsoft.coffee.model.base.generator.EntityIdGenerator")
@@ -48,7 +50,7 @@ public abstract class AbstractIdentifiedAuditEntity extends AbstractAuditEntity<
 
     /**
      * Getter for the field {@code id}.
-     * 
+     *
      * @return id
      */
     public String getId() {
@@ -57,7 +59,7 @@ public abstract class AbstractIdentifiedAuditEntity extends AbstractAuditEntity<
 
     /**
      * Setter for the field {@code id}.
-     * 
+     *
      * @param id
      *            id
      */

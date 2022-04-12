@@ -42,6 +42,12 @@ import hu.icellmobilsoft.coffee.module.configdoc.data.DocData;
 public class ConfigDocVisitor extends ElementKindVisitor9<Void, List<DocData>> {
     private final ProcessingEnvironment processingEnv;
 
+    /**
+     * Creates a visitor instance with the {@code processingEnv}
+     * 
+     * @param processingEnv
+     *            annotation processing environment holder
+     */
     public ConfigDocVisitor(ProcessingEnvironment processingEnv) {
         this.processingEnv = processingEnv;
     }

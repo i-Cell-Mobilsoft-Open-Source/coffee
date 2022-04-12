@@ -15,6 +15,75 @@ A Redis kapcsolat beállítása egyezik a <<coffee-module-redis>> leírásnak,
 ott lévő "kulcs" alapján történik, csak saját annotáció osztályon keresztül,
 ami egyéb stream beállításokat is lehetővé tesz.
 
+NOTE: a jelenlegi jedis 4.2.1 verzióval Redis kompatibilitás 2.8.x-ig visszamenőleg van
+
+== Üzenet és tartalom
+
+Mivel az implemetáció a Jedis drivert használja,
+így van egy megkötés azzal kapcsolatban hogy milyen formában legyen publikálva az
+általános üzenet kerete.
+Szokásos módon ez egy XSD ami egy API része,
+de most a driver sajátossága miatt (`redis.clients.jedis.StreamEntry` objektum a hordozó) ezek csak kulcsok.
+Ezek a kulcsok a
+`hu.icellmobilsoft.coffee.module.redisstream.config.IRedisStreamConstant.Common`
+interfészben találhatóak:
+
+* *_message_* - redis stream üzenet üzleti tartalma.
+Ez lehetőség szerint legtöbbször egy *String ID (DB PK)* valami adatra,
+*vagy* ha komplikáltabb az igény akkor egy *JSON* ami saját API-ra utal.
+Törekedni kell arra hogy lehetőleg ne legyen belőlük sok,
+"újrahasznosítható" struktúrát tartalmazzanak.
+Persze az üzleti igények ezt nem teszik mindig lehetővé,
+de a praxis azt mondja hogy az legtöbb esetben csak egy azonosító kerül bele.
+* *_ttl_* - redis stream üzenet lejárati ideje Long epoch millisec formátumban.
+Tehát olyan időbélyeg ami majd a consumernek megmondja hogy mikor jár le és
+ilyenkor a consumer csak ACK-kolja az üzenetet tartalom feldolgozás nélkül. 
+* hu.icellmobilsoft.coffee.dto.common.LogConstants.LOG_SESSION_ID pointer (*"_extSessionId_"*) -
+Rendszerben szereplő "folyamat azonosító",
+ami így összeköthető a rest input és asynch message műveleteken túl.
+** A érték képzésénél figyelni kell az "egyediségre",
+főleg amikor 1 folyamat szétágazódik N asynch folyamatra.
+Ez az eset például a failower jobok esete,
+tehát az eredeti folyamat azonosítót ki kell egészíteni újabb egyedi azonosítóval.
+Számolni kell az esetleges több ilyen szintre.
+Erre a célra szolgál a rendszerben található `StreamMessageParameter.FLOW_ID_EXTENSION` (*"_flowIdExtension_"*) változó,
+jelenleg a redis streameknál van csak használva.
+
+Redis tartalom böngészésénél a következőképpen nézhet ez ki:
+
+.minta a egyszerű tartalomra:
+[source,json]
+----
+{
+  "extSessionId": "3OXV5ZUSUAF1KA8G_3OCISPU2RW0NWR7M",
+  "flowIdExtension": "3OCISPU2RW0NWR7M",
+  "message": "sample-10415900/2022-01/",
+  "ttl": "1646381700045"
+}
+----
+Az itt szereplő `extSessionId` értéke már láthatólag egy "összetett" folyamati azonosító,
+ahol a "3OXV5ZUSUAF1KA8G" az eredeti folyamat azonosítója,
+majd hozzá van csatolva a "3OCISPU2RW0NWR7M" ami az asynch egyedeti azonosítója.
+A logok böngészésénél így egyértelműen láthatő hol válik szét a folyamat.
+
+.minta a komplexebb tartalomra:
+[source,json]
+----
+{
+  "extSessionId": "#TEST-SimpleTest5546-3OW013B5CP8CMH07_3OW013Z1JLNPOP09",
+  "message": {
+    "blacklisted": false,
+    "changeDate": "2022-03-03T01:50:38.035812+01:00",
+    "identifier": "3OW01426SX6BP5KW",
+    "inputDate": "2022-03-02T23:00:00Z",
+    "version": 0
+  },
+  "ttl": "1646268938291"
+}
+----
+Az itt látható `message` egy komplexebb üzenet tartalom,
+kell hogy tartozzon hozzá valahol API (XSD) és JSON formátumban ajánlott használni.
+
 == Konfiguráció
 
 A konfiguráció a `@RedisStreamConsumer` és `@RedisStreamProducer` qualifier-en keresztül történik.

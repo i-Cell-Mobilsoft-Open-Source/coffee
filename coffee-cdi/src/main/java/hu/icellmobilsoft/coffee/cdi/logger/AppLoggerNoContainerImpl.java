@@ -44,6 +44,9 @@ public class AppLoggerNoContainerImpl implements AppLogger {
 
     private static final long serialVersionUID = 1L;
 
+    /**
+     * The wrapped logger instance
+     */
     private Logger logger;
 
     /** {@inheritDoc} */

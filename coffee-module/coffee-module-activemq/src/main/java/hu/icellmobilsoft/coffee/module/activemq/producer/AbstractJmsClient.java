@@ -53,10 +53,16 @@ public abstract class AbstractJmsClient implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    /**
+     * Logger
+     */
     @Inject
     @ThisLogger
     private AppLogger log;
 
+    /**
+     * Injected JMS handler
+     */
     @Inject
     private JmsHandler jmsHandler;
 

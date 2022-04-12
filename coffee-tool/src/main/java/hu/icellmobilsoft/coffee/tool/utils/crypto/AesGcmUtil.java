@@ -41,6 +41,9 @@ import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 @Vetoed
 public class AesGcmUtil {
 
+    /**
+     * Default Initialization Vector (IV) buffer
+     */
     public static final byte[] DEFAULT_IV = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
     // For GCM a 12 byte (not 16!) byte-array is recommend by NIST because it’s faster and more secure

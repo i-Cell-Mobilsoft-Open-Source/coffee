@@ -98,6 +98,15 @@ public class DefaultGeneralExceptionMapper implements ExceptionMapper<Exception>
         return (result != null) ? result : handleException(e);
     }
 
+    /**
+     * Tries to unwrap the given exception. I.e. the exception in the parameter has a BaseException case, then it returns the BaseException
+     * 
+     * @param wrappedException
+     *            the exception to unwrap
+     * @param <WRAPPED>
+     *            the type of the wrapped exception
+     * @return the unwrapped exception
+     */
     protected <WRAPPED extends Exception & BaseExceptionWrapper<?>> Exception unwrapException(WRAPPED wrappedException) {
         Exception unwrapped;
         if (wrappedException.getException() != null) {
@@ -177,6 +186,19 @@ public class DefaultGeneralExceptionMapper implements ExceptionMapper<Exception>
         dto.setException(null);
     }
 
+    /**
+     * Creates a response builder for the given exception/error
+     * 
+     * @param e
+     *            exception
+     * @param responseStatus
+     *            HTTP response code
+     * @param faultType
+     *            coffee fault type
+     * @param productionStageConsumer
+     *            function to be called if the current stage is production
+     * @return the created response builder
+     */
     protected ResponseBuilder createResponseBuilder(Exception e, Response.Status responseStatus, CoffeeFaultType faultType,
             BiConsumer<TechnicalFault, CoffeeFaultType> productionStageConsumer) {
         TechnicalFault dto = new TechnicalFault();

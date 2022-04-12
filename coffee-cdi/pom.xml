@@ -3,7 +3,7 @@
 	<parent>
 		<groupId>hu.icellmobilsoft.coffee</groupId>
 		<artifactId>coffee</artifactId>
-		<version>1.9.0-SNAPSHOT</version>
+		<version>1.10.0-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>coffee-cdi</artifactId>
@@ -48,15 +48,9 @@
 
 		<!-- CDI -->
 		<dependency>
-			<groupId>javax</groupId>
-			<artifactId>javaee-api</artifactId>
+			<groupId>jakarta.platform</groupId>
+			<artifactId>jakarta.jakartaee-api</artifactId>
 			<scope>compile</scope>
-			<exclusions>
-				<exclusion>
-					<groupId>com.sun.mail</groupId>
-					<artifactId>javax.mail</artifactId>
-				</exclusion>
-			</exclusions>
 		</dependency>
 
 		<dependency>

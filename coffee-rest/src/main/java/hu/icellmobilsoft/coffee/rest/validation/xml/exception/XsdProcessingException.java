@@ -40,6 +40,9 @@ public class XsdProcessingException extends BaseException {
 
     private static final long serialVersionUID = 1L;
 
+    /**
+     * XSD validation errors
+     */
     private final List<XMLValidationError> errors = new ArrayList<>();
 
     /**

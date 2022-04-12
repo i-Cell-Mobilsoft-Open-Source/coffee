@@ -45,7 +45,7 @@ import javax.inject.Qualifier;
 public @interface Range {
 
     /**
-     * Tól-, nemkötelező
+     * (Optional) range from
      * 
      * @return default ""
      */
@@ -53,26 +53,46 @@ public @interface Range {
     String from() default "";
 
     /**
-     * -Ig, nemkötelező
+     * (Optional) range to
      * 
      * @return default ""
      */
     @Nonbinding
     String to() default "";
 
-    public final class RangeLiteral extends AnnotationLiteral<Range> implements Range {
+    /**
+     * Literal class for the {@code Range} qualifier
+     */
+    final class RangeLiteral extends AnnotationLiteral<Range> implements Range {
 
         private static final long serialVersionUID = 1L;
 
+        /**
+         * (Optional) range from
+         */
         final String from;
 
+        /**
+         * (Optional) range to
+         */
         final String to;
 
+        /**
+         * Instantiates the class with default values
+         */
         public RangeLiteral() {
             this.from = "";
             this.to = "";
         }
 
+        /**
+         * Instantiates the class with the given from, to values
+         * 
+         * @param from
+         *            range from
+         * @param to
+         *            range to
+         */
         public RangeLiteral(final String from, final String to) {
             this.from = from;
             this.to = to;

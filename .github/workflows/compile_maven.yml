@@ -42,5 +42,4 @@ jobs:
         java-version: 17
         distribution: 'temurin'
     - name: Build with Maven
-      # remove -P!check-javadoc after https://github.com/i-Cell-Mobilsoft-Open-Source/coffee/issues/234
-      run: mvn -B package -P!check-javadoc --file pom.xml
+      run: mvn -B package --file pom.xml

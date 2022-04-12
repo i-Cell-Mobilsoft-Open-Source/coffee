@@ -45,6 +45,9 @@ public class ThreadUserTransactionStrategy extends BeanManagedUserTransactionStr
 
 	// @Resource hasznalata lenne a logikus megoldas de ennek koszonhetoen szal
 	// el, ezert az @Inject van hasznalva
+	/**
+	 * User transaction object to explicitly manage transaction boundaries
+	 */
 	@Inject
 	private UserTransaction userTransaction;
 

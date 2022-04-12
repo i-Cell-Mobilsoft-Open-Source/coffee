@@ -54,7 +54,10 @@ import hu.icellmobilsoft.coffee.module.csv.annotation.CsvCustomBindByNamePositio
 @Vetoed
 public class HeaderColumnNameWithPositionMappingStrategy<T> extends HeaderColumnNameMappingStrategy<T> {
 
-    protected HashMap<String, Integer> fieldIndexByName;
+    /**
+     * Stores the index of the field by the name of the field
+     */
+    protected Map<String, Integer> fieldIndexByName;
 
     @Override
     protected void loadFieldMap() throws CsvBadConverterException {

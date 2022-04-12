@@ -37,6 +37,13 @@ public class FunctionalInterfaces {
      */
     @FunctionalInterface
     public interface BaseExceptionSupplier<R> {
+        /**
+         * Gets a result.
+         *
+         * @return a result
+         * @throws BaseException
+         *             exception
+         */
         R get() throws BaseException;
     }
 
@@ -60,38 +67,229 @@ public class FunctionalInterfaces {
         void accept(T t) throws BaseException;
     }
 
+    /**
+     * Represents a function without parameter and return value
+     */
     @FunctionalInterface
     public interface BaseExceptionRunner {
+        /**
+         * Executes the function
+         * 
+         * @throws BaseException
+         *             exception
+         */
         void run() throws BaseException;
     }
 
+    /**
+     * Represents a function that accepts one argument and produces a result.
+     *
+     * <p>
+     * This is a <a href="package-summary.html">functional interface</a> whose functional method is {@link #apply(Object)}.
+     *
+     * @param <T>
+     *            the type of the input to the function
+     * @param <R>
+     *            the type of the result of the function
+     */
     @FunctionalInterface
     public interface BaseExceptionFunction<T, R> {
+        /**
+         * Applies this function to the given argument.
+         *
+         * @param t
+         *            the function argument
+         * @return the function result
+         * @throws BaseException
+         *             exception
+         */
         R apply(T t) throws BaseException;
     }
 
+    /**
+     * Represents a function that accepts two arguments and produces a result. This is a specialization of {@link BaseExceptionFunction}.
+     *
+     * <p>
+     * This is a <a href="package-summary.html">functional interface</a> whose functional method is {@link #apply(Object, Object)}.
+     *
+     * @param <T1>
+     *            the type of the first argument to the function
+     * @param <T2>
+     *            the type of the second argument to the function
+     * @param <R>
+     *            the type of the result of the function
+     */
     @FunctionalInterface
     public interface BaseExceptionFunction2<T1, T2, R> {
+        /**
+         * Applies this function to the given arguments.
+         *
+         * @param t1
+         *            the first function argument
+         * @param t2
+         *            the second function argument
+         * @return the function result
+         * @throws BaseException
+         *             exception
+         */
         R apply(T1 t1, T2 t2) throws BaseException;
     }
 
+    /**
+     * Represents a function that accepts three arguments and produces a result. This is a specialization of {@link BaseExceptionFunction}.
+     *
+     * <p>
+     * This is a <a href="package-summary.html">functional interface</a> whose functional method is {@link #apply(Object, Object, Object)}.
+     *
+     * @param <T1>
+     *            the type of the first argument to the function
+     * @param <T2>
+     *            the type of the second argument to the function
+     * @param <T3>
+     *            the type of the third argument to the function
+     * @param <R>
+     *            the type of the result of the function
+     */
     @FunctionalInterface
     public interface BaseExceptionFunction3<T1, T2, T3, R> {
+        /**
+         * Applies this function to the given arguments.
+         *
+         * @param t1
+         *            the first function argument
+         * @param t2
+         *            the second function argument
+         * @param t3
+         *            the third function argument
+         * @return the function result
+         * @throws BaseException
+         *             exception
+         */
         R apply(T1 t1, T2 t2, T3 t3) throws BaseException;
     }
 
+    /**
+     * Represents a function that accepts four arguments and produces a result. This is a specialization of {@link BaseExceptionFunction}.
+     *
+     * <p>
+     * This is a <a href="package-summary.html">functional interface</a> whose functional method is {@link #apply(Object, Object, Object, Object)}.
+     *
+     * @param <T1>
+     *            the type of the first argument to the function
+     * @param <T2>
+     *            the type of the second argument to the function
+     * @param <T3>
+     *            the type of the third argument to the function
+     * @param <T4>
+     *            the type of the fourth argument to the function
+     * @param <R>
+     *            the type of the result of the function
+     */
     @FunctionalInterface
     public interface BaseExceptionFunction4<T1, T2, T3, T4, R> {
+        /**
+         * Applies this function to the given arguments.
+         *
+         * @param t1
+         *            the first function argument
+         * @param t2
+         *            the second function argument
+         * @param t3
+         *            the third function argument
+         * @param t4
+         *            the fourth function argument
+         * @return the function result
+         * @throws BaseException
+         *             exception
+         */
         R apply(T1 t1, T2 t2, T3 t3, T4 t4) throws BaseException;
     }
 
+    /**
+     * Represents a function that accepts fifth arguments and produces a result. This is a specialization of {@link BaseExceptionFunction}.
+     *
+     * <p>
+     * This is a <a href="package-summary.html">functional interface</a> whose functional method is
+     * {@link #apply(Object, Object, Object, Object, Object)}.
+     *
+     * @param <T1>
+     *            the type of the first argument to the function
+     * @param <T2>
+     *            the type of the second argument to the function
+     * @param <T3>
+     *            the type of the third argument to the function
+     * @param <T4>
+     *            the type of the fourth argument to the function
+     * @param <T5>
+     *            the type of the fifth argument to the function
+     * @param <R>
+     *            the type of the result of the function
+     */
     @FunctionalInterface
     public interface BaseExceptionFunction5<T1, T2, T3, T4, T5, R> {
+        /**
+         * Applies this function to the given arguments.
+         *
+         * @param t1
+         *            the first function argument
+         * @param t2
+         *            the second function argument
+         * @param t3
+         *            the third function argument
+         * @param t4
+         *            the fourth function argument
+         * @param t5
+         *            the fifth function argument
+         * @return the function result
+         * @throws BaseException
+         *             exception
+         */
         R apply(T1 t1, T2 t2, T3 t3, T4 t4, T5 t5) throws BaseException;
     }
 
+    /**
+     * Represents a function that accepts six arguments and produces a result. This is a specialization of {@link BaseExceptionFunction}.
+     *
+     * <p>
+     * This is a <a href="package-summary.html">functional interface</a> whose functional method is
+     * {@link #apply(Object, Object, Object, Object, Object, Object)}.
+     *
+     * @param <T1>
+     *            the type of the first argument to the function
+     * @param <T2>
+     *            the type of the second argument to the function
+     * @param <T3>
+     *            the type of the third argument to the function
+     * @param <T4>
+     *            the type of the fourth argument to the function
+     * @param <T5>
+     *            the type of the fifth argument to the function
+     * @param <T6>
+     *            the type of the sixth argument to the function
+     * @param <R>
+     *            the type of the result of the function
+     */
     @FunctionalInterface
     public interface BaseExceptionFunction6<T1, T2, T3, T4, T5, T6, R> {
+        /**
+         * Applies this function to the given arguments.
+         *
+         * @param t1
+         *            the first function argument
+         * @param t2
+         *            the second function argument
+         * @param t3
+         *            the third function argument
+         * @param t4
+         *            the fourth function argument
+         * @param t5
+         *            the fifth function argument
+         * @param t6
+         *            the sixth function argument
+         * @return the function result
+         * @throws BaseException
+         *             exception
+         */
         R apply(T1 t1, T2 t2, T3 t3, T4 t4, T5 t5, T6 t6) throws BaseException;
     }
 }

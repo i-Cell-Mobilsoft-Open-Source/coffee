@@ -46,10 +46,16 @@ public class RecipientService extends BaseService<Recipient> implements Serializ
 
     private static final long serialVersionUID = 1L;
 
+    /**
+     * Logger
+     */
     @Inject
     @ThisLogger
     private AppLogger log;
 
+    /**
+     * Wrapped repository
+     */
     @Inject
     private RecipientRepository recipientRepository;
 

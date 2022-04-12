@@ -51,8 +51,17 @@ public class PublicCatalogResolver implements LSResourceResolver, IXsdResourceRe
     @ThisLogger
     private AppLogger log;
 
-    /*
-     * Implements the EntityResolver interface
+    /**
+     * Allow the application to resolve external resources.
+     * 
+     * @param publicId
+     *            The public identifier of the external entity being referenced, or <code>null</code> if no public identifier was supplied or if the
+     *            resource is not an entity.
+     * @param systemId
+     *            The system identifier, a URI reference [<a href='http://www.ietf.org/rfc/rfc2396.txt'>IETF RFC 2396</a>], of the external resource
+     *            being referenced, or <code>null</code> if no system identifier was supplied.
+     * @return A <code>InputSource</code> object describing the new input source, or <code>null</code> to request that the parser open a regular URI
+     *         connection to the resource.
      */
     public InputSource resolveEntity(String publicId, String systemId) {
 

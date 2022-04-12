@@ -81,8 +81,11 @@ public @interface Version {
      * @author imre.scheffer
      *
      */
-    public static final class Literal extends AnnotationLiteral<Version> implements Version {
+    final class Literal extends AnnotationLiteral<Version> implements Version {
 
+        /**
+         * Qualifier literal instance
+         */
         public static final Literal INSTANCE = new Literal();
 
         private static final long serialVersionUID = 1L;
@@ -100,12 +103,18 @@ public @interface Version {
      * @author imre.scheffer
      *
      */
-    public static final class VersionLiteral extends AnnotationLiteral<Version> implements Version {
+    final class VersionLiteral extends AnnotationLiteral<Version> implements Version {
 
+        /**
+         * Qualifier literal instance
+         */
         public static final Literal INSTANCE = new Literal();
 
         private static final long serialVersionUID = 1L;
 
+        /**
+         * The condition is activated for specified versions (inclusive).
+         */
         private final Range[] include;
 
         /**

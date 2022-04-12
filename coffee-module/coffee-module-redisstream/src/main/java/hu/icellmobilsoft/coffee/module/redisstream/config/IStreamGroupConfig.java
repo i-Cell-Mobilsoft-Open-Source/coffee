@@ -40,7 +40,7 @@ public interface IStreamGroupConfig {
      * @throws BaseException
      *             Exception on read properties
      */
-    Long getReadTimeoutMillis() throws BaseException;
+    Long getStreamReadTimeoutMillis() throws BaseException;
 
     /**
      * Defines the redis connection configuration key to be used.

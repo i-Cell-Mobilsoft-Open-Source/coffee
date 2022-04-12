@@ -41,11 +41,17 @@ public class SecurityPermission extends AbstractIdentifiedAuditEntity {
 
     private static final long serialVersionUID = 1L;
 
+    /**
+     * security permission description
+     */
     @Column(name = "description", length = 255, nullable = false)
     @NotNull
     @Size(max = 255)
     private String description;
 
+    /**
+     * security permission name
+     */
     @Column(name = "name", length = 100, nullable = false)
     @NotNull
     @Size(max = 100)

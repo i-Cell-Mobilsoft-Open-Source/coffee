@@ -432,18 +432,38 @@ public class RedisStreamHandler {
         return Map.entry(parameterKey.getMessageKey(), String.valueOf(parameterValue));
     }
 
+    /**
+     * Validates the passed redis stream group
+     * 
+     * @param streamGroup
+     *            the stream group to validate
+     * @throws TechnicalException
+     *             if validation fails
+     */
     protected void validateGroup(String streamGroup) throws TechnicalException {
         if (StringUtils.isBlank(streamGroup)) {
             throw new TechnicalException("Input of custom streamGroup is null!");
         }
     }
 
+    /**
+     * Validates the instance fields
+     * 
+     * @throws BaseException
+     *             if validation fails
+     */
     protected void checkInitialization() throws BaseException {
         if (jedisInstance == null || streamGroup == null) {
             throw notInitializedException();
         }
     }
 
+    /**
+     * Validates the {@link #jedisInstance} field
+     * 
+     * @throws TechnicalException
+     *             if validation fails
+     */
     protected void checkJedisInstance() throws TechnicalException {
         if (jedisInstance == null) {
             throw notInitializedException();

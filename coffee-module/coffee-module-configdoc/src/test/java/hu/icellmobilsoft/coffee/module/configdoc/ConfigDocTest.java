@@ -31,6 +31,8 @@ import java.nio.file.Paths;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import hu.icellmobilsoft.coffee.module.configdoc.config.ConfigDocConfig;
+
 /**
  * {@link ConfigDoc} file generation test
  * 
@@ -42,7 +44,7 @@ class ConfigDocTest {
     @Test
     @DisplayName("generated file should contain config keys")
     void generatedFileShouldContainConfigKeys() throws URISyntaxException, IOException {
-        URL generatedFileUrl = getClass().getResource("/" + ConfigDoc.FILE_NAME);
+        URL generatedFileUrl = getClass().getResource("/" + ConfigDocConfig.DEFAULT_OUTPUT_PATH + ConfigDocConfig.DEFAULT_OUTPUT_FILE_NAME);
         assertNotNull(generatedFileUrl);
 
         String generatedFile = Files.readString(Paths.get(generatedFileUrl.toURI()));

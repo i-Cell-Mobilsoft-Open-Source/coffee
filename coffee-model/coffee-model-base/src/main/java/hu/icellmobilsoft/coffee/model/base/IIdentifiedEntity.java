@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,46 +17,33 @@
  * limitations under the License.
  * #L%
  */
-package hu.icellmobilsoft.coffee.module.mongodb.model;
+package hu.icellmobilsoft.coffee.model.base;
 
 import java.io.Serializable;
 
-import org.bson.codecs.pojo.annotations.BsonId;
-import org.bson.types.ObjectId;
-
 /**
- * Mongo ObjectId
+ * Interface for the identified audit entities. Contains setters, getters for id, version, and for the basic audit fields.
  *
- * @author balazs.joo
- * @since 1.0.0
+ * @param <ID>
+ *            The type of the entity id
+ * @author arnold.bucher
+ * @since 1.8.1
  */
-public abstract class AbstractMongoEntity implements Serializable {
-
-    private static final long serialVersionUID = 1L;
+public interface IIdentifiedEntity<ID extends Serializable> extends IVersionable {
 
     /**
-     * Identifier of the mongo object
-     */
-    @BsonId
-    private ObjectId id;
-
-    /**
-     * Getter for the field {@code id}.
+     * Returns the id of the entity
      *
-     * @return {@code id}
+     * @return the id of the entity
      */
-    public ObjectId getId() {
-        return id;
-    }
+    ID getId();
 
     /**
-     * Setter for the field {@code id}.
+     * Sets the id of the entity
      *
      * @param id
-     *            id to set
+     *            the new id
      */
-    public void setId(ObjectId id) {
-        this.id = id;
-    }
+    void setId(ID id);
 
 }

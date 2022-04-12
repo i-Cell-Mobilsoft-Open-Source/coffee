@@ -164,7 +164,7 @@ public class StreamGroupConfig implements IStreamGroupConfig {
 
     // stream common
     @Override
-    public Long getReadTimeoutMillis() {
+    public Long getStreamReadTimeoutMillis() {
         return config.getOptionalValue(joinKey(STREAM_READ_TIMEOUTMILLIS), Long.class).orElse(Duration.ofMinutes(1).toMillis());
     }
 

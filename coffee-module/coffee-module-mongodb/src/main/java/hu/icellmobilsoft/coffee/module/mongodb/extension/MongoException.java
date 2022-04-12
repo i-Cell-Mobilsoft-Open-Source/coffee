@@ -33,16 +33,40 @@ public class MongoException extends TechnicalException {
 
     private static final long serialVersionUID = 1L;
 
+    /**
+     * Initializes the exception with a message
+     * 
+     * @param message
+     *            exception message
+     */
     public MongoException(String message) {
         this(CoffeeFaultType.OPERATION_FAILED, message, null);
     }
 
+    /**
+     * Initializes the exception with a message, and fault type
+     *
+     * @param faultTypeEnum
+     *            fault type enum
+     * @param message
+     *            exception message
+     */
     public MongoException(Enum<?> faultTypeEnum, String message) {
         this(faultTypeEnum, message, null);
     }
 
-    public MongoException(Enum<?> faultTypeEnum, String message, Throwable e) {
-        super(faultTypeEnum, message, e);
+    /**
+     * Initializes the exception with a message, fault type, and cause
+     *
+     * @param faultTypeEnum
+     *            fault type enum
+     * @param message
+     *            exception message
+     * @param cause
+     *            the cause of the exception
+     */
+    public MongoException(Enum<?> faultTypeEnum, String message, Throwable cause) {
+        super(faultTypeEnum, message, cause);
     }
 
 }

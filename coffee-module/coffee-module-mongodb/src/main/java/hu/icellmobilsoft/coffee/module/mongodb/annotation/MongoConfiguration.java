@@ -61,8 +61,14 @@ public @interface MongoConfiguration {
     @Nonbinding
     String databaseKey();
 
+    /**
+     * Literal class for {@code MongoConfiguration} qualifier
+     */
     final class Literal extends AnnotationLiteral<MongoConfiguration> implements MongoConfiguration {
 
+        /**
+         * Qualifier literal instance
+         */
         public static final Literal INSTANCE = new Literal();
 
         private static final long serialVersionUID = 1L;

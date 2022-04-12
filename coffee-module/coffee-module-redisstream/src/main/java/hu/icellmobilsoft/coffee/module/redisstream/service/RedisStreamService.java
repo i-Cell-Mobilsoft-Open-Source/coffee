@@ -24,7 +24,6 @@ import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.util.AbstractMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -43,12 +42,14 @@ import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 import hu.icellmobilsoft.coffee.module.redisstream.config.StreamGroupConfig;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
 import redis.clients.jedis.Jedis;
-import redis.clients.jedis.StreamEntry;
 import redis.clients.jedis.StreamEntryID;
-import redis.clients.jedis.StreamGroupInfo;
-import redis.clients.jedis.StreamPendingEntry;
 import redis.clients.jedis.exceptions.JedisDataException;
 import redis.clients.jedis.params.XAddParams;
+import redis.clients.jedis.params.XPendingParams;
+import redis.clients.jedis.params.XReadGroupParams;
+import redis.clients.jedis.resps.StreamEntry;
+import redis.clients.jedis.resps.StreamGroupInfo;
+import redis.clients.jedis.resps.StreamPendingEntry;
 
 /**
  * Service class for redis stream logic
@@ -144,7 +145,7 @@ public class RedisStreamService implements Closeable {
      */
     public boolean existGroup() {
         try {
-            List<StreamGroupInfo> info = getJedis().xinfoGroup(streamKey());
+            List<StreamGroupInfo> info = getJedis().xinfoGroups(streamKey());
             return info.stream().map(StreamGroupInfo::getName).anyMatch(name -> StringUtils.equals(getGroup(), name));
         } catch (JedisDataException e) {
             // ha nincs kulcs akkor a kovetkezo hiba jon:
@@ -191,11 +192,10 @@ public class RedisStreamService implements Closeable {
         if (StringUtils.isBlank(consumerIdentifier)) {
             throw new BaseException(CoffeeFaultType.INVALID_INPUT, "consumerIdentifier is null");
         }
-        Entry<String, StreamEntryID> streamQuery = new AbstractMap.SimpleImmutableEntry<>(streamKey(), StreamEntryID.UNRECEIVED_ENTRY);
+        Map<String, StreamEntryID> streamQuery = Map.of(streamKey(), StreamEntryID.UNRECEIVED_ENTRY);
         // kepes tobb streambol is egyszerre olvasni, de mi 1-re hasznaljuk
-        @SuppressWarnings("unchecked")
-        List<Entry<String, List<StreamEntry>>> result = getJedis().xreadGroup(getGroup(), consumerIdentifier, 1, config.getReadTimeoutMillis(), false,
-                streamQuery);
+        XReadGroupParams params = new XReadGroupParams().count(1).block(config.getStreamReadTimeoutMillis().intValue());
+        List<Entry<String, List<StreamEntry>>> result = getJedis().xreadGroup(getGroup(), consumerIdentifier, params, streamQuery);
         if (result == null || result.isEmpty()) {
             // nincs uj uzenet
             if (log.isTraceEnabled()) {
@@ -266,7 +266,8 @@ public class RedisStreamService implements Closeable {
      * @return pending entries
      */
     public List<StreamPendingEntry> pending(int pendingCount, StreamEntryID from, StreamEntryID to) {
-        return jedis.xpending(streamKey(), getGroup(), from, to, pendingCount, null);
+        XPendingParams params = new XPendingParams(from, to, pendingCount);
+        return jedis.xpending(streamKey(), getGroup(), params);
     }
 
     /**
@@ -359,6 +360,11 @@ public class RedisStreamService implements Closeable {
         return new StreamEntryID(localDateTime.toEpochSecond(ZoneOffset.UTC), 0);
     }
 
+    /**
+     * Returns the jedis instance
+     *
+     * @return the jedis instance
+     */
     protected Jedis getJedis() {
         return jedis;
     }
@@ -383,10 +389,21 @@ public class RedisStreamService implements Closeable {
         }
     }
 
+    /**
+     * Returns the redis stream group
+     *
+     * @return the redis stream group
+     */
     public String getGroup() {
         return group;
     }
 
+    /**
+     * Sets the redis stream group
+     *
+     * @param group
+     *            the new redis stream group
+     */
     public void setGroup(String group) {
         this.group = group;
         config.setConfigKey(group);

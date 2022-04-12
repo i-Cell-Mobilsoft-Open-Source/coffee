@@ -52,7 +52,7 @@ import redis.clients.jedis.Jedis;
 @Dependent
 public class RedisManager {
 
-    public static final String JEDIS_NOT_INITIALIZED_MSG = "jedis is not initialized";
+    private static final String JEDIS_NOT_INITIALIZED_MSG = "jedis is not initialized";
 
     @Inject
     private Logger log;

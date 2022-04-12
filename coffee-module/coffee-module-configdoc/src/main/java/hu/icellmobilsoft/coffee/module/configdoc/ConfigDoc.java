@@ -26,7 +26,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Documentation file will be generated based on the annotated configuration key holder classes and fields to {@value FILE_NAME}.
+ * Documentation file will be generated based on the annotated configuration key holder classes and fields.
  * 
  * @author martin.nagy
  * @since 1.9.0
@@ -35,7 +35,6 @@ import java.lang.annotation.Target;
 @Target({ ElementType.TYPE, ElementType.FIELD })
 @Retention(RetentionPolicy.SOURCE)
 public @interface ConfigDoc {
-    String FILE_NAME = "META-INF/config_keys.adoc";
 
     /**
      * (Optional) {@code true} if the field should be excluded from the documentation. Default {@code false}

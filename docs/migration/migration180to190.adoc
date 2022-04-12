@@ -31,75 +31,104 @@ de kap fordítási és tesztelési ellenőrzéseket java 17-re is.
 * google.code:gson 2.8.3 -> 2.8.9
 * junit:jupiter 5.5.2 -> 5.8.1
 * org.jboss.weld:weld-junit5 2.0.1.Final -> 2.0.2.Final
+* jedis 3.6.0 -> 4.2.1
 
 
 === coffee-module-configdoc
 * Létrejött a modul
+* Kimeneti fájl konfigurálhatóság
+
+==== Átállás
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+=== coffee-tool
+* DateXmlUtil -> XmlGregorianCalendar optimalizálása: DatatypeFactory.newInstance() példány cacheből kiszolgálása performancia okokból
+
+=== coffee-module-mongodb
+* DatatypeFactory.newInstance() cachelt példány lekérése DateXmlUtil alapján
+
+==== Átállás
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+=== coffee-model-base
+* A 2 `AbstractIdentifiedAuditEntity` osztály (`java.util.Date` és `OffsetDateTime`-on alapuló) közös generikus interface javítása jackson deserializálás hiba miatt. Külön lettek bontva `IAuditEntity` és `IIdentifiedEntity` interfacekre.
 
 ==== Átállás
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
 
 === coffee-module-redis
-* Szét lett választva a consumer és a producer config. Külön poolból dolgoznak.
+* jedis verzió emelés történt 3.6.0 -> 4.2.1
 
 ==== Átállás
-* A változtatások érintik a korábbi konfigurációs kulcsok szerkezetét mind a redis connection - mind a redisstream esetében.
-régi:
-```
-coffee:
-  redis:
-    auth:
-      host: sample-sandbox.icellmobilsoft.hu
-      port: 6380
-      password: ****
-      database: 1
-      pool:
-        maxtotal: 128
-        maxidle: 32
-      timeout: 5000
-  redisstream:
-    enabled: true
-      sampleGroup:
-        stream:
-          maxlen: 10
-          read:
-           timeoutmillis: 60000
-        consumer:
-            threadsCount: 2
-```
-új:
-```
-coffee:
-    redis:
-        auth:
-            host: sample-sandbox.icellmobilsoft.hu
-            port: 6380
-            password: authpw
-            database: 1
-            pool:
-                default:
-                    maxtotal: 64
-                    maxidle: 16
-                custom1:
-                    maxtotal: 128
-                    maxidle: 32
-                custom2:
-                    maxtotal: 256
-                    maxidle: 64
-    redisstream:
-       sampleGroup: #(1)
-           stream:
-               read:
-                   timeoutmillis: 60000 #default: 60000 (2)
-               connection:
-                   key: auth # connection referencia
-           producer:
-               maxlen: 10000 #default none (3)
-               ttl: 300000 #millisec, default none (4)
-               pool: custom1 #default: default - pool referencia
-           consumer:
-               threadsCount: 2 #default: 1 (5)
-               retryCount: 2 #default: 1 (6)
-               pool: custom2 #default: default - pool referencia
+Package változások történtek, amiket le kell követni
 
-```
+=== coffee-module-redisstream
+* jedis verzió emelés történt 3.6.0 -> 4.2.1
+
+==== Átállás
+Package változások történtek, amiket le kell követni
+
+== Változások
+
+=== Általános
+
+==== Java EE 8 -> Jakarta EE 8 átállás
+Az elsőként kiadott jakarta verzió package és osztály szinten teljesen megegyezik
+a korábbi Java EE 8-cal, csupán maven koordinátákban tér el.
+
+==== Átállás
+
+* Le kell cserélni a `javax`  dependency-ket a https://wiki.eclipse.org/Jakarta_EE_Maven_Coordinates[megfelelő
+`jakarta` párjára], például:
++
+.javax
+[source,xml]
+----
+<dependency>
+    <groupId>javax</groupId>
+    <artifactId>javaee-api</artifactId>
+    <version>8.0</version>
+    <scope>provided</scope>
+</dependency>
+----
++
+.jakarta
+[source,xml]
+----
+
+<dependency>
+    <groupId>jakarta.platform</groupId>
+    <artifactId>jakarta.jakartaee-api</artifactId>
+    <version>8.0.0</version>
+    <scope>provided</scope>
+</dependency>
+----
++
+Vagy külön kezelt dependency-k esetében:
++
+.javax
+[source,xml]
+----
+<dependency>
+    <groupId>javax.xml.bind</groupId>
+    <artifactId>jaxb-api</artifactId>
+    <version>2.3.1</version>
+    <scope>provided</scope>
+</dependency>
+----
++
+.jakarta
+[source,xml]
+----
+<dependency>
+    <groupId>jakarta.xml.bind</groupId>
+    <artifactId>jakarta.xml.bind-api</artifactId>
+    <version>2.3.2</version>
+    <scope>provided</scope>
+</dependency>
+----
++
+* Ellenőrizni kell a tranzitíven behúzott függőségeket is, az átállás után a projektben nem maradhat `javax`-os függőség,
+mert ez nem várt hibákat eredményezhet. Ehhez használhatjuk a maven dependency-plugin `dependency:tree` goal-ját.
+Előfordulhat, hogy projekt szinten kihasználtuk kódban az exclude-olt tranzitív dependecy-t, ilyenkor fordítási hibát
+fogunk kapni, amit javíthatunk, ha felvesszük az exclude-olt `javax` artifact `jakarta` párját a dependency-k közé.

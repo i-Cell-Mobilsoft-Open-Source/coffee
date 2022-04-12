@@ -43,15 +43,24 @@ public abstract class AbstractEmailTemplateAction implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    /**
+     * Logger
+     */
     @Inject
     @ThisLogger
     private AppLogger log;
 
+    /**
+     * Injected email session
+     */
     // @Resource(mappedName = "java:jboss/mail/default")
     @SuppressWarnings("cdi-ambiguous-dependency")
     @Inject
     private Session sessionDefault;
 
+    /**
+     * Injected email database
+     */
     @Inject
     private EmailDataBase emailDataBase;
 

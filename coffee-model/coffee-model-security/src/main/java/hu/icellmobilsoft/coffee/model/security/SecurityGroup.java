@@ -41,13 +41,22 @@ public class SecurityGroup extends AbstractIdentifiedAuditEntity {
 
     private static final long serialVersionUID = 1L;
 
+    /**
+     * security group description
+     */
     @Column(name = "description", length = 255)
     @Size(max = 255)
     private String description;
 
+    /**
+     * security group can be deleted
+     */
     @Column(name = "deletable", nullable = false)
     private boolean deletable;
 
+    /**
+     * security group name
+     */
     @Column(name = "name", nullable = false, length = 100)
     @Size(max = 100)
     @NotNull

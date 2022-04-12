@@ -113,24 +113,49 @@ public class LocalizationConverter<T, I> extends AbstractBeanField<T, I> {
                 MessageFormat.format("Type not supported! Can not convert to localized value! Actual Type: [{0}] ", field.getType().getName()));
     }
 
+    /**
+     * Throws exception if the class is not initialized
+     */
     protected void checkInitialization() {
         if (localizedMessage == null || language == null) {
             throw new ConverterException("Converter not initialized. Should be used with LocalizedHeaderColumnNameWithPositionMappingStrategy!");
         }
     }
 
+    /**
+     * Returns the value of the {@link #localizedMessage} field
+     *
+     * @return the value of the {@link #localizedMessage} field
+     */
     public LocalizedMessage getLocalizedMessage() {
         return localizedMessage;
     }
 
+    /**
+     * Sets the {@link #localizedMessage} field
+     *
+     * @param localizedMessage
+     *            the new value for the {@link #localizedMessage} field
+     */
     public void setLocalizedMessage(LocalizedMessage localizedMessage) {
         this.localizedMessage = localizedMessage;
     }
 
+    /**
+     * Returns the value of the {@link #language} field
+     *
+     * @return the value of the {@link #language} field
+     */
     public String getLanguage() {
         return language;
     }
 
+    /**
+     * Sets the {@link #language} field
+     *
+     * @param language
+     *            the new value for the {@link #language} field
+     */
     public void setLanguage(String language) {
         this.language = language;
     }
