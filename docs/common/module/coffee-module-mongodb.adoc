@@ -34,9 +34,7 @@ coffee:
              socketTimeout: 0 #default: 0
              maxConnectionIdleTime: 20000 #default: 20000
              maxConnectionLifeTime: 20000 #default: 20000
-             heartbeatConnectTimeout: 20000 #default: 20000
              heartbeatFrequency: 500 #default: 500
-             heartbeatSocketTimeout: 20000 #default: 20000
              minHeartbeatFrequency: 500 #default: 500
         tada:
             database: tada
