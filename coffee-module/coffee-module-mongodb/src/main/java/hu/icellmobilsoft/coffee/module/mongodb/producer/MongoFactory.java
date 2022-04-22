@@ -35,8 +35,7 @@ import javax.enterprise.inject.spi.InjectionPoint;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.microprofile.config.ConfigProvider;
 
-import com.mongodb.MongoClient;
-
+import com.mongodb.client.MongoClient;
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.module.mongodb.annotation.MongoConfiguration;
 import hu.icellmobilsoft.coffee.module.mongodb.config.MongoDbConfig;

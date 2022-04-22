@@ -1,0 +1,20 @@
+= v1.8.0 → v1.9.0
+
+coff:ee v1.9.0 -> v1.10.0 migrációs leírás, újdonságok, változások leírása
+
+== Változások
+
+=== Általános
+
+==== BOM verzió emelések:
+* mongo-java-driver 3.12.5 -> mongodb-driver-sync 4.5.1
+
+=== coffee-module-mongodb
+* mongo-java-driver helyett az új mongodb-driver-sync került bevezetésre
+* a konfigurációból kivezetésre kerültek a `heartbeatConnectTimeout` és `heartbeatSocketTimeout` paraméterek, mivel az új api nem támogatja a közvetlen beállításukat. Értékeik a `connectTimeout`-al és `socketTimeout`-al lesznek megegyezőek.
+* mongo import változások
+
+==== Átállás
+* a konfigurációból törölhetőek a `heartbeatConnectTimeout` és `heartbeatSocketTimeout` paraméterek
+* a `com.mongodb.util` package megszűnt, a benne lévő `Util` osztálynak nincs helyettesítője. Ha van hivatkozás a benne lévő `JSON` osztályra, a serializálást és de-serializálást helyettesíthetjük a `BasicDBObject` megfelelő metódusaival (`parse`, `toJson`)
+* Bővebb leírás a változásokról: https://www.mongodb.com/docs/drivers/java/sync/current/legacy/#api-changes

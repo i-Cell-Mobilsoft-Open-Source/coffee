@@ -23,6 +23,7 @@ import java.text.MessageFormat;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
@@ -35,11 +36,17 @@ import javax.inject.Inject;
 
 import org.bson.codecs.configuration.CodecRegistry;
 
-import com.mongodb.MongoClient;
-import com.mongodb.MongoClientOptions;
-import com.mongodb.MongoClientURI;
+import com.mongodb.Block;
+import com.mongodb.ConnectionString;
+import com.mongodb.MongoClientSettings;
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
 
+import com.mongodb.connection.ClusterSettings;
+import com.mongodb.connection.ConnectionPoolSettings;
+import com.mongodb.connection.ServerSettings;
+import com.mongodb.connection.SocketSettings;
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
@@ -131,21 +138,31 @@ public class MongoDbClientFactory {
                 log.debug("MongoDB uri [{0}]", StringUtil.maskUriAuthenticationCredentials(mongoConfigHelper.getUri()));
             }
 
-            MongoClientOptions.Builder builder = new MongoClientOptions.Builder();
-            builder.maxConnectionIdleTime(mongoConfigHelper.getMaxConnectionIdleTime());
-            builder.maxConnectionLifeTime(mongoConfigHelper.getMaxConnectionLifeTime());
-            builder.connectionsPerHost(mongoConfigHelper.getConnectionsPerHost());
-            builder.connectTimeout(mongoConfigHelper.getConnectTimeout());
-            builder.heartbeatConnectTimeout(mongoConfigHelper.getHeartbeatConnectTimeout());
-            builder.heartbeatFrequency(mongoConfigHelper.getHeartbeatFrequency());
-            builder.heartbeatSocketTimeout(mongoConfigHelper.getHeartbeatSocketTimeout());
-            builder.minConnectionsPerHost(mongoConfigHelper.getMinConnectionsPerHost());
-            builder.minHeartbeatFrequency(mongoConfigHelper.getMinHeartbeatFrequency());
-            builder.socketTimeout(mongoConfigHelper.getSocketTimeout());
-            builder.serverSelectionTimeout(mongoConfigHelper.getServerSelectionTimeout());
+            Block<ConnectionPoolSettings.Builder> connectionPoolSettings = builder -> builder.maxSize(mongoConfigHelper.getConnectionsPerHost())
+                    .minSize(mongoConfigHelper.getMinConnectionsPerHost())
+                    .maxConnectionIdleTime(mongoConfigHelper.getMaxConnectionIdleTime(), TimeUnit.MILLISECONDS)
+                    .maxConnectionLifeTime(mongoConfigHelper.getMaxConnectionLifeTime(), TimeUnit.MILLISECONDS);
 
-            MongoClientURI uri = new MongoClientURI(mongoConfigHelper.getUri(), builder);
-            return new MongoClient(uri);
+            Block<ClusterSettings.Builder> clusterSettings = builder -> builder.serverSelectionTimeout(mongoConfigHelper.getServerSelectionTimeout(),
+                    TimeUnit.MILLISECONDS);
+
+            Block<ServerSettings.Builder> serverSettings = builder -> builder
+                    .minHeartbeatFrequency(mongoConfigHelper.getMinHeartbeatFrequency(), TimeUnit.MILLISECONDS)
+                    .heartbeatFrequency(mongoConfigHelper.getHeartbeatFrequency(), TimeUnit.MILLISECONDS);
+
+            Block<SocketSettings.Builder> socketSettings = builder -> builder
+                    .connectTimeout(mongoConfigHelper.getConnectTimeout(), TimeUnit.MILLISECONDS)
+                    .readTimeout(mongoConfigHelper.getSocketTimeout(), TimeUnit.MILLISECONDS);
+
+            MongoClientSettings.Builder clientSettingsBuilder = MongoClientSettings.builder().applyToClusterSettings(clusterSettings)
+                    .applyConnectionString(new ConnectionString(mongoConfigHelper.getUri())).applyToConnectionPoolSettings(connectionPoolSettings)
+                    .applyToServerSettings(serverSettings).applyToSocketSettings(socketSettings);
+
+            // heartbeatConnectTimeout and heartbeatSocketTimeout are set internally in the builder with the socket settings values
+            // builder.heartbeatConnectTimeout(mongoConfigHelper.getHeartbeatConnectTimeout());
+            // builder.heartbeatSocketTimeout(mongoConfigHelper.getHeartbeatSocketTimeout());
+
+            return MongoClients.create(clientSettingsBuilder.build());
         } catch (Exception e) {
             throw new MongoException(CoffeeFaultType.OPERATION_FAILED,
                     MessageFormat.format("Failed to create mongo client: [{0}]", e.getLocalizedMessage()), e);
