@@ -154,13 +154,10 @@ public class MongoDbClientFactory {
                     .connectTimeout(mongoConfigHelper.getConnectTimeout(), TimeUnit.MILLISECONDS)
                     .readTimeout(mongoConfigHelper.getSocketTimeout(), TimeUnit.MILLISECONDS);
 
+            // heartbeatConnectTimeout and heartbeatSocketTimeout are set internally in the builder with the socket settings values
             MongoClientSettings.Builder clientSettingsBuilder = MongoClientSettings.builder().applyToClusterSettings(clusterSettings)
                     .applyConnectionString(new ConnectionString(mongoConfigHelper.getUri())).applyToConnectionPoolSettings(connectionPoolSettings)
                     .applyToServerSettings(serverSettings).applyToSocketSettings(socketSettings);
-
-            // heartbeatConnectTimeout and heartbeatSocketTimeout are set internally in the builder with the socket settings values
-            // builder.heartbeatConnectTimeout(mongoConfigHelper.getHeartbeatConnectTimeout());
-            // builder.heartbeatSocketTimeout(mongoConfigHelper.getHeartbeatSocketTimeout());
 
             return MongoClients.create(clientSettingsBuilder.build());
         } catch (Exception e) {
