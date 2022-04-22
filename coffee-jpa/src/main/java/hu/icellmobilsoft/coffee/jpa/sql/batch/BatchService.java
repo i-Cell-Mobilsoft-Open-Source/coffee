@@ -24,13 +24,18 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.text.MessageFormat;
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 import java.util.stream.Collectors;
 
 import javax.inject.Inject;
@@ -50,7 +55,10 @@ import org.hibernate.sql.Insert;
 import org.hibernate.sql.Update;
 import org.hibernate.type.CustomType;
 import org.hibernate.type.EnumType;
+import org.hibernate.type.LocalDateTimeType;
+import org.hibernate.type.LocalDateType;
 import org.hibernate.type.ManyToOneType;
+import org.hibernate.type.OffsetDateTimeType;
 import org.hibernate.type.StringType;
 import org.hibernate.type.TimestampType;
 import org.hibernate.type.Type;
@@ -85,6 +93,8 @@ public class BatchService {
     private EntityManager entityManager;
 
     private String sqlPostfix;
+
+    private TimeZone dbTimeZone;
 
     /**
      * input validalas.
@@ -567,14 +577,75 @@ public class BatchService {
                 // a setOject el fog szalni
             }
             ps.setObject(parameterIndex, value);
-        } else if (type instanceof TimestampType) {
-            ps.setObject(parameterIndex, value, TimestampType.INSTANCE.sqlType());
-        } else if (type instanceof ManyToOneType) {
+            return;
+        }
+        if (type instanceof ManyToOneType) {
             E manyToOneEntity = (E) value;
             ps.setObject(parameterIndex, manyToOneEntity != null ? EntityHelper.getLazyId(manyToOneEntity) : null);
-        } else {
-            ps.setObject(parameterIndex, value);
+            return;
         }
+
+        if (setTemporalPsObject(ps, parameterIndex, type, value)) {
+            return;
+        }
+
+        ps.setObject(parameterIndex, value);
+    }
+
+    /**
+     * Sets the prepared statement parameter if the parameter type is a temporal
+     *
+     * @param ps
+     *            prepared statement to set
+     * @param parameterIndex
+     *            index of the parameter in the prepared statement
+     * @param type
+     *            type descriptor of the parameter
+     * @param value
+     *            value of the parameter
+     * @return {@code true} if the statement parameter is set, and no further processing is needed
+     * @throws SQLException
+     *             exception
+     */
+    protected boolean setTemporalPsObject(PreparedStatement ps, int parameterIndex, Type type, Object value) throws SQLException {
+        if (type instanceof TimestampType) {
+            if (value == null) {
+                ps.setNull(parameterIndex, TimestampType.INSTANCE.sqlType());
+            } else if (getDbTimezone() != null) {
+                ps.setTimestamp(parameterIndex, (Timestamp) value, Calendar.getInstance(getDbTimezone()));
+            } else {
+                ps.setTimestamp(parameterIndex, (Timestamp) value);
+            }
+            return true;
+        }
+        if (type instanceof LocalDateType) {
+            ps.setObject(parameterIndex, value, TimestampType.INSTANCE.sqlType());
+            return true;
+        }
+        if (type instanceof LocalDateTimeType) {
+            if (value == null) {
+                ps.setNull(parameterIndex, TimestampType.INSTANCE.sqlType());
+            } else if (getDbTimezone() != null) {
+                ps.setObject(parameterIndex,
+                        ((LocalDateTime) value).atZone(ZoneId.systemDefault()).withZoneSameInstant(getDbTimezone().toZoneId()).toLocalDateTime(),
+                        TimestampType.INSTANCE.sqlType());
+            } else {
+                ps.setObject(parameterIndex, value, TimestampType.INSTANCE.sqlType());
+            }
+            return true;
+        }
+        if (type instanceof OffsetDateTimeType) {
+            if (value == null) {
+                ps.setNull(parameterIndex, TimestampType.INSTANCE.sqlType());
+            } else if (getDbTimezone() != null) {
+                ps.setObject(parameterIndex, ((OffsetDateTime) value).atZoneSameInstant(getDbTimezone().toZoneId()),
+                        TimestampType.INSTANCE.sqlType());
+            } else {
+                ps.setObject(parameterIndex, value, TimestampType.INSTANCE.sqlType());
+            }
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -699,5 +770,18 @@ public class BatchService {
                 return Status.UNKNOWN;
             }
         }
+    }
+
+    /**
+     * Returns the timezone we should use to save times in the database. ({@code persistence.xml}
+     * {@value org.hibernate.cfg.AvailableSettings#JDBC_TIME_ZONE} property)
+     *
+     * @return the timezone we should use to persist times in the database
+     */
+    protected TimeZone getDbTimezone() {
+        if (dbTimeZone == null) {
+            dbTimeZone = entityManager.unwrap(Session.class).getSessionFactory().getSessionFactoryOptions().getJdbcTimeZone();
+        }
+        return dbTimeZone;
     }
 }
