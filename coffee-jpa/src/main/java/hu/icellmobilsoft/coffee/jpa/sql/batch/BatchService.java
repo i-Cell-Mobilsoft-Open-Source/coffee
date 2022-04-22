@@ -27,6 +27,8 @@ import java.text.MessageFormat;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.temporal.Temporal;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -55,10 +57,7 @@ import org.hibernate.sql.Insert;
 import org.hibernate.sql.Update;
 import org.hibernate.type.CustomType;
 import org.hibernate.type.EnumType;
-import org.hibernate.type.LocalDateTimeType;
-import org.hibernate.type.LocalDateType;
 import org.hibernate.type.ManyToOneType;
-import org.hibernate.type.OffsetDateTimeType;
 import org.hibernate.type.StringType;
 import org.hibernate.type.TimestampType;
 import org.hibernate.type.Type;
@@ -618,34 +617,35 @@ public class BatchService {
             }
             return true;
         }
-        if (type instanceof LocalDateType) {
-            ps.setObject(parameterIndex, value, TimestampType.INSTANCE.sqlType());
-            return true;
-        }
-        if (type instanceof LocalDateTimeType) {
-            if (value == null) {
-                ps.setNull(parameterIndex, TimestampType.INSTANCE.sqlType());
-            } else if (getDbTimezone() != null) {
-                ps.setObject(parameterIndex,
-                        ((LocalDateTime) value).atZone(ZoneId.systemDefault()).withZoneSameInstant(getDbTimezone().toZoneId()).toLocalDateTime(),
-                        TimestampType.INSTANCE.sqlType());
-            } else {
-                ps.setObject(parameterIndex, value, TimestampType.INSTANCE.sqlType());
-            }
-            return true;
-        }
-        if (type instanceof OffsetDateTimeType) {
-            if (value == null) {
-                ps.setNull(parameterIndex, TimestampType.INSTANCE.sqlType());
-            } else if (getDbTimezone() != null) {
-                ps.setObject(parameterIndex, ((OffsetDateTime) value).atZoneSameInstant(getDbTimezone().toZoneId()),
-                        TimestampType.INSTANCE.sqlType());
+        if (value instanceof Temporal) {
+            if (getDbTimezone() != null) {
+                ps.setObject(parameterIndex, convertToDbTimezone((Temporal) value), TimestampType.INSTANCE.sqlType());
             } else {
                 ps.setObject(parameterIndex, value, TimestampType.INSTANCE.sqlType());
             }
             return true;
         }
         return false;
+    }
+
+    /**
+     * Converts the given temporal to the DB timezone
+     * 
+     * @param temporal
+     *            the temporal to convert
+     * @return the converted temporal
+     */
+    protected Temporal convertToDbTimezone(Temporal temporal) {
+        if (temporal instanceof LocalDateTime) {
+            return ((LocalDateTime) temporal).atZone(ZoneId.systemDefault()).withZoneSameInstant(getDbTimezone().toZoneId()).toLocalDateTime();
+        }
+        if (temporal instanceof OffsetDateTime) {
+            return ((OffsetDateTime) temporal).atZoneSameInstant(getDbTimezone().toZoneId());
+        }
+        if (temporal instanceof ZonedDateTime) {
+            return ((ZonedDateTime) temporal).withZoneSameInstant(getDbTimezone().toZoneId());
+        }
+        return temporal;
     }
 
     /**
