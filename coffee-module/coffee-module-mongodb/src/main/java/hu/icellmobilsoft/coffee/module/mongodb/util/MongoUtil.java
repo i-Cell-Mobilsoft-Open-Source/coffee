@@ -22,7 +22,6 @@ package hu.icellmobilsoft.coffee.module.mongodb.util;
 import javax.enterprise.inject.Vetoed;
 
 import com.mongodb.BasicDBObject;
-import com.mongodb.util.JSON;
 
 /**
  * Mongo util.
@@ -41,7 +40,6 @@ public class MongoUtil {
      * @return converted {@code BasicDBObject}
      */
     public static BasicDBObject jsonToBasicDbObject(String json) {
-        Object o = JSON.parse(json);
-        return (BasicDBObject) o;
+        return BasicDBObject.parse(json);
     }
 }

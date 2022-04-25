@@ -28,7 +28,6 @@ import java.util.GregorianCalendar;
 import java.util.List;
 
 import javax.enterprise.inject.Vetoed;
-import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.apache.commons.lang3.StringUtils;
@@ -46,7 +45,6 @@ import com.google.gson.JsonSerializer;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.stream.JsonReader;
 import com.mongodb.BasicDBObject;
-
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
 import hu.icellmobilsoft.coffee.tool.gson.ClassTypeAdapter;

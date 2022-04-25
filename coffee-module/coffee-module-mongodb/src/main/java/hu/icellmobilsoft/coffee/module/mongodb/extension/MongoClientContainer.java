@@ -24,7 +24,7 @@ import java.util.Map;
 
 import javax.enterprise.context.ApplicationScoped;
 
-import com.mongodb.MongoClient;
+import com.mongodb.client.MongoClient;
 
 /**
  * 

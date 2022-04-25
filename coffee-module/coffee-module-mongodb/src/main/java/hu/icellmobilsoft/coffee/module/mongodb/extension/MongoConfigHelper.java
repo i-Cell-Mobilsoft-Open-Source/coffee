@@ -47,9 +47,7 @@ import org.eclipse.microprofile.config.Config;
  *        socketTimeout: 0
  *        maxConnectionIdleTime: 20000
  *        maxConnectionLifeTime: 20000
- *        heartbeatConnectTimeout: 20000
  *        heartbeatFrequency: 20000
- *        heartbeatSocketTimeout: 20000
  *        minHeartbeatFrequency: 500
  * </pre>
  * 
@@ -96,15 +94,7 @@ public class MongoConfigHelper {
     /**
      * MongoDB client {@value} config
      */
-    public static final String HEARTBEAT_CONNECT_TIMEOUT_KEY = "heartbeatConnectTimeout";
-    /**
-     * MongoDB client {@value} config
-     */
     public static final String HEARTBEAT_FREQUENCY_KEY = "heartbeatFrequency";
-    /**
-     * MongoDB client {@value} config
-     */
-    public static final String HEARTBEAT_SOCKET_TIMEOUT_KEY = "heartbeatSocketTimeout";
     /**
      * MongoDB client {@value} config
      */
@@ -123,9 +113,7 @@ public class MongoConfigHelper {
     private static final Integer DEFAULT_MAX_CONNECTION_LIFE_TIME = 20000;
     private static final Integer DEFAULT_CONNECTIONS_PER_HOST = 100;
     private static final Integer DEFAULT_CONNECT_TIMEOUT = 10000;
-    private static final Integer DEFAULT_HEARTBEAT_CONNECT_TIMEOUT = 20000;
     private static final Integer DEFAULT_HEARTBEAT_FREQUENCY = 10000;
-    private static final Integer DEFAULT_HEARTBEAT_SOCKET_TIMEOUT = 20000;
     private static final Integer DEFAULT_MIN_CONNECTIONS_PER_HOST = 0;
     private static final Integer DEFAULT_MIN_HEART_BEAT_FREQUENCY = 500;
     private static final Integer DEFAULT_SERVER_SELECTION_TIMEOUT = 5000;
@@ -209,17 +197,6 @@ public class MongoConfigHelper {
     }
 
     /**
-     * <p>
-     * Gets the connect timeout for connections used for the cluster heartbeat.
-     * </p>
-     *
-     * @return heartbeatConnectTimeout
-     */
-    public Integer getHeartbeatConnectTimeout() {
-        return config.getOptionalValue(concatConfigKey(HEARTBEAT_CONNECT_TIMEOUT_KEY), Integer.class).orElse(DEFAULT_HEARTBEAT_CONNECT_TIMEOUT);
-    }
-
-    /**
      * Gets the heartbeat frequency. This is the frequency that the driver will attempt to determine the current state of each server in the cluster.
      *
      * @return heartbeatFrequency
@@ -228,14 +205,6 @@ public class MongoConfigHelper {
         return config.getOptionalValue(concatConfigKey(HEARTBEAT_FREQUENCY_KEY), Integer.class).orElse(DEFAULT_HEARTBEAT_FREQUENCY);
     }
 
-    /**
-     * Gets the socket timeout for connections used for the cluster heartbeat.
-     *
-     * @return heartbeatSocketTimeout
-     */
-    public Integer getHeartbeatSocketTimeout() {
-        return config.getOptionalValue(concatConfigKey(HEARTBEAT_SOCKET_TIMEOUT_KEY), Integer.class).orElse(DEFAULT_HEARTBEAT_SOCKET_TIMEOUT);
-    }
 
     /**
      * <p>

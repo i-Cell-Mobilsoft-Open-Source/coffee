@@ -28,7 +28,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.bson.conversions.Bson;
 
 import com.mongodb.BasicDBObject;
-import com.mongodb.MongoClient;
+import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoDatabase;
 
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
