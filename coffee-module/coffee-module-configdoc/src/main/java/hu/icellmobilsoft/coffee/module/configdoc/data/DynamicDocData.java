@@ -36,10 +36,8 @@ import hu.icellmobilsoft.coffee.module.configdoc.DynamicConfigDocs;
  */
 public class DynamicDocData {
 
-    private static Comparator<String[]> VARIABLE_COMPARATOR = Comparator
-            .nullsFirst(Comparator.comparing(ArrayUtils::getLength).thenComparing(String::valueOf));
     public static Comparator<DynamicDocData> COMPARATOR = Comparator.comparing(DynamicDocData::getTitle)
-            .thenComparing(DynamicDocData::getTemplateVariables, VARIABLE_COMPARATOR);
+            .thenComparing(DynamicDocData::getTemplateVariables, Arrays::compare);
     private String title;
     private String description;
     private String[] templateVariables;

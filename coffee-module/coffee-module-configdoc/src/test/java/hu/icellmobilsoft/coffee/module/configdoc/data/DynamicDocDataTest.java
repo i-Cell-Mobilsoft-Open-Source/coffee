@@ -123,8 +123,8 @@ class DynamicDocDataTest {
         List<DynamicDocData> expected = List.of(//
                 createData("a"), //
                 createData("a", "v1"), //
-                createData("a", "v2"), //
                 createData("a", "v1", "v2"), //
+                createData("a", "v2"), //
                 createData("b"), //
                 createData("b", new String[0]), //
                 createData("b", "v1")//
