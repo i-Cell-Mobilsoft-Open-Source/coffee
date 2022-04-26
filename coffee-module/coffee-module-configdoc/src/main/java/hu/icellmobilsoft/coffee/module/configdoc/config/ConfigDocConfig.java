@@ -23,7 +23,7 @@ import java.util.Map;
 
 /**
  * Class representing the configuration for the module
- * 
+ *
  * @author martin.nagy
  * @since 1.9.0
  */
@@ -56,9 +56,8 @@ public class ConfigDocConfig {
 
     /**
      * Creates the config object based on properties
-     * 
-     * @param properties
-     *            the map which contains the config properties
+     *
+     * @param properties the map which contains the config properties
      */
     public ConfigDocConfig(Map<String, String> properties) {
         outputDir = properties.getOrDefault(OUTPUT_DIR_KEY, DEFAULT_OUTPUT_PATH);
@@ -69,7 +68,7 @@ public class ConfigDocConfig {
 
     /**
      * Returns the directory for the generated file
-     * 
+     *
      * @return the directory for the generated file
      */
     public String getOutputDir() {
@@ -78,7 +77,7 @@ public class ConfigDocConfig {
 
     /**
      * Returns the generated file name
-     * 
+     *
      * @return the generated file name
      */
     public String getOutputFileName() {
@@ -87,13 +86,18 @@ public class ConfigDocConfig {
 
     /**
      * Returns {@literal true} if the output folder should be on the classpath
-     * 
+     *
      * @return {@literal true} if the output folder should be on the classpath
      */
     public boolean isOutputToClassPath() {
         return outputToClassPath;
     }
 
+    /**
+     * Returns the generated file name for dynamic config.
+     *
+     * @return the generated file name for dynamic config
+     */
     public String getDynamicOutputFileName() {
         return dynamicOutputFileName;
     }

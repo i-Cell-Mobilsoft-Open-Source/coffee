@@ -36,6 +36,9 @@ import hu.icellmobilsoft.coffee.module.configdoc.DynamicConfigDocs;
  */
 public class DynamicDocData {
 
+    /**
+     * DynamicDocData comparator. compares by title and template variables
+     */
     public static Comparator<DynamicDocData> COMPARATOR = Comparator.comparing(DynamicDocData::getTitle)
             .thenComparing(DynamicDocData::getTemplateVariables, Arrays::compare);
     private String title;
@@ -69,42 +72,97 @@ public class DynamicDocData {
         }
     }
 
+    /**
+     * Gets title.
+     *
+     * @return the title
+     */
     public String getTitle() {
         return title;
     }
 
+    /**
+     * Sets title.
+     *
+     * @param title
+     *            the title
+     */
     public void setTitle(String title) {
         this.title = title;
     }
 
+    /**
+     * Gets description.
+     *
+     * @return the description
+     */
     public String getDescription() {
         return description;
     }
 
+    /**
+     * Sets description.
+     *
+     * @param description
+     *            the description
+     */
     public void setDescription(String description) {
         this.description = description;
     }
 
+    /**
+     * Get template variables string [ ].
+     *
+     * @return the string [ ]
+     */
     public String[] getTemplateVariables() {
         return templateVariables;
     }
 
+    /**
+     * Sets template variables.
+     *
+     * @param templateVariables
+     *            the template variables
+     */
     public void setTemplateVariables(String[] templateVariables) {
         this.templateVariables = templateVariables;
     }
 
+    /**
+     * Gets template class name.
+     *
+     * @return the template class name
+     */
     public String getTemplateClassName() {
         return templateClassName;
     }
 
+    /**
+     * Sets template class name.
+     *
+     * @param templateClassName
+     *            the template class name
+     */
     public void setTemplateClassName(String templateClassName) {
         this.templateClassName = templateClassName;
     }
 
+    /**
+     * Gets template.
+     *
+     * @return the template
+     */
     public String getTemplate() {
         return template;
     }
 
+    /**
+     * Sets template.
+     *
+     * @param template
+     *            the template
+     */
     public void setTemplate(String template) {
         this.template = template;
     }

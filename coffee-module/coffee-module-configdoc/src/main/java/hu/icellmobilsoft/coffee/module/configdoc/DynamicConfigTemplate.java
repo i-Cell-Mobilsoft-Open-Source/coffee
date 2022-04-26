@@ -28,7 +28,7 @@ import java.lang.annotation.Target;
 /**
  * Annotation used to mark template classes, interfaces for dynamic configs. Dynamic documentation template will be generated based on the annotated
  * configuration class or interface
- * 
+ *
  * @author mark.petrenyi
  * @since 1.10.0
  */
@@ -36,6 +36,12 @@ import java.lang.annotation.Target;
 @Target({ ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER, ElementType.TYPE })
 @Retention(RetentionPolicy.CLASS)
 public @interface DynamicConfigTemplate {
+    /**
+     * Dynamic config template directory
+     */
     String TEMPLATE_DIR = "META-INF/config-templates/";
+    /**
+     * Dynamic config template extension
+     */
     String TEMPLATE_TYPE = ".adoc";
 }
