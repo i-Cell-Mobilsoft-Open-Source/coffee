@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package hu.icellmobilsoft.coffee.module.redisstream.common;
+package hu.icellmobilsoft.coffee.module.redisstream.publisher;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.Dependent;
@@ -27,18 +27,18 @@ import javax.enterprise.inject.spi.CDI;
 import javax.enterprise.inject.spi.InjectionPoint;
 
 import hu.icellmobilsoft.coffee.module.redis.annotation.RedisConnection;
+import hu.icellmobilsoft.coffee.module.redis.manager.RedisManager;
 import hu.icellmobilsoft.coffee.module.redisstream.annotation.RedisStreamProducer;
 import hu.icellmobilsoft.coffee.tool.utils.annotation.AnnotationUtil;
-import redis.clients.jedis.Jedis;
 
 /**
- * RedisStreamHandler producer for easy usage
+ * {@link RedisStreamPublisher} producer for easy usage
  * 
  * @author imre.scheffer
  * @since 1.3.0
  */
 @ApplicationScoped
-public class RedisStreamHandlerProducer {
+public class RedisStreamPublisherProducer {
 
     /**
      * Producer for initializing RedisStreamHandler
@@ -50,13 +50,15 @@ public class RedisStreamHandlerProducer {
     @Produces
     @Dependent
     @RedisStreamProducer(configKey = "", group = "")
-    public RedisStreamHandler produce(InjectionPoint injectionPoint) {
+    public RedisStreamPublisher produce(InjectionPoint injectionPoint) {
         RedisStreamProducer annotation = AnnotationUtil.getAnnotation(injectionPoint, RedisStreamProducer.class).get();
 
         CDI<Object> cdi = CDI.current();
-        RedisStreamHandler redisStreamHandler = cdi.select(RedisStreamHandler.class).get();
-        Instance<Jedis> jedisInstance = cdi.select(Jedis.class, new RedisConnection.Literal(annotation.configKey()));
-        redisStreamHandler.init(jedisInstance, annotation.group());
-        return redisStreamHandler;
+        RedisStreamPublisher redisStreamPublisher = cdi.select(RedisStreamPublisher.class).get();
+        Instance<RedisManager> redisManagerInstance = cdi.select(RedisManager.class, new RedisConnection.Literal(annotation.configKey()));
+        RedisManager redisManager = redisManagerInstance.get();
+        redisStreamPublisher.init(redisManager, annotation.group());
+        redisManagerInstance.destroy(redisManager);
+        return redisStreamPublisher;
     }
 }
