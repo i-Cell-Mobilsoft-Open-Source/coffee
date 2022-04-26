@@ -1,4 +1,4 @@
-= v1.8.0 → v1.9.0
+= v1.9.0 → v1.10.0
 
 coff:ee v1.9.0 -> v1.10.0 migrációs leírás, újdonságok, változások leírása
 
@@ -18,3 +18,9 @@ coff:ee v1.9.0 -> v1.10.0 migrációs leírás, újdonságok, változások leír
 * a konfigurációból törölhetőek a `heartbeatConnectTimeout` és `heartbeatSocketTimeout` paraméterek
 * a `com.mongodb.util` package megszűnt, a benne lévő `Util` osztálynak nincs helyettesítője. Ha van hivatkozás a benne lévő `JSON` osztályra, a serializálást és de-serializálást helyettesíthetjük a `BasicDBObject` megfelelő metódusaival (`parse`, `toJson`)
 * Bővebb leírás a változásokról: https://www.mongodb.com/docs/drivers/java/sync/current/legacy/#api-changes
+
+=== coffee-jpa
+* A `BatchService` már jól kezeli az idő típusakat, ha a `hibernate.jdbc.time_zone` be van állítva a `persistence.xml`-ben.
+
+==== Átállás
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
