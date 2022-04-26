@@ -33,6 +33,7 @@ public class ConfigDocConfig {
     private static final String OUTPUT_DIR_KEY = CONFIG_PREFIX + "outputDir";
     private static final String OUTPUT_FILE_NAME_KEY = CONFIG_PREFIX + "outputFileName";
     private static final String OUTPUT_TO_CLASS_PATH_KEY = CONFIG_PREFIX + "outputToClassPath";
+    private static final String DYNAMIC_OUTPUT_FILE_NAME_KEY = CONFIG_PREFIX + "dynamicOutputFileName";
 
     /**
      * Default output path
@@ -43,9 +44,14 @@ public class ConfigDocConfig {
      * Default output file name
      */
     public static final String DEFAULT_OUTPUT_FILE_NAME = "config_keys.adoc";
+    /**
+     * Default output file name for dynamic configs
+     */
+    public static final String DEFAULT_DYNAMIC_OUTPUT_FILE_NAME = "dynamic_config_keys.adoc";
 
     private final String outputDir;
     private final String outputFileName;
+    private final String dynamicOutputFileName;
     private final boolean outputToClassPath;
 
     /**
@@ -57,6 +63,7 @@ public class ConfigDocConfig {
     public ConfigDocConfig(Map<String, String> properties) {
         outputDir = properties.getOrDefault(OUTPUT_DIR_KEY, DEFAULT_OUTPUT_PATH);
         outputFileName = properties.getOrDefault(OUTPUT_FILE_NAME_KEY, DEFAULT_OUTPUT_FILE_NAME);
+        dynamicOutputFileName = properties.getOrDefault(DYNAMIC_OUTPUT_FILE_NAME_KEY, DEFAULT_DYNAMIC_OUTPUT_FILE_NAME);
         outputToClassPath = Boolean.parseBoolean(properties.getOrDefault(OUTPUT_TO_CLASS_PATH_KEY, Boolean.TRUE.toString()));
     }
 
@@ -87,4 +94,7 @@ public class ConfigDocConfig {
         return outputToClassPath;
     }
 
+    public String getDynamicOutputFileName() {
+        return dynamicOutputFileName;
+    }
 }

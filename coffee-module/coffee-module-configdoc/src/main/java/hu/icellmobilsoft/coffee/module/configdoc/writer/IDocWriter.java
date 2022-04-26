@@ -28,10 +28,12 @@ import hu.icellmobilsoft.coffee.module.configdoc.data.DocData;
 /**
  * Writes the collected annotation data
  *
+ * @param <T>
+ *            the type parameter for data POJO
  * @author martin.nagy
  * @since 1.9.0
  */
-public interface IDocWriter {
+public interface IDocWriter<T> {
 
     /**
      * Writes the collected annotation data to the passed {@link Writer}.
@@ -43,5 +45,5 @@ public interface IDocWriter {
      * @throws IOException
      *             If an I/O error occurs
      */
-    void write(List<DocData> dataList, Writer writer) throws IOException;
+    void write(List<T> dataList, Writer writer) throws IOException;
 }
