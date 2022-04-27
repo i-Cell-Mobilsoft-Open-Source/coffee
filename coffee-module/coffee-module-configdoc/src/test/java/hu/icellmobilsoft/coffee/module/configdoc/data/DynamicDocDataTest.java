@@ -22,11 +22,9 @@ package hu.icellmobilsoft.coffee.module.configdoc.data;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.apache.commons.lang3.ArrayUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.commons.util.StringUtils;
 
 import hu.icellmobilsoft.coffee.module.configdoc.DynamicConfigDocs;
 

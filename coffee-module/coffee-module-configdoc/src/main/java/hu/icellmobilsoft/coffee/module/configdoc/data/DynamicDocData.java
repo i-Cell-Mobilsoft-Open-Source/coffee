@@ -171,7 +171,7 @@ public class DynamicDocData {
     public boolean equals(Object o) {
         if (this == o)
             return true;
-        if (o == null || getClass() != o.getClass())
+        if (!(o instanceof DynamicDocData))
             return false;
         DynamicDocData data = (DynamicDocData) o;
         return Arrays.equals(templateVariables, data.templateVariables) && Objects.equals(title, data.title)
