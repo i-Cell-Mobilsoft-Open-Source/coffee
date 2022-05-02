@@ -57,10 +57,10 @@ public class DynamicDocData {
         if (other == null) {
             return;
         }
-        if (StringUtils.isNotBlank(other.getTitle()) && !StringUtils.equals(other.getTitle(), DynamicConfigDocs.NO_TITLE)) {
+        if (StringUtils.isNotBlank(other.getTitle())) {
             this.setTitle(other.getTitle());
         }
-        if (StringUtils.isNotBlank(other.getDescription()) && !StringUtils.equals(other.getDescription(), DynamicConfigDocs.NO_DESCRIPTION)) {
+        if (StringUtils.isNotBlank(other.getDescription())) {
             this.setDescription(other.getDescription());
         }
         if (ArrayUtils.isNotEmpty(other.getTemplateVariables())) {

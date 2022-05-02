@@ -26,8 +26,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import hu.icellmobilsoft.coffee.module.configdoc.DynamicConfigDocs;
-
 /**
  * Unit tests for {@link DynamicDocData}
  * 
@@ -77,19 +75,6 @@ class DynamicDocDataTest {
         // then
         Assertions.assertEquals(expected, base);
         Assertions.assertNotEquals(toBeMerged, base);
-    }
-
-    @Test
-    void testMergeDefaultValues() {
-        // given
-        DynamicDocData base = createData(TEST_TITLE, TEST_DESCRIPTION, DynamicDocDataTest.class, TEST_VAR_1);
-        DynamicDocData toBeMerged = createData(DynamicConfigDocs.NO_TITLE, DynamicConfigDocs.NO_DESCRIPTION, DynamicConfigDocs.NoTemplate.class);
-        toBeMerged.setTemplateClassName("");
-        DynamicDocData expected = createData(TEST_TITLE, TEST_DESCRIPTION, DynamicDocDataTest.class, TEST_VAR_1);
-        // when
-        base.merge(toBeMerged);
-        // then
-        Assertions.assertEquals(expected, base);
     }
 
     @Test

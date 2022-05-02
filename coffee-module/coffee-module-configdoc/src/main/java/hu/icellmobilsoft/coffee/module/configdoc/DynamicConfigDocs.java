@@ -25,6 +25,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import org.apache.commons.lang3.StringUtils;
+
 /**
  * Documentation file will be generated based on the annotated configuration key holder classes and fields to.
  *
@@ -35,15 +37,6 @@ import java.lang.annotation.Target;
 @Target({ ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER, ElementType.TYPE })
 @Retention(RetentionPolicy.CLASS)
 public @interface DynamicConfigDocs {
-
-    /**
-     * Constant for {@link #title()} indicating no title set.
-     */
-    String NO_TITLE = "hu.icellmobilsoft.coffee.module.configdoc.DynamicConfigDocs.noTitle";
-    /**
-     * Constant for {@link #description()} indicating no description set.
-     */
-    String NO_DESCRIPTION = "hu.icellmobilsoft.coffee.module.configdoc.DynamicConfigDocs.noDescription";
 
     /**
      * (Optional) template class used for documentation
@@ -64,14 +57,14 @@ public @interface DynamicConfigDocs {
      *
      * @return the title
      */
-    String title() default NO_TITLE;
+    String title() default StringUtils.EMPTY;
 
     /**
      * Configuration description, can contain placeholders.
      *
      * @return the description
      */
-    String description() default NO_DESCRIPTION;
+    String description() default StringUtils.EMPTY;
 
     /**
      * Default class for {@link #template()}, indicating no value set

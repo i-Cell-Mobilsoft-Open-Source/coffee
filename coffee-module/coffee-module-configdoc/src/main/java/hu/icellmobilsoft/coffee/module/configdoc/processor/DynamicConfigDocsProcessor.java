@@ -34,7 +34,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.Processor;
@@ -104,7 +103,7 @@ public class DynamicConfigDocsProcessor extends AbstractProcessor {
                 processingEnv.getMessager().printMessage(Diagnostic.Kind.NOTE, msg);
             }
         }
-        dataToWrite = dataToWrite.stream().sorted(DynamicDocData.COMPARATOR).collect(Collectors.toList());
+        dataToWrite.sort(DynamicDocData.COMPARATOR);
         return dataToWrite;
     }
 
