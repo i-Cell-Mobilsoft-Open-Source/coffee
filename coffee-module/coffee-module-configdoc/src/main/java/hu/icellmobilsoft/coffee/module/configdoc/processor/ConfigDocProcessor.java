@@ -42,6 +42,7 @@ import javax.tools.StandardLocation;
 import com.google.auto.service.AutoService;
 
 import hu.icellmobilsoft.coffee.module.configdoc.ConfigDoc;
+import hu.icellmobilsoft.coffee.module.configdoc.DynamicConfigTemplate;
 import hu.icellmobilsoft.coffee.module.configdoc.config.ConfigDocConfig;
 import hu.icellmobilsoft.coffee.module.configdoc.data.DocData;
 import hu.icellmobilsoft.coffee.module.configdoc.writer.IDocWriter;
@@ -72,7 +73,7 @@ public class ConfigDocProcessor extends AbstractProcessor {
         return true;
     }
 
-    private void writeToFile(List<DocData> dataList, IDocWriter docWriter, ConfigDocConfig config) {
+    private void writeToFile(List<DocData> dataList, IDocWriter<DocData> docWriter, ConfigDocConfig config) {
         try (Writer writer = createWriter(config)) {
             docWriter.write(dataList, writer);
         } catch (IOException e) {
@@ -92,10 +93,18 @@ public class ConfigDocProcessor extends AbstractProcessor {
         ArrayList<DocData> dataList = new ArrayList<>();
         for (TypeElement annotation : annotations) {
             for (Element element : roundEnv.getElementsAnnotatedWith(annotation)) {
-                visitor.visit(element, dataList);
+                // Ha van rajta vagy valamelyik ősén DynamicConfigTemplate, akkor az másik adocba kerül, itt skippeljük
+                if (isWithoutDynamicConfigTemplate(element)) {
+                    visitor.visit(element, dataList);
+                }
             }
         }
         return dataList;
+    }
+
+    private boolean isWithoutDynamicConfigTemplate(Element element) {
+        return element == null
+                || (element.getAnnotation(DynamicConfigTemplate.class) == null && isWithoutDynamicConfigTemplate(element.getEnclosingElement()));
     }
 
     @Override
