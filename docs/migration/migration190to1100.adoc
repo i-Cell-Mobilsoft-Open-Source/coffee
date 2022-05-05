@@ -25,6 +25,12 @@ coff:ee v1.9.0 -> v1.10.0 migrációs leírás, újdonságok, változások leír
 ==== Átállás
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
 
+=== coffee-module-configdoc
+* Konfigurációs dokumentum generálási lehetőség dinamikus kulcsokra.
+
+==== Átállás
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
 === coffee-module-redis
 * `RedisService`, `RedisRepository` kivezetésre került (mivel inkompatibilis az új 4.2.1-es jedis-sel)
 

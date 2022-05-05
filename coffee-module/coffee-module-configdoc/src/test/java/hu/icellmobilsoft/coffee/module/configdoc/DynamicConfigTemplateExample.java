@@ -17,33 +17,27 @@
  * limitations under the License.
  * #L%
  */
-package hu.icellmobilsoft.coffee.module.configdoc.writer;
-
-import java.io.IOException;
-import java.io.Writer;
-import java.util.List;
-
-import hu.icellmobilsoft.coffee.module.configdoc.data.DocData;
+package hu.icellmobilsoft.coffee.module.configdoc;
 
 /**
- * Writes the collected annotation data
+ * Example class for the {@link DynamicConfigTemplate} and {@link DynamicConfigDocs} test<br>
+ * The generated file will be here: target/test-classes/META-INF/config_keys.adoc
  *
- * @param <T>
- *            the type parameter for data POJO
- * @author martin.nagy
+ * @author mark.petrenyi
  * @since 1.9.0
  */
-public interface IDocWriter<T> {
+@ConfigDoc
+@DynamicConfigTemplate
+public interface DynamicConfigTemplateExample {
 
     /**
-     * Writes the collected annotation data to the passed {@link Writer}.
-     *
-     * @param dataList
-     *            the collected data to be written
-     * @param writer
-     *            the writer
-     * @throws IOException
-     *             If an I/O error occurs
+     * test prefix
      */
-    void write(List<T> dataList, Writer writer) throws IOException;
+    @ConfigDoc(exclude = true)
+    String PREFIX = "test.";
+
+    /**
+     * Lorem ipsum dolor sit amet, consectetur adipisicing elit. Illo, placeat!
+     */
+    String foo = PREFIX + "{0}.foo";
 }
