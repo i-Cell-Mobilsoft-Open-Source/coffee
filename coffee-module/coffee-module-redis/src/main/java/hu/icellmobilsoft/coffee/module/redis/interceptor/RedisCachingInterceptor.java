@@ -20,6 +20,7 @@
 package hu.icellmobilsoft.coffee.module.redis.interceptor;
 
 import java.lang.reflect.Method;
+import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.Optional;
 
@@ -29,6 +30,8 @@ import javax.interceptor.AroundInvoke;
 import javax.interceptor.Interceptor;
 import javax.interceptor.InvocationContext;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
@@ -36,11 +39,15 @@ import com.google.gson.JsonSyntaxException;
 import hu.icellmobilsoft.coffee.cdi.logger.AppLogger;
 import hu.icellmobilsoft.coffee.cdi.logger.ThisLogger;
 import hu.icellmobilsoft.coffee.dto.common.Envelope;
+import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.module.redis.annotation.RedisConnection;
 import hu.icellmobilsoft.coffee.module.redis.interceptor.annotation.RedisCached;
-import hu.icellmobilsoft.coffee.module.redis.service.AbstractRedisService;
-import hu.icellmobilsoft.coffee.module.redis.service.RedisService;
+import hu.icellmobilsoft.coffee.module.redis.manager.RedisManager;
+import hu.icellmobilsoft.coffee.module.redis.manager.RedisManagerConnection;
 import hu.icellmobilsoft.coffee.tool.gson.ClassTypeAdapter;
+import hu.icellmobilsoft.coffee.tool.gson.JsonUtil;
+
+import redis.clients.jedis.Jedis;
 
 /**
  * <p>
@@ -79,67 +86,57 @@ public class RedisCachingInterceptor {
      */
     @AroundInvoke
     public Object perform(final InvocationContext ctx) throws Exception {
-
-        final Object objectToReturn = getReturnOfCache(ctx);
-
-        return objectToReturn;
+        return getReturnOfCache(ctx);
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
     private Object getReturnOfCache(final InvocationContext ctx) throws Exception {
-        Object objectToReturn = null;
-
-        AbstractRedisService redisService = getCdiRedisService(ctx.getMethod());
-
+        RedisManager redisManager = getRedisManager(ctx.getMethod());
         final String key = getKey(ctx.getMethod(), ctx.getParameters());
 
-        try {
+        try (RedisManagerConnection ignored = redisManager.initConnection()) {
+            Optional<String> json = redisManager.run(Jedis::get, "get", key);
 
-            final Optional<String> json = redisService.getRedisDataOpt(key, String.class);
-
-            if (!json.isPresent()) {
+            if (json.isEmpty()) {
                 log.debug("Data is not cached in Redis, caching key: [{0}]", key);
-                objectToReturn = ctx.proceed();
+                Object objectToReturn = ctx.proceed();
 
-                int timeToExpire = getTime(ctx.getMethod());
+                long timeToExpire = getTime(ctx.getMethod());
                 Envelope envelope = new Envelope(gson.toJson(objectToReturn), objectToReturn.getClass());
 
-                String statusCode = redisService.setRedisData(key, timeToExpire, envelope);
+                Optional<String> statusCode = redisManager.run(Jedis::setex, "setex", key, timeToExpire, JsonUtil.toJsonEx(envelope));
 
-                if (!statusCode.equals("OK")) {
+                if (statusCode.isPresent() && !StringUtils.equals(statusCode.get(), "OK")) {
                     log.warn("Problems in recording cache - status code [{0}]", statusCode);
                 }
+                return objectToReturn;
             } else {
                 Envelope envelope = gson.fromJson(json.get(), Envelope.class);
                 Class type = envelope.getTypeOfJson();
 
-                objectToReturn = gson.fromJson(envelope.getJson(), type);
+                Object objectToReturn = gson.fromJson(envelope.getJson(), type);
 
                 if (objectToReturn == null) {
-                    objectToReturn = ctx.proceed();
-                    log.warn("Problems whith the object type - Type Envelop [{0}]", type);
+                    log.warn("Problems with the object type - Type Envelop [{0}]", type);
+                    return ctx.proceed();
                 } else {
                     log.debug("Data from Redis: [{0}]", objectToReturn);
+                    return objectToReturn;
                 }
             }
         } catch (JsonSyntaxException e) {
             log.error("Syntax problem, removing the key!", e);
-            redisService.removeRedisData(key);
-            objectToReturn = ctx.proceed();
-
+            redisManager.run(Jedis::del, "del", key);
+            return ctx.proceed();
         } catch (Exception e) {
             log.error("Exception on Redis [{0}]", e.getMessage(), e);
-            objectToReturn = ctx.proceed();
+            return ctx.proceed();
         } finally {
-            if (redisService != null) {
-                CDI.current().destroy(redisService);
-            }
+            CDI.current().destroy(redisManager);
         }
-        return objectToReturn;
     }
 
-    private AbstractRedisService getCdiRedisService(Method method) {
-        AbstractRedisService redisService = null;
+    private RedisManager getRedisManager(Method method) throws BaseException {
         RedisConnection redisConnection = method.getAnnotation(RedisConnection.class);
         if (redisConnection == null) {
             redisConnection = method.getDeclaringClass().getAnnotation(RedisConnection.class);
@@ -147,27 +144,26 @@ public class RedisCachingInterceptor {
 
         if (redisConnection != null) {
             String configKey = redisConnection.configKey();
-            redisService = CDI.current().select(RedisService.class, new RedisConnection.Literal(configKey)).get();
+            return CDI.current().select(RedisManager.class, new RedisConnection.Literal(configKey)).get();
+        } else {
+            throw new BaseException(MessageFormat.format("@RedisConnection annotation is missing from method: {0}#{1}",
+                    method.getDeclaringClass().getCanonicalName(), method.getName()));
         }
-        return redisService;
     }
 
-    private int getTime(Method method) {
+    private long getTime(Method method) {
         RedisCached enableCaching = method.getAnnotation(RedisCached.class);
 
         if (enableCaching == null) {
             enableCaching = method.getDeclaringClass().getAnnotation(RedisCached.class);
         }
-        final int timeToExpire = enableCaching.expireInSeconds();
 
-        return timeToExpire;
+        return enableCaching.expireInSeconds();
     }
 
     private String getKey(Method method, Object[] parameters) {
         final String parametersInLineCustom = Arrays.toString(parameters).replace(" ", "").replace("null", "");
 
-        final String key = method.getDeclaringClass().getSimpleName() + method.getName() + parametersInLineCustom;
-
-        return key;
+        return method.getDeclaringClass().getSimpleName() + method.getName() + parametersInLineCustom;
     }
 }
