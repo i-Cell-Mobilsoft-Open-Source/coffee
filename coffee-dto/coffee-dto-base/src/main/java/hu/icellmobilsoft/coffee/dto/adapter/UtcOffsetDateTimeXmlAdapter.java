@@ -41,7 +41,7 @@ public class UtcOffsetDateTimeXmlAdapter extends OffsetDateTimeXmlAdapter {
      * <p>
      * OffsetDateTime to String.
      * Input format is '2021-08-27T13:33:00.000+02:00'.
-     * Output format is '2021-08-27T11:33:16Z'.
+     * Output format is '2021-08-27T11:33:00Z'.
      */
     @Override
     public String marshal(OffsetDateTime offsetDateTime) {
