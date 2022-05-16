@@ -20,7 +20,7 @@ import hu.icellmobilsoft.coffee.dto.adapter.UtcOffsetDateTimeXmlAdapter;
  * @since 1.10.0
  */
 @DisplayName("Testing UtcOffsetDateTimeXmlAdapter")
-public class UtcOffsetDateTimeXmlAdapterTest {
+class UtcOffsetDateTimeXmlAdapterTest {
 
     @DisplayName("UtcOffsetDateTimeXmlAdapterTest.marshal test - OK")
     @ParameterizedTest(name = "Testing mashal method with [{2}]")

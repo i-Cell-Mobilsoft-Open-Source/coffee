@@ -24,3 +24,11 @@ coff:ee v1.9.0 -> v1.10.0 migrációs leírás, újdonságok, változások leír
 
 ==== Átállás
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+=== coffee-dto-base
+* A `UtcOffsetDateTimeXmlAdapter` osztályban ha nulla volt a másodperc akkor levágásra került, ez lett javítva.
+
+==== Átállás
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+
