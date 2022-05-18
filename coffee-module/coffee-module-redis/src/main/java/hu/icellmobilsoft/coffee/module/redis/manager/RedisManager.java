@@ -127,9 +127,8 @@ public class RedisManager {
      * @return {@link TechnicalException} with message from functionInfo.
      */
     protected TechnicalException repositoryFailed(Exception e, String functionInfo) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Error occurred when calling redis operation ").append(functionInfo).append(" : [").append(e.getLocalizedMessage()).append("]");
-        return new TechnicalException(CoffeeFaultType.REDIS_OPERATION_FAILED, sb.toString(), e);
+        String message = "Error occurred when calling redis operation " + functionInfo + " : [" + e.getLocalizedMessage() + "]";
+        return new TechnicalException(CoffeeFaultType.REDIS_OPERATION_FAILED, message, e);
     }
 
     /**
@@ -341,11 +340,8 @@ public class RedisManager {
      */
     @Traced(component = Tags.Redis.Jedis.COMPONENT, kind = Tags.Redis.Jedis.KIND, dbType = Tags.Redis.DB_TYPE)
     public <R> Optional<R> runWithConnection(BaseExceptionFunction<Jedis, R> function, String functionName) throws BaseException {
-        try {
-            initConnection();
+        try (RedisManagerConnection ignored = initConnection()) {
             return run(function, functionName);
-        } finally {
-            closeConnection();
         }
     }
 
@@ -369,11 +365,8 @@ public class RedisManager {
      */
     @Traced(component = Tags.Redis.Jedis.COMPONENT, kind = Tags.Redis.Jedis.KIND, dbType = Tags.Redis.DB_TYPE)
     public <P1, R> Optional<R> runWithConnection(BaseExceptionFunction2<Jedis, P1, R> function, String functionName, P1 p1) throws BaseException {
-        try {
-            initConnection();
+        try (RedisManagerConnection ignored = initConnection()) {
             return run(function, functionName, p1);
-        } finally {
-            closeConnection();
         }
     }
 
@@ -402,11 +395,8 @@ public class RedisManager {
     @Traced(component = Tags.Redis.Jedis.COMPONENT, kind = Tags.Redis.Jedis.KIND, dbType = Tags.Redis.DB_TYPE)
     public <P1, P2, R> Optional<R> runWithConnection(BaseExceptionFunction3<Jedis, P1, P2, R> function, String functionName, P1 p1, P2 p2)
             throws BaseException {
-        try {
-            initConnection();
+        try (RedisManagerConnection ignored = initConnection()) {
             return run(function, functionName, p1, p2);
-        } finally {
-            closeConnection();
         }
     }
 
@@ -439,11 +429,8 @@ public class RedisManager {
     @Traced(component = Tags.Redis.Jedis.COMPONENT, kind = Tags.Redis.Jedis.KIND, dbType = Tags.Redis.DB_TYPE)
     public <P1, P2, P3, R> Optional<R> runWithConnection(BaseExceptionFunction4<Jedis, P1, P2, P3, R> function, String functionName, P1 p1, P2 p2,
             P3 p3) throws BaseException {
-        try {
-            initConnection();
+        try (RedisManagerConnection ignored = initConnection()) {
             return run(function, functionName, p1, p2, p3);
-        } finally {
-            closeConnection();
         }
     }
 
@@ -480,22 +467,24 @@ public class RedisManager {
     @Traced(component = Tags.Redis.Jedis.COMPONENT, kind = Tags.Redis.Jedis.KIND, dbType = Tags.Redis.DB_TYPE)
     public <P1, P2, P3, P4, R> Optional<R> runWithConnection(BaseExceptionFunction5<Jedis, P1, P2, P3, P4, R> function, String functionName, P1 p1,
             P2 p2, P3 p3, P4 p4) throws BaseException {
-        try {
-            initConnection();
+        try (RedisManagerConnection ignored = initConnection()) {
             return run(function, functionName, p1, p2, p3, p4);
-        } finally {
-            closeConnection();
         }
     }
 
     /**
      * Initialize jedis
+     * 
+     * @return object representing the connection and used for automatic close
      */
-    public void initConnection() {
-        if (jedis == null) {
+    public RedisManagerConnection initConnection() {
+        if (jedisInstance == null) {
             jedisInstance = CDI.current().select(Jedis.class, new RedisConnection.Literal(configKey));
+        }
+        if (jedis == null) {
             jedis = jedisInstance.get();
         }
+        return new RedisManagerConnection(this);
     }
 
     /**
@@ -503,8 +492,7 @@ public class RedisManager {
      */
     public void closeConnection() {
         if (jedis != null) {
-            Jedis destroyable = jedis;
-            jedisInstance.destroy(destroyable);
+            jedisInstance.destroy(jedis);
             jedis = null;
         }
     }

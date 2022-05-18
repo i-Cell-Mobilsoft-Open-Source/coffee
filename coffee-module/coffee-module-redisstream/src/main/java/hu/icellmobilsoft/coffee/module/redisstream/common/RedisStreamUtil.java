@@ -17,33 +17,30 @@
  * limitations under the License.
  * #L%
  */
-package hu.icellmobilsoft.coffee.module.configdoc.writer;
+package hu.icellmobilsoft.coffee.module.redisstream.common;
 
-import java.io.IOException;
-import java.io.Writer;
-import java.util.List;
-
-import hu.icellmobilsoft.coffee.module.configdoc.data.DocData;
+import javax.enterprise.inject.Vetoed;
 
 /**
- * Writes the collected annotation data
- *
- * @param <T>
- *            the type parameter for data POJO
+ * Util class for the common redis stream functions
+ * 
  * @author martin.nagy
- * @since 1.9.0
+ * @since 1.10.0
  */
-public interface IDocWriter<T> {
+@Vetoed
+public class RedisStreamUtil {
 
     /**
-     * Writes the collected annotation data to the passed {@link Writer}.
-     *
-     * @param dataList
-     *            the collected data to be written
-     * @param writer
-     *            the writer
-     * @throws IOException
-     *             If an I/O error occurs
+     * Returns the redis stream key calculated by the stream group
+     * 
+     * @param streamGroup
+     *            the redis stream group
+     * @return the redis stream key
      */
-    void write(List<T> dataList, Writer writer) throws IOException;
+    public static String streamKey(String streamGroup) {
+        return streamGroup + "Stream";
+    }
+
+    private RedisStreamUtil() {
+    }
 }

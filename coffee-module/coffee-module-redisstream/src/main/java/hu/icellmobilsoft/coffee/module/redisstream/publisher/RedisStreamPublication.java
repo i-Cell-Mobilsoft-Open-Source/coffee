@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package hu.icellmobilsoft.coffee.module.redisstream.common;
+package hu.icellmobilsoft.coffee.module.redisstream.publisher;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;

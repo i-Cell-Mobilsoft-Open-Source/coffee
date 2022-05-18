@@ -35,13 +35,11 @@ import hu.icellmobilsoft.coffee.module.configdoc.writer.IDocWriter;
  * @author martin.nagy
  * @since 1.9.0
  */
-public class AsciiDocWriter implements IDocWriter {
+public class AsciiDocWriter implements IDocWriter<DocData> {
     private static final String KEY_DELIMITER = ".";
 
     @Override
     public void write(List<DocData> dataList, Writer writer) throws IOException {
-        writer.write(":toc: left\n");
-        writer.write(":sectnums:\n");
 
         String lastPrefix = null;
         for (DocData docData : dataList) {

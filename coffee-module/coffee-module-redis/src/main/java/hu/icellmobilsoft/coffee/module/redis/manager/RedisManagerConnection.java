@@ -17,33 +17,32 @@
  * limitations under the License.
  * #L%
  */
-package hu.icellmobilsoft.coffee.module.configdoc.writer;
+package hu.icellmobilsoft.coffee.module.redis.manager;
 
-import java.io.IOException;
-import java.io.Writer;
-import java.util.List;
-
-import hu.icellmobilsoft.coffee.module.configdoc.data.DocData;
+import java.io.Closeable;
 
 /**
- * Writes the collected annotation data
- *
- * @param <T>
- *            the type parameter for data POJO
+ * Class representing the redis connection created by {@link RedisManager#initConnection}.
+ * 
  * @author martin.nagy
- * @since 1.9.0
+ * @since 1.10.0
  */
-public interface IDocWriter<T> {
+public class RedisManagerConnection implements Closeable {
+
+    private final RedisManager redisManager;
 
     /**
-     * Writes the collected annotation data to the passed {@link Writer}.
-     *
-     * @param dataList
-     *            the collected data to be written
-     * @param writer
-     *            the writer
-     * @throws IOException
-     *             If an I/O error occurs
+     * Constructor to initialize the redisManager field
+     * 
+     * @param redisManager
+     *            redis connection, operation manager object
      */
-    void write(List<T> dataList, Writer writer) throws IOException;
+    public RedisManagerConnection(RedisManager redisManager) {
+        this.redisManager = redisManager;
+    }
+
+    @Override
+    public void close() {
+        redisManager.closeConnection();
+    }
 }
