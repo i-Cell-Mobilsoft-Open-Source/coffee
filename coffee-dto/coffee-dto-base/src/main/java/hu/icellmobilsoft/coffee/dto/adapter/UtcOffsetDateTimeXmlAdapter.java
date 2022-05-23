@@ -22,6 +22,7 @@ package hu.icellmobilsoft.coffee.dto.adapter;
 import java.time.OffsetDateTime;
 import java.time.OffsetTime;
 import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 
 /**
@@ -39,14 +40,14 @@ public class UtcOffsetDateTimeXmlAdapter extends OffsetDateTimeXmlAdapter {
      * {@inheritDoc}
      * <p>
      * OffsetDateTime to String.
-     * Input format is '2021-08-27T13:33:16+02:00'.
-     * Output format is '2021-08-27T11:33:16Z'.
+     * Input format is '2021-08-27T13:33:00.000+02:00'.
+     * Output format is '2021-08-27T11:33:00Z'.
      */
     @Override
     public String marshal(OffsetDateTime offsetDateTime) {
         if (offsetDateTime == null) {
             return null;
         }
-        return offsetDateTime.withOffsetSameInstant(ZoneOffset.UTC).toString();
+        return DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(offsetDateTime.withOffsetSameInstant(ZoneOffset.UTC));
     }
 }

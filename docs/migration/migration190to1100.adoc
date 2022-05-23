@@ -32,7 +32,36 @@ A változtatások nem eredményeznek átállási munkálatokat, visszafelé komp
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
 
 === coffee-module-redis
-* RedisManagerProducer-be bekerült a @Disposes, a dependent beanek memory leaket okoztak.
+* `RedisManagerProducer`-be bekerült a `@Disposes`, a dependent beanek memory leaket okoztak.
+* `RedisService`, `RedisRepository` kivezetésre került (mivel inkompatibilis az új 4.2.1-es jedis-sel)
+
+==== Átállás
+* `RedisService` lecserélése `RedisManager`-re. Pl.:
+[source,java]
+----
+redisService.getRedisData("key", String.class);
+----
+->
+[source,java]
+----
+redisManager.runWithConnection(Jedis::get, "get", "key");
+----
+
+=== coffee-module-redisstream
+* `RedisStreamHandler` átnevezésre került `RedisStreamPublisher`-re, hogy az osztály célja egyértelmű legyen
+* `RedisStreamPublisher` és `RedisStreamService` átállt `RedisManager` használatára, ezért a publish metódusok `Optional`-t adnak vissza
+* `RedisStreamPublisher` és `RedisStreamPublication` átkerült a ` hu.icellmobilsoft.coffee.module.redisstream.publisher` package-be
+* Létrejött a `RedisManagerConnection` osztály, hogy a `RedisManager` connection-ök lezárását egyszerűsítse
+
+==== Átállás
+* `RedisStreamHandler` átnevezése `RedisStreamPublisher`-re
+* `hu.icellmobilsoft.coffee.module.redisstream.common` csomag átnevezése `hu.icellmobilsoft.coffee.module.redisstream.publisher`-re
+* Ahol a `RedisStreamPublisher` és `RedisStreamService` metódusainak visszatérési értéke van használva az `Optional` lekezelése
+
+=== coffee-dto-base
+* A `UtcOffsetDateTimeXmlAdapter` osztályban ha nulla volt a másodperc akkor levágásra került, ez lett javítva.
 
 ==== Átállás
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+
