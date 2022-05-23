@@ -56,3 +56,11 @@ redisManager.runWithConnection(Jedis::get, "get", "key");
 * `RedisStreamHandler` átnevezése `RedisStreamPublisher`-re
 * `hu.icellmobilsoft.coffee.module.redisstream.common` csomag átnevezése `hu.icellmobilsoft.coffee.module.redisstream.publisher`-re
 * Ahol a `RedisStreamPublisher` és `RedisStreamService` metódusainak visszatérési értéke van használva az `Optional` lekezelése
+
+=== coffee-dto-base
+* A `UtcOffsetDateTimeXmlAdapter` osztályban ha nulla volt a másodperc akkor levágásra került, ez lett javítva.
+
+==== Átállás
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+
