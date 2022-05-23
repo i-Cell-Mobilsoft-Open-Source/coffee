@@ -32,6 +32,7 @@ A változtatások nem eredményeznek átállási munkálatokat, visszafelé komp
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
 
 === coffee-module-redis
+* `RedisManagerProducer`-be bekerült a `@Disposes`, a dependent beanek memory leaket okoztak.
 * `RedisService`, `RedisRepository` kivezetésre került (mivel inkompatibilis az új 4.2.1-es jedis-sel)
 
 ==== Átállás
