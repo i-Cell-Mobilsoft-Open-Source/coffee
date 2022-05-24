@@ -72,7 +72,7 @@ public class ConfigDocConfig {
         if (columnsString == null) {
             columns = ConfigDocColumn.values();
         } else {
-            String[] split = columnsString.split("\\s*,\\s*");
+            String[] split = columnsString.split("\\s*,\\s*", -1);
             columns = new ConfigDocColumn[split.length];
             for (int i = 0; i < split.length; i++) {
                 columns[i] = ConfigDocColumn.valueOf(split[i].trim().toUpperCase());
