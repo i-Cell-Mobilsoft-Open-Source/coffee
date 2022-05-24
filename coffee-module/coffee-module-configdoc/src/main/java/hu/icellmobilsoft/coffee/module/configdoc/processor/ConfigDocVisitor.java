@@ -21,6 +21,8 @@ package hu.icellmobilsoft.coffee.module.configdoc.processor;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
@@ -40,6 +42,7 @@ import hu.icellmobilsoft.coffee.module.configdoc.data.DocData;
  * @since 1.9.0
  */
 public class ConfigDocVisitor extends ElementKindVisitor9<Void, List<DocData>> {
+    private final Pattern sinceTagPattern = Pattern.compile("\n\\s*@since ([^\n]+)", Pattern.MULTILINE);
     private final ProcessingEnvironment processingEnv;
 
     /**
@@ -79,10 +82,29 @@ public class ConfigDocVisitor extends ElementKindVisitor9<Void, List<DocData>> {
 
         String key = (String) value;
         String source = element.getEnclosingElement().asType().toString();
-        String description = configDocAnnotation.map(ConfigDoc::description).filter(StringUtils::isNotBlank).orElseGet(() -> getJavaDoc(element));
-        String defaultValue = configDocAnnotation.map(ConfigDoc::defaultValue).orElse(null);
+        Optional<String> descriptionOpt = configDocAnnotation.map(ConfigDoc::description).filter(StringUtils::isNotBlank);
+        String defaultValue = configDocAnnotation.map(ConfigDoc::defaultValue).filter(StringUtils::isNotBlank).orElse(null);
+        String since = configDocAnnotation.map(ConfigDoc::since).filter(StringUtils::isNotBlank).orElse(null);
 
-        dataList.add(new DocData(key, source, description, defaultValue));
+        if (descriptionOpt.isPresent()) {
+            dataList.add(new DocData(key, source, descriptionOpt.get(), defaultValue, since));
+            return;
+        }
+
+        dataList.add(createDataFromJavaDoc(element, key, source, defaultValue, since));
+    }
+
+    private DocData createDataFromJavaDoc(VariableElement element, String key, String source, String defaultValue, String since) {
+        String description = getJavaDoc(element);
+
+        Matcher matcher = sinceTagPattern.matcher(description);
+        if (matcher.find()) {
+            if (since == null) {
+                since = matcher.group(1);
+            }
+            description = matcher.replaceAll("");
+        }
+        return new DocData(key, source, description.trim(), defaultValue, since);
     }
 
     private String getJavaDoc(VariableElement element) {

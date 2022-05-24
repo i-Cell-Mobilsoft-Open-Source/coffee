@@ -34,6 +34,7 @@ public class ConfigDocConfig {
     private static final String OUTPUT_FILE_NAME_KEY = CONFIG_PREFIX + "outputFileName";
     private static final String OUTPUT_TO_CLASS_PATH_KEY = CONFIG_PREFIX + "outputToClassPath";
     private static final String DYNAMIC_OUTPUT_FILE_NAME_KEY = CONFIG_PREFIX + "dynamicOutputFileName";
+    private static final String COLUMNS_KEY = CONFIG_PREFIX + "columns";
 
     /**
      * Default output path
@@ -53,17 +54,30 @@ public class ConfigDocConfig {
     private final String outputFileName;
     private final String dynamicOutputFileName;
     private final boolean outputToClassPath;
+    private final ConfigDocColumn[] columns;
 
     /**
      * Creates the config object based on properties
      *
-     * @param properties the map which contains the config properties
+     * @param properties
+     *            the map which contains the config properties
      */
     public ConfigDocConfig(Map<String, String> properties) {
         outputDir = properties.getOrDefault(OUTPUT_DIR_KEY, DEFAULT_OUTPUT_PATH);
         outputFileName = properties.getOrDefault(OUTPUT_FILE_NAME_KEY, DEFAULT_OUTPUT_FILE_NAME);
         dynamicOutputFileName = properties.getOrDefault(DYNAMIC_OUTPUT_FILE_NAME_KEY, DEFAULT_DYNAMIC_OUTPUT_FILE_NAME);
         outputToClassPath = Boolean.parseBoolean(properties.getOrDefault(OUTPUT_TO_CLASS_PATH_KEY, Boolean.TRUE.toString()));
+
+        String columnsString = properties.get(COLUMNS_KEY);
+        if (columnsString == null) {
+            columns = ConfigDocColumn.values();
+        } else {
+            String[] split = columnsString.split("\\s*,\\s*");
+            columns = new ConfigDocColumn[split.length];
+            for (int i = 0; i < split.length; i++) {
+                columns[i] = ConfigDocColumn.valueOf(split[i].trim().toUpperCase());
+            }
+        }
     }
 
     /**
@@ -100,5 +114,14 @@ public class ConfigDocConfig {
      */
     public String getDynamicOutputFileName() {
         return dynamicOutputFileName;
+    }
+
+    /**
+     * Returns the columns of the generated table
+     * 
+     * @return the columns of the generated table
+     */
+    public ConfigDocColumn[] getColumns() {
+        return columns;
     }
 }

@@ -57,4 +57,12 @@ public @interface ConfigDoc {
      */
     String defaultValue() default "";
 
+    /**
+     * (Optional) the version since the configuration key available
+     * 
+     * @return the version since the configuration key available
+     * @since 1.10.0
+     */
+    String since() default "";
+
 }

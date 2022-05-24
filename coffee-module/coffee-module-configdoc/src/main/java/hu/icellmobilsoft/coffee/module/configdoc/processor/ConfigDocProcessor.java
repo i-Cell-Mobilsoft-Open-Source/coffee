@@ -67,7 +67,7 @@ public class ConfigDocProcessor extends AbstractProcessor {
             dataList = new ArrayList<>(dataList.stream().collect(Collectors.toMap(DocData::getKey, Function.identity(), (o1, o2) -> o2)).values());
             dataList.sort(Comparator.comparing(DocData::getKey));
 
-            writeToFile(dataList, new AsciiDocWriter(), config);
+            writeToFile(dataList, new AsciiDocWriter(config), config);
         }
 
         return true;

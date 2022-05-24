@@ -64,4 +64,9 @@ redisManager.runWithConnection(Jedis::get, "get", "key");
 ==== Átállás
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
 
+=== coffee-module-configdoc
+* A javadoc-ból kinyerjük a `@since` tag tartalmát, és megjelenítjük egy új oszlopban
+* Konfigurációban megadható a generált táblázatban megjelenő oszlopok, és sorrendjük (pl: `-Acoffee.configDoc.columns=key,since,description`)
 
+==== Átállás
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
