@@ -34,6 +34,7 @@ A változtatások nem eredményeznek átállási munkálatokat, visszafelé komp
 === coffee-module-redis
 * `RedisManagerProducer`-be bekerült a `@Disposes`, a dependent beanek memory leaket okoztak.
 * `RedisService`, `RedisRepository` kivezetésre került (mivel inkompatibilis az új 4.2.1-es jedis-sel)
+* jedis upgrade `4.2.1` -> `4.2.3`
 
 ==== Átállás
 * `RedisService` lecserélése `RedisManager`-re. Pl.:
