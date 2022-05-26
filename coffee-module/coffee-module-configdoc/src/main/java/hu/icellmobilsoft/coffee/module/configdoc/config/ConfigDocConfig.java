@@ -19,7 +19,11 @@
  */
 package hu.icellmobilsoft.coffee.module.configdoc.config;
 
+import java.text.MessageFormat;
+import java.util.Arrays;
 import java.util.Map;
+
+import org.apache.commons.lang3.EnumUtils;
 
 /**
  * Class representing the configuration for the module
@@ -67,17 +71,26 @@ public class ConfigDocConfig {
         outputFileName = properties.getOrDefault(OUTPUT_FILE_NAME_KEY, DEFAULT_OUTPUT_FILE_NAME);
         dynamicOutputFileName = properties.getOrDefault(DYNAMIC_OUTPUT_FILE_NAME_KEY, DEFAULT_DYNAMIC_OUTPUT_FILE_NAME);
         outputToClassPath = Boolean.parseBoolean(properties.getOrDefault(OUTPUT_TO_CLASS_PATH_KEY, Boolean.TRUE.toString()));
+        columns = processColumnConfig(properties);
+    }
 
+    private ConfigDocColumn[] processColumnConfig(Map<String, String> properties) {
         String columnsString = properties.get(COLUMNS_KEY);
         if (columnsString == null) {
-            columns = ConfigDocColumn.values();
-        } else {
-            String[] split = columnsString.split("\\s*,\\s*", -1);
-            columns = new ConfigDocColumn[split.length];
-            for (int i = 0; i < split.length; i++) {
-                columns[i] = ConfigDocColumn.valueOf(split[i].trim().toUpperCase());
+            return ConfigDocColumn.values();
+        }
+
+        String[] split = columnsString.split("\\s*,\\s*", -1);
+        ConfigDocColumn[] columns = new ConfigDocColumn[split.length];
+        for (int i = 0; i < split.length; i++) {
+            String name = split[i].trim().toUpperCase();
+            columns[i] = EnumUtils.getEnum(ConfigDocColumn.class, name);
+            if (columns[i] == null) {
+                throw new IllegalStateException(MessageFormat.format("Unknown configDoc column: [{0}]. Possible values: [{1}]", split[i],
+                        Arrays.toString(ConfigDocColumn.values())));
             }
         }
+        return columns;
     }
 
     /**

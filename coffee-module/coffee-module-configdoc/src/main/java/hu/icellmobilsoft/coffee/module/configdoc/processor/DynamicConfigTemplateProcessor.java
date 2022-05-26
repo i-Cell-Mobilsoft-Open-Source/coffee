@@ -63,17 +63,24 @@ public class DynamicConfigTemplateProcessor extends AbstractProcessor {
 
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
+        ConfigDocConfig config;
+        try {
+            config = new ConfigDocConfig(processingEnv.getOptions());
+        } catch (Exception e) {
+            processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, e.getMessage());
+            return true;
+        }
+
         Map<String, List<DocData>> docFileMap = collectDocData(annotations, roundEnv);
         if (MapUtils.isNotEmpty(docFileMap)) {
-            docFileMap.forEach(this::writeDataListSorted);
+            docFileMap.forEach((fileName, lDataList) -> writeDataListSorted(fileName, lDataList, config));
         }
 
         return true;
     }
 
-    private void writeDataListSorted(String fileName, List<DocData> lDataList) {
+    private void writeDataListSorted(String fileName, List<DocData> lDataList, ConfigDocConfig config) {
         if (CollectionUtils.isNotEmpty(lDataList)) {
-            ConfigDocConfig config = new ConfigDocConfig(processingEnv.getOptions());
             List<DocData> sortedList = new ArrayList<>(
                     lDataList.stream().collect(Collectors.toMap(DocData::getKey, Function.identity(), (o1, o2) -> o2)).values());
             sortedList.sort(Comparator.comparing(DocData::getKey));
@@ -81,7 +88,7 @@ public class DynamicConfigTemplateProcessor extends AbstractProcessor {
         }
     }
 
-    private void writeToFile(List<DocData> lDataList, IDocWriter docWriter, String fileName) {
+    private void writeToFile(List<DocData> lDataList, IDocWriter<DocData> docWriter, String fileName) {
         try {
             FileObject fileObject = processingEnv.getFiler().createResource(StandardLocation.CLASS_OUTPUT, "", fileName);
 

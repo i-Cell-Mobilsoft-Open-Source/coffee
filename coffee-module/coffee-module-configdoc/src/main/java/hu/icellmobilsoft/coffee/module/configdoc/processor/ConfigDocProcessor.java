@@ -59,7 +59,13 @@ public class ConfigDocProcessor extends AbstractProcessor {
 
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-        ConfigDocConfig config = new ConfigDocConfig(processingEnv.getOptions());
+        ConfigDocConfig config;
+        try {
+            config = new ConfigDocConfig(processingEnv.getOptions());
+        } catch (Exception e) {
+            processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, e.getMessage());
+            return true;
+        }
 
         List<DocData> dataList = collectDocData(annotations, roundEnv);
 
