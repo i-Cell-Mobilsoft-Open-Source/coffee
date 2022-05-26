@@ -64,7 +64,7 @@ public class ConfigDocProcessor extends AbstractProcessor {
             config = new ConfigDocConfig(processingEnv.getOptions());
         } catch (Exception e) {
             processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, e.getMessage());
-            return true;
+            return false;
         }
 
         List<DocData> dataList = collectDocData(annotations, roundEnv);
@@ -76,7 +76,7 @@ public class ConfigDocProcessor extends AbstractProcessor {
             writeToFile(dataList, new AsciiDocWriter(config), config);
         }
 
-        return true;
+        return false;
     }
 
     private void writeToFile(List<DocData> dataList, IDocWriter<DocData> docWriter, ConfigDocConfig config) {

@@ -95,7 +95,7 @@ public class DynamicConfigDocsProcessor extends AbstractProcessor {
             }
             writeConfigDocFile(dataToWrite, new DynamicAsciiDocWriter(), config);
         }
-        return true;
+        return false;
     }
 
     private List<DynamicDocData> collectDataToWrite(Collection<DynamicDocData> dataCollection, Map<String, String> templates) {

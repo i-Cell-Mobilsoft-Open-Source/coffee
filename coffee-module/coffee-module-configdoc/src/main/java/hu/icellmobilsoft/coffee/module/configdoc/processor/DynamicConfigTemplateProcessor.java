@@ -68,7 +68,7 @@ public class DynamicConfigTemplateProcessor extends AbstractProcessor {
             config = new ConfigDocConfig(processingEnv.getOptions());
         } catch (Exception e) {
             processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, e.getMessage());
-            return true;
+            return false;
         }
 
         Map<String, List<DocData>> docFileMap = collectDocData(annotations, roundEnv);
@@ -76,7 +76,7 @@ public class DynamicConfigTemplateProcessor extends AbstractProcessor {
             docFileMap.forEach((fileName, lDataList) -> writeDataListSorted(fileName, lDataList, config));
         }
 
-        return true;
+        return false;
     }
 
     private void writeDataListSorted(String fileName, List<DocData> lDataList, ConfigDocConfig config) {
