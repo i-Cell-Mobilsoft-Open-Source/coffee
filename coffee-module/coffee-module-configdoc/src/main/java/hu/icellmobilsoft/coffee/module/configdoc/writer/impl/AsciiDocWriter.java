@@ -26,6 +26,8 @@ import java.util.Objects;
 
 import org.apache.commons.lang3.StringUtils;
 
+import hu.icellmobilsoft.coffee.module.configdoc.config.ConfigDocColumn;
+import hu.icellmobilsoft.coffee.module.configdoc.config.ConfigDocConfig;
 import hu.icellmobilsoft.coffee.module.configdoc.data.DocData;
 import hu.icellmobilsoft.coffee.module.configdoc.writer.IDocWriter;
 
@@ -37,6 +39,17 @@ import hu.icellmobilsoft.coffee.module.configdoc.writer.IDocWriter;
  */
 public class AsciiDocWriter implements IDocWriter<DocData> {
     private static final String KEY_DELIMITER = ".";
+    private final ConfigDocConfig config;
+
+    /**
+     * Constructor with the config object
+     * 
+     * @param config
+     *            the config object
+     */
+    public AsciiDocWriter(ConfigDocConfig config) {
+        this.config = config;
+    }
 
     @Override
     public void write(List<DocData> dataList, Writer writer) throws IOException {
@@ -61,19 +74,81 @@ public class AsciiDocWriter implements IDocWriter<DocData> {
     private void writeHeader(Writer writer, String prefix) throws IOException {
         writer.write("=== ");
         writer.write(prefix);
-        writer.write(" keys\n[cols=\"1,1,3,1\",options=header,stripes=even]\n|===\n");
-        writer.write("|Key|Source|Description|Default value\n");
+        writer.write(" keys\n[cols=\"");
+        ConfigDocColumn[] columns = config.getColumns();
+        for (int i = 0; i < columns.length; i++) {
+            if (i > 0) {
+                writer.write(',');
+            }
+            writer.write(String.valueOf(getColumnWidth(columns[i])));
+        }
+        writer.write("\",options=header,stripes=even]\n|===\n");
+
+        for (ConfigDocColumn column : config.getColumns()) {
+            writer.write('|');
+            writer.write(getColumnDisplayName(column));
+        }
+        writer.write("\n");
     }
 
     private void writeLine(DocData docData, Writer writer) throws IOException {
-        writer.write('|');
-        writer.write(docData.getKey());
-        writer.write('|');
-        writer.write(docData.getSource());
-        writer.write('|');
-        writer.write(StringUtils.defaultString(docData.getDescription(), ""));
-        writer.write('|');
-        writer.write(StringUtils.defaultString(docData.getDefaultValue(), ""));
+        for (ConfigDocColumn column : config.getColumns()) {
+            writer.write('|');
+            writer.write(getColumnValue(docData, column));
+        }
         writer.write('\n');
     }
+
+    private String getColumnValue(DocData docData, ConfigDocColumn column) {
+        switch (column) {
+        case KEY:
+            return docData.getKey();
+        case SOURCE:
+            return docData.getSource();
+        case DESCRIPTION:
+            return StringUtils.defaultString(docData.getDescription(), "");
+        case DEFAULT_VALUE:
+            return StringUtils.defaultString(docData.getDefaultValue(), "");
+        case SINCE:
+            return StringUtils.defaultString(docData.getSince(), "");
+        default:
+            throw newInvalidColumnException(column);
+        }
+    }
+
+    private String getColumnDisplayName(ConfigDocColumn column) {
+        switch (column) {
+        case KEY:
+            return "Key";
+        case SOURCE:
+            return "Source";
+        case DESCRIPTION:
+            return "Description";
+        case DEFAULT_VALUE:
+            return "Default value";
+        case SINCE:
+            return "Since";
+        default:
+            throw newInvalidColumnException(column);
+        }
+    }
+
+    private int getColumnWidth(ConfigDocColumn column) {
+        switch (column) {
+        case KEY:
+        case SOURCE:
+        case DEFAULT_VALUE:
+        case SINCE:
+            return 1;
+        case DESCRIPTION:
+            return 3;
+        default:
+            throw newInvalidColumnException(column);
+        }
+    }
+
+    private IllegalStateException newInvalidColumnException(ConfigDocColumn column) {
+        return new IllegalStateException("Invalid column: " + column);
+    }
+
 }

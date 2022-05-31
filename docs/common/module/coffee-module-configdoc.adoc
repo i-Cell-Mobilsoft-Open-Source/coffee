@@ -53,15 +53,17 @@ public interface ConfigDocExample {
 
     /**
      * Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsam, similique?
+     * @since 3.14159 // <4>
      */
-    @ConfigDoc(defaultValue = "5000") // <4>
+    @ConfigDoc(defaultValue = "5000") // <5>
     String baz = PREFIX + "baz";
 }
 ----
 <1> A generálást egy osztályon a `@ConfigDoc` annotációval aktiváljuk
 <2> Az `exclude` mezővel ki lehet hagyni a generálásból mezőket
 <3> Alapértelmezetten a javadoc leírás kerül a generált fájlba, amit felül lehet írni az annotáció `description` mezőjével
-<4> A konfighoz tartozó default érték is megadható
+<4> A generált táblázat `since` oszlopa kinyerhető a `@since` javadoc tag-ből
+<5> A konfighoz tartozó default érték is megadható
 
 .A fenti példa kód eredménye
 image::coffee-module-configdoc-example1.png[]
@@ -173,6 +175,7 @@ Ezt maven esetén a `maven-compiler-plugin`-on keresztül lehet megadni:
                     <arg>-Acoffee.configDoc.outputFileName=${project.name}_config.adoc</arg> #<2>
                     <arg>-Acoffee.configDoc.outputToClassPath=false</arg> #<3>
                     <arg>-Acoffee.configDoc.dynamicOutputFileName=dynamic_${project.name}_config.adoc</arg> #<4>
+                    <arg>-Acoffee.configDoc.columns=key,since,description</arg> #<5>
                 </compilerArgs>
             </configuration>
         </plugin>
@@ -184,3 +187,4 @@ Ezt maven esetén a `maven-compiler-plugin`-on keresztül lehet megadni:
 <2> A generált fájl neve. Default: `config_keys.adoc`
 <3> A generált fájlt a classpath-ra kell-e rakni, azaz szeretnénk-e, hogy az elkészült jar fájlba bekerüljön. Default: `true`
 <4> A generált fájl neve dinamikus konfigurációkra. Default: `dynamic_config_keys.adoc`
+<5> A generált táblázatban megjelenített oszlopok a megadott sorrendben. Default: `key, source, description, default_value, since` (összes oszlop)

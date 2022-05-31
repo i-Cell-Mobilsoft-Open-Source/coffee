@@ -85,10 +85,17 @@ public class DynamicConfigDocsProcessor extends AbstractProcessor {
         if (roundEnv.processingOver()) {
             // összeszedjük a template-eket, rendezünk
             List<DynamicDocData> dataToWrite = collectDataToWrite(docHeaders, templateMap);
-            ConfigDocConfig config = new ConfigDocConfig(processingEnv.getOptions());
+
+            ConfigDocConfig config;
+            try {
+                config = new ConfigDocConfig(processingEnv.getOptions());
+            } catch (Exception e) {
+                processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, e.getMessage());
+                return true;
+            }
             writeConfigDocFile(dataToWrite, new DynamicAsciiDocWriter(), config);
         }
-        return true;
+        return false;
     }
 
     private List<DynamicDocData> collectDataToWrite(Collection<DynamicDocData> dataCollection, Map<String, String> templates) {
