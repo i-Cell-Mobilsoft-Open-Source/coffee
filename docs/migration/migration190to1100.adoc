@@ -8,6 +8,7 @@ coff:ee v1.9.0 -> v1.10.0 migrációs leírás, újdonságok, változások leír
 
 ==== BOM verzió emelések:
 * mongo-java-driver 3.12.5 -> mongodb-driver-sync 4.5.1
+* apache deltaspike 1.9.1 -> 1.9.6
 
 === coffee-module-mongodb
 * mongo-java-driver helyett az új mongodb-driver-sync került bevezetésre
