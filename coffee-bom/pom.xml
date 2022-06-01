@@ -10,7 +10,7 @@
 	<packaging>pom</packaging>
 
 	<properties>
-		<version.apache.deltaspike>1.9.1</version.apache.deltaspike>
+		<version.apache.deltaspike>1.9.6</version.apache.deltaspike>
 
 		<version.jakartaee>8.0.0</version.jakartaee>
 		<version.jakarta.xml.bind.jaxb-api>2.3.2</version.jakarta.xml.bind.jaxb-api>

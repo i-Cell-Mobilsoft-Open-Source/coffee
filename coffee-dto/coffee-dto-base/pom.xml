@@ -27,7 +27,7 @@
 			<artifactId>coffee-se-logging</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-		<!-- java 16+: workaround, megvizsgalni hogy a jakartaEE-nel kell-e -->
+		<!-- java 16+: dependency -->
 		<dependency>
 			<groupId>org.glassfish.jaxb</groupId>
 			<artifactId>jaxb-runtime</artifactId>
