@@ -129,7 +129,9 @@ public class RedisStreamConsumerExecutor implements IRedisStreamConsumerExecutor
                 }
             } catch (BaseException e) {
                 log.error(MessageFormat.format("Exception on consume streamEntry [{0}]: [{1}]", streamEntry, e.getLocalizedMessage()), e);
-            } catch (JedisDataException e) {
+                if (!(e.getCause() instanceof JedisDataException)) {
+                    continue;
+                }
                 // JedisDataException: NOGROUP No such key 'xyStream' or consumer group 'xy' in XREADGROUP with GROUP option
                 // ha elpusztul a Redis, helyre kell tudni allitani a stream es a csoportot
                 if (StringUtils.startsWith(e.getLocalizedMessage(), NOGROUP_PREFIX)) {
