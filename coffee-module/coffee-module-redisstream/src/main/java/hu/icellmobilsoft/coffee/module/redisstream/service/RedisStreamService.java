@@ -19,9 +19,7 @@
  */
 package hu.icellmobilsoft.coffee.module.redisstream.service;
 
-import java.io.Closeable;
 import java.time.Duration;
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
@@ -39,12 +37,16 @@ import org.apache.commons.lang3.StringUtils;
 
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
+import hu.icellmobilsoft.coffee.module.redis.manager.RedisManager;
+import hu.icellmobilsoft.coffee.module.redis.manager.RedisManagerConnection;
+import hu.icellmobilsoft.coffee.module.redisstream.common.RedisStreamUtil;
+import hu.icellmobilsoft.coffee.module.redisstream.config.IStreamGroupConfig;
 import hu.icellmobilsoft.coffee.module.redisstream.config.StreamGroupConfig;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
+
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.StreamEntryID;
 import redis.clients.jedis.exceptions.JedisDataException;
-import redis.clients.jedis.params.XAddParams;
 import redis.clients.jedis.params.XPendingParams;
 import redis.clients.jedis.params.XReadGroupParams;
 import redis.clients.jedis.resps.StreamEntry;
@@ -59,7 +61,8 @@ import redis.clients.jedis.resps.StreamPendingEntry;
  *
  */
 @Dependent
-public class RedisStreamService implements Closeable {
+public class RedisStreamService {
+    private static final int EXPIRED_MESSAGE_CLEANUP_BLOCK_SIZE = 1000;
 
     @Inject
     private Logger log;
@@ -70,49 +73,26 @@ public class RedisStreamService implements Closeable {
     @Inject
     private StreamGroupConfig config;
 
-    private Jedis jedis;
+    private RedisManager redisManager;
 
     private String group;
 
     /**
      * Stream key, calculated by {@link #group}
      * 
-     * @return Sream key
+     * @return Stream key
      */
     public String streamKey() {
-        return getGroup() + "Stream";
+        return RedisStreamUtil.streamKey(getGroup());
     }
 
     /**
-     * Publish one element to stream with values. Stream max size is trimmed by config. This is equivalent to redis console:
-     * 
-     * <pre>
-     * XADD streamKey * key1 value1 key2 value2...
-     * </pre>
-     * 
-     * @param values
-     *            Values in stream element
-     * @return Generated ID
-     * @throws BaseException
-     *             Exception
+     * Is enabled Redis stream? {@link IStreamGroupConfig#isEnabled()}
+     *
+     * @return true - enabled
      */
-    public StreamEntryID publish(Map<String, String> values) throws BaseException {
-        if (values == null) {
-            throw new BaseException(CoffeeFaultType.INVALID_INPUT, "publish values is null");
-        }
-        XAddParams params = XAddParams.xAddParams();
-        if (config.getProducerMaxLen().isPresent()) {
-            params.maxLen(config.getProducerMaxLen().get());
-        }
-        if (config.getProducerTTL().isPresent()) {
-            StreamEntryID before = new StreamEntryID(Instant.now().minusMillis(config.getProducerTTL().get()).toEpochMilli(), 0);
-            params.minId(before.toString());
-        }
-        StreamEntryID streamEntryID = getJedis().xadd(streamKey(), values, params);
-        if (log.isTraceEnabled()) {
-            log.trace("Published streamEntryID: [{0}] into [{1}]", streamEntryID, streamKey());
-        }
-        return streamEntryID;
+    public boolean isRedisStreamEnabled() {
+        return config.isEnabled();
     }
 
     /**
@@ -123,9 +103,11 @@ public class RedisStreamService implements Closeable {
      * </pre>
      * 
      * @return elements count
+     * @throws BaseException
+     *             Exception
      */
-    public Long count() {
-        Long count = getJedis().xlen(streamKey());
+    public Long count() throws BaseException {
+        Long count = getRedisManager().runWithConnection(Jedis::xlen, "xlen", streamKey()).orElse(0L);
         if (log.isTraceEnabled()) {
             log.trace("[{0}] stream have [{1}] elements", streamKey(), count);
         }
@@ -142,16 +124,12 @@ public class RedisStreamService implements Closeable {
      * and search checking group
      * 
      * @return true if exist
+     * @throws BaseException
+     *             exception
      */
-    public boolean existGroup() {
-        try {
-            List<StreamGroupInfo> info = getJedis().xinfoGroups(streamKey());
-            return info.stream().map(StreamGroupInfo::getName).anyMatch(name -> StringUtils.equals(getGroup(), name));
-        } catch (JedisDataException e) {
-            // ha nincs kulcs akkor a kovetkezo hiba jon:
-            // redis.clients.jedis.exceptions.JedisDataException: ERR no such key
-            log.info("Redis exception duringchecking group [{0}]: [{1}]", streamKey(), e.getLocalizedMessage());
-            return false;
+    public boolean existGroup() throws BaseException {
+        try (RedisManagerConnection ignored = getRedisManager().initConnection()) {
+            return existsGroupInActiveConnection();
         }
     }
 
@@ -163,15 +141,33 @@ public class RedisStreamService implements Closeable {
      * # if not exist group then
      * XGROUP CREATE streamKey group 0 MKSTREAM
      * </pre>
+     * 
+     * @throws BaseException
+     *             exception
      */
-    public void handleGroup() {
-        if (existGroup()) {
-            if (log.isTraceEnabled()) {
-                log.trace("Group [{0}] already exist", getGroup());
+    public void handleGroup() throws BaseException {
+        try (RedisManagerConnection ignored = getRedisManager().initConnection()) {
+            if (existsGroupInActiveConnection()) {
+                if (log.isTraceEnabled()) {
+                    log.trace("Group [{0}] already exist", getGroup());
+                }
+            } else {
+                Optional<String> createGroupResult = getRedisManager().run(Jedis::xgroupCreate, "xgroupCreate", streamKey(), getGroup(),
+                        new StreamEntryID(), true);
+                log.info("Stream group [{0}] on stream [{1}] created with result: [{2}]", getGroup(), streamKey(), createGroupResult);
             }
-        } else {
-            String createGroupResult = getJedis().xgroupCreate(streamKey(), getGroup(), new StreamEntryID(), true);
-            log.info("Stream group [{0}] on stream [{1}] created with result: [{2}]", getGroup(), streamKey(), createGroupResult);
+        }
+    }
+
+    private boolean existsGroupInActiveConnection() throws BaseException {
+        try {
+            Optional<List<StreamGroupInfo>> info = getRedisManager().run(Jedis::xinfoGroups, "xinfoGroups", streamKey());
+            return info.isPresent() && info.get().stream().map(StreamGroupInfo::getName).anyMatch(name -> StringUtils.equals(getGroup(), name));
+        } catch (JedisDataException e) {
+            // ha nincs kulcs akkor a kovetkezo hiba jon:
+            // redis.clients.jedis.exceptions.JedisDataException: ERR no such key
+            log.info("Redis exception duringchecking group [{0}]: [{1}]", streamKey(), e.getLocalizedMessage());
+            return false;
         }
     }
 
@@ -195,8 +191,9 @@ public class RedisStreamService implements Closeable {
         Map<String, StreamEntryID> streamQuery = Map.of(streamKey(), StreamEntryID.UNRECEIVED_ENTRY);
         // kepes tobb streambol is egyszerre olvasni, de mi 1-re hasznaljuk
         XReadGroupParams params = new XReadGroupParams().count(1).block(config.getStreamReadTimeoutMillis().intValue());
-        List<Entry<String, List<StreamEntry>>> result = getJedis().xreadGroup(getGroup(), consumerIdentifier, params, streamQuery);
-        if (result == null || result.isEmpty()) {
+        Optional<List<Entry<String, List<StreamEntry>>>> result = getRedisManager().run(Jedis::xreadGroup, "xreadGroup", getGroup(),
+                consumerIdentifier, params, streamQuery);
+        if (result.isEmpty() || result.get().isEmpty()) {
             // nincs uj uzenet
             if (log.isTraceEnabled()) {
                 log.trace("No new message in [{0}] stream", streamKey());
@@ -204,7 +201,7 @@ public class RedisStreamService implements Closeable {
             return Optional.empty();
         }
         // 1 stream-bol olvasunk
-        Entry<String, List<StreamEntry>> stream = result.get(0);
+        Entry<String, List<StreamEntry>> stream = result.get().get(0);
         if (stream.getValue() == null || stream.getValue().isEmpty()) {
             if (log.isTraceEnabled()) {
                 log.trace("Stream key [{0}] in stream [{1}] no have values stream", stream.getKey(), streamKey());
@@ -217,7 +214,7 @@ public class RedisStreamService implements Closeable {
             StringBuilder sb = new StringBuilder("Consumed one entry from:");
             sb.append("\nStream key [" + stream.getKey() + "] ");
             sb.append("\n  ID: [" + entry.getID() + "], values: [");
-            entry.getFields().entrySet().stream().forEach(e -> sb.append("\n    Key[" + e.getKey() + "]: Value[" + e.getValue() + "]"));
+            entry.getFields().forEach((key, value) -> sb.append("\n    Key[" + key + "]: Value[" + value + "]"));
             sb.append("\n]");
             log.trace(sb.toString());
         }
@@ -234,20 +231,45 @@ public class RedisStreamService implements Closeable {
      * @param streamEntryID
      *            stream element unique ID. If null then do nothing
      * @return success count, if &gt;0 then successfully ACKed
+     * @throws BaseException
+     *             Exception
      */
-    public long ack(StreamEntryID streamEntryID) {
+    public long ack(StreamEntryID streamEntryID) throws BaseException {
         if (Objects.isNull(streamEntryID)) {
             return 0;
         }
-        long sucessCount = jedis.xack(streamKey(), getGroup(), streamEntryID);
+
+        try (RedisManagerConnection ignored = getRedisManager().initConnection()) {
+            return ackInCurrentConnection(streamEntryID);
+        }
+    }
+
+    /**
+     * ACK stream element without opening a new connection. This is equivalent to redis console:
+     *
+     * <pre>
+     * XACK streamKey group 1526569495631-0
+     * </pre>
+     *
+     * @param streamEntryID
+     *            stream element unique ID. If null then do nothing
+     * @return success count, if &gt;0 then successfully ACKed
+     * @throws BaseException
+     *             Exception
+     */
+    public long ackInCurrentConnection(StreamEntryID streamEntryID) throws BaseException {
+        if (Objects.isNull(streamEntryID)) {
+            return 0;
+        }
+        long successCount = getRedisManager().run(Jedis::xack, "xack", streamKey(), getGroup(), streamEntryID).orElse(0L);
         if (log.isTraceEnabled()) {
-            if (sucessCount > 0) {
-                log.trace("StreamEntryID [{0}] sucessfully ACKed", streamEntryID);
+            if (successCount > 0) {
+                log.trace("StreamEntryID [{0}] successfully ACKed", streamEntryID);
             } else {
                 log.trace("StreamEntryID [{0}] not ACKed", streamEntryID);
             }
         }
-        return sucessCount;
+        return successCount;
     }
 
     /**
@@ -264,10 +286,19 @@ public class RedisStreamService implements Closeable {
      * @param to
      *            entry id, can be null. Result include this value
      * @return pending entries
+     * @throws BaseException
+     *             Exception
      */
-    public List<StreamPendingEntry> pending(int pendingCount, StreamEntryID from, StreamEntryID to) {
+    public Optional<List<StreamPendingEntry>> pending(int pendingCount, StreamEntryID from, StreamEntryID to) throws BaseException {
+        try (RedisManagerConnection ignored = getRedisManager().initConnection()) {
+            return pendingInCurrentConnection(pendingCount, from, to);
+        }
+    }
+
+    private Optional<List<StreamPendingEntry>> pendingInCurrentConnection(int pendingCount, StreamEntryID from, StreamEntryID to)
+            throws BaseException {
         XPendingParams params = new XPendingParams(from, to, pendingCount);
-        return jedis.xpending(streamKey(), getGroup(), params);
+        return getRedisManager().run(Jedis::xpending, "xpending", streamKey(), getGroup(), params);
     }
 
     /**
@@ -282,10 +313,12 @@ public class RedisStreamService implements Closeable {
      * @param expiryDuration
      *            expiry duration, null value return empty list
      * @return expired pending entries
+     * @throws BaseException
+     *             Exception
      */
-    public List<StreamPendingEntry> pendingExpired(int pendingCount, Duration expiryDuration) {
+    public Optional<List<StreamPendingEntry>> pendingExpired(int pendingCount, Duration expiryDuration) throws BaseException {
         if (expiryDuration == null) {
-            return List.of();
+            return Optional.empty();
         }
         return pending(pendingCount, null, LocalDateTime.now().minus(expiryDuration));
     }
@@ -303,20 +336,28 @@ public class RedisStreamService implements Closeable {
      * @param expiryDuration
      *            expiry duration
      * @return removed entries count
+     * @throws BaseException
+     *             Exception
      */
-    public long removeExpiredPendingEntries(Duration expiryDuration) {
+    public long removeExpiredPendingEntries(Duration expiryDuration) throws BaseException {
         if (expiryDuration == null) {
             return 0;
         }
-        int blockSize = 1000;
         long removedEntries = 0;
-        boolean again = false;
-        do {
-            List<StreamPendingEntry> pendingEntries = pendingExpired(blockSize, expiryDuration);
-            pendingEntries.stream().map(StreamPendingEntry::getID).forEach(this::ack);
-            removedEntries = removedEntries + pendingEntries.size();
-            again = pendingEntries.size() >= blockSize;
-        } while (again);
+        boolean again;
+
+        try (RedisManagerConnection ignored = getRedisManager().initConnection()) {
+            do {
+                List<StreamPendingEntry> pendingEntries = pendingInCurrentConnection(EXPIRED_MESSAGE_CLEANUP_BLOCK_SIZE, null,
+                        toStreamEntryID(LocalDateTime.now().minus(expiryDuration))).orElseGet(List::of);
+                for (StreamPendingEntry pendingEntry : pendingEntries) {
+                    StreamEntryID id = pendingEntry.getID();
+                    ackInCurrentConnection(id);
+                }
+                removedEntries += pendingEntries.size();
+                again = pendingEntries.size() >= EXPIRED_MESSAGE_CLEANUP_BLOCK_SIZE;
+            } while (again);
+        }
         return removedEntries;
     }
 
@@ -330,8 +371,10 @@ public class RedisStreamService implements Closeable {
      * @param to
      *            date type, can be null. Result include this value
      * @return pending entries
+     * @throws BaseException
+     *             Exception
      */
-    public List<StreamPendingEntry> pending(int pendingCount, LocalDateTime from, LocalDateTime to) {
+    public Optional<List<StreamPendingEntry>> pending(int pendingCount, LocalDateTime from, LocalDateTime to) throws BaseException {
         return pending(pendingCount, toStreamEntryID(from), toStreamEntryID(to));
     }
 
@@ -341,8 +384,10 @@ public class RedisStreamService implements Closeable {
      * @param pendingCount
      *            pending count limit
      * @return pending entries
+     * @throws BaseException
+     *             Exception
      */
-    public List<StreamPendingEntry> pending(int pendingCount) {
+    public Optional<List<StreamPendingEntry>> pending(int pendingCount) throws BaseException {
         return pending(pendingCount, (StreamEntryID) null, (StreamEntryID) null);
     }
 
@@ -361,37 +406,27 @@ public class RedisStreamService implements Closeable {
     }
 
     /**
-     * Returns the jedis instance
+     * Returns the redis manager
      *
-     * @return the jedis instance
+     * @return the redis manager
      */
-    protected Jedis getJedis() {
-        return jedis;
+    public RedisManager getRedisManager() {
+        return redisManager;
     }
 
     /**
-     * Setter for the field {@code jedis}.
+     * Sets the redis manager
      *
-     * @param jedis
-     *            jedis
+     * @param redisManager
+     *            the new redis manager
      */
-    public void setJedis(Jedis jedis) {
-        this.jedis = jedis;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void close() {
-        if (jedis != null) {
-            Jedis connection = jedis;
-            connection.close();
-            jedis = null;
-        }
+    public void setRedisManager(RedisManager redisManager) {
+        this.redisManager = redisManager;
     }
 
     /**
      * Returns the redis stream group
-     *
+     * 
      * @return the redis stream group
      */
     public String getGroup() {
@@ -400,7 +435,7 @@ public class RedisStreamService implements Closeable {
 
     /**
      * Sets the redis stream group
-     *
+     * 
      * @param group
      *            the new redis stream group
      */

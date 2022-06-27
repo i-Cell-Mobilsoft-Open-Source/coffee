@@ -158,31 +158,31 @@ de praktikusabb inkább a _Producer_ és _Consumer_ célra készített osztályo
 === Producer
 
 Üzenetek stream-be küldésére a
-`hu.icellmobilsoft.coffee.module.redisstream.common.RedisStreamHandler`
+`hu.icellmobilsoft.coffee.module.redisstream.publisher.RedisStreamPublisher`
 osztály szolgál, mint például:
 
 [source,java]
 ----
 @Inject
 @RedisStreamProducer(configKey = "streamConfigKey", group = "streamGroup") //<1>
-private RedisStreamHandler redisStreamHandler;
+private RedisStreamPublisher redisStreamPublisher;
 ...
-redisStreamHandler.publish("message"); //<2>
+redisStreamPublisher.publish("message"); //<2>
 // vagy
-redisStreamHandler.publish("alternativeGroup", "message");
-redisStreamHandler.publish(List.of("message-1", "message-2"));
-redisStreamHandler.publish("alternativeGroup", List.of("message-1", "message-2"));
-redisStreamHandler.publishPublications(List.of(
+redisStreamPublisher.publish("alternativeGroup", "message");
+redisStreamPublisher.publish(List.of("message-1", "message-2"));
+redisStreamPublisher.publish("alternativeGroup", List.of("message-1", "message-2"));
+redisStreamPublisher.publishPublications(List.of(
         RedisStreamPublication.of("group-1", "message-1"),
         RedisStreamPublication.of("group-2", "message-2")
 // üzenet paraméterezése
 long expiry = Instant.now().plus(5, ChronoUnit.MINUTES).toEpochMilli();
-Map<String, String> map = Map.ofEntries(RedisStreamHandler.parameterOf(StreamMessageParameter.TTL, expiry));
-redisStreamHandler.publish("message", parameters); //<3>
+Map<String, String> map = Map.ofEntries(RedisStreamPublisher.parameterOf(StreamMessageParameter.TTL, expiry));
+redisStreamPublisher.publish("message", parameters); //<3>
 
 // vagy
 RedisStreamPublication publication = RedisStreamPublication.of(id).withTTL(defaultTTL).withParameter(StreamMessageParameter.FLOW_ID_EXTENSION, id))
-redisStreamHandler.publishPublication(publication); //<4>
+redisStreamPublisher.publishPublication(publication); //<4>
 ----
 <1> "group" nem kötelező minden esetben
 <2> Maga a "message" tartalom egyfajta coffee stream message struktúrába fog kerülni,
@@ -192,17 +192,17 @@ Maga a message kiegészült még extra információval, mint pl. folyamat azonos
 A rendszer nyújtotta lehetőségeket a `hu.icellmobilsoft.coffee.module.redisstream.config.StreamMessageParameter`
 enum osztályon keresztül lehet elérni
 <4> A `RedisStreamPublication` All-in-one szerepet játszik az üzenet küldésénél,
-beállított paraméterek felülcsapják a `redisStreamHandler`-ben beállított _group_-ot.
+beállított paraméterek felülcsapják a `redisStreamPublisher`-ben beállított _group_-ot.
 
 TIP: Minden egyes `publish` hívás külön Jedis connection-ön történik, ezért adott
 esetben érdemes lehet összegyűjteni a message-eket, és azokat listaként átadni.
 
 .RedisStreamPublication
 Hogyha egyszerre több üzenetet kell beküldeni akkor érdemes használni a
-`hu.icellmobilsoft.coffee.module.redisstream.common.RedisStreamPublication` osztályt,
+`hu.icellmobilsoft.coffee.module.redisstream.publisher.RedisStreamPublication` osztályt,
 mely arra van felkészítve hogy minden üzenet saját paraméterekkel legyen kiegészítve,
 vagy akár másik streamekre legyen küldve az üzenetek,
-mint ami a `RedisStreamHandler` injectnél történik.
+mint ami a `RedisStreamPublisher` injectnél történik.
 
 Ilyenek például a:
 
@@ -275,7 +275,7 @@ ezért ajánlott az
 `hu.icellmobilsoft.coffee.module.redisstream.consumer.AbstractStreamConsumer`
 használata ami felkészíti az implementáló kozumert.
 Ezzel a logikával küldi be az üzeneteket a
-`hu.icellmobilsoft.coffee.module.redisstream.common.RedisStreamHandler`
+`hu.icellmobilsoft.coffee.module.redisstream.publisher.RedisStreamPublisher`
 osztály is.
  
 [source,java]
@@ -285,7 +285,7 @@ import javax.inject.Inject;
 
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.module.redisstream.annotation.RedisStreamConsumer;
-import hu.icellmobilsoft.coffee.module.redisstream.consumer.AbstractStreamConsumer
+import hu.icellmobilsoft.coffee.module.redisstream.consumer.AbstractStreamConsumer;
 
 @Model
 @RedisStreamConsumer(configKey = "redisConfigKey", group = "redisGroup")
@@ -296,7 +296,7 @@ public class SampleConsumer extends AbstractStreamConsumer {
 
     @Override
     public void doWork(String text) throws BaseException { // <1>
-        sample.do(text);
+        sample.process(text);
     }
 }
 ----

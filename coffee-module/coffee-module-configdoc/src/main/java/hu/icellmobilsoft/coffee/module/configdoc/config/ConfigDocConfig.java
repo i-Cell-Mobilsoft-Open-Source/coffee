@@ -19,11 +19,15 @@
  */
 package hu.icellmobilsoft.coffee.module.configdoc.config;
 
+import java.text.MessageFormat;
+import java.util.Arrays;
 import java.util.Map;
+
+import org.apache.commons.lang3.EnumUtils;
 
 /**
  * Class representing the configuration for the module
- * 
+ *
  * @author martin.nagy
  * @since 1.9.0
  */
@@ -33,6 +37,8 @@ public class ConfigDocConfig {
     private static final String OUTPUT_DIR_KEY = CONFIG_PREFIX + "outputDir";
     private static final String OUTPUT_FILE_NAME_KEY = CONFIG_PREFIX + "outputFileName";
     private static final String OUTPUT_TO_CLASS_PATH_KEY = CONFIG_PREFIX + "outputToClassPath";
+    private static final String DYNAMIC_OUTPUT_FILE_NAME_KEY = CONFIG_PREFIX + "dynamicOutputFileName";
+    private static final String COLUMNS_KEY = CONFIG_PREFIX + "columns";
 
     /**
      * Default output path
@@ -43,26 +49,53 @@ public class ConfigDocConfig {
      * Default output file name
      */
     public static final String DEFAULT_OUTPUT_FILE_NAME = "config_keys.adoc";
+    /**
+     * Default output file name for dynamic configs
+     */
+    public static final String DEFAULT_DYNAMIC_OUTPUT_FILE_NAME = "dynamic_config_keys.adoc";
 
     private final String outputDir;
     private final String outputFileName;
+    private final String dynamicOutputFileName;
     private final boolean outputToClassPath;
+    private final ConfigDocColumn[] columns;
 
     /**
      * Creates the config object based on properties
-     * 
+     *
      * @param properties
      *            the map which contains the config properties
      */
     public ConfigDocConfig(Map<String, String> properties) {
         outputDir = properties.getOrDefault(OUTPUT_DIR_KEY, DEFAULT_OUTPUT_PATH);
         outputFileName = properties.getOrDefault(OUTPUT_FILE_NAME_KEY, DEFAULT_OUTPUT_FILE_NAME);
+        dynamicOutputFileName = properties.getOrDefault(DYNAMIC_OUTPUT_FILE_NAME_KEY, DEFAULT_DYNAMIC_OUTPUT_FILE_NAME);
         outputToClassPath = Boolean.parseBoolean(properties.getOrDefault(OUTPUT_TO_CLASS_PATH_KEY, Boolean.TRUE.toString()));
+        columns = processColumnConfig(properties);
+    }
+
+    private ConfigDocColumn[] processColumnConfig(Map<String, String> properties) {
+        String columnsString = properties.get(COLUMNS_KEY);
+        if (columnsString == null) {
+            return ConfigDocColumn.values();
+        }
+
+        String[] split = columnsString.split("\\s*,\\s*", -1);
+        ConfigDocColumn[] columns = new ConfigDocColumn[split.length];
+        for (int i = 0; i < split.length; i++) {
+            String name = split[i].trim().toUpperCase();
+            columns[i] = EnumUtils.getEnum(ConfigDocColumn.class, name);
+            if (columns[i] == null) {
+                throw new IllegalStateException(MessageFormat.format("Unknown configDoc column: [{0}]. Possible values: [{1}]", split[i],
+                        Arrays.toString(ConfigDocColumn.values())));
+            }
+        }
+        return columns;
     }
 
     /**
      * Returns the directory for the generated file
-     * 
+     *
      * @return the directory for the generated file
      */
     public String getOutputDir() {
@@ -71,7 +104,7 @@ public class ConfigDocConfig {
 
     /**
      * Returns the generated file name
-     * 
+     *
      * @return the generated file name
      */
     public String getOutputFileName() {
@@ -80,11 +113,28 @@ public class ConfigDocConfig {
 
     /**
      * Returns {@literal true} if the output folder should be on the classpath
-     * 
+     *
      * @return {@literal true} if the output folder should be on the classpath
      */
     public boolean isOutputToClassPath() {
         return outputToClassPath;
     }
 
+    /**
+     * Returns the generated file name for dynamic config.
+     *
+     * @return the generated file name for dynamic config
+     */
+    public String getDynamicOutputFileName() {
+        return dynamicOutputFileName;
+    }
+
+    /**
+     * Returns the columns of the generated table
+     * 
+     * @return the columns of the generated table
+     */
+    public ConfigDocColumn[] getColumns() {
+        return columns;
+    }
 }

@@ -29,13 +29,13 @@ coffee:
 ----
 <1> A redis kapcsolat egyedi azonosítója (configKey). Minden mező opcionális.
 
-A fenti konfig-hoz tartozó RedisService használata:
+A fenti konfig-hoz tartozó RedisManager használata:
 
 [source,java]
 ----
 @Inject
 @RedisConnection(configKey = "auth")
-private RedisService authRedisService;
+private RedisManager authRedisManager;
 ----
 
 == RedisManager
@@ -52,17 +52,13 @@ Példa több redis művelet használatára. Ez jellemzően set/get kombinálva a
 @RedisConnection(configKey = "auth")
 private RedisManager redisManager;
 
-try {
-    redisManager.initConnection(); #<1>
+try (RedisManagerConnection connection = redisManager.initConnection()) { #<1>
     redisManager.run(Jedis::set, "set", "key", "value");
     redisManager.run(Jedis::expire, "expire", "key", 300);
-} finally {
-    redisManager.closeConnection(); #<2>
 }
 
 ----
-<1> Jedis példány inicializálása amin a műveleteket végezzük
-<2> Jedis példány lezárása amin a műveleteket elvégeztük 
+<1> Jedis példány inicializálása amin a műveleteket végezzük, try-with-resource használatával automatán lezárhatjuk
 
 Példa egy művelet végrehajtására.
 
@@ -90,7 +86,7 @@ Bővebb leírás a korlátokról: https://redis.io/commands/scan
 
 [source,java]
 ----
-redisService.hscanRedisData("key", 10, 100);
+redisManager.runWithConnection(Jedis::hscan, "hscan", "key", 10, 100);
 ----
 
 === rpush
@@ -102,7 +98,7 @@ Bővebb leírás: https://redis.io/commands/rpush + https://redis.io/commands/ex
 
 [source,java]
 ----
-redisService.rpushRedisData("key", "element", 100);
+redisManager.runWithConnection(Jedis::rpush, "rpush", "key", "element", 100);
 ----
 
 === lpop/rpop
@@ -110,20 +106,15 @@ redisService.rpushRedisData("key", "element", 100);
 (coffee v1.4+)
 A kulcs-ként megadott listából kiszedi és válaszolja az első (lpop) vagy utolsó (rpop) értéket a sorból.
 Ha már üres a lista a Redis automatán törli azt.
-Ha nem létező listából (közben kiürült és a Redis törölte) kérjük az adatot a rendszer `BONotFoundException` hibát fog dobni,
-vagy `Optional.empty()`-t.
+Ha nem létező listából (közben kiürült és a Redis törölte) kérjük az adatot a rendszer `Optional.empty()`-t fog adni.
 Bővebb leírás a korlátokról: https://redis.io/commands/lpop
 
 [source,java]
 ----
-redisService.lpopRedisData("key"); <1>
-redisService.lpopRedisDataOpt("key"); <2>
-
-redisService.rpopRedisData("key"); <1>
-redisService.rpopRedisDataOpt("key"); <2>
+redisManager.runWithConnection(Jedis::lpop, "lpop", "key"); <1>
+redisManager.runWithConnection(Jedis::rpop, "rpop", "key"); <1>
 ----
-<1> Ha nem talál értéket akkor `BONotFoundException` 
-<2> Ha nem talál értéket akkor `Optional.empty()`
+<1> Ha nem talál értéket akkor `Optional.empty()`
 
 === lmove
 
@@ -138,13 +129,10 @@ Bővebb leírás: https://redis.io/commands/lmove + https://redis.io/commands/ex
 [source,java]
 ----
 // sourceListKey elejéről a destinationListKey lista végére
-redisService.lmoveRedisData("sourceListKey", "destinationListKey", ListDirection.LEFT, ListDirection.RIGHT); <1>
-// elejéről a végére
-redisService.lmoveRedisDataOpt("sourceListKey", "sourceListKey", ListDirection.LEFT, ListDirection.RIGHT);
+redisManager.runWithConnection(Jedis::lmove, "lmove", "sourceListKey", "destinationListKey", ListDirection.LEFT, ListDirection.RIGHT);
 // végéről az elejére
-redisService.lmoveRedisDataOpt("sourceListKey", "sourceListKey", ListDirection.RIGHT, ListDirection.LEFT);
+redisManager.runWithConnection(Jedis::lmove, "lmove", "sourceListKey", "sourceListKey", ListDirection.RIGHT, ListDirection.LEFT);
 ----
-<1> Ha nem talál értéket akkor `BONotFoundException` 
 
 === removeValueFromList
 
@@ -153,5 +141,5 @@ Bővebb leírás: https://redis.io/commands/lrem
 
 [source,java]
 ----
-redisService.removeValueFromList(listKey, "removeValue");
+redisManager.runWithConnection(Jedis::lrem, "removeValueFromList", listKey, 0, "removeValue");
 ----

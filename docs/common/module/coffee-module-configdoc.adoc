@@ -16,12 +16,13 @@ Használatához az alabbi függőséget kell hozzáadni a `pom.xml`-hez:
 </dependency>
 ----
 
+=== Statikus konfigurációs kulcsok esetén
 Ez után a konfigurációs kulcsokat tartalmazó osztályokat kell felannotálni a `@ConfigDoc` annotációval.
 
 Ha ezzel megvagyunk alapértelmezetten a fordításkor az elkészült `.jar` fájlba bekerül a generált asciidoc a `META-INF/config_keys.adoc` néven.
 A kulcsok az első pont karakter előtti prefix szerint külön táblázatokban jelennek meg.
 
-== Példa
+==== Példa
 
 [source,java]
 ----
@@ -52,18 +53,109 @@ public interface ConfigDocExample {
 
     /**
      * Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsam, similique?
+     * @since 3.14159 // <4>
      */
-    @ConfigDoc(defaultValue = "5000") // <4>
+    @ConfigDoc(defaultValue = "5000") // <5>
     String baz = PREFIX + "baz";
 }
 ----
 <1> A generálást egy osztályon a `@ConfigDoc` annotációval aktiváljuk
 <2> Az `exclude` mezővel ki lehet hagyni a generálásból mezőket
 <3> Alapértelmezetten a javadoc leírás kerül a generált fájlba, amit felül lehet írni az annotáció `description` mezőjével
-<4> A konfighoz tartozó default érték is megadható
+<4> A generált táblázat `since` oszlopa kinyerhető a `@since` javadoc tag-ből
+<5> A konfighoz tartozó default érték is megadható
 
 .A fenti példa kód eredménye
 image::coffee-module-configdoc-example1.png[]
+
+=== Dinamikus konfigurációs kulcsok esetén
+A dinamikus kulccsal rendelkező konfigok esetén (pl. redis, mongo db),
+a kulcsokat MessageFormat-nak megfelelő formátumban kell felvenni,
+majd a kulcsokat tartalmazó osztályt kell felannotálni a `@DynamicConfigTemplate` annotációval,
+valamint az osztályt vagy változóit a már ismert `@ConfigDoc` annotációval.
+
+A `@DynamicConfigTemplate`-el felannotált osztályokból, a `@ConfigDoc` annotációnak megfelelő template adoc fog készülni,
+a `META-INF/config-templates` mappába, `fully-qualified-class-name.adoc` néven.
+
+Ezek után a config-hoz tartozó qualifier-t és-vagy injection pontot kell felannotálni a `@DynamicConfigDocs`
+annotációval, amiben templateClass-nak a kulcsokat tartalmazó osztályt kell megadni.
+
+A `@DynamicConfigDocs` annotáció feldolgozásakor mind az injection pont-on, mind a qualifier-en
+definiált értékek felolvasásra kerülnek, az injection pont-ot előnybe részesítve.
+
+Ha ezzel megvagyunk alapértelmezetten a fordításkor az elkészült `.jar` fájlba bekerül a generált asciidoc a `META-INF/dynamic_config_keys.adoc` néven.
+
+==== Példa
+
+.Template osztály
+[source,java]
+----
+@ConfigDoc
+@DynamicConfigTemplate //<1>
+public interface DynamicConfigTemplateExample {
+
+    /**
+     * test prefix
+     */
+    @ConfigDoc(exclude = true) //<2>
+    String PREFIX = "test.";
+
+    /**
+     * Lorem ipsum dolor sit amet, consectetur adipisicing elit. Illo, placeat!
+     */
+    String foo = PREFIX + "{0}.foo"; //<3>
+}
+----
+<1> A template generálást egy osztályon a `@ConfigDoc` és `@DynamicConfigTemplate` annotációval aktiváljuk
+<2> A mezőkőn hazsnálható a `@ConfigDoc` a template elkészítéséhez
+<3> A kulcs változó része MessageFormat-nak megfelelő placeholderekkel
+
+.Qualifier
+[source,java]
+----
+@DynamicConfigDocs( // <1>
+        template = DynamicConfigTemplateExample.class, // <2>
+        title = "Dynamic config {0} config keys", // <3>
+        description = "Dyn configuration keys" // <4>
+)
+public @interface DynamicConfigurationQualifierExample {
+
+    /**
+     * Config key of the desired dynamic configuration
+     *
+     * @return config key
+     */
+    String configKey();
+
+}
+----
+<1> Alapértelmezett értékeket tartalmazó @DynamicConfigDocs annotáció a qualifieren
+<2> A dinamikus konfighoz használni kívánt template
+<3> Alapértelmezett cím a konfignak (placeholder-eket tartalmazhat)
+<4> Alapértelmezett leírás a konfigról (placeholder-eket tartalmazhat)
+
+.Injection point
+[source,java]
+----
+public class DynamicConfigInjectionPointExample {
+
+    @Inject
+    @DynamicConfigDocs(templateVariables = "abc") //<1>
+    @DynamicConfigurationQualifierExample(configKey = "abc")
+    private Object injectedConfig;
+
+    @Inject
+    @DynamicConfigDocs(templateVariables = "xyz", title = "Title override for config key {0}") //<2>
+    @DynamicConfigurationQualifierExample(configKey = "xyz")
+    private Object otherConfig;
+}
+
+----
+<1> A qualifieren található template-be behelyettesíteni kívánt konfig kulcs: `abc`
+<2> Második eltérő kulcsú konfig: `xyz`, felülírt címmel
+
+.A fenti példa kód eredménye
+image::coffee-module-configdoc-dynamic-example1.png[]
 
 == Konfiguráció
 
@@ -82,6 +174,8 @@ Ezt maven esetén a `maven-compiler-plugin`-on keresztül lehet megadni:
                     <arg>-Acoffee.configDoc.outputDir=${project.basedir}/../docs/</arg> #<1>
                     <arg>-Acoffee.configDoc.outputFileName=${project.name}_config.adoc</arg> #<2>
                     <arg>-Acoffee.configDoc.outputToClassPath=false</arg> #<3>
+                    <arg>-Acoffee.configDoc.dynamicOutputFileName=dynamic_${project.name}_config.adoc</arg> #<4>
+                    <arg>-Acoffee.configDoc.columns=key,since,description</arg> #<5>
                 </compilerArgs>
             </configuration>
         </plugin>
@@ -92,3 +186,5 @@ Ezt maven esetén a `maven-compiler-plugin`-on keresztül lehet megadni:
 <1> A mappa ahova a genrált fájlt rakjuk. Default: `META-INF/`
 <2> A generált fájl neve. Default: `config_keys.adoc`
 <3> A generált fájlt a classpath-ra kell-e rakni, azaz szeretnénk-e, hogy az elkészült jar fájlba bekerüljön. Default: `true`
+<4> A generált fájl neve dinamikus konfigurációkra. Default: `dynamic_config_keys.adoc`
+<5> A generált táblázatban megjelenített oszlopok a megadott sorrendben. Default: `key, source, description, default_value, since` (összes oszlop)

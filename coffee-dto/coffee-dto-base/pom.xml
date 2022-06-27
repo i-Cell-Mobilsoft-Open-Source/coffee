@@ -3,7 +3,7 @@
 	<parent>
 		<groupId>hu.icellmobilsoft.coffee</groupId>
 		<artifactId>coffee-dto</artifactId>
-		<version>1.10.0-SNAPSHOT</version>
+		<version>1.11.0-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>coffee-dto-base</artifactId>
@@ -27,7 +27,7 @@
 			<artifactId>coffee-se-logging</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-		<!-- java 16+: workaround, megvizsgalni hogy a jakartaEE-nel kell-e -->
+		<!-- java 16+: dependency -->
 		<dependency>
 			<groupId>org.glassfish.jaxb</groupId>
 			<artifactId>jaxb-runtime</artifactId>

@@ -1,0 +1,74 @@
+= v1.9.0 → v1.10.0
+
+coff:ee v1.9.0 -> v1.10.0 migrációs leírás, újdonságok, változások leírása
+
+== Változások
+
+=== Általános
+
+==== BOM verzió emelések:
+* mongo-java-driver 3.12.5 -> mongodb-driver-sync 4.5.1
+* apache deltaspike 1.9.1 -> 1.9.6
+
+=== coffee-module-mongodb
+* mongo-java-driver helyett az új mongodb-driver-sync került bevezetésre
+* a konfigurációból kivezetésre kerültek a `heartbeatConnectTimeout` és `heartbeatSocketTimeout` paraméterek, mivel az új api nem támogatja a közvetlen beállításukat. Értékeik a `connectTimeout`-al és `socketTimeout`-al lesznek megegyezőek.
+* mongo import változások
+
+==== Átállás
+* a konfigurációból törölhetőek a `heartbeatConnectTimeout` és `heartbeatSocketTimeout` paraméterek
+* a `com.mongodb.util` package megszűnt, a benne lévő `Util` osztálynak nincs helyettesítője. Ha van hivatkozás a benne lévő `JSON` osztályra, a serializálást és de-serializálást helyettesíthetjük a `BasicDBObject` megfelelő metódusaival (`parse`, `toJson`)
+* Bővebb leírás a változásokról: https://www.mongodb.com/docs/drivers/java/sync/current/legacy/#api-changes
+
+=== coffee-jpa
+* A `BatchService` már jól kezeli az idő típusakat, ha a `hibernate.jdbc.time_zone` be van állítva a `persistence.xml`-ben.
+
+==== Átállás
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+=== coffee-module-configdoc
+* Konfigurációs dokumentum generálási lehetőség dinamikus kulcsokra.
+
+==== Átállás
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+=== coffee-module-redis
+* `RedisManagerProducer`-be bekerült a `@Disposes`, a dependent beanek memory leaket okoztak.
+* `RedisService`, `RedisRepository` kivezetésre került (mivel inkompatibilis az új 4.2.1-es jedis-sel)
+* jedis upgrade `4.2.1` -> `4.2.3`
+
+==== Átállás
+* `RedisService` lecserélése `RedisManager`-re. Pl.:
+[source,java]
+----
+redisService.getRedisData("key", String.class);
+----
+->
+[source,java]
+----
+redisManager.runWithConnection(Jedis::get, "get", "key");
+----
+
+=== coffee-module-redisstream
+* `RedisStreamHandler` átnevezésre került `RedisStreamPublisher`-re, hogy az osztály célja egyértelmű legyen
+* `RedisStreamPublisher` és `RedisStreamService` átállt `RedisManager` használatára, ezért a publish metódusok `Optional`-t adnak vissza
+* `RedisStreamPublisher` és `RedisStreamPublication` átkerült a ` hu.icellmobilsoft.coffee.module.redisstream.publisher` package-be
+* Létrejött a `RedisManagerConnection` osztály, hogy a `RedisManager` connection-ök lezárását egyszerűsítse
+
+==== Átállás
+* `RedisStreamHandler` átnevezése `RedisStreamPublisher`-re
+* `hu.icellmobilsoft.coffee.module.redisstream.common` csomag átnevezése `hu.icellmobilsoft.coffee.module.redisstream.publisher`-re
+* Ahol a `RedisStreamPublisher` és `RedisStreamService` metódusainak visszatérési értéke van használva az `Optional` lekezelése
+
+=== coffee-dto-base
+* A `UtcOffsetDateTimeXmlAdapter` osztályban ha nulla volt a másodperc akkor levágásra került, ez lett javítva.
+
+==== Átállás
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+=== coffee-module-configdoc
+* A javadoc-ból kinyerjük a `@since` tag tartalmát, és megjelenítjük egy új oszlopban
+* Konfigurációban megadható a generált táblázatban megjelenő oszlopok, és sorrendjük (pl: `-Acoffee.configDoc.columns=key,since,description`)
+
+==== Átállás
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.

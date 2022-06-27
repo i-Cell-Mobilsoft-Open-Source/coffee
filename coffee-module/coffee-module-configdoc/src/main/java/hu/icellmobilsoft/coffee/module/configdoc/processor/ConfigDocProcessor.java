@@ -42,6 +42,7 @@ import javax.tools.StandardLocation;
 import com.google.auto.service.AutoService;
 
 import hu.icellmobilsoft.coffee.module.configdoc.ConfigDoc;
+import hu.icellmobilsoft.coffee.module.configdoc.DynamicConfigTemplate;
 import hu.icellmobilsoft.coffee.module.configdoc.config.ConfigDocConfig;
 import hu.icellmobilsoft.coffee.module.configdoc.data.DocData;
 import hu.icellmobilsoft.coffee.module.configdoc.writer.IDocWriter;
@@ -58,7 +59,13 @@ public class ConfigDocProcessor extends AbstractProcessor {
 
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-        ConfigDocConfig config = new ConfigDocConfig(processingEnv.getOptions());
+        ConfigDocConfig config;
+        try {
+            config = new ConfigDocConfig(processingEnv.getOptions());
+        } catch (Exception e) {
+            processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, e.getMessage());
+            return false;
+        }
 
         List<DocData> dataList = collectDocData(annotations, roundEnv);
 
@@ -66,13 +73,13 @@ public class ConfigDocProcessor extends AbstractProcessor {
             dataList = new ArrayList<>(dataList.stream().collect(Collectors.toMap(DocData::getKey, Function.identity(), (o1, o2) -> o2)).values());
             dataList.sort(Comparator.comparing(DocData::getKey));
 
-            writeToFile(dataList, new AsciiDocWriter(), config);
+            writeToFile(dataList, new AsciiDocWriter(config), config);
         }
 
-        return true;
+        return false;
     }
 
-    private void writeToFile(List<DocData> dataList, IDocWriter docWriter, ConfigDocConfig config) {
+    private void writeToFile(List<DocData> dataList, IDocWriter<DocData> docWriter, ConfigDocConfig config) {
         try (Writer writer = createWriter(config)) {
             docWriter.write(dataList, writer);
         } catch (IOException e) {
@@ -92,10 +99,18 @@ public class ConfigDocProcessor extends AbstractProcessor {
         ArrayList<DocData> dataList = new ArrayList<>();
         for (TypeElement annotation : annotations) {
             for (Element element : roundEnv.getElementsAnnotatedWith(annotation)) {
-                visitor.visit(element, dataList);
+                // Ha van rajta vagy valamelyik ősén DynamicConfigTemplate, akkor az másik adocba kerül, itt skippeljük
+                if (isWithoutDynamicConfigTemplate(element)) {
+                    visitor.visit(element, dataList);
+                }
             }
         }
         return dataList;
+    }
+
+    private boolean isWithoutDynamicConfigTemplate(Element element) {
+        return element == null
+                || (element.getAnnotation(DynamicConfigTemplate.class) == null && isWithoutDynamicConfigTemplate(element.getEnclosingElement()));
     }
 
     @Override

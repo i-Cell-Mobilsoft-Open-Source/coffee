@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * 
  *      http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -39,6 +39,8 @@ import org.jboss.weld.context.bound.BoundRequestContext;
 import hu.icellmobilsoft.coffee.dto.common.LogConstants;
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.module.redis.annotation.RedisConnection;
+import hu.icellmobilsoft.coffee.module.redis.manager.RedisManager;
+import hu.icellmobilsoft.coffee.module.redis.manager.RedisManagerConnection;
 import hu.icellmobilsoft.coffee.module.redisstream.annotation.RedisStreamConsumer;
 import hu.icellmobilsoft.coffee.module.redisstream.config.IRedisStreamConstant;
 import hu.icellmobilsoft.coffee.module.redisstream.config.StreamGroupConfig;
@@ -47,14 +49,14 @@ import hu.icellmobilsoft.coffee.se.logging.Logger;
 import hu.icellmobilsoft.coffee.se.logging.mdc.MDC;
 import hu.icellmobilsoft.coffee.tool.utils.annotation.AnnotationUtil;
 import hu.icellmobilsoft.coffee.tool.utils.string.RandomUtil;
-import redis.clients.jedis.Jedis;
+
 import redis.clients.jedis.StreamEntryID;
 import redis.clients.jedis.exceptions.JedisDataException;
 import redis.clients.jedis.resps.StreamEntry;
 
 /**
  * Redis stream consumer executor class
- *
+ * 
  * @author imre.scheffer
  * @author czenczl
  * @since 1.3.0
@@ -107,13 +109,21 @@ public class RedisStreamConsumerExecutor implements IRedisStreamConsumerExecutor
         boolean prudentRun = true;
         while (!endLoop) {
             Optional<StreamEntry> streamEntry = Optional.empty();
-            Instance<Jedis> jedisInstance = CDI.current().select(Jedis.class,
-                    new RedisConnection.Literal(redisConfigKey, streamGroupConfig.getConsumerPool(redisStreamService.getGroup())));
-            Jedis jedis = null;
-            try {
-                jedis = jedisInstance.get();
-                redisStreamService.setJedis(jedis);
+            Instance<RedisManager> redisManagerInstance = CDI.current().select(RedisManager.class, new RedisConnection.Literal(redisConfigKey));
+            RedisManager redisManager = redisManagerInstance.get();
+            try (RedisManagerConnection ignore = redisManager.initConnection()) {
+                redisStreamService.setRedisManager(redisManager);
 
+                //
+//                Instance<Jedis> jedisInstance = CDI.current().select(Jedis.class,
+//                        new RedisConnection.Literal(redisConfigKey, streamGroupConfig.getConsumerPool(redisStreamService.getGroup())));
+//                Jedis jedis = null;
+//                try {
+//                    jedis = jedisInstance.get();
+//                    redisStreamService.setJedis(jedis);
+//
+//                    if (prudentRun) {
+                //
                 if (prudentRun) {
                     // lehethogy a csoport nem letezik
                     redisStreamService.handleGroup();
@@ -125,7 +135,7 @@ public class RedisStreamConsumerExecutor implements IRedisStreamConsumerExecutor
                 if (streamEntry.isPresent()) {
                     var entry = streamEntry.get();
                     handleMDC(entry);
-                    consumeStreamEntry(entry);
+                    consumeStreamEntry(entry, redisManager);
                 }
             } catch (BaseException e) {
                 log.error(MessageFormat.format("Exception on consume streamEntry [{0}]: [{1}]", streamEntry, e.getLocalizedMessage()), e);
@@ -141,27 +151,29 @@ public class RedisStreamConsumerExecutor implements IRedisStreamConsumerExecutor
                     log.error(MessageFormat.format("Exception on redisConfigKey [{0}] with stream group [{1}]: [{2}]", redisConfigKey,
                             redisStreamService.getGroup(), e.getLocalizedMessage()), e);
                 }
+                redisManager.closeConnection();
                 sleep();
             } catch (Throwable e) {
                 log.error(MessageFormat.format("Exception during consume on redisConfigKey [{0}] with stream group [{1}]: [{2}]", redisConfigKey,
                         redisStreamService.getGroup(), e.getLocalizedMessage()), e);
+                redisManager.closeConnection();
                 sleep();
             } finally {
-                cleanup(jedisInstance, jedis);
+                cleanup(redisManagerInstance, redisManager);
             }
         }
     }
 
-    private void cleanup(Instance<Jedis> jedisInstance, Jedis jedis) {
+    private void cleanup(Instance<RedisManager> redisManagerInstance, RedisManager redisManager) {
         try {
-            if (jedis != null) {
+            if (redisManager != null) {
                 // el kell engedni a connectiont
-                jedisInstance.destroy(jedis);
+                redisManagerInstance.destroy(redisManager);
             }
             MDC.clear();
         } catch (Throwable e) {
-            log.error(MessageFormat.format("Exception during jedis cleanup on redisConfigKey [{0}] with stream group [{1}]: [{2}]", redisConfigKey,
-                    redisStreamService.getGroup(), e.getLocalizedMessage()), e);
+            log.error(MessageFormat.format("Exception during redisManager cleanup on redisConfigKey [{0}] with stream group [{1}]: [{2}]",
+                    redisConfigKey, redisStreamService.getGroup(), e.getLocalizedMessage()), e);
         }
     }
 
@@ -170,10 +182,12 @@ public class RedisStreamConsumerExecutor implements IRedisStreamConsumerExecutor
      *
      * @param streamEntry
      *            Stream event element
+     * @param redisManager
+     *            redis connection, operation manager object
      * @throws BaseException
      *             Technical exception
      */
-    protected void consumeStreamEntry(StreamEntry streamEntry) throws BaseException {
+    protected void consumeStreamEntry(StreamEntry streamEntry, RedisManager redisManager) throws BaseException {
         Optional<Map<String, Object>> result = executeOnStream(streamEntry, 1);
 
         // ack
@@ -186,15 +200,17 @@ public class RedisStreamConsumerExecutor implements IRedisStreamConsumerExecutor
      *
      * @param streamEntryID
      *            Jedis StreamEntry ID
+     * @throws BaseException
+     *             Technical exception
      */
-    protected void ack(StreamEntryID streamEntryID) {
-        redisStreamService.ack(streamEntryID);
+    protected void ack(StreamEntryID streamEntryID) throws BaseException {
+        redisStreamService.ackInCurrentConnection(streamEntryID);
     }
 
     /**
      * Process execution with retry count. If retry {@code RedisStreamConsumer#retryCount()} &gt; count then on processing exception trying run again
      * and again
-     *
+     * 
      * @param streamEntry
      *            Redis stream input entry
      * @param counter
@@ -230,7 +246,7 @@ public class RedisStreamConsumerExecutor implements IRedisStreamConsumerExecutor
 
     /**
      * Process execution wrapper. Running process in self started request scope
-     *
+     * 
      * @param streamEntry
      *            Redis stream input entry
      * @return {@code Optional} result data from {@code IRedisStreamPipeConsumer#onStream(StreamEntry)}
@@ -259,7 +275,7 @@ public class RedisStreamConsumerExecutor implements IRedisStreamConsumerExecutor
 
     /**
      * Process execution wrapper. Running {@code IRedisStreamPipeConsumer#afterAck(StreamEntry, Map)} process in self started request scope
-     *
+     * 
      * @param streamEntry
      *            Redis stream input entry
      * @param onStreamResult
@@ -320,7 +336,7 @@ public class RedisStreamConsumerExecutor implements IRedisStreamConsumerExecutor
 
     /**
      * Logging MDC handling, setting variables
-     *
+     * 
      * @param streamEntry
      *            {@link IRedisStreamConsumer#onStream(StreamEntry)}
      */
@@ -333,7 +349,7 @@ public class RedisStreamConsumerExecutor implements IRedisStreamConsumerExecutor
 
     /**
      * Uniq stream consumer identifier
-     *
+     * 
      * @return identifier
      */
     public String getConsumerIdentifier() {

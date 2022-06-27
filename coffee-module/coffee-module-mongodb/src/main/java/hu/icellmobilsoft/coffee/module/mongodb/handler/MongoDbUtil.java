@@ -25,9 +25,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.bson.codecs.configuration.CodecRegistries;
 import org.bson.codecs.pojo.PojoCodecProvider;
 
-import com.mongodb.MongoClient;
 import com.mongodb.MongoClientSettings;
-import com.mongodb.MongoClientURI;
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
 
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
@@ -60,9 +60,8 @@ public class MongoDbUtil {
             throw new BaseException("uriString is blank!");
         }
         try {
-            // http://mongodb.github.io/mongo-java-driver/3.4/driver/tutorials/connect-to-mongodb/
-            MongoClientURI uri = new MongoClientURI(uriString);
-            return new MongoClient(uri);
+            // https://www.mongodb.com/docs/drivers/java/sync/v4.5/fundamentals/connection/connect/
+            return MongoClients.create(uriString);
         } catch (Exception e) {
             throw new TechnicalException(CoffeeFaultType.OPERATION_FAILED, "Failed to create mongo client: " + e.getLocalizedMessage(), e);
         }

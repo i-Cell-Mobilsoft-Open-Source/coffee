@@ -28,8 +28,10 @@ import javax.enterprise.util.AnnotationLiteral;
 import javax.enterprise.util.Nonbinding;
 import javax.inject.Qualifier;
 
+import hu.icellmobilsoft.coffee.module.redis.manager.RedisManager;
+
 /**
- * Qualifier for instantiating {@link hu.icellmobilsoft.coffee.module.redis.service.RedisService}
+ * Qualifier for instantiating {@link RedisManager}
  *
  * @author mark.petrenyi
  * @since 1.0.0
