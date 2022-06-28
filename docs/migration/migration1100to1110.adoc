@@ -1,0 +1,11 @@
+= v1.10.0 → v1.11.0
+
+coff:ee v1.10.0 -> v1.11.0 migrációs leírás, újdonságok, változások leírása
+
+== Változások
+
+=== coffee-module-redis
+* JedisDataException kezelés javítása
+
+==== Átállás
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
