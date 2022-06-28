@@ -5,7 +5,10 @@ coff:ee v1.10.0 -> v1.11.0 migrációs leírás, újdonságok, változások leí
 == Változások
 
 === coffee-module-redis
-* JedisDataException kezelés javítása
+
+* *JedisDataException TechnicalException*-be lett wrap-olva, így a régi logika nem tudta lekezelni azt, ezért a *cause*-ban
+lévő *JedisDataException* kezelésére kellett módosítani a folyamtot.
 
 ==== Átállás
+
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
