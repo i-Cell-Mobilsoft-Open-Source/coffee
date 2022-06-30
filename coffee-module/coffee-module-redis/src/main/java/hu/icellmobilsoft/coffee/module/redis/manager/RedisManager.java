@@ -480,7 +480,7 @@ public class RedisManager {
      */
     public RedisManagerConnection initConnection() {
         if (jedisInstance == null) {
-            jedisInstance = CDI.current().select(Jedis.class, new RedisConnection.Literal(configKey));
+            jedisInstance = CDI.current().select(Jedis.class, new RedisConnection.Literal(configKey, poolConfigKey));
         }
         if (jedis == null) {
             jedis = jedisInstance.get();

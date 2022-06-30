@@ -109,7 +109,7 @@ public class RedisStreamConsumerExecutor implements IRedisStreamConsumerExecutor
         boolean prudentRun = true;
         while (!endLoop) {
             Optional<StreamEntry> streamEntry = Optional.empty();
-            Instance<RedisManager> redisManagerInstance = CDI.current().select(RedisManager.class, new RedisConnection.Literal(redisConfigKey));
+            Instance<RedisManager> redisManagerInstance = CDI.current().select(RedisManager.class, new RedisConnection.Literal(redisConfigKey, streamGroupConfig.getConsumerPool(redisStreamService.getGroup())));
             RedisManager redisManager = redisManagerInstance.get();
             try (RedisManagerConnection ignore = redisManager.initConnection()) {
                 redisStreamService.setRedisManager(redisManager);

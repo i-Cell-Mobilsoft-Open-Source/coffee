@@ -68,7 +68,7 @@ public class RedisManagerProducer {
         Optional<RedisConnection> annotation = AnnotationUtil.getAnnotation(injectionPoint, RedisConnection.class);
 
         String configKey = annotation.map(RedisConnection::configKey).orElse(null);
-        String poolConfigKey = annotation.map(RedisConnection::poolConfigKey).orElse(null);
+        String poolConfigKey = annotation.map(RedisConnection::poolConfigKey).orElse("default");
 
         if (StringUtils.isBlank(configKey)) {
             throw new IllegalStateException("configKey is required for redis");
@@ -87,7 +87,7 @@ public class RedisManagerProducer {
      * @param redisManager
      *            redis manager
      */
-    public void returnResource(@Disposes @RedisConnection(configKey = "") RedisManager redisManager) {
+    public void returnResource(@Disposes @RedisConnection(configKey = "", poolConfigKey="") RedisManager redisManager) {
         if (Objects.nonNull(redisManager)) {
             CDI.current().destroy(redisManager);
         }
