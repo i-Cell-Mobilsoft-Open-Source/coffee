@@ -33,6 +33,7 @@ import javax.enterprise.inject.Instance;
 import javax.enterprise.inject.spi.CDI;
 import javax.inject.Inject;
 
+import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
 import org.apache.commons.lang3.StringUtils;
 
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
@@ -163,10 +164,13 @@ public class RedisStreamService {
         try {
             Optional<List<StreamGroupInfo>> info = getRedisManager().run(Jedis::xinfoGroups, "xinfoGroups", streamKey());
             return info.isPresent() && info.get().stream().map(StreamGroupInfo::getName).anyMatch(name -> StringUtils.equals(getGroup(), name));
-        } catch (JedisDataException e) {
+        } catch (TechnicalException e) {
+            if (!(e.getCause() instanceof JedisDataException)) {
+                throw e;
+            }
             // ha nincs kulcs akkor a kovetkezo hiba jon:
             // redis.clients.jedis.exceptions.JedisDataException: ERR no such key
-            log.info("Redis exception duringchecking group [{0}]: [{1}]", streamKey(), e.getLocalizedMessage());
+            log.info("Redis exception during checking group [{0}]: [{1}]", streamKey(), e.getLocalizedMessage());
             return false;
         }
     }

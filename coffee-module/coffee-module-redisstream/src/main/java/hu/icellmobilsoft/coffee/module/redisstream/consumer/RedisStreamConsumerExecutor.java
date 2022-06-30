@@ -49,7 +49,6 @@ import hu.icellmobilsoft.coffee.se.logging.Logger;
 import hu.icellmobilsoft.coffee.se.logging.mdc.MDC;
 import hu.icellmobilsoft.coffee.tool.utils.annotation.AnnotationUtil;
 import hu.icellmobilsoft.coffee.tool.utils.string.RandomUtil;
-
 import redis.clients.jedis.StreamEntryID;
 import redis.clients.jedis.exceptions.JedisDataException;
 import redis.clients.jedis.resps.StreamEntry;
@@ -129,17 +128,21 @@ public class RedisStreamConsumerExecutor implements IRedisStreamConsumerExecutor
                 }
             } catch (BaseException e) {
                 log.error(MessageFormat.format("Exception on consume streamEntry [{0}]: [{1}]", streamEntry, e.getLocalizedMessage()), e);
-            } catch (JedisDataException e) {
+                var cause = e.getCause();
+                if (!(cause instanceof JedisDataException)) {
+                    continue;
+                }
+                String message = cause.getLocalizedMessage();
                 // JedisDataException: NOGROUP No such key 'xyStream' or consumer group 'xy' in XREADGROUP with GROUP option
                 // ha elpusztul a Redis, helyre kell tudni allitani a stream es a csoportot
-                if (StringUtils.startsWith(e.getLocalizedMessage(), NOGROUP_PREFIX)) {
+                if (StringUtils.startsWith(message, NOGROUP_PREFIX)) {
                     log.error(
                             "Detected problem on redisConfigKey [{0}] with stream group [{1}] and activating prudentRun on next cycle. Exception: [{2}]",
-                            redisConfigKey, redisStreamService.getGroup(), e.getLocalizedMessage());
+                            redisConfigKey, redisStreamService.getGroup(), message);
                     prudentRun = true;
                 } else {
                     log.error(MessageFormat.format("Exception on redisConfigKey [{0}] with stream group [{1}]: [{2}]", redisConfigKey,
-                            redisStreamService.getGroup(), e.getLocalizedMessage()), e);
+                            redisStreamService.getGroup(), message), cause);
                 }
                 redisManager.closeConnection();
                 sleep();
