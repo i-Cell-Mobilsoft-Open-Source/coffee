@@ -33,10 +33,10 @@ import javax.enterprise.inject.Instance;
 import javax.enterprise.inject.spi.CDI;
 import javax.inject.Inject;
 
-import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
 import org.apache.commons.lang3.StringUtils;
 
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
+import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 import hu.icellmobilsoft.coffee.module.redis.manager.RedisManager;
 import hu.icellmobilsoft.coffee.module.redis.manager.RedisManagerConnection;
@@ -147,16 +147,14 @@ public class RedisStreamService {
      *             exception
      */
     public void handleGroup() throws BaseException {
-        try (RedisManagerConnection ignored = getRedisManager().initConnection()) {
-            if (existsGroupInActiveConnection()) {
-                if (log.isTraceEnabled()) {
-                    log.trace("Group [{0}] already exist", getGroup());
-                }
-            } else {
-                Optional<String> createGroupResult = getRedisManager().run(Jedis::xgroupCreate, "xgroupCreate", streamKey(), getGroup(),
-                        new StreamEntryID(), true);
-                log.info("Stream group [{0}] on stream [{1}] created with result: [{2}]", getGroup(), streamKey(), createGroupResult);
+        if (existsGroupInActiveConnection()) {
+            if (log.isTraceEnabled()) {
+                log.trace("Group [{0}] already exist", getGroup());
             }
+        } else {
+            Optional<String> createGroupResult = getRedisManager().run(Jedis::xgroupCreate, "xgroupCreate", streamKey(), getGroup(),
+                    new StreamEntryID(), true);
+            log.info("Stream group [{0}] on stream [{1}] created with result: [{2}]", getGroup(), streamKey(), createGroupResult);
         }
     }
 
