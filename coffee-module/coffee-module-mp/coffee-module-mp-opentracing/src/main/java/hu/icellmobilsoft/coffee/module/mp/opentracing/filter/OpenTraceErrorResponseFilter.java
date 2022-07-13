@@ -55,7 +55,8 @@ public class OpenTraceErrorResponseFilter implements ContainerResponseFilter {
     /**
      * {@inheritDoc}
      * <p>
-     * Add error tag if http status &gt;= 500 Now working only on async rest calls.
+     * Add error tag if http status &gt;= 500 
+     * Now working only on async rest calls.
      * https://github.com/opentracing-contrib/java-jaxrs/blob/master/opentracing-jaxrs2/src/main/java/io/opentracing/contrib/jaxrs2/server/SpanFinishingFilter.java#L90
      */
     @Override
