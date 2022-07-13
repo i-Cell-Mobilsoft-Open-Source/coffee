@@ -14,3 +14,14 @@ lévő *JedisDataException* kezelésére kellett módosítani a folyamtot.
 ==== Átállás
 
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+=== coffee-module-mp-opentracing
+
+* *OpenTraceErrorResponseFilter* NPE hibát dobott olyan esetben amikor a kérés a filter láncban megakadt az opentrace filter előtt, ami nem tudott létrehozni
+spant, pl ha authentikáció során nem várt hiba keletkezik az egy ilyen eset, mivel az auth az opentrace-től általában magasabb prioritason van.
+Lekezelésre került a hiba, csak logolunk olyan esetben amikor nem tudunk a trace flowhoz hozzáadni mivel nem létezik.
+
+
+==== Átállás
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
