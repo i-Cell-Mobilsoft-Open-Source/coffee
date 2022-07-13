@@ -29,6 +29,8 @@ import javax.ws.rs.ext.Provider;
 
 import org.apache.http.HttpStatus;
 
+import hu.icellmobilsoft.coffee.cdi.logger.AppLogger;
+import hu.icellmobilsoft.coffee.cdi.logger.ThisLogger;
 import io.opentracing.Span;
 import io.opentracing.Tracer;
 import io.opentracing.tag.Tags;
@@ -44,13 +46,16 @@ import io.opentracing.tag.Tags;
 public class OpenTraceErrorResponseFilter implements ContainerResponseFilter {
 
     @Inject
+    @ThisLogger
+    private AppLogger log;
+
+    @Inject
     private Tracer configuredTracer;
 
     /**
      * {@inheritDoc}
      * <p>
-     * Add error tag if http status &gt;= 500
-     * Now working only on async rest calls.
+     * Add error tag if http status &gt;= 500 Now working only on async rest calls.
      * https://github.com/opentracing-contrib/java-jaxrs/blob/master/opentracing-jaxrs2/src/main/java/io/opentracing/contrib/jaxrs2/server/SpanFinishingFilter.java#L90
      */
     @Override
@@ -61,6 +66,10 @@ public class OpenTraceErrorResponseFilter implements ContainerResponseFilter {
 
         if (responseContext.getStatus() >= HttpStatus.SC_INTERNAL_SERVER_ERROR) {
             Span span = configuredTracer.activeSpan();
+            if (span == null) {
+                log.debug("No active span on response, skip error trace");
+                return;
+            }
             Tags.ERROR.set(span, true);
         }
 
