@@ -1,0 +1,19 @@
+= v1.10.0 → v1.11.0
+
+coff:ee v1.10.0 -> v1.11.0 migrációs leírás, újdonságok, változások leírása
+
+== Változások
+
+=== Általános
+
+==== BOM verzió emelések:
+
+=== coffee-rest
+* Bekerült egy defaultként használható OpenApiFilter amit a következő configuráció segítségével lehet aktiválni:
+[source,properties]
+----
+mp.openapi.filter=hu.icellmobilsoft.coffee.rest.filter.OpenAPIFilter
+----
+
+==== Átállás
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
