@@ -14,7 +14,7 @@ import org.eclipse.microprofile.openapi.models.responses.APIResponse;
 /**
  * ApiResponse util, mely visszaadja a http response kódokat és a hozzájuk tartozó {@link APIResponse} objektumokat, melyek a projektben álltalánosak.
  *
- * @since 1.10.0
+ * @since 1.11.0
  * @author speter555
  */
 @Vetoed
