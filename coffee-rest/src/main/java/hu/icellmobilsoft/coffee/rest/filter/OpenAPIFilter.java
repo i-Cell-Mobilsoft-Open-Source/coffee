@@ -23,7 +23,7 @@ import hu.icellmobilsoft.coffee.rest.filter.util.ApiResponseUtil;
  * Azon Response leírások melyeket már a filterig jutásig tartalmaz az OpenApi leíró, nem lesznek felülírva!!!
  *
  * @author speter555
- * @since 1.10.0
+ * @since 1.11.0
  */
 @Vetoed
 public class OpenAPIFilter implements OASFilter {
