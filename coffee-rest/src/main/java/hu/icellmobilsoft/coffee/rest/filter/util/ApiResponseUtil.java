@@ -21,10 +21,10 @@ import org.eclipse.microprofile.openapi.models.responses.APIResponse;
 public class ApiResponseUtil {
 
     private static Map<Integer, APIResponse> apiResponseByStatusCodeMap;
-    private static final String INVALIDREQUESTFAULTTYPE_REF = "#/components/schemas/InvalidRequestFaultType";
-    private static final String BUSINESSFAULTTYPE_REF = "#/components/schemas/BusinessFaultType";
-    private static final String TECHNICALFAULTTYPE_REF = "#/components/schemas/TechnicalFaultType";
-    private static final String BONOTFOUNDTYPE_REF = "#/components/schemas/BONotFoundType";
+    private static final String INVALIDREQUESTFAULTTYPE_REF = "#/components/schemas/InvalidRequestFault";
+    private static final String BUSINESSFAULTTYPE_REF = "#/components/schemas/BusinessFault";
+    private static final String TECHNICALFAULTTYPE_REF = "#/components/schemas/TechnicalFault";
+    private static final String BONOTFOUNDTYPE_REF = "#/components/schemas/BONotFound";
 
     private ApiResponseUtil() {
     }

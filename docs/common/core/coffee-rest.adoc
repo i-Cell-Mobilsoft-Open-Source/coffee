@@ -319,3 +319,77 @@ Alapértelmezett kódoló: RFC4648
 |===
 
 Megjegyzés: A JSON-höz köthető műveletek többsége util jellegű és publikusan elérhető a link:coffee-tool.adoc[coffee-tool] alatt a `JsonUtil` osztályban.
+
+
+[#common_core_coffee-rest_OpenAPIFilter]
+== OpenApiFilter
+A Microprofile OpenApi lehetőséget biztos az org.eclipse.microprofile.openapi.OASFilter interface implementációján keresztül további OpenApi configuráció beállításhoz.
+A hu.icellmobilsoft.coffee.rest.filter.OpenAPIFilter implementáció a projekten belül tartalmazza a coffee hibakezeléséhez kapcsolódó általános hibakódokat és a hozzájuk tartozó response objektumoat, melyek a filteren kereszül minden végpontra általánosan rákerülnek, pontosabb dokumentációt adva a coffee-t használó microservice-ekben írt openapi.yml config fájlhoz képest, mivel dinamikusan töltődik ez az információ.
+
+Ennek a filternek az aktiválásához configurációba meg kell adni az `mp.openapi.filter` configurációs kulcsban az  `hu.icellmobilsoft.coffee.rest.filter.OpenAPIFilter` értéket, ami az implementációt végző osztály.
+
+Példa egy microprofile default properties configban:
+
+.microprofile-default.properties
+[source,properties]
+----
+mp.openapi.filter=hu.icellmobilsoft.coffee.rest.filter.OpenAPIFilter
+----
+
+=== Customizálhatóság
+A megvalósítás tovább pontosítható, kiegészíthető leszármaztatással, amire egy példa:
+
+.CustomerOpenAPIFilter
+[source,java]
+----
+package hu.icellmobilsoft.test.rest.filter;
+
+...
+
+@Vetoed
+public class CustomerOpenAPIFilter extends OpenAPIFilter {
+
+    private static final String CUSTOM_999_RESPONSE = "#/components/schemas/Custom999Response";
+
+    @Override
+    protected Map<Integer, APIResponse> getCommonApiResponseByStatusCodeMap() { // <1>
+        Map<Integer, APIResponse> apiResponseByStatusCodeMap = super.getCommonApiResponseByStatusCodeMap();
+        APIResponse customApiResponse = OASFactory.createAPIResponse() //
+                .content(OASFactory.createContent()
+                        .addMediaType(MediaType.APPLICATION_JSON,
+                                OASFactory.createMediaType().schema(OASFactory.createSchema().ref(CUSTOM_999_RESPONSE)))
+                        .addMediaType(MediaType.APPLICATION_XML,
+                                OASFactory.createMediaType().schema(OASFactory.createSchema().ref(CUSTOM_999_RESPONSE)))
+                        .addMediaType(MediaType.TEXT_XML,
+                                OASFactory.createMediaType().schema(OASFactory.createSchema().ref(CUSTOM_999_RESPONSE))))
+                .description(Response.Status.BAD_REQUEST.getReasonPhrase() //
+                        + "\n" + "* Custom 999 error" //
+                        + "\n\t **resultCode** = *OPERATION_FAILED*" //
+                );
+        apiResponseByStatusCodeMap.put(999,customApiResponse );
+        return apiResponseByStatusCodeMap;
+    }
+
+    @Override
+    protected List<Parameter> getCommonRequestHeaderParameters() { //<2>
+        Parameter xCustomHeader1 = OASFactory.createObject(Parameter.class).name("X-CUSTOM-HEADER-1").in(Parameter.In.HEADER).required(false)
+                .description("Description of custom header 1").schema(OASFactory.createObject(Schema.class).type(Schema.SchemaType.STRING));
+        Parameter xCustomHeader2 = OASFactory.createObject(Parameter.class).name("X-CUSTOM-HEADER-2").in(Parameter.In.HEADER).required(false)
+                .description("Description of custom header 2").schema(OASFactory.createObject(Schema.class).type(Schema.SchemaType.STRING));
+        List<Parameter> headerParams = new ArrayList();
+        headerParams.add(xCustomHeader1);
+        headerParams.add(xCustomHeader2);
+        return headerParams;
+    }
+}
+----
+<1> Példa egy saját response válasz hozzáadása a 999es http státusz kóddal. Fontos megjegyezni hogy a Custom999Response-nak léteznie kell a DTO-k közt.
+<2> Példa 2 darab saját header megadására leírással sémával.
+
+és így a konfiguráció a következő hozzá:
+
+.microprofile-default.properties
+[source,properties]
+----
+mp.openapi.filter=hu.icellmobilsoft.test.rest.filter.CustomerOpenAPIFilter
+----
