@@ -46,6 +46,7 @@ import org.apache.commons.collections.MapUtils;
 import com.google.auto.service.AutoService;
 
 import hu.icellmobilsoft.coffee.module.configdoc.DynamicConfigTemplate;
+import hu.icellmobilsoft.coffee.module.configdoc.config.ConfigDocConfig;
 import hu.icellmobilsoft.coffee.module.configdoc.data.DocData;
 import hu.icellmobilsoft.coffee.module.configdoc.writer.IDocWriter;
 import hu.icellmobilsoft.coffee.module.configdoc.writer.impl.AsciiDocWriter;
@@ -62,24 +63,32 @@ public class DynamicConfigTemplateProcessor extends AbstractProcessor {
 
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-        Map<String, List<DocData>> docFileMap = collectDocData(annotations, roundEnv);
-        if (MapUtils.isNotEmpty(docFileMap)) {
-            docFileMap.forEach(this::writeDataListSorted);
+        ConfigDocConfig config;
+        try {
+            config = new ConfigDocConfig(processingEnv.getOptions());
+        } catch (Exception e) {
+            processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, e.getMessage());
+            return false;
         }
 
-        return true;
+        Map<String, List<DocData>> docFileMap = collectDocData(annotations, roundEnv);
+        if (MapUtils.isNotEmpty(docFileMap)) {
+            docFileMap.forEach((fileName, lDataList) -> writeDataListSorted(fileName, lDataList, config));
+        }
+
+        return false;
     }
 
-    private void writeDataListSorted(String fileName, List<DocData> lDataList) {
+    private void writeDataListSorted(String fileName, List<DocData> lDataList, ConfigDocConfig config) {
         if (CollectionUtils.isNotEmpty(lDataList)) {
             List<DocData> sortedList = new ArrayList<>(
                     lDataList.stream().collect(Collectors.toMap(DocData::getKey, Function.identity(), (o1, o2) -> o2)).values());
             sortedList.sort(Comparator.comparing(DocData::getKey));
-            writeToFile(sortedList, new AsciiDocWriter(), fileName);
+            writeToFile(sortedList, new AsciiDocWriter(config), fileName);
         }
     }
 
-    private void writeToFile(List<DocData> lDataList, IDocWriter docWriter, String fileName) {
+    private void writeToFile(List<DocData> lDataList, IDocWriter<DocData> docWriter, String fileName) {
         try {
             FileObject fileObject = processingEnv.getFiler().createResource(StandardLocation.CLASS_OUTPUT, "", fileName);
 

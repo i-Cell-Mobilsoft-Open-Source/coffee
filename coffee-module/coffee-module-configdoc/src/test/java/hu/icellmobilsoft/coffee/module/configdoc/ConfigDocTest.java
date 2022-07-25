@@ -48,10 +48,17 @@ class ConfigDocTest {
         assertNotNull(generatedFileUrl);
 
         String generatedFile = Files.readString(Paths.get(generatedFileUrl.toURI()));
+
+        // key column
         assertTrue(generatedFile.contains("test.foo"));
         assertTrue(generatedFile.contains("test.bar"));
         assertTrue(generatedFile.contains("test.baz"));
         assertTrue(generatedFile.contains("test2.xxx"));
+
+        // description column
         assertTrue(generatedFile.contains("Override..."));
+
+        // since column
+        assertTrue(generatedFile.contains("3.14159"));
     }
 }

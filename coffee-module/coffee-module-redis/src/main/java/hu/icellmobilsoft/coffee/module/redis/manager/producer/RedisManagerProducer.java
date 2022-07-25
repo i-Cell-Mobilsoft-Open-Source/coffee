@@ -19,10 +19,12 @@
  */
 package hu.icellmobilsoft.coffee.module.redis.manager.producer;
 
+import java.util.Objects;
 import java.util.Optional;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.Dependent;
+import javax.enterprise.inject.Disposes;
 import javax.enterprise.inject.Produces;
 import javax.enterprise.inject.spi.CDI;
 import javax.enterprise.inject.spi.InjectionPoint;
@@ -74,5 +76,17 @@ public class RedisManagerProducer {
         RedisManager redisManager = CDI.current().select(RedisManager.class).get();
         redisManager.setConfigKey(configKey);
         return redisManager;
+    }
+
+    /**
+     * Destroys {@link RedisManager} instances
+     *
+     * @param redisManager
+     *            redis manager
+     */
+    public void returnResource(@Disposes @RedisConnection(configKey = "") RedisManager redisManager) {
+        if (Objects.nonNull(redisManager)) {
+            CDI.current().destroy(redisManager);
+        }
     }
 }

@@ -59,7 +59,13 @@ public class ConfigDocProcessor extends AbstractProcessor {
 
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-        ConfigDocConfig config = new ConfigDocConfig(processingEnv.getOptions());
+        ConfigDocConfig config;
+        try {
+            config = new ConfigDocConfig(processingEnv.getOptions());
+        } catch (Exception e) {
+            processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, e.getMessage());
+            return false;
+        }
 
         List<DocData> dataList = collectDocData(annotations, roundEnv);
 
@@ -67,10 +73,10 @@ public class ConfigDocProcessor extends AbstractProcessor {
             dataList = new ArrayList<>(dataList.stream().collect(Collectors.toMap(DocData::getKey, Function.identity(), (o1, o2) -> o2)).values());
             dataList.sort(Comparator.comparing(DocData::getKey));
 
-            writeToFile(dataList, new AsciiDocWriter(), config);
+            writeToFile(dataList, new AsciiDocWriter(config), config);
         }
 
-        return true;
+        return false;
     }
 
     private void writeToFile(List<DocData> dataList, IDocWriter<DocData> docWriter, ConfigDocConfig config) {

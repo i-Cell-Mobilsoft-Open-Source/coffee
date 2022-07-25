@@ -32,6 +32,7 @@ public class DocData {
     private final String source;
     private final String description;
     private final String defaultValue;
+    private final String since;
 
     /**
      * Creates a {@code DocData} instance with the given arguments
@@ -44,12 +45,15 @@ public class DocData {
      *            the description of the configuration key
      * @param defaultValue
      *            the default value of the configuration key
+     * @param since
+     *            the version since the configuration key available
      */
-    public DocData(String key, String source, String description, String defaultValue) {
+    public DocData(String key, String source, String description, String defaultValue, String since) {
         this.key = key;
         this.source = source;
         this.description = description;
         this.defaultValue = defaultValue;
+        this.since = since;
     }
 
     /**
@@ -86,5 +90,15 @@ public class DocData {
      */
     public String getDefaultValue() {
         return defaultValue;
+    }
+
+    /**
+     * Returns the version since the configuration key available
+     *
+     * @return the version since the configuration key available
+     * @since 1.10.0
+     */
+    public String getSince() {
+        return since;
     }
 }

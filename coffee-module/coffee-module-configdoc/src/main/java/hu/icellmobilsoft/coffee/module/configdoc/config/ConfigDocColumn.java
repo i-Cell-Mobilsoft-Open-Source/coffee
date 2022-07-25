@@ -17,31 +17,33 @@
  * limitations under the License.
  * #L%
  */
-package hu.icellmobilsoft.coffee.module.configdoc.writer;
-
-import java.io.IOException;
-import java.io.Writer;
-import java.util.List;
+package hu.icellmobilsoft.coffee.module.configdoc.config;
 
 /**
- * Writes the collected annotation data
+ * Config doc columns
  *
- * @param <T>
- *            the type parameter for data POJO
  * @author martin.nagy
- * @since 1.9.0
+ * @since 1.10.0
  */
-public interface IDocWriter<T> {
-
+public enum ConfigDocColumn {
     /**
-     * Writes the collected annotation data to the passed {@link Writer}.
-     *
-     * @param dataList
-     *            the collected data to be written
-     * @param writer
-     *            the writer
-     * @throws IOException
-     *             If an I/O error occurs
+     * the configuration key
      */
-    void write(List<T> dataList, Writer writer) throws IOException;
+    KEY,
+    /**
+     * the source class where the configuration key can be found
+     */
+    SOURCE,
+    /**
+     * the description of the configuration key
+     */
+    DESCRIPTION,
+    /**
+     * the default value of the configuration key
+     */
+    DEFAULT_VALUE,
+    /**
+     * the version since the configuration key available
+     */
+    SINCE,
 }

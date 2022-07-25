@@ -36,6 +36,7 @@ import javax.inject.Inject;
 import org.apache.commons.lang3.StringUtils;
 
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
+import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 import hu.icellmobilsoft.coffee.module.redis.manager.RedisManager;
 import hu.icellmobilsoft.coffee.module.redis.manager.RedisManagerConnection;
@@ -146,16 +147,14 @@ public class RedisStreamService {
      *             exception
      */
     public void handleGroup() throws BaseException {
-        try (RedisManagerConnection ignored = getRedisManager().initConnection()) {
-            if (existsGroupInActiveConnection()) {
-                if (log.isTraceEnabled()) {
-                    log.trace("Group [{0}] already exist", getGroup());
-                }
-            } else {
-                Optional<String> createGroupResult = getRedisManager().run(Jedis::xgroupCreate, "xgroupCreate", streamKey(), getGroup(),
-                        new StreamEntryID(), true);
-                log.info("Stream group [{0}] on stream [{1}] created with result: [{2}]", getGroup(), streamKey(), createGroupResult);
+        if (existsGroupInActiveConnection()) {
+            if (log.isTraceEnabled()) {
+                log.trace("Group [{0}] already exist", getGroup());
             }
+        } else {
+            Optional<String> createGroupResult = getRedisManager().run(Jedis::xgroupCreate, "xgroupCreate", streamKey(), getGroup(),
+                    new StreamEntryID(), true);
+            log.info("Stream group [{0}] on stream [{1}] created with result: [{2}]", getGroup(), streamKey(), createGroupResult);
         }
     }
 
@@ -163,10 +162,13 @@ public class RedisStreamService {
         try {
             Optional<List<StreamGroupInfo>> info = getRedisManager().run(Jedis::xinfoGroups, "xinfoGroups", streamKey());
             return info.isPresent() && info.get().stream().map(StreamGroupInfo::getName).anyMatch(name -> StringUtils.equals(getGroup(), name));
-        } catch (JedisDataException e) {
+        } catch (TechnicalException e) {
+            if (!(e.getCause() instanceof JedisDataException)) {
+                throw e;
+            }
             // ha nincs kulcs akkor a kovetkezo hiba jon:
             // redis.clients.jedis.exceptions.JedisDataException: ERR no such key
-            log.info("Redis exception duringchecking group [{0}]: [{1}]", streamKey(), e.getLocalizedMessage());
+            log.info("Redis exception during checking group [{0}]: [{1}]", streamKey(), e.getLocalizedMessage());
             return false;
         }
     }
