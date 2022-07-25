@@ -323,7 +323,7 @@ Megjegyzés: A JSON-höz köthető műveletek többsége util jellegű és publi
 
 [#common_core_coffee-rest_OpenAPIFilter]
 == OpenApiFilter
-A Microprofile OpenApi lehetőséget biztos az org.eclipse.microprofile.openapi.OASFilter interface implementációján keresztül további OpenApi configuráció beállításhoz.
+A Microprofile OpenApi lehetőséget biztosít az org.eclipse.microprofile.openapi.OASFilter interface implementációján keresztül további OpenApi configuráció beállításhoz.
 A hu.icellmobilsoft.coffee.rest.filter.OpenAPIFilter implementáció a projekten belül tartalmazza a coffee hibakezeléséhez kapcsolódó általános hibakódokat és a hozzájuk tartozó response objektumoat, melyek a filteren kereszül minden végpontra általánosan rákerülnek, pontosabb dokumentációt adva a coffee-t használó microservice-ekben írt openapi.yml config fájlhoz képest, mivel dinamikusan töltődik ez az információ.
 
 Ennek a filternek az aktiválásához configurációba meg kell adni az `mp.openapi.filter` configurációs kulcsban az  `hu.icellmobilsoft.coffee.rest.filter.OpenAPIFilter` értéket, ami az implementációt végző osztály.
