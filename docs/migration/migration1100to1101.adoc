@@ -8,6 +8,8 @@ coff:ee v1.10.0 -> v1.10.1 migrációs leírás, újdonságok, változások leí
 
 * *JedisDataException TechnicalException*-be lett wrap-olva, így a régi logika nem tudta lekezelni azt, ezért a *cause*-ban
 lévő *JedisDataException* kezelésére kellett módosítani a folyamtot.
+* `RedisStreamConsumerExecutor`-ban a `handleGroup` lezárta a jedis connection-t amit a `consumeOne` még használt volna,
+így exception keletkezett.
 
 ==== Átállás
 
