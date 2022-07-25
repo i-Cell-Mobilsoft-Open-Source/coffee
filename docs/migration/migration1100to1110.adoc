@@ -25,3 +25,13 @@ Lekezelésre került a hiba, csak logolunk olyan esetben amikor nem tudunk a tra
 ==== Átállás
 
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+=== coffee-rest
+* Bekerült egy defaultként használható OpenApiFilter amit a következő configuráció segítségével lehet aktiválni:
+[source,properties]
+----
+mp.openapi.filter=hu.icellmobilsoft.coffee.rest.filter.OpenAPIFilter
+----
+
+==== Átállás
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
