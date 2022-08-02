@@ -29,6 +29,7 @@ import javax.enterprise.inject.spi.InjectionPoint;
 
 import hu.icellmobilsoft.coffee.module.redis.annotation.RedisConnection;
 import hu.icellmobilsoft.coffee.module.redis.config.ManagedRedisConfig;
+import hu.icellmobilsoft.coffee.module.redis.config.RedisConfig;
 import hu.icellmobilsoft.coffee.tool.utils.annotation.AnnotationUtil;
 
 /**
@@ -49,12 +50,14 @@ public class RedisConfigProducer {
      */
     @Produces
     @Dependent
-    @RedisConnection(configKey = "")
+    @RedisConnection(configKey = "", poolConfigKey = "")
     public ManagedRedisConfig getRedisConfig(InjectionPoint injectionPoint) {
         Optional<RedisConnection> annotation = AnnotationUtil.getAnnotation(injectionPoint, RedisConnection.class);
         String configKey = annotation.map(RedisConnection::configKey).orElse(null);
+        String poolConfigKey = annotation.map(RedisConnection::poolConfigKey).orElse(RedisConfig.POOL_CONFIG_KEY_DEFAULT_VALUE);
         ManagedRedisConfig redisConfig = CDI.current().select(ManagedRedisConfig.class).get();
         redisConfig.setConfigKey(configKey);
+        redisConfig.setPoolConfigKey(poolConfigKey);
         return redisConfig;
     }
 

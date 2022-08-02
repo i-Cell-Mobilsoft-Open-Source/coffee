@@ -98,4 +98,9 @@ public interface RedisConfig {
     default Integer getTimeout() throws BaseException {
         return 5000;
     }
+
+    /**
+     * Default pool configuration key value
+     */
+    String POOL_CONFIG_KEY_DEFAULT_VALUE = "default";
 }

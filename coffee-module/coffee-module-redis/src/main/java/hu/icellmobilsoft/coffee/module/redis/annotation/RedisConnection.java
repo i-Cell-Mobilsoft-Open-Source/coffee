@@ -28,6 +28,7 @@ import javax.enterprise.util.AnnotationLiteral;
 import javax.enterprise.util.Nonbinding;
 import javax.inject.Qualifier;
 
+import hu.icellmobilsoft.coffee.module.redis.config.RedisConfig;
 import hu.icellmobilsoft.coffee.module.redis.manager.RedisManager;
 
 /**
@@ -51,6 +52,17 @@ public @interface RedisConnection {
     String configKey();
 
     /**
+     * Config key of the desired redis connection's pool setting. <br>
+     * ie. if connection details are defined in the project-*.yml by the keys: {@code coffee.redis.auth.pool.default.*=...} then configKey should be
+     * "default"
+     *
+     * @return poolConfigKey, default is {@value RedisConfig#POOL_CONFIG_KEY_DEFAULT_VALUE}
+     * @since 1.11.0
+     */
+    @Nonbinding
+    String poolConfigKey() default RedisConfig.POOL_CONFIG_KEY_DEFAULT_VALUE;
+
+    /**
      * Supports inline instantiation of the {@link RedisConnection} qualifier.
      *
      * @author mark.petrenyi
@@ -61,9 +73,26 @@ public @interface RedisConnection {
         private static final long serialVersionUID = 1L;
 
         /**
-         * config key
+         * Redis configuration key
          */
         private final String configKey;
+        /**
+         * Redis pool configuration key
+         */
+        private final String poolConfigKey;
+
+        /**
+         * Annotation Literal for Redis configuration
+         * 
+         * @param configKey
+         *            Redis configuration key
+         * @param poolConfigKey
+         *            Pool configuration key
+         */
+        public Literal(String configKey, String poolConfigKey) {
+            this.configKey = configKey;
+            this.poolConfigKey = poolConfigKey;
+        }
 
         /**
          * Instantiates the literal with configKey
@@ -73,13 +102,19 @@ public @interface RedisConnection {
          */
         public Literal(String configKey) {
             this.configKey = configKey;
+            this.poolConfigKey = RedisConfig.POOL_CONFIG_KEY_DEFAULT_VALUE;
         }
 
+        @Override
         @Nonbinding
         public String configKey() {
             return configKey;
         }
 
+        @Override
+        @Nonbinding
+        public String poolConfigKey() {
+            return poolConfigKey;
+        }
     }
-
 }

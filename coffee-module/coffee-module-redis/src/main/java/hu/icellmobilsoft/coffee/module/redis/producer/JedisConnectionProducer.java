@@ -35,6 +35,7 @@ import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 import hu.icellmobilsoft.coffee.module.redis.annotation.RedisConnection;
+import hu.icellmobilsoft.coffee.module.redis.config.RedisConfig;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
 import hu.icellmobilsoft.coffee.tool.utils.annotation.AnnotationUtil;
 import redis.clients.jedis.Jedis;
@@ -64,25 +65,32 @@ public class JedisConnectionProducer {
      */
     @Produces
     @Dependent
-    @RedisConnection(configKey = "")
+    @RedisConnection(configKey = "", poolConfigKey = "")
     public Jedis getJedis(InjectionPoint injectionPoint) throws BaseException {
         Optional<RedisConnection> annotation = AnnotationUtil.getAnnotation(injectionPoint, RedisConnection.class);
-        String configKey = annotation.map(RedisConnection::configKey).orElse(null);
 
-        Instance<JedisPool> jedisPoolInstance = CDI.current().select(JedisPool.class, new RedisConnection.Literal(configKey));
-        JedisPool jedisPool = jedisPoolInstance.get();
+        String configKey = annotation.map(RedisConnection::configKey).orElse(null);
+        String poolConfigKey = annotation.map(RedisConnection::poolConfigKey).orElse(RedisConfig.POOL_CONFIG_KEY_DEFAULT_VALUE);
+
+        JedisPool jedisPool;
+        Instance<JedisPool> jedisPoolInstance;
+        jedisPoolInstance = CDI.current().select(JedisPool.class, new RedisConnection.Literal(configKey, poolConfigKey));
+        jedisPool = jedisPoolInstance.get();
+
         if (jedisPool != null) {
             try {
                 return jedisPool.getResource();
             } catch (JedisConnectionException ex) {
-                String msg = MessageFormat.format("Problems trying to get the Redis connection for the configKey:[{0}]", configKey);
+                String msg = MessageFormat.format("Problems trying to get the Redis connection for the configKey:[{0}], poolConfigKey:[{1}]",
+                        configKey, poolConfigKey);
                 log.error(msg, ex);
                 throw new TechnicalException(CoffeeFaultType.REPOSITORY_FAILED, msg, ex);
             } finally {
                 jedisPoolInstance.destroy(jedisPool);
             }
         }
-        String msg = MessageFormat.format("Could not create Redis connection for the configKey:[{0}]! Jedis pool is null", configKey);
+        String msg = MessageFormat.format("Could not create Redis connection for the configKey:[{0}], poolConfigKey:[{1}]! Jedis pool is null",
+                configKey, poolConfigKey);
         throw new TechnicalException(CoffeeFaultType.REPOSITORY_FAILED, msg);
     }
 
@@ -92,7 +100,7 @@ public class JedisConnectionProducer {
      * @param jedis
      *            {@link Jedis} to close
      */
-    public void returnResource(@Disposes @RedisConnection(configKey = "") Jedis jedis) {
+    public void returnResource(@Disposes @RedisConnection(configKey = "", poolConfigKey = "") Jedis jedis) {
         if (jedis != null) {
             jedis.close();
         }
