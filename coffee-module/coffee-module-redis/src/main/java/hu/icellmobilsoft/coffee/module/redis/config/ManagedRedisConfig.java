@@ -167,7 +167,7 @@ public class ManagedRedisConfig implements RedisConfig {
      */
     @Override
     public Integer getPoolMaxTotal() {
-        return config.getOptionalValue(joinKey(POOL + KEY_DELIMITER + getPoolConfigKey() + POOL_MAXTOTAL), Integer.class).orElse(64);
+        return config.getOptionalValue(joinKey(POOL + KEY_DELIMITER + getPoolConfigKey() + "." + POOL_MAXTOTAL), Integer.class).orElse(64);
     }
 
     /**
@@ -179,7 +179,7 @@ public class ManagedRedisConfig implements RedisConfig {
      */
     @Override
     public Integer getPoolMaxIdle() {
-        return config.getOptionalValue(joinKey(POOL + KEY_DELIMITER + getPoolConfigKey() + POOL_MAXIDLE), Integer.class).orElse(16);
+        return config.getOptionalValue(joinKey(POOL + KEY_DELIMITER + getPoolConfigKey() + "." + POOL_MAXIDLE), Integer.class).orElse(16);
     }
 
     /**

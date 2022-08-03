@@ -46,7 +46,6 @@ import hu.icellmobilsoft.coffee.module.redis.manager.RedisManager;
 import hu.icellmobilsoft.coffee.module.redis.manager.RedisManagerConnection;
 import hu.icellmobilsoft.coffee.tool.gson.ClassTypeAdapter;
 import hu.icellmobilsoft.coffee.tool.gson.JsonUtil;
-
 import redis.clients.jedis.Jedis;
 
 /**
@@ -144,7 +143,8 @@ public class RedisCachingInterceptor {
 
         if (redisConnection != null) {
             String configKey = redisConnection.configKey();
-            return CDI.current().select(RedisManager.class, new RedisConnection.Literal(configKey)).get();
+            String poolConfigKey = redisConnection.poolConfigKey();
+            return CDI.current().select(RedisManager.class, new RedisConnection.Literal(configKey, poolConfigKey)).get();
         } else {
             throw new BaseException(MessageFormat.format("@RedisConnection annotation is missing from method: {0}#{1}",
                     method.getDeclaringClass().getCanonicalName(), method.getName()));
