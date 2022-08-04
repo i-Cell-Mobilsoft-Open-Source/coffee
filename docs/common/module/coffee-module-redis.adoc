@@ -21,14 +21,14 @@ coffee:
             host: sample-sandbox.icellmobilsoft.hu #default: localhost
             port: 6380 #default: 6380
             password: pass1234 #default: null
-            database: 1 #default: 1
+            database: 1 #default: 0
             pool:
                 default: #<2>
                     maxtotal: 128 #default: 64
-                    maxidle: 32 #default: 64
+                    maxidle: 32 #default: 16
                 custom: #<2>
                     maxtotal: 12 #default: 64
-                    maxidle: 3 #default: 64
+                    maxidle: 3 #default: 16
             timeout: 5000 #default: 5000
 ----
 <1> A redis kapcsolat egyedi azonosítója (configKey). Minden mező opcionális.

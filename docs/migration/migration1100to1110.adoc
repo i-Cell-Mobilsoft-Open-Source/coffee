@@ -20,18 +20,18 @@ coffee:
             host: sample-sandbox.icellmobilsoft.hu #default: localhost
             port: 6380 #default: 6380
             password: pass1234 #default: null
-            database: 1 #default: 1
+            database: 1 #default: 0
             # előző beállítás, megszünt
             #pool:
             #    maxtotal: 128 #default: 64
-            #    maxidle: 32 #default: 64
+            #    maxidle: 32 #default: 16
             pool:
                 default: #<2>
                     maxtotal: 128 #default: 64
-                    maxidle: 32 #default: 64
+                    maxidle: 32 #default: 16
                 custom:
                     maxtotal: 12 #default: 64
-                    maxidle: 3 #default: 64
+                    maxidle: 3 #default: 16
             timeout: 5000 #default: 5000
 ----
 
