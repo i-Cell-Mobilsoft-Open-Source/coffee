@@ -10,10 +10,36 @@ coff:ee v1.10.0 -> v1.11.0 migrációs leírás, újdonságok, változások leí
 lévő *JedisDataException* kezelésére kellett módosítani a folyamtot.
 * `RedisStreamConsumerExecutor`-ban a `handleGroup` lezárta a jedis connection-t amit a `consumeOne` még használt volna,
 így exception keletkezett.
+* Bevezetésre került a poolConfigKey lehetősége a Redis kapcsolat beállításoknál.
+
+[source,yaml]
+----
+coffee:
+    redis:
+        auth: #<1>
+            host: sample-sandbox.icellmobilsoft.hu #default: localhost
+            port: 6380 #default: 6380
+            password: pass1234 #default: null
+            database: 1 #default: 0
+            # előző beállítás, megszünt
+            #pool:
+            #    maxtotal: 128 #default: 64
+            #    maxidle: 32 #default: 16
+            pool:
+                default: #<2>
+                    maxtotal: 128 #default: 64
+                    maxidle: 32 #default: 16
+                custom:
+                    maxtotal: 12 #default: 64
+                    maxidle: 3 #default: 16
+            timeout: 5000 #default: 5000
+----
 
 ==== Átállás
 
-A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+Mivel a Redis kulcsozási lehetőség megváltozott,
+így a projekteknél a konfigurációnál át kell vezetni a "default" csoportot.
+Többi változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilisek.
 
 === coffee-module-mp-opentracing
 

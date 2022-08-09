@@ -34,6 +34,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.module.redis.annotation.RedisConnection;
+import hu.icellmobilsoft.coffee.module.redis.config.RedisConfig;
 import hu.icellmobilsoft.coffee.module.redis.manager.RedisManager;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
 import hu.icellmobilsoft.coffee.tool.utils.annotation.AnnotationUtil;
@@ -63,11 +64,13 @@ public class RedisManagerProducer {
      */
     @Dependent
     @Produces
-    @RedisConnection(configKey = "")
+    @RedisConnection(configKey = "", poolConfigKey = "")
     public RedisManager getRedisService(InjectionPoint injectionPoint) throws BaseException {
         Optional<RedisConnection> annotation = AnnotationUtil.getAnnotation(injectionPoint, RedisConnection.class);
 
         String configKey = annotation.map(RedisConnection::configKey).orElse(null);
+        String poolConfigKey = annotation.map(RedisConnection::poolConfigKey).orElse(RedisConfig.POOL_CONFIG_KEY_DEFAULT_VALUE);
+
         if (StringUtils.isBlank(configKey)) {
             throw new IllegalStateException("configKey is required for redis");
         }
@@ -75,6 +78,7 @@ public class RedisManagerProducer {
         log.trace("Creating RedisManager with configKey: [{0}]", configKey);
         RedisManager redisManager = CDI.current().select(RedisManager.class).get();
         redisManager.setConfigKey(configKey);
+        redisManager.setPoolConfigKey(poolConfigKey);
         return redisManager;
     }
 
@@ -84,7 +88,7 @@ public class RedisManagerProducer {
      * @param redisManager
      *            redis manager
      */
-    public void returnResource(@Disposes @RedisConnection(configKey = "") RedisManager redisManager) {
+    public void returnResource(@Disposes @RedisConnection(configKey = "", poolConfigKey = "") RedisManager redisManager) {
         if (Objects.nonNull(redisManager)) {
             CDI.current().destroy(redisManager);
         }

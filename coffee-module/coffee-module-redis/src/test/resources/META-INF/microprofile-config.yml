@@ -1,0 +1,15 @@
+coffee:
+  redis:
+    yamlconfig:
+      host: sample.icellmobilsoft.hu
+      port: 6381
+      password: secret
+      database: 1
+      timeout: 6000
+      pool:
+        default:
+          maxtotal: 1
+          maxidle: 2
+        custom1:
+          maxtotal: 3
+          maxidle: 4

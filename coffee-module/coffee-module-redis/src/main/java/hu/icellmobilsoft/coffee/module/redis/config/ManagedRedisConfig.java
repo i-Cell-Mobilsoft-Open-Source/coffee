@@ -39,9 +39,15 @@ import org.eclipse.microprofile.config.Config;
  *        password: ****
  *        database: 1
  *        pool:
- *          maxtotal: 128
- *          maxidle: 32
- *        timeout: 5000
+ *          default:
+ *            maxtotal: 64
+ *            maxidle: 16
+ *          custom1:
+ *            maxtotal: 128
+ *            maxidle: 32
+ *          custom2:
+ *            maxtotal: 256
+ *            maxidle: 64
  * </pre>
  *
  * The upper configuration is injectable with:
@@ -64,30 +70,54 @@ import org.eclipse.microprofile.config.Config;
 @Dependent
 public class ManagedRedisConfig implements RedisConfig {
 
-    /** Constant <code>REDIS_PREFIX="coffee.redis"</code> */
+    /**
+     * Constant <code>REDIS_PREFIX="coffee.redis"</code>
+     */
     public static final String REDIS_PREFIX = "coffee.redis";
 
-    /** Constant <code>HOST="host"</code> */
+    /**
+     * Constant <code>HOST="host"</code>
+     */
     public static final String HOST = "host";
-    /** Constant <code>PORT="port"</code> */
+    /**
+     * Constant <code>PORT="port"</code>
+     */
     public static final String PORT = "port";
-    /** Constant <code>PASSWORD="password"</code> */
+    /**
+     * Constant <code>PASSWORD="password"</code>
+     */
     public static final String PASSWORD = "password";
-    /** Constant <code>DATABASE="database"</code> */
+    /**
+     * Constant <code>DATABASE="database"</code>
+     */
     public static final String DATABASE = "database";
-    /** Constant <code>POOL_MAXTOTAL="pool.maxtotal"</code> */
-    public static final String POOL_MAXTOTAL = "pool.maxtotal";
-    /** Constant <code>POOL_MAXIDLE="pool.maxidle"</code> */
-    public static final String POOL_MAXIDLE = "pool.maxidle";
-    /** Constant <code>TIMEOUT="timeout"</code> */
+    /**
+     * Constant <code>POOL_MAXTOTAL="POOL_CONFIG_KEY.maxtotal"</code>
+     */
+    public static final String POOL_MAXTOTAL = "maxtotal";
+    /**
+     * Constant <code>POOL_MAXIDLE="POOL_CONFIG_KEY.maxidle"</code>
+     */
+    public static final String POOL_MAXIDLE = "maxidle";
+    /**
+     * Constant <code>TIMEOUT="timeout"</code>
+     */
     public static final String TIMEOUT = "timeout";
-    /** Constant <code>KEY_DELIMITER="."</code> */
+    /**
+     * Constant <code>KEY_DELIMITER="."</code>
+     */
     public static final String KEY_DELIMITER = ".";
+    /**
+     * Constant <code>POOL="pool"</code>
+     */
+    private static final String POOL = "pool";
 
     @Inject
     private Config config;
 
     private String configKey;
+
+    private String poolConfigKey;
 
     /**
      * {@inheritDoc}
@@ -137,7 +167,7 @@ public class ManagedRedisConfig implements RedisConfig {
      */
     @Override
     public Integer getPoolMaxTotal() {
-        return config.getOptionalValue(joinKey(POOL_MAXTOTAL), Integer.class).orElse(64);
+        return config.getOptionalValue(joinKey(POOL + KEY_DELIMITER + getPoolConfigKey() + "." + POOL_MAXTOTAL), Integer.class).orElse(64);
     }
 
     /**
@@ -149,7 +179,7 @@ public class ManagedRedisConfig implements RedisConfig {
      */
     @Override
     public Integer getPoolMaxIdle() {
-        return config.getOptionalValue(joinKey(POOL_MAXIDLE), Integer.class).orElse(64);
+        return config.getOptionalValue(joinKey(POOL + KEY_DELIMITER + getPoolConfigKey() + "." + POOL_MAXIDLE), Integer.class).orElse(16);
     }
 
     /**
@@ -179,6 +209,27 @@ public class ManagedRedisConfig implements RedisConfig {
      */
     public void setConfigKey(String configKey) {
         this.configKey = configKey;
+    }
+
+    /**
+     * Getter for the field {@code poolConfigKey}.
+     *
+     * @return poolConfigKey
+     * @since 1.11.0
+     */
+    public String getPoolConfigKey() {
+        return poolConfigKey;
+    }
+
+    /**
+     * Setter for the field {@code poolConfigKey}.
+     *
+     * @param poolConfigKey
+     *            poolConfigKey to set
+     * @since 1.11.0
+     */
+    public void setPoolConfigKey(String poolConfigKey) {
+        this.poolConfigKey = poolConfigKey;
     }
 
     private String joinKey(String key) {
