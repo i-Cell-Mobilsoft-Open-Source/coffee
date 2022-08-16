@@ -20,13 +20,12 @@
 package hu.icellmobilsoft.coffee.cdi.logger;
 
 import javax.enterprise.context.Dependent;
+import javax.enterprise.inject.Instance;
 import javax.enterprise.inject.Produces;
+import javax.enterprise.inject.spi.CDI;
 import javax.enterprise.inject.spi.InjectionPoint;
 import javax.inject.Inject;
 import javax.inject.Named;
-
-import org.apache.deltaspike.core.api.provider.BeanProvider;
-import org.apache.deltaspike.core.api.provider.DependentProvider;
 
 import hu.icellmobilsoft.coffee.se.logging.DefaultLogger;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
@@ -96,17 +95,14 @@ public class LogProducer {
      *
      * @param clazz
      *            logger class rakotese
-     * @return {@code DependentProvider<AppLogger>} instance bean
+     * @return {@code Instance<AppLogger>} instance bean
      */
-    public static DependentProvider<AppLogger> getAppLogger(Class<?> clazz) {
+    public static Instance<AppLogger> getAppLogger(Class<?> clazz) {
         if (clazz == null) {
             throw new IllegalArgumentException("Class should not be empty!");
         }
         // ez ugyan az ami itt van injectalva "private AppLogger appLogger;"
-        DependentProvider<AppLogger> dpAppLogger = BeanProvider.getDependent(AppLogger.class, new DefaultAppLoggerQualifier());
-        java.util.logging.Logger log = java.util.logging.Logger.getLogger(clazz.getName());
-        dpAppLogger.get().setLogger(log);
-        return dpAppLogger;
+        return CDI.current().select(AppLogger.class, new DefaultAppLoggerQualifier());
     }
 
     /**
