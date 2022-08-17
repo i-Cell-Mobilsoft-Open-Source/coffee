@@ -77,7 +77,7 @@ public class DefaultLoggerClientResponseFilter implements ClientResponseFilter {
         msg.append(logStatus(requestContext, responseContext));
         msg.append(logHeader(requestContext, responseContext));
         msg.append(logEntity(requestContext, responseContext));
-        LogProducer.getAppLoggerInstance().get().info(msg.toString());
+        LogProducer.logToAppLogger((AppLogger appLogger) -> appLogger.info(msg.toString()), DefaultLoggerClientResponseFilter.class);
     }
 
     /**

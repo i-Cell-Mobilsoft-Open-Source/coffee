@@ -19,6 +19,8 @@
  */
 package hu.icellmobilsoft.coffee.cdi.logger;
 
+import java.util.function.Consumer;
+
 import javax.enterprise.context.Dependent;
 import javax.enterprise.inject.Instance;
 import javax.enterprise.inject.Produces;
@@ -90,14 +92,25 @@ public class LogProducer {
     }
 
     /**
-     * AppLogger bean letrehozasa. Hasznalhato a statikus metodusokban es ott, ahol nem lehet a CDI Inject-et hasznalni. <b>Hasznalat utan
-     * ".destroy()" kell!!</b>
-     *
-     * @return {@code Instance<AppLogger>} instance bean
+     * AppLogger bean kezelése. Hasznalhato a statikus metodusokban es ott, ahol nem lehet a CDI Inject-et hasznalni
+     * 
+     * @param function
+     *            the function doing the logging
+     * @param clazz
+     *            class for logging
      */
-    public static Instance<AppLogger> getAppLoggerInstance() {
-        // ez ugyan az ami itt van injectalva "private AppLogger appLogger;"
-        return CDI.current().select(AppLogger.class, new DefaultAppLoggerQualifier());
+    public static void logToAppLogger(Consumer<AppLogger> function, Class<?> clazz) {
+        if (function == null || clazz == null) {
+            throw new IllegalArgumentException("function or class is missing!");
+        }
+        Instance<AppLogger> logInstance = CDI.current().select(AppLogger.class, new DefaultAppLoggerQualifier());
+        AppLogger logger = logInstance.get();
+        try {
+            logger.setLogger(java.util.logging.Logger.getLogger(clazz.getName()));
+            function.accept(logger);
+        } finally {
+            logInstance.destroy(logger);
+        }
     }
 
     /**

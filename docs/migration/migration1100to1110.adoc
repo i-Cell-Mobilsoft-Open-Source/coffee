@@ -63,7 +63,8 @@ mp.openapi.filter=hu.icellmobilsoft.coffee.rest.filter.OpenAPIFilter
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
 
 === coffee-cdi
-* Deltaspike függőségek megszűntek, átkerültek a coffee-module-localization modulhoz. Ezzel együtt a `Logproducer.getAppLogger()` megváltozott, már nem `DependentProvider`-el tér vissza és `Logproducer.getAppLoggerInstance()` lett a neve.
+* Deltaspike függőségek megszűntek, átkerültek a coffee-module-localization modulhoz. Ezzel együtt a `LogProducer.getAppLogger()` megszűnt,
+helyette a `LogProducer.logToAppLogger(...)` használható, functional interface-t és class-t vár, magában kezeli az AppLogger létrehozását és megszüntetését.
 * Megszűnt dependencyk:
 ** deltaspike-core-api
 ** deltaspike-core-impl
@@ -83,16 +84,12 @@ Mivel a coffee-cdi már nem húzza be a deltaspike dependencyket, ezért a proje
 </dependency>
 ----
 
-A `Logproducer.getAppLogger(clazz)` Instance típussal tér vissza. Használat után ugy mint eddig, destroy hívás szükséges.
+A `LogProducer.logToAppLogger(...)` használata.
 
 [source,java]
 ----
 ...
-Instance<AppLogger> logInstance = LogProducer.getAppLoggerInstance();
-AppLogger log = logInstance.get();
-log.setLogger(Logger.getLogger(getClass().getName()));
-log.trace("example log");
-logInstance.destroy(log);
+LogProducer.logToAppLogger((AppLogger appLogger) -> appLogger.info(msg.toString()), DefaultLoggerClientRequestFilter.class))
 ...
 ----
 
