@@ -20,7 +20,6 @@
 package hu.icellmobilsoft.coffee.module.mp.restclient.provider;
 
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
@@ -78,7 +77,7 @@ public class DefaultLoggerClientResponseFilter implements ClientResponseFilter {
         msg.append(logStatus(requestContext, responseContext));
         msg.append(logHeader(requestContext, responseContext));
         msg.append(logEntity(requestContext, responseContext));
-        LogProducer.getAppLogger(getClass()).get().info(msg.toString());
+        LogProducer.getAppLoggerInstance().get().info(msg.toString());
     }
 
     /**

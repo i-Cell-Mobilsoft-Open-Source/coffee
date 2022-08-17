@@ -93,14 +93,9 @@ public class LogProducer {
      * AppLogger bean letrehozasa. Hasznalhato a statikus metodusokban es ott, ahol nem lehet a CDI Inject-et hasznalni. <b>Hasznalat utan
      * ".destroy()" kell!!</b>
      *
-     * @param clazz
-     *            logger class rakotese
      * @return {@code Instance<AppLogger>} instance bean
      */
-    public static Instance<AppLogger> getAppLogger(Class<?> clazz) {
-        if (clazz == null) {
-            throw new IllegalArgumentException("Class should not be empty!");
-        }
+    public static Instance<AppLogger> getAppLoggerInstance() {
         // ez ugyan az ami itt van injectalva "private AppLogger appLogger;"
         return CDI.current().select(AppLogger.class, new DefaultAppLoggerQualifier());
     }

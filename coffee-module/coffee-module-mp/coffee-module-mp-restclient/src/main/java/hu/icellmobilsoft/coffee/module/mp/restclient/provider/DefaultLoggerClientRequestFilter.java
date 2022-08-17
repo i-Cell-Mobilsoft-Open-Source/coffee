@@ -70,7 +70,7 @@ public class DefaultLoggerClientRequestFilter implements ClientRequestFilter {
         msg.append(logUrl(requestContext));
         msg.append(logHeader(requestContext));
         msg.append(logEntity(requestContext));
-        LogProducer.getAppLogger(getClass()).get().info(msg.toString());
+        LogProducer.getAppLoggerInstance().get().info(msg.toString());
     }
 
     /**
