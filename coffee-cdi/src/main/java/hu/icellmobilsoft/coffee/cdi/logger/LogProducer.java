@@ -19,14 +19,15 @@
  */
 package hu.icellmobilsoft.coffee.cdi.logger;
 
+import java.util.function.Consumer;
+
 import javax.enterprise.context.Dependent;
+import javax.enterprise.inject.Instance;
 import javax.enterprise.inject.Produces;
+import javax.enterprise.inject.spi.CDI;
 import javax.enterprise.inject.spi.InjectionPoint;
 import javax.inject.Inject;
 import javax.inject.Named;
-
-import org.apache.deltaspike.core.api.provider.BeanProvider;
-import org.apache.deltaspike.core.api.provider.DependentProvider;
 
 import hu.icellmobilsoft.coffee.se.logging.DefaultLogger;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
@@ -91,22 +92,25 @@ public class LogProducer {
     }
 
     /**
-     * AppLogger bean letrehozasa. Hasznalhato a statikus metodusokban es ott, ahol nem lehet a CDI Inject-et hasznalni. <b>Hasznalat utan
-     * ".destroy()" kell!!</b>
-     *
+     * AppLogger bean kezelése. Hasznalhato a statikus metodusokban es ott, ahol nem lehet a CDI Inject-et hasznalni
+     * 
+     * @param function
+     *            the function doing the logging
      * @param clazz
-     *            logger class rakotese
-     * @return {@code DependentProvider<AppLogger>} instance bean
+     *            class for logging
      */
-    public static DependentProvider<AppLogger> getAppLogger(Class<?> clazz) {
-        if (clazz == null) {
-            throw new IllegalArgumentException("Class should not be empty!");
+    public static void logToAppLogger(Consumer<AppLogger> function, Class<?> clazz) {
+        if (function == null || clazz == null) {
+            throw new IllegalArgumentException("function or class is missing!");
         }
-        // ez ugyan az ami itt van injectalva "private AppLogger appLogger;"
-        DependentProvider<AppLogger> dpAppLogger = BeanProvider.getDependent(AppLogger.class, new DefaultAppLoggerQualifier());
-        java.util.logging.Logger log = java.util.logging.Logger.getLogger(clazz.getName());
-        dpAppLogger.get().setLogger(log);
-        return dpAppLogger;
+        Instance<AppLogger> logInstance = CDI.current().select(AppLogger.class, new DefaultAppLoggerQualifier());
+        AppLogger logger = logInstance.get();
+        try {
+            logger.setLogger(java.util.logging.Logger.getLogger(clazz.getName()));
+            function.accept(logger);
+        } finally {
+            logInstance.destroy(logger);
+        }
     }
 
     /**

@@ -61,3 +61,35 @@ mp.openapi.filter=hu.icellmobilsoft.coffee.rest.filter.OpenAPIFilter
 
 ==== Átállás
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+=== coffee-cdi
+* Deltaspike függőségek megszűntek, átkerültek a coffee-module-localization modulhoz. Ezzel együtt a `LogProducer.getAppLogger()` megszűnt,
+helyette a `LogProducer.logToAppLogger(...)` használható, functional interface-t és class-t vár, magában kezeli az AppLogger létrehozását és megszüntetését.
+* Megszűnt dependencyk:
+** deltaspike-core-api
+** deltaspike-core-impl
+
+==== Átállás
+Mivel a coffee-cdi már nem húzza be a deltaspike dependencyket, ezért a projekt pom.xml-ben meg kell adni.
+
+[source,xml]
+----
+<dependency>
+	<groupId>org.apache.deltaspike.core</groupId>
+	<artifactId>deltaspike-core-api</artifactId>
+</dependency>
+<dependency>
+	<groupId>org.apache.deltaspike.core</groupId>
+	<artifactId>deltaspike-core-impl</artifactId>
+</dependency>
+----
+
+A `LogProducer.logToAppLogger(...)` használata.
+
+[source,java]
+----
+...
+LogProducer.logToAppLogger((AppLogger appLogger) -> appLogger.info(msg.toString()), DefaultLoggerClientRequestFilter.class))
+...
+----
+

@@ -34,7 +34,6 @@ import javax.ws.rs.core.MediaType;
 
 import hu.icellmobilsoft.coffee.cdi.logger.AppLogger;
 import hu.icellmobilsoft.coffee.cdi.logger.LogProducer;
-import hu.icellmobilsoft.coffee.cdi.logger.ThisLogger;
 import hu.icellmobilsoft.coffee.module.mp.restclient.RestClientPriority;
 import hu.icellmobilsoft.coffee.rest.log.RequestResponseLogger;
 import hu.icellmobilsoft.coffee.rest.log.annotation.enumeration.LogSpecifierTarget;
@@ -53,10 +52,6 @@ import hu.icellmobilsoft.coffee.tool.utils.string.StringHelper;
 public class DefaultLoggerClientRequestFilter implements ClientRequestFilter {
 
     @Inject
-    @ThisLogger
-    private AppLogger log;
-
-    @Inject
     private RequestResponseLogger requestResponseLogger;
 
     /** {@inheritDoc} */
@@ -70,7 +65,7 @@ public class DefaultLoggerClientRequestFilter implements ClientRequestFilter {
         msg.append(logUrl(requestContext));
         msg.append(logHeader(requestContext));
         msg.append(logEntity(requestContext));
-        LogProducer.getAppLogger(getClass()).get().info(msg.toString());
+        LogProducer.logToAppLogger((AppLogger appLogger) -> appLogger.info(msg.toString()), DefaultLoggerClientRequestFilter.class);
     }
 
     /**
