@@ -1,0 +1,368 @@
+ifndef::imagesdir[:imagesdir: ../../pic]
+[#common_module_coffee-module-redispubsub]
+= coffee-module-redispubsub
+
+Modul célja "topic" jellegű üzenetküldés megvalósítása a https://redis.io/docs/manual/pubsub/[Redis Pub/Sub] funkció használatával
+nyújtani https://download.eclipse.org/microprofile/microprofile-reactive-messaging-2.0.1/microprofile-reactive-messaging-spec-2.0.1.html[microprofile-reactive-messaging] alapokon.
+
+== Redis Pub/Sub
+A Pub/Sub funkció klasszikus publisher-subscriber üzenetváltást valósít meg. A publisher-ek üzenetet küldenek
+egy adott Redis pub/sub channel-re, amit minden éppen feliratkozott subscriber megkap.
+A redis stream-ekkel ellentétben a channel-en még in-memory sem maradnak meg az üzenetek,
+ha egy kliens utólag iratkozik fel a channel-re a korábbi üzeneteket nem kapja meg, ennek megfelelően a feliratkozás nem
+ismételt bekérdezésekkel (pl. `XREAD`), hanem egy fenntartott grpc kapcsolaton történik.
+
+== RedisConnection
+
+A coffee-module-redispubsub modul a <<coffee-module-redis>> modult használja fel a Redis connection kezelésre.
+A Redis kapcsolat beállítása egyezik a <<coffee-module-redis>> leírásnak,
+ott lévő "kulcs" alapján történik.
+
+== Microprofile-reactive-messaging
+A modul a microprofile reactive messaging API-t használva integrálja a Pub/Sub megoldást,
+ezzel a konfiguráció és a message küldés/fogadás a specifikáció szerint történik
+(emiatt minimális kód módosítással már meglévő connector-okra (pl. Kafka, MQTT, Google Pub/Sub...) is lecserélhető a modul).
+Az integráció a `PubSubConnector` osztályon keresztül történik, ezzel kerülnek beregisztrálásra a subscriberek,
+valamint ezen keresztül kerülnek kiküldésre az üzenetek
+
+=== Wildfly konfiguráció
+A modul használatához aktiválni kell wildfly alatt a `microprofile-reactive-streams-operators-smallrye`,
+`microprofile-reactive-messaging-smallrye` subsystem-eket:
+
+.jboss-cli.sh
+[source]
+----
+/extension=org.wildfly.extension.microprofile.reactive-messaging-smallrye:add
+/extension=org.wildfly.extension.microprofile.reactive-streams-operators-smallrye:add
+/subsystem=microprofile-reactive-streams-operators-smallrye:add
+/subsystem=microprofile-reactive-messaging-smallrye:add
+----
+
+== Subscriber(consumer) létrehozás
+
+Subscriber létrehozása a microprofile-reactive-messaging által meghatározott konfigokkal és annotációkkal történik.
+
+.config
+[source, yaml]
+----
+mp:
+  messaging:
+    incoming:
+      test-in: #<1>
+        connector: coffee-redis-pubsub #<2>
+        ${pubsub-attribute}: ${pubsub-attribute} #<3>
+----
+<1> Bejövő mp channel kulcsa, kódban erre hivatkozva lehet feldolgozni az üzenetet.
+<2> A channel használja a modul connector-át, fixen `coffee-redis-pubsub`.
+<3> Connector specifikus beállítások.
++
+.Incoming Attributes of the 'coffee-redis-pubsub' connector
+[cols="25, 30, 15, 20",options="header"]
+|===
+|Attribute (_alias_) | Description | Mandatory | Default
+| [.no-hyphens]#*connection-key*# | Coffee redis modul szerinti connection key coffee.redis.+*+
+
+Type: _string_ | true |
+| [.no-hyphens]#*pool-key*# | Coffee redis modul szerinti pool key coffee.redis.+*+.pool.+*+
+
+Type: _string_ | false | `default`
+| [.no-hyphens]#*pub-sub-channel*# | Opcionális paraméter, redis Pub/Sub channel neve,
+ha nincs megadva, akkor alapértelmezés szerint a bejövő channel kulcsát vesszük redis channel-nek is.
+
+Type: _string_ | false |
+|===
+
+.subscriber method
+[source, java]
+----
+@ApplicationScoped //<1>
+public class TestListener {
+
+    @Incoming("test-in") //<2>
+    void consume(String test) {
+        //logic
+    }
+}
+----
+<1> microprofile-reactive-messaging csak `Dependent` vagy `ApplicationScoped` bean-eket enged consumer-nek
+<2> a konfigban megadott mp channel kulcsával dolgozunk
+
+== Publisher létrehozás
+
+Publisher létrehozása szintén a microprofile-reactive-messaging által meghatározott konfigokkal és annotációkkal történik.
+
+.config
+[source, yaml]
+----
+mp:
+  messaging:
+    outgoing:
+      test-out: #<1>
+        connector: coffee-redis-pubsub #<2>
+        ${pubsub-attribute}: ${pubsub-attribute} #<3>
+----
+<1> Kimenő mp channel kulcsa, kódban erre hivatkozva lehet feldolgozni az üzenetet.
+<2> A channel használja a modul connector-át, fixen `coffee-redis-pubsub`.
+<3> Connector specifikus beállítások.
++
+.Outgoing Attributes of the 'coffee-redis-pubsub' connector
+[cols="25, 30, 15, 20",options="header"]
+|===
+|Attribute (_alias_) | Description | Mandatory | Default
+| [.no-hyphens]#*connection-key*# | Coffee redis modul szerinti connection key coffee.redis.+*+
+
+Type: _string_ | true |
+| [.no-hyphens]#*pool-key*# | Coffee redis modul szerinti pool key coffee.redis.+*+.pool.+*+
+
+Type: _string_ | false | `default`
+| [.no-hyphens]#*pub-sub-channel*# | Opcionális paraméter, redis Pub/Sub channel neve,
+ha nincs megadva, akkor alapértelmezés szerint a bejövő channel kulcsát vesszük redis channel-nek is.
+
+Type: _string_ | false |
+|===
+
+.publishing method
+[source, java]
+----
+@Model
+public class TestAction {
+
+    @Inject
+    @Channel("test-out") //<1>
+    private Emitter<String> emitter;
+
+    void sendMessage(String test) {
+        //logic
+        emitter.send(test); //<2>
+    }
+}
+----
+<1> a konfigban megadott mp channel kulcsával dolgozunk
+<2> üzenet küldése
+
+== Üzenet
+
+A modul minden üzenetet `PubSubMessage` objektumba csomagol, ebbe bekerül a küldő SID-is, amit a consumer kiolvas és MDC-be beállítja.
+Az osztály implementálja a `org.eclipse.microprofile.reactive.messaging.Message`-et így a consumer metódus paraméterének is
+használhatjuk a dokumentációban leírtak szerint
+https://download.eclipse.org/microprofile/microprofile-reactive-messaging-2.0.1/microprofile-reactive-messaging-spec-2.0.1.html#_methods_consuming_data[Methods consuming data].
+
+.példa üzenet
+[source, json]
+----
+{
+    "context": {
+        "extSessionId": "3VUTBZCQOIHUAM07"
+    },
+    "payload": "test0"
+}
+----
+
+=== custom SID beállítása üzeneten
+Ha kézzel akarjuk beállítani az üzenet SID-jét, ahhoz payload helyett `PubSubMessage`-et kell az emitternek küldeni.
+
+.példa saját sid-re
+[source, java]
+----
+@Model
+public class TestAction {
+
+    @Inject
+    @Channel("test")
+    private Emitter<PubSubMessage> emitter;
+
+    void sendMessage() {
+        //logic
+        emitter.send(PubSubMessage.of("test", Map.of(LogConstants.LOG_SESSION_ID, "customSID")));
+    }
+}
+----
+
+== mp-reactive-messaging sajátosságok
+
+=== Azonos channel-re publisher és subscriber egy service-en belül
+
+Egy microservice-en belül a microprofile-reactive-messaging nem engedi, hogy publisher-t és subscriber-t is létrehozzunk
+ugyanarra a kulcsra, ha mégis ilyen igény merülne fel, akkor a `pub-sub-channel` attribútum használatával elválasztható
+a service-en belüli microprofile channel elnevezése és a hozzá kapcsolódó redis pub/sub channel neve, példa: <<common_module_coffee-module-redispubsub_same_pub_sub>>.
+
+=== Több producer használata azonos channel-en
+Alapértelmezés szerint egy channel-re a service-en belül egy helyről lehet üzenetet küldeni,
+ha több beanből szeretnénk, akkor a `mp.messaging.outgoing.test-out.merge=true` konfig aktiválásával tehetjük be.
+
+=== Konfigurációs kulcs megkötések
+
+Ha aktiválva van a microprofile-reactive-messaging subsytem és létezik mp-configban bármilyen `mp.messaging.*` akkor
+kell legyen a deploymentben hozzá tartozó subscriber vagy producer! Ez közös konfig fájlok esetén okozhat gondot.
+
+== Példák
+[#common_module_coffee-module-redispubsub_seperated_pub_sub]
+=== Subscriber és producer külön service-en
+
+image::seperated_pub_sub.drawio.svg[]
+
+==== Publisher
+.publisher config
+[source, yaml]
+----
+coffee:
+  redis:
+    sample: #<1>
+      database: 0
+      host: bs-sample-redis
+      port: 6379
+mp:
+  messaging:
+    outgoing:
+      test: #<2>
+        connector: coffee-redis-pubsub
+        connection-key: sample #<1>
+----
+<1> redis connection beállítás
+<2> emitter kulcsa
+
+.publishing method
+[source, java]
+----
+@Model
+public class TestAction {
+
+    @Inject
+    @Channel("test") //<1>
+    private Emitter<String> emitter;
+
+    void sendMessage() {
+        //logic
+        emitter.send("test123");
+    }
+}
+----
+<1> `mp.messaging.outgoing` kulcs
+
+==== Subscriber
+.config
+[source, yaml]
+----
+coffee:
+  redis:
+    sample: #<1>
+      database: 0
+      host: bs-sample-redis
+      port: 6379
+mp:
+  messaging:
+    incoming:
+      test: #<2>
+        connector: coffee-redis-pubsub
+        connection-key: sample #<1>
+----
+<1> redis connection beállítás
+<2> subscriber kulcsa
+
+.subscriber method
+[source, java]
+----
+@ApplicationScoped
+public class TestListener {
+
+    @Incoming("test") //<1>
+    void consume(String test) {
+        //logic
+    }
+}
+----
+<1> `mp.messaging.incoming` kulcs
+
+[#common_module_coffee-module-redispubsub_same_pub_sub]
+=== Subscriber és producer azonos service-en
+
+image::same_pub_sub.drawio.svg[]
+
+.config
+[source, yaml]
+----
+coffee:
+  redis:
+    sample: #<1>
+      database: 0
+      host: bs-sample-redis
+      port: 6379
+mp:
+  messaging:
+    incoming:
+      test-in: #<2>
+        connector: coffee-redis-pubsub
+        connection-key: sample #<1>
+        pub-sub-channel: test #<4>
+    outgoing:
+      test-out: #<3>
+        connector: coffee-redis-pubsub
+        connection-key: sample #<1>
+        pub-sub-channel: test #<4>
+----
+<1> redis connection beállítás
+<2> subscriber kulcsa
+<3> emitter kulcsa
+<4> redis channel neve
+
+
+.publishing method
+[source, java]
+----
+@Model
+public class TestAction {
+
+    @Inject
+    @Channel("test-out") //<1>
+    private Emitter<String> emitter;
+
+    void sendMessage() {
+        //logic
+        emitter.send("test");
+    }
+}
+----
+<1> `mp.messaging.outgoing` kulcs
+
+.subscriber method
+[source, java]
+----
+@ApplicationScoped
+public class TestListener {
+
+    @Incoming("test-in") //<1>
+    void consume(String test) {
+        //logic
+    }
+}
+----
+<1> `mp.messaging.incoming` kulcs
+
+== Hiányosságok, továbbfejlesztési lehetőségek
+* Több szálas async feldolgozás
++
+Mivel minden subscriber megkapja az üzenetet, ezért redis channel-enként egy szálnak van értelme feliratkozni,
+jelenleg az üzenet érkezése utáni logika is egy szálon valósul meg (hasonlóan a JMS topic mdb-ihez). Consumer oldalon
+megoldható a többszálasítás, erre lehetne Util/Helper osztály (pl. MDC beállításhoz, szálak száma stb...)
++
+.Több szálas feldolgozás
+[source, java]
+----
+@ApplicationScoped
+public class TestListener {
+
+    @Resource(name = "java:jboss/ee/concurrency/executor/default")
+    private ExecutorService executorService;
+
+    @Incoming("test")
+    CompletionStage<Void> consume(Message<String> test){
+        return CompletableFuture.runAsync(() -> {
+            //logic
+        }, executorService);
+    }
+}
+----
+* Redis Pub/Sub `PSUBSCRIBE` operáció támogatása, ezzel lehetséges pattern-ekre feliratkozni, pl. `PSUBSCRIBE ch*`-al
+feliratkozó kliens megkapja a `ch1`,`ch2`,`cha` channelekre küldött üzeneteket is.
+* Projekt szintű felülírás lehetősége pl. service loader mechanizmussal
+* Tracing bekötés
