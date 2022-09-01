@@ -39,7 +39,7 @@ import hu.icellmobilsoft.coffee.se.logging.Logger;
  * @since 1.0.0
  */
 public class XsdValidationErrorCollector implements IXsdValidationErrorCollector {
-    private static final Logger log = hu.icellmobilsoft.coffee.cdi.logger.LogProducer.getStaticDefaultLogger(XsdValidationErrorCollector.class);
+    private static final Logger log = Logger.getLogger(XsdValidationErrorCollector.class);
     private List<XMLValidationError> errors;
 
     /** {@inheritDoc} */

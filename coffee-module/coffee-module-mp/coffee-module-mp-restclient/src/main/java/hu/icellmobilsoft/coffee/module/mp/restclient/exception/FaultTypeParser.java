@@ -23,8 +23,8 @@ import javax.enterprise.inject.Vetoed;
 
 import org.apache.commons.lang3.EnumUtils;
 
-import hu.icellmobilsoft.coffee.cdi.logger.LogProducer;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
+import hu.icellmobilsoft.coffee.se.logging.Logger;
 
 /**
  * FaultType parser.
@@ -49,7 +49,7 @@ public class FaultTypeParser {
                 return fault;
             }
         }
-        LogProducer.getStaticDefaultLogger(FaultTypeParser.class)
+        Logger.getLogger(FaultTypeParser.class)
                 .warn("FaultType not exists in enum for messages, faultType: [" + faultTypeString + "]");
         return CoffeeFaultType.OPERATION_FAILED;
     }

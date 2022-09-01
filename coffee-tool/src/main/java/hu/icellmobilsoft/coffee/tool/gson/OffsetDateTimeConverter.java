@@ -44,7 +44,7 @@ import hu.icellmobilsoft.coffee.tool.utils.date.DatePrintUtil;
  */
 public class OffsetDateTimeConverter implements JsonSerializer<OffsetDateTime>, JsonDeserializer<OffsetDateTime> {
 
-    private static Logger LOGGER = hu.icellmobilsoft.coffee.cdi.logger.LogProducer.getStaticDefaultLogger(OffsetDateTimeConverter.class);
+    private static Logger LOGGER = Logger.getLogger(OffsetDateTimeConverter.class);
 
     /** {@inheritDoc} */
     @Override

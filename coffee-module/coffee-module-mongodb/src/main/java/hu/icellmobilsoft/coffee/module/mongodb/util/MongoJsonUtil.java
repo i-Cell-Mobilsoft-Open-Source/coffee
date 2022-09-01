@@ -60,7 +60,7 @@ import hu.icellmobilsoft.coffee.tool.utils.date.DateXmlUtil;
 @Vetoed
 public class MongoJsonUtil {
 
-    private static Logger LOGGER = hu.icellmobilsoft.coffee.cdi.logger.LogProducer.getStaticDefaultLogger(MongoJsonUtil.class);
+    private static Logger LOGGER = Logger.getLogger(MongoJsonUtil.class);
 
     private static final String DATE_PROPERTY = "$date";
 

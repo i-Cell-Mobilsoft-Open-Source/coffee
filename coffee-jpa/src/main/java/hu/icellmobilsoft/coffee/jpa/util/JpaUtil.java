@@ -28,10 +28,10 @@ import javax.persistence.Query;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.query.internal.QueryImpl;
 
-import hu.icellmobilsoft.coffee.cdi.logger.LogProducer;
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
+import hu.icellmobilsoft.coffee.se.logging.Logger;
 
 /**
  * JPA common functions.
@@ -55,7 +55,7 @@ public class JpaUtil {
         try {
             return toNativeSQL(em, query);
         } catch (BaseException e) {
-            LogProducer.getStaticDefaultLogger(JpaUtil.class).warn("Exception on converting Query to native SQL!", e);
+            Logger.getLogger(JpaUtil.class).warn("Exception on converting Query to native SQL!", e);
         }
         return null;
     }

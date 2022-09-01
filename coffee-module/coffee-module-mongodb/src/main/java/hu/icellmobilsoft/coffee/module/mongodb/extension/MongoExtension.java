@@ -49,7 +49,7 @@ import hu.icellmobilsoft.coffee.se.logging.Logger;
  */
 public class MongoExtension implements javax.enterprise.inject.spi.Extension {
 
-    private static final Logger LOGGER = hu.icellmobilsoft.coffee.cdi.logger.LogProducer.getStaticDefaultLogger(MongoExtension.class);
+    private static final Logger LOGGER = Logger.getLogger(MongoExtension.class);
 
     private final List<Type> mongoServiceTypes = new ArrayList<>();
 

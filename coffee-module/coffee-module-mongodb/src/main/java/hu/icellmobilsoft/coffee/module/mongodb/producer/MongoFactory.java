@@ -55,7 +55,7 @@ import hu.icellmobilsoft.coffee.se.logging.Logger;
 @Deprecated(forRemoval = true, since = "1.1.0")
 public class MongoFactory {
 
-    private static Logger LOGGER = hu.icellmobilsoft.coffee.cdi.logger.LogProducer.getStaticDefaultLogger(MongoFactory.class);
+    private static Logger LOGGER = Logger.getLogger(MongoFactory.class);
 
     private Map<String, MongoClient> mongoClientMap = new HashMap<>();
 

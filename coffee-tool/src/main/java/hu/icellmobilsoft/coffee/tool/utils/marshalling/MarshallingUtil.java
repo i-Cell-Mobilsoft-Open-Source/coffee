@@ -47,7 +47,7 @@ import hu.icellmobilsoft.coffee.se.logging.Logger;
 @Vetoed
 public class MarshallingUtil {
 
-    private static Logger LOGGER = hu.icellmobilsoft.coffee.cdi.logger.LogProducer.getStaticDefaultLogger(MarshallingUtil.class);
+    private static Logger LOGGER = Logger.getLogger(MarshallingUtil.class);
 
     private static final String WARN_CANNOT_CONVERT = "Cannot convert [{0}] object to xml: [{1}]";
 

@@ -29,7 +29,6 @@ import javax.enterprise.inject.spi.InjectionPoint;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import hu.icellmobilsoft.coffee.se.logging.DefaultLogger;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
 
 /**
@@ -77,21 +76,6 @@ public class LogProducer {
     }
 
     /**
-     * <p>
-     * createDefaultJBossLogger.
-     * </p>
-     *
-     * @param injectionPoint
-     *            the injection point
-     * @return {@link org.jboss.logging.Logger} instance
-     */
-    @Produces
-    @Deprecated(since = "1.1.0", forRemoval = true)
-    public org.jboss.logging.Logger createDefaultJbossLogger(InjectionPoint injectionPoint) {
-        return getStaticLogger(injectionPoint.getMember().getDeclaringClass().getName());
-    }
-
-    /**
      * AppLogger bean kezelése. Hasznalhato a statikus metodusokban es ott, ahol nem lehet a CDI Inject-et hasznalni
      * 
      * @param function
@@ -111,57 +95,5 @@ public class LogProducer {
         } finally {
             logInstance.destroy(logger);
         }
-    }
-
-    /**
-     * Bizonyos esetekben hasznaljuk, peldaul ott ahol nincs CDI es static-kent bekotjuk osztaly valtozoba
-     *
-     * @param clazz
-     *            osztaly
-     * @return slf4j logger
-     * @deprecated use {@link #getStaticDefaultLogger(Class)} instead
-     */
-    @Deprecated(forRemoval = true, since = "1.1.0")
-    public static org.jboss.logging.Logger getStaticLogger(Class<?> clazz) {
-        return org.jboss.logging.Logger.getLogger(clazz);
-    }
-
-    /**
-     * Bizonyos esetekben hasznaljuk, peldaul ott ahol nincs CDI es static-kent bekotjuk osztaly valtozoba
-     *
-     * @param className
-     *            osztaly neve
-     * @return slf4j logger
-     * @deprecated use {@link #getStaticDefaultLogger(String)} instead
-     */
-    @Deprecated(forRemoval = true, since = "1.1.0")
-    public static org.jboss.logging.Logger getStaticLogger(String className) {
-        return org.jboss.logging.Logger.getLogger(className);
-    }
-
-    /**
-     * Bizonyos esetekben hasznaljuk, peldaul ott ahol nincs CDI es static-kent bekotjuk osztaly valtozoba
-     *
-     * @param clazz
-     *            osztaly
-     * @return slf4j logger
-     * @deprecated use {@link Logger#getLogger(Class)} instead
-     */
-    @Deprecated(forRemoval = true, since = "1.1.0")
-    public static hu.icellmobilsoft.coffee.se.logging.Logger getStaticDefaultLogger(Class<?> clazz) {
-        return DefaultLogger.getLogger(clazz);
-    }
-
-    /**
-     * Bizonyos esetekben hasznaljuk, peldaul ott ahol nincs CDI es static-kent bekotjuk osztaly valtozoba
-     *
-     * @param className
-     *            osztaly neve
-     * @return slf4j logger
-     * @deprecated use {@link Logger#getLogger(String)} instead
-     */
-    @Deprecated(forRemoval = true, since = "1.1.0")
-    public static hu.icellmobilsoft.coffee.se.logging.Logger getStaticDefaultLogger(String className) {
-        return DefaultLogger.getLogger(className);
     }
 }

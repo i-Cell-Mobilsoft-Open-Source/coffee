@@ -49,7 +49,7 @@ import hu.icellmobilsoft.coffee.se.logging.Logger;
 @Vetoed
 public class JsonUtil {
 
-    private static final Logger LOGGER = hu.icellmobilsoft.coffee.cdi.logger.LogProducer.getStaticDefaultLogger(JsonUtil.class);
+    private static final Logger LOGGER = Logger.getLogger(JsonUtil.class);
 
     /**
      * Converting DTO object to JSON string without throwing exception

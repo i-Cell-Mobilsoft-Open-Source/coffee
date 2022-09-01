@@ -41,7 +41,7 @@ import hu.icellmobilsoft.coffee.se.logging.Logger;
 @Vetoed
 public class EncodeUtil {
 
-    private static Logger LOGGER = hu.icellmobilsoft.coffee.cdi.logger.LogProducer.getStaticDefaultLogger(EncodeUtil.class);
+    private static Logger LOGGER = Logger.getLogger(EncodeUtil.class);
 
     /**
      * Encodes input {@link String} with SHA-512.

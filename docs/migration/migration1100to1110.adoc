@@ -65,6 +65,12 @@ A változtatások nem eredményeznek átállási munkálatokat, visszafelé komp
 === coffee-cdi
 * Deltaspike függőségek megszűntek, átkerültek a coffee-module-localization modulhoz. Ezzel együtt a `LogProducer.getAppLogger()` megszűnt,
 helyette a `LogProducer.logToAppLogger(...)` használható, functional interface-t és class-t vár, magában kezeli az AppLogger létrehozását és megszüntetését.
+* A `LogProducer`-ből kivezetésre a korábban már deprecated-nek minősített metódusok, amelyek helyett a `Logger.getLogger(...)` használható:
+** createDefaultJbossLogger(InjectionPoint injectionPoint)
+** getStaticLogger(Class<?> clazz)
+** getStaticLogger(String className)
+** getStaticDefaultLogger(Class<?> clazz)
+** getStaticDefaultLogger(String className)
 * Megszűnt dependencyk:
 ** deltaspike-core-api
 ** deltaspike-core-impl

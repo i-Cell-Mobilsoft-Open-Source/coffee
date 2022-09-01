@@ -41,7 +41,7 @@ import hu.icellmobilsoft.coffee.se.logging.Logger;
  */
 public class DateConverter implements JsonSerializer<Date>, JsonDeserializer<Date> {
 
-    private static Logger LOGGER = hu.icellmobilsoft.coffee.cdi.logger.LogProducer.getStaticDefaultLogger(DateConverter.class);
+    private static Logger LOGGER = Logger.getLogger(DateConverter.class);
 
     /** {@inheritDoc} */
     @Override

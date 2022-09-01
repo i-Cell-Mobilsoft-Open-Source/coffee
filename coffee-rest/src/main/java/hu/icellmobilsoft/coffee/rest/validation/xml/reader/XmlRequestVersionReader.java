@@ -29,9 +29,9 @@ import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
-import hu.icellmobilsoft.coffee.cdi.logger.LogProducer;
 import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
+import hu.icellmobilsoft.coffee.se.logging.Logger;
 
 /**
  * A requestVersion értékének kiolvasását végzi XML stream-ból
@@ -85,7 +85,7 @@ public class XmlRequestVersionReader implements IXmlRequestVersionReader {
                 try {
                     reader.close();
                 } catch (XMLStreamException e) {
-                    LogProducer.getStaticDefaultLogger(XmlRequestVersionReader.class).warn(e.getLocalizedMessage());
+                    Logger.getLogger(XmlRequestVersionReader.class).warn(e.getLocalizedMessage());
                 }
             }
         }

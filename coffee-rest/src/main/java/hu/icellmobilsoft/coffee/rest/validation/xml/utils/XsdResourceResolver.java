@@ -35,7 +35,6 @@ import org.w3c.dom.ls.DOMImplementationLS;
 import org.w3c.dom.ls.LSInput;
 import org.w3c.dom.ls.LSResourceResolver;
 
-import hu.icellmobilsoft.coffee.cdi.logger.LogProducer;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
 
 /**
@@ -56,7 +55,7 @@ import hu.icellmobilsoft.coffee.se.logging.Logger;
  */
 @Alternative
 public class XsdResourceResolver implements LSResourceResolver, IXsdResourceResolver {
-    private static final Logger log = LogProducer.getStaticDefaultLogger(XsdResourceResolver.class);
+    private static final Logger log = Logger.getLogger(XsdResourceResolver.class);
     private String xsdDirPath;
 
     /**
