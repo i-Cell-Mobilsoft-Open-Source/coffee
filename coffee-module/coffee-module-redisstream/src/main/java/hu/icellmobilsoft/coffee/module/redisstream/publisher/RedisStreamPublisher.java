@@ -79,6 +79,7 @@ public class RedisStreamPublisher {
     public void init(RedisManager redisManager, String streamGroup) {
         this.redisManager = redisManager;
         this.streamGroup = streamGroup;
+        config.setConfigKey(streamGroup);
     }
 
     /**

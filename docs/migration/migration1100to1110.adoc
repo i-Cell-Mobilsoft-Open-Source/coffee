@@ -41,6 +41,14 @@ Mivel a Redis kulcsozási lehetőség megváltozott,
 így a projekteknél a konfigurációnál át kell vezetni a "default" csoportot.
 Többi változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilisek.
 
+=== coffee-module-redis-stream
+
+* `coffee.redisstream.{0}.producer.{1}` konfigurációs kulcsok nem léptek érvényre, javítva lett
+
+==== Átállás
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
 === coffee-module-mp-opentracing
 
 * *OpenTraceErrorResponseFilter* NPE hibát dobott olyan esetben amikor a kérés a filter láncban megakadt az opentrace filter előtt, ami nem tudott létrehozni
