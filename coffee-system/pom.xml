@@ -3,7 +3,7 @@
 	<parent>
 		<groupId>hu.icellmobilsoft.coffee</groupId>
 		<artifactId>coffee</artifactId>
-		<version>1.11.0-SNAPSHOT</version>
+		<version>1.11.0</version>
 	</parent>
 
 	<artifactId>coffee-system</artifactId>
