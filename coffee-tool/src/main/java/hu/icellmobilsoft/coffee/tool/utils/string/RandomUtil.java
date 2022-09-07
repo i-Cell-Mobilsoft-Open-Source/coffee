@@ -39,7 +39,7 @@ import hu.icellmobilsoft.coffee.se.logging.Logger;
 @Vetoed
 public class RandomUtil {
 
-    private static Logger LOGGER = hu.icellmobilsoft.coffee.cdi.logger.LogProducer.getStaticDefaultLogger(RandomUtil.class);
+    private static Logger LOGGER = Logger.getLogger(RandomUtil.class);
 
     /** Constant <code>DATE_2013_01_01=1356998400000l</code> */
     public static long DATE_2013_01_01 = 1356998400000l;

@@ -45,7 +45,7 @@ import hu.icellmobilsoft.coffee.tool.utils.date.DateXmlUtil;
  */
 public class XMLGregorianCalendarConverter implements JsonSerializer<XMLGregorianCalendar>, JsonDeserializer<XMLGregorianCalendar> {
 
-    private static Logger LOGGER = hu.icellmobilsoft.coffee.cdi.logger.LogProducer.getStaticDefaultLogger(XMLGregorianCalendarConverter.class);
+    private static Logger LOGGER = Logger.getLogger(XMLGregorianCalendarConverter.class);
 
     /** {@inheritDoc} */
     @Override

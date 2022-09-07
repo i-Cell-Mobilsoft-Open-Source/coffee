@@ -48,7 +48,7 @@ import hu.icellmobilsoft.coffee.se.logging.Logger;
 @Vetoed
 public class PropertyReader {
 
-    private static Logger LOGGER = hu.icellmobilsoft.coffee.cdi.logger.LogProducer.getStaticDefaultLogger(PropertyReader.class);
+    private static Logger LOGGER = Logger.getLogger(PropertyReader.class);
 
     private static PropertyReader instance = null;
 

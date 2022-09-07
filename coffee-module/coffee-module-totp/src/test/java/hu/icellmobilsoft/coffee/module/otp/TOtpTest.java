@@ -55,6 +55,7 @@ import hu.icellmobilsoft.coffee.module.totp.constant.TOtpConfigKey;
 import hu.icellmobilsoft.coffee.module.totp.enums.TOtpAlgorithm;
 import hu.icellmobilsoft.coffee.module.totp.impl.DefaultTOtpGeneratorImpl;
 import hu.icellmobilsoft.coffee.module.totp.impl.DefaultTOtpVerifierImpl;
+import hu.icellmobilsoft.coffee.se.logging.Logger;
 import io.smallrye.config.inject.ConfigExtension;
 
 /**
@@ -107,7 +108,7 @@ public class TOtpTest {
 
         currentTime = System.currentTimeMillis();
         // direkt egy eltolt idot hasznalunk majd a jelszohoz
-        LogProducer.getStaticDefaultLogger(TOtpTest.class).info("secret: [{0}] ", secret);
+        Logger.getLogger(TOtpTest.class).info("secret: [{0}] ", secret);
     }
 
     public String generateTOtp() throws BaseException {

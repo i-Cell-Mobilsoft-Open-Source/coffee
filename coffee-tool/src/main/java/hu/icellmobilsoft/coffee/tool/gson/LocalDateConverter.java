@@ -44,7 +44,7 @@ import hu.icellmobilsoft.coffee.tool.utils.date.DatePrintUtil;
  */
 public class LocalDateConverter implements JsonSerializer<LocalDate>, JsonDeserializer<LocalDate> {
 
-    private static Logger LOGGER = hu.icellmobilsoft.coffee.cdi.logger.LogProducer.getStaticDefaultLogger(LocalDateConverter.class);
+    private static Logger LOGGER = Logger.getLogger(LocalDateConverter.class);
 
     /** {@inheritDoc} */
     @Override

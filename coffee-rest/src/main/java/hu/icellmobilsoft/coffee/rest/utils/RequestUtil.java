@@ -27,7 +27,7 @@ import javax.ws.rs.container.ContainerRequestContext;
 
 import org.jboss.resteasy.core.ResourceMethodInvoker;
 
-import hu.icellmobilsoft.coffee.cdi.logger.LogProducer;
+import hu.icellmobilsoft.coffee.se.logging.Logger;
 
 /**
  * REST Request utils.
@@ -55,13 +55,13 @@ public class RequestUtil {
      */
     public static <A extends Annotation> A getAnnotation(ContainerRequestContext requestContext, Class<A> clazz) {
         if (requestContext == null || clazz == null) {
-            LogProducer.getStaticDefaultLogger(RequestUtil.class).warn("requestContext or clazz is null!!");
+            Logger.getLogger(RequestUtil.class).warn("requestContext or clazz is null!!");
             return null;
         }
         ResourceMethodInvoker invoker = (ResourceMethodInvoker) requestContext.getProperty(ResourceMethodInvoker.class.getName());
         if (invoker == null) {
             // ez nem lehet null soha
-            LogProducer.getStaticDefaultLogger(RequestUtil.class).warn("ResourceMethodInvoker is null!!");
+            Logger.getLogger(RequestUtil.class).warn("ResourceMethodInvoker is null!!");
             return null;
         }
         Method serviceMethod = invoker.getMethod();
@@ -82,13 +82,13 @@ public class RequestUtil {
      */
     public static <A extends Annotation> A getAnnotation(ClientRequestContext requestContext, Class<A> clazz) {
         if (requestContext == null || clazz == null) {
-            LogProducer.getStaticDefaultLogger(RequestUtil.class).warn("requestContext or clazz is null!!");
+            Logger.getLogger(RequestUtil.class).warn("requestContext or clazz is null!!");
             return null;
         }
         Method invokedMethod = (Method) requestContext.getProperty(ECLIPSE_MICROPROFILE_REST_CLIENT_INVOKED_METHOD_KEY);
         if (invokedMethod == null) {
             // ez nem lehet null soha
-            LogProducer.getStaticDefaultLogger(RequestUtil.class).warn("invokedMethod is null!!");
+            Logger.getLogger(RequestUtil.class).warn("invokedMethod is null!!");
             return null;
         }
         return invokedMethod.getAnnotation(clazz);

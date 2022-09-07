@@ -62,7 +62,7 @@ import hu.icellmobilsoft.coffee.tool.gson.JsonUtil;
 @Dependent
 public class BaseApacheHttpClient {
 
-    private static Logger LOGGER = hu.icellmobilsoft.coffee.cdi.logger.LogProducer.getStaticDefaultLogger(BaseApacheHttpClient.class);
+    private static Logger LOGGER = Logger.getLogger(BaseApacheHttpClient.class);
 
     /** constant connection time-out: 1 minute response time */
     public static final int CONNECTION_TIMEOUT_MILLIS = (int) TimeUnit.MINUTES.toMillis(1);

@@ -56,7 +56,7 @@ import hu.icellmobilsoft.coffee.se.logging.Logger;
 @Vetoed
 public class DateUtil {
 
-    private static Logger LOGGER = hu.icellmobilsoft.coffee.cdi.logger.LogProducer.getStaticDefaultLogger(DateUtil.class);
+    private static Logger LOGGER = Logger.getLogger(DateUtil.class);
 
     /** Constant <code>DEFAULT_FULL_PATTERN="yyyy-MM-dd'T'HH:mm:ss.SSSZ"</code> */
     public static final String DEFAULT_FULL_PATTERN = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";

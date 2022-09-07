@@ -40,7 +40,7 @@ import hu.icellmobilsoft.coffee.se.logging.Logger;
 @Vetoed
 public class JmsUtil {
 
-    private static Logger LOGGER = hu.icellmobilsoft.coffee.cdi.logger.LogProducer.getStaticDefaultLogger(JmsUtil.class);
+    private static Logger LOGGER = Logger.getLogger(JmsUtil.class);
 
     /**
      * Returns id of given {@link Message}.
