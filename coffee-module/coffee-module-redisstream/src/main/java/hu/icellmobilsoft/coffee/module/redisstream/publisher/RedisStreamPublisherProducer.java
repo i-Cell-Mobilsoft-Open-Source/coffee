@@ -25,11 +25,14 @@ import javax.enterprise.inject.Instance;
 import javax.enterprise.inject.Produces;
 import javax.enterprise.inject.spi.CDI;
 import javax.enterprise.inject.spi.InjectionPoint;
+import javax.inject.Inject;
 
 import hu.icellmobilsoft.coffee.module.redis.annotation.RedisConnection;
 import hu.icellmobilsoft.coffee.module.redis.manager.RedisManager;
 import hu.icellmobilsoft.coffee.module.redisstream.annotation.RedisStreamProducer;
+import hu.icellmobilsoft.coffee.module.redisstream.config.StreamGroupConfig;
 import hu.icellmobilsoft.coffee.tool.utils.annotation.AnnotationUtil;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * {@link RedisStreamPublisher} producer for easy usage
@@ -39,6 +42,9 @@ import hu.icellmobilsoft.coffee.tool.utils.annotation.AnnotationUtil;
  */
 @ApplicationScoped
 public class RedisStreamPublisherProducer {
+
+    @Inject
+    private StreamGroupConfig config;
 
     /**
      * Producer for initializing RedisStreamHandler
@@ -55,7 +61,9 @@ public class RedisStreamPublisherProducer {
 
         CDI<Object> cdi = CDI.current();
         RedisStreamPublisher redisStreamPublisher = cdi.select(RedisStreamPublisher.class).get();
-        Instance<RedisManager> redisManagerInstance = cdi.select(RedisManager.class, new RedisConnection.Literal(annotation.configKey()));
+        config.setConfigKey(annotation.group());
+        String configKey = StringUtils.isEmpty(config.getConnectionKey()) ? annotation.configKey() : config.getConnectionKey();
+        Instance<RedisManager> redisManagerInstance = cdi.select(RedisManager.class, new RedisConnection.Literal(configKey, config.getProducerPool(annotation.group())));
         RedisManager redisManager = redisManagerInstance.get();
         redisStreamPublisher.init(redisManager, annotation.group());
         redisManagerInstance.destroy(redisManager);

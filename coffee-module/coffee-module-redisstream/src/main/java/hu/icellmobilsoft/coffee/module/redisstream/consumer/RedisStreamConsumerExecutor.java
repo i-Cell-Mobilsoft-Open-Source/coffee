@@ -96,6 +96,7 @@ public class RedisStreamConsumerExecutor implements IRedisStreamConsumerExecutor
         this.redisConfigKey = redisConfigKey;
         redisStreamService.setGroup(group);
         this.consumerBean = consumerBean;
+        this.streamGroupConfig.setConfigKey(group);
     }
 
     /**
@@ -108,11 +109,12 @@ public class RedisStreamConsumerExecutor implements IRedisStreamConsumerExecutor
         boolean prudentRun = true;
         while (!endLoop) {
             Optional<StreamEntry> streamEntry = Optional.empty();
-            Instance<RedisManager> redisManagerInstance = CDI.current().select(RedisManager.class, new RedisConnection.Literal(redisConfigKey));
+            String configKey = StringUtils.isEmpty(streamGroupConfig.getConnectionKey(redisStreamService.getGroup())) ? redisConfigKey : streamGroupConfig.getConnectionKey(redisStreamService.getGroup());
+
+            Instance<RedisManager> redisManagerInstance = CDI.current().select(RedisManager.class, new RedisConnection.Literal(configKey, streamGroupConfig.getConsumerPool(redisStreamService.getGroup())));
             RedisManager redisManager = redisManagerInstance.get();
             try (RedisManagerConnection ignore = redisManager.initConnection()) {
                 redisStreamService.setRedisManager(redisManager);
-
                 if (prudentRun) {
                     // lehethogy a csoport nem letezik
                     redisStreamService.handleGroup();
@@ -217,6 +219,7 @@ public class RedisStreamConsumerExecutor implements IRedisStreamConsumerExecutor
             return onStreamInRequestScope(streamEntry);
         } catch (BaseException e) {
             RedisStreamConsumer redisStreamConsumerAnnotation = AnnotationUtil.getAnnotation(consumerBean.getBeanClass(), RedisStreamConsumer.class);
+
             streamGroupConfig.setConfigKey(redisStreamConsumerAnnotation.group());
             int retryCount = streamGroupConfig.getRetryCount().orElse(redisStreamConsumerAnnotation.retryCount());
             if (counter < retryCount) {

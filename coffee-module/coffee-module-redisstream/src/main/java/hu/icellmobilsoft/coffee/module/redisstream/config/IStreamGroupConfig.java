@@ -42,6 +42,26 @@ public interface IStreamGroupConfig {
     Long getStreamReadTimeoutMillis() throws BaseException;
 
     /**
+     * Defines the redis connection configuration key to be used.
+     *
+     * @return redis key.
+     * @throws BaseException
+     *             Exception on read properties
+     */
+    String getConnectionKey() throws BaseException;
+
+    /**
+     * Defines the redis connection configuration key to be used.
+     *
+     * @param configKey
+     *            redis configuration of which pool searched for.
+     * @return redis key.
+     * @throws BaseException
+     *             Exception on read properties
+     */
+    String getConnectionKey(String configKey) throws BaseException;
+
+    /**
      * Max elements in stream, oldest will be removed. See https://redis.io/commands/xadd MAXLEN parameter. <br>
      * <br>
      * This parameter has higher priority than {@link #getProducerTTL()}, if both setted, this parameter is applied and {@link #getProducerTTL()}
@@ -64,6 +84,25 @@ public interface IStreamGroupConfig {
      *             Exception on read properties
      */
     Optional<Long> getProducerTTL() throws BaseException;
+    /**
+     * Defines the redis connection pool configuration key to be used.
+     *
+     * @return pool config.
+     * @throws BaseException
+     *             Exception on read properties
+     */
+    String getProducerPool() throws BaseException;
+
+    /**
+     * Defines the redis connection pool configuration key to be used.
+     *
+     * @param configKey
+     *            redisstream configuration key.
+     * @return pool config.
+     * @throws BaseException
+     *             Exception on read properties
+     */
+    String getProducerPool(String configKey) throws BaseException;
 
     /**
      * How many threads start to listening on stream group. This value override {@link RedisStreamConsumer#consumerThreadsCount()}
@@ -91,4 +130,25 @@ public interface IStreamGroupConfig {
      *             if any exception occurs
      */
     boolean isEnabled() throws BaseException;
+
+    /**
+     * Defines the redis connection pool configuration key to be used.
+     *
+     * @return pool config.
+     * @throws BaseException
+     *             Exception on read properties
+     */
+    String getConsumerPool() throws BaseException;
+
+    /**
+     * Defines the redis connection pool configuration key to be used.
+     *
+     * @param configKey
+     *            redisstream configuration key.
+     * @return pool config.
+     * @throws BaseException
+     *             Exception on read properties
+     */
+    String getConsumerPool(String configKey) throws BaseException;
+
 }

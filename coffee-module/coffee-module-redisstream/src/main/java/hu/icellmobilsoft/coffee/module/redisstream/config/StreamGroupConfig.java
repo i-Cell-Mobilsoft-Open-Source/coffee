@@ -29,18 +29,41 @@ import org.eclipse.microprofile.config.Config;
 
 /**
  * Redis stream group configuration implementation. Key-value par has standard format like yaml file:
- * 
+ *
  * <pre>
  * coffee:
- *   redisstream:
- *     enabled: true
- *     sampleGroup:
- *       stream:
- *         maxlen: 10
- *         read:
- *           timeoutmillis: 60000
- *       consumer:
- *         threadsCount: 2
+ *    redis:
+ *      auth:
+ *        host: sample-sandbox.icellmobilsoft.hu
+ *        port: 6380
+ *        password: *****
+ *        database: 1
+ *        pool:
+ *          default:
+ *              maxtotal: 64
+ *              maxidle: 16
+ *          custom1:
+ *              maxtotal: 128
+ *              maxidle: 32
+ *          custom2:
+ *              maxtotal: 256
+ *              maxidle: 64
+ *    redisstream:
+ *       sampleGroup: #(1)
+ *           stream:
+ *               read:
+ *                   timeoutmillis: 60000 #default: 60000 (2)
+ *               connection:
+ *                   key: auth # connection reference
+ *           producer:
+ *               maxlen: 10000 #default none (3)
+ *               ttl: 300000 #millisec, default none (4)
+ *               pool: custom1 # default - coffee.redis.*.pool config reference
+ *           consumer:
+ *               threadsCount: 2 #default: 1 (5)
+ *               retryCount: 2 #default: 1 (6)
+ *               pool: custom2 # default - coffee.redis.*.pool config reference
+ *
  * </pre>
  * 
  * @author imre.scheffer
@@ -54,6 +77,12 @@ public class StreamGroupConfig implements IStreamGroupConfig {
      * Config delimiter
      */
     public static final String KEY_DELIMITER = ".";
+    private static final String DEFAULT = "default";
+
+    @Inject
+    private Config config;
+
+    private String configKey;
 
     /**
      * Prefix for all configs
@@ -69,11 +98,19 @@ public class StreamGroupConfig implements IStreamGroupConfig {
      * Default no ttl, value in millisecond. See {@link #getProducerTTL()}}
      */
     public static final String PRODUCER_TTL = "producer.ttl";
-
+    /**
+     * Defines the redis connection pool configuration key to be used.
+     */
+    public static final String PRODUCER_POOL = "producer.pool";
     /**
      * Default 1 minute {@link #getStreamReadTimeoutMillis()}}
      */
     public static final String STREAM_READ_TIMEOUTMILLIS = "stream.read.timeoutmillis";
+
+    /**
+     * Prefix for stream.connection.key config
+     */
+    public static final String CONNECTION = "stream.connection.key";
 
     /**
      * Default 1 thread {@link #getConsumerThreadsCount()}}
@@ -86,14 +123,14 @@ public class StreamGroupConfig implements IStreamGroupConfig {
     public static final String RETRY_COUNT = "consumer.retryCount";
 
     /**
+     * Defines the redis connection pool configuration key to be used.
+     */
+    public static final String CONSUMER_POOL = "consumer.pool";
+
+    /**
      * Default true {@link #isEnabled()}}
      */
     public static final String ENABLED = "enabled";
-
-    @Inject
-    private Config config;
-
-    private String configKey;
 
     @Override
     public Optional<Long> getProducerMaxLen() {
@@ -147,4 +184,38 @@ public class StreamGroupConfig implements IStreamGroupConfig {
     private String joinKey(String key) {
         return String.join(KEY_DELIMITER, REDISSTREAM_PREFIX, getConfigKey(), key);
     }
+
+    private String joinKey(String configKey, String key) {
+        return String.join(KEY_DELIMITER, REDISSTREAM_PREFIX, configKey, key);
+    }
+
+    @Override
+    public String getConsumerPool() {
+        return config.getOptionalValue(joinKey(CONSUMER_POOL), String.class).orElse(DEFAULT);
+    }
+
+    @Override
+    public String getConsumerPool(String configKey) {
+        return config.getOptionalValue(joinKey(configKey, CONSUMER_POOL), String.class).orElse(DEFAULT);
+    }
+
+    @Override
+    public String getProducerPool() {
+        return config.getOptionalValue(joinKey(PRODUCER_POOL), String.class).orElse(DEFAULT);
+    }
+
+    public String getProducerPool(String configKey) {
+        return config.getOptionalValue(joinKey(configKey, PRODUCER_POOL), String.class).orElse(DEFAULT);
+    }
+
+    @Override
+    public String getConnectionKey() {
+        return config.getValue(joinKey(CONNECTION), String.class);
+    }
+
+    @Override
+    public String getConnectionKey(String configKeyParam) {
+        return config.getValue(joinKey(configKeyParam, CONNECTION), String.class);
+    }
+
 }

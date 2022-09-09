@@ -1,0 +1,42 @@
+=== coffee-module-redisstream
+
+* Bevezetésre kerül a konfigurációban a pool-ra hivatkozás. Ezáltal konfigurációban megadható, hogy
+adott redis melyik pooljából dolgozzon.
+
+==== Átállás
+* `a yaml konfigurációt szükséges a lentiek szerint igazítani.
+
+régi:
+```
+coffee:
+    redisstream:
+        sampleGroup:
+            stream:
+                maxlen: 10
+                read:
+                    timeoutmillis: 60000
+            consumer:
+                threadsCount: 2
+                retryCount: 2
+
+```
+új:
+```
+coffee:
+    redisstream:
+        sampleGroup: #(1)
+            stream:
+                read:
+                    timeoutmillis: 60000 #default: 60000 (2)
+                connection:
+                    key: auth # connection referencia
+            producer:
+                maxlen: 10000 #default none (3)
+                ttl: 300000 #millisec, default none (4)
+                pool: custom1 #default: default - pool referencia
+            consumer:
+                threadsCount: 2 #default: 1 (5)
+                retryCount: 2 #default: 1 (6)
+                pool: custom2 #default: default - pool referencia
+
+```

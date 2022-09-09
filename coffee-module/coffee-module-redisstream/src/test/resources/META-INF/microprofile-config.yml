@@ -1,0 +1,70 @@
+coffee:
+  redis:
+    redis1:
+      host: sample.icellmobilsoft.hu
+      port: 6381
+      password: secret
+      database: 1
+      timeout: 6000
+      pool:
+        default:
+          maxtotal: 1
+          maxidle: 2
+        custom1:
+          maxtotal: 3
+          maxidle: 4
+    redis2:
+      host: sample.icellmobilsoft.hu
+      port: 6382
+      password: secret
+      database: 1
+      timeout: 1000
+      pool:
+        default:
+          maxtotal: 5
+          maxidle: 6
+        custom2:
+          maxtotal: 7
+          maxidle: 8
+    redis3:
+      host: sample.icellmobilsoft.hu
+      port: 6382
+      password: secret
+      database: 1
+      timeout: 1000
+      pool:
+        default:
+          maxtotal: 5
+          maxidle: 6
+        custom2:
+          maxtotal: 7
+          maxidle: 8
+  redisstream:
+    streamconfig1:
+      stream:
+        read:
+          timeoutmillis: 8000
+        connection:
+          key: redis1
+      producer:
+        ttl: 3600000
+        maxlen: 10000
+        pool: default
+      consumer:
+        threadsCount: 2
+        retryCount: 2
+        pool: custom1
+    streamconfig2:
+      stream:
+        read:
+          timeoutmillis: 7000
+        connection:
+          key: redis3
+      producer:
+        ttl: 3200000
+        maxlen: 12000
+        pool: invalid
+      consumer:
+        threadsCount: 2
+        retryCount: 2
+        pool: custom2
