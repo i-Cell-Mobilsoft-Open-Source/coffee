@@ -19,6 +19,8 @@
  */
 package hu.icellmobilsoft.coffee.module.redisstream.config;
 
+import hu.icellmobilsoft.coffee.dto.exception.BaseException;
+
 import java.time.Duration;
 import java.util.Optional;
 
@@ -184,38 +186,18 @@ public class StreamGroupConfig implements IStreamGroupConfig {
     private String joinKey(String key) {
         return String.join(KEY_DELIMITER, REDISSTREAM_PREFIX, getConfigKey(), key);
     }
-
-    private String joinKey(String configKey, String key) {
-        return String.join(KEY_DELIMITER, REDISSTREAM_PREFIX, configKey, key);
-    }
-
     @Override
     public String getConsumerPool() {
         return config.getOptionalValue(joinKey(CONSUMER_POOL), String.class).orElse(DEFAULT);
     }
 
     @Override
-    public String getConsumerPool(String configKey) {
-        return config.getOptionalValue(joinKey(configKey, CONSUMER_POOL), String.class).orElse(DEFAULT);
-    }
-
-    @Override
     public String getProducerPool() {
         return config.getOptionalValue(joinKey(PRODUCER_POOL), String.class).orElse(DEFAULT);
     }
-
-    public String getProducerPool(String configKey) {
-        return config.getOptionalValue(joinKey(configKey, PRODUCER_POOL), String.class).orElse(DEFAULT);
-    }
-
     @Override
     public String getConnectionKey() {
         return config.getValue(joinKey(CONNECTION), String.class);
-    }
-
-    @Override
-    public String getConnectionKey(String configKeyParam) {
-        return config.getValue(joinKey(configKeyParam, CONNECTION), String.class);
     }
 
 }

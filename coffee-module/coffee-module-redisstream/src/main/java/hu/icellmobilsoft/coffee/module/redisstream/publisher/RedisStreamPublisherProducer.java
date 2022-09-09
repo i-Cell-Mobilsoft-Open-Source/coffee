@@ -63,7 +63,7 @@ public class RedisStreamPublisherProducer {
         RedisStreamPublisher redisStreamPublisher = cdi.select(RedisStreamPublisher.class).get();
         config.setConfigKey(annotation.group());
         String configKey = StringUtils.isEmpty(config.getConnectionKey()) ? annotation.configKey() : config.getConnectionKey();
-        Instance<RedisManager> redisManagerInstance = cdi.select(RedisManager.class, new RedisConnection.Literal(configKey, config.getProducerPool(annotation.group())));
+        Instance<RedisManager> redisManagerInstance = cdi.select(RedisManager.class, new RedisConnection.Literal(configKey, config.getProducerPool()));
         RedisManager redisManager = redisManagerInstance.get();
         redisStreamPublisher.init(redisManager, annotation.group());
         redisManagerInstance.destroy(redisManager);

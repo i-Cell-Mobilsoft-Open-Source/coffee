@@ -50,16 +50,7 @@ public interface IStreamGroupConfig {
      */
     String getConnectionKey() throws BaseException;
 
-    /**
-     * Defines the redis connection configuration key to be used.
-     *
-     * @param configKey
-     *            redis configuration of which pool searched for.
-     * @return redis key.
-     * @throws BaseException
-     *             Exception on read properties
-     */
-    String getConnectionKey(String configKey) throws BaseException;
+
 
     /**
      * Max elements in stream, oldest will be removed. See https://redis.io/commands/xadd MAXLEN parameter. <br>
@@ -93,16 +84,6 @@ public interface IStreamGroupConfig {
      */
     String getProducerPool() throws BaseException;
 
-    /**
-     * Defines the redis connection pool configuration key to be used.
-     *
-     * @param configKey
-     *            redisstream configuration key.
-     * @return pool config.
-     * @throws BaseException
-     *             Exception on read properties
-     */
-    String getProducerPool(String configKey) throws BaseException;
 
     /**
      * How many threads start to listening on stream group. This value override {@link RedisStreamConsumer#consumerThreadsCount()}
@@ -140,15 +121,5 @@ public interface IStreamGroupConfig {
      */
     String getConsumerPool() throws BaseException;
 
-    /**
-     * Defines the redis connection pool configuration key to be used.
-     *
-     * @param configKey
-     *            redisstream configuration key.
-     * @return pool config.
-     * @throws BaseException
-     *             Exception on read properties
-     */
-    String getConsumerPool(String configKey) throws BaseException;
 
 }
