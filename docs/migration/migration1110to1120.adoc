@@ -18,6 +18,9 @@ coffee:
             consumer:
                 threadsCount: 2
                 retryCount: 2
+            producer:
+                maxlen: 10000
+                ttl: 300000
 
 ```
 új:

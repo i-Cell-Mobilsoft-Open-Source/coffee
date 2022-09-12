@@ -19,6 +19,8 @@
  */
 package hu.icellmobilsoft.coffee.module.redisstream;
 
+import hu.icellmobilsoft.coffee.module.redis.annotation.RedisConnection;
+import hu.icellmobilsoft.coffee.module.redis.config.ManagedRedisConfig;
 import hu.icellmobilsoft.coffee.module.redisstream.annotation.RedisStreamProducer;
 import hu.icellmobilsoft.coffee.module.redisstream.config.StreamGroupConfig;
 import hu.icellmobilsoft.coffee.module.redisstream.publisher.RedisStreamPublisher;
@@ -46,14 +48,11 @@ import java.lang.reflect.Field;
 @Tag("weld")
 @ExtendWith(WeldJunit5Extension.class)
 @DisplayName("Redis Publisher tests")
-class StreamPublisherTest {
+class StreamConfigTest {
 
+    public static final String CONFIG_KEY = "streamconfig1";
     @Inject
-    @RedisStreamProducer(configKey = "redis1", group = "streamconfig1")
-    private RedisStreamPublisher publisher1;
-    @Inject
-    @RedisStreamProducer(configKey = "redis2", group = "streamconfig2")
-    private RedisStreamPublisher publisher2;
+    private StreamGroupConfig streamGroupConfig;
 
     @WeldSetup
     public WeldInitiator weld = WeldInitiator.from(WeldInitiator.createWeld()
@@ -64,38 +63,15 @@ class StreamPublisherTest {
 
     @Test
     @DisplayName("redis1 redisstream test")
-    void redis1Test() throws NoSuchFieldException, IllegalAccessException {
-
-        Field fieldStreamGroupConfig = publisher1.getClass().getDeclaredField("config");
-        fieldStreamGroupConfig.setAccessible(true);
-        StreamGroupConfig streamGroupConfig = (StreamGroupConfig) fieldStreamGroupConfig.get(publisher1);
-
+    void redis1Test() {
+        streamGroupConfig.setConfigKey(CONFIG_KEY);
+        Assertions.assertEquals(false, streamGroupConfig.isEnabled());
         Assertions.assertEquals(8000, streamGroupConfig.getStreamReadTimeoutMillis());
         Assertions.assertEquals("redis1", streamGroupConfig.getConnectionKey());
         Assertions.assertEquals("default", streamGroupConfig.getProducerPool());
         Assertions.assertEquals(3600000, streamGroupConfig.getProducerTTL().get());
         Assertions.assertEquals(10000, streamGroupConfig.getProducerMaxLen().get());
         Assertions.assertEquals("custom1", streamGroupConfig.getConsumerPool());
-        Assertions.assertEquals(2, streamGroupConfig.getRetryCount().get());
-        Assertions.assertEquals(2, streamGroupConfig.getConsumerThreadsCount().get());
-
-    }
-
-    @Test
-    @DisplayName("redis2 redisstream test: yaml configuration overrides code")
-    void redis2test() throws NoSuchFieldException, IllegalAccessException {
-
-        Field fieldStreamGroupConfig = publisher2.getClass().getDeclaredField("config");
-        fieldStreamGroupConfig.setAccessible(true);
-        StreamGroupConfig streamGroupConfig = (StreamGroupConfig) fieldStreamGroupConfig.get(publisher2);
-
-        Assertions.assertEquals(7000, streamGroupConfig.getStreamReadTimeoutMillis());
-        // yaml configuration overrides code
-        Assertions.assertEquals("redis3", streamGroupConfig.getConnectionKey());
-        Assertions.assertEquals("invalid", streamGroupConfig.getProducerPool());
-        Assertions.assertEquals(3200000, streamGroupConfig.getProducerTTL().get());
-        Assertions.assertEquals(12000, streamGroupConfig.getProducerMaxLen().get());
-        Assertions.assertEquals("custom2", streamGroupConfig.getConsumerPool());
         Assertions.assertEquals(2, streamGroupConfig.getRetryCount().get());
         Assertions.assertEquals(2, streamGroupConfig.getConsumerThreadsCount().get());
 

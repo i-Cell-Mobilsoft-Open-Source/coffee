@@ -118,6 +118,12 @@
 				<version>${version.smallrye-config}</version>
 				<scope>test</scope>
 			</dependency>
+			<dependency>
+				<groupId>io.smallrye.config</groupId>
+				<artifactId>smallrye-config-source-yaml</artifactId>
+				<version>${version.smallrye-config}</version>
+				<scope>test</scope>
+			</dependency>
 
 			<dependency>
 				<groupId>hu.icellmobilsoft.coffee</groupId>

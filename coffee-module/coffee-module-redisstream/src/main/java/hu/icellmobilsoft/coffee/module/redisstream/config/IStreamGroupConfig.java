@@ -22,6 +22,7 @@ package hu.icellmobilsoft.coffee.module.redisstream.config;
 import java.util.Optional;
 
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
+import hu.icellmobilsoft.coffee.module.redis.config.ManagedRedisConfig;
 import hu.icellmobilsoft.coffee.module.redisstream.annotation.RedisStreamConsumer;
 
 /**
@@ -42,7 +43,7 @@ public interface IStreamGroupConfig {
     Long getStreamReadTimeoutMillis() throws BaseException;
 
     /**
-     * Defines the redis connection configuration key to be used.
+     * Defines the redis connection configuration key to be used. {@link ManagedRedisConfig#getConfigKey()}
      *
      * @return redis key.
      * @throws BaseException

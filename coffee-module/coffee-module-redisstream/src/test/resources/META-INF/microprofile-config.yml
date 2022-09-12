@@ -40,6 +40,7 @@ coffee:
           maxtotal: 7
           maxidle: 8
   redisstream:
+    enabled: false
     streamconfig1:
       stream:
         read:

@@ -19,8 +19,6 @@
  */
 package hu.icellmobilsoft.coffee.module.redisstream.config;
 
-import hu.icellmobilsoft.coffee.dto.exception.BaseException;
-
 import java.time.Duration;
 import java.util.Optional;
 
@@ -28,6 +26,8 @@ import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
 import org.eclipse.microprofile.config.Config;
+
+import static hu.icellmobilsoft.coffee.module.redis.config.RedisConfig.POOL_CONFIG_KEY_DEFAULT_VALUE;
 
 /**
  * Redis stream group configuration implementation. Key-value par has standard format like yaml file:
@@ -51,19 +51,20 @@ import org.eclipse.microprofile.config.Config;
  *              maxtotal: 256
  *              maxidle: 64
  *    redisstream:
- *       sampleGroup: #(1)
+ *       enabled: true
+ *       sampleGroup:
  *           stream:
  *               read:
- *                   timeoutmillis: 60000 #default: 60000 (2)
+ *                   timeoutmillis: 60000 #default: 60000
  *               connection:
  *                   key: auth # connection reference
  *           producer:
- *               maxlen: 10000 #default none (3)
- *               ttl: 300000 #millisec, default none (4)
+ *               maxlen: 10000 #default none
+ *               ttl: 300000 #millisec, default none
  *               pool: custom1 # default - coffee.redis.*.pool config reference
  *           consumer:
- *               threadsCount: 2 #default: 1 (5)
- *               retryCount: 2 #default: 1 (6)
+ *               threadsCount: 2 #default: 1
+ *               retryCount: 2 #default: 1
  *               pool: custom2 # default - coffee.redis.*.pool config reference
  *
  * </pre>
@@ -79,7 +80,6 @@ public class StreamGroupConfig implements IStreamGroupConfig {
      * Config delimiter
      */
     public static final String KEY_DELIMITER = ".";
-    private static final String DEFAULT = "default";
 
     @Inject
     private Config config;
@@ -161,7 +161,7 @@ public class StreamGroupConfig implements IStreamGroupConfig {
 
     @Override
     public boolean isEnabled() {
-        return config.getOptionalValue(joinKey(ENABLED), Boolean.class).orElse(true);
+        return config.getOptionalValue(String.join(KEY_DELIMITER, REDISSTREAM_PREFIX, ENABLED), Boolean.class).orElse(true);
     }
 
     /**
@@ -186,15 +186,17 @@ public class StreamGroupConfig implements IStreamGroupConfig {
     private String joinKey(String key) {
         return String.join(KEY_DELIMITER, REDISSTREAM_PREFIX, getConfigKey(), key);
     }
+
     @Override
     public String getConsumerPool() {
-        return config.getOptionalValue(joinKey(CONSUMER_POOL), String.class).orElse(DEFAULT);
+        return config.getOptionalValue(joinKey(CONSUMER_POOL), String.class).orElse(POOL_CONFIG_KEY_DEFAULT_VALUE);
     }
 
     @Override
     public String getProducerPool() {
-        return config.getOptionalValue(joinKey(PRODUCER_POOL), String.class).orElse(DEFAULT);
+        return config.getOptionalValue(joinKey(PRODUCER_POOL), String.class).orElse(POOL_CONFIG_KEY_DEFAULT_VALUE);
     }
+
     @Override
     public String getConnectionKey() {
         return config.getValue(joinKey(CONNECTION), String.class);

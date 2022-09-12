@@ -94,6 +94,7 @@ Konfiguráció yaml-ben:
 ----
 coffee:
    redisstream:
+       enabled: true #<0>
        sampleGroup: #<1>
            stream:
                read:
@@ -110,6 +111,7 @@ coffee:
                pool: custom2 #default: default - pool referencia <6>
 
 ----
+<0> RedisStream funkció kapcsoló. Default true.
 <1> A stream csoport egyedi neve. Minden mező opcionális.
 <2> Stream consumer timeoutja - meddig várjon 1 iterációban az üzenetre.
 Ha nem érkezik üzenet a streamben ennyi ms ideig,
