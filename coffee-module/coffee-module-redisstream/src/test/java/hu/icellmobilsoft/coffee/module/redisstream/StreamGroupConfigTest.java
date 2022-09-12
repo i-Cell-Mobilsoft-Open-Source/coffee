@@ -19,11 +19,8 @@
  */
 package hu.icellmobilsoft.coffee.module.redisstream;
 
-import hu.icellmobilsoft.coffee.module.redis.annotation.RedisConnection;
-import hu.icellmobilsoft.coffee.module.redis.config.ManagedRedisConfig;
-import hu.icellmobilsoft.coffee.module.redisstream.annotation.RedisStreamProducer;
 import hu.icellmobilsoft.coffee.module.redisstream.config.StreamGroupConfig;
-import hu.icellmobilsoft.coffee.module.redisstream.publisher.RedisStreamPublisher;
+
 import org.jboss.weld.junit5.EnableWeld;
 import org.jboss.weld.junit5.WeldInitiator;
 import org.jboss.weld.junit5.WeldJunit5Extension;
@@ -36,10 +33,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
-import java.lang.reflect.Field;
 
 /**
- * Test for RedisStream Publisher class
+ * Test for StreamGroupConfig class
  *
  * @author peter.kovacs
  * @since 1.11.0
@@ -47,8 +43,8 @@ import java.lang.reflect.Field;
 @EnableWeld
 @Tag("weld")
 @ExtendWith(WeldJunit5Extension.class)
-@DisplayName("Redis Publisher tests")
-class StreamConfigTest {
+@DisplayName("Redis StreamGroupConfig test")
+class StreamGroupConfigTest {
 
     public static final String CONFIG_KEY = "streamconfig1";
     @Inject
@@ -62,7 +58,7 @@ class StreamConfigTest {
             .activate(RequestScoped.class).build();
 
     @Test
-    @DisplayName("redis1 redisstream test")
+    @DisplayName("redis1 StreamGroupConfig test")
     void redis1Test() {
         streamGroupConfig.setConfigKey(CONFIG_KEY);
         Assertions.assertEquals(false, streamGroupConfig.isEnabled());
