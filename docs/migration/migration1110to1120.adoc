@@ -1,0 +1,13 @@
+= v1.11.0 → v1.12.0
+
+coff:ee v1.11.0 -> v1.12.0 migrációs leírás, újdonságok, változások leírása
+
+== Újdonságok
+
+=== coffee-jpa
+
+Bekerült a *TransactionHelper* osztály, amely segédmetódusokat tartalmaz *@Transactional* annotációval ellátva a *FunctionalInterfaces* osztályban deklarált *@FunctionalInterface*-ekhez.
+
+Így lehetőségünk van arra, hogy ha egy osztály első belépési pontja nincs tranzakcióban, de azon elül szeretnénk tranzakcióban futtatni egy kód részletet, akkor elegendő a kívánt részt kiemelni egy *private* metódusba vagy bármilyen coffee által nyújtott *@FunctionalInterface*-be és meghívni a *TransactionHelper* megfelelő metódusát, ami elvégzi a tranzakcióban való futtatást.
+
+Ezzel elkerüljük, hogy *@Transactional* annotációval ellátott *public* metódusba kelljen kiemelni a tranzakcióban futtatandó logikát és *CDI.current()*-en keresztül meghívni az osztályon belül elkészített metódust vagy ugyan ezt külön osztályba kiemelve elvégezni.
