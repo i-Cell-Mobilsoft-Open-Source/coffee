@@ -1,0 +1,9 @@
+= v1.11.0 → v1.12.0
+
+coff:ee v1.11.0 -> v1.12.0 migrációs leírás, újdonságok, változások leírása
+
+== Újdonságok
+
+=== coffee-jpa
+
+Bevezetésre került a link:#TransactionHelper[TransactionHelper] osztály.
