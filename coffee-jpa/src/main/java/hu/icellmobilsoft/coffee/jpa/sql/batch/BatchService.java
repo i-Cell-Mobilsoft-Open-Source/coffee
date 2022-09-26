@@ -37,6 +37,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.TimeZone;
 import java.util.stream.Collectors;
 
@@ -564,6 +565,7 @@ public class BatchService {
      * @throws SQLException
      *             exception
      */
+    @SuppressWarnings("unchecked")
     protected <E> void setPsObject(PreparedStatement ps, int parameterIndex, Type type, Object value) throws SQLException {
         // enumokat le kell kezelni
         if (type instanceof CustomType) {
@@ -584,7 +586,13 @@ public class BatchService {
             return;
         }
 
-        if (setTemporalPsObject(ps, parameterIndex, type, value)) {
+        if (type instanceof TimestampType) {
+            setTimestampPsObject(ps, parameterIndex, value);
+            return;
+        }
+
+        if (value instanceof Temporal) {
+            setTemporalPsObject(ps, parameterIndex, value);
             return;
         }
 
@@ -592,40 +600,71 @@ public class BatchService {
     }
 
     /**
-     * Sets the prepared statement parameter if the parameter type is a temporal
+     * Sets a timestamp parameter in the prepared statement.
+     * 
+     * @param ps
+     *            prepared statement.
+     * @param parameterIndex
+     *            index of the parameter in the prepared statement.
+     * @param value
+     *            value of the parameter.
+     * @throws SQLException
+     *             in case of any exception occurs during the process.
+     */
+    protected void setTimestampPsObject(PreparedStatement ps, int parameterIndex, Object value) throws SQLException {
+        if (value == null) {
+            ps.setNull(parameterIndex, TimestampType.INSTANCE.sqlType());
+            return;
+        }
+
+        Optional<Timestamp> timestampOptional = convertToTimestamp(value);
+        if (timestampOptional.isPresent()) {
+            if (getDbTimezone() != null) {
+                ps.setTimestamp(parameterIndex, timestampOptional.get(), Calendar.getInstance(getDbTimezone()));
+            } else {
+                ps.setTimestamp(parameterIndex, timestampOptional.get());
+            }
+            return;
+        }
+
+        ps.setObject(parameterIndex, value, TimestampType.INSTANCE.sqlType());
+    }
+
+    /**
+     * Converts the incoming parameter into {@link Timestamp}.
+     * 
+     * @param value
+     *            the parameter to convert.
+     * @return the converted {@link Timestamp} in {@link Optional}.
+     */
+    protected Optional<Timestamp> convertToTimestamp(Object value) {
+        if (value instanceof Timestamp) {
+            return Optional.of((Timestamp) value);
+        }
+        if (value instanceof Date) {
+            return Optional.of(new Timestamp(((Date) value).getTime()));
+        }
+        return Optional.empty();
+    }
+
+    /**
+     * Sets a temporal parameter in the prepared statement.
      *
      * @param ps
      *            prepared statement to set
      * @param parameterIndex
      *            index of the parameter in the prepared statement
-     * @param type
-     *            type descriptor of the parameter
      * @param value
      *            value of the parameter
-     * @return {@code true} if the statement parameter is set, and no further processing is needed
      * @throws SQLException
      *             exception
      */
-    protected boolean setTemporalPsObject(PreparedStatement ps, int parameterIndex, Type type, Object value) throws SQLException {
-        if (type instanceof TimestampType) {
-            if (value == null) {
-                ps.setNull(parameterIndex, TimestampType.INSTANCE.sqlType());
-            } else if (getDbTimezone() != null) {
-                ps.setTimestamp(parameterIndex, (Timestamp) value, Calendar.getInstance(getDbTimezone()));
-            } else {
-                ps.setTimestamp(parameterIndex, (Timestamp) value);
-            }
-            return true;
+    protected void setTemporalPsObject(PreparedStatement ps, int parameterIndex, Object value) throws SQLException {
+        if (getDbTimezone() != null) {
+            ps.setObject(parameterIndex, convertToDbTimezone((Temporal) value), TimestampType.INSTANCE.sqlType());
+        } else {
+            ps.setObject(parameterIndex, value, TimestampType.INSTANCE.sqlType());
         }
-        if (value instanceof Temporal) {
-            if (getDbTimezone() != null) {
-                ps.setObject(parameterIndex, convertToDbTimezone((Temporal) value), TimestampType.INSTANCE.sqlType());
-            } else {
-                ps.setObject(parameterIndex, value, TimestampType.INSTANCE.sqlType());
-            }
-            return true;
-        }
-        return false;
     }
 
     /**
