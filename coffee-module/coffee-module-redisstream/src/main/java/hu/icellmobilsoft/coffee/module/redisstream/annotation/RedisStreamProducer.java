@@ -50,16 +50,7 @@ import hu.icellmobilsoft.coffee.module.redisstream.config.StreamGroupConfig;
 @Retention(RetentionPolicy.RUNTIME)
 @Qualifier
 public @interface RedisStreamProducer {
-    /**
-     * Config key of the desired redis connection. <br>
-     * ie. if connection details are defined in the project-*.yml by the keys: {@code coffee.redis.auth.*=...} then configKey should be "auth"
-     * 
-     * @see RedisConnection#configKey()
-     * 
-     * @return config key
-     */
-    @Nonbinding
-    String configKey();
+
 
     /**
      * Stream consumer group name. This is name for group and also key for konfigurable values for {@link StreamGroupConfig}
@@ -72,7 +63,7 @@ public @interface RedisStreamProducer {
     /**
      * Default empty literal
      */
-    AnnotationLiteral<RedisStreamProducer> LITERAL = new Literal("", "");
+    AnnotationLiteral<RedisStreamProducer> LITERAL = new Literal("");
 
     /**
      * AnnotationLiteral for RedisStreamProducer annotation
@@ -84,10 +75,7 @@ public @interface RedisStreamProducer {
 
         private static final long serialVersionUID = 1L;
 
-        /**
-         * config key
-         */
-        final String configKey;
+
         /**
          * redis stream group
          */
@@ -95,22 +83,14 @@ public @interface RedisStreamProducer {
 
         /**
          * Instantiates the literal with configKey and redis stream group
-         * 
-         * @param configKey
-         *            config key
+         *
          * @param group
          *            redis stream group
          */
-        public Literal(String configKey, String group) {
-            this.configKey = configKey;
+        public Literal(String group) {
             this.group = group;
         }
 
-        @Nonbinding
-        @Override
-        public String configKey() {
-            return configKey;
-        }
 
         @Nonbinding
         @Override

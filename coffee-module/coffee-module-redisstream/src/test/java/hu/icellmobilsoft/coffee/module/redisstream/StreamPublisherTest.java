@@ -19,6 +19,9 @@
  */
 package hu.icellmobilsoft.coffee.module.redisstream;
 
+import hu.icellmobilsoft.coffee.dto.exception.BaseException;
+import hu.icellmobilsoft.coffee.module.redis.annotation.RedisConnection;
+import hu.icellmobilsoft.coffee.module.redis.manager.RedisManager;
 import hu.icellmobilsoft.coffee.module.redisstream.annotation.RedisStreamProducer;
 import hu.icellmobilsoft.coffee.module.redisstream.config.StreamGroupConfig;
 import hu.icellmobilsoft.coffee.module.redisstream.publisher.RedisStreamPublisher;
@@ -31,10 +34,19 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.testcontainers.containers.GenericContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
+import org.testcontainers.utility.DockerImageName;
 
+import hu.icellmobilsoft.coffee.module.redisstream.service.RedisStreamService;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
+import redis.clients.jedis.resps.StreamEntry;
+
 import java.lang.reflect.Field;
+import java.util.Map;
+import java.util.Optional;
 
 /**
  * Test for RedisStream Publisher class
@@ -46,13 +58,15 @@ import java.lang.reflect.Field;
 @Tag("weld")
 @ExtendWith(WeldJunit5Extension.class)
 @DisplayName("Redis Publisher tests")
+@Testcontainers
 class StreamPublisherTest {
 
+    public static final String STREAMCONFIG_1 = "streamconfig1";
     @Inject
-    @RedisStreamProducer(configKey = "redis1", group = "streamconfig1")
+    @RedisStreamProducer(group = STREAMCONFIG_1)
     private RedisStreamPublisher publisher1;
     @Inject
-    @RedisStreamProducer(configKey = "redis2", group = "streamconfig2")
+    @RedisStreamProducer(group = "streamconfig2")
     private RedisStreamPublisher publisher2;
 
     @WeldSetup
@@ -62,9 +76,19 @@ class StreamPublisherTest {
             // start request scope + build
             .activate(RequestScoped.class).build();
 
+    @Inject
+    private RedisStreamService redisStreamService;
+
+    @Inject
+    @RedisConnection(configKey = "redis1")
+    private RedisManager redisManager;
+
+    @Container
+    public GenericContainer redis = new GenericContainer<>(DockerImageName.parse("redis:5.0.3-alpine")).withExposedPorts(6379);
+
     @Test
     @DisplayName("redis1 redisstream test")
-    void redis1Test() throws NoSuchFieldException, IllegalAccessException {
+    void redis1ConfigTest() throws NoSuchFieldException, IllegalAccessException, BaseException {
 
         Field fieldStreamGroupConfig = publisher1.getClass().getDeclaredField("config");
         fieldStreamGroupConfig.setAccessible(true);
@@ -83,7 +107,7 @@ class StreamPublisherTest {
 
     @Test
     @DisplayName("redis2 redisstream test: yaml configuration overrides code")
-    void redis2test() throws NoSuchFieldException, IllegalAccessException {
+    void redis2Configtest() throws NoSuchFieldException, IllegalAccessException {
 
         Field fieldStreamGroupConfig = publisher2.getClass().getDeclaredField("config");
         fieldStreamGroupConfig.setAccessible(true);
@@ -98,6 +122,21 @@ class StreamPublisherTest {
         Assertions.assertEquals("custom2", streamGroupConfig.getConsumerPool());
         Assertions.assertEquals(2, streamGroupConfig.getRetryCount().get());
         Assertions.assertEquals(2, streamGroupConfig.getConsumerThreadsCount().get());
+
+    }
+
+    @Test
+    @DisplayName("redis1 redisstream test")
+    void redisStreamPublishTest() throws BaseException {
+        redisStreamService.setGroup(STREAMCONFIG_1);
+        redisStreamService.setRedisManager(redisManager);
+        String streamMessage = "alma";
+        publisher1.publish(STREAMCONFIG_1, streamMessage, Map.ofEntries(Map.entry("extSessionId", "id1")));
+        Optional<StreamEntry> streamEntry = Optional.empty();
+        redisManager.initConnection();
+        redisStreamService.handleGroup();
+        streamEntry = redisStreamService.consumeOne("ads");
+        Assertions.assertEquals(streamMessage, streamEntry.get().getFields().get("message"));
 
     }
 

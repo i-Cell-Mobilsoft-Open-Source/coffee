@@ -141,10 +141,9 @@ public class BaseRedisConsumerStarter {
      */
     @SuppressWarnings("unchecked")
     protected void startThread(IRedisStreamConsumerExecutor executor, RedisStreamConsumer redisStreamConsumerAnnotation, Bean<?> bean) {
-        executor.init(redisStreamConsumerAnnotation.configKey(), redisStreamConsumerAnnotation.group(),
-                (Bean<? super IRedisStreamBaseConsumer>) bean);
+        executor.init(redisStreamConsumerAnnotation.group(), (Bean<? super IRedisStreamBaseConsumer>) bean);
         log.info("Starting Redis stream consumer with executor, class [{0}] for configKey [{1}], group [{2}]...", bean.getBeanClass(),
-                redisStreamConsumerAnnotation.configKey(), redisStreamConsumerAnnotation.group());
+                redisStreamConsumerAnnotation.group());
 
         managedExecutorService.submit(executor);
         log.info("consumer class [{0}] started.", bean.getBeanClass());

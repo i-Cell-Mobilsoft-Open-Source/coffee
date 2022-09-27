@@ -22,12 +22,11 @@ package hu.icellmobilsoft.coffee.module.redisstream.config;
 import java.time.Duration;
 import java.util.Optional;
 
+import hu.icellmobilsoft.coffee.module.redis.config.RedisConfig;
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
 import org.eclipse.microprofile.config.Config;
-
-import static hu.icellmobilsoft.coffee.module.redis.config.RedisConfig.POOL_CONFIG_KEY_DEFAULT_VALUE;
 
 /**
  * Redis stream group configuration implementation. Key-value par has standard format like yaml file:
@@ -189,12 +188,12 @@ public class StreamGroupConfig implements IStreamGroupConfig {
 
     @Override
     public String getConsumerPool() {
-        return config.getOptionalValue(joinKey(CONSUMER_POOL), String.class).orElse(POOL_CONFIG_KEY_DEFAULT_VALUE);
+        return config.getOptionalValue(joinKey(CONSUMER_POOL), String.class).orElse(RedisConfig.POOL_CONFIG_KEY_DEFAULT_VALUE);
     }
 
     @Override
     public String getProducerPool() {
-        return config.getOptionalValue(joinKey(PRODUCER_POOL), String.class).orElse(POOL_CONFIG_KEY_DEFAULT_VALUE);
+        return config.getOptionalValue(joinKey(PRODUCER_POOL), String.class).orElse(RedisConfig.POOL_CONFIG_KEY_DEFAULT_VALUE);
     }
 
     @Override

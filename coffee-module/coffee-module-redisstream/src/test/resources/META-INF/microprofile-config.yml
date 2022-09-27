@@ -1,9 +1,9 @@
 coffee:
   redis:
     redis1:
-      host: sample.icellmobilsoft.hu
-      port: 6381
-      password: secret
+      host: localhost
+      port: 6379
+      password:
       database: 1
       timeout: 6000
       pool:
@@ -14,8 +14,8 @@ coffee:
           maxtotal: 3
           maxidle: 4
     redis2:
-      host: sample.icellmobilsoft.hu
-      port: 6382
+      host: localhost
+      port: 6379
       password: secret
       database: 1
       timeout: 1000

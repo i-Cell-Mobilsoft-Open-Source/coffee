@@ -27,19 +27,19 @@ coffee:
 ```
 coffee:
     redisstream:
-        sampleGroup: #(1)
+        sampleGroup:
             stream:
                 read:
-                    timeoutmillis: 60000 #default: 60000 (2)
+                    timeoutmillis: 60000
                 connection:
-                    key: auth # connection referencia
+                    key: auth
             producer:
-                maxlen: 10000 #default none (3)
-                ttl: 300000 #millisec, default none (4)
-                pool: custom1 #default: default - pool referencia
+                maxlen: 10000
+                ttl: 300000
+                pool: custom1
             consumer:
-                threadsCount: 2 #default: 1 (5)
-                retryCount: 2 #default: 1 (6)
-                pool: custom2 #default: default - pool referencia
+                threadsCount: 2
+                retryCount: 2
+                pool: custom2
 
 ```

@@ -32,14 +32,12 @@ public interface IRedisStreamConsumerExecutor extends Runnable {
 
     /**
      * Stream consumer executor inicializacioja
-     * 
-     * @param redisConfigKey
-     *            kulcs ami a redis konfiguraciot celozza, @RedisConnection-ba hasznalja fel
+     *
      * @param group
      *            stream consumer group nev
      * @param consumerBean
      *            stream consumer bean
      */
-    void init(String redisConfigKey, String group, Bean<? super IRedisStreamBaseConsumer> consumerBean);
+    void init(String group, Bean<? super IRedisStreamBaseConsumer> consumerBean);
 
 }

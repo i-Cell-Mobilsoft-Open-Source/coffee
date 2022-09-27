@@ -55,14 +55,14 @@ public class RedisStreamPublisherProducer {
      */
     @Produces
     @Dependent
-    @RedisStreamProducer(configKey = "", group = "")
+    @RedisStreamProducer(group = "")
     public RedisStreamPublisher produce(InjectionPoint injectionPoint) {
         RedisStreamProducer annotation = AnnotationUtil.getAnnotation(injectionPoint, RedisStreamProducer.class).get();
 
         CDI<Object> cdi = CDI.current();
         RedisStreamPublisher redisStreamPublisher = cdi.select(RedisStreamPublisher.class).get();
         config.setConfigKey(annotation.group());
-        String configKey = StringUtils.isEmpty(config.getConnectionKey()) ? annotation.configKey() : config.getConnectionKey();
+        String configKey = config.getConnectionKey();
         Instance<RedisManager> redisManagerInstance = cdi.select(RedisManager.class, new RedisConnection.Literal(configKey, config.getProducerPool()));
         RedisManager redisManager = redisManagerInstance.get();
         redisStreamPublisher.init(redisManager, annotation.group());

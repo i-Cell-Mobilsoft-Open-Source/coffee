@@ -104,10 +104,9 @@ public class ConsumerStarterExtension implements Extension {
 
     @SuppressWarnings("unchecked")
     private void startThread(IRedisStreamConsumerExecutor executor, RedisStreamConsumer redisStreamConsumerAnnotation, Bean<?> bean) {
-        executor.init(redisStreamConsumerAnnotation.configKey(), redisStreamConsumerAnnotation.group(),
-                (Bean<? super IRedisStreamBaseConsumer>) bean);
-        LOG.info("Starting Redis stream consumer with executor, class [{0}] for configKey [{1}], group [{2}]...", bean.getBeanClass(),
-                redisStreamConsumerAnnotation.configKey(), redisStreamConsumerAnnotation.group());
+        executor.init(redisStreamConsumerAnnotation.group(), (Bean<? super IRedisStreamBaseConsumer>) bean);
+        LOG.info("Starting Redis stream consumer with executor, class [{0}] for group [{1}]...", bean.getBeanClass(),
+                redisStreamConsumerAnnotation.group());
 
         managedExecutorService.submit(executor);
         LOG.info("consumer class [{0}] started.", bean.getBeanClass());

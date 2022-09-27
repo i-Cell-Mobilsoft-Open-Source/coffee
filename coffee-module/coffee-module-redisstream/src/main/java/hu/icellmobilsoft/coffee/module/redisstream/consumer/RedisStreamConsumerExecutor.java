@@ -85,15 +85,12 @@ public class RedisStreamConsumerExecutor implements IRedisStreamConsumerExecutor
 
     private String consumerIdentifier;
 
-    private String redisConfigKey;
-
     private boolean endLoop;
 
     private Bean<? super IRedisStreamBaseConsumer> consumerBean;
 
     @Override
-    public void init(String redisConfigKey, String group, Bean<? super IRedisStreamBaseConsumer> consumerBean) {
-        this.redisConfigKey = redisConfigKey;
+    public void init(String group, Bean<? super IRedisStreamBaseConsumer> consumerBean) {
         redisStreamService.setGroup(group);
         this.consumerBean = consumerBean;
         this.streamGroupConfig.setConfigKey(group);
@@ -109,7 +106,7 @@ public class RedisStreamConsumerExecutor implements IRedisStreamConsumerExecutor
         boolean prudentRun = true;
         while (!endLoop) {
             Optional<StreamEntry> streamEntry = Optional.empty();
-            String configKey = StringUtils.isEmpty(streamGroupConfig.getConnectionKey()) ? redisConfigKey : streamGroupConfig.getConnectionKey();
+            String configKey = streamGroupConfig.getConnectionKey();
 
             Instance<RedisManager> redisManagerInstance = CDI.current().select(RedisManager.class, new RedisConnection.Literal(configKey, streamGroupConfig.getConsumerPool()));
             RedisManager redisManager = redisManagerInstance.get();
@@ -140,16 +137,16 @@ public class RedisStreamConsumerExecutor implements IRedisStreamConsumerExecutor
                 if (StringUtils.startsWith(message, NOGROUP_PREFIX)) {
                     log.error(
                             "Detected problem on redisConfigKey [{0}] with stream group [{1}] and activating prudentRun on next cycle. Exception: [{2}]",
-                            redisConfigKey, redisStreamService.getGroup(), message);
+                            this.streamGroupConfig.getConnectionKey(), redisStreamService.getGroup(), message);
                     prudentRun = true;
                 } else {
-                    log.error(MessageFormat.format("Exception on redisConfigKey [{0}] with stream group [{1}]: [{2}]", redisConfigKey,
+                    log.error(MessageFormat.format("Exception on redisConfigKey [{0}] with stream group [{1}]: [{2}]", this.streamGroupConfig.getConnectionKey(),
                             redisStreamService.getGroup(), message), cause);
                 }
                 redisManager.closeConnection();
                 sleep();
             } catch (Throwable e) {
-                log.error(MessageFormat.format("Exception during consume on redisConfigKey [{0}] with stream group [{1}]: [{2}]", redisConfigKey,
+                log.error(MessageFormat.format("Exception during consume on redisConfigKey [{0}] with stream group [{1}]: [{2}]", this.streamGroupConfig.getConnectionKey(),
                         redisStreamService.getGroup(), e.getLocalizedMessage()), e);
                 redisManager.closeConnection();
                 sleep();
@@ -168,7 +165,7 @@ public class RedisStreamConsumerExecutor implements IRedisStreamConsumerExecutor
             MDC.clear();
         } catch (Throwable e) {
             log.error(MessageFormat.format("Exception during redisManager cleanup on redisConfigKey [{0}] with stream group [{1}]: [{2}]",
-                    redisConfigKey, redisStreamService.getGroup(), e.getLocalizedMessage()), e);
+                    this.streamGroupConfig.getConnectionKey(), redisStreamService.getGroup(), e.getLocalizedMessage()), e);
         }
     }
 

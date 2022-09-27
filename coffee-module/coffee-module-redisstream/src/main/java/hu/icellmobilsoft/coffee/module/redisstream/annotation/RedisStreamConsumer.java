@@ -50,17 +50,6 @@ import hu.icellmobilsoft.coffee.module.redisstream.config.StreamGroupConfig;
 public @interface RedisStreamConsumer {
 
     /**
-     * Config key of the desired redis connection. <br>
-     * ie. if connection details are defined in the project-*.yml by the keys: {@code coffee.redis.auth.*=...} then configKey should be "auth"
-     * 
-     * @see RedisConnection#configKey()
-     * 
-     * @return config key
-     */
-    @Nonbinding
-    String configKey();
-
-    /**
      * Stream consumer group name. This is name for group and also key for konfigurable values for {@link StreamGroupConfig}
      * 
      * @return group name for redis stream in redis
@@ -87,7 +76,7 @@ public @interface RedisStreamConsumer {
     /**
      * Default empty literal
      */
-    AnnotationLiteral<RedisStreamConsumer> LITERAL = new Literal("", "", 0, 0);
+    AnnotationLiteral<RedisStreamConsumer> LITERAL = new Literal("", 0, 0);
 
     /**
      * AnnotationLiteral for RedisStreamConsumer annotation
@@ -99,10 +88,6 @@ public @interface RedisStreamConsumer {
 
         private static final long serialVersionUID = 1L;
 
-        /**
-         * config key
-         */
-        final String configKey;
         /**
          * redis stream group
          */
@@ -118,9 +103,7 @@ public @interface RedisStreamConsumer {
 
         /**
          * Instantiates the literal with configKey, redis stream group, consumer thread count, and retry count
-         * 
-         * @param configKey
-         *            config key
+         *
          * @param group
          *            redis stream group
          * @param consumerThreadsCount
@@ -128,18 +111,11 @@ public @interface RedisStreamConsumer {
          * @param retryCount
          *            retry count
          */
-        public Literal(String configKey, String group, int consumerThreadsCount, int retryCount) {
+        public Literal(String group, int consumerThreadsCount, int retryCount) {
             super();
-            this.configKey = configKey;
             this.group = group;
             this.consumerThreadsCount = consumerThreadsCount;
             this.retryCount = retryCount;
-        }
-
-        @Nonbinding
-        @Override
-        public String configKey() {
-            return configKey;
         }
 
         @Nonbinding
