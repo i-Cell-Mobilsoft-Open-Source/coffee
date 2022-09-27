@@ -6,4 +6,15 @@ coff:ee v1.11.0 -> v1.12.0 migrációs leírás, újdonságok, változások leí
 
 === coffee-jpa
 
-Bevezetésre került a link:#TransactionHelper[TransactionHelper] osztály.
+* Bevezetésre került a link:#TransactionHelper[TransactionHelper] osztály.
+
+== Változások
+
+=== coffee-jpa
+
+* A *BatchService* insert és update metódusai *java.util.Date* beállítása esetén *cannot cast 'java.util.Date' to 'java.sql.Timestamp'* hibát dobtak (coffee 1.10.0 óta).
+A hiba kezelésre került, most már az érték szerinti instanceof alapján történik meg a megfelelő cast.
+
+==== Átállás
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
