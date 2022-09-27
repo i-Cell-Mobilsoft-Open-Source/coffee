@@ -8,6 +8,8 @@ coff:ee v1.11.0 -> v1.12.0 migrációs leírás, újdonságok, változások leí
 
 Bevezetésre került a link:#TransactionHelper[TransactionHelper] osztály.
 
+== Változások
+
 === coffee-tool
 
 RandomUtil osztályban a generateId a javadoc-ban írt 16 karakter helyett 17-et is tudott visszaadni, mert a getNextIndex metódusban tovább tudott futni az index 1296-ig is, amit a generateId-ban 36-os számrendszerben 100-ra alakított, így túllépett. Javítás 1295-ig engedi az indexet.
@@ -22,3 +24,15 @@ A változtatások nem eredményeznek átállási munkálatokat, visszafelé komp
 ==== Átállás
 * Amennyiben a régi működést szeretnénk alkalmazni, azaz ha exception-t dob a redis stream consumer,
 akkor ne történjen `XACK`, akkor a stream konfigjában fel kell venni a `coffee.redisstream.{0}.consumer.manualAck` kulcsot `true` értékkel.
+
+=== coffee-jpa
+
+* A *BatchService* insert és update metódusai *java.util.Date* beállítása esetén *cannot cast 'java.util.Date' to 'java.sql.Timestamp'* hibát dobtak (coffee 1.10.0 óta).
+A *setPsObject()* metódusban innentől az alap hibernate típusok egységesen a *SingleColumnType* ősre kerülnek ellenőrzésre.
+Ez magában foglalja, hogy az adott érték pontosan milyen *java.sql.Types*-nak van megfeleltetve, így most már a megfelelő típus szerint kerül beszúrásra minden ilyen érték.
+Ezenkívül a *java.sql.Types.TIME* és *java.sql.Types.TIMESTAMP* szerint külön ellenőrzés van érték beállításra, amelyekben nézzük, hogy a *hibernate.jdbc.time_zone* be van állítva a *persistence.xml*-ben.
+Ha be van állítva, akkor az érték szerinti *instanceof* alapján végezzük el a megfelelő időzóna szerinti beállításokat.
+
+==== Átállás
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
