@@ -130,14 +130,14 @@ public class RandomUtil {
     }
 
     /**
-     * Generates sequential index. Restarts sequence at value 1296.
+     * Generates sequential index. Restarts sequence when value greater than 1295.
      * 
      * @return next index
      */
     protected static synchronized int getNextIndex() {
         generatedIndex++;
         // MAX a ZZ
-        if (generatedIndex > 1296) {
+        if (generatedIndex > 1295) {
             generatedIndex = 0;
         }
         return generatedIndex;

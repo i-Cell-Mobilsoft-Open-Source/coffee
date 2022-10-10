@@ -41,11 +41,13 @@ class RandomUtilTest {
         // given
 
         // when
-        String actual = RandomUtil.generateId();
+        for (int i = 0; i < 1297; i++) {
+            String actual = RandomUtil.generateId();
 
-        // then
-        Assertions.assertNotNull(actual);
-        Assertions.assertTrue(actual.matches(ID_REGEX));
+            // then
+            Assertions.assertNotNull(actual);
+            Assertions.assertTrue(actual.matches(ID_REGEX));
+        }
     }
 
     @DisplayName("Testing paddl()")
