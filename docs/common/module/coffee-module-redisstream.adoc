@@ -84,6 +84,7 @@ A logok böngészésénél így egyértelműen láthatő hol válik szét a foly
 Az itt látható `message` egy komplexebb üzenet tartalom,
 kell hogy tartozzon hozzá valahol API (XSD) és JSON formátumban ajánlott használni.
 
+[#common_module_coffee-module-redisstream-config]
 == Konfiguráció
 
 A konfiguráció a `@RedisStreamConsumer` és `@RedisStreamProducer` qualifier-en keresztül történik.
@@ -104,6 +105,7 @@ coffee:
            consumer:
                threadsCount: 2 #default: 1 <5>
                retryCount: 2 #default: 1 <6>
+               manualAck: true # default: false <7>
 ----
 <1> A stream csoport egyedi neve. Minden mező opcionális.
 <2> Stream consumer timeoutja - meddig várjon 1 iterációban az üzenetre.
@@ -118,6 +120,9 @@ akkor is ha fel vagy nem voltak az dolgozva.
 <5> Az adott csoport (sampleGroup) consumer mennyi független szálban induljon el.
 <6> (Coff:ee 1.4.0+) Az adott csoport (sampleGroup) consumer hányszor próbálkozzon újra `BaseException` esetén.
 Más hibáknál mely nem `BaseException`-ből származnak nincs figyelembe véve ez a beállítás.
+<7> Ha true, akkor explicit `XACK` hívás szükséges az üzenetek feldolgozása végén.
+Ha a feldolgozás során exception keletkezik, akkor ez elmarad, kézzel újra fel lehet dolgozni az üzenetet.
+Ha false, akkor már az üzenet feldolgozásakor automata ack történik. Default: `false`
 
 WARNING: A `...producer.maxlen` és `...producer.ttl` egyszerre megadása esetén
 a `...producer.ttl` paraméter nem lessz figyelembe véve!

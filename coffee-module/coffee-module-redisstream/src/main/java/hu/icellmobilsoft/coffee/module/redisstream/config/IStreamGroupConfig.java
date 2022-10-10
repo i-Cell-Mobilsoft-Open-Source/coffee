@@ -91,4 +91,12 @@ public interface IStreamGroupConfig {
      *             if any exception occurs
      */
     boolean isEnabled() throws BaseException;
+
+    /**
+     * Enable/Disable automatic redis xack call
+     *
+     * @return {@code true} if explicit {@link redis.clients.jedis.Jedis#xack} call is required, default false
+     */
+    boolean isManualAck();
+
 }

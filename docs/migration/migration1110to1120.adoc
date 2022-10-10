@@ -15,3 +15,10 @@ RandomUtil osztályban a generateId a javadoc-ban írt 16 karakter helyett 17-et
 ==== Átállás
 
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+=== coffee-module-redisstream
+* `coffee.redisstream.{0}.consumer.manualAck` konfiguráció bevezetése. Lásd: link:#common_module_coffee-module-redisstream-config[coffee-module-redisstream konfiguráció]
+
+==== Átállás
+* Amennyiben a régi működést szeretnénk alkalmazni, azaz ha exception-t dob a redis stream consumer,
+akkor ne történjen `XACK`, akkor a stream konfigjában fel kell venni a `coffee.redisstream.{0}.consumer.manualAck` kulcsot `true` értékkel.
