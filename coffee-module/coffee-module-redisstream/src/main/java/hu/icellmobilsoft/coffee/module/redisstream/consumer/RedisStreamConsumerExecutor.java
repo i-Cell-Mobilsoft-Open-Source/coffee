@@ -94,8 +94,9 @@ public class RedisStreamConsumerExecutor implements IRedisStreamConsumerExecutor
     @Override
     public void init(String redisConfigKey, String group, Bean<? super IRedisStreamBaseConsumer> consumerBean) {
         this.redisConfigKey = redisConfigKey;
-        redisStreamService.setGroup(group);
         this.consumerBean = consumerBean;
+        redisStreamService.setGroup(group);
+        streamGroupConfig.setConfigKey(group);
     }
 
     /**

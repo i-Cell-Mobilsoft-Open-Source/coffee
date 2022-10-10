@@ -122,7 +122,13 @@ akkor is ha fel vagy nem voltak az dolgozva.
 Más hibáknál mely nem `BaseException`-ből származnak nincs figyelembe véve ez a beállítás.
 <7> Ha true, akkor explicit `XACK` hívás szükséges az üzenetek feldolgozása végén.
 Ha a feldolgozás során exception keletkezik, akkor ez elmarad, kézzel újra fel lehet dolgozni az üzenetet.
-Ha false, akkor már az üzenet feldolgozásakor automata ack történik. Default: `false`
+Ha false, akkor már az üzenet feldolgozásakor automata ack történik. Default: `false`.
+Lásd redis https://redis.io/commands/xreadgroup/[XREADGROUP dokumentáció]:
+[quote]
+____
+The NOACK subcommand can be used to avoid adding the message to the PEL in cases where reliability is not a requirement
+and the occasional message loss is acceptable. This is equivalent to acknowledging the message when it is read.
+____
 
 WARNING: A `...producer.maxlen` és `...producer.ttl` egyszerre megadása esetén
 a `...producer.ttl` paraméter nem lessz figyelembe véve!
