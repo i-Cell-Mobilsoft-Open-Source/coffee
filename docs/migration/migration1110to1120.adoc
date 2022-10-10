@@ -11,3 +11,7 @@ Bevezetésre került a link:#TransactionHelper[TransactionHelper] osztály.
 === coffee-tool
 
 RandomUtil osztályban a generateId a javadoc-ban írt 16 karakter helyett 17-et is tudott visszaadni, mert a getNextIndex metódusban tovább tudott futni az index 1296-ig is, amit a generateId-ban 36-os számrendszerben 100-ra alakított, így túllépett. Javítás 1295-ig engedi az indexet.
+
+==== Átállás
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
