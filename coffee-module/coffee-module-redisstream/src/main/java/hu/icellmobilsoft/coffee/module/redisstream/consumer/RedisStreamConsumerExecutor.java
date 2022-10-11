@@ -94,8 +94,9 @@ public class RedisStreamConsumerExecutor implements IRedisStreamConsumerExecutor
     @Override
     public void init(String redisConfigKey, String group, Bean<? super IRedisStreamBaseConsumer> consumerBean) {
         this.redisConfigKey = redisConfigKey;
-        redisStreamService.setGroup(group);
         this.consumerBean = consumerBean;
+        redisStreamService.setGroup(group);
+        streamGroupConfig.setConfigKey(group);
     }
 
     /**
@@ -183,6 +184,9 @@ public class RedisStreamConsumerExecutor implements IRedisStreamConsumerExecutor
     protected void consumeStreamEntry(StreamEntry streamEntry, RedisManager redisManager) throws BaseException {
         Optional<Map<String, Object>> result = executeOnStream(streamEntry, 1);
 
+        if (!streamGroupConfig.isManualAck()) {
+            return;
+        }
         // ack
         ack(streamEntry.getID());
         afterAckInRequestScope(streamEntry, result.orElse(Collections.emptyMap()));

@@ -41,6 +41,7 @@ import org.eclipse.microprofile.config.Config;
  *           timeoutmillis: 60000
  *       consumer:
  *         threadsCount: 2
+ *         manualAck: true
  * </pre>
  * 
  * @author imre.scheffer
@@ -86,6 +87,11 @@ public class StreamGroupConfig implements IStreamGroupConfig {
     public static final String RETRY_COUNT = "consumer.retryCount";
 
     /**
+     * Default false {@link #isManualAck()}
+     */
+    public static final String MANUAL_ACK = "consumer.manualAck";
+
+    /**
      * Default true {@link #isEnabled()}}
      */
     public static final String ENABLED = "enabled";
@@ -123,6 +129,11 @@ public class StreamGroupConfig implements IStreamGroupConfig {
     @Override
     public boolean isEnabled() {
         return config.getOptionalValue(joinKey(ENABLED), Boolean.class).orElse(true);
+    }
+
+    @Override
+    public boolean isManualAck() {
+        return config.getOptionalValue(joinKey(MANUAL_ACK), Boolean.class).orElse(false);
     }
 
     /**

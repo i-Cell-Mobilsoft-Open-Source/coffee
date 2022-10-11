@@ -191,10 +191,8 @@ public class RedisStreamService {
             throw new BaseException(CoffeeFaultType.INVALID_INPUT, "consumerIdentifier is null");
         }
         Map<String, StreamEntryID> streamQuery = Map.of(streamKey(), StreamEntryID.UNRECEIVED_ENTRY);
-        // kepes tobb streambol is egyszerre olvasni, de mi 1-re hasznaljuk
-        XReadGroupParams params = new XReadGroupParams().count(1).block(config.getStreamReadTimeoutMillis().intValue());
         Optional<List<Entry<String, List<StreamEntry>>>> result = getRedisManager().run(Jedis::xreadGroup, "xreadGroup", getGroup(),
-                consumerIdentifier, params, streamQuery);
+                consumerIdentifier, createXReadGroupParams(), streamQuery);
         if (result.isEmpty() || result.get().isEmpty()) {
             // nincs uj uzenet
             if (log.isTraceEnabled()) {
@@ -221,6 +219,21 @@ public class RedisStreamService {
             log.trace(sb.toString());
         }
         return Optional.of(entry);
+    }
+
+    /**
+     * Creates the parameters for the {@link Jedis#xreadGroup}
+     * 
+     * @return params for {@link Jedis#xreadGroup}
+     */
+    protected XReadGroupParams createXReadGroupParams() {
+        int readTimeoutMillis = config.getStreamReadTimeoutMillis().intValue();
+        // kepes tobb streambol is egyszerre olvasni, de mi 1-re hasznaljuk
+        XReadGroupParams params = new XReadGroupParams().count(1).block(readTimeoutMillis);
+        if (!config.isManualAck()) {
+            params.noAck();
+        }
+        return params;
     }
 
     /**
