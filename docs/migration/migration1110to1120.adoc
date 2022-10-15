@@ -26,3 +26,7 @@ akkor ne történjen `XACK`, akkor a stream konfigjában fel kell venni a `coffe
 === coffee-module-mp-restclient
 * `DefaultBaseExceptionResponseExceptionMapper` fel lett készítve "application/octet-stream" válaszra.
 Ilyenkor megpróbálja a streamben válaszolt `BaseExceptionResultType`-ot json vagy xml szerint felparszolni. 
+
+==== Átállás
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
