@@ -21,6 +21,7 @@ package hu.icellmobilsoft.coffee.module.mp.restclient.provider;
 
 import java.text.MessageFormat;
 
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.apache.commons.lang3.StringUtils;
@@ -82,11 +83,19 @@ public class DefaultBaseExceptionResponseExceptionMapper implements ResponseExce
         if (StringUtils.isBlank(entity)) {
             return null;
         }
-        var mediaType = response.getMediaType();
+        MediaType mediaType = response.getMediaType();
         if (StringUtils.equalsAnyIgnoreCase(mediaType.getSubtype(), "json")) {
             return JsonUtil.toObject(entity, dtoClass);
         } else if (StringUtils.equalsAnyIgnoreCase(mediaType.getSubtype(), "xml")) {
             return MarshallingUtil.unmarshallUncheckedXml(entity, dtoClass);
+        } else if (mediaType.equals(MediaType.APPLICATION_OCTET_STREAM_TYPE)) {
+            if (StringUtils.startsWith(entity, "{")) {
+                return JsonUtil.toObject(entity, dtoClass);
+            } else if (StringUtils.startsWith(entity, "<")) {
+                return MarshallingUtil.unmarshallUncheckedXml(entity, dtoClass);
+            } else {
+                return null;
+            }
         }
         return null;
     }

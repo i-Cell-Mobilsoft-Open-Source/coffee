@@ -56,11 +56,15 @@ akkor abban a HTTP hívásban ugyan úgy szükséges belerakni azokat a HTTP hea
 melyek az service requestjében bejöttek, hogy az ottani authentikáció is sikeres lehessen.
 Konkrétan az autentikáció MDC változók beállítása bekerül a kiküldött http headerek közé.
 
+=== DefaultBaseExceptionResponseExceptionMapper
+Célja hogy a response-ban kapott hibát feldolgozza,
+azt szokásos coffee BaseException-ból származó `hu.icellmobilsoft.coffee.dto.exception.RestClientResponseException`
+osztályban tovább dobja.
+
 [#common_module_coffee-module-mp-restclient_DefaultRestClientBuilderListener]
 === DefaultRestClientBuilderListener
-Ez egy *minta "aktivátor" a fenti felsorolt osztályok bekötésére*.
-Jelenleg még ezt az osztályt minden projekt kell hogy implementálja és kiegészítse exception kezeléssel,
-mivel az még nem emelhető ki Coffee-be (catalog XSD implementálása funkció után már igen - tervben van).
+Ez egy *alapértelmezett "aktivátor" a fenti felsorolt osztályok bekötésére*.
+Ezt az osztály használható direkben vagy szabadon konfigurálható.
 Ezen kívül az osztályban van definiálva a HTTP kliens timeout értékei is:
 
 * 5 sec connect timeout
@@ -70,6 +74,20 @@ Ha van bármilyen működési változtatási igény,
 akkor azt ezen a központi "aktivátor" osztályon keresztül is lehet befolyásolni,
 további lehetőségek lejebb vannak említve,
 ami a https://github.com/eclipse/microprofile-rest-client[microprofile-rest-client] szabályai szerint történnek.
+
+Hogy az "aktivátor" figyelembe is legyen véve a
+https://github.com/eclipse/microprofile-rest-client[microprofile-rest-client]
+számára a következő fájlban kell regisztrálni:
+
+.src/main/resources/META-INF/services/org.eclipse.microprofile.rest.client.spi.RestClientBuilderListener 
+[source,txt]
+----
+# coffee alapértelmezett
+hu.icellmobilsoft.coffee.module.mp.restclient.provider.DefaultRestClientBuilderListener
+# projekten személyreszabott
+#hu.icellmobilsoft.sample.invoice.service.provider.ProjectRestClientBuilderListener
+----
+Ez egy sima postfix és extension nélküli txt fájl.
 
 === FaultTypeParserExtension
 `IFaultType` interface-t implementáló enum osztályok összegyűjtését végzi.
@@ -103,23 +121,6 @@ ami például a thorntail serverben a következő:
     <artifactId>microprofile-restclient</artifactId>
 </dependency>
 ----
-
-=== microprofile-rest-client regisztráció
-NOTE: Jelenleg még nincs elkészítve egy default exception lekezelő osztály,
-ezért mintaként szolgáljon valamelyik projektünkben már elkészített
-'DefaultBaseExceptionResponseExceptionMapper' osztály.
-
-Hogy az "aktivátor" figyelembe is legyen véve a
-https://github.com/eclipse/microprofile-rest-client[microprofile-rest-client]
-számára *a DefaultRestClientBuilderListener osztályt projekt szinten le kell örököltetni*
-és az exception kezelést is beallítani. Az így keletkező osztályt a következő fájlban kell regisztrálni:
-
-.src/main/resources/META-INF/services/org.eclipse.microprofile.rest.client.spi.RestClientBuilderListener 
-[source,txt]
-----
-hu.icellmobilsoft.sample.invoice.service.provider.ProjectRestClientBuilderListener
-----
-Ez egy sima postfix és extension nélküli txt fájl.
 
 == Használati példák
 IMPORTANT: Maga a komplett használat részletes leírása a
