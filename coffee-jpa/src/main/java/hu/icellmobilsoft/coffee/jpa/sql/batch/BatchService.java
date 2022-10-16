@@ -22,13 +22,18 @@ package hu.icellmobilsoft.coffee.jpa.sql.batch;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Time;
 import java.sql.Timestamp;
+import java.sql.Types;
 import java.text.MessageFormat;
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.OffsetDateTime;
+import java.time.OffsetTime;
 import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
-import java.time.temporal.Temporal;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -37,7 +42,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.TimeZone;
 import java.util.stream.Collectors;
 
@@ -59,8 +63,8 @@ import org.hibernate.sql.Update;
 import org.hibernate.type.CustomType;
 import org.hibernate.type.EnumType;
 import org.hibernate.type.ManyToOneType;
+import org.hibernate.type.SingleColumnType;
 import org.hibernate.type.StringType;
-import org.hibernate.type.TimestampType;
 import org.hibernate.type.Type;
 
 import hu.icellmobilsoft.coffee.cdi.logger.AppLogger;
@@ -245,6 +249,8 @@ public class BatchService {
             // u.addWhereColumn(persister.getIdentifierColumnNames()[0]);
             // u.addWhereColumn(persister.getVersionColumnName());
 
+            dbTimeZone = sfi.getSessionFactoryOptions().getJdbcTimeZone();
+
             String sql = u.toStatementString() + StringUtils.defaultString(getSqlPostfix());
 
             // String sql = update.toString();
@@ -342,6 +348,8 @@ public class BatchService {
             for (String name : names) {
                 insert.addColumns(persister.getPropertyColumnNames(name));
             }
+
+            dbTimeZone = sfi.getSessionFactoryOptions().getJdbcTimeZone();
 
             String sql = insert.toStatementString() + StringUtils.defaultString(getSqlPostfix());
             log.debug("Running insert:\n[{0}]", sql);
@@ -586,13 +594,8 @@ public class BatchService {
             return;
         }
 
-        if (type instanceof TimestampType) {
-            setTimestampPsObject(ps, parameterIndex, value);
-            return;
-        }
-
-        if (value instanceof Temporal) {
-            setTemporalPsObject(ps, parameterIndex, value);
+        if (type instanceof SingleColumnType) {
+            setSingleColumnPsObject(ps, parameterIndex, (SingleColumnType<?>) type, value);
             return;
         }
 
@@ -600,10 +603,82 @@ public class BatchService {
     }
 
     /**
-     * Sets a timestamp parameter in the prepared statement.
+     * Sets a {@link SingleColumnType} object in the prepared statement.
      * 
      * @param ps
-     *            prepared statement.
+     *            the prepared statement.
+     * @param parameterIndex
+     *            index of the parameter in the prepared statement.
+     * @param singleColumn
+     *            {@link SingleColumnType}.
+     * @param value
+     *            value of the parameter.
+     * @throws SQLException
+     *             in case of any exception occurs during the process.
+     */
+    protected void setSingleColumnPsObject(PreparedStatement ps, int parameterIndex, SingleColumnType<?> singleColumn, Object value)
+            throws SQLException {
+        if (value == null) {
+            ps.setNull(parameterIndex, singleColumn.sqlType());
+            return;
+        }
+        switch (singleColumn.sqlType()) {
+        case Types.TIME:
+            setTimePsObject(ps, parameterIndex, value);
+            break;
+        case Types.TIMESTAMP:
+            setTimestampPsObject(ps, parameterIndex, value);
+            break;
+        default:
+            ps.setObject(parameterIndex, value, singleColumn.sqlType());
+        }
+    }
+
+    /**
+     * Sets a time object in the prepared statement.
+     *
+     * @param ps
+     *            the prepared statement.
+     * @param parameterIndex
+     *            index of the parameter in the prepared statement.
+     * @param value
+     *            value of the parameter.
+     * @throws SQLException
+     *             in case of any exception occurs during the process.
+     */
+    protected void setTimePsObject(PreparedStatement ps, int parameterIndex, Object value) throws SQLException {
+        if (dbTimeZone == null) {
+            ps.setObject(parameterIndex, value, Types.TIME);
+            return;
+        }
+
+        ZoneId dbZoneId = dbTimeZone.toZoneId();
+
+        if (value instanceof LocalTime) {
+            ZoneOffset systemDefaultZoneOffset = getZoneOffset(ZoneId.systemDefault());
+            ZoneOffset dbZoneOffset = getZoneOffset(dbZoneId);
+            LocalTime localTime = ((LocalTime) value).atOffset(systemDefaultZoneOffset).withOffsetSameInstant(dbZoneOffset).toLocalTime();
+            ps.setObject(parameterIndex, localTime, Types.TIME);
+        } else if (value instanceof OffsetTime) {
+            OffsetTime offsetTime = ((OffsetTime) value).withOffsetSameInstant(getZoneOffset(dbZoneId));
+            ps.setObject(parameterIndex, offsetTime, Types.TIME);
+        } else if (value instanceof Time) {
+            ps.setTime(parameterIndex, (Time) value, Calendar.getInstance(dbTimeZone));
+        } else if (value instanceof Date) {
+            Time time = new Time(((Date) value).getTime());
+            ps.setTime(parameterIndex, time, Calendar.getInstance(dbTimeZone));
+        } else {
+            ps.setObject(parameterIndex, value, Types.TIME);
+        }
+    }
+
+    /**
+     * Sets a timestamp object in the prepared statement.<br>
+     * Be careful to use {@link Instant}, not every prepared statement implementation has converter for it.<br>
+     * For example oracle prepared statement throws java.sql.Exception, because there is no converter for java.time.Instant to oracle.sql.TIMESTAMP.
+     * 
+     * @param ps
+     *            the prepared statement.
      * @param parameterIndex
      *            index of the parameter in the prepared statement.
      * @param value
@@ -612,79 +687,35 @@ public class BatchService {
      *             in case of any exception occurs during the process.
      */
     protected void setTimestampPsObject(PreparedStatement ps, int parameterIndex, Object value) throws SQLException {
-        if (value == null) {
-            ps.setNull(parameterIndex, TimestampType.INSTANCE.sqlType());
+        if (dbTimeZone == null) {
+            ps.setObject(parameterIndex, value, Types.TIMESTAMP);
             return;
         }
 
-        Optional<Timestamp> timestampOptional = convertToTimestamp(value);
-        if (timestampOptional.isPresent()) {
-            if (getDbTimezone() != null) {
-                ps.setTimestamp(parameterIndex, timestampOptional.get(), Calendar.getInstance(getDbTimezone()));
-            } else {
-                ps.setTimestamp(parameterIndex, timestampOptional.get());
-            }
-            return;
-        }
+        ZoneId dbZoneId = dbTimeZone.toZoneId();
 
-        ps.setObject(parameterIndex, value, TimestampType.INSTANCE.sqlType());
-    }
-
-    /**
-     * Converts the incoming parameter into {@link Timestamp}.
-     * 
-     * @param value
-     *            the parameter to convert.
-     * @return the converted {@link Timestamp} in {@link Optional}.
-     */
-    protected Optional<Timestamp> convertToTimestamp(Object value) {
-        if (value instanceof Timestamp) {
-            return Optional.of((Timestamp) value);
-        }
-        if (value instanceof Date) {
-            return Optional.of(new Timestamp(((Date) value).getTime()));
-        }
-        return Optional.empty();
-    }
-
-    /**
-     * Sets a temporal parameter in the prepared statement.
-     *
-     * @param ps
-     *            prepared statement to set
-     * @param parameterIndex
-     *            index of the parameter in the prepared statement
-     * @param value
-     *            value of the parameter
-     * @throws SQLException
-     *             exception
-     */
-    protected void setTemporalPsObject(PreparedStatement ps, int parameterIndex, Object value) throws SQLException {
-        if (getDbTimezone() != null) {
-            ps.setObject(parameterIndex, convertToDbTimezone((Temporal) value), TimestampType.INSTANCE.sqlType());
+        if (value instanceof LocalDateTime) {
+            LocalDateTime localDateTime = ((LocalDateTime) value).atZone(ZoneId.systemDefault()).withZoneSameInstant(dbZoneId).toLocalDateTime();
+            ps.setObject(parameterIndex, localDateTime, Types.TIMESTAMP);
+        } else if (value instanceof OffsetDateTime) {
+            OffsetDateTime offsetDateTime = ((OffsetDateTime) value).atZoneSameInstant(dbZoneId).toOffsetDateTime();
+            ps.setObject(parameterIndex, offsetDateTime, Types.TIMESTAMP);
+        } else if (value instanceof ZonedDateTime) {
+            ZonedDateTime zonedDateTime = ((ZonedDateTime) value).withZoneSameInstant(dbZoneId);
+            ps.setObject(parameterIndex, zonedDateTime, Types.TIMESTAMP);
+        } else if (value instanceof Timestamp) {
+            ps.setTimestamp(parameterIndex, (Timestamp) value, Calendar.getInstance(dbTimeZone));
+        } else if (value instanceof Date) {
+            ps.setTimestamp(parameterIndex, getTimestamp((Date) value), Calendar.getInstance(dbTimeZone));
+        } else if (value instanceof Calendar) {
+            Timestamp timestamp = new Timestamp(((Calendar) value).getTimeInMillis());
+            ps.setTimestamp(parameterIndex, timestamp, Calendar.getInstance(dbTimeZone));
+        } else if (value instanceof Instant) {
+            Instant instant = ((Instant) value).atZone(ZoneId.systemDefault()).withZoneSameInstant(dbZoneId).toInstant();
+            ps.setObject(parameterIndex, instant, Types.TIMESTAMP);
         } else {
-            ps.setObject(parameterIndex, value, TimestampType.INSTANCE.sqlType());
+            ps.setObject(parameterIndex, value, Types.TIMESTAMP);
         }
-    }
-
-    /**
-     * Converts the given temporal to the DB timezone
-     * 
-     * @param temporal
-     *            the temporal to convert
-     * @return the converted temporal
-     */
-    protected Temporal convertToDbTimezone(Temporal temporal) {
-        if (temporal instanceof LocalDateTime) {
-            return ((LocalDateTime) temporal).atZone(ZoneId.systemDefault()).withZoneSameInstant(getDbTimezone().toZoneId()).toLocalDateTime();
-        }
-        if (temporal instanceof OffsetDateTime) {
-            return ((OffsetDateTime) temporal).atZoneSameInstant(getDbTimezone().toZoneId());
-        }
-        if (temporal instanceof ZonedDateTime) {
-            return ((ZonedDateTime) temporal).withZoneSameInstant(getDbTimezone().toZoneId());
-        }
-        return temporal;
     }
 
     /**
@@ -768,6 +799,26 @@ public class BatchService {
         return (String) entityManager.getEntityManagerFactory().getPersistenceUnitUtil().getIdentifier(entity);
     }
 
+    /**
+     * Returns the db timezone.
+     * 
+     * @return the db timezone.
+     */
+    protected TimeZone getDbTimeZone() {
+        return dbTimeZone;
+    }
+
+    /**
+     * Returns the {@link ZoneOffset} by {@link ZoneId}.
+     * 
+     * @param zoneId
+     *            the {@link ZoneId}.
+     * @return {@link ZoneOffset} by {@link ZoneId}.
+     */
+    protected ZoneOffset getZoneOffset(ZoneId zoneId) {
+        return OffsetDateTime.now(zoneId).getOffset();
+    }
+
     private <E> void executeBatch(Map<String, Status> result, PreparedStatement ps, List<String> tmpProcessedEntities) throws SQLException {
         int[] executeBatchResult = ps.executeBatch();
         addBatchResult(result, tmpProcessedEntities, executeBatchResult);
@@ -809,18 +860,5 @@ public class BatchService {
                 return Status.UNKNOWN;
             }
         }
-    }
-
-    /**
-     * Returns the timezone we should use to save times in the database. ({@code persistence.xml}
-     * {@value org.hibernate.cfg.AvailableSettings#JDBC_TIME_ZONE} property)
-     *
-     * @return the timezone we should use to persist times in the database
-     */
-    protected TimeZone getDbTimezone() {
-        if (dbTimeZone == null) {
-            dbTimeZone = entityManager.unwrap(Session.class).getSessionFactory().getSessionFactoryOptions().getJdbcTimeZone();
-        }
-        return dbTimeZone;
     }
 }
