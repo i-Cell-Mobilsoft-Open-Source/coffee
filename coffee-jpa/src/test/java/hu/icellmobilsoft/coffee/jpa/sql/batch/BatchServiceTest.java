@@ -82,8 +82,6 @@ import hu.icellmobilsoft.coffee.cdi.logger.AppLogger;
 class BatchServiceTest {
 
     private static final ZoneId UTC_ZONE_ID = ZoneId.of("UTC");
-    private static final TimeZone UTC_TIME_ZONE = TimeZone.getTimeZone(UTC_ZONE_ID);
-    private static final ZoneOffset UTC_ZONE_OFFSET = ZoneOffset.of(ZoneOffset.UTC.getId());
     private static final ZoneOffset DEFAULT_ZONE_OFFSET = OffsetTime.now().getOffset();
 
     @Mock
@@ -110,9 +108,8 @@ class BatchServiceTest {
     @ParameterizedTest(name = "[{index}] - type: [{0}] value: [{1}]")
     @MethodSource("provideDateTypes")
     void setPsObjectDateWithTimezoneTest(SingleColumnType<?> type, Object value) throws SQLException {
-        // BatchService-ben lévő dbTimeZone mock készítése miatt szükségesek
-        dbTimeZone = Mockito.spy(UTC_TIME_ZONE);
-        MockitoAnnotations.initMocks(this);
+        // BatchService-ben lévő dbTimeZone mock készítése miatt szükséges
+        mockDbTimeZone();
 
         batchService.setPsObject(preparedStatement, 0, type, value);
 
@@ -124,8 +121,8 @@ class BatchServiceTest {
     @MethodSource("provideTimeTypes")
     void setPsObjectTimeWithTimezoneTest(SingleColumnType<?> type, Object value, Object expectedValue) throws SQLException {
         // BatchService-ben lévő dbTimeZone mock készítése miatt szükségesek
-        dbTimeZone = Mockito.spy(UTC_TIME_ZONE);
-        MockitoAnnotations.initMocks(this);
+        mockDbTimeZone();
+        Mockito.doReturn(UTC_ZONE_ID).when(dbTimeZone).toZoneId();
 
         batchService.setPsObject(preparedStatement, 0, type, value);
 
@@ -143,8 +140,8 @@ class BatchServiceTest {
     @MethodSource("provideTimestampTypes")
     void setPsObjectTimestampWithTimezoneTest(SingleColumnType<?> type, Object value, Object expectedValue) throws SQLException {
         // BatchService-ben lévő dbTimeZone mock készítése miatt szükségesek
-        dbTimeZone = Mockito.spy(UTC_TIME_ZONE);
-        MockitoAnnotations.initMocks(this);
+        mockDbTimeZone();
+        Mockito.doReturn(UTC_ZONE_ID).when(dbTimeZone).toZoneId();
 
         batchService.setPsObject(preparedStatement, 0, type, value);
 
@@ -155,6 +152,12 @@ class BatchServiceTest {
         } else {
             Mockito.verify(preparedStatement).setObject(0, expectedValue, Types.TIMESTAMP);
         }
+    }
+
+    private void mockDbTimeZone() {
+        dbTimeZone = Mockito.mock(TimeZone.class);
+        dbTimeZone.setID("UTC");
+        MockitoAnnotations.initMocks(this);
     }
 
     private static Stream<Arguments> provideDateTypes() {
@@ -168,9 +171,9 @@ class BatchServiceTest {
 
     private static Stream<Arguments> provideTimeTypes() {
         LocalTime localTime = LocalTime.now();
-        LocalTime localTimeInUTC = OffsetTime.of(localTime, DEFAULT_ZONE_OFFSET).withOffsetSameInstant(UTC_ZONE_OFFSET).toLocalTime();
+        LocalTime localTimeInUTC = OffsetTime.of(localTime, DEFAULT_ZONE_OFFSET).withOffsetSameInstant(ZoneOffset.UTC).toLocalTime();
         OffsetTime offsetTime = OffsetTime.now();
-        OffsetTime offsetTimeInUTC = offsetTime.withOffsetSameInstant(UTC_ZONE_OFFSET);
+        OffsetTime offsetTimeInUTC = offsetTime.withOffsetSameInstant(ZoneOffset.UTC);
         Date date = new Date();
         return Stream.of( //
                 Arguments.of(toNamed(LocalTimeType.INSTANCE), localTime, localTimeInUTC), //
@@ -182,12 +185,12 @@ class BatchServiceTest {
 
     private static Stream<Arguments> provideTimestampTypes() {
         LocalDateTime localDateTime = LocalDateTime.now();
-        LocalDateTime localDateTimeInUTC = OffsetDateTime.of(localDateTime, DEFAULT_ZONE_OFFSET).withOffsetSameInstant(UTC_ZONE_OFFSET)
+        LocalDateTime localDateTimeInUTC = OffsetDateTime.of(localDateTime, DEFAULT_ZONE_OFFSET).withOffsetSameInstant(ZoneOffset.UTC)
                 .toLocalDateTime();
         Instant instant = Instant.now();
-        Instant instantInUTC = OffsetDateTime.ofInstant(instant, ZoneId.systemDefault()).withOffsetSameInstant(UTC_ZONE_OFFSET).toInstant();
+        Instant instantInUTC = OffsetDateTime.ofInstant(instant, ZoneId.systemDefault()).withOffsetSameInstant(ZoneOffset.UTC).toInstant();
         OffsetDateTime offsetDateTime = OffsetDateTime.now();
-        OffsetDateTime offsetDateTimeInUTC = offsetDateTime.withOffsetSameInstant(UTC_ZONE_OFFSET);
+        OffsetDateTime offsetDateTimeInUTC = offsetDateTime.withOffsetSameInstant(ZoneOffset.UTC);
         ZonedDateTime zonedDateTime = ZonedDateTime.now();
         ZonedDateTime zonedDateTimeInUTC = zonedDateTime.withZoneSameInstant(UTC_ZONE_ID);
         Date date = new Date();
