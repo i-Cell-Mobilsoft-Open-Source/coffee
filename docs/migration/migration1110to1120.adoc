@@ -13,7 +13,10 @@ coff:ee v1.11.0 -> v1.12.0 migrációs leírás, újdonságok, változások leí
 === coffee-jpa
 
 * A *BatchService* insert és update metódusai *java.util.Date* beállítása esetén *cannot cast 'java.util.Date' to 'java.sql.Timestamp'* hibát dobtak (coffee 1.10.0 óta).
-A hiba kezelésre került, most már az érték szerinti instanceof alapján történik meg a megfelelő cast.
+A *setPsObject()* metódusban innentől az alap hibernate típusok egységesen a *SingleColumnType* ősre kerülnek ellenőrzésre.
+Ez magában foglalja, hogy az adott érték pontosan milyen *java.sql.Types*-nak van megfeleltetve, így most már a megfelelő típus szerint kerül beszúrásra minden ilyen érték.
+Ezenkívül a *java.sql.Types.TIME* és *java.sql.Types.TIMESTAMP* szerint külön ellenőrzés van érték beállításra, amelyekben nézzük, hogy a *hibernate.jdbc.time_zone* be van állítva a *persistence.xml*-ben.
+Ha be van állítva, akkor az érték szerinti *instanceof* alapján végezzük el a megfelelő időzóna szerinti beállításokat.
 
 ==== Átállás
 
