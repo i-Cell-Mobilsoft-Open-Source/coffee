@@ -32,6 +32,8 @@ import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.ext.MessageBodyWriter;
 import javax.ws.rs.ext.Provider;
 
+import org.apache.commons.lang3.StringUtils;
+
 import hu.icellmobilsoft.coffee.dto.common.commonservice.BaseResultType;
 import hu.icellmobilsoft.coffee.tool.utils.marshalling.MarshallingUtil;
 
@@ -45,17 +47,19 @@ import hu.icellmobilsoft.coffee.tool.utils.marshalling.MarshallingUtil;
  */
 @Provider
 @Produces(MediaType.APPLICATION_OCTET_STREAM)
-public class OctetStreamBaseResultTypeXmlMessageBodyWriter  implements MessageBodyWriter<BaseResultType> {
+public class OctetStreamBaseResultTypeXmlMessageBodyWriter implements MessageBodyWriter<BaseResultType> {
 
-        @Override
-        public boolean isWriteable(Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType) {
-            return BaseResultType.class.isAssignableFrom(type);
-        }
+    @Override
+    public boolean isWriteable(Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType) {
+        return BaseResultType.class.isAssignableFrom(type);
+    }
 
-        @Override
-        public void writeTo(BaseResultType t, Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType,
-                MultivaluedMap<String, Object> httpHeaders, OutputStream entityStream) throws IOException, WebApplicationException {
-            String xmlFormat = MarshallingUtil.marshall(t);
+    @Override
+    public void writeTo(BaseResultType t, Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType,
+            MultivaluedMap<String, Object> httpHeaders, OutputStream entityStream) throws IOException, WebApplicationException {
+        String xmlFormat = MarshallingUtil.marshall(t);
+        if (StringUtils.isNotEmpty(xmlFormat)) {
             entityStream.write(xmlFormat.getBytes(StandardCharsets.UTF_8));
         }
     }
+}
