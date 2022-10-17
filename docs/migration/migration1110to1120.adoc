@@ -6,7 +6,23 @@ coff:ee v1.11.0 -> v1.12.0 migrációs leírás, újdonságok, változások leí
 
 === coffee-jpa
 
-Bevezetésre került a link:#TransactionHelper[TransactionHelper] osztály.
+* Bevezetésre került a link:#TransactionHelper[TransactionHelper] osztály.
+
+=== coffee-rest
+
+* Létrejött egy új MessageBodyWriter,
+ami a `application/octet-stream` + `BaseResultType` válaszokat kezeli.
+Alapértelmezetten aktiválva van,
+mivel nem volt ehhez hasonló megoldás a rendszerben és a Resteasy sem nyújtott semmi választ ilyenkor,
+csak elnyelte a response body-t.
+
+==== Átállás
+
+Csak ott érinthet valamit amikor `application/octet-stream` mediatype a várt válasz és elszálás
+történik a távoli stream előállításnál.
+Meglehet hogy ezekre az esetekre valami egyedi mapper/writter lekezelés volt a projektben.
+
+== Változások
 
 === coffee-tool
 
@@ -33,16 +49,14 @@ Ilyenkor megpróbálja a streamben válaszolt `BaseExceptionResultType`-ot json 
 
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
 
-=== coffee-rest
+=== coffee-jpa
 
-* Létrejött egy új MessageBodyWriter,
-ami a `application/octet-stream` + `BaseResultType` válaszokat kezeli.
-Alapértelmezetten aktiválva van,
-mivel nem volt ehhez hasonló megoldás a rendszerben és a Resteasy sem nyújtott semmi választ ilyenkor,
-csak elnyelte a response body-t.
+* A *BatchService* insert és update metódusai *java.util.Date* beállítása esetén *cannot cast 'java.util.Date' to 'java.sql.Timestamp'* hibát dobtak (coffee 1.10.0 óta).
+A *setPsObject()* metódusban innentől az alap hibernate típusok egységesen a *SingleColumnType* ősre kerülnek ellenőrzésre.
+Ez magában foglalja, hogy az adott érték pontosan milyen *java.sql.Types*-nak van megfeleltetve, így most már a megfelelő típus szerint kerül beszúrásra minden ilyen érték.
+Ezenkívül a *java.sql.Types.TIME* és *java.sql.Types.TIMESTAMP* szerint külön ellenőrzés van érték beállításra, amelyekben nézzük, hogy a *hibernate.jdbc.time_zone* be van állítva a *persistence.xml*-ben.
+Ha be van állítva, akkor az érték szerinti *instanceof* alapján végezzük el a megfelelő időzóna szerinti beállításokat.
 
 ==== Átállás
 
-Csak ott érinthet valamit amikor `application/octet-stream` mediatype a várt válasz és elszálás
-történik a távoli stream előállításnál.
-Meglehet hogy ezekre az esetekre valami egyedi mapper/writter lekezelés volt a projektben.
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
