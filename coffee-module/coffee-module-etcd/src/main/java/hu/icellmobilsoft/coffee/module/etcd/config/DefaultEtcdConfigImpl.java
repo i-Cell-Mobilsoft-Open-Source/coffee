@@ -42,7 +42,7 @@ public class DefaultEtcdConfigImpl implements EtcdConfig {
     /** {@inheritDoc} */
     @Override
     public String[] getUrl() {
-        String urlString = ConfigUtil.defaultConfig().getOptionalValue(URL_KEY, String.class).orElse("http://localhost:2379");
+        String urlString = ConfigUtil.getInstance().defaultConfig().getOptionalValue(URL_KEY, String.class).orElse("http://localhost:2379");
         return StringUtils.split(urlString, ",");
     }
 
