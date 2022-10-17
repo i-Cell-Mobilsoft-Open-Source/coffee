@@ -8,10 +8,6 @@ on:
     branches-ignore:
       - 'gh-pages'
       - 'dependabot/**'
-  pull_request:
-    branches-ignore:
-      - 'gh-pages'
-      - 'dependabot/**'
 
 jobs:
   compile-with-jdk11:

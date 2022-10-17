@@ -30,3 +30,17 @@ Ilyenkor megpróbálja a streamben válaszolt `BaseExceptionResultType`-ot json 
 ==== Átállás
 
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+=== coffee-rest
+
+* Létrejött egy új MessageBodyWriter,
+ami a `application/octet-stream` + `BaseResultType` válaszokat kezeli.
+Alapértelmezetten aktiválva van,
+mivel nem volt ehhez hasonló megoldás a rendszerben és a Resteasy sem nyújtott semmi választ ilyenkor,
+csak elnyelte a response body-t.
+
+==== Átállás
+
+Csak ott érinthet valamit amikor `application/octet-stream` mediatype a várt válasz és elszálás
+történik a távoli stream előállításnál.
+Meglehet hogy ezekre az esetekre valami egyedi mapper/writter lekezelés volt a projektben.
