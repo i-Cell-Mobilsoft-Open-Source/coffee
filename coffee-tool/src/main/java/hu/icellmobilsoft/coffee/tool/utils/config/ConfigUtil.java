@@ -28,6 +28,7 @@ import org.eclipse.microprofile.config.spi.ConfigProviderResolver;
  * ConfigUtil
  * 
  * @author czenczl
+ * @author speter555
  * @since 1.2.0
  */
 @Vetoed
@@ -43,9 +44,40 @@ public class ConfigUtil {
      * 
      * @return default microprofile config without other configsources
      */
-    public static Config defaultConfig() {
-        // Lefixaljuk arra a classloader-re ahol kezeljunk a kodunkat, ezzel biztositjuk hogyha netan az alkalmazas szerver mas classloaderrel
-        // inicializal mindig megtalalja a sajat 'microprofile-config.properties' fajlunkat
-        return ConfigProviderResolver.instance().getBuilder().forClassLoader(ConfigUtil.class.getClassLoader()).addDefaultSources().build();
+    // Fontos - A {@link ConfigBuilder#build()} metódust a SmallRyeConfigBuilder osztály valósítja meg a smallrye config implementáción belül, és
+    // ennek használata során a SmallRyeConfig osztályból új példány jön létre, és a példányosítása során a generateDottedProperties metódus nagyon
+    // sok CPU erőforrást emészt el. Ezért szükséges olyan módon megoldani ezt a default config tárolást, hogy az ne jelentsen problémát se CDI
+    // használatkor, se pedig CDI-n kívül.
+    //
+    // Lefixaljuk arra a classloader-re ahol kezeljunk a kodunkat, ezzel biztositjuk hogyha netan az alkalmazas szerver mas classloaderrel
+    // inicializal mindig megtalalja a sajat 'microprofile-config.properties' fajlunkat
+    private Config config;
+
+    private ConfigUtil() {
+        config = ConfigProviderResolver.instance().getBuilder().forClassLoader(ConfigUtil.class.getClassLoader()).addDefaultSources().build();
     }
+
+    /**
+     * Get default configs
+     * 
+     * @return {@link Config} instance
+     */
+    public Config defaultConfig() {
+        return config;
+    }
+
+    /**
+     * Get ConfigUtil instance
+     * 
+     * @return {@link ConfigUtil} instance
+     */
+    public static ConfigUtil getInstance() {
+        return ConfigHolder.INSTANCE;
+    }
+
+    private static class ConfigHolder {
+        public static final ConfigUtil INSTANCE = new ConfigUtil();
+
+    }
+
 }
