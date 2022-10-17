@@ -22,3 +22,11 @@ A változtatások nem eredményeznek átállási munkálatokat, visszafelé komp
 ==== Átállás
 * Amennyiben a régi működést szeretnénk alkalmazni, azaz ha exception-t dob a redis stream consumer,
 akkor ne történjen `XACK`, akkor a stream konfigjában fel kell venni a `coffee.redisstream.{0}.consumer.manualAck` kulcsot `true` értékkel.
+
+=== coffee-module-mp-restclient
+* `DefaultBaseExceptionResponseExceptionMapper` fel lett készítve "application/octet-stream" válaszra.
+Ilyenkor megpróbálja a streamben válaszolt `BaseExceptionResultType`-ot json vagy xml szerint felparszolni. 
+
+==== Átállás
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
