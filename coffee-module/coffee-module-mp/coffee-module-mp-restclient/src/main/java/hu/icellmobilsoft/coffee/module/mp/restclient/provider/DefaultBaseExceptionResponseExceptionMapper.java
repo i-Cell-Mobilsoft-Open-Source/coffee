@@ -84,6 +84,9 @@ public class DefaultBaseExceptionResponseExceptionMapper implements ResponseExce
             return null;
         }
         MediaType mediaType = response.getMediaType();
+        if (mediaType == null) {
+            return null;
+        }
         if (StringUtils.equalsAnyIgnoreCase(mediaType.getSubtype(), "json")) {
             return JsonUtil.toObject(entity, dtoClass);
         } else if (StringUtils.equalsAnyIgnoreCase(mediaType.getSubtype(), "xml")) {
