@@ -393,3 +393,10 @@ public class CustomerOpenAPIFilter extends OpenAPIFilter {
 ----
 mp.openapi.filter=hu.icellmobilsoft.test.rest.filter.CustomerOpenAPIFilter
 ----
+
+== MessageBodyWriter
+
+A modul tartalmaz `application/octet-stream` + `BaseResultType` writert.
+Ennek köszönhetően octet-stream válaszban tudja küldeni a rendszer az esetleges
+saját DTO BaseResultType objektumot.
+Ez nagyon hasznos például a hibával elszált file generálásnál.
