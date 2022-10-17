@@ -60,7 +60,7 @@ public class ConfigUtil {
     /**
      * Get default configs
      * 
-     * @return
+     * @return {@link Config} instance
      */
     public Config defaultConfig() {
         return config;
