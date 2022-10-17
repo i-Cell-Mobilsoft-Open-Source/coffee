@@ -22,7 +22,6 @@ package hu.icellmobilsoft.coffee.module.configdoc.processor;
 import java.io.IOException;
 import java.io.Writer;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -88,9 +87,11 @@ public class ConfigDocProcessor extends AbstractProcessor {
     }
 
     private Writer createWriter(ConfigDocConfig config) throws IOException {
-        Path path = Paths.get(config.getOutputDir(), config.getOutputFileName());
-        return config.isOutputToClassPath() ? processingEnv.getFiler().createResource(StandardLocation.CLASS_OUTPUT, "", path.toString()).openWriter()
-                : Files.newBufferedWriter(path);
+        return config.isOutputToClassPath() //
+                ? processingEnv.getFiler() //
+                        .createResource(StandardLocation.CLASS_OUTPUT, "", config.getOutputDir() + config.getOutputFileName()) //
+                        .openWriter() //
+                : Files.newBufferedWriter(Paths.get(config.getOutputDir(), config.getOutputFileName()));
     }
 
     private ArrayList<DocData> collectDocData(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
