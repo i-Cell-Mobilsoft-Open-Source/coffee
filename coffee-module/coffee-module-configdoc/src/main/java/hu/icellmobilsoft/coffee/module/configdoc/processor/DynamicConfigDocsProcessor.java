@@ -24,7 +24,6 @@ import java.io.InputStream;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -165,8 +164,10 @@ public class DynamicConfigDocsProcessor extends AbstractProcessor {
     }
 
     private Writer createWriter(ConfigDocConfig config) throws IOException {
-        Path path = Paths.get(config.getOutputDir(), config.getDynamicOutputFileName());
-        return config.isOutputToClassPath() ? processingEnv.getFiler().createResource(StandardLocation.CLASS_OUTPUT, "", path.toString()).openWriter()
-                : Files.newBufferedWriter(path);
+        return config.isOutputToClassPath() //
+                ? processingEnv.getFiler() //
+                        .createResource(StandardLocation.CLASS_OUTPUT, "", config.getOutputDir() + config.getDynamicOutputFileName()) //
+                        .openWriter()
+                : Files.newBufferedWriter(Paths.get(config.getOutputDir(), config.getDynamicOutputFileName()));
     }
 }
