@@ -619,15 +619,19 @@ public class BatchService {
     protected void setSingleColumnPsObject(PreparedStatement ps, int parameterIndex, SingleColumnType<?> singleColumn, Object value)
             throws SQLException {
         if (value == null) {
-            ps.setNull(parameterIndex, singleColumn.sqlType());
+            ps.setNull(parameterIndex, Types.NULL);
             return;
         }
+
         switch (singleColumn.sqlType()) {
         case Types.TIME:
             setTimePsObject(ps, parameterIndex, value);
             break;
         case Types.TIMESTAMP:
             setTimestampPsObject(ps, parameterIndex, value);
+            break;
+        case Types.BOOLEAN:
+            setBooleanPsObject(ps, parameterIndex, value);
             break;
         default:
             ps.setObject(parameterIndex, value, singleColumn.sqlType());
@@ -715,6 +719,27 @@ public class BatchService {
             ps.setObject(parameterIndex, instant, Types.TIMESTAMP);
         } else {
             ps.setObject(parameterIndex, value, Types.TIMESTAMP);
+        }
+    }
+
+    /**
+     * Sets a boolean object in the prepared statement.
+     * 
+     * @param ps
+     *            the prepared statement.
+     * @param parameterIndex
+     *            index of the parameter in the prepared statement.
+     * @param value
+     *            value of the parameter.
+     * @throws SQLException
+     *             in case of any exception occurs during the process.
+     */
+    protected void setBooleanPsObject(PreparedStatement ps, int parameterIndex, Object value) throws SQLException {
+        if (value instanceof Boolean) {
+            ps.setBoolean(parameterIndex, (Boolean) value);
+        } else {
+            // Ilyen esetben rábízzuk a driver-re a mappelést
+            ps.setObject(parameterIndex, value);
         }
     }
 
