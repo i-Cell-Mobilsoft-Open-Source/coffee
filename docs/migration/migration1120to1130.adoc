@@ -22,3 +22,13 @@ A hiba úgy került kezelésre, hogy a `processingEnv.getFiler().createResource(
 ==== Átállás
 
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+=== coffee-jpa
+
+* A `BatchService` `java.sql.Types.BOOLEAN` mentés esetén, oracle jdbc driver használatával `java.sql.SQLException: Invalid column type` hibát eredményezett.
+A `null` értékű objektumok `prepared statement` beállítás esetén mentesítve lettek az SQL típusoktól és univerzálisan `java.sql.Types.NULL` kerül beállításra.
+A `java.sql.Types.BOOLEAN` típusok külön ágban kerülnek kezelésre, amelyben ha a beállítandó érték `java.lang.Boolean`, akkor a `prepared statement` erre biztosított `setBoolean(int parameterIndex, boolean x)` metódusa van használva, egyébként pedig a `setObject(int parameterIndex, Object x)`, amelyben a driver-re bízzuk, hogy kezelje le az adott értéket.
+
+==== Átállás
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
