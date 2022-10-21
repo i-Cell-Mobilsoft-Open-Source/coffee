@@ -4,6 +4,8 @@ coff:ee v1.12.0 -> v1.13.0 migrációs leírás, újdonságok, változások leí
 
 == Változások
 
+* Bump jackson-databind from 2.13.2.1 to 2.13.4.2 - DTO generátoroknál van használva.
+
 === coffee-module-configdoc
 
 * A `coffee-module-configdoc` windows-on való fordítás során `java.lang.IllegalArgumentException: Invalid relative name: META-INF\config_keys.adoc` hibát eredményezett.
