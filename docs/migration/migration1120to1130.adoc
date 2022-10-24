@@ -32,3 +32,13 @@ A `java.sql.Types.BOOLEAN` típusok külön ágban kerülnek kezelésre, amelybe
 ==== Átállás
 
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+=== coffee-rest
+
+* hu.icellmobilsoft.coffee.rest.utils.RequestUtil: kikerültek a WARN "ResourceMethodInvoker is null!!"
+és "invokedMethod is null!!" üzenetek.
+Kiderült hogy a nem létező objektum helyzet sok esetben és jogosan fordul elő.
+
+==== Átállás
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
