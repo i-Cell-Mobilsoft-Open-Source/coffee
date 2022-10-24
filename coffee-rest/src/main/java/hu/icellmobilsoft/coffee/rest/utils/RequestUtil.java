@@ -60,8 +60,7 @@ public class RequestUtil {
         }
         ResourceMethodInvoker invoker = (ResourceMethodInvoker) requestContext.getProperty(ResourceMethodInvoker.class.getName());
         if (invoker == null) {
-            // ez nem lehet null soha
-            Logger.getLogger(RequestUtil.class).warn("ResourceMethodInvoker is null!!");
+            // Manualis rest client esetekben lehet null
             return null;
         }
         Method serviceMethod = invoker.getMethod();
@@ -87,8 +86,7 @@ public class RequestUtil {
         }
         Method invokedMethod = (Method) requestContext.getProperty(ECLIPSE_MICROPROFILE_REST_CLIENT_INVOKED_METHOD_KEY);
         if (invokedMethod == null) {
-            // ez nem lehet null soha
-            Logger.getLogger(RequestUtil.class).warn("invokedMethod is null!!");
+            // Manualis rest client esetekben lehet null
             return null;
         }
         return invokedMethod.getAnnotation(clazz);
