@@ -24,6 +24,7 @@ import java.io.StringReader;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.time.OffsetTime;
+import java.time.YearMonth;
 import java.util.Date;
 
 import javax.enterprise.inject.Vetoed;
@@ -199,6 +200,7 @@ public class JsonUtil {
                 .registerTypeAdapter(OffsetTime.class, new OffsetTimeConverter()) //
                 .registerTypeAdapter(LocalDate.class, new LocalDateConverter()) //
                 .registerTypeAdapter(Duration.class, new DurationConverter()) //
+                .registerTypeAdapter(YearMonth.class, new YearMonthConverter()) //
                 .registerTypeHierarchyAdapter(byte[].class, new ByteArrayConverter()) //
                 .create();
     }

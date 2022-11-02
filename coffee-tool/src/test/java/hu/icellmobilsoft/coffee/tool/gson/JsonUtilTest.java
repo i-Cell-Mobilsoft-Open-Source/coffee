@@ -26,6 +26,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.time.OffsetTime;
+import java.time.YearMonth;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.Arrays;
@@ -72,7 +73,8 @@ class JsonUtilTest {
             "\"offsetDateTime\":\"2019-02-11T15:23:34.051Z\"," + //
             "\"offsetTime\":\"15:23:34.051Z\"," + //
             "\"localDate\":\"2019-02-11\"," + //
-            "\"duration\":\"P1Y1M1DT1H1M1S\"" + //
+            "\"duration\":\"P1Y1M1DT1H1M1S\"," + //
+            "\"yearMonth\":\"2010-05\"" + //
             "}";
 
     private TestObject givenWeHaveTestObject() throws DatatypeConfigurationException {
@@ -81,6 +83,7 @@ class JsonUtilTest {
         Calendar gregorianCalendar = GregorianCalendar.getInstance(TimeZone.getTimeZone("UTC"));
         Duration duration = DatatypeFactory.newInstance().newDuration(true, 1, 1, 1, 1, 1, 1);
         gregorianCalendar.setTime(Date.from(zonedDateTime.toInstant()));
+        YearMonth yearMonth = YearMonth.of(2010, 5);
 
         Date date = new Date(Long.parseLong(DATE_AS_LONG));
         testObject.setDate(date);
@@ -92,6 +95,7 @@ class JsonUtilTest {
         testObject.setOffsetTime(zonedDateTime.toOffsetDateTime().toOffsetTime());
         testObject.setLocalDate(zonedDateTime.toLocalDate());
         testObject.setDuration(duration);
+        testObject.setYearMonth(yearMonth);
         return testObject;
     }
 
@@ -318,6 +322,7 @@ class JsonUtilTest {
         OffsetTime offsetTime;
         LocalDate localDate;
         Duration duration;
+        YearMonth yearMonth;
 
         public XMLGregorianCalendar getXmlGregorianCalendar() {
             return xmlGregorianCalendar;
@@ -391,6 +396,14 @@ class JsonUtilTest {
             this.duration = duration;
         }
 
+        public YearMonth getYearMonth() {
+            return yearMonth;
+        }
+
+        public void setYearMonth(YearMonth yearMonth) {
+            this.yearMonth = yearMonth;
+        }
+
         @Override
         public boolean equals(Object o) {
             if (this == o) {
@@ -407,19 +420,20 @@ class JsonUtilTest {
                     && Objects.equals(string, other.string)//
                     && Objects.equals(clazz, other.clazz) && Objects.equals(offsetDateTime, other.offsetDateTime)
                     && Objects.equals(offsetTime, other.offsetTime) && Objects.equals(localDate, other.localDate)
-                    && Objects.equals(duration, other.duration);
+                    && Objects.equals(duration, other.duration)
+                    && Objects.equals(yearMonth, other.yearMonth);
         }
 
         @Override
         public int hashCode() {
-            return Objects.hash(xmlGregorianCalendar, date, bytes, string, clazz, offsetDateTime, offsetTime, localDate, duration);
+            return Objects.hash(xmlGregorianCalendar, date, bytes, string, clazz, offsetDateTime, offsetTime, localDate, duration, yearMonth);
         }
 
         @Override
         public String toString() {
             return "TestObject{" + "xmlGregorianCalendar=" + xmlGregorianCalendar + ", date=" + date + ", bytes=" + Arrays.toString(bytes)
                     + ", string='" + string + '\'' + ", clazz=" + clazz + "offsetDateTime=" + offsetDateTime + ", offsetTime=" + offsetTime
-                    + ", localDate=" + localDate + ", duration=" + duration + '}';
+                    + ", localDate=" + localDate + ", duration=" + duration + ", yearMonth=" + yearMonth + '}';
         }
 
     }
