@@ -2,6 +2,16 @@
 
 coff:ee v1.12.0 -> v1.13.0 migrációs leírás, újdonságok, változások leírása
 
+== Újdonságok
+
+=== coffee-tool
+
+* A `JsonUtil.initGson()` kiegészítésre került egy `YearMonthConverter` nevű `java.time.YearMonth` type adapter osztállyal.
+
+==== Átállás
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
 == Változások
 
 * Bump jackson-databind from 2.13.2.1 to 2.13.4.2 - DTO generátoroknál van használva.

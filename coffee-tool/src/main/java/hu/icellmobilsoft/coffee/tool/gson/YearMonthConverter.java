@@ -45,7 +45,6 @@ import com.google.gson.JsonSerializer;
  */
 public class YearMonthConverter implements JsonSerializer<YearMonth>, JsonDeserializer<YearMonth> {
 
-    /** {@inheritDoc} */
     @Override
     public YearMonth deserialize(JsonElement json, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
         if (!json.isJsonPrimitive()) {
@@ -61,7 +60,6 @@ public class YearMonthConverter implements JsonSerializer<YearMonth>, JsonDeseri
         }
     }
 
-    /** {@inheritDoc} */
     @Override
     public JsonElement serialize(YearMonth src, Type type, JsonSerializationContext jsonSerializationContext) {
         try {

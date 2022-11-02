@@ -76,6 +76,12 @@ class JsonUtilTest {
             "\"duration\":\"P1Y1M1DT1H1M1S\"," + //
             "\"yearMonth\":\"2010-05\"" + //
             "}";
+    private static final String INVALID_JSON_OBJECT_YEAR_MONTH = "{" + //
+            "\"yearMonth\": {}" + //
+            "}";
+    private static final String INVALID_JSON_ARRAY_YEAR_MONTH = "{" + //
+            "\"yearMonth\": []" + //
+            "}";
 
     private TestObject givenWeHaveTestObject() throws DatatypeConfigurationException {
         TestObject testObject = new TestObject();
@@ -131,6 +137,30 @@ class JsonUtilTest {
                 // then
                 assertEquals(expected, actual);
             }
+
+            @Test
+            @DisplayName("Testing toObject() with invalid JSON object YearMonth")
+            void invalidJsonObjectYearMonth() {
+                //given
+
+                //when
+                TestObject actual = JsonUtil.toObject(INVALID_JSON_OBJECT_YEAR_MONTH, TestObject.class);
+
+                //then
+                assertNull(actual);
+            }
+
+            @Test
+            @DisplayName("Testing toObject() with invalid JSON array YearMonth")
+            void invalidJsonArrayYearMonth() {
+                //given
+
+                //when
+                TestObject actual = JsonUtil.toObject(INVALID_JSON_ARRAY_YEAR_MONTH, TestObject.class);
+
+                //then
+                assertNull(actual);
+            }
         }
 
         @Nested
@@ -159,6 +189,30 @@ class JsonUtilTest {
                 // then
                 assertThrows(BaseException.class, operation);
             }
+
+            @Test
+            @DisplayName("Testing toObjectEx() with invalid JSON object YearMonth")
+            void invalidJsonObjectYearMonth() {
+                //given
+
+                //when
+                Executable operation = () -> JsonUtil.toObjectEx(INVALID_JSON_OBJECT_YEAR_MONTH, TestObject.class);
+
+                //then
+                assertThrows(BaseException.class, operation);
+            }
+
+            @Test
+            @DisplayName("Testing toObjectEx() with invalid JSON array YearMonth")
+            void invalidJsonArrayYearMonth() {
+                //given
+
+                //when
+                Executable operation = () -> JsonUtil.toObjectEx(INVALID_JSON_ARRAY_YEAR_MONTH, TestObject.class);
+
+                //then
+                assertThrows(BaseException.class, operation);
+            }
         }
 
         @Nested
@@ -181,7 +235,7 @@ class JsonUtilTest {
 
             @Test
             @DisplayName("Test toObjectGson with invalid input JSON")
-            void invalidJSON() throws DatatypeConfigurationException {
+            void invalidJSON() {
                 // given
 
                 // when
@@ -190,6 +244,30 @@ class JsonUtilTest {
                 // then
                 assertThrows(Exception.class, operation);
 
+            }
+
+            @Test
+            @DisplayName("Testing toObjectGson with invalid JSON object YearMonth")
+            void invalidJsonObjectYearMonth() {
+                //given
+
+                //when
+                Executable operation = () -> JsonUtil.toObjectGson(INVALID_JSON_OBJECT_YEAR_MONTH, TestObject.class);
+
+                //then
+                assertThrows(Exception.class, operation);
+            }
+
+            @Test
+            @DisplayName("Testing toObjectGson with invalid JSON array YearMonth")
+            void invalidJsonArrayYearMonth() {
+                //given
+
+                //when
+                Executable operation = () -> JsonUtil.toObjectGson(INVALID_JSON_ARRAY_YEAR_MONTH, TestObject.class);
+
+                //then
+                assertThrows(Exception.class, operation);
             }
         }
 
