@@ -26,10 +26,13 @@ import javax.enterprise.inject.Model;
 import javax.inject.Inject;
 import javax.persistence.NoResultException;
 
+import org.apache.commons.lang3.StringUtils;
+
 import hu.icellmobilsoft.coffee.cdi.logger.AppLogger;
 import hu.icellmobilsoft.coffee.cdi.logger.ThisLogger;
 import hu.icellmobilsoft.coffee.dto.exception.BONotFoundException;
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
+import hu.icellmobilsoft.coffee.dto.exception.InvalidParameterException;
 import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 import hu.icellmobilsoft.coffee.jpa.service.BaseService;
@@ -37,8 +40,6 @@ import hu.icellmobilsoft.coffee.module.document.model.TemplateData;
 import hu.icellmobilsoft.coffee.module.document.model.enums.TemplateDataType;
 import hu.icellmobilsoft.coffee.module.document.repository.TemplateDataRepository;
 import hu.icellmobilsoft.coffee.tool.utils.date.DateUtil;
-
-import org.apache.commons.lang3.StringUtils;
 
 /**
  * Service for TemplateData functionality. Represents only DB operations
@@ -74,7 +75,7 @@ public class TemplateDataService extends BaseService<TemplateData> {
     public TemplateData find(String templateKey, TemplateDataType dataType, String language, Date date) throws BaseException {
         log.trace(">> find(templateKey: [{0}], dataType: [{1}], language: [{2}], date: [{3}]", templateKey, dataType, language, date);
         if (StringUtils.isAnyBlank(templateKey, language) || dataType == null) {
-            throw new BaseException("templateKey, templateType or language cant be a null");
+            throw new InvalidParameterException("templateKey, templateType or language cant be a null");
         }
         Date findDate = date == null ? new Date() : date;
         try {

@@ -29,8 +29,6 @@ import hu.icellmobilsoft.coffee.dto.common.commonservice.BaseResponse;
 import hu.icellmobilsoft.coffee.dto.common.commonservice.BaseResultType;
 import hu.icellmobilsoft.coffee.dto.common.commonservice.ContextType;
 import hu.icellmobilsoft.coffee.dto.common.commonservice.FunctionCodeType;
-import hu.icellmobilsoft.coffee.dto.exception.BaseException;
-import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 
 /**
  * Base class for all other business logic action class.
@@ -147,16 +145,5 @@ public abstract class AbstractBaseAction {
         param.setKey(key);
         param.setValue(value);
         return param;
-    }
-
-    /**
-     * Creates new exception object for invalid parameter.
-     *
-     * @param msg
-     *            exception message
-     * @return new Exception object
-     */
-    public static BaseException newInvalidParameterException(String msg) {
-        return new BaseException(CoffeeFaultType.INVALID_INPUT, msg);
     }
 }

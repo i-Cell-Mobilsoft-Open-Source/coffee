@@ -36,6 +36,7 @@ import com.mongodb.client.MongoCollection;
 
 import hu.icellmobilsoft.coffee.dto.exception.BONotFoundException;
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
+import hu.icellmobilsoft.coffee.dto.exception.InvalidParameterException;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 import hu.icellmobilsoft.coffee.module.mongodb.annotation.MongoServiceBaseQualifier;
 import hu.icellmobilsoft.coffee.module.mongodb.repository.MongoRepository;
@@ -85,7 +86,7 @@ public class MongoService<T> {
         log.trace(">> MongoService.insertOne(document: [{0}]", document);
 
         if (document == null) {
-            throw new BaseException(CoffeeFaultType.WRONG_OR_MISSING_PARAMETERS, "document is null!");
+            throw new InvalidParameterException("document is null!");
         }
         try {
             mongoRepository.insertOne(document);
@@ -109,7 +110,7 @@ public class MongoService<T> {
      */
     public T findById(String mongoId) throws BaseException {
         if (StringUtils.isBlank(mongoId)) {
-            throw new BaseException(CoffeeFaultType.WRONG_OR_MISSING_PARAMETERS, "mongoId is blank!");
+            throw new InvalidParameterException("mongoId is blank!");
         }
 
         try {
@@ -133,7 +134,7 @@ public class MongoService<T> {
         log.trace(">> MongoService.findFirst(filter: [{0}]", filter);
 
         if (filter == null) {
-            throw new BaseException(CoffeeFaultType.WRONG_OR_MISSING_PARAMETERS, FILTER_NULL_ERROR_MSG);
+            throw new InvalidParameterException(FILTER_NULL_ERROR_MSG);
         }
         T found;
         try {
@@ -166,7 +167,7 @@ public class MongoService<T> {
         log.trace(">> MongoService.findFirst(filter: [{0}], order: [{1}]", filter, order);
 
         if (filter == null) {
-            throw new BaseException(CoffeeFaultType.WRONG_OR_MISSING_PARAMETERS, FILTER_NULL_ERROR_MSG);
+            throw new InvalidParameterException(FILTER_NULL_ERROR_MSG);
         }
         T found;
         try {
@@ -208,7 +209,7 @@ public class MongoService<T> {
         log.trace(">> MongoService.findAll(filter: [{0}])", filter);
 
         if (filter == null) {
-            throw new BaseException(CoffeeFaultType.WRONG_OR_MISSING_PARAMETERS, FILTER_NULL_ERROR_MSG);
+            throw new InvalidParameterException(FILTER_NULL_ERROR_MSG);
         }
         List<T> found;
         try {
@@ -247,7 +248,7 @@ public class MongoService<T> {
         log.trace(">> MongoService.find(filter: [{0}], order: [{1}], rows: [{2}], page: [{3}], clazz: [{4}]", filter, order, rows, page, clazz);
 
         if (filter == null) {
-            throw new BaseException(CoffeeFaultType.WRONG_OR_MISSING_PARAMETERS, FILTER_NULL_ERROR_MSG);
+            throw new InvalidParameterException(FILTER_NULL_ERROR_MSG);
         }
         List<T> found;
         try {
@@ -277,7 +278,7 @@ public class MongoService<T> {
         log.trace(">> MongoService.count(filter: [{0}]", filter);
 
         if (filter == null) {
-            throw new BaseException(CoffeeFaultType.WRONG_OR_MISSING_PARAMETERS, FILTER_NULL_ERROR_MSG);
+            throw new InvalidParameterException(FILTER_NULL_ERROR_MSG);
         }
         long found;
         try {

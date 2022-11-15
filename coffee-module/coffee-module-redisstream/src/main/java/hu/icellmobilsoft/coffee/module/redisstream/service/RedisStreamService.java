@@ -36,8 +36,8 @@ import javax.inject.Inject;
 import org.apache.commons.lang3.StringUtils;
 
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
+import hu.icellmobilsoft.coffee.dto.exception.InvalidParameterException;
 import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
-import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 import hu.icellmobilsoft.coffee.module.redis.manager.RedisManager;
 import hu.icellmobilsoft.coffee.module.redis.manager.RedisManagerConnection;
 import hu.icellmobilsoft.coffee.module.redisstream.common.RedisStreamUtil;
@@ -188,7 +188,7 @@ public class RedisStreamService {
      */
     public Optional<StreamEntry> consumeOne(String consumerIdentifier) throws BaseException {
         if (StringUtils.isBlank(consumerIdentifier)) {
-            throw new BaseException(CoffeeFaultType.INVALID_INPUT, "consumerIdentifier is null");
+            throw new InvalidParameterException("consumerIdentifier is null");
         }
         Map<String, StreamEntryID> streamQuery = Map.of(streamKey(), StreamEntryID.UNRECEIVED_ENTRY);
         Optional<List<Entry<String, List<StreamEntry>>>> result = getRedisManager().run(Jedis::xreadGroup, "xreadGroup", getGroup(),

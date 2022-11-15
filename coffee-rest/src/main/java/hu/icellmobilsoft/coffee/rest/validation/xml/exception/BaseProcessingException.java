@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,44 +19,46 @@
  */
 package hu.icellmobilsoft.coffee.rest.validation.xml.exception;
 
+import javax.ws.rs.ProcessingException;
+
+import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.dto.exception.BaseExceptionWrapper;
 
 /**
- * Kivétel osztály, hogy tudjunk céges kivételt dobni a MessageBodyReader/MessageBodyWriter osztályokból.
+ * Exception for wrapping and throwing {@link BaseException} as {@link ProcessingException}.
  *
- * @author attila.nyers
- * @author ferenc.lutischan
- * @since 1.0.0
+ * @author csaba.balogh
+ * @since 1.13.0
  */
-public class XsdProcessingExceptionWrapper extends javax.ws.rs.ProcessingException implements BaseExceptionWrapper<XsdProcessingException> {
+public class BaseProcessingException extends ProcessingException implements BaseExceptionWrapper<BaseException> {
 
     private static final long serialVersionUID = 1L;
 
     /**
      * The wrapped exception
      */
-    private XsdProcessingException exception;
+    private BaseException exception;
 
     /**
-     * Becsomagol egy BaseException típusú kivételt
+     * Constructor for wrapping {@link BaseException}.
      *
-     * @param cause
-     *            Az eredeti BaseException
+     * @param exception
+     *            the original {@link BaseException}.
      */
-    public XsdProcessingExceptionWrapper(XsdProcessingException cause) {
-        super(cause);
-        this.exception = cause;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void setException(XsdProcessingException exception) {
+    public BaseProcessingException(BaseException exception) {
+        super(exception);
         this.exception = exception;
     }
 
     /** {@inheritDoc} */
     @Override
-    public XsdProcessingException getException() {
+    public void setException(BaseException exception) {
+        this.exception = exception;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public BaseException getException() {
         return exception;
     }
 }

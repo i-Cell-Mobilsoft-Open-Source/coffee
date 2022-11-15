@@ -33,6 +33,7 @@ import org.apache.commons.lang3.StringUtils;
 import hu.icellmobilsoft.coffee.cdi.logger.AppLogger;
 import hu.icellmobilsoft.coffee.cdi.logger.ThisLogger;
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
+import hu.icellmobilsoft.coffee.dto.exception.InvalidParameterException;
 import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 import hu.icellmobilsoft.coffee.module.document.model.TemplateData;
@@ -66,7 +67,7 @@ public class RawAction {
      */
     public Response findRaw(String templateDataId) throws BaseException {
         if (StringUtils.isBlank(templateDataId)) {
-            throw new BaseException("templateDataId is null");
+            throw new InvalidParameterException("templateDataId is null");
         }
         TemplateData entityData = templateDataService.findById(templateDataId);
         return ResponseUtil.getFileResponse(entityData.getData(), templateDataId + "_" + entityData.getLanguage() + ".raw",
@@ -86,7 +87,7 @@ public class RawAction {
      */
     public String updateRaw(String templateDataId, InputStream inputStream) throws BaseException {
         if (StringUtils.isBlank(templateDataId) || inputStream == null) {
-            throw new BaseException("templateDataId or inputStream is null");
+            throw new InvalidParameterException("templateDataId or inputStream is null");
         }
         try {
             String fileContent = IOUtils.toString(inputStream);

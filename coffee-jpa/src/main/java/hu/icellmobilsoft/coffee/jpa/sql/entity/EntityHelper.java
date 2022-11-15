@@ -35,7 +35,7 @@ import org.hibernate.proxy.LazyInitializer;
 import com.google.common.collect.Lists;
 
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
-import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
+import hu.icellmobilsoft.coffee.dto.exception.InvalidParameterException;
 import hu.icellmobilsoft.coffee.tool.common.FunctionalInterfaces.BaseExceptionFunction;
 import hu.icellmobilsoft.coffee.tool.common.FunctionalInterfaces.BaseExceptionFunction2;
 import hu.icellmobilsoft.coffee.tool.common.FunctionalInterfaces.BaseExceptionFunction3;
@@ -110,7 +110,7 @@ public class EntityHelper {
      */
     public static <T> List<T> partitionedQuery(Collection<String> ids, BaseExceptionFunction<List<String>, List<T>> function) throws BaseException {
         if (ids == null) {
-            throw new BaseException(CoffeeFaultType.INVALID_INPUT, "ids parameter is null");
+            throw new InvalidParameterException("ids parameter is null");
         }
 
         List<String> copy = new ArrayList<>(ids);
@@ -145,7 +145,7 @@ public class EntityHelper {
     public static <T, P> List<T> partitionedQuery(Collection<String> ids, P param1, BaseExceptionFunction2<List<String>, P, List<T>> function)
             throws BaseException {
         if (ids == null || param1 == null) {
-            throw new BaseException(CoffeeFaultType.INVALID_INPUT, "null input in parameter!");
+            throw new InvalidParameterException("ids or param1 is null");
         }
 
         List<String> copy = new ArrayList<>(ids);
@@ -184,7 +184,7 @@ public class EntityHelper {
     public static <T, P1, P2> List<T> partitionedQuery(Collection<String> ids, P1 param1, P2 param2,
             BaseExceptionFunction3<List<String>, P1, P2, List<T>> function) throws BaseException {
         if (ids == null || param1 == null || param2 == null) {
-            throw new BaseException(CoffeeFaultType.INVALID_INPUT, "ids parameter is null");
+            throw new InvalidParameterException("ids, param1 or param2 is null");
         }
 
         List<String> copy = new ArrayList<>(ids);

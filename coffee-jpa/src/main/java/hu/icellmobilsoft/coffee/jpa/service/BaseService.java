@@ -39,6 +39,7 @@ import hu.icellmobilsoft.coffee.cdi.logger.AppLogger;
 import hu.icellmobilsoft.coffee.cdi.logger.ThisLogger;
 import hu.icellmobilsoft.coffee.dto.exception.BONotFoundException;
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
+import hu.icellmobilsoft.coffee.dto.exception.InvalidParameterException;
 import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 import hu.icellmobilsoft.coffee.tool.common.FunctionalInterfaces.BaseExceptionFunction;
@@ -92,7 +93,7 @@ public class BaseService<T> {
     public T findById(String id, Class<T> clazz) throws BaseException {
         if (StringUtils.isBlank(id) || clazz == null) {
             log.warn("Entity Id is blank or clazz is null skipped to load!");
-            throw new BaseException("id is blank or clazz is null!");
+            throw new InvalidParameterException("id is blank or clazz is null!");
         }
         log.trace(">> BaseService.findById(id: [{0}], class: [{1}])", id, clazz.getCanonicalName());
         T entity = null;
@@ -129,7 +130,7 @@ public class BaseService<T> {
     public Optional<T> findOptionalById(String id, Class<T> clazz) throws BaseException {
         if (StringUtils.isBlank(id) || clazz == null) {
             log.warn("Entity Id is blank or clazz is null skipped to load!");
-            throw new BaseException("id is blank or clazz is null!");
+            throw new InvalidParameterException("id is blank or clazz is null!");
         }
         log.trace(">> BaseService.findOptionalById(id: [{0}], class: [{1}])", id, clazz.getCanonicalName());
         T entity = null;
@@ -185,7 +186,7 @@ public class BaseService<T> {
     public T save(T entity) throws BaseException {
         if (entity == null) {
             log.warn("Entity is null skipped to save!");
-            throw new BaseException("entity is null!");
+            throw new InvalidParameterException("entity is null!");
         }
         String entityName = entity.getClass().getSimpleName();
         log.debug(">> save([{0}]: [{1}]", entityName, entity);
@@ -217,7 +218,7 @@ public class BaseService<T> {
     public T refresh(T entity) throws BaseException {
         if (entity == null) {
             log.warn("Entity is null skipped to refresh!");
-            throw new BaseException("entity is null!");
+            throw new InvalidParameterException("entity is null!");
         }
         String entityName = entity.getClass().getSimpleName();
         log.debug(">> refresh([{0}]: [{1}]", entityName, entity);
@@ -245,7 +246,7 @@ public class BaseService<T> {
     public void delete(T entity) throws BaseException {
         if (entity == null) {
             log.warn("Entity is null skipped to delete!");
-            throw new BaseException("entity is null!");
+            throw new InvalidParameterException("entity is null!");
         }
         String entityName = entity.getClass().getSimpleName();
         log.debug(">> delete([{0}]: [{1}]", entityName, entity);
@@ -295,17 +296,6 @@ public class BaseService<T> {
         StringBuffer sb = new StringBuffer();
         sb.append(string).append("%");
         return sb.toString();
-    }
-
-    /**
-     * Returns {@link BaseException} with {@link CoffeeFaultType#WRONG_OR_MISSING_PARAMETERS} and given message.
-     *
-     * @param msg
-     *            exception message
-     * @return {@link BaseException}
-     */
-    public static BaseException newInvalidParameterException(String msg) {
-        return new BaseException(CoffeeFaultType.WRONG_OR_MISSING_PARAMETERS, msg);
     }
 
     /**
@@ -1858,7 +1848,7 @@ public class BaseService<T> {
     }
 
     /**
-     * Creates {@link BaseException} with {@link CoffeeFaultType#WRONG_OR_MISSING_PARAMETERS} fault type.
+     * Creates {@link InvalidParameterException} with formatted exception message by method info.
      *
      * @param methodInfo
      *            method info format {@link String} with method and param names, and placeholders for param values
@@ -1868,7 +1858,7 @@ public class BaseService<T> {
      */
     protected BaseException invalidParameter(String methodInfo, Object... params) {
         String msg = MessageFormat.format("At least one incoming parameter in " + methodInfo + " is null or blank!", params);
-        return newInvalidParameterException(msg);
+        return new InvalidParameterException(msg);
     }
 
     /**

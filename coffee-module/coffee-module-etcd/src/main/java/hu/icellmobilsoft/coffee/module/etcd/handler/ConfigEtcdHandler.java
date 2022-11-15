@@ -29,6 +29,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import hu.icellmobilsoft.coffee.cdi.trace.annotation.Traceable;
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
+import hu.icellmobilsoft.coffee.dto.exception.InvalidParameterException;
 import hu.icellmobilsoft.coffee.module.etcd.service.ConfigEtcdService;
 
 /**
@@ -72,14 +73,14 @@ public class ConfigEtcdHandler {
      */
     public void putValue(String key, Object value) throws BaseException {
         if (StringUtils.isBlank(key)) {
-            throw new BaseException("key is empty!");
+            throw new InvalidParameterException("key is blank!");
         }
         configEtcdService.putValue(key, value);
     }
 
     private String getValueWithCircleCheck(String key, Set<String> previousKeys) throws BaseException {
         if (StringUtils.isBlank(key)) {
-            throw new BaseException("key is empty!");
+            throw new InvalidParameterException("key is blank!");
         }
         String value = configEtcdService.getValue(key);
         if (StringUtils.startsWith(value, "{") && StringUtils.endsWith(value, "}")) {

@@ -47,6 +47,7 @@ import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
 
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.dto.exception.BusinessException;
+import hu.icellmobilsoft.coffee.dto.exception.InvalidParameterException;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 import hu.icellmobilsoft.coffee.module.csv.localization.LocalizedHeaderColumnNameWithPositionMappingStrategy;
 import hu.icellmobilsoft.coffee.module.csv.strategy.HeaderColumnNameWithPositionMappingStrategy;
@@ -99,7 +100,7 @@ public class CsvUtil {
      */
     public static <T> String toLocalizedCsv(List<T> beans, Class<T> clazz, String language) throws BaseException {
         if (beans == null || clazz == null || language == null) {
-            throw new BaseException(CoffeeFaultType.INVALID_INPUT, "beans or clazz or language is null!");
+            throw new InvalidParameterException("beans or clazz or language is null!");
         }
         CDI<Object> cdi = CDI.current();
         LocalizedHeaderColumnNameWithPositionMappingStrategy<T> mappingStrategy = cdi
@@ -129,7 +130,7 @@ public class CsvUtil {
      */
     public static <T> String toCsv(List<T> beans, Class<T> clazz, MappingStrategy<T> mappingStrategy) throws BaseException {
         if (beans == null || clazz == null || mappingStrategy == null) {
-            throw new BaseException(CoffeeFaultType.INVALID_INPUT, "beans or clazz or mappingStrategy is null!");
+            throw new InvalidParameterException("beans or clazz or mappingStrategy is null!");
         }
         StringWriter sw = new StringWriter();
         CSVWriter csvWriter = new CSVWriter(sw, DEFAULT_SEPARATOR, ICSVWriter.DEFAULT_QUOTE_CHARACTER, ICSVWriter.DEFAULT_ESCAPE_CHARACTER,
@@ -161,7 +162,7 @@ public class CsvUtil {
      */
     public static <T> List<T> toBean(String csv, Class<? extends T> clazz) throws BaseException {
         if (StringUtils.isBlank(csv) || clazz == null) {
-            throw new BaseException(CoffeeFaultType.INVALID_INPUT, "csv or clazz is blank!");
+            throw new InvalidParameterException("csv or clazz is blank!");
         }
         try (CSVReader csvReader = createCsvReader(csv)) {
             return toBean(csvReader, clazz);
@@ -186,7 +187,7 @@ public class CsvUtil {
      */
     public static <T> List<T> toBean(InputStream inputStream, Class<? extends T> clazz) throws BaseException {
         if (inputStream == null || clazz == null) {
-            throw new BaseException(CoffeeFaultType.INVALID_INPUT, "inputStream or clazz is null!");
+            throw new InvalidParameterException("inputStream or clazz is null!");
         }
         try (InputStreamReader inputStreamReader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
                 CSVReader csvReader = createCsvReader(inputStreamReader)) {

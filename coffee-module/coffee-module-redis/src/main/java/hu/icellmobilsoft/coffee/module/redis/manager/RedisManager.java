@@ -31,6 +31,7 @@ import org.apache.commons.lang3.StringUtils;
 import hu.icellmobilsoft.coffee.cdi.trace.annotation.Traced;
 import hu.icellmobilsoft.coffee.cdi.trace.constants.Tags;
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
+import hu.icellmobilsoft.coffee.dto.exception.InvalidParameterException;
 import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 import hu.icellmobilsoft.coffee.module.redis.annotation.RedisConnection;
@@ -40,6 +41,7 @@ import hu.icellmobilsoft.coffee.tool.common.FunctionalInterfaces.BaseExceptionFu
 import hu.icellmobilsoft.coffee.tool.common.FunctionalInterfaces.BaseExceptionFunction3;
 import hu.icellmobilsoft.coffee.tool.common.FunctionalInterfaces.BaseExceptionFunction4;
 import hu.icellmobilsoft.coffee.tool.common.FunctionalInterfaces.BaseExceptionFunction5;
+
 import redis.clients.jedis.Jedis;
 
 /**
@@ -519,8 +521,7 @@ public class RedisManager {
     }
 
     private BaseException newInvalidParameterException(String functionName) {
-        return new BaseException(CoffeeFaultType.WRONG_OR_MISSING_PARAMETERS,
-                "At least one incoming parameter in " + functionName + " is null or blank!");
+        return new InvalidParameterException("At least one incoming parameter in " + functionName + " is null or blank!");
     }
 
     private boolean isNullOrBlankAnyParameter(Object... params) {

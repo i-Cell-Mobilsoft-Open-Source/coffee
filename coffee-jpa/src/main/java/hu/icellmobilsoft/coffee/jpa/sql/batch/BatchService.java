@@ -70,6 +70,7 @@ import org.hibernate.type.Type;
 import hu.icellmobilsoft.coffee.cdi.logger.AppLogger;
 import hu.icellmobilsoft.coffee.cdi.logger.ThisLogger;
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
+import hu.icellmobilsoft.coffee.dto.exception.InvalidParameterException;
 import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 import hu.icellmobilsoft.coffee.jpa.sql.batch.enums.Status;
@@ -111,7 +112,7 @@ public class BatchService {
     protected void validateInput(Collection<?> entities) throws BaseException {
         if (entities == null) {
             log.warn("entities is null skipped to save!");
-            throw new BaseException("entity is null!");
+            throw new InvalidParameterException("entities is null!");
         }
         if (entities.isEmpty()) {
             log.debug("No entity in list, skip merge.");

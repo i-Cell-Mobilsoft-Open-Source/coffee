@@ -31,6 +31,7 @@ import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
 
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
+import hu.icellmobilsoft.coffee.dto.exception.InvalidParameterException;
 import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 import hu.icellmobilsoft.coffee.module.mongodb.codec.time.duration.DurationAsDocumentCodec;
@@ -57,7 +58,7 @@ public class MongoDbUtil {
      */
     public static MongoClient getMongoClient(String uriString) throws BaseException {
         if (StringUtils.isBlank(uriString)) {
-            throw new BaseException("uriString is blank!");
+            throw new InvalidParameterException("uriString is blank!");
         }
         try {
             // https://www.mongodb.com/docs/drivers/java/sync/v4.5/fundamentals/connection/connect/
@@ -83,7 +84,7 @@ public class MongoDbUtil {
     public static MongoDatabase getDatabase(MongoClient mongoClient, String databaseName) throws BaseException {
         try {
             if (mongoClient == null || StringUtils.isBlank(databaseName)) {
-                throw new BaseException("mongoClient or databaseName is null!");
+                throw new InvalidParameterException("mongoClient or databaseName is null!");
             }
             return setCodecs(mongoClient.getDatabase(databaseName));
         } catch (IllegalArgumentException e) {

@@ -26,7 +26,7 @@ import javax.enterprise.context.Dependent;
 import org.apache.deltaspike.jpa.api.transaction.Transactional;
 
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
-import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
+import hu.icellmobilsoft.coffee.dto.exception.InvalidParameterException;
 import hu.icellmobilsoft.coffee.tool.common.FunctionalInterfaces.BaseExceptionFunction;
 import hu.icellmobilsoft.coffee.tool.common.FunctionalInterfaces.BaseExceptionFunction2;
 import hu.icellmobilsoft.coffee.tool.common.FunctionalInterfaces.BaseExceptionFunction3;
@@ -60,7 +60,7 @@ public class TransactionHelper {
     @Transactional
     public <R> R executeWithTransaction(BaseExceptionSupplier<R> baseExceptionSupplier) throws BaseException {
         if (Objects.isNull(baseExceptionSupplier)) {
-            throw newInvalidParameterException("baseExceptionSupplier is NULL!");
+            throw new InvalidParameterException("baseExceptionSupplier is NULL!");
         }
         return baseExceptionSupplier.get();
     }
@@ -76,7 +76,7 @@ public class TransactionHelper {
     @Transactional
     public void executeWithTransaction(BaseExceptionRunner baseExceptionRunner) throws BaseException {
         if (Objects.isNull(baseExceptionRunner)) {
-            throw newInvalidParameterException("baseExceptionRunner is NULL!");
+            throw new InvalidParameterException("baseExceptionRunner is NULL!");
         }
         baseExceptionRunner.run();
     }
@@ -99,7 +99,7 @@ public class TransactionHelper {
     @Transactional
     public <P1, R> R executeWithTransaction(BaseExceptionFunction<P1, R> baseExceptionFunction, P1 p1) throws BaseException {
         if (Objects.isNull(baseExceptionFunction)) {
-            throw newInvalidParameterException("baseExceptionFunction is NULL!");
+            throw new InvalidParameterException("baseExceptionFunction is NULL!");
         }
         return baseExceptionFunction.apply(p1);
     }
@@ -126,7 +126,7 @@ public class TransactionHelper {
     @Transactional
     public <P1, P2, R> R executeWithTransaction(BaseExceptionFunction2<P1, P2, R> baseExceptionFunction, P1 p1, P2 p2) throws BaseException {
         if (Objects.isNull(baseExceptionFunction)) {
-            throw newInvalidParameterException("baseExceptionFunction is NULL!");
+            throw new InvalidParameterException("baseExceptionFunction is NULL!");
         }
         return baseExceptionFunction.apply(p1, p2);
     }
@@ -158,7 +158,7 @@ public class TransactionHelper {
     public <P1, P2, P3, R> R executeWithTransaction(BaseExceptionFunction3<P1, P2, P3, R> baseExceptionFunction, P1 p1, P2 p2, P3 p3)
             throws BaseException {
         if (Objects.isNull(baseExceptionFunction)) {
-            throw newInvalidParameterException("baseExceptionFunction is NULL!");
+            throw new InvalidParameterException("baseExceptionFunction is NULL!");
         }
         return baseExceptionFunction.apply(p1, p2, p3);
     }
@@ -194,7 +194,7 @@ public class TransactionHelper {
     public <P1, P2, P3, P4, R> R executeWithTransaction(BaseExceptionFunction4<P1, P2, P3, P4, R> baseExceptionFunction, P1 p1, P2 p2, P3 p3, P4 p4)
             throws BaseException {
         if (Objects.isNull(baseExceptionFunction)) {
-            throw newInvalidParameterException("baseExceptionFunction is NULL!");
+            throw new InvalidParameterException("baseExceptionFunction is NULL!");
         }
         return baseExceptionFunction.apply(p1, p2, p3, p4);
     }
@@ -234,7 +234,7 @@ public class TransactionHelper {
     public <P1, P2, P3, P4, P5, R> R executeWithTransaction(BaseExceptionFunction5<P1, P2, P3, P4, P5, R> baseExceptionFunction, P1 p1, P2 p2, P3 p3,
             P4 p4, P5 p5) throws BaseException {
         if (Objects.isNull(baseExceptionFunction)) {
-            throw newInvalidParameterException("baseExceptionFunction is NULL!");
+            throw new InvalidParameterException("baseExceptionFunction is NULL!");
         }
         return baseExceptionFunction.apply(p1, p2, p3, p4, p5);
     }
@@ -278,12 +278,9 @@ public class TransactionHelper {
     public <P1, P2, P3, P4, P5, P6, R> R executeWithTransaction(BaseExceptionFunction6<P1, P2, P3, P4, P5, P6, R> baseExceptionFunction, P1 p1, P2 p2,
             P3 p3, P4 p4, P5 p5, P6 p6) throws BaseException {
         if (Objects.isNull(baseExceptionFunction)) {
-            throw newInvalidParameterException("baseExceptionFunction is NULL!");
+            throw new InvalidParameterException("baseExceptionFunction is NULL!");
         }
         return baseExceptionFunction.apply(p1, p2, p3, p4, p5, p6);
     }
 
-    private BaseException newInvalidParameterException(String message) {
-        return new BaseException(CoffeeFaultType.WRONG_OR_MISSING_PARAMETERS, message);
-    }
 }

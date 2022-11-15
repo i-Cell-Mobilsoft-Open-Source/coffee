@@ -29,6 +29,7 @@ import org.apache.commons.lang3.StringUtils;
 import hu.icellmobilsoft.coffee.cdi.logger.AppLogger;
 import hu.icellmobilsoft.coffee.cdi.logger.ThisLogger;
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
+import hu.icellmobilsoft.coffee.dto.exception.InvalidParameterException;
 import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 import hu.icellmobilsoft.coffee.jpa.service.BaseService;
@@ -65,7 +66,7 @@ public class TemplateParameterService extends BaseService<TemplateParameter> {
     public List<TemplateParameter> findAll(String templateKey, String language) throws BaseException {
         log.trace(">> findAll(templateKey: [{0}] ,language: [{1}]", templateKey, language);
         if (StringUtils.isAnyBlank(templateKey, language)) {
-            throw new BaseException("templateKey or language is null");
+            throw new InvalidParameterException("templateKey or language is null");
         }
         try {
             return templateParameterRepository.findAllTemplateKeyAndLanguage(templateKey, language);

@@ -31,12 +31,14 @@ import org.apache.commons.lang3.StringUtils;
 
 import hu.icellmobilsoft.coffee.dto.exception.BONotFoundException;
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
+import hu.icellmobilsoft.coffee.dto.exception.InvalidParameterException;
 import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 import hu.icellmobilsoft.coffee.module.etcd.repository.EtcdRepository;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
 import hu.icellmobilsoft.coffee.tool.utils.string.StringHelper;
 import hu.icellmobilsoft.coffee.tool.utils.string.StringUtil;
+
 import io.etcd.jetcd.ByteSequence;
 import io.etcd.jetcd.Response;
 import io.etcd.jetcd.kv.DeleteResponse;
@@ -73,7 +75,7 @@ public class BaseEtcdService<T> {
     @SuppressWarnings("unchecked")
     public T getEtcdData(String key, Class<T> c) throws BaseException {
         if (StringUtils.isBlank(key)) {
-            throw new BaseException("key is empty!");
+            throw new InvalidParameterException("key is blank!");
         }
 
         try {
@@ -112,7 +114,7 @@ public class BaseEtcdService<T> {
     public void setEtcdData(String key, String value) throws BaseException {
         // IS: a value lehetne generikum is, ha szukseg lessz ra, csak akkor meg kell allapodni mikent fogjuk tarolni (pl json)
         if (StringUtils.isAnyBlank(key, value)) {
-            throw new BaseException("key or value is empty!");
+            throw new InvalidParameterException("key or value is blank!");
         }
 
         try {

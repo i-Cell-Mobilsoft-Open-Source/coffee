@@ -36,6 +36,8 @@ import org.xml.sax.SAXException;
 
 import hu.icellmobilsoft.coffee.cdi.logger.AppLogger;
 import hu.icellmobilsoft.coffee.cdi.logger.ThisLogger;
+import hu.icellmobilsoft.coffee.dto.exception.BaseException;
+import hu.icellmobilsoft.coffee.dto.exception.InvalidParameterException;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 import hu.icellmobilsoft.coffee.rest.validation.xml.exception.XsdProcessingException;
 
@@ -60,9 +62,9 @@ public class XsdHelper implements IXsdHelper {
      * Létrehoz egy osztályhoz egy JAXBContext-et, cache-eli a választ.
      */
     @Override
-    public JAXBContext getJAXBContext(Class<?> forClass) throws JAXBException, XsdProcessingException {
+    public JAXBContext getJAXBContext(Class<?> forClass) throws JAXBException, BaseException {
         if (forClass == null) {
-            throw new XsdProcessingException(CoffeeFaultType.WRONG_OR_MISSING_PARAMETERS, "Null parameter is not accepted!");
+            throw new InvalidParameterException("forClass is null!");
         }
         String className = forClass.getName();
         if (jaxbContextCache.containsKey(className)) {
@@ -80,12 +82,12 @@ public class XsdHelper implements IXsdHelper {
      * Létrehoz a megadott XSD-hez egy Schema-t, cache-eli a választ.
      */
     @Override
-    public Schema getSchema(String xsd, LSResourceResolver lsResourceResolver) throws XsdProcessingException, SAXException {
+    public Schema getSchema(String xsd, LSResourceResolver lsResourceResolver) throws BaseException, SAXException {
         // ebben az esetben az xsd-knek a jboss szerveren kell lenniuk valahol
         // ha a warba akarjuk csomagolni, akkor valoszinuleg masik
         // classloader kell (at kell adni egy classt is)
         if (StringUtils.isBlank(xsd) || lsResourceResolver == null) {
-            throw new XsdProcessingException(CoffeeFaultType.WRONG_OR_MISSING_PARAMETERS, "Null parameters are not accepted!");
+            throw new InvalidParameterException("xsd is blank or lsResourceResolver is null!");
         }
         Schema schema = xsdCache.get(xsd);
         if (schema == null) {

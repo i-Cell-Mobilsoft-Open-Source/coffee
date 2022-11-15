@@ -29,7 +29,7 @@ import hu.icellmobilsoft.coffee.cdi.logger.AppLogger;
 import hu.icellmobilsoft.coffee.cdi.logger.ThisLogger;
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.dto.exception.BusinessException;
-import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
+import hu.icellmobilsoft.coffee.dto.exception.InvalidParameterException;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 import hu.icellmobilsoft.coffee.module.totp.TOtpGenerator;
 import hu.icellmobilsoft.coffee.module.totp.TOtpVerifier;
@@ -65,7 +65,7 @@ public class DefaultTOtpVerifierImpl implements TOtpVerifier {
     @Override
     public void verify(byte[] secretKey, String verifiedOtp, long utcTimestamp, TOtpAlgorithm hashAlgorithm) throws BaseException {
         if (ObjectUtils.isEmpty(secretKey) || StringUtils.isBlank(verifiedOtp) || hashAlgorithm == null) {
-            throw new TechnicalException(CoffeeFaultType.WRONG_OR_MISSING_PARAMETERS, "otp.verify parameters cannot be null or empty");
+            throw new InvalidParameterException("otp.verify parameters cannot be null or empty");
         }
         String serverOtp = totpGenerator.generatePassword(secretKey, utcTimestamp, verifiedOtp.length(), hashAlgorithm);
         if (StringUtils.equals(serverOtp, verifiedOtp)) {

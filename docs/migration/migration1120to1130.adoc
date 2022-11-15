@@ -12,6 +12,32 @@ coff:ee v1.12.0 -> v1.13.0 migrációs leírás, újdonságok, változások leí
 
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
 
+=== coffee-dto-base
+
+* Bevezetésre került az `InvalidParameterException`, alapértelmezetten `CoffeeFaultType.WRONG_OR_MISSING_PARAMETERS` hibakóddal, amely azt a célt szolgálja, hogy a metódusok paraméter ellenőrzésnél egységes kivételt dobjunk az érvénytelen paraméterek esetén.
+Ilyen például tipikusan a public metódusok esetén a null check.
+A bevezetés során ahol eddig érvénytelen paraméterre `BaseException`-t kiterjesztő kivételt dobtunk, most már `InvalidParameterException`-t dobunk.
+
+==== Átállás
+
+* Ajánlott a projekteken is egységesen az `InvalidParameterException` használata az érvénytelen paraméterek esetén.
+* A `BaseService`-ből törlésre került a `newInvalidParameterException(String msg)` metódus, helyette közvetlenül az `InvalidParameterException` használata szükséges.
+* Az `AbstractBaseAction`-ből törlésre került a `newInvalidParameterException(String msg)` metódus, helyette közvetlenül az `InvalidParameterException` használata szükséges.
+* Az `IXsdHelper` és a `JaxbTool` osztályok metódusai most már `XsdProcessingException` helyett `BaseException`-t dobnak.
+A változásokat szükséges lekövetni.
+* A további metódusok, amelyeknél bevezetésre került az `InvalidParameterException` használata rendre `BaseException`-t dobtak, így azoknál nem történt változás.
+
+=== coffee-rest
+
+* Bevezetésre került a `BaseProcessingException`, amely azt a célt szolgálja, hogy a `MessageBodyReader`-t és `MessageBodyWriter`-t kiterjesztő osztályokból tudjunk `BaseException`-t dobni.
+Eredetileg az `XsdProcessingExceptionWrapper`-t használtuk erre, de az dedikáltan csak `XsdProcessingException`-t csomagolt be, így ezt leváltottuk és töröltük.
+Így most már nem csak `XsdProcessingException` dobása történhet meg a `MessageBodyReader` és `MessageBodyWriter` osztályokban, hanem bármilyen `BaseException`.
+
+==== Átállás
+
+* A `JsonMessageBodyReaderBase` és `XmlMessageBodyReaderBase` osztályok `readFrom()` metódusai most már `BaseException`-t kapnak el és `BaseProcessingException`-t dobnak `XsdProcessingExceptionWrapper` helyett.
+A változásokat szükséges lekövetni a projekten használt / felülírt osztályokban.
+
 == Változások
 
 * Bump jackson-databind from 2.13.2.1 to 2.13.4.2 - DTO generátoroknál van használva.

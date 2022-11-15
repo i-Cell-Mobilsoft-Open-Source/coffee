@@ -42,6 +42,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.w3c.dom.ls.LSResourceResolver;
 import org.xml.sax.SAXException;
 
+import hu.icellmobilsoft.coffee.dto.exception.BaseException;
+import hu.icellmobilsoft.coffee.dto.exception.InvalidParameterException;
 import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 import hu.icellmobilsoft.coffee.rest.validation.xml.annotation.ValidateXML;
@@ -79,12 +81,12 @@ public class JaxbTool {
      * @param validateXMLs
      *            Az XSD validációhoz kapcsolódó annotációk
      * @return A eredményobjektum
-     * @throws XsdProcessingException
+     * @throws BaseException
      *             érvénytelen bemenet esetén, vagy ha nem lehet feldolgozni a bemeneti adatot
      */
-    public <T> T unmarshalXML(Class<T> type, InputStream entityStream, ValidateXML[] validateXMLs) throws XsdProcessingException {
+    public <T> T unmarshalXML(Class<T> type, InputStream entityStream, ValidateXML[] validateXMLs) throws BaseException {
         if (type == null || entityStream == null) {
-            throw new XsdProcessingException(CoffeeFaultType.WRONG_OR_MISSING_PARAMETERS, "type or entityStream is null!");
+            throw new InvalidParameterException("type or entityStream is null!");
         }
         String requestVersion = getRequestVersion(entityStream);
         String schemaPath = getXsdPath(validateXMLs, requestVersion);
@@ -104,12 +106,12 @@ public class JaxbTool {
      * @param validateXMLs
      *            Az XSD validációhoz kapcsolódó annotációk
      * @return A eredményobjektum
-     * @throws XsdProcessingException
+     * @throws BaseException
      *             érvénytelen bemenet esetén, vagy ha nem lehet feldolgozni a bemeneti adatot
      */
-    public <T> T unmarshalXML(Class<T> type, byte[] binary, ValidateXML[] validateXMLs) throws XsdProcessingException {
+    public <T> T unmarshalXML(Class<T> type, byte[] binary, ValidateXML[] validateXMLs) throws BaseException {
         if (Objects.isNull(type) || ArrayUtils.isEmpty(binary)) {
-            throw new XsdProcessingException(CoffeeFaultType.WRONG_OR_MISSING_PARAMETERS, ERR_MSG_TYPE_OR_BINARY_IS_NULL_OR_EMPTY);
+            throw new InvalidParameterException(ERR_MSG_TYPE_OR_BINARY_IS_NULL_OR_EMPTY);
         }
         ByteArrayInputStream inputStream = new ByteArrayInputStream(binary);
         return unmarshalXML(type, inputStream, validateXMLs);
@@ -125,10 +127,10 @@ public class JaxbTool {
      * @param inputStream
      *            a bemeneti adatokat tartalmazó folyam
      * @return xml-nek megfelelő objektum a felolvasott értékekkel.
-     * @throws XsdProcessingException
+     * @throws BaseException
      *             érvénytelen bemenet esetén, vagy ha nem lehet feldolgozni a bemeneti adatot
      */
-    public <T> T unmarshalXML(Class<T> type, InputStream inputStream) throws XsdProcessingException {
+    public <T> T unmarshalXML(Class<T> type, InputStream inputStream) throws BaseException {
         return unmarshalXML(type, inputStream, (String) null);
     }
 
@@ -142,12 +144,12 @@ public class JaxbTool {
      * @param binary
      *            a bemeneti adatokat tartalmazó bináris
      * @return xml-nek megfelelő objektum a felolvasott értékekkel.
-     * @throws XsdProcessingException
+     * @throws BaseException
      *             érvénytelen bemenet esetén, vagy ha nem lehet feldolgozni a bemeneti adatot
      */
-    public <T> T unmarshalXML(Class<T> type, byte[] binary) throws XsdProcessingException {
+    public <T> T unmarshalXML(Class<T> type, byte[] binary) throws BaseException {
         if (Objects.isNull(type) || ArrayUtils.isEmpty(binary)) {
-            throw new XsdProcessingException(CoffeeFaultType.WRONG_OR_MISSING_PARAMETERS, ERR_MSG_TYPE_OR_BINARY_IS_NULL_OR_EMPTY);
+            throw new InvalidParameterException(ERR_MSG_TYPE_OR_BINARY_IS_NULL_OR_EMPTY);
         }
         ByteArrayInputStream inputStream = new ByteArrayInputStream(binary);
         return unmarshalXML(type, inputStream);
@@ -192,12 +194,12 @@ public class JaxbTool {
      * @param schemaPath
      *            séma elérési útja
      * @return xml-nek megfelelő objektum a felolvasott értékekkel.
-     * @throws XsdProcessingException
+     * @throws BaseException
      *             érvénytelen bemenet esetén, vagy ha nem lehet feldolgozni a bemeneti adatot
      */
-    public <T> T unmarshalXML(Class<T> type, InputStream inputStream, String schemaPath) throws XsdProcessingException {
+    public <T> T unmarshalXML(Class<T> type, InputStream inputStream, String schemaPath) throws BaseException {
         if (type == null || inputStream == null) {
-            throw new XsdProcessingException(CoffeeFaultType.WRONG_OR_MISSING_PARAMETERS, "type or inputStream is null!");
+            throw new InvalidParameterException("type or inputStream is null!");
         }
         IXsdValidationErrorCollector errorCollector = createCDIInstance(IXsdValidationErrorCollector.class);
         try {
@@ -238,12 +240,12 @@ public class JaxbTool {
      * @param schemaPath
      *            séma elérési útja
      * @return xml-nek megfelelő objektum a felolvasott értékekkel.
-     * @throws XsdProcessingException
+     * @throws BaseException
      *             érvénytelen bemenet esetén, vagy ha nem lehet feldolgozni a bemeneti adatot
      */
-    public <T> T unmarshalXML(Class<T> type, byte[] binary, String schemaPath) throws XsdProcessingException {
+    public <T> T unmarshalXML(Class<T> type, byte[] binary, String schemaPath) throws BaseException {
         if (Objects.isNull(type) || ArrayUtils.isEmpty(binary)) {
-            throw new XsdProcessingException(CoffeeFaultType.WRONG_OR_MISSING_PARAMETERS, ERR_MSG_TYPE_OR_BINARY_IS_NULL_OR_EMPTY);
+            throw new InvalidParameterException(ERR_MSG_TYPE_OR_BINARY_IS_NULL_OR_EMPTY);
         }
         ByteArrayInputStream inputStream = new ByteArrayInputStream(binary);
         return unmarshalXML(type, inputStream, schemaPath);
@@ -262,10 +264,10 @@ public class JaxbTool {
      * @param schemaPath
      *            path to XSD to validate on, if null, then validation is not executed
      * @return XML String
-     * @throws XsdProcessingException
+     * @throws BaseException
      *             if invalid input or cannot be marshalled
      */
-    public String marshalXML(Object obj, String schemaPath) throws XsdProcessingException {
+    public String marshalXML(Object obj, String schemaPath) throws BaseException {
         Map<String, Object> properties = new HashMap<>();
         properties.put(javax.xml.bind.Marshaller.JAXB_FORMATTED_OUTPUT, true);
         properties.put(javax.xml.bind.Marshaller.JAXB_FRAGMENT, Boolean.TRUE);
@@ -283,12 +285,12 @@ public class JaxbTool {
      * @param marshallerProperties
      *            marshaller properties
      * @return XML String
-     * @throws XsdProcessingException
+     * @throws BaseException
      *             if invalid input or cannot be marshalled
      */
-    public String marshalXML(Object obj, String schemaPath, Map<String, Object> marshallerProperties) throws XsdProcessingException {
+    public String marshalXML(Object obj, String schemaPath, Map<String, Object> marshallerProperties) throws BaseException {
         if (obj == null) {
-            throw new XsdProcessingException(CoffeeFaultType.WRONG_OR_MISSING_PARAMETERS, "obj is null!");
+            throw new InvalidParameterException("obj is null!");
         }
         try {
             IXsdHelper xsdHelper = createCDIInstance(IXsdHelper.class);
@@ -342,12 +344,12 @@ public class JaxbTool {
      * @param entityStream
      *            http REST entity
      * @return request version
-     * @throws XsdProcessingException
+     * @throws BaseException
      *             if invalid input or cannot read request version
      */
-    public String getRequestVersion(InputStream entityStream) throws XsdProcessingException {
+    public String getRequestVersion(InputStream entityStream) throws BaseException {
         if (entityStream == null) {
-            throw new XsdProcessingException(CoffeeFaultType.WRONG_OR_MISSING_PARAMETERS, "entityStream is null!");
+            throw new InvalidParameterException("entityStream is null!");
         }
         try {
             entityStream.mark(0);
@@ -367,12 +369,12 @@ public class JaxbTool {
      * @param requestVersion
      *            keresett verzió
      * @return definiált XSD path
-     * @throws XsdProcessingException
+     * @throws BaseException
      *             if invalid input or cannot read xsd path
      */
-    public String getXsdPath(ValidateXML[] validateXMLs, String requestVersion) throws XsdProcessingException {
+    public String getXsdPath(ValidateXML[] validateXMLs, String requestVersion) throws BaseException {
         if (validateXMLs == null) {
-            throw new XsdProcessingException(CoffeeFaultType.WRONG_OR_MISSING_PARAMETERS, "validateXMLs is null!");
+            throw new InvalidParameterException("validateXMLs is null!");
         }
         for (ValidateXML versionValidate : validateXMLs) {
             if (versionValidate.version().include().length == 0 // Nincs version megadva
