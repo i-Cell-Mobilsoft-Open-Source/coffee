@@ -299,6 +299,19 @@ public class BaseService<T> {
     }
 
     /**
+     * Returns {@link BaseException} with {@link CoffeeFaultType#WRONG_OR_MISSING_PARAMETERS} and given message.
+     *
+     * @param msg
+     *            exception message
+     * @return {@link BaseException}
+     * @deprecated Use {@link InvalidParameterException} instead, forRemoval = true, since = "1.13.0"
+     */
+    @Deprecated(forRemoval = true, since = "1.13.0")
+    public static BaseException newInvalidParameterException(String msg) {
+        return new BaseException(CoffeeFaultType.WRONG_OR_MISSING_PARAMETERS, msg);
+    }
+
+    /**
      * Wraps call to parameter-less method.
      *
      * @param function

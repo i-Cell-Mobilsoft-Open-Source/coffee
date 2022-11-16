@@ -30,7 +30,7 @@ import hu.icellmobilsoft.coffee.dto.exception.BaseExceptionWrapper;
  * @author csaba.balogh
  * @since 1.13.0
  */
-public class BaseProcessingException extends ProcessingException implements BaseExceptionWrapper<BaseException> {
+public class BaseProcessingExceptionWrapper extends ProcessingException implements BaseExceptionWrapper<BaseException> {
 
     private static final long serialVersionUID = 1L;
 
@@ -45,7 +45,7 @@ public class BaseProcessingException extends ProcessingException implements Base
      * @param exception
      *            the original {@link BaseException}.
      */
-    public BaseProcessingException(BaseException exception) {
+    public BaseProcessingExceptionWrapper(BaseException exception) {
         super(exception);
         this.exception = exception;
     }

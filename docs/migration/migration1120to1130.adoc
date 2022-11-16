@@ -21,22 +21,23 @@ A bevezetés során ahol eddig érvénytelen paraméterre `BaseException`-t kite
 ==== Átállás
 
 * Ajánlott a projekteken is egységesen az `InvalidParameterException` használata az érvénytelen paraméterek esetén.
-* A `BaseService`-ből törlésre került a `newInvalidParameterException(String msg)` metódus, helyette közvetlenül az `InvalidParameterException` használata szükséges.
-* Az `AbstractBaseAction`-ből törlésre került a `newInvalidParameterException(String msg)` metódus, helyette közvetlenül az `InvalidParameterException` használata szükséges.
+* A `BaseService.newInvalidParameterException(String msg)` metódusa `@Deprecated` jelzést kapott, helyette közvetlenül az `InvalidParameterException` használata szükséges.
+* Az `AbstractBaseAction.newInvalidParameterException(String msg)` metódusa `@Deprecated` jelzést kapott, helyette közvetlenül az `InvalidParameterException` használata szükséges.
 * Az `IXsdHelper` és a `JaxbTool` osztályok metódusai most már `XsdProcessingException` helyett `BaseException`-t dobnak.
 A változásokat szükséges lekövetni.
 * A további metódusok, amelyeknél bevezetésre került az `InvalidParameterException` használata rendre `BaseException`-t dobtak, így azoknál nem történt változás.
 
 === coffee-rest
 
-* Bevezetésre került a `BaseProcessingException`, amely azt a célt szolgálja, hogy a `MessageBodyReader`-t és `MessageBodyWriter`-t kiterjesztő osztályokból tudjunk `BaseException`-t dobni.
-Eredetileg az `XsdProcessingExceptionWrapper`-t használtuk erre, de az dedikáltan csak `XsdProcessingException`-t csomagolt be, így ezt leváltottuk és töröltük.
+* Bevezetésre került a `BaseProcessingExceptionWrapper`, amely azt a célt szolgálja, hogy a `MessageBodyReader`-t és `MessageBodyWriter`-t kiterjesztő osztályokból tudjunk `BaseException`-t dobni.
+Eredetileg az `XsdProcessingExceptionWrapper`-t használtuk erre, de az dedikáltan csak `XsdProcessingException`-t csomagolt be, így ezt leváltottuk.
 Így most már nem csak `XsdProcessingException` dobása történhet meg a `MessageBodyReader` és `MessageBodyWriter` osztályokban, hanem bármilyen `BaseException`.
 
 ==== Átállás
 
-* A `JsonMessageBodyReaderBase` és `XmlMessageBodyReaderBase` osztályok `readFrom()` metódusai most már `BaseException`-t kapnak el és `BaseProcessingException`-t dobnak `XsdProcessingExceptionWrapper` helyett.
+* A `JsonMessageBodyReaderBase` és `XmlMessageBodyReaderBase` osztályok `readFrom()` metódusai most már `BaseException`-t kapnak el és `BaseProcessingExceptionWrapper`-t dobnak `XsdProcessingExceptionWrapper` helyett.
 A változásokat szükséges lekövetni a projekten használt / felülírt osztályokban.
+* Az `XsdProcessingExceptionWrapper` `@Deprecated` jelzést kapott, helyette a `BaseProcessingExceptionWrapper` használata javasolt.
 
 == Változások
 
