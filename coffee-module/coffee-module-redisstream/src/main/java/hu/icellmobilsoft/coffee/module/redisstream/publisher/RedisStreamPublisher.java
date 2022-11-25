@@ -34,6 +34,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import hu.icellmobilsoft.coffee.dto.common.LogConstants;
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
+import hu.icellmobilsoft.coffee.dto.exception.InvalidParameterException;
 import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.module.redis.manager.RedisManager;
 import hu.icellmobilsoft.coffee.module.redis.manager.RedisManagerConnection;
@@ -44,6 +45,7 @@ import hu.icellmobilsoft.coffee.module.redisstream.config.StreamMessageParameter
 import hu.icellmobilsoft.coffee.module.redisstream.service.RedisStreamService;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
 import hu.icellmobilsoft.coffee.se.logging.mdc.MDC;
+
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.StreamEntryID;
 import redis.clients.jedis.params.XAddParams;
@@ -156,7 +158,7 @@ public class RedisStreamPublisher {
      */
     public Optional<StreamEntryID> publishPublication(RedisStreamPublication publication) throws BaseException {
         if (publication == null) {
-            throw new TechnicalException("publication is null!");
+            throw new InvalidParameterException("publication is null!");
         }
         checkRedisManager();
         if (StringUtils.isBlank(publication.getStreamGroup())) {
@@ -178,7 +180,7 @@ public class RedisStreamPublisher {
      */
     public List<Optional<StreamEntryID>> publishPublications(List<RedisStreamPublication> publications) throws BaseException {
         if (publications == null) {
-            throw new TechnicalException("publications is null!");
+            throw new InvalidParameterException("publications is null!");
         }
         checkRedisManager();
 
@@ -225,7 +227,7 @@ public class RedisStreamPublisher {
      */
     public List<Optional<StreamEntryID>> publish(List<String> streamMessages, Map<String, String> parameters) throws BaseException {
         if (streamMessages == null) {
-            throw new TechnicalException("streamMessages is null!");
+            throw new InvalidParameterException("streamMessages is null!");
         }
         checkInitialization();
 
@@ -265,7 +267,7 @@ public class RedisStreamPublisher {
     public List<Optional<StreamEntryID>> publish(String streamGroup, List<String> streamMessages, Map<String, String> parameters)
             throws BaseException {
         if (streamMessages == null) {
-            throw new TechnicalException("streamMessages is null!");
+            throw new InvalidParameterException("streamMessages is null!");
         }
         validateGroup(streamGroup);
         checkRedisManager();
@@ -386,7 +388,7 @@ public class RedisStreamPublisher {
      */
     public static Entry<String, String> parameterOf(StreamMessageParameter parameterKey, Object parameterValue) throws BaseException {
         if (parameterKey == null) {
-            throw new TechnicalException("parameterKey is null!");
+            throw new InvalidParameterException("parameterKey is null!");
         }
         return Map.entry(parameterKey.getMessageKey(), String.valueOf(parameterValue));
     }
@@ -401,7 +403,7 @@ public class RedisStreamPublisher {
      */
     protected void validateGroup(String streamGroup) throws TechnicalException {
         if (StringUtils.isBlank(streamGroup)) {
-            throw new TechnicalException("Input of custom streamGroup is null!");
+            throw new InvalidParameterException("Input of custom streamGroup is null!");
         }
     }
 

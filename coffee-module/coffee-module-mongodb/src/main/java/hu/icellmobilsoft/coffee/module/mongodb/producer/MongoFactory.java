@@ -36,7 +36,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.eclipse.microprofile.config.ConfigProvider;
 
 import com.mongodb.client.MongoClient;
+
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
+import hu.icellmobilsoft.coffee.dto.exception.InvalidParameterException;
 import hu.icellmobilsoft.coffee.module.mongodb.annotation.MongoConfiguration;
 import hu.icellmobilsoft.coffee.module.mongodb.config.MongoDbConfig;
 import hu.icellmobilsoft.coffee.module.mongodb.handler.MongoDbHandler;
@@ -120,7 +122,7 @@ public class MongoFactory {
      */
     public MongoClient getMongoClient(String uri) throws BaseException {
         if (StringUtils.isBlank(uri)) {
-            throw new BaseException("uri is null!");
+            throw new InvalidParameterException("uri is null!");
         }
         if (!mongoClientMap.containsKey(uri)) {
             MongoClient mongoClient = MongoDbUtil.getMongoClient(uri);

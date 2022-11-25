@@ -26,7 +26,7 @@ import javax.xml.validation.Schema;
 import org.w3c.dom.ls.LSResourceResolver;
 import org.xml.sax.SAXException;
 
-import hu.icellmobilsoft.coffee.rest.validation.xml.exception.XsdProcessingException;
+import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 
 /**
  * XSD helper methods.
@@ -44,10 +44,10 @@ public interface IXsdHelper {
      * @return {@code JAXBContext}
      * @throws JAXBException
      *             if JAXB exception occurs
-     * @throws XsdProcessingException
+     * @throws BaseException
      *             if XSD processing exception occurs
      */
-    JAXBContext getJAXBContext(Class<?> forClass) throws JAXBException, XsdProcessingException;
+    JAXBContext getJAXBContext(Class<?> forClass) throws JAXBException, BaseException;
 
     /**
      * Returns {@link Schema} for given XSD.
@@ -57,10 +57,10 @@ public interface IXsdHelper {
      * @param lsResourceResolver
      *            resolver
      * @return {@code Schema}
-     * @throws XsdProcessingException
+     * @throws BaseException
      *             if XSD processing exception occurs
      * @throws SAXException
      *             if SAX exception occurs
      */
-    Schema getSchema(String xsd, LSResourceResolver lsResourceResolver) throws XsdProcessingException, SAXException;
+    Schema getSchema(String xsd, LSResourceResolver lsResourceResolver) throws BaseException, SAXException;
 }

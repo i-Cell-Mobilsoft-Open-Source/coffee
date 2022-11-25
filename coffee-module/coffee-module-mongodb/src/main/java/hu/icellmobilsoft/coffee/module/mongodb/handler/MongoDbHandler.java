@@ -32,8 +32,7 @@ import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoDatabase;
 
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
-import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
-import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
+import hu.icellmobilsoft.coffee.dto.exception.InvalidParameterException;
 import hu.icellmobilsoft.coffee.module.mongodb.config.MongoDbConfig;
 import hu.icellmobilsoft.coffee.module.mongodb.producer.MongoFactory;
 import hu.icellmobilsoft.coffee.module.mongodb.service.MongoServiceImpl;
@@ -78,7 +77,7 @@ public class MongoDbHandler {
      */
     public MongoClient getMongoClient() throws BaseException {
         if (mongoDbConfig == null) {
-            throw new TechnicalException(CoffeeFaultType.WRONG_OR_MISSING_PARAMETERS, "mongoDbConfig is not set!");
+            throw new InvalidParameterException("mongoDbConfig is not set!");
         }
         return mongoFactory.getMongoClient(mongoDbConfig.getUri());
     }
@@ -117,7 +116,7 @@ public class MongoDbHandler {
      */
     public void setDatabase(String databaseName) throws BaseException {
         if (StringUtils.isBlank(databaseName)) {
-            throw new TechnicalException(CoffeeFaultType.WRONG_OR_MISSING_PARAMETERS, "databaseName is blank!");
+            throw new InvalidParameterException("databaseName is blank!");
         }
         mongoDatabase = MongoDbUtil.getDatabase(getMongoClient(), databaseName);
     }

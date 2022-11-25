@@ -33,6 +33,7 @@ import org.apache.commons.lang3.StringUtils;
 import hu.icellmobilsoft.coffee.cdi.logger.AppLogger;
 import hu.icellmobilsoft.coffee.cdi.logger.ThisLogger;
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
+import hu.icellmobilsoft.coffee.dto.exception.InvalidParameterException;
 import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 import hu.icellmobilsoft.coffee.module.totp.TOtpGenerator;
@@ -62,7 +63,7 @@ public class DefaultTOtpGeneratorImpl implements TOtpGenerator {
     @Override
     public String generatePassword(byte[] secretKey, long currentUTCTimestamp, int otpLength, TOtpAlgorithm hashAlgorithm) throws BaseException {
         if (ObjectUtils.isEmpty(secretKey) || hashAlgorithm == null) {
-            throw new TechnicalException(CoffeeFaultType.WRONG_OR_MISSING_PARAMETERS, "otp.generatePassword parameters cannot be null or empty");
+            throw new InvalidParameterException("otp.generatePassword parameters cannot be null or empty");
         }
         long timeWindow = currentUTCTimestamp / otpConfig.getTimestep();
         String sTimeMs = StringUtils.leftPad(Long.toHexString(timeWindow).toUpperCase(), 16, '0');

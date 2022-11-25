@@ -32,15 +32,14 @@ import javax.ws.rs.ext.MessageBodyReader;
 
 import org.apache.commons.lang3.ArrayUtils;
 
-import hu.icellmobilsoft.coffee.cdi.logger.AppLogger;
-import hu.icellmobilsoft.coffee.cdi.logger.ThisLogger;
+import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 import hu.icellmobilsoft.coffee.rest.validation.xml.JaxbTool;
 import hu.icellmobilsoft.coffee.rest.validation.xml.XmlMessageBodyReaderBase;
 import hu.icellmobilsoft.coffee.rest.validation.xml.annotation.ValidateXML;
+import hu.icellmobilsoft.coffee.rest.validation.xml.exception.BaseProcessingExceptionWrapper;
 import hu.icellmobilsoft.coffee.rest.validation.xml.exception.XsdProcessingException;
-import hu.icellmobilsoft.coffee.rest.validation.xml.exception.XsdProcessingExceptionWrapper;
 import hu.icellmobilsoft.coffee.rest.validation.xml.reader.IJsonRequestVersionReader;
 import hu.icellmobilsoft.coffee.tool.gson.JsonUtil;
 
@@ -64,10 +63,6 @@ import hu.icellmobilsoft.coffee.tool.gson.JsonUtil;
  * @since 1.0.0
  */
 public abstract class JsonMessageBodyReaderBase<T> implements MessageBodyReader<T> {
-
-    @Inject
-    @ThisLogger
-    private AppLogger log;
 
     @Inject
     private JaxbTool jaxbTool;
@@ -101,8 +96,8 @@ public abstract class JsonMessageBodyReaderBase<T> implements MessageBodyReader<
             String schemaPath = jaxbTool.getXsdPath(validates, requestVersion);
             jaxbTool.marshalXML(obj, schemaPath);
             return obj;
-        } catch (XsdProcessingException e) {
-            throw new XsdProcessingExceptionWrapper(e);
+        } catch (BaseException e) {
+            throw new BaseProcessingExceptionWrapper(e);
         }
     }
 

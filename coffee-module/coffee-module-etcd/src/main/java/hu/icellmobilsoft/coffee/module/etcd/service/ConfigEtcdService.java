@@ -33,6 +33,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import hu.icellmobilsoft.coffee.dto.exception.BONotFoundException;
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
+import hu.icellmobilsoft.coffee.dto.exception.InvalidParameterException;
 import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
@@ -241,7 +242,7 @@ public class ConfigEtcdService {
      */
     protected String getValueWithCircleCheck(String key, Set<String> previousKeys) throws BaseException {
         if (StringUtils.isBlank(key)) {
-            throw new BaseException("key is empty!");
+            throw new InvalidParameterException("key is blank!");
         }
         String value = getRawValue(key);
         if (StringUtils.startsWith(value, "{") && StringUtils.endsWith(value, "}")) {

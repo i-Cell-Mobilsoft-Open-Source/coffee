@@ -26,6 +26,7 @@ import javax.naming.NamingException;
 import org.apache.commons.lang3.StringUtils;
 
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
+import hu.icellmobilsoft.coffee.dto.exception.InvalidParameterException;
 import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 
@@ -57,7 +58,7 @@ public class ContextUtil {
             return null;
         }
         if (clazz == null) {
-            throw new TechnicalException(CoffeeFaultType.WRONG_OR_MISSING_PARAMETERS, "clazz cant be null!");
+            throw new InvalidParameterException("clazz cant be null!");
         }
         try {
             return (T) InitialContext.doLookup(jndi);

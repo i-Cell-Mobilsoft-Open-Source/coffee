@@ -31,12 +31,14 @@ import org.apache.commons.lang3.StringUtils;
 
 import hu.icellmobilsoft.coffee.dto.exception.BONotFoundException;
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
+import hu.icellmobilsoft.coffee.dto.exception.InvalidParameterException;
 import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 import hu.icellmobilsoft.coffee.module.etcd.repository.EtcdRepository;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
 import hu.icellmobilsoft.coffee.tool.utils.string.StringHelper;
 import hu.icellmobilsoft.coffee.tool.utils.string.StringUtil;
+
 import io.etcd.jetcd.ByteSequence;
 import io.etcd.jetcd.Response;
 import io.etcd.jetcd.kv.DeleteResponse;
@@ -105,7 +107,7 @@ public class EtcdService {
      */
     public Optional<String> get(String key) throws BaseException {
         if (StringUtils.isBlank(key)) {
-            throw new TechnicalException(CoffeeFaultType.INVALID_INPUT, "key is empty!");
+            throw new InvalidParameterException("key is blank!");
         }
         checkInit();
 
@@ -154,7 +156,7 @@ public class EtcdService {
      */
     public void set(String key, String value) throws BaseException {
         if (StringUtils.isBlank(key)) {
-            throw new TechnicalException(CoffeeFaultType.INVALID_INPUT, "key is empty!");
+            throw new InvalidParameterException("key is blank!");
         }
         checkInit();
 
@@ -188,7 +190,7 @@ public class EtcdService {
      */
     public Map<String, Optional<String>> get(String startKeyStr, String endKeyStr) throws BaseException {
         if (startKeyStr == null || endKeyStr == null) {
-            throw new TechnicalException(CoffeeFaultType.INVALID_INPUT, "startKeyStr or endKeyStr is null!");
+            throw new InvalidParameterException("startKeyStr or endKeyStr is null!");
         }
         checkInit();
 
@@ -233,7 +235,7 @@ public class EtcdService {
      */
     public void delete(String key) throws BaseException {
         if (StringUtils.isBlank(key)) {
-            throw new TechnicalException(CoffeeFaultType.INVALID_INPUT, "key is empty!");
+            throw new InvalidParameterException("key is blank!");
         }
         checkInit();
 

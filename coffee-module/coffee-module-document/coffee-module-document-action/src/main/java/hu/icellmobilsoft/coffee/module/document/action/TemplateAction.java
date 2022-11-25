@@ -35,6 +35,7 @@ import hu.icellmobilsoft.coffee.dto.common.common.KeyValueBasicType;
 import hu.icellmobilsoft.coffee.dto.document.document.TemplateFullType;
 import hu.icellmobilsoft.coffee.dto.document.document.TemplateType;
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
+import hu.icellmobilsoft.coffee.dto.exception.InvalidParameterException;
 import hu.icellmobilsoft.coffee.module.document.model.TemplateData;
 import hu.icellmobilsoft.coffee.module.document.model.TemplateParameter;
 import hu.icellmobilsoft.coffee.module.document.model.enums.TemplateDataType;
@@ -72,7 +73,7 @@ public class TemplateAction {
      */
     public TemplateFullType getTemplate(TemplateType templateType) throws BaseException {
         if (templateType == null) {
-            throw new BaseException("templateType is null");
+            throw new InvalidParameterException("templateType is null");
         }
 
         String templateKey = templateType.getTemplateKey();

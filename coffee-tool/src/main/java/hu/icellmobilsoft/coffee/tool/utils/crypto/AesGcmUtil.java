@@ -29,6 +29,7 @@ import javax.crypto.spec.SecretKeySpec;
 import javax.enterprise.inject.Vetoed;
 
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
+import hu.icellmobilsoft.coffee.dto.exception.InvalidParameterException;
 import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 
@@ -166,11 +167,11 @@ public class AesGcmUtil {
 
     private static void checkKeyAndIVSize(byte[] key, byte[] iv) throws BaseException {
         if (key == null || key.length != KEY_BYTE_LENGTH) {
-            throw new TechnicalException(CoffeeFaultType.INVALID_INPUT,
+            throw new InvalidParameterException(
                     MessageFormat.format("Invalid key length or key is null! Expected key length in bytes: [{0}]", KEY_BYTE_LENGTH));
         }
         if (iv == null || iv.length != IV_BYTE_LENGTH) {
-            throw new TechnicalException(CoffeeFaultType.INVALID_INPUT,
+            throw new InvalidParameterException(
                     MessageFormat.format("Invalid IV length or IV is null! Expected IV length in bytes: [{0}]", IV_BYTE_LENGTH));
         }
     }

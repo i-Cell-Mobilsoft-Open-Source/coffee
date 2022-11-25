@@ -30,6 +30,7 @@ import hu.icellmobilsoft.coffee.dto.common.commonservice.BaseResultType;
 import hu.icellmobilsoft.coffee.dto.common.commonservice.ContextType;
 import hu.icellmobilsoft.coffee.dto.common.commonservice.FunctionCodeType;
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
+import hu.icellmobilsoft.coffee.dto.exception.InvalidParameterException;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 
 /**
@@ -155,7 +156,9 @@ public abstract class AbstractBaseAction {
      * @param msg
      *            exception message
      * @return new Exception object
+     * @deprecated Use {@link InvalidParameterException} instead, forRemoval = true, since = "1.13.0"
      */
+    @Deprecated(forRemoval = true, since = "1.13.0")
     public static BaseException newInvalidParameterException(String msg) {
         return new BaseException(CoffeeFaultType.INVALID_INPUT, msg);
     }

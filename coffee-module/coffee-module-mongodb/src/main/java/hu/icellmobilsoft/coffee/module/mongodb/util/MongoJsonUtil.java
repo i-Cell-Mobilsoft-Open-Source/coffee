@@ -45,7 +45,9 @@ import com.google.gson.JsonSerializer;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.stream.JsonReader;
 import com.mongodb.BasicDBObject;
+
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
+import hu.icellmobilsoft.coffee.dto.exception.InvalidParameterException;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
 import hu.icellmobilsoft.coffee.tool.gson.ClassTypeAdapter;
 import hu.icellmobilsoft.coffee.tool.utils.date.DateUtil;
@@ -243,7 +245,7 @@ public class MongoJsonUtil {
      */
     public static void addJsonToBsonList(List<Bson> bsonList, String json) throws BaseException {
         if (bsonList == null || StringUtils.isBlank(json)) {
-            throw new BaseException("bsonList is null or json is blank!");
+            throw new InvalidParameterException("bsonList is null or json is blank!");
         }
         BasicDBObject row = MongoUtil.jsonToBasicDbObject(json);
         bsonList.add(row);
@@ -262,7 +264,7 @@ public class MongoJsonUtil {
      */
     public static void addJsonsToBsonList(List<Bson> bsonList, String... jsons) throws BaseException {
         if (bsonList == null || jsons == null || jsons.length == 0) {
-            throw new BaseException("bsonList is null or jsons is null or empty!");
+            throw new InvalidParameterException("bsonList is null or jsons is null or empty!");
         }
         for (String json : jsons) {
             addJsonToBsonList(bsonList, json);
@@ -280,7 +282,7 @@ public class MongoJsonUtil {
      */
     public static String dateToString(Date date) throws BaseException {
         if (date == null) {
-            throw new BaseException("date is null!");
+            throw new InvalidParameterException("date is null!");
         }
 
         DateTimeFormatter f = DateTimeFormatter.ISO_INSTANT.withZone(ZoneId.systemDefault());

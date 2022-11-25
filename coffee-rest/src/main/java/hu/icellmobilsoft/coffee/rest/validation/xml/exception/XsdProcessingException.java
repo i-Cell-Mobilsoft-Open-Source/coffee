@@ -31,7 +31,10 @@ import hu.icellmobilsoft.coffee.dto.exception.enums.Severity;
  * Xsd validáció / feldolgozás során keletkező hibákhoz kivétel osztály
  *
  * @see XsdProcessingExceptionWrapper
+ * @see hu.icellmobilsoft.coffee.rest.validation.xml.JaxbTool
+ * @see hu.icellmobilsoft.coffee.rest.validation.xml.utils.XsdHelper
  * @see hu.icellmobilsoft.coffee.rest.validation.xml.XmlMessageBodyReaderBase
+ * @see hu.icellmobilsoft.coffee.rest.validation.json.JsonMessageBodyReaderBase
  * @author ferenc.lutischan
  * @author imre.scheffer
  * @since 1.0.0

@@ -43,8 +43,7 @@ import hu.icellmobilsoft.coffee.cdi.annotation.Version;
 import hu.icellmobilsoft.coffee.cdi.logger.AppLogger;
 import hu.icellmobilsoft.coffee.cdi.logger.ThisLogger;
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
-import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
-import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
+import hu.icellmobilsoft.coffee.dto.exception.InvalidParameterException;
 import hu.icellmobilsoft.coffee.module.ruleng.rule.IRule;
 import hu.icellmobilsoft.coffee.module.ruleng.rule.IRuleSelector;
 import hu.icellmobilsoft.coffee.module.ruleng.rule.RuleException;
@@ -184,7 +183,7 @@ public abstract class AbstractEvaluator<INPUT, RULERESULT extends RuleResult> im
     @Override
     public List<RULERESULT> evaluate(INPUT input, Long inputIndex) throws BaseException {
         if (input == null) {
-            throw new TechnicalException(CoffeeFaultType.WRONG_OR_MISSING_PARAMETERS, "input is null");
+            throw new InvalidParameterException("input is null");
         }
         List<RULERESULT> evalResults = new ArrayList<>();
 
