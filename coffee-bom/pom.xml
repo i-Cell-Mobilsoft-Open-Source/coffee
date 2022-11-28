@@ -12,32 +12,32 @@
 	<properties>
 		<version.apache.deltaspike>1.9.6</version.apache.deltaspike>
 
-		<version.jakartaee>8.0.0</version.jakartaee>
-		<version.jakarta.xml.bind.jaxb-api>2.3.2</version.jakarta.xml.bind.jaxb-api>
-		<version.jakarta.activation-api>1.2.1</version.jakarta.activation-api>
+		<version.jakartaee>10.0.0</version.jakartaee>
+		<version.jakarta.xml.bind.jaxb-api>4.0.0</version.jakarta.xml.bind.jaxb-api>
+		<version.jakarta.activation-api>2.1.0</version.jakarta.activation-api>
 
 		<version.google.code.gson>2.8.9</version.google.code.gson>
 
-		<version.org.jboss.logging.jboss-logging>3.3.2.Final</version.org.jboss.logging.jboss-logging>
-		<version.org.apache.commons.commons-lang3>3.9</version.org.apache.commons.commons-lang3>
-		<version.com.google.guava>30.1.1-jre</version.com.google.guava>
+		<version.org.jboss.logging.jboss-logging>3.4.3.Final</version.org.jboss.logging.jboss-logging>
+		<version.org.apache.commons.commons-lang3>3.12.0</version.org.apache.commons.commons-lang3>
+		<version.com.google.guava>31.1-jre</version.com.google.guava>
 		<version.commons-beanutils>1.9.4</version.commons-beanutils>
-		<version.commons-codec>1.10</version.commons-codec>
+		<version.commons-codec>1.15</version.commons-codec>
 		<version.commons-collections>3.2.2</version.commons-collections>
-		<version.commons-io>2.8.0</version.commons-io>
-		<version.org.eclipse.microprofile.config>2.0</version.org.eclipse.microprofile.config>
-		<version.osgi.annotation>7.0.0</version.osgi.annotation>
-		<version.org.jboss.resteasy>4.7.6.Final</version.org.jboss.resteasy>
-		<version.org.hibernate>5.4.24.Final</version.org.hibernate>
-		<version.org.hibernate.validator>6.0.20.Final</version.org.hibernate.validator>
+		<version.commons-io>2.11.0</version.commons-io>
+		<version.org.eclipse.microprofile.config>3.0.1</version.org.eclipse.microprofile.config>
+		<version.osgi.annotation>8.1.0</version.osgi.annotation>
+		<version.org.jboss.resteasy>6.2.1.Final</version.org.jboss.resteasy>
+		<version.org.hibernate>6.1.5.Final</version.org.hibernate>
+		<version.org.hibernate.validator>8.0.0.Final</version.org.hibernate.validator>
 		<version.org.apache.httpcomponents.httpclient>4.5.13</version.org.apache.httpcomponents.httpclient>
-		<version.org.apache.httpcomponents.httpcore>4.4.13</version.org.apache.httpcomponents.httpcore>
+		<version.org.apache.httpcomponents.httpcore>4.4.15</version.org.apache.httpcomponents.httpcore>
 
-		<version.junit.jupiter>5.8.1</version.junit.jupiter>
-		<version.org.jboss.weld.weld-junit5>2.0.2.Final</version.org.jboss.weld.weld-junit5>
-		<version.org.mockito>3.2.0</version.org.mockito>
-		<version.glassfish.jakarta.el>3.0.2</version.glassfish.jakarta.el>
-		<version.smallrye-config>2.8.1</version.smallrye-config>
+		<version.junit.jupiter>5.9.1</version.junit.jupiter>
+		<version.org.jboss.weld.weld-junit5>4.0.0.Final</version.org.jboss.weld.weld-junit5>
+		<version.org.mockito>4.9.0</version.org.mockito>
+		<version.org.glassfish.expressly.expressly>5.0.0</version.org.glassfish.expressly.expressly>
+		<version.smallrye-config>3.0.0</version.smallrye-config>
 		<version.microprofile-reactive-messaging-api>2.0.1</version.microprofile-reactive-messaging-api>
 		<version.microprofile-reactive-streams-operators-api>2.0</version.microprofile-reactive-streams-operators-api>
 	</properties>
@@ -64,13 +64,14 @@
 				<artifactId>jakarta.xml.bind-api</artifactId>
 				<version>${version.jakarta.xml.bind.jaxb-api}</version>
 			</dependency>
+<!-- benne van a ee csomagban
 			<dependency>
 				<groupId>jakarta.activation</groupId>
 				<artifactId>jakarta.activation-api</artifactId>
 				<version>${version.jakarta.activation-api}</version>
 				<scope>provided</scope>
 			</dependency>
-
+-->
 			<dependency>
 				<groupId>org.apache.commons</groupId>
 				<artifactId>commons-lang3</artifactId>
@@ -422,9 +423,9 @@
 				Expression Language (JSR 341) for evaluating dynamic expressions in constraint 
 				violation messages. -->
 			<dependency>
-				<groupId>org.glassfish</groupId>
-				<artifactId>jakarta.el</artifactId>
-				<version>${version.glassfish.jakarta.el}</version>
+				<groupId>org.glassfish.expressly</groupId>
+				<artifactId>expressly</artifactId>
+				<version>${version.org.glassfish.expressly.expressly}</version>
 				<scope>test</scope>
 			</dependency>
 

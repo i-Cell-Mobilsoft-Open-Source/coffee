@@ -29,7 +29,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.enterprise.inject.Model;
+import jakarta.enterprise.inject.Model;
 
 /**
  * Container for logging.

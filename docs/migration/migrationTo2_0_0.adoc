@@ -1,0 +1,20 @@
+= v2.0.0
+
+coff:ee v1.x.x -> v2.0.0 migrációs leírás, újdonságok, változások leírása
+
+== Változások
+
+=== Általános
+A verzió célja a Jakarta EE 10 implemetálása,
+ami az egész projekten java import javax.* -> jakarta.* változást követi le.
+
+Mivel szinte minden dependency frissült,
+így egyenként felsorolni őket felesleges.
+Legtöbbször kozmetikai verzióváltások, vagy a EE10 implementációk.
+
+==== BOM verzió emelések:
+Fontosabb változás volt: 
+
+* org.jboss.resteasy.resteasy-jaxrs 3.6.2.Final -> org.jboss.resteasy.resteasy-core 6.2.1.Final - a resteasy dependency bontáson esett végig,
+ezt figyelmbe kell venni a projekteken
+* org.hibernate.hibernate-core 5.4.24.Final -> 6.1.5.Final
