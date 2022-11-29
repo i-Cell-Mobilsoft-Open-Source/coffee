@@ -2,6 +2,23 @@
 
 coff:ee v1.12.0 -> v1.13.0 migrációs leírás, újdonságok, változások leírása
 
+== Változások
+
+=== Általános
+
+==== BOM verzió emelések:
+* resteasy-jaxrs megszűnt!
+* resteasy-core 4.7.6.Final
+* resteasy-core-spi 4.7.6.Final
+
+
+==== Átállás
+A változtatások package szintű és esetleges további változást is magával vonhat az eltérések miatt.
+
+NOTE: Segítség hozzá:
+https://docs.jboss.org/resteasy/docs/4.1.0.Final/userguide/html/Migration_from_older_versions.html#d4e4276
+https://stackoverflow.com/questions/57598426/why-is-there-no-maven-resteasy-jaxrs-package-for-version-4-2-0
+
 == Újdonságok
 
 === coffee-tool
