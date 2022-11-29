@@ -57,6 +57,7 @@ public class EntityIdGenerator implements IdentifierGenerator {
 
     private static final long DATE_2013_01_01 = 1356998400000L;
 
+    private static final int RADIX = 36;
     // [0-9a-zA-Z]
     private static final int MAX_NUM_SYS = 62;
     // [a-z]
@@ -97,7 +98,7 @@ public class EntityIdGenerator implements IdentifierGenerator {
         // maxpid = 238327
         PID62 = paddL(convertToRadix(PID, MAX_NUM_SYS), 3, '0').substring(0, 3);
         // maxpid
-        PID36 = paddL(convertToRadix(PID, 36), 3, '0').substring(0, 3);
+        PID36 = paddL(convertToRadix(PID, RADIX), 3, '0').substring(0, 3);
     }
 
     private static final Random RANDOM = new Random();
@@ -112,7 +113,7 @@ public class EntityIdGenerator implements IdentifierGenerator {
         Date xDate = new Date();
         xDate.setTime(xDate.getTime() - DATE_2013_01_01);
         /* time based */
-        String xRes = convertToRadix(xDate.getTime(), 36);
+        String xRes = convertToRadix(xDate.getTime(), RADIX);
         // 8888 -ig eleg a 8 karakter :) 7 karakter 2081 -ig jo.
         xRes = paddL(xRes, 8, '0');
 
@@ -121,14 +122,14 @@ public class EntityIdGenerator implements IdentifierGenerator {
 
         // nano, utolso 4 karaktert levagjuk mert csak az változik millisecen belül
         long nano = System.nanoTime();
-        String xNano = convertToRadix(nano, 36);
+        String xNano = convertToRadix(nano, RADIX);
         builder.append(xNano.substring(xNano.length() - 4, xNano.length()));
 
         /* random */
         // 2
-        builder.append(paddL(convertToRadix(RANDOM.nextInt(1296), 36), 2, '0'));
+        builder.append(paddL(convertToRadix(RANDOM.nextInt(1296), RADIX), 2, '0'));
         /* generation index */
-        builder.append(paddL(convertToRadix(xInd, 36), 2, '0'));
+        builder.append(paddL(convertToRadix(xInd, RADIX), 2, '0'));
 
         return builder.toString();
     }
@@ -136,7 +137,7 @@ public class EntityIdGenerator implements IdentifierGenerator {
     private static synchronized int getNextIndex() {
         generatedIndex++;
         // MAX a ZZ
-        if (generatedIndex > 1295) {
+        if (generatedIndex > RADIX * RADIX - 1) {
             generatedIndex = 0;
         }
         return generatedIndex;

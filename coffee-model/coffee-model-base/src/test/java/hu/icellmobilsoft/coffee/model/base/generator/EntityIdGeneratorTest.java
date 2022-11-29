@@ -21,14 +21,12 @@ package hu.icellmobilsoft.coffee.model.base.generator;
 
 import java.io.Serializable;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import hu.icellmobilsoft.coffee.model.base.DefaultImplAbstractIdentifiedAuditEntity;
-import hu.icellmobilsoft.coffee.model.base.generator.EntityIdGenerator;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * Testing EntityIdGenerator class
@@ -38,15 +36,19 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @DisplayName("Testing EntityIdGenerator class")
 public class EntityIdGeneratorTest {
 
+    private static final String ID_REGEX = "[0-9A-Za-z]{16}";
     @Test
     @DisplayName("Testing generateId size")
     public void generateIdTest() {
         // given
 
         // when
-
-        // then
-        assertNotNull(EntityIdGenerator.generateId());
+        for (int i = 0; i < 1297; i++) {
+            String actual = EntityIdGenerator.generateId();
+            // then
+            Assertions.assertNotNull(actual);
+            Assertions.assertTrue(actual.matches(ID_REGEX));
+        }
     }
 
     @Test
@@ -57,7 +59,7 @@ public class EntityIdGeneratorTest {
         // when
 
         // then
-        assertEquals(16, EntityIdGenerator.generateId().length());
+        Assertions.assertEquals(16, EntityIdGenerator.generateId().length());
     }
 
     @Test
@@ -70,7 +72,7 @@ public class EntityIdGeneratorTest {
         Serializable generatedId = entityIdGenerator.generate(null, null);
 
         // then
-        assertNotNull(generatedId);
+        Assertions.assertNotNull(generatedId);
     }
 
     @Test
@@ -84,7 +86,7 @@ public class EntityIdGeneratorTest {
         Serializable generatedId = entityIdGenerator.generate(null, entity);
 
         // then
-        assertNotNull(generatedId);
+        Assertions.assertNotNull(generatedId);
     }
 
     @Test
@@ -99,6 +101,6 @@ public class EntityIdGeneratorTest {
         Serializable generatedId = entityIdGenerator.generate(null, entity);
 
         // then
-        assertEquals(entity.getId(), generatedId);
+        Assertions.assertEquals(entity.getId(), generatedId);
     }
 }
