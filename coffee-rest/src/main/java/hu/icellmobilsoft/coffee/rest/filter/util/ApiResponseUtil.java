@@ -70,7 +70,7 @@ public class ApiResponseUtil {
                 OASFactory.createAPIResponse() //
                         .description(Response.Status.OK.getReasonPhrase() //
                                 + "\n* the request was successfully " //
-                                + "\n\t **resultCode** = *OK*"));
+                                + "\n\t * **resultCode** = *OK*"));
 
         apiResponseByStatusCodeMap.put( //
                 Response.Status.BAD_REQUEST.getStatusCode(), //
@@ -84,11 +84,11 @@ public class ApiResponseUtil {
                                         OASFactory.createMediaType().schema(OASFactory.createSchema().ref(INVALIDREQUESTFAULTTYPE_REF))))
                         .description(Response.Status.BAD_REQUEST.getReasonPhrase() //
                                 + "\n" + "* Invalid request" //
-                                + "\n\t **resultCode** = *OPERATION_FAILED*" //
-                                + "\n\t **resultCode** = *WRONG_OR_MISSING_PARAMETERS*" //
-                                + "\n\t **resultCode** = *INVALID_INPUT*" //
-                                + "\n\t **resultCode** = *INVALID_INPUT*" //
-                                + "\n\t **resultCode** = *OPERATION_FAILED*" //
+                                + "\n\t * **resultCode** = *OPERATION_FAILED*" //
+                                + "\n\t * **resultCode** = *WRONG_OR_MISSING_PARAMETERS*" //
+                                + "\n\t * **resultCode** = *INVALID_INPUT*" //
+                                + "\n\t * **resultCode** = *INVALID_INPUT*" //
+                                + "\n\t * **resultCode** = *OPERATION_FAILED*" //
                         ));
 
         apiResponseByStatusCodeMap.put( //
@@ -103,7 +103,7 @@ public class ApiResponseUtil {
                                         OASFactory.createMediaType().schema(OASFactory.createSchema().ref(BUSINESSFAULTTYPE_REF))))
                         .description(Response.Status.UNAUTHORIZED.getReasonPhrase() //
                                 + "\n" + "* You are not authorized to perform the operation" //
-                                + "\n\t **resultCode** = *NOT_AUTHORIZED*"));
+                                + "\n\t * **resultCode** = *NOT_AUTHORIZED*"));
 
         apiResponseByStatusCodeMap.put( //
                 Response.Status.FORBIDDEN.getStatusCode(), //
@@ -117,7 +117,7 @@ public class ApiResponseUtil {
                                         OASFactory.createMediaType().schema(OASFactory.createSchema().ref(TECHNICALFAULTTYPE_REF))))
                         .description(Response.Status.FORBIDDEN.getReasonPhrase() //
                                 + "\n" + "* An access to a resource requested by a client has been forbidden by the server." //
-                                + "\n\t **resultCode** = *NOT_AUTHORIZED*"));
+                                + "\n\t * **resultCode** = *NOT_AUTHORIZED*"));
 
         apiResponseByStatusCodeMap.put( //
                 418, //
@@ -131,7 +131,7 @@ public class ApiResponseUtil {
                                         OASFactory.createMediaType().schema(OASFactory.createSchema().ref(BONOTFOUNDTYPE_REF))))
                         .description("Unique http response code" //
                                 + "\n" + "* Looked for entity is not found." //
-                                + "\n\t **resultCode** = *ENTITY_NOT_FOUND*"));
+                                + "\n\t * **resultCode** = *ENTITY_NOT_FOUND*"));
 
         apiResponseByStatusCodeMap.put( //
                 Response.Status.SERVICE_UNAVAILABLE.getStatusCode(), //
@@ -145,7 +145,7 @@ public class ApiResponseUtil {
                                         OASFactory.createMediaType().schema(OASFactory.createSchema().ref(BUSINESSFAULTTYPE_REF))))
                         .description(Response.Status.SERVICE_UNAVAILABLE.getReasonPhrase() //
                                 + "\n" + "* The REST endpoint is down by configuration" //
-                                + "\n\t **resultCode** = *SERVICE_UNAVAILABLE*"));
+                                + "\n\t * **resultCode** = *SERVICE_UNAVAILABLE*"));
 
         apiResponseByStatusCodeMap.put( //
                 Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), //
@@ -160,12 +160,12 @@ public class ApiResponseUtil {
                         .description(Response.Status.INTERNAL_SERVER_ERROR.getReasonPhrase() //
                                 + "\n" + "* Technical error" //
                                 + "\n\t+ **resultCode** = *OPERATION_FAILED* (default)" //
-                                + "\n\t **resultCode** = *NOT_ACCEPTABLE_EXCEPTION*" //
-                                + "\n\t **resultCode** = *REPOSITORY_FAILED*" //
-                                + "\n\t **resultCode** = *NOT_ALLOWED_EXCEPTION*" //
-                                + "\n\t **resultCode** = *ILLEGAL_ARGUMENT_EXCEPTION*" //
-                                + "\n\t **resultCode** = *GENERIC_EXCEPTION*" //
-                                + "\n\t **resultCode** = *unique see in rest endpoint description*"));
+                                + "\n\t * **resultCode** = *NOT_ACCEPTABLE_EXCEPTION*" //
+                                + "\n\t * **resultCode** = *REPOSITORY_FAILED*" //
+                                + "\n\t * **resultCode** = *NOT_ALLOWED_EXCEPTION*" //
+                                + "\n\t * **resultCode** = *ILLEGAL_ARGUMENT_EXCEPTION*" //
+                                + "\n\t * **resultCode** = *GENERIC_EXCEPTION*" //
+                                + "\n\t * **resultCode** = *unique see in rest endpoint description*"));
     }
 
 }
