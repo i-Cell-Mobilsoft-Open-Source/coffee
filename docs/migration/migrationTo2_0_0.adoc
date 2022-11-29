@@ -18,3 +18,24 @@ Fontosabb változás volt:
 * org.jboss.resteasy.resteasy-jaxrs 3.6.2.Final -> org.jboss.resteasy.resteasy-core 6.2.1.Final - a resteasy dependency bontáson esett végig,
 ezt figyelmbe kell venni a projekteken
 * org.hibernate.hibernate-core 5.4.24.Final -> 6.1.5.Final
+
+=== coffee-dto
+* A jakarta átálás a `/coffee-dto-gen/src/main/resources/xsd/hu/icellmobilsoft/coffee/dto/bindings.xjb`
+fájlban a fejléc módosítását követeli:
+[source,xml]
+----
+<jaxb:bindings version="3.0"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:jaxb="https://jakarta.ee/xml/ns/jaxb"
+    xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc"
+    xmlns:annox="http://annox.dev.java.net"
+    jaxb:extensionBindingPrefixes="xjc annox">
+...
+</jaxb:bindings>
+----
+
+Egyenlőre nincs jaxb4 támogatás a XSD -> DTO generálásnál, csak jaxb3 van pár forkolt repository.
+A `coffee-dto-gen` projekt is jaxb3-ra generál egyenlőre.
+
+.Átállás
+Az implementáló projekteken is hasonló változásra lessz szükség.

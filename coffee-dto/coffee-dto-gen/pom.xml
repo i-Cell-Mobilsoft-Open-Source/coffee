@@ -21,14 +21,14 @@
 		<dependency>
 			<groupId>org.eclipse.microprofile.openapi</groupId>
 			<artifactId>microprofile-openapi-api</artifactId>
-			<version>2.0</version>
+			<version>3.0</version>
 		</dependency>
 
 		<!--Test dependecies -->
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter</artifactId>
-			<version>5.8.1</version>
+			<version>5.9.1</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
@@ -36,17 +36,25 @@
 	<build>
 		<plugins>
 			<plugin>
+<!-- eredeti plugin: ez nem tudja a jaxb3 vagy 4-et
 				<groupId>org.jvnet.jaxb2.maven2</groupId>
 				<artifactId>maven-jaxb2-plugin</artifactId>
-				<version>0.14.0</version>
+				<version>0.15.1</version>
+-->
+<!-- forkolt es releaselt plugin a felsobol kiindulva: ez csak a jaxb3-at tudja, 4-et nem de lagalabb jakarta csomagok vannak hasznalva -->
+                <groupId>com.evolvedbinary.maven.jvnet</groupId>
+				<artifactId>jaxb30-maven-plugin</artifactId>
+                <version>0.15.0</version>
+<!-- ez mar nem kell -->
+				<!-- java 16+: https://github.com/highsource/maven-jaxb2-plugin/issues/201#issuecomment-808009784>
 				<dependencies>
-					<!-- java 16+: https://github.com/highsource/maven-jaxb2-plugin/issues/201#issuecomment-808009784 -->
 					<dependency>
 						<groupId>org.glassfish.jaxb</groupId>
 						<artifactId>jaxb-runtime</artifactId>
-						<version>2.3.5</version>
+						<version>4.0.1</version>
 					</dependency>
 				</dependencies>
+-->
 				<executions>
 					<execution>
 						<id>coffee-super</id>
@@ -71,16 +79,20 @@
 					<verbose>true</verbose>
 					<schemaDirectory>src/main/resources</schemaDirectory>
 					<args>
+<!-- a pluginunk nem tud jaxb3+ dolgozni
 						<arguments>-openapify</arguments>
+-->
 						<arguments>-Xfluent-api</arguments>
 						<arguments>-Xannotate</arguments>
 					</args>
 					<plugins>
+<!--
 						<plugin>
 							<groupId>hu.icellmobilsoft.jaxb</groupId>
 							<artifactId>openapi-jaxb</artifactId>
 							<version>1.1.0</version>
 						</plugin>
+-->
 						<plugin>
 							<groupId>net.java.dev.jaxb2-commons</groupId>
 							<artifactId>jaxb-fluent-api</artifactId>
@@ -89,12 +101,12 @@
 						<plugin>
 							<groupId>org.jvnet.jaxb2_commons</groupId>
 							<artifactId>jaxb2-basics-annotate</artifactId>
-							<version>1.0.4</version>
+							<version>1.1.0</version>
 						</plugin>
 						<plugin>
 							<groupId>com.fasterxml.jackson.core</groupId>
 							<artifactId>jackson-databind</artifactId>
-							<version>2.13.4.2</version>
+							<version>2.14.1</version>
 						</plugin>
 					</plugins>
 				</configuration>

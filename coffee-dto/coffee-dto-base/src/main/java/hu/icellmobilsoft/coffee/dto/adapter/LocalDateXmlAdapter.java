@@ -25,7 +25,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 
-import javax.xml.bind.annotation.adapters.XmlAdapter;
+import jakarta.xml.bind.annotation.adapters.XmlAdapter;
 
 /**
  * {@code XmlAdapter} mapping JSR-310 {@code LocalDate} to ISO-8601 string or epoch milli

@@ -9,11 +9,11 @@
 	<artifactId>coffee-dto-base</artifactId>
 
 	<properties>
-		<version.jakarta.xml.bind.jaxb-api>2.3.2</version.jakarta.xml.bind.jaxb-api>
+		<version.jakarta.xml.bind.jaxb-api>4.0.0</version.jakarta.xml.bind.jaxb-api>
 
 		<!-- Test dependency versions -->
-		<version.junit.jupiter>5.8.1</version.junit.jupiter>
-		<version.org.mockito>3.2.0</version.org.mockito>
+		<version.junit.jupiter>5.9.1</version.junit.jupiter>
+		<version.org.mockito>4.9.0</version.org.mockito>
 	</properties>
 
 	<dependencies>
@@ -28,12 +28,13 @@
 			<version>${project.version}</version>
 		</dependency>
 		<!-- java 16+: dependency -->
+<!-- kell ez meg?
 		<dependency>
 			<groupId>org.glassfish.jaxb</groupId>
 			<artifactId>jaxb-runtime</artifactId>
-			<version>2.3.5</version>
+			<version>4.0.1</version>
 		</dependency>
-
+-->
 		<!--Test dependecies -->
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
