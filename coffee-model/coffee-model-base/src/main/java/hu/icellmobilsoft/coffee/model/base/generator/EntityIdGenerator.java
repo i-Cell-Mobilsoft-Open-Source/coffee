@@ -127,7 +127,7 @@ public class EntityIdGenerator implements IdentifierGenerator {
 
         /* random */
         // 2
-        builder.append(paddL(convertToRadix(RANDOM.nextInt(1296), RADIX), 2, '0'));
+        builder.append(paddL(convertToRadix(RANDOM.nextInt(RADIX * RADIX), RADIX), 2, '0'));
         /* generation index */
         builder.append(paddL(convertToRadix(xInd, RADIX), 2, '0'));
 
