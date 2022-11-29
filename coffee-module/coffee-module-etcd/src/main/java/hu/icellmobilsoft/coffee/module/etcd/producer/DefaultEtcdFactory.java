@@ -30,6 +30,7 @@ import hu.icellmobilsoft.coffee.module.etcd.config.DefaultEtcdConfigImpl;
 import hu.icellmobilsoft.coffee.module.etcd.repository.EtcdRepository;
 import hu.icellmobilsoft.coffee.module.etcd.service.ConfigEtcdService;
 import hu.icellmobilsoft.coffee.module.etcd.service.EtcdService;
+import hu.icellmobilsoft.coffee.module.etcd.util.EtcdClientBuilderUtil;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
 import io.etcd.jetcd.Client;
 
@@ -55,13 +56,7 @@ public class DefaultEtcdFactory {
     @ApplicationScoped
     @Produces
     public Client createEtcdClient() {
-        Client etcdClient = null;
-        try {
-            etcdClient = Client.builder().endpoints(defaultEtcdConfigImpl.getUrl()).build();
-        } catch (Exception e) {
-            LOGGER.error("Problems trying to get the Etcd connection.", e);
-        }
-        return etcdClient;
+        return EtcdClientBuilderUtil.getClientBuilder(defaultEtcdConfigImpl.getUrl()).build();
     }
 
     /**
