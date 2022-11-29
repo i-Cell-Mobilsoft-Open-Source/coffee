@@ -26,6 +26,7 @@ import javax.enterprise.inject.Produces;
 import javax.enterprise.inject.spi.CDI;
 import javax.inject.Inject;
 
+import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.module.etcd.config.DefaultEtcdConfigImpl;
 import hu.icellmobilsoft.coffee.module.etcd.repository.EtcdRepository;
 import hu.icellmobilsoft.coffee.module.etcd.service.ConfigEtcdService;
@@ -56,7 +57,13 @@ public class DefaultEtcdFactory {
     @ApplicationScoped
     @Produces
     public Client createEtcdClient() {
-        return EtcdClientBuilderUtil.getClientBuilder(defaultEtcdConfigImpl.getUrl()).build();
+        Client etcdClient = null;
+        try {
+            etcdClient = EtcdClientBuilderUtil.getClientBuilder(defaultEtcdConfigImpl.getUrl()).build();
+        } catch (BaseException e) {
+            LOGGER.error("Problems trying to get the Etcd connection.", e);
+        }
+        return etcdClient;
     }
 
     /**

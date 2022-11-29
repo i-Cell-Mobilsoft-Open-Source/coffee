@@ -74,7 +74,7 @@ public class DefaultEtcdConfigSource implements ConfigSource {
         return getProperties().keySet();
     }
 
-    private static ConfigEtcdService getConfigEtcdService() {
+    private static ConfigEtcdService getConfigEtcdService() throws BaseException {
         if (configEtcdService == null) {
             synchronized (DefaultEtcdConfigSource.class) {
                 if (configEtcdService != null) {
@@ -86,7 +86,7 @@ public class DefaultEtcdConfigSource implements ConfigSource {
         return configEtcdService;
     }
 
-    private static ConfigEtcdService createConfigEtcdService() {
+    private static ConfigEtcdService createConfigEtcdService() throws BaseException{
         EtcdConfig config = new DefaultEtcdConfigImpl();
         Client etcdClient = EtcdClientBuilderUtil.getClientBuilder(config.getUrl()).build();
 

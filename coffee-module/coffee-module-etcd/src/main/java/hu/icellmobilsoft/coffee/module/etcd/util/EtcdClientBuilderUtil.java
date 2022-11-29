@@ -24,12 +24,13 @@ import java.time.temporal.ChronoUnit;
 
 import javax.enterprise.inject.Vetoed;
 
+import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
 import io.etcd.jetcd.Client;
 import io.etcd.jetcd.ClientBuilder;
 
 /**
- * {@ClientBuilder} creater util class
+ * {@link ClientBuilder} creater util class
  * 
  * @author speter555
  * @since 1.13.0
@@ -46,13 +47,15 @@ public class EtcdClientBuilderUtil {
     private static final Logger logger = Logger.getLogger(EtcdClientBuilderUtil.class);
 
     /**
-     * Create {@ClientBuilder} with urls with came from parameter
-     * 
+     *
+     * Create {@link ClientBuilder} with urls with came from parameter
+     *
      * @param urls
      *            etcd service urls
-     * @return {@ClientBuilder} instance
+     * @return {@link ClientBuilder} instance
+     * @throws BaseException if exception occurs at create {@link  ClientBuilder}
      */
-    public static ClientBuilder getClientBuilder(String[] urls) {
+    public static ClientBuilder getClientBuilder(String[] urls) throws BaseException {
         ClientBuilder etcdClientBuilder = null;
         try {
             etcdClientBuilder = Client.builder()
@@ -79,6 +82,7 @@ public class EtcdClientBuilderUtil {
             ;
         } catch (Exception e) {
             logger.error("Problems trying to get the Etcd client builder.", e);
+            throw new BaseException("Problems trying to get the Etcd client builder.", e);
         }
         return etcdClientBuilder;
     }
