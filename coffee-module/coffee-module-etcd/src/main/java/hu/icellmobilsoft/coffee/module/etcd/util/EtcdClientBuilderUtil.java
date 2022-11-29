@@ -56,7 +56,7 @@ public class EtcdClientBuilderUtil {
         ClientBuilder etcdClientBuilder = null;
         try {
             etcdClientBuilder = Client.builder()
-                    // endpoint
+                    // endpoints
                     .endpoints(urls)
                     // Connect timeout
                     .connectTimeout(Duration.ofMillis(500)) // default null
@@ -69,13 +69,13 @@ public class EtcdClientBuilderUtil {
                     // keepaliveTimeout
                     .keepaliveTimeout(Duration.ofSeconds(10L)) // default 10 sec
                     // keepaliveWithoutCalls
-                    .keepaliveWithoutCalls(false) // default true
+                    .keepaliveWithoutCalls(true) // default true
                     // retryChronoUnit
                     .retryChronoUnit(ChronoUnit.MILLIS) // default ChronoUnit.MILLIS
                     // retryMaxDuration
                     .retryMaxDuration(Duration.ofSeconds(10)) // default null
                     // waitForReady
-                    .waitForReady(false) // default true
+                    .waitForReady(true) // default true
             ;
         } catch (Exception e) {
             logger.error("Problems trying to get the Etcd client builder.", e);
