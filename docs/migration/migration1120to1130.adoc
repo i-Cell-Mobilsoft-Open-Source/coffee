@@ -92,6 +92,8 @@ A változtatások nem eredményeznek átállási munkálatokat, visszafelé komp
 * hu.icellmobilsoft.coffee.rest.utils.RequestUtil: kikerültek a WARN "ResourceMethodInvoker is null!!"
 és "invokedMethod is null!!" üzenetek.
 Kiderült hogy a nem létező objektum helyzet sok esetben és jogosan fordul elő.
+* ApiResponseUtil-ban lemaradtak a felsorolást adó sor elejei csillagok, ezek pótolva lettek.
+
 
 ==== Átállás
 
