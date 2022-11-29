@@ -108,3 +108,12 @@ Az EtcdService get(String key) metódusa használja az EtcdRepository get(ByteSe
 ==== Átállás
 
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+
+=== coffee-model-base
+
+* EntityIdGenerator osztályban a getNextIndex() metódus vissza tud adni 1296ot ami már 3 karakter 36os számrendszerben a logikában, így egy karakterrel többet is generálhat.
+
+==== Átállás
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
