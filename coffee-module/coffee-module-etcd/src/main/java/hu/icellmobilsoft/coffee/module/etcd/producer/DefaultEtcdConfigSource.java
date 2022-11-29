@@ -36,6 +36,7 @@ import hu.icellmobilsoft.coffee.module.etcd.config.EtcdConfig;
 import hu.icellmobilsoft.coffee.module.etcd.repository.EtcdRepository;
 import hu.icellmobilsoft.coffee.module.etcd.service.ConfigEtcdService;
 import hu.icellmobilsoft.coffee.module.etcd.service.EtcdService;
+import hu.icellmobilsoft.coffee.module.etcd.util.EtcdClientBuilderUtil;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
 import io.etcd.jetcd.Client;
 
@@ -62,7 +63,7 @@ public class DefaultEtcdConfigSource implements ConfigSource {
     public Map<String, String> getProperties() {
         try {
             return getConfigEtcdService().getAll();
-        } catch (BaseException e) {
+        } catch (Exception e) {
             log.error(MessageFormat.format("Error in getting all values from ETCD: [{0}]", e.getLocalizedMessage()), e);
         }
         return Collections.emptyMap();
@@ -87,7 +88,7 @@ public class DefaultEtcdConfigSource implements ConfigSource {
 
     private static ConfigEtcdService createConfigEtcdService() {
         EtcdConfig config = new DefaultEtcdConfigImpl();
-        Client etcdClient = Client.builder().endpoints(config.getUrl()).build();
+        Client etcdClient = EtcdClientBuilderUtil.getClientBuilder(config.getUrl()).build();
 
         EtcdRepository etcdRepository = new EtcdRepository();
         etcdRepository.init(etcdClient);
