@@ -136,7 +136,7 @@ public class EntityIdGenerator implements IdentifierGenerator {
     private static synchronized int getNextIndex() {
         generatedIndex++;
         // MAX a ZZ
-        if (generatedIndex > 1296) {
+        if (generatedIndex > 1295) {
             generatedIndex = 0;
         }
         return generatedIndex;
