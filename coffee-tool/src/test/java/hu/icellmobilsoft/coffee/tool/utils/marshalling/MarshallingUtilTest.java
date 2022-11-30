@@ -22,15 +22,13 @@ package hu.icellmobilsoft.coffee.tool.utils.marshalling;
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import hu.icellmobilsoft.coffee.tool.utils.marshalling.MarshallingUtil;
+import jakarta.xml.bind.JAXBException;
+import jakarta.xml.bind.Marshaller;
 
 /**
  * Test MarshallingUtil.

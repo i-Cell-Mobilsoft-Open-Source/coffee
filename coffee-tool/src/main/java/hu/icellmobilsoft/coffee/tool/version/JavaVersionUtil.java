@@ -21,7 +21,7 @@ package hu.icellmobilsoft.coffee.tool.version;
 
 import java.security.InvalidParameterException;
 
-import javax.enterprise.inject.Vetoed;
+import jakarta.enterprise.inject.Vetoed;
 
 import org.apache.commons.lang3.StringUtils;
 

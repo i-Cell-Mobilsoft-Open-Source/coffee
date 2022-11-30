@@ -28,7 +28,7 @@ import java.util.Locale;
 import java.util.Properties;
 import java.util.Stack;
 
-import javax.enterprise.inject.Typed;
+import jakarta.enterprise.inject.Typed;
 
 /**
  * <p>

@@ -19,7 +19,7 @@
  */
 package hu.icellmobilsoft.coffee.tool.utils.number;
 
-import javax.enterprise.inject.Vetoed;
+import jakarta.enterprise.inject.Vetoed;
 
 /**
  * Util for number types.

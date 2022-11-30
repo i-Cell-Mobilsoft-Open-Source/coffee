@@ -19,12 +19,13 @@
  */
 package hu.icellmobilsoft.coffee.tool.utils.string;
 
+import java.util.regex.Pattern;
+
+import jakarta.enterprise.inject.Vetoed;
+
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
-
-import javax.enterprise.inject.Vetoed;
-import java.util.regex.Pattern;
 
 /**
  * Cache for precompiled regex patterns used in {@link StringUtil} class
