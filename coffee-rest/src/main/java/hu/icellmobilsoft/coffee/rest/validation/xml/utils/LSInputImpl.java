@@ -22,9 +22,9 @@ package hu.icellmobilsoft.coffee.rest.validation.xml.utils;
 import java.io.InputStream;
 import java.io.Reader;
 
-import org.w3c.dom.ls.LSInput;
+import jakarta.enterprise.inject.Vetoed;
 
-import javax.enterprise.inject.Vetoed;
+import org.w3c.dom.ls.LSInput;
 
 /**
  * LSInput implementáció

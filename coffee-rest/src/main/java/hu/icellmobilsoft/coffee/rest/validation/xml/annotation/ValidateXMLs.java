@@ -24,7 +24,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import javax.enterprise.util.Nonbinding;
+import jakarta.enterprise.util.Nonbinding;
 
 /**
  * Ha egy RestService-ben szereplő metódus a request body paraméterét megannotáljuk ezzel az annotációval, akkor a deszerializációt és a validációt a

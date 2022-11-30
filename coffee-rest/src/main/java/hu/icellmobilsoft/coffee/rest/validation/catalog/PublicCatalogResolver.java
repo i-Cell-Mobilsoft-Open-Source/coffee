@@ -22,8 +22,9 @@ package hu.icellmobilsoft.coffee.rest.validation.catalog;
 import java.io.StringReader;
 import java.util.Iterator;
 
-import javax.inject.Inject;
 import javax.xml.catalog.Catalog;
+
+import jakarta.inject.Inject;
 
 import org.w3c.dom.ls.LSInput;
 import org.w3c.dom.ls.LSResourceResolver;

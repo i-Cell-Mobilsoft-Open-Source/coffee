@@ -38,6 +38,7 @@
 		<version.org.mockito>4.9.0</version.org.mockito>
 		<version.org.glassfish.expressly.expressly>5.0.0</version.org.glassfish.expressly.expressly>
 		<version.smallrye-config>3.0.0</version.smallrye-config>
+		<version.org.glassfish.jaxb.jaxb-runtime>4.0.1</version.org.glassfish.jaxb.jaxb-runtime>
 		<version.microprofile-reactive-messaging-api>2.0.1</version.microprofile-reactive-messaging-api>
 		<version.microprofile-reactive-streams-operators-api>2.0</version.microprofile-reactive-streams-operators-api>
 	</properties>
@@ -119,6 +120,13 @@
 				<groupId>io.smallrye.config</groupId>
 				<artifactId>smallrye-config</artifactId>
 				<version>${version.smallrye-config}</version>
+				<scope>test</scope>
+			</dependency>
+
+			<dependency>
+				<groupId>org.glassfish.jaxb</groupId>
+				<artifactId>jaxb-runtime</artifactId>
+				<version>${version.org.glassfish.jaxb.jaxb-runtime}</version>
 				<scope>test</scope>
 			</dependency>
 

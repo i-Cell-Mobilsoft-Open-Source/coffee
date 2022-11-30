@@ -19,8 +19,8 @@
  */
 package hu.icellmobilsoft.coffee.rest.filter;
 
-import javax.ws.rs.core.Feature;
-import javax.ws.rs.core.FeatureContext;
+import jakarta.ws.rs.core.Feature;
+import jakarta.ws.rs.core.FeatureContext;
 
 import org.jboss.resteasy.plugins.interceptors.CorsFilter;
 

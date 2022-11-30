@@ -22,9 +22,9 @@ package hu.icellmobilsoft.coffee.rest.utils;
 import java.lang.annotation.Annotation;
 import java.util.Arrays;
 
-import javax.ws.rs.client.ClientRequestContext;
-import javax.ws.rs.container.ContainerRequestContext;
-import javax.ws.rs.ext.WriterInterceptorContext;
+import jakarta.ws.rs.client.ClientRequestContext;
+import jakarta.ws.rs.container.ContainerRequestContext;
+import jakarta.ws.rs.ext.WriterInterceptorContext;
 
 import hu.icellmobilsoft.coffee.rest.log.annotation.LogSpecifier;
 import hu.icellmobilsoft.coffee.rest.log.annotation.LogSpecifiers;

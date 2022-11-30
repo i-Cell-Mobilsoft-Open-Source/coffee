@@ -19,8 +19,8 @@
  */
 package hu.icellmobilsoft.coffee.rest.rest;
 
-import javax.inject.Inject;
-import javax.ws.rs.PathParam;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.PathParam;
 
 import org.apache.deltaspike.core.util.ProxyUtils;
 
