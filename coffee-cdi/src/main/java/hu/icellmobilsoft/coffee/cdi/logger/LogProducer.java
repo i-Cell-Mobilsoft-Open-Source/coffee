@@ -21,7 +21,6 @@ package hu.icellmobilsoft.coffee.cdi.logger;
 
 import java.util.function.Consumer;
 
-import hu.icellmobilsoft.coffee.se.logging.Logger;
 import jakarta.enterprise.context.Dependent;
 import jakarta.enterprise.inject.Instance;
 import jakarta.enterprise.inject.Produces;
@@ -29,6 +28,8 @@ import jakarta.enterprise.inject.spi.CDI;
 import jakarta.enterprise.inject.spi.InjectionPoint;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
+
+import hu.icellmobilsoft.coffee.se.logging.Logger;
 
 /**
  * <p>

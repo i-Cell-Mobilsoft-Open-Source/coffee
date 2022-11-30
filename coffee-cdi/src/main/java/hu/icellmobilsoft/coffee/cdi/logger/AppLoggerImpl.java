@@ -22,11 +22,12 @@ package hu.icellmobilsoft.coffee.cdi.logger;
 import java.text.MessageFormat;
 import java.util.logging.Logger;
 
-import hu.icellmobilsoft.coffee.cdi.logger.LogContainer.LogLevel;
-import hu.icellmobilsoft.coffee.se.logging.JulLevel;
 import jakarta.enterprise.context.Dependent;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
+
+import hu.icellmobilsoft.coffee.cdi.logger.LogContainer.LogLevel;
+import hu.icellmobilsoft.coffee.se.logging.JulLevel;
 
 /**
  * <p>
