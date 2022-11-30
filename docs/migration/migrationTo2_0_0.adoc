@@ -54,3 +54,18 @@ A `coffee-dto-gen` projekt is jaxb3-ra generál egyenlőre.
 
 .Átállás
 Az implementáló projekteken is hasonló változásra lessz szükség.
+
+=== coffee-rest
+
+Kidobásra került a `deltaspike-jpa-module`,
+alternatíva nincs helyette.
+Ez befolyásolja a `@Transactional` használatát, rollback mechanizmus így megváltozott.
+
+Sajnos a Hibernate 6 upgrade ráhatott a BatchService-re,
+ezt jelenleg nem fogja a coffee támogatni.
+
+
+
+
+
+

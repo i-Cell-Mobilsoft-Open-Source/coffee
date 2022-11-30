@@ -21,9 +21,8 @@ package hu.icellmobilsoft.coffee.jpa.helper;
 
 import java.util.Objects;
 
-import javax.enterprise.context.Dependent;
-
-import org.apache.deltaspike.jpa.api.transaction.Transactional;
+import jakarta.enterprise.context.Dependent;
+import jakarta.transaction.Transactional;
 
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.dto.exception.InvalidParameterException;
@@ -38,7 +37,7 @@ import hu.icellmobilsoft.coffee.tool.common.FunctionalInterfaces.BaseExceptionSu
 
 /**
  * Helper class for managing transactions. <br>
- * This class is an alternative solution based on {@link org.apache.deltaspike.jpa.api.transaction.TransactionHelper}.
+ * This class is an alternative solution based on "org.apache.deltaspike.jpa.api.transaction.TransactionHelper".
  *
  * @author csaba.balogh
  * @since 1.12.0
