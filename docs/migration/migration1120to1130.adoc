@@ -96,3 +96,15 @@ Kiderült hogy a nem létező objektum helyzet sok esetben és jogosan fordul el
 ==== Átállás
 
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+=== coffee-module-etcd
+
+A DefaultEtcdConfigSource osztályban a getProperties() metódus csak BaseExceptiont kezelt, és ha nem elérhető az etcd service, akkor Exception keletkezik (pontosabban  java.util.concurrent.ExecutionException: io.grpc.StatusRuntimeException: UNAVAILABLE: unresolved address -> java.nio.channels.UnresolvedAddressException), ez lett lekezelve.
+
+Az EtcdClient-hez használt ClientBuilder kapott egy util osztályt, hogy közös helyen legyenek a beállításai.
+
+Az EtcdService get(String key) metódusa használja az EtcdRepository get(ByteSequence bsKey) metódustát, ahol CompletableFuture<GetResponse> jön vissza, és ez kapott egy 200 millisecnyi timeoutot.
+
+==== Átállás
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.

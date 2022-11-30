@@ -24,6 +24,7 @@ import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 import javax.enterprise.inject.Vetoed;
 
@@ -38,7 +39,6 @@ import hu.icellmobilsoft.coffee.module.etcd.repository.EtcdRepository;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
 import hu.icellmobilsoft.coffee.tool.utils.string.StringHelper;
 import hu.icellmobilsoft.coffee.tool.utils.string.StringUtil;
-
 import io.etcd.jetcd.ByteSequence;
 import io.etcd.jetcd.Response;
 import io.etcd.jetcd.kv.DeleteResponse;
@@ -113,7 +113,7 @@ public class EtcdService {
 
         try {
             ByteSequence bsKey = ByteSequence.from(key, StandardCharsets.UTF_8);
-            GetResponse response = etcdRepository.get(bsKey).get();
+            GetResponse response = etcdRepository.get(bsKey).get(200, TimeUnit.MILLISECONDS);
             if (response.getCount() < 1) {
                 throw new BONotFoundException(MessageFormat.format("Etcd data not found for key [{0}], response: [{1}]", key, response));
             }
