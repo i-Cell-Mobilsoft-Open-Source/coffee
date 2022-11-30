@@ -12,6 +12,20 @@ Mivel szinte minden dependency frissült,
 így egyenként felsorolni őket felesleges.
 Legtöbbször kozmetikai verzióváltások, vagy a EE10 implementációk.
 
+A beans.xml fájloknak frissültek a tartalmai:
+
+.beans.xml
+[source,xml]
+----
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="https://jakarta.ee/xml/ns/jakartaee"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="
+      https://jakarta.ee/xml/ns/jakartaee 
+      https://jakarta.ee/xml/ns/jakartaee/beans_4_0.xsd">
+</beans>
+----
+
 ==== BOM verzió emelések:
 Fontosabb változás volt: 
 
@@ -22,6 +36,7 @@ ezt figyelmbe kell venni a projekteken
 === coffee-dto
 * A jakarta átálás a `/coffee-dto-gen/src/main/resources/xsd/hu/icellmobilsoft/coffee/dto/bindings.xjb`
 fájlban a fejléc módosítását követeli:
+
 [source,xml]
 ----
 <jaxb:bindings version="3.0"

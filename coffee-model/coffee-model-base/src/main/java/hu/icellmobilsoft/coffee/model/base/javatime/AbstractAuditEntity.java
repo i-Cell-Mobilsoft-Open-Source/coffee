@@ -22,10 +22,10 @@ package hu.icellmobilsoft.coffee.model.base.javatime;
 import java.io.Serializable;
 import java.time.OffsetDateTime;
 
-import javax.enterprise.inject.Vetoed;
-import javax.persistence.Column;
-import javax.persistence.MappedSuperclass;
-import javax.validation.constraints.NotNull;
+import jakarta.enterprise.inject.Vetoed;
+import jakarta.persistence.Column;
+import jakarta.persistence.MappedSuperclass;
+import jakarta.validation.constraints.NotNull;
 
 import hu.icellmobilsoft.coffee.model.base.AbstractEntity;
 import hu.icellmobilsoft.coffee.model.base.IAuditEntity;

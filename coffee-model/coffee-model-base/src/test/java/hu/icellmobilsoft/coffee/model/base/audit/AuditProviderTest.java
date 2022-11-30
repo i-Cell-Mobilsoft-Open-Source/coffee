@@ -19,9 +19,11 @@
  */
 package hu.icellmobilsoft.coffee.model.base.audit;
 
-import javax.enterprise.context.RequestScoped;
-import javax.enterprise.inject.spi.BeanManager;
-import javax.inject.Inject;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.enterprise.inject.spi.BeanManager;
+import jakarta.inject.Inject;
 
 import org.jboss.weld.junit5.EnableWeld;
 import org.jboss.weld.junit5.WeldInitiator;
@@ -33,9 +35,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import hu.icellmobilsoft.coffee.model.base.DefaultImplAbstractIdentifiedAuditEntity;
-import hu.icellmobilsoft.coffee.model.base.audit.AuditProvider;
-
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * Testing AuditProvider class
