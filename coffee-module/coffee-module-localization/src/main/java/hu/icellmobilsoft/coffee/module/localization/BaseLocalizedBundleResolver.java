@@ -23,7 +23,7 @@ package hu.icellmobilsoft.coffee.module.localization;
 import java.io.Serializable;
 import java.util.Locale;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.apache.deltaspike.core.api.message.LocaleResolver;
 import org.apache.deltaspike.core.api.message.Message;
