@@ -26,16 +26,16 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import javax.enterprise.context.Dependent;
-import javax.enterprise.event.Observes;
-import javax.enterprise.inject.Default;
-import javax.enterprise.inject.spi.AfterBeanDiscovery;
-import javax.enterprise.inject.spi.AnnotatedMethod;
-import javax.enterprise.inject.spi.AnnotatedType;
-import javax.enterprise.inject.spi.Bean;
-import javax.enterprise.inject.spi.BeanAttributes;
-import javax.enterprise.inject.spi.BeanManager;
-import javax.enterprise.inject.spi.ProcessInjectionTarget;
+import jakarta.enterprise.context.Dependent;
+import jakarta.enterprise.event.Observes;
+import jakarta.enterprise.inject.Default;
+import jakarta.enterprise.inject.spi.AfterBeanDiscovery;
+import jakarta.enterprise.inject.spi.AnnotatedMethod;
+import jakarta.enterprise.inject.spi.AnnotatedType;
+import jakarta.enterprise.inject.spi.Bean;
+import jakarta.enterprise.inject.spi.BeanAttributes;
+import jakarta.enterprise.inject.spi.BeanManager;
+import jakarta.enterprise.inject.spi.ProcessInjectionTarget;
 
 import hu.icellmobilsoft.coffee.module.mongodb.service.MongoService;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
@@ -47,7 +47,7 @@ import hu.icellmobilsoft.coffee.se.logging.Logger;
  * @since 1.1.0
  * 
  */
-public class MongoExtension implements javax.enterprise.inject.spi.Extension {
+public class MongoExtension implements jakarta.enterprise.inject.spi.Extension {
 
     private static final Logger LOGGER = Logger.getLogger(MongoExtension.class);
 

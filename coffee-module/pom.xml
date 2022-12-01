@@ -12,8 +12,8 @@
 	<modules>
 		<module>coffee-module-configdoc</module>
 		<module>coffee-module-localization</module>
-<!--
 		<module>coffee-module-mongodb</module>
+<!--
 		<module>coffee-module-etcd</module>
 		<module>coffee-module-activemq</module>
 		<module>coffee-module-redis</module>

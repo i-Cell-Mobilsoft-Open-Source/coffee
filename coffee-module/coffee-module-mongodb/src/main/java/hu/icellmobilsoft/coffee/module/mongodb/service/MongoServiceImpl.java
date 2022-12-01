@@ -21,7 +21,7 @@ package hu.icellmobilsoft.coffee.module.mongodb.service;
 
 import java.util.Objects;
 
-import javax.enterprise.context.Dependent;
+import jakarta.enterprise.context.Dependent;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.client.MongoCollection;
