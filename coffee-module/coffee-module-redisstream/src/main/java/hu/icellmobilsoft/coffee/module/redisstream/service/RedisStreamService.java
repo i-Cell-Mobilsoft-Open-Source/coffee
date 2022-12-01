@@ -28,10 +28,10 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Optional;
 
-import javax.enterprise.context.Dependent;
-import javax.enterprise.inject.Instance;
-import javax.enterprise.inject.spi.CDI;
-import javax.inject.Inject;
+import jakarta.enterprise.context.Dependent;
+import jakarta.enterprise.inject.Instance;
+import jakarta.enterprise.inject.spi.CDI;
+import jakarta.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -44,7 +44,6 @@ import hu.icellmobilsoft.coffee.module.redisstream.common.RedisStreamUtil;
 import hu.icellmobilsoft.coffee.module.redisstream.config.IStreamGroupConfig;
 import hu.icellmobilsoft.coffee.module.redisstream.config.StreamGroupConfig;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
-
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.StreamEntryID;
 import redis.clients.jedis.exceptions.JedisDataException;

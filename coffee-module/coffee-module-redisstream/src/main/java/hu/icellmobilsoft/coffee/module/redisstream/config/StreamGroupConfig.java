@@ -22,8 +22,8 @@ package hu.icellmobilsoft.coffee.module.redisstream.config;
 import java.time.Duration;
 import java.util.Optional;
 
-import javax.enterprise.context.Dependent;
-import javax.inject.Inject;
+import jakarta.enterprise.context.Dependent;
+import jakarta.inject.Inject;
 
 import org.eclipse.microprofile.config.Config;
 
