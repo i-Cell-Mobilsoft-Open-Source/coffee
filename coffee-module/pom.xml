@@ -15,8 +15,8 @@
 		<module>coffee-module-mongodb</module>
 		<module>coffee-module-etcd</module>
 		<module>coffee-module-activemq</module>
-<!--
 		<module>coffee-module-redis</module>
+<!--
 		<module>coffee-module-redisstream</module>
 		<module>coffee-module-document</module>
 		<module>coffee-module-notification</module>
