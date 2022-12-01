@@ -21,7 +21,7 @@ package hu.icellmobilsoft.coffee.system.jpa.converter.list;
 
 import java.util.List;
 
-import javax.enterprise.context.Dependent;
+import jakarta.enterprise.context.Dependent;
 
 import hu.icellmobilsoft.coffee.dto.common.common.CommonIdListType;
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;

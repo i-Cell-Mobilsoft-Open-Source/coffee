@@ -210,15 +210,13 @@
 		<module>coffee-se</module>
 		<module>coffee-cdi</module>
 		<module>coffee-module</module>
-<!--
-		<module>coffee-configuration</module>
 		<module>coffee-dto</module>
 		<module>coffee-tool</module>
+		<module>coffee-configuration</module>
+		<module>coffee-rest</module>
 		<module>coffee-model</module>
 		<module>coffee-jpa</module>
-		<module>coffee-rest</module>
 		<module>coffee-system</module>
--->
 	</modules>
 
 	<distributionManagement>
