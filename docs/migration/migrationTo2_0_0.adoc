@@ -32,6 +32,10 @@ Fontosabb változás volt:
 * org.jboss.resteasy.resteasy-jaxrs 3.6.2.Final -> org.jboss.resteasy.resteasy-core 6.2.1.Final - a resteasy dependency bontáson esett végig,
 ezt figyelmbe kell venni a projekteken
 * org.hibernate.hibernate-core 5.4.24.Final -> 6.1.5.Final
+* org.apache.activemq.activemq-client 5.15.13 -> org.apache.activemq.artemis-jakarta-client 2.27.0 - ez nagy ugrás driverben,
+sok változást végeztek el benne.
+A projekteken nagy figyelemmel kell átvezetni a változásokat.
+
 
 === coffee-dto
 * A jakarta átálás a `/coffee-dto-gen/src/main/resources/xsd/hu/icellmobilsoft/coffee/dto/bindings.xjb`
@@ -64,8 +68,14 @@ Ez befolyásolja a `@Transactional` használatát, rollback mechanizmus így meg
 Sajnos a Hibernate 6 upgrade ráhatott a BatchService-re,
 ezt jelenleg nem fogja a coffee támogatni.
 
+=== coffee-module-artemis
+A driver _jakarta EE 10_ és abban történt _Jakarta Messaging 3.1_ változások miatt nagyon megváltozott:
+https://blogs.apache.org/activemq/entry/activemq-artemis-embraces-jakarta-ee[ActiveMQ Artemis embraces Jakarta EE].
 
-
+Kiemeleten tesztelni kell a *JmsHandler.createTextMessage*
+és *JmsUtil.newJmsException* funkciókat,
+ott kifejezetten érintett volt a változás,
+megváltozott az eredeti koncepció a delay üzenetekkel. 
 
 
 
