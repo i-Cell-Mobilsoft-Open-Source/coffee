@@ -65,6 +65,7 @@ Kidobásra került a `deltaspike-jpa-module`,
 alternatíva nincs helyette.
 Ez befolyásolja a `@Transactional` használatát, rollback mechanizmus így megváltozott.
 
+.Átállás
 Sajnos a Hibernate 6 upgrade ráhatott a BatchService-re,
 ezt jelenleg nem fogja a coffee támogatni.
 
@@ -72,10 +73,15 @@ ezt jelenleg nem fogja a coffee támogatni.
 A driver _jakarta EE 10_ és abban történt _Jakarta Messaging 3.1_ változások miatt nagyon megváltozott:
 https://blogs.apache.org/activemq/entry/activemq-artemis-embraces-jakarta-ee[ActiveMQ Artemis embraces Jakarta EE].
 
+.Átállás
 Kiemeleten tesztelni kell a *JmsHandler.createTextMessage*
 és *JmsUtil.newJmsException* funkciókat,
 ott kifejezetten érintett volt a változás,
 megváltozott az eredeti koncepció a delay üzenetekkel. 
 
+=== coffee-module-artemis
+Deltaspike data kidobása miatt a `TemplateDataRepository` és `TemplateParameterRepository` interfész
+nem tudja az előző alapértelmezett SQL selecteket szolgáltatni.
 
-
+.Átállás
+`TemplateDataRepository` és `TemplateParameterRepository` interfészek implementálasa szükséges a projekteken.

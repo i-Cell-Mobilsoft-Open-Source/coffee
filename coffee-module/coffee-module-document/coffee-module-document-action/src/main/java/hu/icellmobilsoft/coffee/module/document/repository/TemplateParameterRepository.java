@@ -21,9 +21,6 @@ package hu.icellmobilsoft.coffee.module.document.repository;
 
 import java.util.List;
 
-import org.apache.deltaspike.data.api.EntityRepository;
-import org.apache.deltaspike.data.api.Repository;
-
 import hu.icellmobilsoft.coffee.module.document.model.TemplateParameter;
 
 /**
@@ -32,8 +29,10 @@ import hu.icellmobilsoft.coffee.module.document.model.TemplateParameter;
  * @author imre.scheffer
  * @since 1.0.0
  */
-@Repository
-public interface TemplateParameterRepository extends EntityRepository<TemplateParameter, String> {
+//EE8 + deltaspike:@Repository
+public interface TemplateParameterRepository
+//EE8 + deltaspike: extends EntityRepository<TemplateParameter, String>
+{
 
     /**
      * Returns all {@link TemplateParameter}s with given template key and language.

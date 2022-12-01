@@ -17,8 +17,8 @@
 		<module>coffee-module-activemq</module>
 		<module>coffee-module-redis</module>
 		<module>coffee-module-redisstream</module>
-<!--
 		<module>coffee-module-document</module>
+<!--
 		<module>coffee-module-notification</module>
 		<module>coffee-module-csv</module>
 		<module>coffee-module-ruleng</module>
