@@ -22,8 +22,8 @@
 		<module>coffee-module-notification</module>
 		-->
 		<module>coffee-module-csv</module>
-<!--
 		<module>coffee-module-ruleng</module>
+<!--
 		<module>coffee-module-mp</module>
 		<module>coffee-module-totp</module>
 -->

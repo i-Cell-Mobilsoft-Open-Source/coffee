@@ -19,7 +19,7 @@
  */
 package hu.icellmobilsoft.coffee.module.ruleng.rule;
 
-import javax.enterprise.inject.Vetoed;
+import jakarta.enterprise.inject.Vetoed;
 
 /**
  * Általános kiértékelés eredménye (valid és invalid esetén is)
