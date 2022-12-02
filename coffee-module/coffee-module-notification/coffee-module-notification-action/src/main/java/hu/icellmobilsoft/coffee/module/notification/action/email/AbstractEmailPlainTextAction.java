@@ -22,9 +22,9 @@ package hu.icellmobilsoft.coffee.module.notification.action.email;
 import java.io.Serializable;
 import java.util.List;
 
-import javax.enterprise.context.Dependent;
-import javax.inject.Inject;
-import javax.mail.Session;
+import jakarta.enterprise.context.Dependent;
+import jakarta.inject.Inject;
+import jakarta.mail.Session;
 
 import hu.icellmobilsoft.coffee.cdi.logger.AppLogger;
 import hu.icellmobilsoft.coffee.cdi.logger.ThisLogger;
@@ -32,7 +32,6 @@ import hu.icellmobilsoft.coffee.dto.common.common.KeyValueBasicType;
 import hu.icellmobilsoft.coffee.dto.document.document.TemplateFullType;
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.dto.notification.notification.EmailPlainTextType;
-import hu.icellmobilsoft.coffee.dto.notification.notification.EmailTemplateType;
 
 /**
  * AbstractEmailPlainTextAction class.

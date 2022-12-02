@@ -85,3 +85,13 @@ nem tudja az előző alapértelmezett SQL selecteket szolgáltatni.
 
 .Átállás
 `TemplateDataRepository` és `TemplateParameterRepository` interfészek implementálasa szükséges a projekteken.
+
+=== coffee-module-notification
+Sajnos az Apache commons-email függőségből még nem készült jakarta kompatibilis release,
+így a `coffee-module-notification` modul kikerül a coffee modulok kozül.
+Következő issue kezeli: https://issues.apache.org/jira/browse/EMAIL-203[EMAIL-203] vagy
+https://github.com/apache/commons-email/pull/37[commons-email Gihub PR] pull request.
+Esetleg meglehet szabadulni a függőségtől is...
+
+.Átállás
+coffee-module-notification modul megszünt.

@@ -18,8 +18,10 @@
 		<module>coffee-module-redis</module>
 		<module>coffee-module-redisstream</module>
 		<module>coffee-module-document</module>
-<!--
+		<!-- waiting for commons-email 2.0 or refact module without it...>
 		<module>coffee-module-notification</module>
+		-->
+<!--
 		<module>coffee-module-csv</module>
 		<module>coffee-module-ruleng</module>
 		<module>coffee-module-mp</module>
