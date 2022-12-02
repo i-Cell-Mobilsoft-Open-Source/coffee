@@ -21,8 +21,8 @@ package hu.icellmobilsoft.coffee.module.csv.localization;
 
 import java.lang.reflect.Field;
 
-import javax.enterprise.context.Dependent;
-import javax.inject.Inject;
+import jakarta.enterprise.context.Dependent;
+import jakarta.inject.Inject;
 
 import com.opencsv.bean.AbstractBeanField;
 import com.opencsv.bean.BeanField;

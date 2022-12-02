@@ -21,8 +21,8 @@
 		<!-- waiting for commons-email 2.0 or refact module without it...>
 		<module>coffee-module-notification</module>
 		-->
-<!--
 		<module>coffee-module-csv</module>
+<!--
 		<module>coffee-module-ruleng</module>
 		<module>coffee-module-mp</module>
 		<module>coffee-module-totp</module>

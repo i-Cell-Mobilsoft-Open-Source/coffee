@@ -95,3 +95,13 @@ Esetleg meglehet szabadulni a függőségtől is...
 
 .Átállás
 coffee-module-notification modul megszünt.
+
+== TODO
+.Nyelvesítés
+A deltaspike nyelvesites kezelese helyett fel lehetne használni a 
+https://jakarta.ee/specifications/mvc/
+amit úgy is fel kellene karolni.
+Addig is a deltaspike kódjat át kellene hozni és jakarta csomagolással ellátni.
+Ez miatt jelenleg a `LocalizedCsvUtilTest` ideiglenesen deaktiválva lett.
+
+
