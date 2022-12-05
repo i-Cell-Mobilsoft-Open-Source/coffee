@@ -19,15 +19,11 @@
  */
 package hu.icellmobilsoft.coffee.module.mp.opentracing.extension;
 
-import javax.enterprise.event.Observes;
-import javax.enterprise.inject.spi.AfterBeanDiscovery;
-import javax.enterprise.inject.spi.ProcessAnnotatedType;
-
-import org.apache.deltaspike.core.util.metadata.AnnotationInstanceProvider;
-import org.apache.deltaspike.core.util.metadata.builder.AnnotatedTypeBuilder;
+import jakarta.enterprise.event.Observes;
+import jakarta.enterprise.inject.spi.AfterBeanDiscovery;
+import jakarta.enterprise.inject.spi.ProcessAnnotatedType;
 
 import hu.icellmobilsoft.coffee.cdi.trace.annotation.Traceable;
-import hu.icellmobilsoft.coffee.cdi.trace.annotation.Traced;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
 import hu.icellmobilsoft.coffee.tool.utils.annotation.AnnotationUtil;
 
@@ -37,7 +33,7 @@ import hu.icellmobilsoft.coffee.tool.utils.annotation.AnnotationUtil;
  * @author czenczl
  * @since 1.3.0
  */
-public class OpenTraceExtension implements javax.enterprise.inject.spi.Extension {
+public class OpenTraceExtension implements jakarta.enterprise.inject.spi.Extension {
 
     private static final Logger LOGGER = Logger.getLogger(OpenTraceExtension.class);
 
@@ -65,11 +61,12 @@ public class OpenTraceExtension implements javax.enterprise.inject.spi.Extension
         if (traceable != null) {
             LOGGER.info("Found traceable class: " + pat.getAnnotatedType());
 
-            Traced traced = AnnotationInstanceProvider.of(Traced.class);
-            AnnotatedTypeBuilder<T> builder = new AnnotatedTypeBuilder<T>().readFromType(pat.getAnnotatedType());
-            builder.addToClass(traced);
-            pat.setAnnotatedType(builder.create());
-
+            // FIXME Atirhato talan a WELD AnnotatedTypeWrapper osztalyra?
+            // EE10 before delstaspike:
+            // Traced traced = AnnotationInstanceProvider.of(Traced.class);
+            // AnnotatedTypeBuilder<T> builder = new AnnotatedTypeBuilder<T>().readFromType(pat.getAnnotatedType());
+            // builder.addToClass(traced);
+            // pat.setAnnotatedType(builder.create());
         }
 
     }

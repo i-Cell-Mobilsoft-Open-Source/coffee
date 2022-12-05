@@ -21,9 +21,7 @@ package hu.icellmobilsoft.coffee.module.mp.restclient.provider;
 
 import java.util.concurrent.TimeUnit;
 
-import javax.enterprise.context.Dependent;
-import javax.enterprise.inject.Model;
-import javax.enterprise.inject.spi.CDI;
+import jakarta.enterprise.inject.spi.CDI;
 
 import org.eclipse.microprofile.rest.client.RestClientBuilder;
 import org.eclipse.microprofile.rest.client.spi.RestClientBuilderListener;

@@ -96,9 +96,17 @@ Esetleg meglehet szabadulni a függőségtől is...
 .Átállás
 coffee-module-notification modul megszünt.
 
+=== coffee-module-mp-opentracing
+A `OpenTraceExtension` osztályban volt Deltaspike kódrészlet,
+amíg ez nincs atírva natív CDI-re a modul ki nem tudja kezelni a `@Traceable` annotációt.
+
+.Átállás
+coffee-module-mp-opentracing modul egyenlőre nem regisztrálja be a `@Traceable`
+annotációval ellátott osztályokat/metódusokat a tracing tételek közé.
+
 == TODO
 .Nyelvesítés
-A deltaspike nyelvesites kezelese helyett fel lehetne használni a 
+A deltaspike nyelvesites kezelése helyett fel lehetne használni a 
 https://jakarta.ee/specifications/mvc/
 amit úgy is fel kellene karolni.
 Addig is a deltaspike kódjat át kellene hozni és jakarta csomagolással ellátni.
