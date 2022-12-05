@@ -24,8 +24,9 @@ import java.security.GeneralSecurityException;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
-import javax.enterprise.context.Dependent;
-import javax.inject.Inject;
+
+import jakarta.enterprise.context.Dependent;
+import jakarta.inject.Inject;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;

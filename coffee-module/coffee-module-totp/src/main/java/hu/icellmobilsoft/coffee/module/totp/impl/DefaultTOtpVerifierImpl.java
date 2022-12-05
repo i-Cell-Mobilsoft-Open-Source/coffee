@@ -19,8 +19,8 @@
  */
 package hu.icellmobilsoft.coffee.module.totp.impl;
 
-import javax.enterprise.context.Dependent;
-import javax.inject.Inject;
+import jakarta.enterprise.context.Dependent;
+import jakarta.inject.Inject;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;

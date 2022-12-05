@@ -23,8 +23,8 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import javax.enterprise.context.RequestScoped;
-import javax.inject.Inject;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
 
 import org.apache.commons.codec.binary.Base32;
 import org.apache.commons.lang3.StringUtils;
