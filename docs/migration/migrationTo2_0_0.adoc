@@ -79,7 +79,7 @@ Kiemeleten tesztelni kell a *JmsHandler.createTextMessage*
 ott kifejezetten érintett volt a változás,
 megváltozott az eredeti koncepció a delay üzenetekkel. 
 
-=== coffee-module-artemis
+=== coffee-module-document
 Deltaspike data kidobása miatt a `TemplateDataRepository` és `TemplateParameterRepository` interfész
 nem tudja az előző alapértelmezett SQL selecteket szolgáltatni.
 
