@@ -1,0 +1,16 @@
+= v1.12.1 → v1.12.2
+
+coff:ee v1.12.1 -> v1.12.2 migrációs leírás, újdonságok, változások leírása
+
+== Változások
+
+=== coffee-jpa
+
+* A `BatchService` `java.sql.Types.BLOB` mentés esetén, oracle jdbc driver használatával `java.sql.SQLException: Invalid column type` hibát eredményezett.
+Ennek az volt az oka, hogy a nem kezelt `org.hibernate.type.SingleColumnType` esetén a `setObject(int parameterIndex, Object x, int targetSqlType)` hívással
+az Oracle driver BLOB-ként próbálta meg feloldani (arra próbálta castolni) a `byte[]` -t, ami a fenti hibát eredményezte.
+A default ágon a `setObject(int parameterIndex, Object x)` hívással teljes mértékben a driverre hárul a típus feloldása.
+
+==== Átállás
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
