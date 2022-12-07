@@ -99,6 +99,9 @@ coffee-module-notification modul megszünt.
 === coffee-module-mp-opentracing
 A `OpenTraceExtension` osztályban volt Deltaspike kódrészlet,
 amíg ez nincs atírva natív CDI-re a modul ki nem tudja kezelni a `@Traceable` annotációt.
+A `@Traceable` annotáció és az azt kezelő CDI extension megszűnik, helyette haszálható a `@hu.icellmobilsoft.coffee.cdi.trace.annotation.Traced` annotáció,
+amivel továbbra is trace flow-ba helyezhetőek a coffee egyes moduljai.
+Egyelőre a `ConfigEtcdHandler` nem vesz részt a trace flow-ban.
 
 .Átállás
 coffee-module-mp-opentracing modul egyenlőre nem regisztrálja be a `@Traceable`

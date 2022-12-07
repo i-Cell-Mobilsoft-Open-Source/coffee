@@ -27,7 +27,6 @@ import jakarta.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
 
-import hu.icellmobilsoft.coffee.cdi.trace.annotation.Traceable;
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.dto.exception.InvalidParameterException;
 import hu.icellmobilsoft.coffee.module.etcd.service.ConfigEtcdService;
@@ -39,7 +38,6 @@ import hu.icellmobilsoft.coffee.module.etcd.service.ConfigEtcdService;
  * @since 1.0.0
  */
 @Dependent
-@Traceable
 public class ConfigEtcdHandler {
 
     @Inject
