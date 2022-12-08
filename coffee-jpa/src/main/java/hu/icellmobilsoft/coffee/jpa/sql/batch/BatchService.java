@@ -635,7 +635,7 @@ public class BatchService {
             setBooleanPsObject(ps, parameterIndex, value);
             break;
         default:
-            ps.setObject(parameterIndex, value, singleColumn.sqlType());
+            ps.setObject(parameterIndex, value);
         }
     }
 

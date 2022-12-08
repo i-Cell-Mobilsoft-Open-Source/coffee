@@ -82,6 +82,9 @@ A változtatások nem eredményeznek átállási munkálatokat, visszafelé komp
 * A `BatchService` `java.sql.Types.BOOLEAN` mentés esetén, oracle jdbc driver használatával `java.sql.SQLException: Invalid column type` hibát eredményezett.
 A `null` értékű objektumok `prepared statement` beállítás esetén mentesítve lettek az SQL típusoktól és univerzálisan `java.sql.Types.NULL` kerül beállításra.
 A `java.sql.Types.BOOLEAN` típusok külön ágban kerülnek kezelésre, amelyben ha a beállítandó érték `java.lang.Boolean`, akkor a `prepared statement` erre biztosított `setBoolean(int parameterIndex, boolean x)` metódusa van használva, egyébként pedig a `setObject(int parameterIndex, Object x)`, amelyben a driver-re bízzuk, hogy kezelje le az adott értéket.
+* Továbbá a `BatchService` `java.sql.Types.BLOB` mentés esetén, oracle jdbc driver használatával szintén `java.sql.SQLException: Invalid column type` kivétel dobódott.
+Amennyiben a `BatchService.setSingleColumnPsObject()` metódusban egyetlen ágra sem illeszkedik a kapott `org.hibernate.type.SingleColumnType<?>` paraméter, 
+a default ágon a `setObject(int parameterIndex, Object x)` hívás típus átadás nélkül hívódik meg, hogy az Oracle driver maga detektálja a megfelelő típust.
 
 ==== Átállás
 
