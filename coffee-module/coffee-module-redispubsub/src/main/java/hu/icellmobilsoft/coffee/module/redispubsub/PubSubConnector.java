@@ -52,9 +52,9 @@ import hu.icellmobilsoft.coffee.se.logging.Logger;
  * {@code
  * mp.messaging.incoming.<channel-key>.connector=coffee-redis-pubsub #1
  * mp.messaging.incoming.<channel-key>.connection-key=sample #2
- * mp.messaging.incoming.<channel-key>.connection-key=sample-consumer #3
+ * mp.messaging.incoming.<channel-key>.pool-key=sample-consumer #3
  * mp.messaging.incoming.<channel-key>.pub-sub-channel=<redis-pub-sub-channel> #4
- * }*
+ * }
  * </pre>
  *
  * <ol>
@@ -80,7 +80,7 @@ import hu.icellmobilsoft.coffee.se.logging.Logger;
  * {@code
  * mp.messaging.outgoing.<channel-key>.connector=coffee-redis-pubsub
  * mp.messaging.outgoing.<channel-key>.connection-key=sample
- * mp.messaging.outgoing.<channel-key>.connection-key=sample-producer
+ * mp.messaging.outgoing.<channel-key>.pool-key=sample-producer
  * mp.messaging.outgoing.<channel-key>.pub-sub-channel=<redis-pub-sub-channel>
  * }*
  * </pre>
@@ -98,7 +98,7 @@ import hu.icellmobilsoft.coffee.se.logging.Logger;
  * </pre>
  *
  * @author mark.petrenyi
- * @since 1.11.0
+ * @since 1.13.0
  */
 @ApplicationScoped
 @Connector(PubSubConnector.CONNECTOR_NAME)
@@ -110,6 +110,8 @@ import hu.icellmobilsoft.coffee.se.logging.Logger;
 // @ConnectorAttribute(name = "pub-sub-channel", type = "string", direction = ConnectorAttribute.Direction.INCOMING_AND_OUTGOING,
 // description = "Optional name of pub/sub channel, defaults to microprofile stream channel, workaround to have both publisher and subscriber for the
 // same channel within a service.")
+// @ConnectorAttribute(name = "retry-seconds", type = "int", defaultValue = "30", direction = ConnectorAttribute.Direction.INCOMING,
+// description = "Number of seconds to wait after subscription failure, before attempting retry")
 public class PubSubConnector implements IncomingConnectorFactory, OutgoingConnectorFactory {
     /**
      * The connector name. Activates redis connector with {@code mp.messaging.outgoing.<channel-key>.connector} config key
@@ -164,7 +166,7 @@ public class PubSubConnector implements IncomingConnectorFactory, OutgoingConnec
         PubSubConnectorOutgoingConfiguration outConfig = new PubSubConnectorOutgoingConfiguration(config);
         PubSubSink pubSubSink = new PubSubSink(outConfig);
         SubscriberBuilder<Message<?>, Void> subscriberBuilder = ReactiveStreams.<Message<?>> builder().forEach(pubSubSink::publishMessage);
-        log.info("Created [{0}] SubscriberBuilder for mp channel:[{0}]", CONNECTOR_NAME, outConfig.getChannel());
+        log.info("Created [{0}] SubscriberBuilder for mp channel:[{1}]", CONNECTOR_NAME, outConfig.getChannel());
         return subscriberBuilder;
     }
 

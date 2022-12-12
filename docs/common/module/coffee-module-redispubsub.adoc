@@ -15,7 +15,7 @@ ismételt bekérdezésekkel (pl. `XREAD`), hanem egy fenntartott grpc kapcsolato
 == RedisConnection
 
 A coffee-module-redispubsub modul a <<coffee-module-redis>> modult használja fel a Redis connection kezelésre.
-A Redis kapcsolat beállítása egyezik a <<coffee-module-redis>> leírásnak,
+A Redis kapcsolat beállítása egyezik a <<coffee-module-redis>> leírásban szereplővel,
 ott lévő "kulcs" alapján történik.
 
 == Microprofile-reactive-messaging
@@ -42,35 +42,36 @@ A modul használatához aktiválni kell wildfly alatt a `microprofile-reactive-s
 
 Subscriber létrehozása a microprofile-reactive-messaging által meghatározott konfigokkal és annotációkkal történik.
 
-.config
+.mp reactive incoming config
 [source, yaml]
 ----
+coffee:
+  redis:
+    pubsubredis: #<1>
+    #...
+      pool:
+        pubsubpool:
+        #...
+
 mp:
   messaging:
     incoming:
-      test-in: #<1>
-        connector: coffee-redis-pubsub #<2>
-        ${pubsub-attribute}: ${pubsub-attribute} #<3>
+      test-in: #<2>
+        connector: coffee-redis-pubsub #<3>
+        connection-key: pubsubredis #<4>
+        pool-key: pubsubpool #<5>
+        pub-sub-channel: channel1 #<6>
+        retry-seconds: 60 #<7>
 ----
-<1> Bejövő mp channel kulcsa, kódban erre hivatkozva lehet feldolgozni az üzenetet.
-<2> A channel használja a modul connector-át, fixen `coffee-redis-pubsub`.
-<3> Connector specifikus beállítások.
-+
-.Incoming Attributes of the 'coffee-redis-pubsub' connector
-[cols="25, 30, 15, 20",options="header"]
-|===
-|Attribute (_alias_) | Description | Mandatory | Default
-| [.no-hyphens]#*connection-key*# | Coffee redis modul szerinti connection key coffee.redis.+*+
-
-Type: _string_ | true |
-| [.no-hyphens]#*pool-key*# | Coffee redis modul szerinti pool key coffee.redis.+*+.pool.+*+
-
-Type: _string_ | false | `default`
-| [.no-hyphens]#*pub-sub-channel*# | Opcionális paraméter, redis Pub/Sub channel neve,
-ha nincs megadva, akkor alapértelmezés szerint a bejövő channel kulcsát vesszük redis channel-nek is.
-
-Type: _string_ | false |
-|===
+<1> Használni kívánt redis connection és pool beállítások
+<2> Bejövő mp channel kulcsa, kódban erre hivatkozva lehet feldolgozni az üzenetet.
+<3> A channel használja a modul connector-át, fixen `coffee-redis-pubsub`.
+<4> Coffee redis modul szerinti connection key coffee.redis.+*+, kötelező paraméter
+<5> Coffee redis modul szerinti pool key coffee.redis.+*+.pool.+*+, opcionális, alapértelmezett érték `default`
+<6> Opcionális paraméter, redis Pub/Sub channel neve,
+ha nincs megadva, akkor alapértelmezés szerint a bejövő mp channel kulcsát (<1>-es kulcs - `test-in`) vesszük redis channel-nek is,
+bővebb leírás, hogy mikor lehet szükséges a paraméter megadása: <<common_module_coffee-module-redispubsub_same_channel_pub_sub>>.
+<7> Opcionális paraméter, subscribe hiba esetén hány másodpercet várjunk az újra próbálkozás előtt, alapértelmezetten 30s
 
 .subscriber method
 [source, java]
@@ -91,35 +92,34 @@ public class TestListener {
 
 Publisher létrehozása szintén a microprofile-reactive-messaging által meghatározott konfigokkal és annotációkkal történik.
 
-.config
+.mp reactive outgoing config
 [source, yaml]
 ----
+coffee:
+  redis:
+    pubsubredis: #<1>
+    #...
+      pool:
+        pubsubpool:
+        #...
+
 mp:
   messaging:
     outgoing:
-      test-out: #<1>
-        connector: coffee-redis-pubsub #<2>
-        ${pubsub-attribute}: ${pubsub-attribute} #<3>
+      test-out: #<2>
+        connector: coffee-redis-pubsub #<3>
+        connection-key: pubsubredis #<4>
+        pool-key: pubsubpool #<5>
+        pub-sub-channel: channel1 #<6>
 ----
-<1> Kimenő mp channel kulcsa, kódban erre hivatkozva lehet feldolgozni az üzenetet.
-<2> A channel használja a modul connector-át, fixen `coffee-redis-pubsub`.
-<3> Connector specifikus beállítások.
-+
-.Outgoing Attributes of the 'coffee-redis-pubsub' connector
-[cols="25, 30, 15, 20",options="header"]
-|===
-|Attribute (_alias_) | Description | Mandatory | Default
-| [.no-hyphens]#*connection-key*# | Coffee redis modul szerinti connection key coffee.redis.+*+
-
-Type: _string_ | true |
-| [.no-hyphens]#*pool-key*# | Coffee redis modul szerinti pool key coffee.redis.+*+.pool.+*+
-
-Type: _string_ | false | `default`
-| [.no-hyphens]#*pub-sub-channel*# | Opcionális paraméter, redis Pub/Sub channel neve,
-ha nincs megadva, akkor alapértelmezés szerint a bejövő channel kulcsát vesszük redis channel-nek is.
-
-Type: _string_ | false |
-|===
+<1> Használni kívánt redis connection és pool beállítások
+<2> Kimenő mp channel kulcsa, kódban erre hivatkozva lehet feldolgozni az üzenetet.
+<3> A channel használja a modul connector-át, fixen `coffee-redis-pubsub`.
+<4> Coffee redis modul szerinti connection key coffee.redis.+*+, kötelező paraméter
+<5> Coffee redis modul szerinti pool key coffee.redis.+*+.pool.+*+, opcionális, alapértelmezett érték `default`
+<6> Opcionális paraméter, redis Pub/Sub channel neve,
+ha nincs megadva, akkor alapértelmezés szerint a kimenő mp channel kulcsát (<1>-es kulcs - `test-out`) vesszük redis channel-nek is,
+bővebb leírás, hogy mikor lehet szükséges a paraméter megadása: <<common_module_coffee-module-redispubsub_same_channel_pub_sub>>.
 
 .publishing method
 [source, java]
@@ -138,7 +138,7 @@ public class TestAction {
 }
 ----
 <1> a konfigban megadott mp channel kulcsával dolgozunk
-<2> üzenet küldése
+<2> üzenet küldése, completionStage-el tér vissza.
 
 == Üzenet
 
@@ -180,6 +180,7 @@ public class TestAction {
 
 == mp-reactive-messaging sajátosságok
 
+[#common_module_coffee-module-redispubsub_same_channel_pub_sub]
 === Azonos channel-re publisher és subscriber egy service-en belül
 
 Egy microservice-en belül a microprofile-reactive-messaging nem engedi, hogy publisher-t és subscriber-t is létrehozzunk

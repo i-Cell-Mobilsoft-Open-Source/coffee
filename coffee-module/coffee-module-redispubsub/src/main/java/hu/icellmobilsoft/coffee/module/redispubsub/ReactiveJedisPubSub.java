@@ -21,10 +21,10 @@ package hu.icellmobilsoft.coffee.module.redispubsub;
 
 import java.util.Map;
 
+import javax.enterprise.inject.Vetoed;
+
 import org.eclipse.microprofile.reactive.messaging.Message;
-import org.eclipse.microprofile.reactive.streams.operators.ReactiveStreams;
 import org.reactivestreams.Subscriber;
-import org.reactivestreams.Subscription;
 
 import hu.icellmobilsoft.coffee.dto.common.LogConstants;
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
@@ -40,26 +40,23 @@ import redis.clients.jedis.JedisPubSub;
  * subscriber.
  *
  * @author mark.petrenyi
- * @since 1.1.0
+ * @since 1.13.0
  */
-public class ReactiveJedisPubSub extends JedisPubSub {
+@Vetoed
+public class ReactiveJedisPubSub extends JedisPubSub implements AutoCloseable {
 
     private static final Logger LOG = Logger.getLogger(ReactiveJedisPubSub.class);
 
     private final Subscriber<? super Message<?>> subscriber;
-    private final Subscription subscription;
 
     /**
      * Instantiates a new ReactiveJedisPubSub
      *
      * @param subscriber
      *            the base subscriber to use when receiving message
-     * @param subscription
-     *            the subscription
      */
-    public ReactiveJedisPubSub(Subscriber<? super Message<?>> subscriber, Subscription subscription) {
-        this.subscriber = ReactiveStreams.fromSubscriber(subscriber).build();
-        this.subscription = subscription;
+    public ReactiveJedisPubSub(Subscriber<? super Message<?>> subscriber) {
+        this.subscriber = subscriber;
     }
 
     @Override
@@ -67,7 +64,7 @@ public class ReactiveJedisPubSub extends JedisPubSub {
         MDC.clear();
         PubSubMessage pubSubMessage = getPubSubMessage(message);
         handleMDC(pubSubMessage);
-        LOG.trace("Redis pub/sub message received, channel:{0}, message:{1}", channel, message);
+        LOG.trace("Redis pub/sub message received, channel:[{0}], message:[{1}]", channel, message);
         subscriber.onNext(pubSubMessage);
     }
 
@@ -93,14 +90,20 @@ public class ReactiveJedisPubSub extends JedisPubSub {
 
     @Override
     public void onSubscribe(String channel, int subscribedChannels) {
-        subscriber.onSubscribe(subscription);
-        LOG.info("subscribed to redis pub/sub channel:{0}, subscribedChannels:{1}", channel, subscribedChannels);
+        LOG.info("subscribed to redis pub/sub channel:[{0}], subscribedChannels:[{1}]", channel, subscribedChannels);
+
     }
 
     @Override
     public void onUnsubscribe(String channel, int subscribedChannels) {
-        LOG.info("unsubscribed from channel:{0}, subscribedChannels:{1}", channel, subscribedChannels);
-        subscriber.onComplete();
+        LOG.info("unsubscribed from redis pub/sub channel:[{0}], subscribedChannels:[{1}]", channel, subscribedChannels);
+    }
+
+    @Override
+    public void close() {
+        if (subscriber != null) {
+            subscriber.onComplete();
+        }
     }
 
 }

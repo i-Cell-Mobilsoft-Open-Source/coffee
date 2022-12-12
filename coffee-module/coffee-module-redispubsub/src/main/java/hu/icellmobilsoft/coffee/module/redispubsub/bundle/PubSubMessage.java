@@ -28,7 +28,7 @@ import org.eclipse.microprofile.reactive.messaging.Message;
  * representation on publish
  *
  * @author mark.petrenyi
- * @since 1.11.0
+ * @since 1.13.0
  */
 public class PubSubMessage implements Message<String> {
     private String payload;

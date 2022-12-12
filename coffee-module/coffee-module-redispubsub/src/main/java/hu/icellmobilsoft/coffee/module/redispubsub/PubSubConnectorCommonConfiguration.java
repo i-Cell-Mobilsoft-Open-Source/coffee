@@ -28,6 +28,9 @@ import org.eclipse.microprofile.reactive.messaging.spi.ConnectorFactory;
 /**
  * Extracts the common configuration for the {@code coffee-redis-pubsub} connector. <br>
  * PM: Jó lenne ConnectorAttribute annotációval generáltatni, de wf alatt még experimental, ezért copy-paste és javadoc fix a generátumból
+ * 
+ * @author mark.petrenyi
+ * @since 1.13.0
  */
 public class PubSubConnectorCommonConfiguration {
     /**

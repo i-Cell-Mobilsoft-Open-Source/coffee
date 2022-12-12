@@ -25,6 +25,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import javax.enterprise.inject.Instance;
+import javax.enterprise.inject.Vetoed;
 import javax.enterprise.inject.spi.CDI;
 
 import org.eclipse.microprofile.reactive.messaging.Message;
@@ -43,8 +44,9 @@ import redis.clients.jedis.Jedis;
  * {@link org.eclipse.microprofile.reactive.messaging.Outgoing} annotation or {@link org.eclipse.microprofile.reactive.messaging.Emitter#send} method
  *
  * @author mark.petrenyi
- * @since 1.1.0
+ * @since 1.13.0
  */
+@Vetoed
 public class PubSubSink {
     private final PubSubConnectorOutgoingConfiguration outConfig;
     private final Logger log = Logger.getLogger(PubSubSink.class);
@@ -67,6 +69,9 @@ public class PubSubSink {
      */
     public void publishMessage(Message<?> msg) {
         log.trace(">> publishMessage:[{0}]", msg);
+        if (msg == null) {
+            return;
+        }
         String messagePayload = getPubSubMessage(msg);
         String channel = outConfig.getPubSubChannel().orElseGet(outConfig::getChannel);
         Instance<RedisManager> redisManagerInstance = CDI.current().select(RedisManager.class,
@@ -76,12 +81,15 @@ public class PubSubSink {
             redisManager = redisManagerInstance.get();
             Optional<Long> published = redisManager.runWithConnection(Jedis::publish, "publish", channel, messagePayload);
             log.trace("Message published to [{0}] clients!", published.orElse(0L));
-            // redis pub/sub nem kezel ack/nack-ot, de az ide érkező message jöhet olyan forrásból,
-            // ahol kell, egyelőre ha sikeres a kiküldés ackolunk, ha nem akkor nack, később ezen lehet finomítani.
+            // redis pub/sub nem kezel ack/nack-ot, de az MP reactive streams igen +
+            // ide érkező message is jöhet olyan forrásból ahol kell (pl. kafka...),
+            // egyelőre ha sikeres a kiküldés ackolunk, ha nem akkor nack, később ezen lehet finomítani.
             msg.ack();
         } catch (Exception e) {
             String errorMsg = MessageFormat.format("Could not publish message:[{0}] to redis pub/sub channel:[{1}]", msg, channel);
             log.error(errorMsg, e);
+            // MP subscriberben vagyunk, a hívó csak completionStage-et kap exception dobás helyett nack-olni kell
+            // aki hívta az emittert kezelheti, ha akarja ExecutionException-be csomagolva fogja megkapni
             msg.nack(e);
         } finally {
             if (redisManager != null) {

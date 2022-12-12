@@ -24,6 +24,9 @@ import org.eclipse.microprofile.config.Config;
 /**
  * Extract the incoming configuration for the {@code coffee-redis-pubsub} connector. <br>
  * PM: Jó lenne ConnectorAttribute annotációval generáltatni, de wf alatt még experimental, ezért copy-paste és javadoc fix a generátumból
+ * 
+ * @author mark.petrenyi
+ * @since 1.13.0
  */
 public class PubSubConnectorIncomingConfiguration extends PubSubConnectorCommonConfiguration {
 
@@ -36,6 +39,16 @@ public class PubSubConnectorIncomingConfiguration extends PubSubConnectorCommonC
     public PubSubConnectorIncomingConfiguration(Config config) {
         super(config);
         validate();
+    }
+
+    /**
+     * Gets the retry-seconds value from the configuration. Attribute Name: retry-seconds Description: Number of seconds to wait after subscription
+     * failure, before attempting retry Default Value: 30
+     * 
+     * @return the retry-seconds
+     */
+    public Integer getRetrySeconds() {
+        return config.getOptionalValue("retry-seconds", Integer.class).orElse(30);
     }
 
     public void validate() {

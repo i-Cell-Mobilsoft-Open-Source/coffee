@@ -2,6 +2,15 @@
 
 coff:ee v1.12.0 -> v1.13.0 migrációs leírás, újdonságok, változások leírása
 
+== Újdonságok
+
+=== coffee-module-redispubsub
+Bevezetésre ekrült a redis pub-sub támogatása micro-profile-reactive-messaging-en keresztül, leírás: <<common_module_coffee-module-redispubsub>>
+
+==== Átállás
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
 == Változások
 
 === Általános

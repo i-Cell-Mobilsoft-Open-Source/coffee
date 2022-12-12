@@ -23,7 +23,7 @@
 		<module>coffee-module-mp</module>
 		<module>coffee-module-totp</module>
 		<module>coffee-module-configdoc</module>
-        <module>coffee-module-redispubsub</module>
+		<module>coffee-module-redispubsub</module>
     </modules>
 
 	<dependencyManagement>
