@@ -19,6 +19,8 @@ include::module/coffee-module-redis.adoc[leveloffset=+1]
 
 include::module/coffee-module-redisstream.adoc[leveloffset=+1]
 
+include::module/coffee-module-redispubsub.adoc[leveloffset=+1]
+
 include::module/coffee-module-ruleng.adoc[leveloffset=+1]
 
 include::module/coffee-module-mp-opentracing.adoc[leveloffset=+1]
