@@ -70,7 +70,7 @@ package hu.icellmobilsoft.coffee.jpa.sql.batch;
 //import org.mockito.junit.jupiter.MockitoExtension;
 //
 //import hu.icellmobilsoft.coffee.cdi.logger.AppLogger;
-//
+
 /**
  * Class for testing {@link BatchService}.
  * 
@@ -98,13 +98,21 @@ class BatchServiceTest {
 //
 //    @Order(1)
 //    @ParameterizedTest(name = "[{index}] - type: [{0}] value: [{1}]")
-//    @MethodSource({ "provideDateTypes", "provideTimeTypes", "provideTimestampTypes" })
-//    void setPsObjectDateAndTimeAndTimestampWithoutTimezoneTest(SingleColumnType<?> type, Object value) throws SQLException {
+//    @MethodSource({ "provideDateTypes" })
+//    void setPsObjectDateWithoutTimezoneTest(SingleColumnType<?> type, Object value) throws SQLException {
+//        batchService.setPsObject(preparedStatement, 0, type, value);
+//        Mockito.verify(preparedStatement).setObject(0, value);
+//    }
+//
+//    @Order(2)
+//    @ParameterizedTest(name = "[{index}] - type: [{0}] value: [{1}]")
+//    @MethodSource({ "provideTimeTypes", "provideTimestampTypes" })
+//    void setPsObjectTimeAndTimestampWithoutTimezoneTest(SingleColumnType<?> type, Object value) throws SQLException {
 //        batchService.setPsObject(preparedStatement, 0, type, value);
 //        Mockito.verify(preparedStatement).setObject(0, value, type.sqlType());
 //    }
 //
-//    @Order(2)
+//    @Order(3)
 //    @ParameterizedTest(name = "[{index}] - type: [{0}] value: [{1}]")
 //    @MethodSource("provideDateTypes")
 //    void setPsObjectDateWithTimezoneTest(SingleColumnType<?> type, Object value) throws SQLException {
@@ -113,10 +121,10 @@ class BatchServiceTest {
 //
 //        batchService.setPsObject(preparedStatement, 0, type, value);
 //
-//        Mockito.verify(preparedStatement).setObject(0, value, Types.DATE);
+//        Mockito.verify(preparedStatement).setObject(0, value);
 //    }
 //
-//    @Order(3)
+//    @Order(4)
 //    @ParameterizedTest(name = "[{index}] - type: [{0}] value: [{1}] expectedValue: [{2}]")
 //    @MethodSource("provideTimeTypes")
 //    void setPsObjectTimeWithTimezoneTest(SingleColumnType<?> type, Object value, Object expectedValue) throws SQLException {
@@ -135,7 +143,7 @@ class BatchServiceTest {
 //        }
 //    }
 //
-//    @Order(4)
+//    @Order(5)
 //    @ParameterizedTest(name = "[{index}] - type: [{0}] value: [{1}] expectedValue: [{2}]")
 //    @MethodSource("provideTimestampTypes")
 //    void setPsObjectTimestampWithTimezoneTest(SingleColumnType<?> type, Object value, Object expectedValue) throws SQLException {
