@@ -217,6 +217,7 @@
 		<module>coffee-model</module>
 		<module>coffee-jpa</module>
 		<module>coffee-system</module>
+		<module>coffee-deltaspike</module>
 	</modules>
 
 	<distributionManagement>
