@@ -10,8 +10,6 @@
 	<packaging>pom</packaging>
 
 	<properties>
-		<version.apache.deltaspike>1.9.6</version.apache.deltaspike>
-
 		<version.jakartaee>10.0.0</version.jakartaee>
 		<version.jakarta.xml.bind.jaxb-api>4.0.0</version.jakarta.xml.bind.jaxb-api>
 		<version.jakarta.activation-api>2.1.0</version.jakarta.activation-api>
@@ -46,14 +44,6 @@
 	<dependencyManagement>
 		<dependencies>
 			<!-- bom imports -->
-			<dependency>
-				<groupId>org.apache.deltaspike.distribution</groupId>
-				<artifactId>distributions-bom</artifactId>
-				<version>${version.apache.deltaspike}</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
-
 			<dependency>
 				<groupId>jakarta.platform</groupId>
 				<artifactId>jakarta.jakartaee-api</artifactId>
@@ -133,6 +123,11 @@
 			<dependency>
 				<groupId>hu.icellmobilsoft.coffee</groupId>
 				<artifactId>coffee-cdi</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>hu.icellmobilsoft.coffee</groupId>
+				<artifactId>coffee-deltaspike</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>

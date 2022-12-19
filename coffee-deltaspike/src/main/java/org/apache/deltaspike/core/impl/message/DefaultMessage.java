@@ -59,11 +59,23 @@ import static org.apache.deltaspike.core.api.message.MessageResolver.MISSING_RES
 @Typed()
 public class DefaultMessage implements Message
 {
+    /**
+     * message template
+     */
     private String messageTemplate;
+    /**
+     * message arguments
+     */
     private List<Serializable> arguments = new ArrayList<>();
-
+    /**
+     * Message context
+     */
     private MessageContext messageContext;
 
+    /**
+     * Constructor
+     * @param messageContext message cotext
+     */
     public DefaultMessage(MessageContext messageContext)
     {
         reset();
@@ -71,6 +83,9 @@ public class DefaultMessage implements Message
         this.messageContext = messageContext;
     }
 
+    /**
+     * reset settings
+     */
     protected void reset()
     {
         messageTemplate = null;

@@ -27,7 +27,6 @@ import java.util.Objects;
 import jakarta.enterprise.inject.Vetoed;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.deltaspike.core.util.CollectionUtils;
 import org.eclipse.microprofile.openapi.OASFilter;
 import org.eclipse.microprofile.openapi.models.OpenAPI;
 import org.eclipse.microprofile.openapi.models.media.Schema;
@@ -113,7 +112,7 @@ public class OpenAPIFilter implements OASFilter {
 
     private void addCommonRequestHeaderParameters(OpenAPI openAPI) {
         // NOTE Új modulhoz még nem feltétlen van végpont
-        if (isOpenapiPathEmpty(openAPI) || CollectionUtils.isEmpty(getCommonRequestHeaderParameters())) {
+        if (isOpenapiPathEmpty(openAPI) || getCommonRequestHeaderParameters() == null || getCommonRequestHeaderParameters().isEmpty()) {
             return;
         }
 

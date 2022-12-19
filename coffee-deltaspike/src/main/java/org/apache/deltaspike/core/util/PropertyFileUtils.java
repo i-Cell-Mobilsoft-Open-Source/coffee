@@ -50,6 +50,9 @@ import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.Vector;
 
+/**
+ * Copy from deltaspike project
+ */
 @Typed()
 public abstract class PropertyFileUtils
 {
@@ -61,6 +64,12 @@ public abstract class PropertyFileUtils
         // prevent instantiation
     }
 
+    /**
+     * Resolve property files
+     * @param propertyFileName property file name
+     * @return files URL
+     * @throws IOException if error
+     */
     public static Enumeration<URL> resolvePropertyFiles(String propertyFileName) throws IOException
     {
         if (propertyFileName != null && (propertyFileName.contains("://") || propertyFileName.startsWith("file:")))
@@ -115,6 +124,11 @@ public abstract class PropertyFileUtils
         return propertyFileUrls;
     }
 
+    /**
+     * Load properties by URL
+     * @param url url
+     * @return properties
+     */
     public static Properties loadProperties(URL url)
     {
         Properties props = new Properties();
@@ -152,6 +166,7 @@ public abstract class PropertyFileUtils
     }
 
     /**
+     * @param bundleName bundle name
      * @return the ResourceBundle for the current default Locale
      */
     public static ResourceBundle getResourceBundle(String bundleName)
@@ -161,6 +176,8 @@ public abstract class PropertyFileUtils
 
     /**
      * This uses the correct ThreadContextClassLoader if deployed in an Container.
+     * @param bundleName bundle name
+     * @param locale locale
      * @return the ResourceBundle for the current Locale
      */
     public static ResourceBundle getResourceBundle(String bundleName, Locale locale)

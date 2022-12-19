@@ -98,6 +98,8 @@ public interface Message extends Serializable
 
     /**
      * Renders the Message to a String, using an arbitrary {@link MessageContext}.
+     * @param messageContext message context
+     * @return Renders the Message as String
      */
     String toString(MessageContext messageContext);
 
@@ -111,6 +113,8 @@ public interface Message extends Serializable
      * {@code &quot;summary&quot;} and {@code &quot;detail&quot;}
      * to allow a short and a more detailed explanation in Error, Warn and Info popups at the same time.
      * </p>
+     * @param category category
+     * @return Renders the Message as String
      */
     String toString(String category);
 
@@ -119,6 +123,9 @@ public interface Message extends Serializable
      * first search for a messageTemplate with the given category by just adding an underscore '_' and the category
      * String to the {@link #getTemplate()}. If no such template exists we will fall back to the version without the
      * category String.
+     * @param messageContext message context object
+     * @param category category
+     * @return Renders the Message as String
      */
     String toString(MessageContext messageContext, String category);
 

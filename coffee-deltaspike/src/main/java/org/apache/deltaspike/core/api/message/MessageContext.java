@@ -49,7 +49,7 @@ import java.util.List;
 public interface MessageContext extends LocaleResolver, Serializable, Cloneable
 {
     /**
-     * Clones the current MessageContext.
+     * @return Clones the current MessageContext.
      */
     MessageContext clone();
 

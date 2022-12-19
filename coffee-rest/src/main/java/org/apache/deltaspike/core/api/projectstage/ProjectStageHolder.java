@@ -35,35 +35,20 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.core.impl.message;
-
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.enterprise.inject.Alternative;
-import java.io.Serializable;
-import java.util.Locale;
-import java.text.MessageFormat;
-
-import org.apache.deltaspike.core.api.message.MessageInterpolator;
+package org.apache.deltaspike.core.api.projectstage;
 
 /**
- * This is an Alternative implementation of a {@link MessageInterpolator} which
- * uses java.text.MessageFormat for formatting.
+ * A marker interface for custom ProjectStage holders. A ProjectStage holder is a class which contains one or more
+ * {@link ProjectStage}s.
  *
- * Please note that for some EE containers you might need to add this &lt;alternative&gt;>
- * to all JARs and classpath entries beanx.xml files.
- *
- * {@inheritDoc}
+ * Any custom ProjectStageHolder must get registered via the {@link java.util.ServiceLoader} mechanism. Simply create a
+ * file
+ * <pre>
+ *     META-INF/services/org.apache.deltaspike.core.api.projectstage.ProjectStageHolder
+ * </pre> and write the fully qualified class name of your ProjectStageHolder into it.
+ * @deprecated remove it after remove deltaspike data 
  */
-@ApplicationScoped
-@Alternative
-public class MessageFormatMessageInterpolator implements MessageInterpolator, Serializable
+@Deprecated(since = "2.0.0", forRemoval = true)
+public interface ProjectStageHolder
 {
-    private static final long serialVersionUID = -8854087197813424812L;
-
-    @Override
-    public String interpolate(String messageTemplate, Serializable[] arguments, Locale locale)
-    {
-        MessageFormat messageFormat = new MessageFormat(messageTemplate, locale);
-        return messageFormat.format(arguments);
-    }
 }

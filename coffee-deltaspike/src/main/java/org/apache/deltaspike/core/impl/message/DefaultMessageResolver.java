@@ -48,6 +48,9 @@ import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
+/**
+ * Copy from deltaspike project
+ */
 @Dependent
 @SuppressWarnings("UnusedDeclaration")
 public class DefaultMessageResolver implements MessageResolver
@@ -117,6 +120,10 @@ public class DefaultMessageResolver implements MessageResolver
         return messageTemplate;
     }
 
+    /**
+     * @param messageContext message context
+     * @return sources
+     */
     protected List<String> getMessageSources(MessageContext messageContext)
     {
         return messageContext.getMessageSources();

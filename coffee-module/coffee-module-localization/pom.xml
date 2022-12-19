@@ -24,12 +24,8 @@
 		</dependency>
 
 		<dependency>
-			<groupId>org.apache.deltaspike.core</groupId>
-			<artifactId>deltaspike-core-api</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.deltaspike.core</groupId>
-			<artifactId>deltaspike-core-impl</artifactId>
+			<groupId>hu.icellmobilsoft.coffee</groupId>
+			<artifactId>coffee-deltaspike</artifactId>
 		</dependency>
 	</dependencies>
 

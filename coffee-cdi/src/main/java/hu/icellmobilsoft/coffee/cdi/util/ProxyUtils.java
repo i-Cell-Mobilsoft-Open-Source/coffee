@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package hu.icellmobilsoft.coffee.jpa.service;
+package hu.icellmobilsoft.coffee.cdi.util;
 
 import jakarta.enterprise.inject.Typed;
 

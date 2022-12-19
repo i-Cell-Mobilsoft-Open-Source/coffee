@@ -134,7 +134,7 @@ public abstract class ClassUtils
      * <a href="https://docs.jboss.org/cdi/spec/1.2/cdi-spec-with-assertions.html#unproxyable">
      *     CDI spec unproxyable bean types</a>
      *
-     * @param type
+     * @param type type
      * @return {@code true} if all proxy conditions are met, {@code false} otherwise
      */
     public static boolean isProxyableClass(Type type)
@@ -452,8 +452,8 @@ public abstract class ClassUtils
 
     /**
      * Checks if the given class has a method with the same signature, taking in to account generic types
-     * @param targetClass
-     * @param method
+     * @param targetClass class
+     * @param method method
      * @return if it contains a method with the same signature.
      */
     public static boolean containsPossiblyGenericMethod(Class<?> targetClass, Method method)
@@ -515,6 +515,12 @@ public abstract class ClassUtils
         return true;
     }
     
+    /**
+     * returns
+     * @param method method
+     * @param clazz class
+     * @return values
+     */
     public static boolean returns(Method method, Class<?> clazz)
     {
         return method.getReturnType().isAssignableFrom(clazz);

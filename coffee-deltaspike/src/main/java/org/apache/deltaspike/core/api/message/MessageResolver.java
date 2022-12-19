@@ -45,6 +45,9 @@ import java.io.Serializable;
  */
 public interface MessageResolver extends Serializable
 {
+    /**
+     * Default missing resource marker
+     */
     String MISSING_RESOURCE_MARKER = "???";
 
     /**

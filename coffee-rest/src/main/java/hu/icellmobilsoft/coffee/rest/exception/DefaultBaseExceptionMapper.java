@@ -25,8 +25,6 @@ import jakarta.inject.Inject;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.ext.ExceptionMapper;
 
-import org.apache.deltaspike.core.util.CollectionUtils;
-
 import hu.icellmobilsoft.coffee.cdi.logger.AppLogger;
 import hu.icellmobilsoft.coffee.cdi.logger.ThisLogger;
 import hu.icellmobilsoft.coffee.dto.common.commonservice.BONotFound;
@@ -142,7 +140,7 @@ public class DefaultBaseExceptionMapper implements ExceptionMapper<BaseException
     }
 
     private void addValidationErrors(InvalidRequestFault dto, Collection<XMLValidationError> errors) {
-        if (CollectionUtils.isEmpty(errors)) {
+        if (errors == null || errors.isEmpty()) {
             return;
         }
         for (XMLValidationError error : errors) {
