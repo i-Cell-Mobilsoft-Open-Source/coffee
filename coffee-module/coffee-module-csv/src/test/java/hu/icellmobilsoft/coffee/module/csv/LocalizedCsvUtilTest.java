@@ -57,8 +57,10 @@ class LocalizedCsvUtilTest {
     private static String TEST_CSV;
 
     @WeldSetup
-    public WeldInitiator weld = WeldInitiator.from(WeldInitiator.createWeld().addBeanClass(LocalizedHeaderColumnNameWithPositionMappingStrategy.class)
-            .scanClasspathEntries().enableDiscovery()).activate(RequestScoped.class).build();
+// EE10: WELD-001335: Ambiguous dependencies for type LocalizedHeaderColumnNameWithPositionMappingStrategy with qualifiers
+//    public WeldInitiator weld = WeldInitiator.from(WeldInitiator.createWeld().addBeanClass(LocalizedHeaderColumnNameWithPositionMappingStrategy.class)
+//            .scanClasspathEntries().enableDiscovery()).activate(RequestScoped.class).build();
+    public WeldInitiator weld = WeldInitiator.from(WeldInitiator.createWeld().enableDiscovery()).activate(RequestScoped.class).build();
 
     @BeforeAll
     static void beforeAll() throws IOException {
@@ -73,7 +75,6 @@ class LocalizedCsvUtilTest {
     void setUp() {
     }
 
-    @Disabled("Jelenleg nincs lokalazacio a deltaspike core jakarta annotaciokkal")
     @Test
     void shouldConvertToCsv() throws BaseException {
         // GIVEN

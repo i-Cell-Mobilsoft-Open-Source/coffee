@@ -56,6 +56,18 @@ fájlban a fejléc módosítását követeli:
 Egyenlőre nincs jaxb4 támogatás a XSD -> DTO generálásnál, csak jaxb3 van pár forkolt repository.
 A `coffee-dto-gen` projekt is jaxb3-ra generál egyenlőre.
 
+=== coffee-deltaspike
+Létrejött a coffee-deltaspike alprojekt, ami azt a célt szolgálja,
+hogy pótolja azokat a funkcionalitásokat melyeket a deltaspike dependency kidobása
+után nincs mivel pótolni.
+Ez lehet akár végleges megoldás is, idővel meglátjuk.
+
+Tartalmazza a nyelvesítésért felelő osztályokat,
+1:1 megfelel az eddig használt megoldáshoz - class név szinten.
+A nyelvesítés egy "lite" másolata az eredetinek,
+@MessageBundle és @MessageTemplate nélkül.
+A MessageContext és a Locale resolver teljesen a régi szerint működik.
+
 .Átállás
 Az implementáló projekteken is hasonló változásra lessz szükség.
 
@@ -108,11 +120,8 @@ coffee-module-mp-opentracing modul egyenlőre nem regisztrálja be a `@Traceable
 annotációval ellátott osztályokat/metódusokat a tracing tételek közé.
 
 == TODO
-.Nyelvesítés
-A deltaspike nyelvesites kezelése helyett fel lehetne használni a 
-https://jakarta.ee/specifications/mvc/
-amit úgy is fel kellene karolni.
-Addig is a deltaspike kódjat át kellene hozni és jakarta csomagolással ellátni.
-Ez miatt jelenleg a `LocalizedCsvUtilTest` ideiglenesen deaktiválva lett.
+.Project stage kezelés
+A kompilálás sikerességére kellő fájlok 1:1 bemásolva vannak a coffee-rest alprojektben.
 
-
+.coffee-model-base
+Utolsó deltaspike dependency függőségeket tartalmaz.
