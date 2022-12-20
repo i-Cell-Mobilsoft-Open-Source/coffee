@@ -19,13 +19,12 @@
  */
 package hu.icellmobilsoft.coffee.rest.rest;
 
-import javax.inject.Inject;
-import javax.ws.rs.PathParam;
-
-import org.apache.deltaspike.core.util.ProxyUtils;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.PathParam;
 
 import hu.icellmobilsoft.coffee.cdi.logger.AppLogger;
 import hu.icellmobilsoft.coffee.cdi.logger.ThisLogger;
+import hu.icellmobilsoft.coffee.cdi.util.ProxyUtils;
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;

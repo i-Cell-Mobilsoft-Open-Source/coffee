@@ -24,7 +24,7 @@ import java.util.Date;
 import java.util.Random;
 import java.util.UUID;
 
-import javax.enterprise.inject.Vetoed;
+import jakarta.enterprise.inject.Vetoed;
 
 import org.apache.commons.lang3.StringUtils;
 

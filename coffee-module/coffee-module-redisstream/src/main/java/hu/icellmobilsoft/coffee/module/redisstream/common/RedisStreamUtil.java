@@ -19,7 +19,7 @@
  */
 package hu.icellmobilsoft.coffee.module.redisstream.common;
 
-import javax.enterprise.inject.Vetoed;
+import jakarta.enterprise.inject.Vetoed;
 
 /**
  * Util class for the common redis stream functions

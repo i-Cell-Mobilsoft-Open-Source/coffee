@@ -21,7 +21,8 @@ package hu.icellmobilsoft.coffee.dto.adapter;
 
 import java.time.OffsetTime;
 import java.time.ZoneOffset;
-import javax.xml.bind.annotation.adapters.XmlAdapter;
+
+import jakarta.xml.bind.annotation.adapters.XmlAdapter;
 
 /**
  * {@code XmlAdapter} mapping JSR-310 {@code OffsetTime} to UTC string

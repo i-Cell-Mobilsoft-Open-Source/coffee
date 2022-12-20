@@ -21,7 +21,7 @@ package hu.icellmobilsoft.coffee.tool.utils.string;
 
 import java.util.Optional;
 
-import javax.enterprise.context.Dependent;
+import jakarta.enterprise.context.Dependent;
 
 import org.eclipse.microprofile.config.Config;
 import org.eclipse.microprofile.config.spi.ConfigProviderResolver;

@@ -19,7 +19,7 @@
  */
 package hu.icellmobilsoft.coffee.module.mp.restclient;
 
-import javax.ws.rs.Priorities;
+import jakarta.ws.rs.Priorities;
 
 /**
  * HTTP Rest Clienseken hasznalt fiterek priority gyujtoje

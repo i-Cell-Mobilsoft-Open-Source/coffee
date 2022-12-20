@@ -22,8 +22,9 @@ package hu.icellmobilsoft.coffee.tool.utils.bigdecimal;
 import java.math.BigDecimal;
 import java.util.Collection;
 
-import javax.enterprise.inject.Vetoed;
 import javax.xml.datatype.DatatypeConstants;
+
+import jakarta.enterprise.inject.Vetoed;
 
 /**
  * Helper class to handle BigDecimal retain precision of it's double value

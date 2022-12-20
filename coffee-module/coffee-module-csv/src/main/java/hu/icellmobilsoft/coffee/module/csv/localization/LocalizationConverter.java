@@ -21,7 +21,7 @@ package hu.icellmobilsoft.coffee.module.csv.localization;
 
 import java.text.MessageFormat;
 
-import javax.enterprise.inject.Vetoed;
+import jakarta.enterprise.inject.Vetoed;
 
 import com.opencsv.bean.AbstractBeanField;
 import com.opencsv.exceptions.CsvConstraintViolationException;

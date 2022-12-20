@@ -21,8 +21,8 @@ package hu.icellmobilsoft.coffee.module.mp.restclient.provider;
 
 import java.text.MessageFormat;
 
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.microprofile.rest.client.ext.ResponseExceptionMapper;

@@ -19,7 +19,7 @@
  */
 package hu.icellmobilsoft.coffee.tool.utils.string;
 
-import javax.enterprise.inject.Vetoed;
+import jakarta.enterprise.inject.Vetoed;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.CharUtils;

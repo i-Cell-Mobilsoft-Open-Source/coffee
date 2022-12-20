@@ -27,9 +27,10 @@ import java.time.OffsetTime;
 import java.time.YearMonth;
 import java.util.Date;
 
-import javax.enterprise.inject.Vetoed;
 import javax.xml.datatype.Duration;
 import javax.xml.datatype.XMLGregorianCalendar;
+
+import jakarta.enterprise.inject.Vetoed;
 
 import org.apache.commons.lang3.StringUtils;
 

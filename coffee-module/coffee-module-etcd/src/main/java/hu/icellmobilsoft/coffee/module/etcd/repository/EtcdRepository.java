@@ -21,7 +21,7 @@ package hu.icellmobilsoft.coffee.module.etcd.repository;
 
 import java.util.concurrent.CompletableFuture;
 
-import javax.enterprise.inject.Vetoed;
+import jakarta.enterprise.inject.Vetoed;
 
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;

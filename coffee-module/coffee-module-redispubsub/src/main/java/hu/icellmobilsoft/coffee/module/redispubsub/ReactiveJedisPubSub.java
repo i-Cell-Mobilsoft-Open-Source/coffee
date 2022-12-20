@@ -21,7 +21,7 @@ package hu.icellmobilsoft.coffee.module.redispubsub;
 
 import java.util.Map;
 
-import javax.enterprise.inject.Vetoed;
+import jakarta.enterprise.inject.Vetoed;
 
 import org.eclipse.microprofile.reactive.messaging.Message;
 import org.reactivestreams.Subscriber;

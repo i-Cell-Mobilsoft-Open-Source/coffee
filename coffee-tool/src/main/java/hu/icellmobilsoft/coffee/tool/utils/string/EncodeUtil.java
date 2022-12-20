@@ -26,7 +26,7 @@ import java.text.MessageFormat;
 import java.util.Formatter;
 import java.util.Objects;
 
-import javax.enterprise.inject.Vetoed;
+import jakarta.enterprise.inject.Vetoed;
 
 import org.apache.commons.lang3.StringUtils;
 

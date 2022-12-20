@@ -19,8 +19,8 @@
  */
 package hu.icellmobilsoft.coffee.rest.exception;
 
-import javax.inject.Inject;
-import javax.xml.bind.JAXBException;
+import jakarta.inject.Inject;
+import jakarta.xml.bind.JAXBException;
 
 import org.apache.deltaspike.core.api.projectstage.ProjectStage;
 

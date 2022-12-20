@@ -23,7 +23,8 @@ import java.time.OffsetDateTime;
 import java.time.OffsetTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
-import javax.xml.bind.annotation.adapters.XmlAdapter;
+
+import jakarta.xml.bind.annotation.adapters.XmlAdapter;
 
 /**
  * {@code XmlAdapter} mapping JSR-310 {@code OffsetDateTime} to UTC string

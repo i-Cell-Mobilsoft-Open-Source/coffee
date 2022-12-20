@@ -22,10 +22,10 @@ package hu.icellmobilsoft.coffee.module.document.action;
 import java.io.IOException;
 import java.io.InputStream;
 
-import javax.enterprise.inject.Model;
-import javax.inject.Inject;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+import jakarta.enterprise.inject.Model;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;

@@ -77,7 +77,7 @@
 				<plugin>
 					<groupId>org.jacoco</groupId>
 					<artifactId>jacoco-maven-plugin</artifactId>
-					<version>0.8.7</version>
+					<version>0.8.8</version>
 					<executions>
 						<execution>
 							<id>pre-unit-test</id>
@@ -127,7 +127,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-surefire-plugin</artifactId>
-					<version>3.0.0-M5</version>
+					<version>3.0.0-M7</version>
 					<configuration>
 						<reportsDirectory>${surefire.reportsDir}</reportsDirectory>
 						<excludedGroups>weld,it,integration</excludedGroups>
@@ -137,7 +137,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-failsafe-plugin</artifactId>
-					<version>3.0.0-M5</version>
+					<version>3.0.0-M7</version>
 					<executions>
 						<execution>
 							<phase>integration-test</phase>
@@ -162,12 +162,12 @@
 				<plugin>
 					<groupId>org.asciidoctor</groupId>
 					<artifactId>asciidoctor-maven-plugin</artifactId>
-					<version>2.2.1</version>
+					<version>3.8.6</version>
 					<dependencies>
 						<dependency>
 							<groupId>org.asciidoctor</groupId>
 							<artifactId>asciidoctorj-diagram</artifactId>
-							<version>2.2.1</version>
+							<version>2.2.3</version>
 						</dependency>
 					</dependencies>
 				</plugin>
@@ -207,16 +207,17 @@
 
 	<modules>
 		<module>coffee-bom</module>
+		<module>coffee-se</module>
 		<module>coffee-cdi</module>
-		<module>coffee-configuration</module>
+		<module>coffee-module</module>
 		<module>coffee-dto</module>
 		<module>coffee-tool</module>
+		<module>coffee-configuration</module>
+		<module>coffee-rest</module>
 		<module>coffee-model</module>
 		<module>coffee-jpa</module>
-		<module>coffee-rest</module>
 		<module>coffee-system</module>
-		<module>coffee-module</module>
-		<module>coffee-se</module>
+		<module>coffee-deltaspike</module>
 	</modules>
 
 	<distributionManagement>

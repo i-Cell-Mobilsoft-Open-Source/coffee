@@ -19,7 +19,7 @@
  */
 package hu.icellmobilsoft.coffee.tool.utils.clazz;
 
-import javax.enterprise.inject.Vetoed;
+import jakarta.enterprise.inject.Vetoed;
 
 /**
  * Resource utils

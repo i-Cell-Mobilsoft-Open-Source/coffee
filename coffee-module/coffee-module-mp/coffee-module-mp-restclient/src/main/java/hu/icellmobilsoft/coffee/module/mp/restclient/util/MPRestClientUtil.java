@@ -19,9 +19,9 @@
  */
 package hu.icellmobilsoft.coffee.module.mp.restclient.util;
 
-import javax.enterprise.inject.Vetoed;
-import javax.ws.rs.ProcessingException;
-import javax.ws.rs.WebApplicationException;
+import jakarta.enterprise.inject.Vetoed;
+import jakarta.ws.rs.ProcessingException;
+import jakarta.ws.rs.WebApplicationException;
 
 import org.eclipse.microprofile.rest.client.RestClientBuilder;
 import org.eclipse.microprofile.rest.client.ext.ResponseExceptionMapper;

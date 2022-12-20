@@ -19,9 +19,10 @@
  */
 package hu.icellmobilsoft.coffee.rest.validation.xml.utils;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
 import javax.xml.validation.Schema;
+
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.JAXBException;
 
 import org.w3c.dom.ls.LSResourceResolver;
 import org.xml.sax.SAXException;

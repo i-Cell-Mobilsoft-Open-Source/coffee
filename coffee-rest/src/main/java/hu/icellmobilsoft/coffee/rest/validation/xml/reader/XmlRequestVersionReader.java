@@ -22,12 +22,13 @@ package hu.icellmobilsoft.coffee.rest.validation.xml.reader;
 import java.io.InputStream;
 import java.text.MessageFormat;
 
-import javax.enterprise.context.Dependent;
-import javax.enterprise.inject.Alternative;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
+
+import jakarta.enterprise.context.Dependent;
+import jakarta.enterprise.inject.Alternative;
 
 import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;

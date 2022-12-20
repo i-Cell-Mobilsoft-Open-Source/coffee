@@ -22,7 +22,7 @@ package hu.icellmobilsoft.coffee.module.etcd.util;
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 
-import javax.enterprise.inject.Vetoed;
+import jakarta.enterprise.inject.Vetoed;
 
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.se.logging.Logger;

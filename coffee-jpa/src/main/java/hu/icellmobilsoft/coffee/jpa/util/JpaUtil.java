@@ -21,12 +21,12 @@ package hu.icellmobilsoft.coffee.jpa.util;
 
 import java.lang.reflect.Method;
 
-import javax.enterprise.inject.Vetoed;
-import javax.persistence.EntityManager;
-import javax.persistence.Query;
+import jakarta.enterprise.inject.Vetoed;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.Query;
 
 import org.apache.commons.lang3.StringUtils;
-import org.hibernate.query.internal.QueryImpl;
+import org.hibernate.query.spi.QueryImplementor;
 
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
@@ -89,7 +89,7 @@ public class JpaUtil {
             return null;
         }
         try {
-            QueryImpl queryObj = query.unwrap(QueryImpl.class);
+            QueryImplementor queryObj = query.unwrap(QueryImplementor.class);
             return queryObj.getQueryString();
         } catch (Exception e) {
             throw new TechnicalException(CoffeeFaultType.OPERATION_FAILED, "Failed to unwrap QueryImpl from Query", e);

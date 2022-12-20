@@ -27,8 +27,9 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-import javax.enterprise.inject.Vetoed;
 import javax.xml.datatype.XMLGregorianCalendar;
+
+import jakarta.enterprise.inject.Vetoed;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;

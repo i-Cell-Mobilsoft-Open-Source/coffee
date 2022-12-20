@@ -21,12 +21,12 @@ package hu.icellmobilsoft.coffee.model.base;
 
 import java.util.Date;
 
-import javax.enterprise.inject.Vetoed;
-import javax.persistence.Column;
-import javax.persistence.MappedSuperclass;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.validation.constraints.NotNull;
+import jakarta.enterprise.inject.Vetoed;
+import jakarta.persistence.Column;
+import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
+import jakarta.validation.constraints.NotNull;
 
 import org.apache.deltaspike.data.api.audit.CreatedOn;
 import org.apache.deltaspike.data.api.audit.ModifiedOn;

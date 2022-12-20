@@ -1,0 +1,127 @@
+= v2.0.0
+
+coff:ee v1.x.x -> v2.0.0 migrációs leírás, újdonságok, változások leírása
+
+== Változások
+
+=== Általános
+A verzió célja a Jakarta EE 10 implemetálása,
+ami az egész projekten java import javax.* -> jakarta.* változást követi le.
+
+Mivel szinte minden dependency frissült,
+így egyenként felsorolni őket felesleges.
+Legtöbbször kozmetikai verzióváltások, vagy a EE10 implementációk.
+
+A beans.xml fájloknak frissültek a tartalmai:
+
+.beans.xml
+[source,xml]
+----
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="https://jakarta.ee/xml/ns/jakartaee"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="
+      https://jakarta.ee/xml/ns/jakartaee 
+      https://jakarta.ee/xml/ns/jakartaee/beans_4_0.xsd">
+</beans>
+----
+
+==== BOM verzió emelések:
+Fontosabb változás volt: 
+
+* org.jboss.resteasy.resteasy-jaxrs 3.6.2.Final -> org.jboss.resteasy.resteasy-core 6.2.1.Final - a resteasy dependency bontáson esett végig,
+ezt figyelmbe kell venni a projekteken
+* org.hibernate.hibernate-core 5.4.24.Final -> 6.1.5.Final
+* org.apache.activemq.activemq-client 5.15.13 -> org.apache.activemq.artemis-jakarta-client 2.27.0 - ez nagy ugrás driverben,
+sok változást végeztek el benne.
+A projekteken nagy figyelemmel kell átvezetni a változásokat.
+
+
+=== coffee-dto
+* A jakarta átálás a `/coffee-dto-gen/src/main/resources/xsd/hu/icellmobilsoft/coffee/dto/bindings.xjb`
+fájlban a fejléc módosítását követeli:
+
+[source,xml]
+----
+<jaxb:bindings version="3.0"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:jaxb="https://jakarta.ee/xml/ns/jaxb"
+    xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc"
+    xmlns:annox="http://annox.dev.java.net"
+    jaxb:extensionBindingPrefixes="xjc annox">
+...
+</jaxb:bindings>
+----
+
+Egyenlőre nincs jaxb4 támogatás a XSD -> DTO generálásnál, csak jaxb3 van pár forkolt repository.
+A `coffee-dto-gen` projekt is jaxb3-ra generál egyenlőre.
+
+=== coffee-deltaspike
+Létrejött a coffee-deltaspike alprojekt, ami azt a célt szolgálja,
+hogy pótolja azokat a funkcionalitásokat melyeket a deltaspike dependency kidobása
+után nincs mivel pótolni.
+Ez lehet akár végleges megoldás is, idővel meglátjuk.
+
+Tartalmazza a nyelvesítésért felelő osztályokat,
+1:1 megfelel az eddig használt megoldáshoz - class név szinten.
+A nyelvesítés egy "lite" másolata az eredetinek,
+@MessageBundle és @MessageTemplate nélkül.
+A MessageContext és a Locale resolver teljesen a régi szerint működik.
+
+.Átállás
+Az implementáló projekteken is hasonló változásra lessz szükség.
+
+=== coffee-rest
+
+Kidobásra került a `deltaspike-jpa-module`,
+alternatíva nincs helyette.
+Ez befolyásolja a `@Transactional` használatát, rollback mechanizmus így megváltozott.
+
+.Átállás
+Sajnos a Hibernate 6 upgrade ráhatott a BatchService-re,
+ezt jelenleg nem fogja a coffee támogatni.
+
+=== coffee-module-artemis
+A driver _jakarta EE 10_ és abban történt _Jakarta Messaging 3.1_ változások miatt nagyon megváltozott:
+https://blogs.apache.org/activemq/entry/activemq-artemis-embraces-jakarta-ee[ActiveMQ Artemis embraces Jakarta EE].
+
+.Átállás
+Kiemeleten tesztelni kell a *JmsHandler.createTextMessage*
+és *JmsUtil.newJmsException* funkciókat,
+ott kifejezetten érintett volt a változás,
+megváltozott az eredeti koncepció a delay üzenetekkel. 
+
+=== coffee-module-document
+Deltaspike data kidobása miatt a `TemplateDataRepository` és `TemplateParameterRepository` interfész
+nem tudja az előző alapértelmezett SQL selecteket szolgáltatni.
+
+.Átállás
+`TemplateDataRepository` és `TemplateParameterRepository` interfészek implementálasa szükséges a projekteken.
+
+=== coffee-module-notification
+Sajnos az Apache commons-email függőségből még nem készült jakarta kompatibilis release,
+így a `coffee-module-notification` modul kikerül a coffee modulok kozül.
+Következő issue kezeli: https://issues.apache.org/jira/browse/EMAIL-203[EMAIL-203] vagy
+https://github.com/apache/commons-email/pull/37[commons-email Gihub PR] pull request.
+Esetleg meglehet szabadulni a függőségtől is...
+
+.Átállás
+coffee-module-notification modul megszünt.
+
+=== coffee-module-mp-opentracing
+A `OpenTraceExtension` osztályban volt Deltaspike kódrészlet,
+amíg ez nincs atírva natív CDI-re a modul ki nem tudja kezelni a `@Traceable` annotációt.
+A `@Traceable` annotáció és az azt kezelő CDI extension megszűnik, helyette haszálható a `@hu.icellmobilsoft.coffee.cdi.trace.annotation.Traced` annotáció,
+amivel továbbra is trace flow-ba helyezhetőek a coffee egyes moduljai.
+Egyelőre a `ConfigEtcdHandler` nem vesz részt a trace flow-ban.
+
+.Átállás
+coffee-module-mp-opentracing modul egyenlőre nem regisztrálja be a `@Traceable`
+annotációval ellátott osztályokat/metódusokat a tracing tételek közé.
+
+== TODO
+.Project stage kezelés
+A kompilálás sikerességére kellő fájlok 1:1 bemásolva vannak a coffee-rest alprojektben.
+
+.coffee-model-base
+Utolsó deltaspike dependency függőségeket tartalmaz.

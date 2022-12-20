@@ -22,8 +22,8 @@ package hu.icellmobilsoft.coffee.rest.utils;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 
-import javax.ws.rs.client.ClientRequestContext;
-import javax.ws.rs.container.ContainerRequestContext;
+import jakarta.ws.rs.client.ClientRequestContext;
+import jakarta.ws.rs.container.ContainerRequestContext;
 
 import org.jboss.resteasy.core.ResourceMethodInvoker;
 

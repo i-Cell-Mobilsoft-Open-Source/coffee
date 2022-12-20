@@ -19,7 +19,7 @@
  */
 package hu.icellmobilsoft.coffee.cdi.logger;
 
-import javax.enterprise.util.AnnotationLiteral;
+import jakarta.enterprise.util.AnnotationLiteral;
 
 /**
  * Ez csak azert kell, hogy lehessen rahivatkozni a qualifier annotaciora

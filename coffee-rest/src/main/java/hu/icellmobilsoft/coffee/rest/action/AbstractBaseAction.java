@@ -19,7 +19,7 @@
  */
 package hu.icellmobilsoft.coffee.rest.action;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import hu.icellmobilsoft.coffee.cdi.logger.AppLogger;
 import hu.icellmobilsoft.coffee.cdi.logger.ThisLogger;

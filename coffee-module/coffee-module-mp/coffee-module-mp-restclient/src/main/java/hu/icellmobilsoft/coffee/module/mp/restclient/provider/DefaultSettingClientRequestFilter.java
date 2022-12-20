@@ -21,10 +21,10 @@ package hu.icellmobilsoft.coffee.module.mp.restclient.provider;
 
 import java.io.IOException;
 
-import javax.annotation.Priority;
-import javax.enterprise.context.Dependent;
-import javax.ws.rs.client.ClientRequestContext;
-import javax.ws.rs.client.ClientRequestFilter;
+import jakarta.annotation.Priority;
+import jakarta.enterprise.context.Dependent;
+import jakarta.ws.rs.client.ClientRequestContext;
+import jakarta.ws.rs.client.ClientRequestFilter;
 
 import hu.icellmobilsoft.coffee.dto.common.LogConstants;
 import hu.icellmobilsoft.coffee.module.mp.restclient.RestClientPriority;

@@ -21,13 +21,7 @@
 		<dependency>
 			<groupId>org.jboss.weld</groupId>
 			<artifactId>weld-api</artifactId>
-			<version>3.0.Final</version>
-			<exclusions>
-				<exclusion>
-					<groupId>javax.enterprise</groupId>
-					<artifactId>cdi-api</artifactId>
-				</exclusion>
-			</exclusions>
+			<version>5.0.Final</version>
     </dependency>
 
 		<!--Test dependecies -->

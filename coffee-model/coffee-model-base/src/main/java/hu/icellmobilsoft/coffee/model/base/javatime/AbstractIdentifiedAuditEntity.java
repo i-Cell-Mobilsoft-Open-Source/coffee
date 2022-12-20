@@ -19,12 +19,12 @@
  */
 package hu.icellmobilsoft.coffee.model.base.javatime;
 
-import javax.enterprise.inject.Vetoed;
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.MappedSuperclass;
+import jakarta.enterprise.inject.Vetoed;
+import jakarta.persistence.Column;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.MappedSuperclass;
 
 import org.hibernate.annotations.GenericGenerator;
 

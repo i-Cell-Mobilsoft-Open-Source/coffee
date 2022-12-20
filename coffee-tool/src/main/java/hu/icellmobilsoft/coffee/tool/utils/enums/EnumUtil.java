@@ -19,7 +19,7 @@
  */
 package hu.icellmobilsoft.coffee.tool.utils.enums;
 
-import javax.enterprise.inject.Vetoed;
+import jakarta.enterprise.inject.Vetoed;
 
 import org.apache.commons.lang3.EnumUtils;
 import org.apache.commons.lang3.StringUtils;

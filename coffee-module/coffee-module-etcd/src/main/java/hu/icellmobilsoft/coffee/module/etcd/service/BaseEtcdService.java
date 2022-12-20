@@ -24,8 +24,8 @@ import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.enterprise.context.Dependent;
-import javax.inject.Inject;
+import jakarta.enterprise.context.Dependent;
+import jakarta.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -38,7 +38,6 @@ import hu.icellmobilsoft.coffee.module.etcd.repository.EtcdRepository;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
 import hu.icellmobilsoft.coffee.tool.utils.string.StringHelper;
 import hu.icellmobilsoft.coffee.tool.utils.string.StringUtil;
-
 import io.etcd.jetcd.ByteSequence;
 import io.etcd.jetcd.Response;
 import io.etcd.jetcd.kv.DeleteResponse;

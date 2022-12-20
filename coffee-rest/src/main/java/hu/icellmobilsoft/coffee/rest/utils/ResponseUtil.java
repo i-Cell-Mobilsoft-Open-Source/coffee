@@ -19,14 +19,15 @@
  */
 package hu.icellmobilsoft.coffee.rest.utils;
 
-import javax.enterprise.inject.Vetoed;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.ResponseBuilder;
-import javax.ws.rs.core.Response.Status;
+import jakarta.enterprise.inject.Vetoed;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.ResponseBuilder;
+import jakarta.ws.rs.core.Response.Status;
+
+import org.jboss.resteasy.spi.CorsHeaders;
 
 import com.google.common.net.HttpHeaders;
-import org.jboss.resteasy.spi.CorsHeaders;
 
 /**
  * REST Response utils

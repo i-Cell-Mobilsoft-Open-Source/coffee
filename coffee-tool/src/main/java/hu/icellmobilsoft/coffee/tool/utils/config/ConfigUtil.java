@@ -19,7 +19,7 @@
  */
 package hu.icellmobilsoft.coffee.tool.utils.config;
 
-import javax.enterprise.inject.Vetoed;
+import jakarta.enterprise.inject.Vetoed;
 
 import org.eclipse.microprofile.config.Config;
 import org.eclipse.microprofile.config.spi.ConfigProviderResolver;

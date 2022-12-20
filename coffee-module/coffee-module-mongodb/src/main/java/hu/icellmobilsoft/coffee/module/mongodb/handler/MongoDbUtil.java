@@ -19,7 +19,7 @@
  */
 package hu.icellmobilsoft.coffee.module.mongodb.handler;
 
-import javax.enterprise.inject.Vetoed;
+import jakarta.enterprise.inject.Vetoed;
 
 import org.apache.commons.lang3.StringUtils;
 import org.bson.codecs.configuration.CodecRegistries;

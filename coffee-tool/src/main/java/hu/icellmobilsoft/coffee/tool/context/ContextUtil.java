@@ -19,9 +19,10 @@
  */
 package hu.icellmobilsoft.coffee.tool.context;
 
-import javax.enterprise.inject.Vetoed;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
+
+import jakarta.enterprise.inject.Vetoed;
 
 import org.apache.commons.lang3.StringUtils;
 

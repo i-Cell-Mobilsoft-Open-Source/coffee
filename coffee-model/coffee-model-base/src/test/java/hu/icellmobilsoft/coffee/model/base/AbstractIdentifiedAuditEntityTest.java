@@ -22,21 +22,15 @@ package hu.icellmobilsoft.coffee.model.base;
 import java.util.Date;
 import java.util.Set;
 
-import javax.validation.ConstraintViolation;
-import javax.validation.Validation;
-import javax.validation.Validator;
-import javax.validation.ValidatorFactory;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
+import jakarta.validation.ValidatorFactory;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
-import hu.icellmobilsoft.coffee.model.base.AbstractEntity;
-import hu.icellmobilsoft.coffee.model.base.AbstractIdentifiedAuditEntity;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Testing AbstractIdentifiedAuditEntity class
@@ -63,7 +57,7 @@ public class AbstractIdentifiedAuditEntityTest {
         // when
 
         // then
-        assertEquals(0, entity.getVersion());
+        Assertions.assertEquals(0, entity.getVersion());
     }
 
     @Test
@@ -77,7 +71,7 @@ public class AbstractIdentifiedAuditEntityTest {
         entity.setVersion(2L);
 
         // then
-        assertEquals(2, entity.getVersion());
+        Assertions.assertEquals(2, entity.getVersion());
     }
 
     @Test
@@ -91,7 +85,7 @@ public class AbstractIdentifiedAuditEntityTest {
         entity.setVersion(1L);
 
         // then
-        assertEquals(1, entity.getVersion());
+        Assertions.assertEquals(1, entity.getVersion());
     }
 
     @Test
@@ -106,7 +100,7 @@ public class AbstractIdentifiedAuditEntityTest {
         entity.rollbackVersion();
 
         // then
-        assertEquals(0, entity.getVersion());
+        Assertions.assertEquals(0, entity.getVersion());
     }
 
     @Test
@@ -119,7 +113,7 @@ public class AbstractIdentifiedAuditEntityTest {
         entity.setVersion(Long.MAX_VALUE);
 
         // then
-        assertEquals(Long.MAX_VALUE, entity.getVersion());
+        Assertions.assertEquals(Long.MAX_VALUE, entity.getVersion());
     }
 
     @Test
@@ -135,7 +129,7 @@ public class AbstractIdentifiedAuditEntityTest {
         Set<ConstraintViolation<AbstractEntity>> violations = validator.validate(entity);
 
         // then
-        assertTrue(violations.isEmpty());
+        Assertions.assertTrue(violations.isEmpty());
     }
 
     @Test
@@ -149,7 +143,7 @@ public class AbstractIdentifiedAuditEntityTest {
         entity.setId(id);
 
         // then
-        assertEquals(id, entity.getId());
+        Assertions.assertEquals(id, entity.getId());
     }
 
     @Test
@@ -164,7 +158,7 @@ public class AbstractIdentifiedAuditEntityTest {
         entity.setCreatorUser("0");
 
         // then
-        assertEquals(creationDate.getTime(), entity.getCreationDate().getTime());
+        Assertions.assertEquals(creationDate.getTime(), entity.getCreationDate().getTime());
     }
 
     @Test
@@ -179,7 +173,7 @@ public class AbstractIdentifiedAuditEntityTest {
         Set<ConstraintViolation<AbstractIdentifiedAuditEntity>> violations = validator.validate(entity);
 
         // then
-        assertEquals(1, violations.size());
+        Assertions.assertEquals(1, violations.size());
     }
 
     @Test
@@ -195,7 +189,7 @@ public class AbstractIdentifiedAuditEntityTest {
         entity.setModificationDate(modificationDate);
 
         // then
-        assertEquals(modificationDate.getTime(), entity.getModificationDate().getTime());
+        Assertions.assertEquals(modificationDate.getTime(), entity.getModificationDate().getTime());
     }
 
     @Test
@@ -211,8 +205,8 @@ public class AbstractIdentifiedAuditEntityTest {
         Set<ConstraintViolation<AbstractIdentifiedAuditEntity>> violations = validator.validate(entity);
 
         // then
-        assertTrue(violations.isEmpty());
-        assertNull(entity.getModificationDate());
+        Assertions.assertTrue(violations.isEmpty());
+        Assertions.assertNull(entity.getModificationDate());
     }
 
     @Test
@@ -227,7 +221,7 @@ public class AbstractIdentifiedAuditEntityTest {
         entity.setCreatorUser(creatorUser);
 
         // then
-        assertEquals(creatorUser, entity.getCreatorUser());
+        Assertions.assertEquals(creatorUser, entity.getCreatorUser());
     }
 
     @Test
@@ -242,7 +236,7 @@ public class AbstractIdentifiedAuditEntityTest {
         Set<ConstraintViolation<AbstractIdentifiedAuditEntity>> violations = validator.validate(entity);
 
         // then
-        assertEquals(1, violations.size());
+        Assertions.assertEquals(1, violations.size());
     }
 
     @Test
@@ -258,7 +252,7 @@ public class AbstractIdentifiedAuditEntityTest {
         entity.setModifierUser(modifierUser);
 
         // then
-        assertEquals(modifierUser, entity.getModifierUser());
+        Assertions.assertEquals(modifierUser, entity.getModifierUser());
     }
 
     @Test
@@ -274,8 +268,8 @@ public class AbstractIdentifiedAuditEntityTest {
         Set<ConstraintViolation<AbstractIdentifiedAuditEntity>> violations = validator.validate(entity);
 
         // then
-        assertTrue(violations.isEmpty());
-        assertNull(entity.getModifierUser());
+        Assertions.assertTrue(violations.isEmpty());
+        Assertions.assertNull(entity.getModifierUser());
     }
 
 }

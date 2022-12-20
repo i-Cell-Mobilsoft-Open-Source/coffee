@@ -21,10 +21,8 @@ package hu.icellmobilsoft.coffee.tool.utils.string;
 
 import java.util.stream.Stream;
 
-import javax.enterprise.context.RequestScoped;
-import javax.inject.Inject;
-
 import org.jboss.weld.junit5.EnableWeld;
+import org.jboss.weld.junit5.ExplicitParamInjection;
 import org.jboss.weld.junit5.WeldInitiator;
 import org.jboss.weld.junit5.WeldJunit5Extension;
 import org.jboss.weld.junit5.WeldSetup;
@@ -38,8 +36,8 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import hu.icellmobilsoft.coffee.cdi.config.IConfigKey;
-import hu.icellmobilsoft.coffee.tool.utils.string.StringHelper;
 import io.smallrye.config.inject.ConfigExtension;
+import jakarta.enterprise.context.RequestScoped;
 
 /**
  * @author mark.petrenyi
@@ -48,6 +46,7 @@ import io.smallrye.config.inject.ConfigExtension;
 @Tag("weld")
 @ExtendWith(WeldJunit5Extension.class)
 @DisplayName("Testing StringHelper")
+@ExplicitParamInjection
 class StringHelperTest {
 
     @SuppressWarnings("unchecked")

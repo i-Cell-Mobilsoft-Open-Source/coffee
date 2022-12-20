@@ -19,13 +19,13 @@
  */
 package hu.icellmobilsoft.coffee.model.base.javatime.history;
 
-import javax.enterprise.inject.Vetoed;
-import javax.persistence.Column;
-import javax.persistence.Embedded;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.Id;
-import javax.persistence.MappedSuperclass;
+import jakarta.enterprise.inject.Vetoed;
+import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.Id;
+import jakarta.persistence.MappedSuperclass;
 
 import hu.icellmobilsoft.coffee.model.base.history.HistoryPk;
 import hu.icellmobilsoft.coffee.model.base.history.enums.State;

@@ -21,7 +21,7 @@ package hu.icellmobilsoft.coffee.rest.validation.xml.error;
 
 import java.util.List;
 
-import javax.xml.bind.ValidationEventHandler;
+import jakarta.xml.bind.ValidationEventHandler;
 
 import hu.icellmobilsoft.coffee.dto.exception.XMLValidationError;
 

@@ -21,11 +21,10 @@ package hu.icellmobilsoft.coffee.tool.utils.annotation.bean;
 
 import java.util.Optional;
 
-import javax.enterprise.context.Dependent;
-import javax.enterprise.inject.Produces;
-import javax.enterprise.inject.spi.InjectionPoint;
-
 import hu.icellmobilsoft.coffee.tool.utils.annotation.AnnotationUtil;
+import jakarta.enterprise.context.Dependent;
+import jakarta.enterprise.inject.Produces;
+import jakarta.enterprise.inject.spi.InjectionPoint;
 
 /**
  * Test producer for AnnotationUtilTest

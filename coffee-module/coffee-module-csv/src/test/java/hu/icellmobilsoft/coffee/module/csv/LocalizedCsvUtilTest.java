@@ -26,7 +26,7 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.util.List;
 
-import javax.enterprise.context.RequestScoped;
+import jakarta.enterprise.context.RequestScoped;
 
 import org.jboss.weld.junit5.EnableWeld;
 import org.jboss.weld.junit5.WeldInitiator;
@@ -34,6 +34,7 @@ import org.jboss.weld.junit5.WeldJunit5Extension;
 import org.jboss.weld.junit5.WeldSetup;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -56,8 +57,10 @@ class LocalizedCsvUtilTest {
     private static String TEST_CSV;
 
     @WeldSetup
-    public WeldInitiator weld = WeldInitiator.from(WeldInitiator.createWeld().addBeanClass(LocalizedHeaderColumnNameWithPositionMappingStrategy.class)
-            .scanClasspathEntries().enableDiscovery()).activate(RequestScoped.class).build();
+// EE10: WELD-001335: Ambiguous dependencies for type LocalizedHeaderColumnNameWithPositionMappingStrategy with qualifiers
+//    public WeldInitiator weld = WeldInitiator.from(WeldInitiator.createWeld().addBeanClass(LocalizedHeaderColumnNameWithPositionMappingStrategy.class)
+//            .scanClasspathEntries().enableDiscovery()).activate(RequestScoped.class).build();
+    public WeldInitiator weld = WeldInitiator.from(WeldInitiator.createWeld().enableDiscovery()).activate(RequestScoped.class).build();
 
     @BeforeAll
     static void beforeAll() throws IOException {

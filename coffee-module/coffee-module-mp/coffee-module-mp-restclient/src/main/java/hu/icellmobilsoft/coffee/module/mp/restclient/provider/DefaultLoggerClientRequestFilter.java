@@ -24,13 +24,13 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map.Entry;
 
-import javax.annotation.Priority;
-import javax.enterprise.context.Dependent;
-import javax.inject.Inject;
-import javax.ws.rs.client.ClientRequestContext;
-import javax.ws.rs.client.ClientRequestFilter;
-import javax.ws.rs.core.Cookie;
-import javax.ws.rs.core.MediaType;
+import jakarta.annotation.Priority;
+import jakarta.enterprise.context.Dependent;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.client.ClientRequestContext;
+import jakarta.ws.rs.client.ClientRequestFilter;
+import jakarta.ws.rs.core.Cookie;
+import jakarta.ws.rs.core.MediaType;
 
 import hu.icellmobilsoft.coffee.cdi.logger.AppLogger;
 import hu.icellmobilsoft.coffee.cdi.logger.LogProducer;

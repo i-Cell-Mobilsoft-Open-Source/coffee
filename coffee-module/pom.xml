@@ -10,21 +10,23 @@
 	<packaging>pom</packaging>
 
 	<modules>
+		<module>coffee-module-configdoc</module>
+		<module>coffee-module-localization</module>
 		<module>coffee-module-mongodb</module>
 		<module>coffee-module-etcd</module>
-		<module>coffee-module-localization</module>
 		<module>coffee-module-activemq</module>
 		<module>coffee-module-redis</module>
 		<module>coffee-module-redisstream</module>
 		<module>coffee-module-document</module>
+		<!-- waiting for commons-email 2.0 or refact module without it...>
 		<module>coffee-module-notification</module>
+		-->
 		<module>coffee-module-csv</module>
 		<module>coffee-module-ruleng</module>
 		<module>coffee-module-mp</module>
 		<module>coffee-module-totp</module>
-		<module>coffee-module-configdoc</module>
 		<module>coffee-module-redispubsub</module>
-    </modules>
+	</modules>
 
 	<dependencyManagement>
 		<dependencies>

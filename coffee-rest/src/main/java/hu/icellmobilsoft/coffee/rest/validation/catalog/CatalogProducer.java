@@ -23,20 +23,21 @@ import java.net.URI;
 import java.text.MessageFormat;
 import java.util.Optional;
 
-import javax.enterprise.inject.Model;
-import javax.enterprise.inject.Produces;
-import javax.inject.Inject;
 import javax.xml.catalog.Catalog;
 import javax.xml.catalog.CatalogFeatures;
 import javax.xml.catalog.CatalogManager;
 
+import jakarta.enterprise.inject.Model;
+import jakarta.enterprise.inject.Produces;
+import jakarta.inject.Inject;
+
 import hu.icellmobilsoft.coffee.cdi.config.IConfigKey;
 import hu.icellmobilsoft.coffee.cdi.logger.AppLogger;
 import hu.icellmobilsoft.coffee.cdi.logger.ThisLogger;
+import hu.icellmobilsoft.coffee.configuration.ApplicationConfiguration;
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
-import hu.icellmobilsoft.coffee.configuration.ApplicationConfiguration;
 import hu.icellmobilsoft.coffee.rest.validation.xml.exception.XsdProcessingException;
 
 /**

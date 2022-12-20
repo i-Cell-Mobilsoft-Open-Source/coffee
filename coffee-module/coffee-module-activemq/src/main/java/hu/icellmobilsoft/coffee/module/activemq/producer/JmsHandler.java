@@ -19,19 +19,17 @@
  */
 package hu.icellmobilsoft.coffee.module.activemq.producer;
 
-import javax.enterprise.context.Dependent;
-import javax.inject.Inject;
-import javax.jms.Connection;
-import javax.jms.ConnectionFactory;
-import javax.jms.DeliveryMode;
-import javax.jms.JMSException;
-import javax.jms.Message;
-import javax.jms.MessageProducer;
-import javax.jms.Queue;
-import javax.jms.Session;
-import javax.jms.TextMessage;
-
-import org.apache.activemq.ScheduledMessage;
+import jakarta.enterprise.context.Dependent;
+import jakarta.inject.Inject;
+import jakarta.jms.Connection;
+import jakarta.jms.ConnectionFactory;
+import jakarta.jms.DeliveryMode;
+import jakarta.jms.JMSException;
+import jakarta.jms.Message;
+import jakarta.jms.MessageProducer;
+import jakarta.jms.Queue;
+import jakarta.jms.Session;
+import jakarta.jms.TextMessage;
 
 import hu.icellmobilsoft.coffee.cdi.logger.AppLogger;
 import hu.icellmobilsoft.coffee.cdi.logger.ThisLogger;
@@ -208,7 +206,11 @@ public class JmsHandler {
     public TextMessage createTextMessage(String text, long delayInMillis, int priority) throws JMSException {
         TextMessage message = createTextMessage(text);
         if (delayInMillis > 0) {
-            message.setLongProperty(ScheduledMessage.AMQ_SCHEDULED_DELAY, delayInMillis);
+            // regi EE8: message.setLongProperty(ScheduledMessage.AMQ_SCHEDULED_DELAY, delayInMillis);
+            // https://github.com/apache/activemq-artemis/tree/main/examples/features/standard/scheduled-message
+            long time = System.currentTimeMillis();
+            time += delayInMillis;
+            message.setLongProperty(org.apache.activemq.artemis.api.core.Message.HDR_SCHEDULED_DELIVERY_TIME.toString(), time);
         }
         message.setJMSPriority(priority);
         return message;

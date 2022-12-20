@@ -21,7 +21,7 @@ package hu.icellmobilsoft.coffee.module.notification.action.email;
 
 import java.util.Arrays;
 
-import javax.enterprise.inject.Vetoed;
+import jakarta.enterprise.inject.Vetoed;
 
 /**
  * Encapsulates a byte array with a name.

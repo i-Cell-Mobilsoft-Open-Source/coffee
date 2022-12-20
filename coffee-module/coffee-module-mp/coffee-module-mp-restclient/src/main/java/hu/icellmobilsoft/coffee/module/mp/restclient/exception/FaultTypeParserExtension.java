@@ -26,12 +26,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import javax.annotation.Priority;
-import javax.enterprise.event.Observes;
-import javax.enterprise.inject.spi.AfterTypeDiscovery;
-import javax.enterprise.inject.spi.AnnotatedType;
-import javax.enterprise.inject.spi.Extension;
-import javax.enterprise.inject.spi.ProcessAnnotatedType;
+import jakarta.annotation.Priority;
+import jakarta.enterprise.event.Observes;
+import jakarta.enterprise.inject.spi.AfterTypeDiscovery;
+import jakarta.enterprise.inject.spi.AnnotatedType;
+import jakarta.enterprise.inject.spi.Extension;
+import jakarta.enterprise.inject.spi.ProcessAnnotatedType;
 
 import hu.icellmobilsoft.coffee.dto.error.IFaultType;
 import hu.icellmobilsoft.coffee.se.logging.Logger;

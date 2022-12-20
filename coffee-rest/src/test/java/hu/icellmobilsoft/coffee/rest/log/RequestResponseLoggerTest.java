@@ -22,7 +22,7 @@ package hu.icellmobilsoft.coffee.rest.log;
 import java.nio.charset.StandardCharsets;
 import java.time.OffsetDateTime;
 
-import javax.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.MediaType;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;

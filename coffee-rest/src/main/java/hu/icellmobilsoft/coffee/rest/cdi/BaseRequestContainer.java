@@ -23,7 +23,7 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.enterprise.inject.Model;
+import jakarta.enterprise.inject.Model;
 
 /**
  * Common request scope container.

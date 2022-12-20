@@ -19,6 +19,8 @@
  */
 package hu.icellmobilsoft.coffee.rest.validation.xml.exception;
 
+import jakarta.ws.rs.ProcessingException;
+
 import hu.icellmobilsoft.coffee.dto.exception.BaseExceptionWrapper;
 
 /**
@@ -31,7 +33,7 @@ import hu.icellmobilsoft.coffee.dto.exception.BaseExceptionWrapper;
  * @deprecated Use {@link BaseProcessingExceptionWrapper} instead, forRemoval = true, since = "1.13.0"
  */
 @Deprecated(forRemoval = true, since = "1.13.0")
-public class XsdProcessingExceptionWrapper extends javax.ws.rs.ProcessingException implements BaseExceptionWrapper<XsdProcessingException> {
+public class XsdProcessingExceptionWrapper extends ProcessingException implements BaseExceptionWrapper<XsdProcessingException> {
 
     private static final long serialVersionUID = 1L;
 

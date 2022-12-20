@@ -22,13 +22,13 @@ package hu.icellmobilsoft.coffee.model.base;
 import java.beans.PropertyDescriptor;
 import java.io.Serializable;
 
-import javax.enterprise.inject.Vetoed;
-import javax.persistence.Column;
-import javax.persistence.EntityListeners;
-import javax.persistence.MappedSuperclass;
-import javax.persistence.Transient;
-import javax.persistence.Version;
-import javax.validation.constraints.NotNull;
+import jakarta.enterprise.inject.Vetoed;
+import jakarta.persistence.Column;
+import jakarta.persistence.EntityListeners;
+import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.Transient;
+import jakarta.persistence.Version;
+import jakarta.validation.constraints.NotNull;
 
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang3.ClassUtils;

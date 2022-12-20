@@ -19,7 +19,7 @@
  */
 package hu.icellmobilsoft.coffee.module.redisstream.consumer;
 
-import javax.enterprise.inject.spi.Bean;
+import jakarta.enterprise.inject.spi.Bean;
 
 /**
  * Stream consumer executor interface
