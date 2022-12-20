@@ -120,3 +120,13 @@ A változtatások nem eredményeznek átállási munkálatokat, visszafelé komp
 ==== Átállás
 
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+=== coffee-rest
+
+* Átalakításra került a 'DefaultGeneralExceptionMapper' és a 'DefaultBaseExceptionMapper' osztályokban a hibakezelés.
+* Uzleti hiba - BusinessException esetén 422 státuszkódot adunk az eddigi 500 Státuszkód helyett.
+* Technikai hiba - OptimisticLockException esetén 518 státuszkódot adunk az eddigi 500 Státuszkód helyett.
+
+==== Átállás
+
+* Az visszafelé kompatibilításhoz a projekteken saját ExceptionMapper létrehozása szükséges.

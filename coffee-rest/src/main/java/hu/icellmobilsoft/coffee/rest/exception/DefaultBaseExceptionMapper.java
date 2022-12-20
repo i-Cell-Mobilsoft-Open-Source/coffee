@@ -42,6 +42,7 @@ import hu.icellmobilsoft.coffee.dto.exception.BusinessException;
 import hu.icellmobilsoft.coffee.dto.exception.DtoConversionException;
 import hu.icellmobilsoft.coffee.dto.exception.ServiceUnavailableException;
 import hu.icellmobilsoft.coffee.dto.exception.XMLValidationError;
+import hu.icellmobilsoft.coffee.dto.exception.enums.Status;
 import hu.icellmobilsoft.coffee.rest.validation.xml.exception.XsdProcessingException;
 
 /**
@@ -88,7 +89,7 @@ public class DefaultBaseExceptionMapper implements ExceptionMapper<BaseException
             XsdProcessingException xsdProcessingException = (XsdProcessingException) e;
             return createValidationErrorResponse(e, xsdProcessingException.getErrors());
         } else if (e instanceof BusinessException) {
-            return createResponse(e, Response.Status.INTERNAL_SERVER_ERROR, new BusinessFault());
+            return createResponse(e, Status.UNPROCESSABLE_ENTITY.getStatusCode(), new BusinessFault());
         } else {
             // BaseException/TechnicalException
             return createResponse(e, Response.Status.INTERNAL_SERVER_ERROR, new TechnicalFault());
