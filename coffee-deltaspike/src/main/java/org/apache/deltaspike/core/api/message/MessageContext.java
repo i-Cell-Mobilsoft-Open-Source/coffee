@@ -42,7 +42,7 @@ import java.util.List;
 
 /**
  * Central context for handling dynamic messages.
- * <br/>
+ * <br>
  * Instances of this type are mutable but also {@link Cloneable}. If you need a new instance, then use
  * {@link Object#clone()}.
  */

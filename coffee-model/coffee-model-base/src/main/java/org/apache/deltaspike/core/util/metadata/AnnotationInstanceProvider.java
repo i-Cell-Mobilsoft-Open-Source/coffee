@@ -59,8 +59,8 @@ import java.util.Map;
  * <p>usage:</p>
  * <pre>
  * String annotationClassName = ...;
- * Class&lt;? extends annotation> annotationClass =
- *     (Class&lt;? extends Annotation>) ClassUtils.getClassLoader(null).loadClass(annotationClassName);
+ * Class&lt;? extends annotation&gt; annotationClass =
+ *     (Class&lt;? extends Annotation&gt;) ClassUtils.getClassLoader(null).loadClass(annotationClassName);
  * Annotation a = AnnotationInstanceProvider.of(annotationClass)
  * </pre>
  * @deprecated remove it after remove deltaspike data 

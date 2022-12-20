@@ -49,7 +49,7 @@ import org.apache.deltaspike.core.api.message.MessageInterpolator;
  * This is an Alternative implementation of a {@link MessageInterpolator} which
  * uses java.text.MessageFormat for formatting.
  *
- * Please note that for some EE containers you might need to add this &lt;alternative&gt;>
+ * Please note that for some EE containers you might need to add this &lt;alternative&gt;
  * to all JARs and classpath entries beanx.xml files.
  *
  * {@inheritDoc}
