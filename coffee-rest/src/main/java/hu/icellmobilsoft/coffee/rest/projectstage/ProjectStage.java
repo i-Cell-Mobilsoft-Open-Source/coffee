@@ -37,10 +37,10 @@
  */
 package hu.icellmobilsoft.coffee.rest.projectstage;
 
-import jakarta.enterprise.inject.Vetoed;
-
 import java.io.Serializable;
 import java.util.Objects;
+
+import jakarta.enterprise.inject.Vetoed;
 
 
 /**
@@ -78,6 +78,11 @@ public class ProjectStage implements Serializable {
         projectStageEnum = ProjectStageEnum.PRODUCTION;
     }
 
+    /**
+     * Get ProjectStage enum
+     * 
+     * @return {@link ProjectStageEnum} for instance
+     */
     public ProjectStageEnum getProjectStageEnum() {
         return projectStageEnum;
     }

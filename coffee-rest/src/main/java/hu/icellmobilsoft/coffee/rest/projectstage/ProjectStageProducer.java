@@ -86,6 +86,9 @@ public class ProjectStageProducer {
      */
     protected static final String[] CONFIG_SETTING_KEYS = { IConfigKey.COFFEE_APP_PROJECT_STAGE, "org.apache.deltaspike.ProjectStage" };
 
+    /**
+     * Logging
+     */
     protected static final Logger LOG = Logger.getLogger(ProjectStageProducer.class.getName());
 
     /**
