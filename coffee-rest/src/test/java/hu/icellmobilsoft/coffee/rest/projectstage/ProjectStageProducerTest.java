@@ -84,7 +84,7 @@ class ProjectStageProducerTest {
         for (int i = 0; i < thread; i++) {
             service.submit(() -> {
                 ProjectStage projectStage = CDI.current().select(ProjectStage.class).get();
-                Assertions.assertTrue(projectStage.isProductionStage()));
+                Assertions.assertTrue(projectStage.isProductionStage());
                 latch.countDown();
             });
         }
