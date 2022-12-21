@@ -19,17 +19,30 @@
  */
 package hu.icellmobilsoft.coffee.rest.projectstage;
 
-import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Random;
+import java.util.stream.Stream;
 
+import javax.enterprise.inject.spi.CDI;
+
+import org.apache.commons.lang3.RandomStringUtils;
 import org.jboss.weld.junit5.EnableWeld;
 import org.jboss.weld.junit5.WeldInitiator;
 import org.jboss.weld.junit5.WeldJunit5Extension;
 import org.jboss.weld.junit5.WeldSetup;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+
+import hu.icellmobilsoft.coffee.cdi.config.IConfigKey;
 
 @EnableWeld
 @Tag("weld")
@@ -37,8 +50,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 @DisplayName("ProjectStageProducer tests")
 class ProjectStageProducerTest {
 
-    @Inject
-    ProjectStage projectStage;
+    private static final String[] configs = new String[] { "coffee.app.projectStage", "org.apache.deltaspike.ProjectStage" };
 
     @WeldSetup
     public WeldInitiator weld = WeldInitiator.from(WeldInitiator.createWeld()
@@ -47,10 +59,51 @@ class ProjectStageProducerTest {
             // build
             .build();
 
+    @BeforeEach
+    public void cleanConfigs() {
+        // Clean configs
+        Arrays.stream(configs).forEach(element -> System.setProperty(element, ""));
+    }
+
     @Test
     @DisplayName("default ProjectStage is Production test")
     void defaultProjectStage() {
+        ProjectStage projectStage = CDI.current().select(ProjectStage.class).get();
+        Assertions.assertEquals(ProjectStage.Production.getProjectStageEnum(), projectStage.getProjectStageEnum());
+    }
+
+    @Test
+    @DisplayName("default ProjectStage is Production after mp.config.profile set other value test")
+    void defaultLocaleAfterConfigChange() {
+        ProjectStage projectStage = CDI.current().select(ProjectStage.class).get();
+        Assertions.assertEquals(ProjectStage.Production, projectStage);
+        System.setProperty(IConfigKey.COFFEE_APP_PROJECT_STAGE, "Test");
+        projectStage = CDI.current().select(ProjectStage.class).get();
         Assertions.assertEquals(ProjectStage.Production, projectStage);
     }
 
+    @DisplayName("default ProjectStage is Production test - projectStage config")
+    @ParameterizedTest
+    @MethodSource("methodForProjectStageTest")
+    void projectStageTest(String config, String projectStageConfig, ProjectStageEnum projectStageEnum) {
+        System.setProperty(config, projectStageConfig);
+        ProjectStage projectStage = CDI.current().select(ProjectStage.class).get();
+        Assertions.assertEquals(projectStage.getProjectStageEnum(), projectStageEnum);
+    }
+
+    private static Stream<Arguments> methodForProjectStageTest() {
+
+        List<Arguments> argumentsList = new ArrayList<>();
+        for (String config : configs) {
+            for (ProjectStageEnum projectStageEnum : ProjectStageEnum.values()) {
+                for (String alternativeName : projectStageEnum.getAlternativeNames()) {
+                    argumentsList.add(Arguments.of(config, alternativeName, projectStageEnum));
+                    argumentsList.add(Arguments.of(config, alternativeName.toLowerCase(), projectStageEnum));
+                    argumentsList.add(Arguments.of(config, alternativeName.toUpperCase(), projectStageEnum));
+                }
+            }
+            argumentsList.add(Arguments.of(config, RandomStringUtils.random(5), ProjectStageEnum.PRODUCTION));
+        }
+        return argumentsList.stream();
+    }
 }
