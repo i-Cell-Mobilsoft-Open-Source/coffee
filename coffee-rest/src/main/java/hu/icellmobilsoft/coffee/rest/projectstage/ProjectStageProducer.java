@@ -112,9 +112,7 @@ public class ProjectStageProducer {
     }
 
     /**
-     * Resolves the project-stage configured
-     * 
-     * @return the resolved {@link ProjectStage} if not defined return Production projectStage.
+     * Resolves the project-stage. Read configurations from config sources and create ProjectStage from first found config, otherwise create Project
      */
     private void initProjectStage() {
         Config config = ConfigUtil.getInstance().defaultConfig();
@@ -127,9 +125,9 @@ public class ProjectStageProducer {
             }
         }
         if (projectStage == null) {
-            projectStage = new ProjectStage();
+            projectStage = ProjectStage.Production;
         }
-        LOG.info("Computed the following ProjectStage: " + projectStage);
+        LOG.info("Computed the following ProjectStage: " + projectStage.getProjectStageEnum());
     }
 
 }

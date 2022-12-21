@@ -19,9 +19,6 @@
  */
 package hu.icellmobilsoft.coffee.rest.projectstage;
 
-import java.util.Arrays;
-import java.util.List;
-
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -50,7 +47,7 @@ public enum ProjectStageEnum {
     /**
      * Alternative names of projectStage enum
      */
-    private final List<String> alternativeNames;
+    private final String[] alternativeNames;
 
     /**
      * Constructor
@@ -59,7 +56,7 @@ public enum ProjectStageEnum {
      *            alternative name os projectStage enum
      */
     ProjectStageEnum(String... alternativeNames) {
-        this.alternativeNames = Arrays.asList(alternativeNames);
+        this.alternativeNames = alternativeNames;
     }
 
     /**
@@ -67,7 +64,7 @@ public enum ProjectStageEnum {
      * 
      * @return list of defined alternative names
      */
-    public List<String> getAlternativeNames() {
+    public String[] getAlternativeNames() {
         return alternativeNames;
     }
 
