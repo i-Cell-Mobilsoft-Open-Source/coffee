@@ -131,3 +131,32 @@ A változtatások nem eredményeznek átállási munkálatokat, visszafelé komp
 ==== Átállás
 
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+=== coffee-rest
+
+* Deltaspike álltal nyújtott ProjectStage leváltásra került egy coffee-ba implementált egyszerűsített változatra.
+* BaseApplicationContainer-ből a COFFEE_APP_NAME etcd kulcs átkerült az IConfigKey interface-be, ahol így dokumentálódik is.
+
+==== Átállás
+
+* A deltaspike-os ProjectStage hivatkozásokat (`org.apache.deltaspike.core.api.projectstage.ProjectStage`) át kell állítani `hu.icellmobilsoft.coffee.rest.projectstage.ProjectStage` -re.
+Ahol ProjectStage.Production volt használva, ott át kell állni erre:
+
+[source,java]
+----
+@Dependent
+public class MyBean {
+    private @Inject ProjectStage projectStage;
+
+    public void fn() {
+        if (projectStage.isProductionStage()) {
+            // do some production stuff...
+        }
+    }
+}
+----
+
+
+Ezzel együtt a ProjectStage fajtái is lecsökkentek, és már csak Production, Development és Test lehetséges. Régi deltaspikeos alap projekt stage-ek bekerültek a Testbe, kivéve a Development és Productiont ami azonos néven maradt. Lásd `hu.icellmobilsoft.coffee.rest.projectstage.ProjectStageEnum`.
+
+Az eddig használt `org.apache.deltaspike.ProjectStage` konfiguráció használata megmaradt, és visszafelé a deltaspike által támogatott értékek is feldolgozásra kerülnek az enum értékeibe.
