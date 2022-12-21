@@ -55,7 +55,7 @@ public class ProjectStage implements Serializable {
     /**
      * Production ProjectStage
      */
-    public final static ProjectStage Production = new ProjectStage();
+    public static final ProjectStage Production = new ProjectStage();
 
     /** the enum of the ProjectStage */
     private final ProjectStageEnum projectStageEnum;
@@ -77,6 +77,11 @@ public class ProjectStage implements Serializable {
         projectStageEnum = ProjectStageEnum.PRODUCTION;
     }
 
+    /**
+     * Get ProjectStage enum
+     *
+     * @return {@link ProjectStageEnum} for instance
+     */
     public ProjectStageEnum getProjectStageEnum() {
         return projectStageEnum;
     }
