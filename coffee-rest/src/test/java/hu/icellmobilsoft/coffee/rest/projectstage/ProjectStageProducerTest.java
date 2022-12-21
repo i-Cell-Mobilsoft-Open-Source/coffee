@@ -69,6 +69,13 @@ class ProjectStageProducerTest {
     @DisplayName("default ProjectStage is Production test")
     void defaultProjectStage() {
         ProjectStage projectStage = CDI.current().select(ProjectStage.class).get();
+        Assertions.assertTrue(ProjectStage.Production == projectStage);
+    }
+
+    @Test
+    @DisplayName("default ProjectStage is Production test")
+    void defaultProjectStageWithEquals() {
+        ProjectStage projectStage = CDI.current().select(ProjectStage.class).get();
         Assertions.assertEquals(ProjectStage.Production.getProjectStageEnum(), projectStage.getProjectStageEnum());
     }
 
@@ -92,7 +99,6 @@ class ProjectStageProducerTest {
     }
 
     private static Stream<Arguments> methodForProjectStageTest() {
-
         List<Arguments> argumentsList = new ArrayList<>();
         for (String config : configs) {
             for (ProjectStageEnum projectStageEnum : ProjectStageEnum.values()) {

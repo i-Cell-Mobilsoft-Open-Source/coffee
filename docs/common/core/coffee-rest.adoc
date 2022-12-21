@@ -418,4 +418,39 @@ IMPORTANT: Fontos kiemelni, hogyha nincs megadva, vagy ha nem található a conf
 
 Configurációk az Microprofile Config segítségével megadhatók több helyről is, de csak a fent leírt sorrend szerint az elsőt fogja figyelembe venni.
 
+Jelenleg a projektben egyenlőre ha nem Production a ProjectStage értéke, akkor hibáknál tágabb választ ad vissza rendszer.
+
+Ennek használata a következő képpen működik:
+
+.MyBean
+[source,java]
+----
+@Dependent
+public class MyBean {
+    private @Inject ProjectStage projectStage;
+
+    public void fn() {
+        if (projectStage == ProjectStage.Production) {
+            // do some production stuff...
+        }
+    }
+}
+----
+
+Esetleges további bontásban következőképpen használható:
+
+.MyBean
+[source,java]
+----
+@Dependent
+public class MyBean {
+    private @Inject ProjectStage projectStage;
+
+    public void fn() {
+        if (projectStage.getProjectStageEnum() == ProjectStageEnum.DEVELOPMENT) {
+            // do some development stuff...
+        }
+    }
+}
+----
 
