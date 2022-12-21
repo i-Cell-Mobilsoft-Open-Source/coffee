@@ -36,6 +36,19 @@ public interface IConfigKey {
     @ConfigDoc(exclude = true)
     String COFFEE_CONFIG_PREFIX = "coffee.config";
 
+    @ConfigDoc(exclude = true)
+    String COFFEE_CONFIG_APP_PREFIX = "coffee.app";
+
+    /**
+     * Coffee app ProjectStage
+     */
+    String COFFEE_APP_PROJECT_STAGE = COFFEE_CONFIG_APP_PREFIX + ".projectStage";
+    
+    /**
+     * Coffee app name key
+     */
+    String COFFEE_APP_NAME = COFFEE_CONFIG_APP_PREFIX + ".name";
+
     /**
      * Nyelvesítés szótárak elérési útvonalak (java class package formátum).<br>
      * Pl. "i18n.messages,i18n.validators,i18n.enums" - space-k nelkul

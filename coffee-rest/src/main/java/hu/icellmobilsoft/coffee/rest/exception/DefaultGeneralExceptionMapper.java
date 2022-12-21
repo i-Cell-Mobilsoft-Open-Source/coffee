@@ -38,7 +38,6 @@ import javax.ws.rs.ext.Providers;
 import javax.xml.bind.UnmarshalException;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.deltaspike.core.api.projectstage.ProjectStage;
 import org.jboss.resteasy.spi.InternalServerErrorException;
 
 import hu.icellmobilsoft.coffee.cdi.logger.AppLogger;
@@ -50,6 +49,7 @@ import hu.icellmobilsoft.coffee.dto.exception.BaseExceptionWrapper;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 import hu.icellmobilsoft.coffee.rest.cdi.BaseApplicationContainer;
 import hu.icellmobilsoft.coffee.rest.log.RequestResponseLogger;
+import hu.icellmobilsoft.coffee.rest.projectstage.ProjectStage;
 import hu.icellmobilsoft.coffee.se.logging.mdc.MDC;
 import hu.icellmobilsoft.coffee.tool.utils.string.RandomUtil;
 
