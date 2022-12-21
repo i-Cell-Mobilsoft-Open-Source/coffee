@@ -36,6 +36,9 @@ public interface IConfigKey {
     @ConfigDoc(exclude = true)
     String COFFEE_CONFIG_PREFIX = "coffee.config";
 
+    /**
+     * Coffee app konfigurációk prefix-e
+     */
     @ConfigDoc(exclude = true)
     String COFFEE_CONFIG_APP_PREFIX = "coffee.app";
 
