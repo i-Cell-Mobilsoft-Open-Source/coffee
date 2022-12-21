@@ -430,7 +430,7 @@ public class MyBean {
     private @Inject ProjectStage projectStage;
 
     public void fn() {
-        if (projectStage == ProjectStage.Production) {
+        if (projectStage.isProductionStage()) {
             // do some production stuff...
         }
     }

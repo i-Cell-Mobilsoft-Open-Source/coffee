@@ -19,9 +19,6 @@
  */
 package hu.icellmobilsoft.coffee.rest.projectstage;
 
-import java.io.Serializable;
-import java.util.Objects;
-
 import javax.enterprise.inject.Vetoed;
 
 /**
@@ -32,12 +29,7 @@ import javax.enterprise.inject.Vetoed;
  * 
  */
 @Vetoed
-public class ProjectStage implements Serializable {
-
-    /**
-     * Production ProjectStage
-     */
-    public static final ProjectStage Production = new ProjectStage();
+public class ProjectStage {
 
     /** the enum of the ProjectStage */
     private final ProjectStageEnum projectStageEnum;
@@ -69,24 +61,11 @@ public class ProjectStage implements Serializable {
     }
 
     /**
-     * {@inheritDoc}
+     * Tell that projectStage is in production stage.
+     * 
+     * @return true if projectStage in production stage, otherwise false
      */
-    @Override
-    public String toString() {
-        return projectStageEnum.name();
+    public boolean isProductionStage() {
+        return projectStageEnum == ProjectStageEnum.PRODUCTION;
     }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj instanceof ProjectStage) {
-            return ((ProjectStage) obj).getProjectStageEnum() == this.getProjectStageEnum();
-        }
-        return false;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(projectStageEnum);
-    }
-
 }

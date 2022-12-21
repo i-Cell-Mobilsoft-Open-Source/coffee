@@ -22,7 +22,9 @@ package hu.icellmobilsoft.coffee.rest.projectstage;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Random;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.stream.Stream;
 
 import javax.enterprise.inject.spi.CDI;
@@ -69,24 +71,35 @@ class ProjectStageProducerTest {
     @DisplayName("default ProjectStage is Production test")
     void defaultProjectStage() {
         ProjectStage projectStage = CDI.current().select(ProjectStage.class).get();
-        Assertions.assertTrue(ProjectStage.Production == projectStage);
+        Assertions.assertTrue(projectStage.isProductionStage());
+        Assertions.assertEquals(ProjectStageEnum.PRODUCTION, projectStage.getProjectStageEnum());
     }
 
     @Test
-    @DisplayName("default ProjectStage is Production test")
-    void defaultProjectStageWithEquals() {
-        ProjectStage projectStage = CDI.current().select(ProjectStage.class).get();
-        Assertions.assertEquals(ProjectStage.Production.getProjectStageEnum(), projectStage.getProjectStageEnum());
+    @DisplayName("test")
+    void testSameProjectStage() throws InterruptedException {
+        int thread = 10000;
+        ExecutorService service = Executors.newFixedThreadPool(thread);
+        CountDownLatch latch = new CountDownLatch(thread);
+        for (int i = 0; i < thread; i++) {
+            service.submit(() -> {
+                ProjectStage projectStage = CDI.current().select(ProjectStage.class).get();
+                Assertions.assertTrue(projectStage.isProductionStage()));
+                latch.countDown();
+            });
+        }
+        latch.await();
     }
+
 
     @Test
     @DisplayName("default ProjectStage is Production after mp.config.profile set other value test")
     void defaultLocaleAfterConfigChange() {
         ProjectStage projectStage = CDI.current().select(ProjectStage.class).get();
-        Assertions.assertEquals(ProjectStage.Production, projectStage);
+        Assertions.assertEquals(ProjectStageEnum.PRODUCTION, projectStage.getProjectStageEnum());
         System.setProperty(IConfigKey.COFFEE_APP_PROJECT_STAGE, "Test");
         projectStage = CDI.current().select(ProjectStage.class).get();
-        Assertions.assertEquals(ProjectStage.Production, projectStage);
+        Assertions.assertEquals(ProjectStageEnum.PRODUCTION, projectStage.getProjectStageEnum());
     }
 
     @DisplayName("default ProjectStage is Production test - projectStage config")

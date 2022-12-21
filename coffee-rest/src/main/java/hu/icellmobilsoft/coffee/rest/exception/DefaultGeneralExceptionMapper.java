@@ -158,7 +158,7 @@ public class DefaultGeneralExceptionMapper implements ExceptionMapper<Exception>
                 dto.setException(null);
             });
 
-            boolean productionStage = ProjectStage.Production.equals(projectStage);
+            boolean productionStage = projectStage.isProductionStage();
             if (productionStage) {
                 // NotFoundException, NotSupportedException, ...
                 handleRequestProcess();
@@ -205,7 +205,7 @@ public class DefaultGeneralExceptionMapper implements ExceptionMapper<Exception>
         exceptionMessageTranslator.addCommonInfo(dto, e, faultType);
         Response.Status statusCode = responseStatus;
         ResponseBuilder responseBuilder = Response.status(statusCode);
-        boolean productionStage = ProjectStage.Production.equals(projectStage);
+        boolean productionStage = projectStage.isProductionStage();
         if (productionStage) {
             productionStageConsumer.accept(dto, faultType);
         }

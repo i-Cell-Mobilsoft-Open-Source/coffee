@@ -61,7 +61,7 @@ public class DefaultExceptionMessageTranslator implements IExceptionMessageTrans
     /** {@inheritDoc} */
     @Override
     public void addCommonInfo(BaseExceptionResultType dto, Exception e, Enum<?> faultType) {
-        boolean putExceptionToResponse = !ProjectStage.Production.equals(projectStage);
+        boolean putExceptionToResponse = !projectStage.isProductionStage();
         if (putExceptionToResponse) {
             if (e instanceof JAXBException) {
                 dto.setException(getLinkedExceptionLocalizedMessage((JAXBException) e));

@@ -24,7 +24,6 @@ import java.util.Iterator;
 import java.util.logging.Logger;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.Default;
 import javax.enterprise.inject.Produces;
 
 import org.apache.commons.lang3.StringUtils;
@@ -51,7 +50,7 @@ import hu.icellmobilsoft.coffee.tool.utils.config.ConfigUtil;
  *     private @Inject ProjectStage projectStage;
  *
  *     public void fn() {
- *         if (projectStage == ProjectStage.Production) {
+ *         if (projectStage.isProductionStage()) {
  *             // do some production stuff...
  *         }
  *     }
@@ -85,7 +84,7 @@ public class ProjectStageProducer {
      * @return current ProjectStage
      */
     @Produces
-    @Default
+    @ApplicationScoped
     public ProjectStage getProjectStage() {
         if (projectStage == null) {
             initProjectStage();
@@ -107,7 +106,7 @@ public class ProjectStageProducer {
             }
         }
         if (projectStage == null) {
-            projectStage = ProjectStage.Production;
+            projectStage = new ProjectStage();
         }
         LOG.info("Computed the following ProjectStage: " + projectStage.getProjectStageEnum());
     }
