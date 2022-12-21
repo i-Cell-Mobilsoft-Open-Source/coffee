@@ -19,7 +19,10 @@
  */
 package hu.icellmobilsoft.coffee.rest.projectstage;
 
+import com.google.common.collect.ImmutableList;
 import org.apache.commons.lang3.StringUtils;
+
+import java.util.List;
 
 /**
  * ProjectStage enum
@@ -47,7 +50,7 @@ public enum ProjectStageEnum {
     /**
      * Alternative names of projectStage enum
      */
-    private final String[] alternativeNames;
+    private final ImmutableList<String> alternativeNames;
 
     /**
      * Constructor
@@ -56,7 +59,7 @@ public enum ProjectStageEnum {
      *            alternative name os projectStage enum
      */
     ProjectStageEnum(String... alternativeNames) {
-        this.alternativeNames = alternativeNames;
+        this.alternativeNames = ImmutableList.copyOf(alternativeNames);
     }
 
     /**
@@ -64,7 +67,7 @@ public enum ProjectStageEnum {
      * 
      * @return list of defined alternative names
      */
-    public String[] getAlternativeNames() {
+    public List<String> getAlternativeNames() {
         return alternativeNames;
     }
 
