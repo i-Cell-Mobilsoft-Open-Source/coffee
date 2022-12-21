@@ -26,6 +26,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.stream.Stream;
+import jakarta.enterprise.inject.spi.CDI;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.jboss.weld.junit5.EnableWeld;
@@ -43,7 +44,6 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import hu.icellmobilsoft.coffee.cdi.config.IConfigKey;
-import jakarta.enterprise.inject.spi.CDI;
 
 @EnableWeld
 @Tag("weld")

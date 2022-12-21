@@ -22,14 +22,14 @@ package hu.icellmobilsoft.coffee.rest.projectstage;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.logging.Logger;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.inject.Produces;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.microprofile.config.Config;
 
 import hu.icellmobilsoft.coffee.cdi.config.IConfigKey;
 import hu.icellmobilsoft.coffee.tool.utils.config.ConfigUtil;
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.enterprise.inject.Produces;
 
 /**
  * <p>
