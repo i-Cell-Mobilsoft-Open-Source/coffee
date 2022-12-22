@@ -123,7 +123,8 @@ A változtatások nem eredményeznek átállási munkálatokat, visszafelé komp
 
 === coffee-rest
 
-* Átalakításra került a 'DefaultGeneralExceptionMapper' és a 'DefaultBaseExceptionMapper' osztályokban a hibakezelés.
+* Bevezetésre került az `OptimisticLockException`, alapértelmezetten `CoffeeFaultType.OPTIMISTIC_LOCK_EXCEPTION` hibakóddal.
+* Átalakításra került a `DefaultBaseExceptionMapper` osztályban a hibakezelés:
 * Uzleti hiba - BusinessException esetén 422 státuszkódot adunk az eddigi 500 Státuszkód helyett.
 * Technikai hiba - OptimisticLockException esetén 518 státuszkódot adunk az eddigi 500 Státuszkód helyett.
 

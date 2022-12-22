@@ -17,22 +17,22 @@
  * limitations under the License.
  * #L%
  */
-package hu.icellmobilsoft.coffee.dto.exception.enums;
+package hu.icellmobilsoft.coffee.rest.exception.enums;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status.Family;
 import javax.ws.rs.core.Response.StatusType;
 
 /**
- * Status codes
+ * HttpStatus codes
  *
  * @author gabor.balazs
  * @since 1.13.0
  */
-public enum Status implements StatusType {
+public enum HttpStatus implements StatusType {
 
     /**
-     * 422 Unprocessable Entity, see {@link <a href="https://httpwg.org/specs/rfc9110.html#status.422">HTTP Semantics documentation</a>}.
+     * 422 Unprocessable Entity.
      */
     UNPROCESSABLE_ENTITY(422, "Unprocessable Entity"),
 
@@ -45,23 +45,23 @@ public enum Status implements StatusType {
     private final String reason;
     private final Family family;
 
-    Status(final int statusCode, final String reasonPhrase) {
+    HttpStatus(final int statusCode, final String reasonPhrase) {
         this.code = statusCode;
         this.reason = reasonPhrase;
         this.family = Family.familyOf(statusCode);
     }
 
     /**
-     * Create a new ResponseBuilder with the supplied status.
+     * Create a new ResponseBuilder with the supplied httpStatus.
      *
-     * @param status
-     *            the response status.
+     * @param httpStatus
+     *            the response httpStatus.
      * @return a new response builder.
      * @throws IllegalArgumentException
-     *             if status is {@code null}.
+     *             if httpStatus is {@code null}.
      */
-    public static Response.ResponseBuilder status(Status status) {
-        return Response.status(status);
+    public static Response.ResponseBuilder status(HttpStatus httpStatus) {
+        return Response.status(httpStatus);
     }
 
     /**

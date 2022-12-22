@@ -22,7 +22,6 @@ package hu.icellmobilsoft.coffee.rest.exception;
 import java.util.function.BiConsumer;
 
 import javax.inject.Inject;
-import javax.persistence.OptimisticLockException;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.ForbiddenException;
@@ -49,7 +48,6 @@ import hu.icellmobilsoft.coffee.dto.common.commonservice.TechnicalFault;
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.dto.exception.BaseExceptionWrapper;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
-import hu.icellmobilsoft.coffee.dto.exception.enums.Status;
 import hu.icellmobilsoft.coffee.rest.cdi.BaseApplicationContainer;
 import hu.icellmobilsoft.coffee.rest.log.RequestResponseLogger;
 import hu.icellmobilsoft.coffee.se.logging.mdc.MDC;
@@ -154,9 +152,6 @@ public class DefaultGeneralExceptionMapper implements ExceptionMapper<Exception>
         } else if (e.getCause() instanceof IllegalArgumentException) {
             responseBuilder = createResponseBuilder(e, Response.Status.INTERNAL_SERVER_ERROR, CoffeeFaultType.ILLEGAL_ARGUMENT_EXCEPTION,
                     this::handleProductionStage);
-        } else if (e instanceof OptimisticLockException) {
-            responseBuilder = createResponseBuilder(e, Status.OPTIMISTIC_LOCK, CoffeeFaultType.OPTIMISTIC_LOCK_EXCEPTION,
-                    this::handleProductionStage);
         } else if (e instanceof ClientErrorException) {
             responseBuilder = createResponseBuilder(e, Response.Status.INTERNAL_SERVER_ERROR, CoffeeFaultType.OPERATION_FAILED, (dto, faultType) -> {
                 dto.setMessage(maskSensitiveData(e.getLocalizedMessage()));
@@ -204,11 +199,12 @@ public class DefaultGeneralExceptionMapper implements ExceptionMapper<Exception>
      *            function to be called if the current stage is production
      * @return the created response builder
      */
-    protected ResponseBuilder createResponseBuilder(Exception e, Response.StatusType responseStatus, CoffeeFaultType faultType,
+    protected ResponseBuilder createResponseBuilder(Exception e, Response.Status responseStatus, CoffeeFaultType faultType,
             BiConsumer<TechnicalFault, CoffeeFaultType> productionStageConsumer) {
         TechnicalFault dto = new TechnicalFault();
         exceptionMessageTranslator.addCommonInfo(dto, e, faultType);
-        ResponseBuilder responseBuilder = Response.status(responseStatus);
+        Response.Status statusCode = responseStatus;
+        ResponseBuilder responseBuilder = Response.status(statusCode);
         boolean productionStage = ProjectStage.Production.equals(projectStage);
         if (productionStage) {
             productionStageConsumer.accept(dto, faultType);

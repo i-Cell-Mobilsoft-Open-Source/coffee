@@ -23,10 +23,6 @@
 			<version>${version.jakarta.xml.bind.jaxb-api}</version>
 		</dependency>
 		<dependency>
-			<groupId>jakarta.platform</groupId>
-			<artifactId>jakarta.jakartaee-api</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>hu.icellmobilsoft.coffee</groupId>
 			<artifactId>coffee-se-logging</artifactId>
 			<version>${project.version}</version>
