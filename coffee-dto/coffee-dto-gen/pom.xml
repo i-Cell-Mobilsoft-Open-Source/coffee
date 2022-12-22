@@ -79,20 +79,16 @@
 					<verbose>true</verbose>
 					<schemaDirectory>src/main/resources</schemaDirectory>
 					<args>
-<!-- a pluginunk nem tud jaxb3+ dolgozni
 						<arguments>-openapify</arguments>
--->
 						<arguments>-Xfluent-api</arguments>
 						<arguments>-Xannotate</arguments>
 					</args>
 					<plugins>
-<!--
 						<plugin>
 							<groupId>hu.icellmobilsoft.jaxb</groupId>
-							<artifactId>openapi-jaxb</artifactId>
-							<version>1.1.0</version>
+							<artifactId>openapi-jaxb-plugin</artifactId>
+							<version>2.0.0-SNAPSHOT</version>
 						</plugin>
--->
 						<plugin>
 							<groupId>net.java.dev.jaxb2-commons</groupId>
 							<artifactId>jaxb-fluent-api</artifactId>
