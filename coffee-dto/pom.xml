@@ -13,13 +13,6 @@
 		<dependencies>
 			<dependency>
 				<groupId>hu.icellmobilsoft.coffee</groupId>
-				<artifactId>coffee-bom</artifactId>
-				<version>${project.version}</version>
-				<scope>import</scope>
-				<type>pom</type>
-			</dependency>
-			<dependency>
-				<groupId>hu.icellmobilsoft.coffee</groupId>
 				<artifactId>coffee-dto-xsd</artifactId>
 				<version>${project.version}</version>
 			</dependency>

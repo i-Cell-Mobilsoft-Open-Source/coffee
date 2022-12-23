@@ -39,19 +39,7 @@ public class OptimisticLockException extends TechnicalException {
      *            the exception message.
      */
     public OptimisticLockException(String message) {
-        super(CoffeeFaultType.WRONG_OR_MISSING_PARAMETERS, message);
-    }
-
-    /**
-     * Constructor for {@link OptimisticLockException} with given exception message and fault type.
-     *
-     * @param faultTypeEnum
-     *            the fault type.
-     * @param message
-     *            the exception message.
-     */
-    public OptimisticLockException(Enum<?> faultTypeEnum, String message) {
-        super(faultTypeEnum, message);
+        super(CoffeeFaultType.OPTIMISTIC_LOCK_EXCEPTION, message);
     }
 
     /**
