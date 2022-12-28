@@ -30,6 +30,7 @@ import jakarta.enterprise.inject.spi.CDI;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.jboss.weld.junit5.EnableWeld;
+import org.jboss.weld.junit5.ExplicitParamInjection;
 import org.jboss.weld.junit5.WeldInitiator;
 import org.jboss.weld.junit5.WeldJunit5Extension;
 import org.jboss.weld.junit5.WeldSetup;
@@ -49,6 +50,7 @@ import hu.icellmobilsoft.coffee.cdi.config.IConfigKey;
 @Tag("weld")
 @ExtendWith(WeldJunit5Extension.class)
 @DisplayName("ProjectStageProducer tests")
+@ExplicitParamInjection
 class ProjectStageProducerTest {
 
     private static final String[] configs = new String[] { "coffee.app.projectStage", "org.apache.deltaspike.ProjectStage" };
