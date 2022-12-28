@@ -24,6 +24,7 @@ import java.util.Iterator;
 
 import javax.xml.catalog.Catalog;
 
+import jakarta.enterprise.context.Dependent;
 import jakarta.inject.Inject;
 
 import org.w3c.dom.ls.LSInput;
@@ -43,6 +44,7 @@ import hu.icellmobilsoft.coffee.rest.validation.xml.utils.IXsdResourceResolver;
  * @author mark.petrenyi
  * @since 1.0.0
  */
+@Dependent
 public class PublicCatalogResolver implements LSResourceResolver, IXsdResourceResolver {
 
     @Inject
