@@ -38,7 +38,7 @@ jobs:
     name: Maven release
 
     # Permission ellenorzes https://github.community/t/who-has-permission-to-workflow-dispatch/133981
-    if: contains('["rombow"]', github.actor)
+    if: contains('["rombow","czenczl"]', github.actor)
 
     runs-on: ubuntu-latest
 
@@ -62,12 +62,16 @@ jobs:
           # config: ${{ secrets.CONFIG }} # ssh_config; optional
 
       - name: Checkout ${{ github.event.ref }}
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
+        with:
+          # Ne az a user legyen aki a workflow-ot inditotta
+          token: ${{ secrets.GH_TOKEN_TECHUSER_JAVA }}
 
       - name: Set up JDK 11
-        uses: actions/setup-java@v1
+        uses: actions/setup-java@v3
         with:
           java-version: 11
+          distribution: 'temurin'
           server-id: ossrh # Value of the distributionManagement/repository/id field of the pom.xml
           settings-path: ${{ github.workspace }} # location for the settings.xml file
 
@@ -75,33 +79,24 @@ jobs:
       #- name: Check sign
       #  run: mvn -B package gpg:sign -Dgpg.keyname=$GPG_KEY_ID_GITHUB_TECHUSER --file pom.xml
 
-      #- name: Configure git credentials
-      #  uses: OleksiyRudenko/gha-git-credentials@v1
+      # mar nem kell, potolja a actions/checkout@v3.with.token + lejebb levo git config parancsok
+      #- name: Setup GIT token
+      #  uses: fregante/setup-git-token@v1
       #  with:
-      #    # <git-user-email@domain.com> (default: github-action@users.noreply.github.com)
-      #    email: github_techuser@icellmobilsoft.hu
-      #    # Git User Name (default: "GitHub Action")
+      #    # The token provided by GitHub actions via secrets.GITHUB_TOKEN
+      #    token: ${{ secrets.GH_TOKEN_TECHUSER_JAVA }}
+      #    # The name that will be used as "Author" of future commits
       #    name: icellmobilsoft-robot
-      #    # GitHub Actor Username (default: github.actor)
-      #    #actor: Github TechUser
-      #    # GitHub Token (default: secrets.GITHUB_TOKEN)
-      #    token: secrets.ROMBOW_GITHUB_COFFEE_PRIVATE
-
-      - name: Setup GIT token
-        uses: fregante/setup-git-token@v1
-        with:
-          # The token provided by GitHub actions via secrets.GITHUB_TOKEN
-          token: ${{ secrets.GH_TOKEN_TECHUSER_JAVA }}
-          # The name that will be used as "Author" of future commits
-          name: icellmobilsoft-robot
-          # The email that will be used as "Author" of future commits
-          email: github_techuser@icellmobilsoft.hu
+      #    # The email that will be used as "Author" of future commits
+      #    email: github_techuser@icellmobilsoft.hu
 
       - name: Configure GIT for signed commit
         env:
           # GPG kulcs azonositoja, jelenleg F0744443DCD76BF5DC11D3ED3C8AD450A27EF801
           GPG_KEY_ID_GITHUB_TECHUSER: ${{ secrets.GPG_KEY_ID_GITHUB_TECHUSER }}
         run: |
+          git config --global user.name "icellmobilsoft-robot"
+          git config --global user.email "github_techuser@icellmobilsoft.hu"
           git config --global user.signingkey "$GPG_KEY_ID_GITHUB_TECHUSER"
           git config --global commit.gpgsign true
           git config --global tag.gpgSign true
