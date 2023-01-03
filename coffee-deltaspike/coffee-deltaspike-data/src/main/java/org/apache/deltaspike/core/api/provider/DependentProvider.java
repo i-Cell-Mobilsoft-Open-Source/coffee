@@ -39,6 +39,7 @@ package org.apache.deltaspike.core.api.provider;
 
 import jakarta.enterprise.context.spi.CreationalContext;
 import jakarta.enterprise.inject.spi.Bean;
+import jakarta.enterprise.inject.spi.CDI;
 import jakarta.enterprise.inject.spi.PassivationCapable;
 import jakarta.inject.Provider;
 
@@ -86,7 +87,8 @@ public class DependentProvider<T> implements Provider<T>, Serializable
      */
     public void destroy()
     {
-        if (!BeanManagerProvider.getInstance().getBeanManager().isNormalScope(bean.getScope()))
+//        if (!BeanManagerProvider.getInstance().getBeanManager().isNormalScope(bean.getScope()))
+        if (!CDI.current().getBeanManager().isNormalScope(bean.getScope()))
         {
             bean.destroy(instance, creationalContext);
         }
@@ -119,7 +121,8 @@ public class DependentProvider<T> implements Provider<T>, Serializable
             throw new NotSerializableException(getClass().getName() + " serialVersion does not match");
         }
         String passivationId = (String) in.readObject();
-        bean = (Bean<T>) BeanManagerProvider.getInstance().getBeanManager().getPassivationCapableBean(passivationId);
+//        bean = (Bean<T>) BeanManagerProvider.getInstance().getBeanManager().getPassivationCapableBean(passivationId);
+        bean = (Bean<T>) CDI.current().getBeanManager().getPassivationCapableBean(passivationId);
         instance = (T) in.readObject();
         creationalContext = (CreationalContext<T>) in.readObject();
     }

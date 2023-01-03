@@ -41,10 +41,11 @@ import java.util.Set;
 
 import jakarta.enterprise.inject.spi.Bean;
 import jakarta.enterprise.inject.spi.BeanManager;
+import jakarta.enterprise.inject.spi.CDI;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 
-import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
+//import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
 
 public class AuditEntityListener
 {
@@ -52,7 +53,8 @@ public class AuditEntityListener
     @PrePersist
     public void persist(Object entity)
     {
-        BeanManager beanManager = BeanManagerProvider.getInstance().getBeanManager();
+//        BeanManager beanManager = BeanManagerProvider.getInstance().getBeanManager();
+        BeanManager beanManager = CDI.current().getBeanManager();
         Set<Bean<?>> beans = beanManager.getBeans(PrePersistAuditListener.class);
         for (Bean<?> bean : beans)
         {
@@ -65,7 +67,8 @@ public class AuditEntityListener
     @PreUpdate
     public void update(Object entity)
     {
-        BeanManager beanManager = BeanManagerProvider.getInstance().getBeanManager();
+//        BeanManager beanManager = BeanManagerProvider.getInstance().getBeanManager();
+        BeanManager beanManager = CDI.current().getBeanManager();
         Set<Bean<?>> beans = beanManager.getBeans(PreUpdateAuditListener.class);
         for (Bean<?> bean : beans)
         {

@@ -38,15 +38,16 @@
 package org.apache.deltaspike.jpa.impl.entitymanager;
 
 import jakarta.enterprise.context.ApplicationScoped;
+//import jakarta.enterprise.inject.spi.BeanManager;
+import jakarta.enterprise.inject.spi.CDI;
 
-
-import java.util.Map;
+//import java.util.Map;
 import java.util.Properties;
-import java.util.Set;
+//import java.util.Set;
 
 //import org.apache.deltaspike.core.api.config.ConfigResolver;
 //import org.apache.deltaspike.core.api.config.PropertyLoader;
-import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
+//import org.apache.deltaspike.core.api.provider.BeanManagerProvider;
 import org.apache.deltaspike.jpa.spi.entitymanager.PersistenceConfigurationProvider;
 
 /**
@@ -62,7 +63,7 @@ public class PersistenceConfigurationProviderImpl implements PersistenceConfigur
      *
      * @see #addConfigProperties(Properties, String)
      */
-    private static final String CONFIG_PREFIX = "deltaspike.persistence.config.";
+//    private static final String CONFIG_PREFIX = "deltaspike.persistence.config.";
 
     @Override
     public Properties getEntityManagerFactoryConfiguration(String persistenceUnitName)
@@ -87,7 +88,8 @@ public class PersistenceConfigurationProviderImpl implements PersistenceConfigur
         unitProperties = addConfigProperties(unitProperties, persistenceUnitName);
 
         // add spec expected attributes
-        unitProperties.put("jakarta.persistence.bean.manager", BeanManagerProvider.getInstance().getBeanManager());
+//        unitProperties.put("jakarta.persistence.bean.manager", BeanManagerProvider.getInstance().getBeanManager());
+        unitProperties.put("jakarta.persistence.bean.manager", CDI.current().getBeanManager());
 
         return unitProperties;
     }

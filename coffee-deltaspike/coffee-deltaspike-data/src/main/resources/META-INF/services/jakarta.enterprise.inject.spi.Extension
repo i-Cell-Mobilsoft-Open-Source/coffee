@@ -17,10 +17,6 @@
 # under the License.
 #
 
-# DeltaSpike BeanManager provider
-# Ki kellene dobni, CDI helyettesiti
-org.apache.deltaspike.core.api.provider.BeanManagerProvider
-
 #org.apache.deltaspike.partialbean.impl.PartialBeanBindingExtension
 
 org.apache.deltaspike.data.impl.RepositoryExtension

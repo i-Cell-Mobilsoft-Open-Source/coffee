@@ -44,10 +44,11 @@ import jakarta.enterprise.inject.Any;
 import jakarta.enterprise.context.Dependent;
 import jakarta.enterprise.context.spi.CreationalContext;
 import jakarta.enterprise.inject.Typed;
-import jakarta.enterprise.inject.spi.AnnotatedType;
+//import jakarta.enterprise.inject.spi.AnnotatedType;
 import jakarta.enterprise.inject.spi.Bean;
 import jakarta.enterprise.inject.spi.BeanManager;
-import jakarta.enterprise.inject.spi.InjectionTarget;
+import jakarta.enterprise.inject.spi.CDI;
+//import jakarta.enterprise.inject.spi.InjectionTarget;
 
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
@@ -549,6 +550,7 @@ public final class BeanProvider
      */
     private static BeanManager getBeanManager()
     {
-        return BeanManagerProvider.getInstance().getBeanManager();
+//        return BeanManagerProvider.getInstance().getBeanManager();
+        return CDI.current().getBeanManager();
     }
 }
