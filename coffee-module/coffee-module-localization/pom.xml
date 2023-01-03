@@ -25,7 +25,7 @@
 
 		<dependency>
 			<groupId>hu.icellmobilsoft.coffee</groupId>
-			<artifactId>coffee-deltaspike</artifactId>
+			<artifactId>coffee-deltaspike-message</artifactId>
 		</dependency>
 	</dependencies>
 
