@@ -62,24 +62,45 @@ hogy pótolja azokat a funkcionalitásokat melyeket a deltaspike dependency kido
 után nincs mivel pótolni.
 Ez lehet akár végleges megoldás is, idővel meglátjuk.
 
+.coffee-deltaspike-message
 Tartalmazza a nyelvesítésért felelő osztályokat,
 1:1 megfelel az eddig használt megoldáshoz - class név szinten.
-A nyelvesítés egy "lite" másolata az eredetinek,
+A nyelvesítés egy "lite" másolata az eredetinek
+(https://deltaspike.apache.org/documentation/core.html#Messagesandi18n),
 @MessageBundle és @MessageTemplate nélkül.
-A MessageContext és a Locale resolver teljesen a régi szerint működik.
+A MessageContext és a Locale resolver teljesen az eredeti szerint működik.
+
+.coffee-deltaspike-data
+Helyettesíti az eredeti
+https://deltaspike.apache.org/documentation/data.html[deltaspike-data-module]
+funkcionalitást, leszámítva pár dolgot:
+
+* Deactivating Repositories
+* Transactions
+* Multiple entityManager
+* Auditing
 
 .Átállás
-Az implementáló projekteken is hasonló változásra lessz szükség.
+Az implementáló projekteken az esetleges deltaspike message és data dependency-t
+le kell cserélni a `coffee-deltaspike-message` illetve `coffee-deltaspike-data` dependencyre.
+Az eddig használt `org.apache.deltaspike.jpa.api.transaction.Transactional`
+annotációt a `jakarta.transaction.Transactional` veszi át, mindenhol le kell cserélni.
 
 === coffee-rest
-
-Kidobásra került a `deltaspike-jpa-module`,
-alternatíva nincs helyette.
-Ez befolyásolja a `@Transactional` használatát, rollback mechanizmus így megváltozott.
 
 .Project stage kezelés
 Deltaspike core kidobása után a `org.apache.deltaspike.core.api.projectstage.ProjectStage`
 megszünt és a `hu.icellmobilsoft.coffee.rest.projectstage.ProjectStage` vette át a helyét.
+
+.Átállás
+Régi `org.apache.deltaspike.core.api.projectstage.ProjectStage`
+potolni kell az `hu.icellmobilsoft.coffee.rest.projectstage.ProjectStage` osztályal.
+
+=== coffee-jpa
+
+Kidobásra került a `deltaspike-jpa-module`,
+alternatíva nincs helyette.
+Ez befolyásolja a `@Transactional` használatát, rollback mechanizmus így megváltozott.
 
 .Átállás
 Sajnos a Hibernate 6 upgrade ráhatott a BatchService-re,
@@ -124,8 +145,6 @@ coffee-module-mp-opentracing modul egyenlőre nem regisztrálja be a `@Traceable
 annotációval ellátott osztályokat/metódusokat a tracing tételek közé.
 
 == TODO
-.coffee-model-base
-Utolsó deltaspike dependency függőségeket tartalmaz.
 
 .JUnit @ParameterizedTest annotáció
 Ahhoz hogy működjon a CDI kezelt paraméter injecion kell a "@ExplicitParamInjection"
