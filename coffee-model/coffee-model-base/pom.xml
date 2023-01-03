@@ -29,32 +29,10 @@
 		</dependency>
 
 		<dependency>
-			<groupId>org.apache.deltaspike.modules</groupId>
-			<artifactId>deltaspike-data-module-api</artifactId>
-			<version>1.9.6</version>
-			<exclusions>
-				<exclusion>
-					<groupId>org.apache.deltaspike.core</groupId>
-					<artifactId>deltaspike-core-api</artifactId>
-				</exclusion>
-			</exclusions>
+			<groupId>hu.icellmobilsoft.coffee</groupId>
+			<artifactId>coffee-deltaspike-data</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>org.apache.deltaspike.modules</groupId>
-			<artifactId>deltaspike-data-module-impl</artifactId>
-            <version>1.9.6</version>
-			<scope>compile</scope>
-			<exclusions>
-				<exclusion>
-					<groupId>org.apache.deltaspike.core</groupId>
-					<artifactId>deltaspike-core-api</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>org.apache.deltaspike.core</groupId>
-					<artifactId>deltaspike-core-impl</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
+
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
