@@ -17,12 +17,13 @@
  * limitations under the License.
  * #L%
  */
-package hu.icellmobilsoft.coffee.tool.protocol.handler;
+package hu.icellmobilsoft.coffee.se.net;
 
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLStreamHandler;
+import java.text.MessageFormat;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -48,18 +49,57 @@ import org.apache.commons.lang3.StringUtils;
 public class MavenURLHandler extends URLStreamHandler {
 
     private static final String SEPARATOR = "!";
+    private static final String DIR_SEPARATOR = "/";
+
+    private final ClassLoader classLoader;
+
+    /**
+     * Instantiates a new MavenURLHandler, will use MavenURLHandler.class.getClassLoader() as classloader
+     */
+    public MavenURLHandler() {
+        this(MavenURLHandler.class.getClassLoader());
+    }
+
+    /**
+     * Instantiates a new MavenURLHandler.
+     *
+     * @param classLoader
+     *            the class loader to find urls
+     */
+    public MavenURLHandler(ClassLoader classLoader) {
+        this.classLoader = classLoader;
+    }
 
     /** {@inheritDoc} */
     @Override
     protected URLConnection openConnection(URL url) throws IOException {
         String path = url.getPath();
+        String originalPath = path;
+
         // levagjuk az elso "!" jelig majd a maradekot a classpathban keressuk
         if (StringUtils.contains(path, SEPARATOR)) {
             path = StringUtils.substringAfter(path, SEPARATOR);
         }
-        URL classPathUrl = getClass().getResource(path);
-
-        // kesobbiekben annyit lehet csinalni hogy a valos classban keressuk
+        URL classPathUrl = getResource(path);
+        // Ha nem sikerült levágjuk a path kezdő "/"-t, pl. ant jar-okban keres
+        if (classPathUrl == null && StringUtils.startsWith(path, DIR_SEPARATOR)) {
+            path = StringUtils.substringAfter(path, DIR_SEPARATOR);
+            classPathUrl = getResource(path);
+        }
+        if (classPathUrl == null) {
+            throw new IOException(MessageFormat.format("Could not find resource with path: [{0}]", originalPath));
+        }
         return classPathUrl.openConnection();
+    }
+
+    private URL getResource(String path) {
+
+        URL result = null;
+        if (classLoader != null) {
+            result = classLoader.getResource(path);
+        } else {
+            result = getClass().getClassLoader().getResource(path);
+        }
+        return result;
     }
 }

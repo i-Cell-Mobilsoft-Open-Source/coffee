@@ -220,14 +220,14 @@ Mivel az XSD Catalog generálásnál használunk maven által bekötött függő
 ...
 ----
 Így fel kell készülni a `maven:` URI protokolhoz kezelésére.
-Ez el is készült a `hu.icellmobilsoft.coffee.tool.protocol.handler.MavenURLHandler` osztályban,
+Ez el is készült a `hu.icellmobilsoft.coffee.se.net.MavenURLHandler` osztályban,
 amit aktiválni kell.
 Ez megtörténhet több féle képpen, ajánlott megoldás a következő: 
 
 .src/main/resources/META-INF/services/java.net.spi.URLStreamHandlerProvider
 [source,txt]
 ----
-hu.icellmobilsoft.coffee.rest.validation.catalog.MavenURLStreamHandlerProvider
+hu.icellmobilsoft.coffee.se.net.provider.MavenURLStreamHandlerProvider
 ----
 Tehát létre kell hozni a `src/main/resources/META-INF/services/java.net.spi.URLStreamHandlerProvider` fájlt
 és beleírni azt a class-t mely kezelésbe veszi (Coffee része).

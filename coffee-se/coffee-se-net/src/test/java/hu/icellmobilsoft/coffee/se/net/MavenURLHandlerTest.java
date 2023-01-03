@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package hu.icellmobilsoft.coffee.tool.protocol.handler;
+package hu.icellmobilsoft.coffee.se.net;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -30,15 +30,15 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 
-import hu.icellmobilsoft.coffee.tool.protocol.handler.MavenURLHandler;
-
 /**
+ * Test class for {@link MavenURLHandler}
+ * 
  * @author imre.scheffer
  *
  */
 @DisplayName("Testing maven URL")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class MavenURLHandlerTest {
+class MavenURLHandlerTest {
 
     @Order(1)
     @Test

@@ -52,7 +52,7 @@
 					<target>
 						<!--https://eclipse-ee4j.github.io/jaxb-ri/4.0.1/docs/ch04.html#tools-xjc-ant-task-->
 						<taskdef name="register-maven-url-handler"
-								 classname="hu.icellmobilsoft.poc.jaxb40.ant.maven.url.MavenURLHandlerRegistrationTask"/>
+								 classname="hu.icellmobilsoft.coffee.se.net.task.MavenURLHandlerRegistrationTask"/>
 						<taskdef name="xjc" classname="com.sun.tools.xjc.XJCTask"/>
 
 						<property name="generateDirectory"
@@ -103,9 +103,9 @@
 						<scope>compile</scope>
 					</dependency>
 					<dependency>
-						<groupId>hu.icellmobilsoft.poc.jaxb40</groupId>
-						<artifactId>ant-maven-url-handler</artifactId>
-						<version>1.0-SNAPSHOT</version>
+						<groupId>hu.icellmobilsoft.coffee</groupId>
+						<artifactId>coffee-se-net</artifactId>
+						<version>${project.version}</version>
 					</dependency>
 					<dependency>
 						<groupId>hu.icellmobilsoft.jaxb</groupId>
@@ -117,11 +117,12 @@
 						<artifactId>jaxb-fluent-api</artifactId>
 						<version>2.1.8</version>
 					</dependency>
-					<dependency>
-						<groupId>org.jvnet.jaxb2_commons</groupId>
-						<artifactId>jaxb2-basics-annotate</artifactId>
-						<version>1.1.0</version>
-					</dependency>
+<!--					Nincs még belőle jaxb4-->
+<!--					<dependency>-->
+<!--						<groupId>org.jvnet.jaxb2_commons</groupId>-->
+<!--						<artifactId>jaxb2-basics-annotate</artifactId>-->
+<!--						<version>1.1.0</version>-->
+<!--					</dependency>-->
 					<dependency>
 						<groupId>com.fasterxml.jackson.core</groupId>
 						<artifactId>jackson-databind</artifactId>

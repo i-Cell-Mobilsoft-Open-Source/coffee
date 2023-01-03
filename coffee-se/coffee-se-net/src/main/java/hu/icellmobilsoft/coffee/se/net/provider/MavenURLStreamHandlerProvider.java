@@ -17,13 +17,13 @@
  * limitations under the License.
  * #L%
  */
-package hu.icellmobilsoft.coffee.rest.validation.catalog;
+package hu.icellmobilsoft.coffee.se.net.provider;
 
 import java.net.URLStreamHandler;
 import java.net.spi.URLStreamHandlerProvider;
 
 import hu.icellmobilsoft.coffee.se.logging.Logger;
-import hu.icellmobilsoft.coffee.tool.protocol.handler.MavenURLHandler;
+import hu.icellmobilsoft.coffee.se.net.MavenURLHandler;
 
 /**
  * "maven" URL protocol olvasashoz szolgalo Provider. Regisztralni szukseges a
@@ -36,7 +36,26 @@ public class MavenURLStreamHandlerProvider extends URLStreamHandlerProvider {
 
     private static final Logger LOGGER = Logger.getLogger(MavenURLStreamHandlerProvider.class);
 
-    private static String PREFIX = "sun.net.www.protocol";
+    private static final String PREFIX = "sun.net.www.protocol";
+
+    private final ClassLoader classLoader;
+
+    /**
+     * Instantiates a new MavenURLStreamHandlerProvider, will use MavenURLStreamHandlerProvider.class.getClassLoader() as classloader
+     */
+    public MavenURLStreamHandlerProvider() {
+        this(MavenURLStreamHandlerProvider.class.getClassLoader());
+    }
+
+    /**
+     * Instantiates a new MavenURLStreamHandlerProvider.
+     *
+     * @param classLoader
+     *            the class loader to find urls
+     */
+    public MavenURLStreamHandlerProvider(ClassLoader classLoader) {
+        this.classLoader = classLoader;
+    }
 
     /** {@inheritDoc} */
     @Override
@@ -46,15 +65,15 @@ public class MavenURLStreamHandlerProvider extends URLStreamHandlerProvider {
         // de nem mukodik a TT-ben sem a "java.protocol.handler.pkgs" settings,
         // sem a src/main/resources/META-INF/services/java.net.spi.URLStreamHandlerProvider megoldas sem,
         // mert a jboss indulasnal beolvas sajat ModularURLStreamHandlerFactory osztaly
-        return "maven".equals(protocol) ? new MavenURLHandler() : createDefaultURLStreamHandler(protocol);
+        return "maven".equals(protocol) ? new MavenURLHandler(classLoader) : createDefaultURLStreamHandler(protocol);
     }
 
     /**
      * {@code URL$DefaultFactory} osztaly masolata
-     * 
+     *
      * @param protocol
      *            protocol
-     * 
+     *
      * @return default {@code URLStreamHandler} or null in case of any exception
      *
      */

@@ -24,6 +24,7 @@
 
 	<modules>
 		<module>coffee-se-logging</module>
+		<module>coffee-se-net</module>
 	</modules>
 
 </project>
