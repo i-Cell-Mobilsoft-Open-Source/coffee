@@ -53,8 +53,23 @@ fájlban a fejléc módosítását követeli:
 </jaxb:bindings>
 ----
 
-Egyenlőre nincs jaxb4 támogatás a XSD -> DTO generálásnál, csak jaxb3 van pár forkolt repository.
-A `coffee-dto-gen` projekt is jaxb3-ra generál egyenlőre.
+IMPORTANT:: A JAXB 4.0 specifikációban az jaxb xml schema verziója, maradt `3.0`!
+https://jakarta.ee/specifications/xml-binding/4.0/[Jakarta XML Binding 4.0]
+
+Egyenlőre nincs elérhetó jaxb4 maven plugin az XSD -> DTO generálásnál, csak jaxb3 van pár forkolt repository.
+Viszont a referencia implementáció tartalmaz generátort (XJC) és ant taskot hozzá, ezt pedig futtathatjuk ant-run-pluginnal,
+ezt használja a `coffee-dto-gen` projekt is egyelőre.
+
+WARNING:: A `org.jvnet.jaxb2_commons:jaxb2-basics-annotate` pluginból jelenleg nem érhető el jaxb3 vagy jaxb4 verzió,
+mivel jaxb4-el törik és coffee-ban nincs használva így egyelőre ki van kötve, de projekten esetleg okozhat gondot.
+
+.Átállás
+* A `hu.icellmobilsoft.coffee.tool.protocol.handler.MavenUrlHandler` áthelyezésre került,
+új elérése `hu.icellmobilsoft.coffee.se.net.MavenURLHandler` és `coffee-tool`-ból a `coffee-se-net` modulba került
+* A `hu.icellmobilsoft.coffee.rest.validation.catalog.MavenURLStreamHandlerProvider` áthelyezésre került,
+új elérése `hu.icellmobilsoft.coffee.se.net.provider.MavenURLStreamHandlerProvider` és `coffee-rest`-ből a `coffee-se-net` modulba került
+* Az eddig használt plugin cserélendő bővebb leírások a <<howto_jaxb40_xsd_generate, Jakarta XML Binding 4.0 XSD -> DTO generálás>>
+és <<howto_xsd_catalog,  XSD Catalog és generálás>> fejezetekben található.
 
 === coffee-deltaspike
 Létrejött a coffee-deltaspike alprojekt, ami azt a célt szolgálja,

@@ -1,0 +1,101 @@
+[#howto_jaxb40_xsd_generate]
+= Jakarta XML Binding 4.0 XSD -> DTO generálás
+
+A https://github.com/highsource/maven-jaxb2-plugin[JAXB2 Maven Plugin
+]-ból még nem készült 4.0-val kompatibilis verzió,
+viszont a korábbi plugin is XJC-t használ a referencia implementációból, ami elérhető 4.0-s verzióban is: https://github.com/eclipse-ee4j/jaxb-ri[Eclipse Implementation of JAXB
+].
+Az implementáció tartalmaz ant task-ot XJC futtatásra, így ezt alternatív megoldásként lehet használni ant runner-en keresztül.
+
+== Generálás
+
+* `org.apache.maven.plugins:maven-antrun-plugin` plugin behúzása
+** `goal`: run
+** `execution.phase`: generate-sources
+* plugin dependency-k felvétele:
+** `com.sun.xml.bind:jaxb-xjc:4.0.1`
+** `com.sun.xml.bind:jaxb-impl:4.0.1`
++
+WARNING:: megtévesztő a com.sun, mert már eclipse jakarta, de a referencia implementáció nem lett átnevezve
++
+** bármi egyéb xjc plugin amit használnánk: openapi, fluent api stb...
+* xjc target bekötése a plugin `target` mezőjébe:
++
+[source,xml]
+----
+<target>
+    <taskdef name="xjc" classname="com.sun.tools.xjc.XJCTask"/> <!--1-->
+
+    <mkdir dir="${generateDirectory}"/> <!--2-->
+    <mkdir dir="${generateDirectory}/META-INF"/>
+
+    <xjc destdir="${generateDirectory}" <!--3-->
+        catalog="src/main/resources/xsd/hu/icellmobilsoft/poc/jaxb40/common/super.catalog.xml" <!--4-->
+        extension="true">
+
+        <schema dir="src/main/resources" includes="xsd/hu/icellmobilsoft/poc/jaxb40/common/super.xsd"/> <!--5-->
+        <binding dir="src/main/resources" includes="xsd/hu/icellmobilsoft/poc/jaxb40/common/bindings.xjb"/> <!--6-->
+
+        <!-- episode, hogy később lehessen hivatkozni rá-->
+        <arg value="-episode"/> <!--7-->
+        <arg value="${generateDirectory}/META-INF/sun-jaxb.episode"/>
+    </xjc>
+</target>
+
+----
+<1> XJC task definiálása
+<2> generált forráskód helyét létre kell hozni
+<3> Hova generálja a DTO-kat
+<4> XSD Catalog helye
+<5> Super XSD séma
+<6> binding fájlok
+<7> a jaxb plugin ezt alapból generálta, itt külön meg kell adni, hogy később episode-ként lehessen hivatkozni rá
++
+* A legenerált osztályokat fordítani is kell, erre használható a `org.codehaus.mojo:build-helper-maven-plugin`,
+java kódra az `add-source`, resource-ra (pl. episode fájl) az `add-resource` goal.
+
+=== Catalog maven: url protocol
+A `maven:` url protocol nem standard, be kell állítani külön erre használható a <<common_core_coffee-se_coffee-se-net, coffee-se-net>> modul.
+
+Bekötés:
+
+. plugin dependecyk közé fel kell venni a `hu.icellmobilsoft.coffee:coffee-se-net` modult, ami tartalmaz ant taskot az url kezelésre
+. az xjc futás előtt meg kell hívni a modul taskját
++
+[source,xml]
+----
+<target>
+    <taskdef name="register-maven-url-handler"
+             classname="hu.icellmobilsoft.poc.jaxb40.ant.maven.url.MavenURLHandlerRegistrationTask"/>
+    <register-maven-url-handler/>
+
+    <xjc/>
+</target>
+----
+
+=== Dependecy-k használata újragenerálás nélkül
+
+Ahhoz hogy az xjc ne generáljon újra dependecyben lévő xsd-ket, amiknek már van generált dto-ja,
+bindingként kell hozzáadni a generált dto-khoz tartozó episode fájlt, ezt legegyszerűbben unzip-el tudjuk kivenni a dependencyből:
+
+[source,xml]
+----
+<target>
+    <unzip src="${hu.icellmobilsoft.poc.jaxb40:common-api-gen:jar}" <!--1-->
+           dest="${project.build.directory}/generated-sources/common-api-gen"> <!--2-->
+        <patternset>
+            <include name="META-INF/sun-jaxb.episode"/> <!--3-->
+        </patternset>
+    </unzip>
+    <xjc destdir="${generateDirectory}" catalog="src/main/resources/xsd/hu/icellmobilsoft/poc/jaxb40/project/super.catalog.xml"
+         extension="true">
+
+        <binding dir="${project.build.directory}/generated-sources/common-api-gen" includes="META-INF/sun-jaxb.episode"/> <!--4-->
+
+    </xjc>
+</target>
+----
+<1> maven dependency formátum: `+${groupId:artifactId:type}+` vagy `+${groupId:artifactId:type:classifier}+`
+<2> episode fájl cél könyvtára
+<3> episode fájl elérése a dependency jar-on belül
+<4> a kicsomagolt episode fájl használata binding-ként

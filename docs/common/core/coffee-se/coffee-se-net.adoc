@@ -1,0 +1,17 @@
+[#common_core_coffee-se_coffee-se-net]
+= coffee-se-net
+
+A `java.net` package-et kiegészítő modul, JakartaEE függőséget nem tartalmaz.
+
+== MavenUrlHandler
+Handler a `maven:` url protokoll kezelésére, a használathoz aktiválni kell.
+
+Ez történhet a `URL.setURLStreamHandlerFactory(factory);` static metódussal vagy ServiceProvider-en keresztül:
+
+.src/main/resources/META-INF/services/java.net.spi.URLStreamHandlerProvider
+[source,txt]
+----
+hu.icellmobilsoft.coffee.se.net.provider.MavenURLStreamHandlerProvider
+----
+
+Példa használat a <<common_core_coffee-rest_JaxbTool, JaxbTool>> fejezetben található.

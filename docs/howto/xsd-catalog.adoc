@@ -215,6 +215,8 @@ Ha a változás nagyon drasztikus akkor a CDI segítségével az Coffee logikát
 
 === Generálás
 A generálás a mi esetünkben a maven segítségével történik. Példa:
+
+
 [source,xml]
 ----
     <dependencies>
@@ -228,67 +230,88 @@ A generálás a mi esetünkben a maven segítségével történik. Példa:
         <dependency>
             <groupId>org.eclipse.microprofile.openapi</groupId>
             <artifactId>microprofile-openapi-api</artifactId> //<2>
-            <version>1.0.1</version>
+            <version>2.0.0</version>
         </dependency>
     </dependencies>
 
     <build>
         <plugins>
             <plugin>
-                <groupId>org.jvnet.jaxb2.maven2</groupId>
-                <artifactId>maven-jaxb2-plugin</artifactId> //<3>
-                <version>0.14.0</version>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>3.1.0</version>
                 <executions>
-                    <execution>
-                        <id>coffee-super</id>
-                        <goals>
-                            <goal>generate</goal>
-                        </goals>
-                        <configuration>
-                            <strict>false</strict>
-                            <!-- https://github.com/highsource/maven-jaxb2-plugin/wiki/Catalogs-in-Strict-Mode -->
-                            <catalog>src/main/resources/xsd/hu/icellmobilsoft/coffee/dto/super.catalog.xml</catalog>  //<4>
-                            <schemaIncludes>
-                                <include>xsd/hu/icellmobilsoft/coffee/dto/super.xsd</include>  //<5>
-                            </schemaIncludes>
-                            <bindingIncludes>
-                                <include>xsd/hu/icellmobilsoft/coffee/dto/bindings.xjb</include>  //<6>
-                            </bindingIncludes>
-                            <generateDirectory>${project.build.directory}/generated-sources/src/main/java</generateDirectory>  //<7>
-                        </configuration>
-                    </execution>
-                </executions>
-                <configuration>
-                    <verbose>true</verbose>
-                    <schemaDirectory>src/main/resources</schemaDirectory>
-                    <args>
-                        <arguments>-openapify</arguments> //<8>
-                        <arguments>-Xfluent-api</arguments> //<9>
-                        <arguments>-Xannotate</arguments> //<10>
-                    </args>
-                    <plugins>
-                        <plugin>
-                            <groupId>hu.icellmobilsoft.jaxb</groupId>
-                            <artifactId>openapi-jaxb</artifactId> //<8>
-                            <version>1.1.0</version>
-                        </plugin>
-                        <plugin>
-                            <groupId>net.java.dev.jaxb2-commons</groupId>
-                            <artifactId>jaxb-fluent-api</artifactId> //<9>
-                            <version>2.1.8</version>
-                        </plugin>
-                        <plugin>
-                            <groupId>org.jvnet.jaxb2_commons</groupId>
-                            <artifactId>jaxb2-basics-annotate</artifactId> //<10>
-                            <version>1.0.4</version>
-                        </plugin>
-                        <plugin>
-                            <groupId>com.fasterxml.jackson.core</groupId>
-                            <artifactId>jackson-databind</artifactId> //<10>
-                            <version>2.9.9.1</version>
-                        </plugin>
-                    </plugins>
-                </configuration>
+					<execution>
+						<id>coffee-super</id>
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<phase>generate-sources</phase>
+					</execution>
+				</executions>
+				<configuration>
+					<target>
+						<!--https://eclipse-ee4j.github.io/jaxb-ri/4.0.1/docs/ch04.html#tools-xjc-ant-task-->
+						<taskdef name="register-maven-url-handler"
+								 classname="hu.icellmobilsoft.coffee.se.net.task.MavenURLHandlerRegistrationTask"/> //<11>
+						<taskdef name="xjc" classname="com.sun.tools.xjc.XJCTask"/> //<3>
+
+						<property name="generateDirectory"
+								  value="${project.build.directory}/generated-sources/src/main/java"/> //<7>
+						<!-- handle maven: url protocols-->
+						<register-maven-url-handler/>
+
+						<mkdir dir="${generateDirectory}"/>
+						<mkdir dir="${generateDirectory}/META-INF"/>
+
+						<xjc destdir="${generateDirectory}"
+							 catalog="src/main/resources/xsd/hu/icellmobilsoft/coffee/dto/super.catalog.xml" //<4>
+							 extension="true">
+
+							<schema dir="src/main/resources" includes="xsd/hu/icellmobilsoft/coffee/dto/super.xsd"/> //<5>
+							<binding dir="src/main/resources" includes="xsd/hu/icellmobilsoft/coffee/dto/bindings.xjb"/> //<6>
+
+							<arg value="-verbose"/>
+
+							<!-- plugin kapcsolók -->
+							<arg value="-openapify"/>  //<8>
+							<arg value="-Xfluent-api"/> //<9>
+
+							<!-- episode, hogy később lehessen hivatkozni rá-->
+							<arg value="-episode"/>
+							<arg value="${generateDirectory}/META-INF/sun-jaxb.episode"/>
+						</xjc>
+					</target>
+				</configuration>
+                <dependencies>
+					<dependency>
+						<groupId>com.sun.xml.bind</groupId>
+						<artifactId>jaxb-xjc</artifactId> //<10>
+						<version>4.0.1</version>
+						<scope>compile</scope>
+					</dependency>
+					<dependency>
+						<groupId>com.sun.xml.bind</groupId>
+						<artifactId>jaxb-impl</artifactId> //<10>
+						<version>4.0.1</version>
+						<scope>compile</scope>
+					</dependency>
+					<dependency>
+						<groupId>hu.icellmobilsoft.coffee</groupId>
+						<artifactId>coffee-se-net</artifactId> //<11>
+						<version>${project.version}</version>
+					</dependency>
+					<dependency>
+						<groupId>hu.icellmobilsoft.jaxb</groupId>
+						<artifactId>openapi-jaxb-plugin</artifactId>  //<8>
+						<version>2.0.0</version>
+					</dependency>
+					<dependency>
+						<groupId>net.java.dev.jaxb2-commons</groupId>
+						<artifactId>jaxb-fluent-api</artifactId> //<9>
+						<version>2.1.8</version>
+					</dependency>
+				</dependencies>
             </plugin>
         </plugins>
     </build>
@@ -296,7 +319,7 @@ A generálás a mi esetünkben a maven segítségével történik. Példa:
 ----
 <1> Ez a csomag tartalmazza az XSD fájlokat 
 <2> A kigenerált DTO-k tartalmaznak OpenApi annotációkat, és hogy a generált osztályok forduljanak, szükséges a specifikáció bekötése
-<3> Maven plugin mely vezérli a generálást
+<3> Ant task mely vezérli a generálást
 <4> XSD catalog fájl eléresi helye
 <5> Fő XSD melyet generálunk.
 Ez valójában lehet több kicsi is, de akkor folyton módosítani kell a pom.xml-t ha változás történik.
@@ -308,10 +331,8 @@ A plugin ezt automatán beteszi a forráskódok forrásai közé, Eclipse és ID
 <8> Kapcsoló hogy generálja az OpenApi annotációkat, `hu.icellmobilsoft.jaxb:openapi-jaxb` plugin által.
 <9> Kapcsoló hogy generálja az fluent kódoláshoz szükséges metódusokat, `net.java.dev.jaxb2-commons:jaxb-fluent-api` plugin által.
 Nagyon hasznos tud lenni, sok felesleges sort az üzleti logibában meg tud spórolni.
-<10> Kapcsoló hogy lehessen használni a javax.annotation.* annotáciokat
-az XSD-ben és az szerint is tudjon generálni.
-Bővebb leírás a https://github.com/highsource/jaxb2-annotate-plugin[jaxb2-annotate-plugin]
-és https://stackoverflow.com/questions/26430199/http-annox-dev-java-net-customizations-require-the-xannotate-switch[stackoverflow.com]  oldalakon
+<10> Generáláshoz használt jaxb és xjc implementáció
+<11> A `maven:` url protokoll feloldásához szükséges
 
 === OpenApi, Swagger
 Ahogy már említve volt a generált DTO-k a komplett dokumentáció részei.
@@ -472,7 +493,7 @@ Maga a `maven:` protocol ismeretlen a java.net.URL számára, így írnunk kell 
 .coffee-tool/src/main/java/hu/icellmobilsoft/coffee/tool/protocol/handler/MavenURLHandler.java tartalmi lényege
 [source,java,indent=0]
 ----
-include::../../coffee-tool/src/main/java/hu/icellmobilsoft/coffee/tool/protocol/handler/MavenURLHandler.java[lines=29..44]
+include::../../coffee-se/coffee-se-net/src/main/java/hu/icellmobilsoft/coffee/se/net/MavenURLHandler.java[lines=30..45]
 ----
 Ezt a handlert még be kell regisztrálni a következő módon:
 
@@ -485,7 +506,7 @@ Mi esetünkben így fog kinézni:
 .src/main/resources/META-INF/services/java.net.spi.URLStreamHandlerProvider
 [source,txt]
 ----
-hu.icellmobilsoft.coffee.tool.protocol.handler.MavenURLStreamHandlerProvider
+hu.icellmobilsoft.coffee.se.net.provider.MavenURLStreamHandlerProvider
 ----
 Innentől kezdve a java 9+ XSD Catalog kezelése képes felolvasni a generátor által ismert útvonalat.
 

@@ -4,3 +4,4 @@
 Modul célja a lehetőség szerint jakarta EE API-tól független osztályok gyűjtése.
 
 include::coffee-se/coffee-se-logging.adoc[leveloffset=+1]
+include::coffee-se/coffee-se-net.adoc[leveloffset=+1]
