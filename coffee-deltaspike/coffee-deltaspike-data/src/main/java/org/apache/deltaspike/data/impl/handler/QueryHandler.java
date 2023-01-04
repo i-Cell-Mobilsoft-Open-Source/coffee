@@ -51,7 +51,7 @@ import org.apache.deltaspike.jpa.api.transaction.Transactional;
 import org.apache.deltaspike.jpa.impl.entitymanager.EntityManagerRef;
 import org.apache.deltaspike.jpa.impl.entitymanager.EntityManagerRefLookup;
 import org.apache.deltaspike.jpa.spi.entitymanager.ActiveEntityManagerHolder;
-import org.apache.deltaspike.jpa.spi.transaction.TransactionStrategy;
+//import org.apache.deltaspike.jpa.spi.transaction.TransactionStrategy;
 
 import jakarta.enterprise.inject.Any;
 import jakarta.enterprise.inject.spi.BeanManager;
@@ -96,8 +96,8 @@ public class QueryHandler implements Serializable, InvocationHandler
     @Inject
     private BeanManager beanManager;
 
-    @Inject
-    private TransactionStrategy transactionStrategy;
+//    @Inject
+//    private TransactionStrategy transactionStrategy;
 
     @Inject
     private ActiveEntityManagerHolder activeEntityManagerHolder;
@@ -127,23 +127,23 @@ public class QueryHandler implements Serializable, InvocationHandler
                 activeEntityManagerHolder.set(entityManager);
             }
 
-            return transactionStrategy.execute(
-                new AbstractInvocationContext<Object>(proxy, method, args, null)
-                {
-                    @Override
-                    public Object proceed() throws Exception
-                    {
-                        try
-                        {
+//            return transactionStrategy.execute(
+//                new AbstractInvocationContext<Object>(proxy, method, args, null)
+//                {
+//                    @Override
+//                    public Object proceed() throws Exception
+//                    {
+//                        try
+//                        {
                             return process(proxy, method, args, repositoryMetadata, repositoryMethodMetadata);
-                        }
-                        catch (Throwable t)
-                        {
-                            throw new RuntimeException(t);
-//                            throw ExceptionUtils.throwAsRuntimeException(t);
-                        }
-                    }
-                });
+//                        }
+//                        catch (Throwable t)
+//                        {
+//                            throw new RuntimeException(t);
+////                            throw ExceptionUtils.throwAsRuntimeException(t);
+//                        }
+//                    }
+//                });
         }
         else
         {

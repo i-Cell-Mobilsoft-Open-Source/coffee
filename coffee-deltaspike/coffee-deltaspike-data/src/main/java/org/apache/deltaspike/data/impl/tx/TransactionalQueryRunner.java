@@ -45,14 +45,14 @@ import org.apache.deltaspike.data.impl.builder.QueryBuilder;
 import org.apache.deltaspike.data.impl.handler.CdiQueryInvocationContext;
 import org.apache.deltaspike.data.impl.handler.QueryRunner;
 import org.apache.deltaspike.jpa.spi.entitymanager.ActiveEntityManagerHolder;
-import org.apache.deltaspike.jpa.spi.transaction.TransactionStrategy;
+//import org.apache.deltaspike.jpa.spi.transaction.TransactionStrategy;
 
 @ApplicationScoped
 public class TransactionalQueryRunner implements QueryRunner
 {
 
-    @Inject
-    private TransactionStrategy strategy;
+//    @Inject
+//    private TransactionStrategy strategy;
 
     @Inject
     private ActiveEntityManagerHolder activeEntityManagerHolder;
@@ -84,14 +84,14 @@ public class TransactionalQueryRunner implements QueryRunner
     protected Object executeTransactional(final QueryBuilder builder, final CdiQueryInvocationContext context)
         throws Exception
     {
-        return strategy.execute(new InvocationContextWrapper(context)
-        {
-            @Override
-            public Object proceed() throws Exception
-            {
+//        return strategy.execute(new InvocationContextWrapper(context)
+//        {
+//            @Override
+//            public Object proceed() throws Exception
+//            {
                 return builder.executeQuery(context);
-            }
-        });
+//            }
+//        });
     }
 
 }
