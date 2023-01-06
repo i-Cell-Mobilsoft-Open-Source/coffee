@@ -19,14 +19,23 @@
  */
 package hu.icellmobilsoft.coffee.rest.log;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.time.OffsetDateTime;
 
+import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.core.MediaType;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.platform.commons.util.StringUtils;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import hu.icellmobilsoft.coffee.dto.common.commonservice.BaseResponse;
 import hu.icellmobilsoft.coffee.dto.common.commonservice.ContextType;
@@ -39,9 +48,17 @@ import hu.icellmobilsoft.coffee.rest.log.annotation.LogSpecifier;
  * @author peter.szabo
  */
 @DisplayName("RequestResponseLogger class tests")
+@ExtendWith(MockitoExtension.class)
 public class RequestResponseLoggerTest {
 
     private RequestResponseLogger requestResponseLogger = new RequestResponseLogger();
+
+    private ContainerRequestContext requestContext;
+
+    @BeforeEach
+    public void setup() {
+        requestContext = Mockito.mock(ContainerRequestContext.class);
+    }
 
     @Test
     @DisplayName("Test printEntity with Json object and application/json;charset=UTF-8 media type")
@@ -113,5 +130,39 @@ public class RequestResponseLoggerTest {
         MediaType mediaType = MediaType.TEXT_XML_TYPE;
         String responseText = requestResponseLogger.printEntity(response, null, "", false, mediaType);
         Assertions.assertTrue(responseText.startsWith("entity: [<?xml"));
+    }
+
+    @Test
+    @DisplayName("Test printRequestEntity with large Json object")
+    void printJsonRequestEntityTest() throws IOException {
+        // Given
+        InputStream is = this.getClass().getClassLoader().getResourceAsStream("large.json");
+        int inSize = is.available();
+        Mockito.when(requestContext.getEntityStream()).thenReturn(is);
+        Mockito.when(requestContext.getMediaType()).thenReturn(MediaType.APPLICATION_JSON_TYPE);
+        // When
+        String requestEntityText = requestResponseLogger.printRequestEntity(requestContext);
+        System.out.println(requestEntityText);
+        InputStream targetStream = new ByteArrayInputStream(requestEntityText.getBytes());
+        int targetSize = targetStream.available();
+        // Then
+        Assertions.assertTrue(StringUtils.isNotBlank(requestEntityText));
+    }
+
+    @Test
+    @DisplayName("Test printRequestEntity with large Json object")
+    void printJsonRequestEntityNewTest() throws IOException {
+        // Given
+        InputStream is = this.getClass().getClassLoader().getResourceAsStream("large.json");
+        int inSize = is.available();
+        Mockito.when(requestContext.getEntityStream()).thenReturn(is);
+        Mockito.when(requestContext.getMediaType()).thenReturn(MediaType.APPLICATION_JSON_TYPE);
+        // When
+        String requestEntityText = requestResponseLogger.printRequestEntityNew(requestContext);
+        System.out.println(requestEntityText);
+        InputStream targetStream = new ByteArrayInputStream(requestEntityText.getBytes());
+        int targetSize = targetStream.available();
+        // Then
+        Assertions.assertTrue(StringUtils.isNotBlank(requestEntityText));
     }
 }

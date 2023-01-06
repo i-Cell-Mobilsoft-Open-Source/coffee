@@ -98,7 +98,8 @@ public abstract class BaseRestLogger implements ContainerRequestFilter, WriterIn
         StringBuffer message = new StringBuffer();
         printRequestLine(message, requestContext);
         printRequestHeaders(message, requestContext);
-        printRequestEntity(message, requestContext);
+        // printRequestEntity(message, requestContext);
+        printRequestEntityNew(message, requestContext);
 
         String messageString = message.toString();
         log.info(message.toString());
@@ -204,6 +205,19 @@ public abstract class BaseRestLogger implements ContainerRequestFilter, WriterIn
      */
     protected void printRequestEntity(StringBuffer b, ContainerRequestContext requestContext) {
         b.append(requestResponseLogger.printRequestEntity(requestContext));
+    }
+
+    /**
+     * Prints http entity from {@link ContainerRequestContext} and appends given {@link StringBuffer} with the print result.
+     *
+     * @param b
+     *            request message
+     * @param requestContext
+     *            context
+     * @see RequestResponseLogger#printRequestEntity(ContainerRequestContext)
+     */
+    protected void printRequestEntityNew(StringBuffer b, ContainerRequestContext requestContext) {
+        b.append(requestResponseLogger.printRequestEntityNew(requestContext));
     }
 
     /**
