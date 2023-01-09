@@ -80,6 +80,14 @@ funkcionalitást, leszámítva pár dolgot:
 * Multiple entityManager
 * Auditing
 
+Változások az eredeti deltaspike kódjához képest:
+
+* EntityRepositoryHandler kapott egy @Dependent annotációt,
+egyenlőre nem tudni miért nem volt rajta.
+Hasonló célú CriteriaSupportHandler-en rajta volt eredetileg is,
+nélküle a `DelegateQueryBuilder.lookup` (111. sor) nem találta meg
+a megfelelő kiszolgáló osztályt a `EntityRepository` interfészhez.
+
 .Átállás
 Az implementáló projekteken az esetleges deltaspike message és data dependency-t
 le kell cserélni a `coffee-deltaspike-message` illetve `coffee-deltaspike-data` dependencyre.
