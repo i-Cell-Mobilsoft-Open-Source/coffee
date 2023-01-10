@@ -41,20 +41,12 @@
 				<artifactId>maven-jaxb2-plugin</artifactId>
 				<version>0.15.1</version>
 -->
-<!-- forkolt es releaselt plugin a felsobol kiindulva: ez csak a jaxb3-at tudja, 4-et nem de lagalabb jakarta csomagok vannak hasznalva -->
-                <groupId>com.evolvedbinary.maven.jvnet</groupId>
-				<artifactId>jaxb30-maven-plugin</artifactId>
-                <version>0.15.0</version>
-<!-- ez mar nem kell -->
-				<!-- java 16+: https://github.com/highsource/maven-jaxb2-plugin/issues/201#issuecomment-808009784>
-				<dependencies>
-					<dependency>
-						<groupId>org.glassfish.jaxb</groupId>
-						<artifactId>jaxb-runtime</artifactId>
-						<version>4.0.1</version>
-					</dependency>
-				</dependencies>
--->
+<!-- forkolt es releaselt plugin a felsobol kiindulva jaxb4-re -->
+<!-- https://github.com/phax/maven-jaxb2-plugin/tree/v016 -->
+				<groupId>com.helger.maven</groupId>
+				<artifactId>jaxb40-maven-plugin</artifactId>
+				<version>0.16.0</version>
+
 				<executions>
 					<execution>
 						<id>coffee-super</id>
