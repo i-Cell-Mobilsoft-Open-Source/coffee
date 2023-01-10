@@ -19,7 +19,6 @@
  */
 package hu.icellmobilsoft.coffee.rest.log;
 
-import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -35,7 +34,6 @@ import java.util.Objects;
 
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
-import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerResponseContext;
@@ -238,22 +236,6 @@ public class RequestResponseLogger {
      *            entity
      * @param maxLogSize
      *            max size for log
-     * @throws IOException
-     *             if cannot be read
-     * @return request entity
-     * @see #printEntity(byte[], Integer, String)
-     */
-    public String printRequestEntity(String entity, Integer maxLogSize) throws IOException {
-        return printEntityString(entity, maxLogSize, REQUEST_PREFIX);
-    }
-
-    /**
-     * Prints request entity to {@link String}. Masks password.
-     *
-     * @param entity
-     *            entity
-     * @param maxLogSize
-     *            max size for log
      * @param prefix
      *            prefix for log
      * @return entity {@code String}
@@ -262,25 +244,6 @@ public class RequestResponseLogger {
      */
     public String printEntity(byte[] entity, Integer maxLogSize, String prefix) throws IOException {
         String requestText = entityToString(entity, maxLogSize);
-        String maskedText = StringHelper.maskValueInXmlJson(requestText);
-        return prefix + "entity: [" + maskedText + "]\n";
-    }
-
-    /**
-     * Prints request entity to {@link String}. Masks password.
-     *
-     * @param entity
-     *            entity
-     * @param maxLogSize
-     *            max size for log
-     * @param prefix
-     *            prefix for log
-     * @return entity {@code String}
-     * @throws IOException
-     *             if cannot be read
-     */
-    public String printEntityString(String entity, Integer maxLogSize, String prefix) throws IOException {
-        String requestText = limitEntityLength(entity, maxLogSize);
         String maskedText = StringHelper.maskValueInXmlJson(requestText);
         return prefix + "entity: [" + maskedText + "]\n";
     }
@@ -301,20 +264,6 @@ public class RequestResponseLogger {
         return new String(requestEntityPart, StandardCharsets.UTF_8);
     }
 
-    private String limitEntityLength(String entity, Integer maxLogSize) {
-        if (StringUtils.isBlank(entity)) {
-            return "";
-        }
-
-        // input parameter szerint korlatozzuk a logot
-        String requestEntityPart = entity;
-        if (maxLogSize != null && maxLogSize >= LogSpecifier.NO_LOG && entity.length() > maxLogSize) {
-            requestEntityPart = entity.substring(0, maxLogSize);
-        }
-
-        return requestEntityPart;
-    }
-
     /**
      * Prints http entity from {@link ContainerRequestContext}.
      *
@@ -328,15 +277,14 @@ public class RequestResponseLogger {
         }
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         InputStream in = requestContext.getEntityStream();
-
         try {
             IOUtils.copy(in, out);
 
             byte[] requestEntity = out.toByteArray();
             int maxRequestEntityLogSize = RestLoggerUtil.getMaxEntityLogSize(requestContext, LogSpecifierTarget.REQUEST);
             if (maxRequestEntityLogSize != LogSpecifier.NO_LOG &&
-            // byte-code betoltesi fajlokat, json-t és xml-t ne loggoljuk ki egeszben
-                    (Objects.equals(requestContext.getMediaType(), MediaType.APPLICATION_OCTET_STREAM_TYPE))) {
+            // byte-code betoltesi fajlokat ne loggoljuk ki egeszben
+                    Objects.equals(requestContext.getMediaType(), MediaType.APPLICATION_OCTET_STREAM_TYPE)) {
                 maxRequestEntityLogSize = RequestResponseLogger.BYTECODE_MAX_LOG;
 
             }
@@ -344,77 +292,6 @@ public class RequestResponseLogger {
             requestContext.setEntityStream(new ByteArrayInputStream(requestEntity));
 
             return printRequestEntity(requestEntity, maxRequestEntityLogSize);
-        } catch (IOException e) {
-            log.error("Error in logging request entity: " + e.getLocalizedMessage(), e);
-            return null;
-        }
-    }
-
-    /**
-     * Prints http entity from {@link ContainerRequestContext}.
-     *
-     * @param requestContext
-     *            context
-     * @return HTTP entity or null if invalid parameter or exception when reading the entity
-     */
-    public String printRequestEntityNew(ContainerRequestContext requestContext) {
-        if (requestContext == null) {
-            return null;
-        }
-
-        try {
-            // requestContext.getEntityStream().mark(10000);
-            // InputStream in = new ByteArrayInputStream(requestContext.getEntityStream().readAllBytes());
-            InputStream entityStream = requestContext.getEntityStream();
-
-            ServletInputStream servletInputStream = null;
-            if (entityStream instanceof ServletInputStream) {
-                servletInputStream = (ServletInputStream) entityStream;
-            }
-
-            if (servletInputStream.markSupported()) {
-                var i = 0;
-            }
-            InputStream in = new BufferedInputStream(requestContext.getEntityStream());
-            // requestContext.getEntityStream().reset();
-
-            int available = 0;
-            try {
-                available = in.available();
-            } catch (IOException e) {
-                // TODO
-            }
-
-            if (in.markSupported()) {
-                var i = 0;
-            }
-
-            int i;
-            char c;
-            StringBuilder builder = new StringBuilder();
-
-            // in.mark(8192);
-            // in.mark(0);
-            // reads till the end of the stream
-            while ((i = in.read()) != -1) {
-                c = (char) i;
-                builder.append(c);
-            }
-
-            // in.reset();
-            String text = builder.toString();
-
-            int maxRequestEntityLogSize = RestLoggerUtil.getMaxEntityLogSize(requestContext, LogSpecifierTarget.REQUEST);
-            if (maxRequestEntityLogSize != LogSpecifier.NO_LOG &&
-            // byte-code betoltesi fajlokat, json-t és xml-t ne loggoljuk ki egeszben
-                    (Objects.equals(requestContext.getMediaType(), MediaType.APPLICATION_OCTET_STREAM_TYPE)
-                            || Objects.equals(requestContext.getMediaType(), MediaType.APPLICATION_JSON_TYPE)
-                            || Objects.equals(requestContext.getMediaType(), MediaType.APPLICATION_XML_TYPE))) {
-                maxRequestEntityLogSize = RequestResponseLogger.BYTECODE_MAX_LOG;
-
-            }
-
-            return printRequestEntity(text, maxRequestEntityLogSize);
         } catch (IOException e) {
             log.error("Error in logging request entity: " + e.getLocalizedMessage(), e);
             return null;
