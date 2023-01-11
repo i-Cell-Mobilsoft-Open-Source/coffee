@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -51,6 +52,7 @@ import hu.icellmobilsoft.coffee.se.logging.Logger;
  * @since 1.0.0
  * 
  */
+@Dependent
 @MongoServiceBaseQualifier
 public class MongoService<T> {
 

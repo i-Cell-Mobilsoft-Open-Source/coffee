@@ -24,6 +24,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
+import javax.enterprise.context.Dependent;
 import javax.xml.bind.ValidationEvent;
 
 import org.apache.commons.lang3.StringUtils;
@@ -38,6 +39,7 @@ import hu.icellmobilsoft.coffee.se.logging.Logger;
  * @author ferenc.lutischan
  * @since 1.0.0
  */
+@Dependent
 public class XsdValidationErrorCollector implements IXsdValidationErrorCollector {
     private static final Logger log = Logger.getLogger(XsdValidationErrorCollector.class);
     private List<XMLValidationError> errors;
