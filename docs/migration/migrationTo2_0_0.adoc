@@ -53,8 +53,15 @@ fájlban a fejléc módosítását követeli:
 </jaxb:bindings>
 ----
 
-Egyenlőre nincs jaxb4 támogatás a XSD -> DTO generálásnál, csak jaxb3 van pár forkolt repository.
-A `coffee-dto-gen` projekt is jaxb3-ra generál egyenlőre.
+IMPORTANT:: A JAXB 4.0 specifikációban az jaxb xml schema verziója, maradt `3.0`!
+https://jakarta.ee/specifications/xml-binding/4.0/[Jakarta XML Binding 4.0]
+
+Egyenlőre egy forkolt jaxb4 maven plugin érhető el az XSD -> DTO generálásnál: https://github.com/phax/maven-jaxb2-plugin/tree/v016[phax/maven-jaxb2-plugin#v016].
+A plugin az eddig használt jaxb2 plugin fork-ja, elegendő a dependency csere
+`com.helger.maven:jaxb40-maven-plugin:0.16.0`-ra.
+
+WARNING:: A `org.jvnet.jaxb2_commons:jaxb2-basics-annotate` pluginból jelenleg nem érhető el jaxb3 vagy jaxb4 verzió,
+coffee-ban a korábbi működik a 4.0-s pluginnal, de projekten vagy a későbbiekben esetleg okozhat gondot.
 
 === coffee-deltaspike
 Létrejött a coffee-deltaspike alprojekt, ami azt a célt szolgálja,
