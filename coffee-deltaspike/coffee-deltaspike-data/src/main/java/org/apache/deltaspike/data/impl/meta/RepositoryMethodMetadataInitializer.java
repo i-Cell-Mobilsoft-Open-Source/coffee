@@ -66,7 +66,7 @@ import org.apache.deltaspike.data.impl.builder.MethodExpressionException;
 import org.apache.deltaspike.data.impl.builder.part.QueryRoot;
 import org.apache.deltaspike.data.impl.builder.result.QueryProcessorFactory;
 import org.apache.deltaspike.data.impl.handler.EntityRepositoryHandler;
-import org.apache.deltaspike.jpa.api.transaction.Transactional;
+//import org.apache.deltaspike.jpa.api.transaction.Transactional;
 
 @ApplicationScoped
 public class RepositoryMethodMetadataInitializer
@@ -88,9 +88,9 @@ public class RepositoryMethodMetadataInitializer
         repositoryMethodMetadata.setModifying(method.isAnnotationPresent(Modifying.class)
                 ? method.getAnnotation(Modifying.class) : null);
         
-        Transactional methodT = method.getAnnotation(Transactional.class);
-        Transactional classT = repositoryMetadata.getRepositoryClass().getAnnotation(Transactional.class);
-        repositoryMethodMetadata.setTransactional(methodT != null ? methodT : classT);
+//        Transactional methodT = method.getAnnotation(Transactional.class);
+//        Transactional classT = repositoryMetadata.getRepositoryClass().getAnnotation(Transactional.class);
+//        repositoryMethodMetadata.setTransactional(methodT != null ? methodT : classT);
 //        repositoryMethodMetadata.setTransactional(AnnotationUtils.extractAnnotationFromMethodOrClass(
 //                beanManager, method, repositoryMetadata.getRepositoryClass(), Transactional.class));
 

@@ -37,29 +37,31 @@
  */
 package org.apache.deltaspike.data.impl.handler;
 
-import org.apache.deltaspike.core.api.provider.BeanProvider;
+//import org.apache.deltaspike.core.api.provider.BeanProvider;
 //import org.apache.deltaspike.core.util.ExceptionUtils;
 import org.apache.deltaspike.core.util.ProxyUtils;
-import org.apache.deltaspike.core.util.interceptor.AbstractInvocationContext;
-import org.apache.deltaspike.core.util.metadata.AnnotationInstanceProvider;
+//import org.apache.deltaspike.core.util.interceptor.AbstractInvocationContext;
+//import org.apache.deltaspike.core.util.metadata.AnnotationInstanceProvider;
 import org.apache.deltaspike.data.api.QueryInvocationException;
 import org.apache.deltaspike.data.api.Repository;
 import org.apache.deltaspike.data.impl.builder.QueryBuilder;
 import org.apache.deltaspike.data.impl.builder.QueryBuilderFactory;
 import org.apache.deltaspike.data.impl.meta.RepositoryMetadataHandler;
-import org.apache.deltaspike.jpa.api.transaction.Transactional;
-import org.apache.deltaspike.jpa.impl.entitymanager.EntityManagerRef;
-import org.apache.deltaspike.jpa.impl.entitymanager.EntityManagerRefLookup;
-import org.apache.deltaspike.jpa.spi.entitymanager.ActiveEntityManagerHolder;
+//import org.apache.deltaspike.jpa.api.transaction.Transactional;
+//import org.apache.deltaspike.jpa.impl.entitymanager.EntityManagerRef;
+//import org.apache.deltaspike.jpa.impl.entitymanager.EntityManagerRefLookup;
+//import org.apache.deltaspike.jpa.spi.entitymanager.ActiveEntityManagerHolder;
 //import org.apache.deltaspike.jpa.spi.transaction.TransactionStrategy;
 
-import jakarta.enterprise.inject.Any;
+//import jakarta.enterprise.inject.Any;
+import jakarta.enterprise.inject.Instance;
 import jakarta.enterprise.inject.spi.BeanManager;
+import jakarta.enterprise.inject.spi.CDI;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceException;
 import java.io.Serializable;
-import java.lang.annotation.Annotation;
+//import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.util.List;
@@ -87,8 +89,8 @@ public class QueryHandler implements Serializable, InvocationHandler
     @Inject
     private CdiQueryContextHolder context;
 
-    @Inject
-    private EntityManagerRefLookup entityManagerRefLookup;
+//    @Inject
+//    private EntityManagerRefLookup entityManagerRefLookup;
 
     @Inject
     private QueryRunner runner;
@@ -99,8 +101,8 @@ public class QueryHandler implements Serializable, InvocationHandler
 //    @Inject
 //    private TransactionStrategy transactionStrategy;
 
-    @Inject
-    private ActiveEntityManagerHolder activeEntityManagerHolder;
+//    @Inject
+//    private ActiveEntityManagerHolder activeEntityManagerHolder;
 
     @Override
     public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable
@@ -111,21 +113,21 @@ public class QueryHandler implements Serializable, InvocationHandler
         final RepositoryMethodMetadata repositoryMethodMetadata =
                 metadataHandler.lookupMethodMetadata(repositoryMetadata, method);
 
-        if (repositoryMethodMetadata.getTransactional() != null)
-        {
-            if (repositoryMethodMetadata.getTransactional().qualifier().length > 1)
-            {
-                throw new IllegalStateException(proxy.getClass().getName() + " uses @" + Transactional.class.getName() +
-                    " with multiple qualifiers. That isn't supported with @" + Repository.class.getName());
-            }
+//        if (repositoryMethodMetadata.getTransactional() != null)
+//        {
+//            if (repositoryMethodMetadata.getTransactional().qualifier().length > 1)
+//            {
+//                throw new IllegalStateException(proxy.getClass().getName() + " uses @" + Transactional.class.getName() +
+//                    " with multiple qualifiers. That isn't supported with @" + Repository.class.getName());
+//            }
 
-            Class<? extends Annotation> qualifier = repositoryMethodMetadata.getTransactional().qualifier()[0];
-            if (!Any.class.equals(qualifier))
-            {
-                EntityManager entityManager = BeanProvider.getContextualReference(
-                    EntityManager.class, false, AnnotationInstanceProvider.of(qualifier));
-                activeEntityManagerHolder.set(entityManager);
-            }
+//            Class<? extends Annotation> qualifier = repositoryMethodMetadata.getTransactional().qualifier()[0];
+//            if (!Any.class.equals(qualifier))
+//            {
+//                EntityManager entityManager = BeanProvider.getContextualReference(
+//                    EntityManager.class, false, AnnotationInstanceProvider.of(qualifier));
+//                activeEntityManagerHolder.set(entityManager);
+//            }
 
 //            return transactionStrategy.execute(
 //                new AbstractInvocationContext<Object>(proxy, method, args, null)
@@ -135,7 +137,7 @@ public class QueryHandler implements Serializable, InvocationHandler
 //                    {
 //                        try
 //                        {
-                            return process(proxy, method, args, repositoryMetadata, repositoryMethodMetadata);
+//                            return process(proxy, method, args, repositoryMetadata, repositoryMethodMetadata);
 //                        }
 //                        catch (Throwable t)
 //                        {
@@ -144,22 +146,24 @@ public class QueryHandler implements Serializable, InvocationHandler
 //                        }
 //                    }
 //                });
-        }
-        else
-        {
+//        }
+//        else
+//        {
             return process(proxy, method, args, repositoryMetadata, repositoryMethodMetadata);
-        }
+//        }
     }
 
     protected Object process(Object proxy, Method method, Object[] args,
             RepositoryMetadata repositoryMetadata, RepositoryMethodMetadata repositoryMethodMetadata) throws Throwable
     {
         CdiQueryInvocationContext queryContext = null;
-        EntityManagerRef entityManagerRef = null;
+//        EntityManagerRef entityManagerRef = null;
+        Instance<EntityManager> entityManagerInstance = CDI.current().select(EntityManager.class);
+        EntityManager entityManager = entityManagerInstance.get();
         try
         {
-            entityManagerRef = entityManagerRefLookup.lookupReference(repositoryMetadata);
-            EntityManager entityManager = entityManagerRef.getEntityManager();
+//            entityManagerRef = entityManagerRefLookup.lookupReference(repositoryMetadata);
+//            EntityManager entityManager = entityManagerRef.getEntityManager();
             if (entityManager == null)
             {
                 throw new IllegalStateException("Unable to look up EntityManager");
@@ -186,10 +190,11 @@ public class QueryHandler implements Serializable, InvocationHandler
         }
         finally
         {
-            if (entityManagerRef != null)
-            {
-                entityManagerRef.release();
-            }
+//            if (entityManagerRef != null)
+//            {
+//                entityManagerRef.release();
+//            }
+            entityManagerInstance.destroy(entityManager);
             context.dispose();
         }
     }

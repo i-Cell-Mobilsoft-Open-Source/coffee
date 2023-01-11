@@ -39,9 +39,9 @@ package org.apache.deltaspike.data.impl.meta;
 
 import java.lang.reflect.Method;
 import java.util.Map;
-import org.apache.deltaspike.jpa.impl.entitymanager.EntityManagerMetadata;
+//import org.apache.deltaspike.jpa.impl.entitymanager.EntityManagerMetadata;
 
-public class RepositoryMetadata extends EntityManagerMetadata
+public class RepositoryMetadata //extends EntityManagerMetadata
 {
     private Class<?> repositoryClass;
 

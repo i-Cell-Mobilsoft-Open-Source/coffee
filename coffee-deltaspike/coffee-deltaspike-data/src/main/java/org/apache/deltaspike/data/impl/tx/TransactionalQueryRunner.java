@@ -39,12 +39,12 @@ package org.apache.deltaspike.data.impl.tx;
 
 import jakarta.enterprise.context.ApplicationScoped;
 
-import jakarta.inject.Inject;
+//import jakarta.inject.Inject;
 
 import org.apache.deltaspike.data.impl.builder.QueryBuilder;
 import org.apache.deltaspike.data.impl.handler.CdiQueryInvocationContext;
 import org.apache.deltaspike.data.impl.handler.QueryRunner;
-import org.apache.deltaspike.jpa.spi.entitymanager.ActiveEntityManagerHolder;
+//import org.apache.deltaspike.jpa.spi.entitymanager.ActiveEntityManagerHolder;
 //import org.apache.deltaspike.jpa.spi.transaction.TransactionStrategy;
 
 @ApplicationScoped
@@ -54,8 +54,8 @@ public class TransactionalQueryRunner implements QueryRunner
 //    @Inject
 //    private TransactionStrategy strategy;
 
-    @Inject
-    private ActiveEntityManagerHolder activeEntityManagerHolder;
+//    @Inject
+//    private ActiveEntityManagerHolder activeEntityManagerHolder;
 
     @Override
     public Object executeQuery(final QueryBuilder builder, final CdiQueryInvocationContext context)
@@ -65,12 +65,12 @@ public class TransactionalQueryRunner implements QueryRunner
         {
             try
             {
-                activeEntityManagerHolder.set(context.getEntityManager());
+//                activeEntityManagerHolder.set(context.getEntityManager());
                 return executeTransactional(builder, context);
             }
             finally
             {
-                activeEntityManagerHolder.dispose();
+//                activeEntityManagerHolder.dispose();
             }
         }
         return executeNonTransactional(builder, context);

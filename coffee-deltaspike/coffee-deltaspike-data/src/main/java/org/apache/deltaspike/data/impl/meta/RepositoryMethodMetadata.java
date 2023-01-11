@@ -44,7 +44,7 @@ import org.apache.deltaspike.data.api.SingleResultType;
 import org.apache.deltaspike.data.api.mapping.QueryInOutMapper;
 import org.apache.deltaspike.data.impl.builder.part.QueryRoot;
 import org.apache.deltaspike.data.impl.builder.result.QueryProcessor;
-import org.apache.deltaspike.jpa.api.transaction.Transactional;
+//import org.apache.deltaspike.jpa.api.transaction.Transactional;
 
 public class RepositoryMethodMetadata
 {
@@ -68,7 +68,7 @@ public class RepositoryMethodMetadata
     
     private boolean requiresTransaction;
     
-    private Transactional transactional;
+//    private Transactional transactional;
 
     public RepositoryMethodMetadata()
     {
@@ -210,13 +210,13 @@ public class RepositoryMethodMetadata
         this.requiresTransaction = requiresTransaction;
     }
 
-    public Transactional getTransactional()
-    {
-        return transactional;
-    }
-
-    public void setTransactional(Transactional transactional)
-    {
-        this.transactional = transactional;
-    }
+//    public Transactional getTransactional()
+//    {
+//        return transactional;
+//    }
+//
+//    public void setTransactional(Transactional transactional)
+//    {
+//        this.transactional = transactional;
+//    }
 }

@@ -37,7 +37,7 @@
  */
 package org.apache.deltaspike.data.impl.meta;
 
-import java.lang.annotation.Annotation;
+//import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -46,15 +46,15 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import jakarta.enterprise.context.ApplicationScoped;
 
-import jakarta.enterprise.inject.Default;
-import jakarta.enterprise.inject.spi.Bean;
+//import jakarta.enterprise.inject.Default;
+//import jakarta.enterprise.inject.spi.Bean;
 import jakarta.enterprise.inject.spi.BeanManager;
 import jakarta.inject.Inject;
-import jakarta.persistence.FlushModeType;
+//import jakarta.persistence.FlushModeType;
 
-import org.apache.deltaspike.data.api.EntityManagerConfig;
-import org.apache.deltaspike.jpa.api.entitymanager.EntityManagerResolver;
-import org.apache.deltaspike.jpa.spi.entitymanager.QualifierBackedEntityManagerResolver;
+//import org.apache.deltaspike.data.api.EntityManagerConfig;
+//import org.apache.deltaspike.jpa.api.entitymanager.EntityManagerResolver;
+//import org.apache.deltaspike.jpa.spi.entitymanager.QualifierBackedEntityManagerResolver;
 
 @ApplicationScoped
 public class RepositoryMetadataInitializer
@@ -70,35 +70,35 @@ public class RepositoryMetadataInitializer
     public RepositoryMetadata init(Class<?> repositoryClass, BeanManager beanManager)
     {
         RepositoryMetadata repositoryMetadata = new RepositoryMetadata(repositoryClass);
-        // read from looks for JPA Transactional and EntityManagerConfig to determine attributes
-        // if those are set, don't process old annotations
-        if (!repositoryMetadata.readFrom(repositoryClass, beanManager))
-        {
-            repositoryMetadata.setEntityManagerResolverClass(extractEntityManagerResolver(repositoryClass));
-            repositoryMetadata.setEntityManagerFlushMode(extractEntityManagerFlushMode(repositoryClass));
-
-            if (repositoryMetadata.getEntityManagerResolverClass() != null)
-            {
-                Set<Bean<?>> beans = beanManager.getBeans(repositoryMetadata.getEntityManagerResolverClass());
-                Class<? extends Annotation> scope = beanManager.resolve(beans).getScope();
-                repositoryMetadata.setEntityManagerResolverIsNormalScope(beanManager.isNormalScope(scope));
-            }
-            else
-            {
-                EntityManagerResolver resolver;
-                if (repositoryMetadata.getQualifiers() != null)
-                {
-                    resolver = new QualifierBackedEntityManagerResolver(beanManager,
-                            repositoryMetadata.getQualifiers());
-                }
-                else
-                {
-                    resolver = new QualifierBackedEntityManagerResolver(beanManager, Default.class);
-                }
-                repositoryMetadata.setUnmanagedResolver(resolver);
-                repositoryMetadata.setEntityManagerResolverIsNormalScope(false);
-            }
-        }
+//        // read from looks for JPA Transactional and EntityManagerConfig to determine attributes
+//        // if those are set, don't process old annotations
+//        if (!repositoryMetadata.readFrom(repositoryClass, beanManager))
+//        {
+//            repositoryMetadata.setEntityManagerResolverClass(extractEntityManagerResolver(repositoryClass));
+//            repositoryMetadata.setEntityManagerFlushMode(extractEntityManagerFlushMode(repositoryClass));
+//
+//            if (repositoryMetadata.getEntityManagerResolverClass() != null)
+//            {
+//                Set<Bean<?>> beans = beanManager.getBeans(repositoryMetadata.getEntityManagerResolverClass());
+//                Class<? extends Annotation> scope = beanManager.resolve(beans).getScope();
+//                repositoryMetadata.setEntityManagerResolverIsNormalScope(beanManager.isNormalScope(scope));
+//            }
+//            else
+//            {
+//                EntityManagerResolver resolver;
+//                if (repositoryMetadata.getQualifiers() != null)
+//                {
+//                    resolver = new QualifierBackedEntityManagerResolver(beanManager,
+//                            repositoryMetadata.getQualifiers());
+//                }
+//                else
+//                {
+//                    resolver = new QualifierBackedEntityManagerResolver(beanManager, Default.class);
+//                }
+//                repositoryMetadata.setUnmanagedResolver(resolver);
+//                repositoryMetadata.setEntityManagerResolverIsNormalScope(false);
+//            }
+//        }
         repositoryMetadata.setEntityMetadata(entityMetadataInitializer.init(repositoryMetadata));
         initializeMethodsMetadata(repositoryMetadata, beanManager);
         
@@ -143,34 +143,34 @@ public class RepositoryMetadataInitializer
         collectClasses(cls.getSuperclass(), result);
     }
 
-    private Class<? extends EntityManagerResolver> extractEntityManagerResolver(Class<?> clazz)
-    {
-        EntityManagerConfig config = extractEntityManagerConfig(clazz);
-        if (config != null && !EntityManagerResolver.class.equals(config.entityManagerResolver()))
-        {
-            return config.entityManagerResolver();
-        }
-        return null;
-    }
-
-    private FlushModeType extractEntityManagerFlushMode(Class<?> clazz)
-    {
-        EntityManagerConfig config = extractEntityManagerConfig(clazz);
-        if (config != null)
-        {
-            return config.flushMode();
-        }
-        return null;
-    }
-
-    private EntityManagerConfig extractEntityManagerConfig(Class<?> clazz)
-    {
-        if (clazz.isAnnotationPresent(EntityManagerConfig.class))
-        {
-            return clazz.getAnnotation(EntityManagerConfig.class);
-        }
-        return null;
-    }
+//    private Class<? extends EntityManagerResolver> extractEntityManagerResolver(Class<?> clazz)
+//    {
+//        EntityManagerConfig config = extractEntityManagerConfig(clazz);
+//        if (config != null && !EntityManagerResolver.class.equals(config.entityManagerResolver()))
+//        {
+//            return config.entityManagerResolver();
+//        }
+//        return null;
+//    }
+//
+//    private FlushModeType extractEntityManagerFlushMode(Class<?> clazz)
+//    {
+//        EntityManagerConfig config = extractEntityManagerConfig(clazz);
+//        if (config != null)
+//        {
+//            return config.flushMode();
+//        }
+//        return null;
+//    }
+//
+//    private EntityManagerConfig extractEntityManagerConfig(Class<?> clazz)
+//    {
+//        if (clazz.isAnnotationPresent(EntityManagerConfig.class))
+//        {
+//            return clazz.getAnnotation(EntityManagerConfig.class);
+//        }
+//        return null;
+//    }
 
 
 }
