@@ -11,25 +11,6 @@ Bevezetésre ekrült a redis pub-sub támogatása micro-profile-reactive-messagi
 
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
 
-== Változások
-
-=== Általános
-
-==== BOM verzió emelések:
-* resteasy-jaxrs megszűnt!
-* resteasy-core 4.7.6.Final
-* resteasy-core-spi 4.7.6.Final
-
-
-==== Átállás
-A változtatások package szintű és esetleges további változást is magával vonhat az eltérések miatt.
-
-NOTE: Segítség hozzá:
-https://docs.jboss.org/resteasy/docs/4.1.0.Final/userguide/html/Migration_from_older_versions.html#d4e4276
-https://stackoverflow.com/questions/57598426/why-is-there-no-maven-resteasy-jaxrs-package-for-version-4-2-0
-
-== Újdonságok
-
 === coffee-tool
 
 * A `JsonUtil.initGson()` kiegészítésre került egy `YearMonthConverter` nevű `java.time.YearMonth` type adapter osztállyal.
@@ -67,7 +48,25 @@ A változásokat szükséges lekövetni a projekten használt / felülírt oszt�
 
 == Változások
 
+=== Általános
+
+Felkészülve a beans.xml bean-discovery-mode "all" -> "annotated" (default) használatra
+a projekteken pár osztályon hiányzott a scope annotáció.
+Ahol hiányzott, ott a `@Dependent` lett.
+
+==== BOM verzió emelések:
 * Bump jackson-databind from 2.13.2.1 to 2.13.4.2 - DTO generátoroknál van használva.
+* resteasy-jaxrs megszűnt! Verzió emelésnél szétbontották a projektet.
+* resteasy-core 4.7.6.Final
+* resteasy-core-spi 4.7.6.Final
+
+
+==== Átállás
+A változtatások package szintű és esetleges további változást is magával vonhat az eltérések miatt.
+
+NOTE: Segítség hozzá:
+https://docs.jboss.org/resteasy/docs/4.1.0.Final/userguide/html/Migration_from_older_versions.html#d4e4276
+https://stackoverflow.com/questions/57598426/why-is-there-no-maven-resteasy-jaxrs-package-for-version-4-2-0
 
 === coffee-module-configdoc
 
