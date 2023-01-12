@@ -171,7 +171,7 @@ public class DefaultLoggerClientResponseFilter implements ClientResponseFilter {
         if (maxResponseEntityLogSize != LogSpecifier.NO_LOG &&
         // byte-code betoltesi fajlokat ne loggoljuk ki egeszben
                 Objects.equals(responseContext.getMediaType(), MediaType.APPLICATION_OCTET_STREAM_TYPE)) {
-            maxResponseEntityLogSize = RequestResponseLogger.BYTECODE_MAX_LOG;
+            maxResponseEntityLogSize = RequestResponseLogger.ENTITY_MAX_LOG;
 
         }
         return maxResponseEntityLogSize;

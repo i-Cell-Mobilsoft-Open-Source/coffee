@@ -69,8 +69,8 @@ public class RequestResponseLogger {
     /** Constant <code>RESPONSE_PREFIX="&lt; "</code> */
     public static final String RESPONSE_PREFIX = "< ";
 
-    /** Constant <code>BYTECODE_MAX_LOG=5000</code> */
-    public static final int BYTECODE_MAX_LOG = 5000;
+    /** Constant <code>ENTITY_MAX_LOG=5000</code> */
+    public static final int ENTITY_MAX_LOG = 5000;
 
     /** Constant <code>SKIP_MEDIATYPE_SUBTYPE_PDF="pdf"</code> */
     public static final String SKIP_MEDIATYPE_SUBTYPE_PDF = "pdf";
@@ -248,6 +248,22 @@ public class RequestResponseLogger {
         return prefix + "entity: [" + maskedText + "]\n";
     }
 
+    /**
+     * Prints request entity to {@link String}. Masks password.
+     *
+     * @param requestText
+     *            entity string
+     * @param prefix
+     *            prefix for log
+     * @return entity {@code String}
+     * @throws IOException
+     *             if cannot be read
+     */
+    public String printEntityNew(String requestText, String prefix) {
+        String maskedText = StringHelper.maskValueInXmlJson(requestText);
+        return prefix + "entity: [" + maskedText + "]\n";
+    }
+
     private String entityToString(byte[] entity, Integer maxLogSize) {
         if (entity == null) {
             return null;
@@ -285,7 +301,7 @@ public class RequestResponseLogger {
             if (maxRequestEntityLogSize != LogSpecifier.NO_LOG &&
             // byte-code betoltesi fajlokat ne loggoljuk ki egeszben
                     Objects.equals(requestContext.getMediaType(), MediaType.APPLICATION_OCTET_STREAM_TYPE)) {
-                maxRequestEntityLogSize = RequestResponseLogger.BYTECODE_MAX_LOG;
+                maxRequestEntityLogSize = RequestResponseLogger.ENTITY_MAX_LOG;
 
             }
             // vissza irjuk a kiolvasott streamet
@@ -296,6 +312,28 @@ public class RequestResponseLogger {
             log.error("Error in logging request entity: " + e.getLocalizedMessage(), e);
             return null;
         }
+    }
+
+    /**
+     * Returns the maximum entity log size
+     *
+     * @param requestContext
+     *            context
+     * 
+     * @return the maximum log size of the entity
+     */
+    protected int getMaxRequestEntityLogSize(ContainerRequestContext requestContext) {
+        int maxRequestEntityLogSize = RestLoggerUtil.getMaxEntityLogSize(requestContext, LogSpecifierTarget.REQUEST);
+        if (maxRequestEntityLogSize != LogSpecifier.NO_LOG &&
+        // byte-code betoltesi fajlokat, json-t és xml-t ne loggoljuk ki egeszben
+                Objects.equals(requestContext.getMediaType(), MediaType.APPLICATION_OCTET_STREAM_TYPE)
+                || Objects.equals(requestContext.getMediaType(), MediaType.APPLICATION_JSON_TYPE)
+                || Objects.equals(requestContext.getMediaType(), MediaType.APPLICATION_XML_TYPE)) {
+            maxRequestEntityLogSize = RequestResponseLogger.ENTITY_MAX_LOG;
+
+        }
+
+        return maxRequestEntityLogSize;
     }
 
     /**
@@ -318,7 +356,7 @@ public class RequestResponseLogger {
             // byte-code betoltesi fajlokat ne loggoljuk ki egeszben
             boolean logLimit = Objects.equals(servletRequest.getContentType(), MediaType.APPLICATION_OCTET_STREAM);
 
-            return printRequestEntity(requestEntity, logLimit ? RequestResponseLogger.BYTECODE_MAX_LOG : null);
+            return printRequestEntity(requestEntity, logLimit ? RequestResponseLogger.ENTITY_MAX_LOG : null);
         } catch (IllegalStateException e) {
             log.info("Inputstream is already readed from servletRequest: " + e.getLocalizedMessage(), e);
         } catch (IOException e) {
