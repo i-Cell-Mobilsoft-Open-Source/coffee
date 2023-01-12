@@ -27,6 +27,7 @@ import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 
+import jakarta.enterprise.context.Dependent;
 import jakarta.inject.Inject;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
@@ -48,6 +49,7 @@ import hu.icellmobilsoft.coffee.rest.validation.xml.exception.XsdProcessingExcep
  * @author ferenc.lutischan
  * @since 1.0.0
  */
+@Dependent
 public class XsdHelper implements IXsdHelper {
 
     private static final Map<String, Schema> xsdCache = new ConcurrentHashMap<>();
