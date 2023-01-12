@@ -22,6 +22,7 @@ package hu.icellmobilsoft.coffee.rest.validation.catalog;
 import java.io.StringReader;
 import java.util.Iterator;
 
+import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 import javax.xml.catalog.Catalog;
 
@@ -42,6 +43,7 @@ import hu.icellmobilsoft.coffee.rest.validation.xml.utils.IXsdResourceResolver;
  * @author mark.petrenyi
  * @since 1.0.0
  */
+@Dependent
 public class PublicCatalogResolver implements LSResourceResolver, IXsdResourceResolver {
 
     @Inject

@@ -21,6 +21,7 @@ package hu.icellmobilsoft.coffee.model.base.audit;
 
 import java.util.Set;
 
+import javax.enterprise.context.Dependent;
 import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.inject.Inject;
@@ -46,6 +47,7 @@ import hu.icellmobilsoft.coffee.model.base.annotation.ModifiedBy;
  * @author czenczl
  * @since 1.0.0
  */
+@Dependent
 public class AuditProvider implements PrePersistAuditListener, PreUpdateAuditListener {
 
     @Inject

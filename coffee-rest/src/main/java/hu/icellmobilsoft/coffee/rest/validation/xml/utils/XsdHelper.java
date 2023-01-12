@@ -23,6 +23,7 @@ import java.io.InputStream;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -47,6 +48,7 @@ import hu.icellmobilsoft.coffee.rest.validation.xml.exception.XsdProcessingExcep
  * @author ferenc.lutischan
  * @since 1.0.0
  */
+@Dependent
 public class XsdHelper implements IXsdHelper {
 
     private static final Map<String, Schema> xsdCache = new ConcurrentHashMap<>();
