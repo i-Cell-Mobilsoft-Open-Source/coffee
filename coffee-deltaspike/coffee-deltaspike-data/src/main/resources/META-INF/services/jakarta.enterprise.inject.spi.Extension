@@ -18,5 +18,5 @@
 #
 
 #org.apache.deltaspike.partialbean.impl.PartialBeanBindingExtension
-
-org.apache.deltaspike.data.impl.RepositoryExtension
+#org.apache.deltaspike.data.impl.RepositoryExtension
+hu.icellmobilsoft.coffee.deltaspike.data.extension.RepositoryExtension

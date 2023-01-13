@@ -87,6 +87,12 @@ egyenlőre nem tudni miért nem volt rajta.
 Hasonló célú CriteriaSupportHandler-en rajta volt eredetileg is,
 nélküle a `DelegateQueryBuilder.lookup` (111. sor) nem találta meg
 a megfelelő kiszolgáló osztályt a `EntityRepository` interfészhez.
+* Megszűnt az asm függőség, helyette dinamikus proxy-kon keresztül valósulnak meg a repository hívások.
+* Uj extension  `hu.icellmobilsoft.coffee.deltaspike.data.extension.RepositoryExtension` ami kezeli a repository interfaceket és hozzájuk tartozó proxykat.
+Az extension feladata hogy a létrejött proxy hívásokat a központi QueryHandler osztályba csatornázza be.
+* `QueryHandler` az új proxy-k miatt az interface keresés részben megváltozott. Ez azért szükséges hogy a feldolgozott repository metaadatok felhasználhatóak legyenek 
+így nem szükséges a deltaspike core logikáját átírni.
+* `ProxyUtils` megszűnt, már nem szükséges.
 
 .Átállás
 Az implementáló projekteken az esetleges deltaspike message és data dependency-t
