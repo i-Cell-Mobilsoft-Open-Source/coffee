@@ -19,89 +19,90 @@
  */
 package hu.icellmobilsoft.coffee.model.base.audit;
 
+import java.lang.reflect.Field;
+import java.util.List;
 import java.util.Set;
 
+import hu.icellmobilsoft.coffee.model.base.AbstractProvider;
+import hu.icellmobilsoft.coffee.model.base.annotation.CreatedBy;
+import hu.icellmobilsoft.coffee.model.base.annotation.CurrentUser;
+import hu.icellmobilsoft.coffee.model.base.annotation.ModifiedBy;
+import hu.icellmobilsoft.coffee.model.base.exception.ProviderException;
 import jakarta.enterprise.context.Dependent;
 import jakarta.enterprise.inject.spi.Bean;
 import jakarta.enterprise.inject.spi.BeanManager;
 import jakarta.inject.Inject;
-
-import org.apache.deltaspike.core.util.metadata.AnnotationInstanceProvider;
-import org.apache.deltaspike.data.api.audit.CurrentUser;
-import org.apache.deltaspike.data.impl.audit.AuditPropertyException;
-import org.apache.deltaspike.data.impl.audit.PrePersistAuditListener;
-import org.apache.deltaspike.data.impl.audit.PreUpdateAuditListener;
-import org.apache.deltaspike.data.impl.property.Property;
-import org.apache.deltaspike.data.impl.property.query.AnnotatedPropertyCriteria;
-import org.apache.deltaspike.data.impl.property.query.PropertyQueries;
-import org.apache.deltaspike.data.impl.property.query.PropertyQuery;
-
-import hu.icellmobilsoft.coffee.model.base.annotation.CreatedBy;
-import hu.icellmobilsoft.coffee.model.base.annotation.ModifiedBy;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 
 /**
- * Perist entity @CreatedBy property before persist with the value provided by @CurrentUser
+ * Persist entity @CreatedBy property before persist with the value provided by @CurrentUser
  *
  * Update entity @ModifiedBy property before update with the value provided by @CurrentUser
  *
  * @author czenczl
+ * @author zsolt.vasi
  * @since 1.0.0
  */
 @Dependent
-public class AuditProvider implements PrePersistAuditListener, PreUpdateAuditListener {
+public class AuditProvider extends AbstractProvider {
 
     @Inject
     private BeanManager manager;
 
-    /** {@inheritDoc} */
-    @Override
+    /**
+     * Persist entity @CreatedBy (@ModifiedBy) property before persist with the value provided by @CurrentUser
+     *
+     * @param entity
+     *            Object entity to persist
+     */
+    @PrePersist
     public void prePersist(Object entity) {
-        PropertyQuery<Object> createdByQuery = PropertyQueries.<Object> createQuery(entity.getClass())
-                .addCriteria(new AnnotatedPropertyCriteria(CreatedBy.class));
-        for (Property<Object> property : createdByQuery.getWritableResultList()) {
-            Object value = resolvePrincipal(entity, property);
-            setProperty(entity, property, value);
+        List<Field> allFields = getAllFields(entity.getClass());
+        for (Field field : allFields) {
+            if (field.isAnnotationPresent(CreatedBy.class)) {
+                Object value = resolvePrincipal(field.getType());
+                setProperty(entity, field, value);
+            }
+            if (field.isAnnotationPresent(ModifiedBy.class) && field.getAnnotation(ModifiedBy.class).onCreate()) {
+                Object value = resolvePrincipal(field.getType());
+                setProperty(entity, field, value);
+            }
         }
 
-        PropertyQuery<Object> modifiedByQuery = PropertyQueries.<Object> createQuery(entity.getClass())
-                .addCriteria(new AnnotatedPropertyCriteria(ModifiedBy.class));
-        for (Property<Object> property : modifiedByQuery.getWritableResultList()) {
-            ModifiedBy annotation = property.getAnnotatedElement().getAnnotation(ModifiedBy.class);
-            if (annotation.onCreate()) {
-                Object newValue = resolvePrincipal(entity, property);
-                setProperty(entity, property, newValue);
+    }
+
+    /**
+     * Update entity @ModifiedBy property before update with the value provided by @CurrentUser
+     *
+     * @param entity
+     *            Object entity to update
+     */
+    @PreUpdate
+    public void preUpdate(Object entity) {
+        List<Field> allFields = getAllFields(entity.getClass());
+        for (Field field : allFields) {
+            if (field.isAnnotationPresent(ModifiedBy.class)) {
+                Object value = resolvePrincipal(field.getType());
+                setProperty(entity, field, value);
             }
         }
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public void preUpdate(Object entity) {
-        PropertyQuery<Object> query = PropertyQueries.<Object> createQuery(entity.getClass())
-                .addCriteria(new AnnotatedPropertyCriteria(ModifiedBy.class));
-        for (Property<Object> property : query.getWritableResultList()) {
-            Object newValue = resolvePrincipal(entity, property);
-            setProperty(entity, property, newValue);
-        }
-    }
-
-    private void setProperty(Object entity, Property<Object> property, Object value) {
+    private void setProperty(Object entity, Field field, Object value) {
         try {
-            property.setValue(entity, value);
+            field.setAccessible(true);
+            field.set(entity, value);
         } catch (Exception e) {
-            throw new AuditPropertyException(
-                    "Failed to write value [" + value + "] to entity [" + entity.getClass() + "]: " + e.getLocalizedMessage(), e);
+            throw new ProviderException("Failed to write value [" + value + "] to entity [" + entity.getClass() + "]: " + e.getLocalizedMessage(), e);
         }
     }
 
-    private Object resolvePrincipal(Object entity, Property<Object> property) {
-        CurrentUser principal = AnnotationInstanceProvider.of(CurrentUser.class);
-        Class<?> propertyClass = property.getJavaClass();
-        Set<Bean<?>> beans = manager.getBeans(propertyClass, principal);
+    private Object resolvePrincipal(Class<?> propertyClass) {
+        Set<Bean<?>> beans = manager.getBeans(propertyClass, () -> CurrentUser.class);
         if (!beans.isEmpty() && beans.size() == 1) {
             Bean<?> bean = beans.iterator().next();
-            Object result = manager.getReference(bean, propertyClass, manager.createCreationalContext(bean));
-            return result;
+            return manager.getReference(bean, propertyClass, manager.createCreationalContext(bean));
         }
         throw new IllegalArgumentException("Principal " + (beans.isEmpty() ? "not found" : "not unique"));
     }
