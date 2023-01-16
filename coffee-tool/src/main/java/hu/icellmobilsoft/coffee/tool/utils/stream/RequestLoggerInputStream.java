@@ -50,11 +50,11 @@ public class RequestLoggerInputStream extends InputStream {
      * @param inputStream
      *            original inputStream
      * @param logReadLimit
-     *            original inputStream
+     *            read limit
      * @param requestPrefix
-     *            original inputStream
+     *            request log prefix
      * @param message
-     *            original inputStream
+     *            log message
      */
     public RequestLoggerInputStream(InputStream inputStream, int logReadLimit, String requestPrefix, StringBuilder message) {
         this.inputStream = inputStream;
@@ -63,7 +63,14 @@ public class RequestLoggerInputStream extends InputStream {
         this.message = message;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     *
+     * Extra functionality: On first read cycle it appends the read request entity data from the original {@link InputStream} to an internal
+     * {@link StringBuilder} until a given limit is reached (or until the end of stream if limit is higher). Then logs the given request message with
+     * the appended request entity.
+     *
+     */
     @Override
     public int read() throws IOException {
         int streamData = inputStream.read();
