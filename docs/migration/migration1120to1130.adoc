@@ -159,3 +159,11 @@ public class MyBean {
 Ezzel együtt a ProjectStage fajtái is lecsökkentek, és már csak Production, Development és Test lehetséges. Régi deltaspikeos alap projekt stage-ek bekerültek a Testbe, kivéve a Development és Productiont ami azonos néven maradt. Lásd `hu.icellmobilsoft.coffee.rest.projectstage.ProjectStageEnum`.
 
 Az eddig használt `org.apache.deltaspike.ProjectStage` konfiguráció használata megmaradt, és visszafelé a deltaspike által támogatott értékek is feldolgozásra kerülnek az enum értékeibe.
+
+=== coffee-rest
+
+* A `RequestResponseLogger` osztályban A `BYTECODE_MAX_LOG` konstans átvevezésre került `ENTITY_MAX_LOG`-ra, mivel a feltétel, ami alapján a request body log mérete korlátozva van kiegészült a meglévő `application/octet-stream` mellett `application/json`, `application/xml` és `text/xml` mediaType-okkal.
+
+==== Átállás
+
+* A `BYTECODE_MAX_LOG` konstans helyett `ENTITY_MAX_LOG`-ot kell használni.
