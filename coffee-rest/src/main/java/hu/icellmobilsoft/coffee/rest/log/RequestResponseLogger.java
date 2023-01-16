@@ -248,22 +248,6 @@ public class RequestResponseLogger {
         return prefix + "entity: [" + maskedText + "]\n";
     }
 
-    /**
-     * Prints request entity to {@link String}. Masks password.
-     *
-     * @param requestText
-     *            entity string
-     * @param prefix
-     *            prefix for log
-     * @return entity {@code String}
-     * @throws IOException
-     *             if cannot be read
-     */
-    public String printEntityNew(String requestText, String prefix) {
-        String maskedText = StringHelper.maskValueInXmlJson(requestText);
-        return prefix + "entity: [" + maskedText + "]\n";
-    }
-
     private String entityToString(byte[] entity, Integer maxLogSize) {
         if (entity == null) {
             return null;
