@@ -30,6 +30,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import javax.enterprise.context.Dependent;
+
 import org.apache.deltaspike.data.impl.audit.AuditPropertyException;
 import org.apache.deltaspike.data.impl.audit.PrePersistAuditListener;
 import org.apache.deltaspike.data.impl.audit.PreUpdateAuditListener;
@@ -50,6 +52,7 @@ import hu.icellmobilsoft.coffee.model.base.javatime.annotation.ModifiedOn;
  * @see org.apache.deltaspike.data.impl.audit.TimestampsProvider
  * @since 1.0.0
  */
+@Dependent
 public class TimestampsProvider implements PrePersistAuditListener, PreUpdateAuditListener {
 
     /** {@inheritDoc} */
