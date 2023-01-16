@@ -84,7 +84,7 @@ public class RequestLoggerInputStream extends InputStream {
 
     private void buildEntity(int streamData) {
         // logoláshoz gyűjtjük a stream tartalmát amíg van, vagy még nem értük el a limitet
-        if (!firstReadCycle || streamData == -1 && logReadLimit == 0) {
+        if (!firstReadCycle || (streamData == -1 && logReadLimit == 0)) {
             return;
         }
         entity.append((char) streamData);
@@ -93,7 +93,7 @@ public class RequestLoggerInputStream extends InputStream {
 
     private void logRequestWithEntity(int streamData) {
         // ha a stream végére értünk vagy elértük a limitet, akkor logolunk
-        if (!firstReadCycle || streamData != -1 && logReadLimit != 0) {
+        if (!firstReadCycle || (streamData != -1 && logReadLimit != 0)) {
             return;
         }
         String maskedEntity = getMaskedEntity(entity.toString(), requestPrefix);
