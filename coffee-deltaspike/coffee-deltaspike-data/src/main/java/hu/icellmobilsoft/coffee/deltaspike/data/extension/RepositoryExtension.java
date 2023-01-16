@@ -60,10 +60,10 @@ import org.apache.deltaspike.data.impl.handler.QueryHandler;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
 
 /**
- * The main extension class for Repositories based on dynamic proxy mechanics. <br/>
+ * The main extension class for Repositories based on dynamic proxy mechanics. <br>
  * 
  * <b>{@code @Observes ProcessAnnotatedType<X>}</b>: Looks for types annotated with {@link Repository}. Repositories are validated and preprocessed -
- * all the methods on the repository are checked and analyzed for better runtime performance.<br/>
+ * all the methods on the repository are checked and analyzed for better runtime performance.<br>
  * 
  * <b>{@code @Observes AfterBeanDiscovery}</b>: Create proxies for Repository classes, configuring {@link QueryHandler}
  * 
