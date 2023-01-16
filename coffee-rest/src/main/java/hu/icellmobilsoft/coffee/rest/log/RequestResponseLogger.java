@@ -312,7 +312,8 @@ public class RequestResponseLogger {
         // byte-code betoltesi fajlokat, json-t és xml-t ne loggoljuk ki egeszben
                 Objects.equals(requestContext.getMediaType(), MediaType.APPLICATION_OCTET_STREAM_TYPE)
                 || Objects.equals(requestContext.getMediaType(), MediaType.APPLICATION_JSON_TYPE)
-                || Objects.equals(requestContext.getMediaType(), MediaType.APPLICATION_XML_TYPE)) {
+                || Objects.equals(requestContext.getMediaType(), MediaType.APPLICATION_XML_TYPE)
+                || Objects.equals(requestContext.getMediaType(), MediaType.TEXT_XML_TYPE)) {
             maxRequestEntityLogSize = RequestResponseLogger.ENTITY_MAX_LOG;
 
         }
