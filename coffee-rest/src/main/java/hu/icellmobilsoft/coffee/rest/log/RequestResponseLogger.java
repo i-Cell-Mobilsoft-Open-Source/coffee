@@ -265,40 +265,6 @@ public class RequestResponseLogger {
     }
 
     /**
-     * Prints http entity from {@link ContainerRequestContext}.
-     *
-     * @param requestContext
-     *            context
-     * @return HTTP entity or null if invalid parameter or exception when reading the entity
-     */
-    public String printRequestEntity(ContainerRequestContext requestContext) {
-        if (requestContext == null) {
-            return null;
-        }
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        InputStream in = requestContext.getEntityStream();
-        try {
-            IOUtils.copy(in, out);
-
-            byte[] requestEntity = out.toByteArray();
-            int maxRequestEntityLogSize = RestLoggerUtil.getMaxEntityLogSize(requestContext, LogSpecifierTarget.REQUEST);
-            if (maxRequestEntityLogSize != LogSpecifier.NO_LOG &&
-            // byte-code betoltesi fajlokat ne loggoljuk ki egeszben
-                    Objects.equals(requestContext.getMediaType(), MediaType.APPLICATION_OCTET_STREAM_TYPE)) {
-                maxRequestEntityLogSize = RequestResponseLogger.ENTITY_MAX_LOG;
-
-            }
-            // vissza irjuk a kiolvasott streamet
-            requestContext.setEntityStream(new ByteArrayInputStream(requestEntity));
-
-            return printRequestEntity(requestEntity, maxRequestEntityLogSize);
-        } catch (IOException e) {
-            log.error("Error in logging request entity: " + e.getLocalizedMessage(), e);
-            return null;
-        }
-    }
-
-    /**
      * Returns the maximum entity log size
      *
      * @param requestContext
