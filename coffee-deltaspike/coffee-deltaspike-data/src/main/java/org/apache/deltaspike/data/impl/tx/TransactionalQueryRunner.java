@@ -47,6 +47,10 @@ import org.apache.deltaspike.data.impl.handler.QueryRunner;
 //import org.apache.deltaspike.jpa.spi.entitymanager.ActiveEntityManagerHolder;
 //import org.apache.deltaspike.jpa.spi.transaction.TransactionStrategy;
 
+/**
+ * @deprecated Icellmobilsoft deltaspike-data rewrite drops it
+ */
+@Deprecated(forRemoval = true, since = "2.0.0")
 @ApplicationScoped
 public class TransactionalQueryRunner implements QueryRunner
 {
