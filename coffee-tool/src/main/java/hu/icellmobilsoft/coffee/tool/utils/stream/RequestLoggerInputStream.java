@@ -35,6 +35,7 @@ import hu.icellmobilsoft.coffee.tool.utils.string.StringHelper;
  * @since 1.13.0
  */
 @Vetoed
+@SuppressWarnings("InputStreamSlowMultibyteRead")
 public class RequestLoggerInputStream extends InputStream {
 
     private final InputStream inputStream;
