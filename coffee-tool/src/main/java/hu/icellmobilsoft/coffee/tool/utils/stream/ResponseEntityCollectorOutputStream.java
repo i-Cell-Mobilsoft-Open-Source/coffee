@@ -40,7 +40,7 @@ public class ResponseEntityCollectorOutputStream extends OutputStream {
      * Constructor
      *
      * @param outputStream
-     *            original outputStream what we want to copy
+     *            original outputStream
      */
     public ResponseEntityCollectorOutputStream(OutputStream outputStream) {
         this.outputStream = outputStream;
