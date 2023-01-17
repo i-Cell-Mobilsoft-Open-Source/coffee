@@ -80,7 +80,6 @@ public class RequestLoggerInputStream extends InputStream {
         logRequestWithEntity(streamData);
 
         return streamData;
-
     }
 
     private void buildEntity(int streamData) {

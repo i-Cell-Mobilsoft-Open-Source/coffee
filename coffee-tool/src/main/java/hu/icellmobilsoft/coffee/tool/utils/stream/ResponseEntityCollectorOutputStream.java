@@ -44,7 +44,6 @@ public class ResponseEntityCollectorOutputStream extends OutputStream {
      */
     public ResponseEntityCollectorOutputStream(OutputStream outputStream) {
         this.outputStream = outputStream;
-
     }
 
     /**
