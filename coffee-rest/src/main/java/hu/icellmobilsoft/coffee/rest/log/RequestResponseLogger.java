@@ -19,7 +19,6 @@
  */
 package hu.icellmobilsoft.coffee.rest.log;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -57,6 +56,7 @@ import hu.icellmobilsoft.coffee.tool.utils.string.StringHelper;
  * Request - Response logger class
  *
  * @author imre.scheffer
+ * @author mate.biro
  * @since 1.0.0
  */
 @Dependent
