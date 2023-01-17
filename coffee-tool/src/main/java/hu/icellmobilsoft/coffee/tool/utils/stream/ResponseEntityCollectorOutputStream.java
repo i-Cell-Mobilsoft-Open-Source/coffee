@@ -22,7 +22,7 @@ package hu.icellmobilsoft.coffee.tool.utils.stream;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import javax.enterprise.inject.Vetoed;
+import jakarta.enterprise.inject.Vetoed;
 
 /**
  * Custom {@link OutputStream} for collecting response entity

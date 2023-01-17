@@ -22,7 +22,7 @@ package hu.icellmobilsoft.coffee.tool.utils.stream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import javax.enterprise.inject.Vetoed;
+import jakarta.enterprise.inject.Vetoed;
 
 import hu.icellmobilsoft.coffee.cdi.logger.AppLogger;
 import hu.icellmobilsoft.coffee.cdi.logger.LogProducer;
