@@ -274,12 +274,22 @@ public class RequestResponseLogger {
      */
     protected int getMaxRequestEntityLogSize(ContainerRequestContext requestContext) {
         int maxRequestEntityLogSize = RestLoggerUtil.getMaxEntityLogSize(requestContext, LogSpecifierTarget.REQUEST);
+
+        boolean isApplicationOctetStream = Objects.equals(requestContext.getMediaType(), MediaType.APPLICATION_OCTET_STREAM_TYPE);
+        boolean isApplicationJson = Objects.equals(requestContext.getMediaType(), MediaType.APPLICATION_JSON_TYPE);
+        boolean isApplicationXml = Objects.equals(requestContext.getMediaType(), MediaType.APPLICATION_XML_TYPE);
+        boolean isTextXml = Objects.equals(requestContext.getMediaType(), MediaType.TEXT_XML_TYPE);
+        boolean isApplicationJsonWithCharset = Objects.equals(requestContext.getMediaType(), new MediaType(MediaType.APPLICATION_JSON_TYPE.getType(),
+                MediaType.APPLICATION_JSON_TYPE.getSubtype(), StandardCharsets.UTF_8.displayName()));
+        boolean isApplicationXmlWithCharset = Objects.equals(requestContext.getMediaType(), new MediaType(MediaType.APPLICATION_XML_TYPE.getType(),
+                MediaType.APPLICATION_XML_TYPE.getSubtype(), StandardCharsets.UTF_8.displayName()));
+        boolean isTextXmlWithCharset = Objects.equals(requestContext.getMediaType(),
+                new MediaType(MediaType.TEXT_XML_TYPE.getType(), MediaType.TEXT_XML_TYPE.getSubtype(), StandardCharsets.UTF_8.displayName()));
+
         if (maxRequestEntityLogSize != LogSpecifier.NO_LOG &&
         // byte-code betoltesi fajlokat, json-t és xml-t ne loggoljuk ki egeszben
-                (Objects.equals(requestContext.getMediaType(), MediaType.APPLICATION_OCTET_STREAM_TYPE)
-                        || Objects.equals(requestContext.getMediaType(), MediaType.APPLICATION_JSON_TYPE)
-                        || Objects.equals(requestContext.getMediaType(), MediaType.APPLICATION_XML_TYPE)
-                        || Objects.equals(requestContext.getMediaType(), MediaType.TEXT_XML_TYPE))) {
+                (isApplicationOctetStream || isApplicationJson || isApplicationJsonWithCharset || isApplicationXmlWithCharset || isApplicationXml
+                        || isTextXml || isTextXmlWithCharset)) {
             maxRequestEntityLogSize = RequestResponseLogger.ENTITY_MAX_LOG;
         }
 
