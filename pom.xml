@@ -271,7 +271,7 @@
 						<configuration>
 							<failOnError>true</failOnError>
 							<failOnWarnings>true</failOnWarnings>
-							<excludePackageNames>hu.icellmobilsoft.coffee.dto.*</excludePackageNames>
+							<excludePackageNames>hu.icellmobilsoft.coffee.dto.*,org.apache.deltaspike.*</excludePackageNames>
 							<sourceFileExcludes>**/*_.java</sourceFileExcludes>
 						</configuration>
 					</plugin>
