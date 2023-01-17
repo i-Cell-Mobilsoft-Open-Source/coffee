@@ -28,7 +28,7 @@ import javax.enterprise.inject.Vetoed;
  * Custom {@link OutputStream} for collecting response entity
  *
  * @author mate.biro
- * @since 1.13.0
+ * @since 1.14.0
  */
 @Vetoed
 public class ResponseEntityCollectorOutputStream extends OutputStream {

@@ -32,7 +32,7 @@ import hu.icellmobilsoft.coffee.tool.utils.string.StringHelper;
  * Custom {@link InputStream} for logging request with entity
  *
  * @author mate.biro
- * @since 1.13.0
+ * @since 1.14.0
  */
 @Vetoed
 @SuppressWarnings("InputStreamSlowMultibyteRead")

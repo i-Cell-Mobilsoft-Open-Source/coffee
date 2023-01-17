@@ -58,7 +58,7 @@ public class OutputStreamCopier extends OutputStream {
      * Constructor
      *
      * @param outputStream
-     *            original outputStream
+     *            original outputStream what we want to copy
      */
     public OutputStreamCopier(OutputStream outputStream) {
         this.outputStream = outputStream;

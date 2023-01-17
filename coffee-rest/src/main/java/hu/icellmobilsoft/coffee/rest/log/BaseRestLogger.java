@@ -53,6 +53,7 @@ import hu.icellmobilsoft.coffee.tool.utils.string.RandomUtil;
  * Base class for REST logging
  *
  * @author ischeffer
+ * @author mate.biro
  * @since 1.0.0
  */
 public abstract class BaseRestLogger implements ContainerRequestFilter, WriterInterceptor {
