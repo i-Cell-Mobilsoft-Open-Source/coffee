@@ -25,9 +25,8 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import hu.icellmobilsoft.coffee.model.base.DefaultImplAbstractIdentifiedAuditEntity;
 import hu.icellmobilsoft.coffee.model.base.javatime.listener.TimestampsProvider;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
 
 /**
  * Testing TimestampsProvider class
@@ -36,38 +35,30 @@ import jakarta.persistence.Table;
  * @since 2.0.0
  */
 @DisplayName("Testing TimestampsProvider class")
-public class TimestampsProviderTest {
+class TimestampsProviderTest {
 
     @Test
-    public void testPrePersist() {
+    void testPrePersist() {
         // given
-        TimestampsProvider TimestampsProvider = new TimestampsProvider();
-        TestEntity TestEntity = new TestEntity();
+        TimestampsProvider timestampsProvider = new TimestampsProvider();
+        DefaultImplAbstractIdentifiedAuditEntity testEntity = new DefaultImplAbstractIdentifiedAuditEntity();
         // when
-        TimestampsProvider.prePersist(TestEntity);
+        timestampsProvider.prePersist(testEntity);
         // then
-        assertNotNull(TestEntity.getCreationDate());
-        assertNull(TestEntity.getModificationDate());
+        assertNotNull(testEntity.getCreationDate());
+        assertNull(testEntity.getModificationDate());
     }
 
     @Test
-    public void testPreUpdate() {
+    void testPreUpdate() {
         // given
-        TimestampsProvider TimestampsProvider = new TimestampsProvider();
-        TestEntity TestEntity = new TestEntity();
+        TimestampsProvider timestampsProvider = new TimestampsProvider();
+        DefaultImplAbstractIdentifiedAuditEntity testEntity = new DefaultImplAbstractIdentifiedAuditEntity();
         // when
-        TimestampsProvider.preUpdate(TestEntity);
+        timestampsProvider.preUpdate(testEntity);
         // then
-        assertNull(TestEntity.getCreationDate());
-        assertNotNull(TestEntity.getModificationDate());
-    }
-
-    @Entity
-    @Table(name = "SIMPLE_TABLE")
-    class TestEntity extends AbstractAuditEntity {
-
-        private String taxNumber;
-
+        assertNull(testEntity.getCreationDate());
+        assertNotNull(testEntity.getModificationDate());
     }
 
 }
