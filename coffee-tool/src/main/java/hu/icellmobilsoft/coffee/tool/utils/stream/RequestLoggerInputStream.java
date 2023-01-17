@@ -83,8 +83,8 @@ public class RequestLoggerInputStream extends InputStream {
     }
 
     private void buildEntity(int streamData) {
-        // logoláshoz gyűjtjük a stream tartalmát amíg van, vagy még nem értük el a limitet
-        if (!firstReadCycle || (streamData == -1 && logReadLimit == 0)) {
+        // logoláshoz gyűjtjük a stream tartalmát amíg van, és még nem értük el a limitet
+        if (!firstReadCycle || streamData == -1 || logReadLimit == 0) {
             return;
         }
         entity.append((char) streamData);
