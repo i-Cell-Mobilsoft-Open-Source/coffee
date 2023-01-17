@@ -135,6 +135,7 @@ public abstract class BaseRestLogger implements ContainerRequestFilter, WriterIn
             int maxResponseEntityLogSize = RestLoggerUtil.getMaxEntityLogSize(context, LogSpecifierTarget.RESPONSE);
             if (maxResponseEntityLogSize != LogSpecifier.NO_LOG) {
                 ResponseEntityCollectorOutputStream responseEntityCollectorOutputStream = new ResponseEntityCollectorOutputStream(originalStream);
+                // a saját OutputStream-et állítjuk be a context-be, ami majd az entity stream-be írásakor gyűjti azt a log-olás számára
                 context.setOutputStream(responseEntityCollectorOutputStream);
                 context.proceed();
                 entity = responseEntityCollectorOutputStream.getEntityText().getBytes(StandardCharsets.UTF_8);
