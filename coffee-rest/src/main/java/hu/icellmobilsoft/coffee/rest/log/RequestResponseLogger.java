@@ -19,7 +19,6 @@
  */
 package hu.icellmobilsoft.coffee.rest.log;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -57,6 +56,7 @@ import hu.icellmobilsoft.coffee.tool.utils.string.StringHelper;
  * Request - Response logger class
  *
  * @author imre.scheffer
+ * @author mate.biro
  * @since 1.0.0
  */
 @Dependent
@@ -69,8 +69,8 @@ public class RequestResponseLogger {
     /** Constant <code>RESPONSE_PREFIX="&lt; "</code> */
     public static final String RESPONSE_PREFIX = "< ";
 
-    /** Constant <code>BYTECODE_MAX_LOG=5000</code> */
-    public static final int BYTECODE_MAX_LOG = 5000;
+    /** Constant <code>ENTITY_MAX_LOG=5000</code> */
+    public static final int ENTITY_MAX_LOG = 5000;
 
     /** Constant <code>SKIP_MEDIATYPE_SUBTYPE_PDF="pdf"</code> */
     public static final String SKIP_MEDIATYPE_SUBTYPE_PDF = "pdf";
@@ -265,37 +265,25 @@ public class RequestResponseLogger {
     }
 
     /**
-     * Prints http entity from {@link ContainerRequestContext}.
+     * Returns the maximum entity log size
      *
      * @param requestContext
      *            context
-     * @return HTTP entity or null if invalid parameter or exception when reading the entity
+     * 
+     * @return the maximum log size of the entity
      */
-    public String printRequestEntity(ContainerRequestContext requestContext) {
-        if (requestContext == null) {
-            return null;
+    protected int getMaxRequestEntityLogSize(ContainerRequestContext requestContext) {
+        int maxRequestEntityLogSize = RestLoggerUtil.getMaxEntityLogSize(requestContext, LogSpecifierTarget.REQUEST);
+        if (maxRequestEntityLogSize != LogSpecifier.NO_LOG &&
+        // byte-code betoltesi fajlokat, json-t és xml-t ne loggoljuk ki egeszben
+                (Objects.equals(requestContext.getMediaType(), MediaType.APPLICATION_OCTET_STREAM_TYPE)
+                        || Objects.equals(requestContext.getMediaType(), MediaType.APPLICATION_JSON_TYPE)
+                        || Objects.equals(requestContext.getMediaType(), MediaType.APPLICATION_XML_TYPE)
+                        || Objects.equals(requestContext.getMediaType(), MediaType.TEXT_XML_TYPE))) {
+            maxRequestEntityLogSize = RequestResponseLogger.ENTITY_MAX_LOG;
         }
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        InputStream in = requestContext.getEntityStream();
-        try {
-            IOUtils.copy(in, out);
 
-            byte[] requestEntity = out.toByteArray();
-            int maxRequestEntityLogSize = RestLoggerUtil.getMaxEntityLogSize(requestContext, LogSpecifierTarget.REQUEST);
-            if (maxRequestEntityLogSize != LogSpecifier.NO_LOG &&
-            // byte-code betoltesi fajlokat ne loggoljuk ki egeszben
-                    Objects.equals(requestContext.getMediaType(), MediaType.APPLICATION_OCTET_STREAM_TYPE)) {
-                maxRequestEntityLogSize = RequestResponseLogger.BYTECODE_MAX_LOG;
-
-            }
-            // vissza irjuk a kiolvasott streamet
-            requestContext.setEntityStream(new ByteArrayInputStream(requestEntity));
-
-            return printRequestEntity(requestEntity, maxRequestEntityLogSize);
-        } catch (IOException e) {
-            log.error("Error in logging request entity: " + e.getLocalizedMessage(), e);
-            return null;
-        }
+        return maxRequestEntityLogSize;
     }
 
     /**
@@ -318,7 +306,7 @@ public class RequestResponseLogger {
             // byte-code betoltesi fajlokat ne loggoljuk ki egeszben
             boolean logLimit = Objects.equals(servletRequest.getContentType(), MediaType.APPLICATION_OCTET_STREAM);
 
-            return printRequestEntity(requestEntity, logLimit ? RequestResponseLogger.BYTECODE_MAX_LOG : null);
+            return printRequestEntity(requestEntity, logLimit ? RequestResponseLogger.ENTITY_MAX_LOG : null);
         } catch (IllegalStateException e) {
             log.info("Inputstream is already readed from servletRequest: " + e.getLocalizedMessage(), e);
         } catch (IOException e) {

@@ -21,6 +21,7 @@ package hu.icellmobilsoft.coffee.rest.log;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 
 import jakarta.inject.Inject;
 import jakarta.servlet.http.HttpServletResponse;
@@ -43,12 +44,15 @@ import hu.icellmobilsoft.coffee.rest.log.annotation.LogSpecifier;
 import hu.icellmobilsoft.coffee.rest.log.annotation.enumeration.LogSpecifierTarget;
 import hu.icellmobilsoft.coffee.rest.utils.RestLoggerUtil;
 import hu.icellmobilsoft.coffee.se.logging.mdc.MDC;
+import hu.icellmobilsoft.coffee.tool.utils.stream.RequestLoggerInputStream;
+import hu.icellmobilsoft.coffee.tool.utils.stream.ResponseEntityCollectorOutputStream;
 import hu.icellmobilsoft.coffee.tool.utils.string.RandomUtil;
 
 /**
  * Base class for REST logging
  *
  * @author ischeffer
+ * @author mate.biro
  * @since 1.0.0
  */
 public abstract class BaseRestLogger implements ContainerRequestFilter, WriterInterceptor {
@@ -88,68 +92,61 @@ public abstract class BaseRestLogger implements ContainerRequestFilter, WriterIn
      *
      * @param requestContext
      *            context
-     * @return HTTP request message or null if logging is disabled
      */
-    protected String processRequest(ContainerRequestContext requestContext) {
+    protected void processRequest(ContainerRequestContext requestContext) {
         if (RestLoggerUtil.logDisabled(requestContext, LogSpecifierTarget.REQUEST)) {
-            return null;
+            return;
         }
 
-        StringBuffer message = new StringBuffer();
-        printRequestLine(message, requestContext);
-        printRequestHeaders(message, requestContext);
-        printRequestEntity(message, requestContext);
+        StringBuilder message = new StringBuilder();
+        appendRequestLine(message, requestContext);
+        appendRequestHeaders(message, requestContext);
 
-        String messageString = message.toString();
-        log.info(message.toString());
-        return messageString;
+        int maxRequestEntityLogSize = requestResponseLogger.getMaxRequestEntityLogSize(requestContext);
+
+        RequestLoggerInputStream requestLoggerInputStream = new RequestLoggerInputStream(requestContext.getEntityStream(), maxRequestEntityLogSize,
+                RequestResponseLogger.REQUEST_PREFIX, message);
+
+        // a saját InputStream-et állítjuk be a context-be, ami majd az entity stream olvasáskor log-olja a request-et
+        requestContext.setEntityStream(requestLoggerInputStream);
     }
 
     /**
      * Processes HTTP response.
-     * 
+     *
      * @param context
      *            context
-     * @return HTTP response message or null if logging is disabled
      * @throws IOException
      *             if response cannot be processed.
      */
-    protected String processResponse(WriterInterceptorContext context) throws IOException {
+    protected void processResponse(WriterInterceptorContext context) throws IOException {
         if (RestLoggerUtil.logDisabled(context, LogSpecifierTarget.RESPONSE)) {
             context.proceed();
-            return null;
+            return;
         }
 
-        StringBuffer message = new StringBuffer();
+        StringBuilder message = new StringBuilder();
         try {
-
             printResponseLine(message, context);
             printResponseHeaders(message, context);
 
             OutputStream originalStream = context.getOutputStream();
-            byte[] entityCopy = new byte[0];
+            byte[] entity = new byte[0];
             int maxResponseEntityLogSize = RestLoggerUtil.getMaxEntityLogSize(context, LogSpecifierTarget.RESPONSE);
             if (maxResponseEntityLogSize != LogSpecifier.NO_LOG) {
-                hu.icellmobilsoft.coffee.tool.utils.stream.OutputStreamCopier osc = new hu.icellmobilsoft.coffee.tool.utils.stream.OutputStreamCopier(
-                        originalStream);
-                context.setOutputStream(osc);
-                // elegessuk a stream-et, kozben masoljuk a tartalmat
-                try {
-                    context.proceed();
-                } finally {
-                    // IS: kerdeses erdemes-e vissza irni az eredeti stream-et...
-                    context.setOutputStream(originalStream);
-                }
-                entityCopy = osc.getCopy();
+                ResponseEntityCollectorOutputStream responseEntityCollectorOutputStream = new ResponseEntityCollectorOutputStream(originalStream);
+                // a saját OutputStream-et állítjuk be a context-be, ami majd az entity stream-be írásakor gyűjti azt a log-olás számára
+                context.setOutputStream(responseEntityCollectorOutputStream);
+                context.proceed();
+                entity = responseEntityCollectorOutputStream.getEntityText().getBytes(StandardCharsets.UTF_8);
             } else {
                 context.proceed();
             }
 
-            printResponseEntity(message, context, entityCopy);
+            printResponseEntity(message, context, entity);
         } finally {
             log.info(message.toString());
         }
-        return message.toString();
     }
 
     /**
@@ -163,7 +160,7 @@ public abstract class BaseRestLogger implements ContainerRequestFilter, WriterIn
     public abstract String sessionKey();
 
     /**
-     * Prints request headers from {@link ContainerRequestContext} and appends given {@link StringBuffer} with the print result.
+     * Prints request headers from {@link ContainerRequestContext} and appends given {@link StringBuilder} with the print result.
      *
      * @param b
      *            request message
@@ -171,17 +168,18 @@ public abstract class BaseRestLogger implements ContainerRequestFilter, WriterIn
      *            context
      * @see RequestResponseLogger#printRequestHeaders(java.util.Map)
      */
-    protected void printRequestHeaders(StringBuffer b, ContainerRequestContext requestContext) {
-        b.append(requestResponseLogger.printRequestHeaders(requestContext.getHeaders()));
+    protected void appendRequestHeaders(StringBuilder b, ContainerRequestContext requestContext) {
+        MultivaluedMap<String, String> headers = requestContext.getHeaders();
+        b.append(requestResponseLogger.printRequestHeaders(headers));
         String sessionId = null;
-        if (requestContext.getHeaders().containsKey(sessionKey())) {
-            sessionId = requestContext.getHeaders().get(sessionKey()).get(0);
+        if (headers != null && headers.containsKey(sessionKey())) {
+            sessionId = headers.get(sessionKey()).get(0);
         }
         MDC.put(LogConstants.LOG_SESSION_ID, StringUtils.defaultIfBlank(sessionId, RandomUtil.generateId()));
     }
 
     /**
-     * Prints http path info from {@link ContainerRequestContext} and appends given {@link StringBuffer} with the print result.
+     * Prints http path info from {@link ContainerRequestContext} and appends given {@link StringBuilder} with the print result.
      *
      * @param b
      *            request message
@@ -189,25 +187,12 @@ public abstract class BaseRestLogger implements ContainerRequestFilter, WriterIn
      *            context
      * @see RequestResponseLogger#printRequestLine(ContainerRequestContext)
      */
-    protected void printRequestLine(StringBuffer b, ContainerRequestContext requestContext) {
+    protected void appendRequestLine(StringBuilder b, ContainerRequestContext requestContext) {
         b.append(requestResponseLogger.printRequestLine(requestContext));
     }
 
     /**
-     * Prints http entity from {@link ContainerRequestContext} and appends given {@link StringBuffer} with the print result.
-     * 
-     * @param b
-     *            request message
-     * @param requestContext
-     *            context
-     * @see RequestResponseLogger#printRequestEntity(ContainerRequestContext)
-     */
-    protected void printRequestEntity(StringBuffer b, ContainerRequestContext requestContext) {
-        b.append(requestResponseLogger.printRequestEntity(requestContext));
-    }
-
-    /**
-     * Prints response URL line and appends given {@link StringBuffer} with the print result.
+     * Prints response URL line and appends given {@link StringBuilder} with the print result.
      * 
      * @param b
      *            response message
@@ -215,7 +200,7 @@ public abstract class BaseRestLogger implements ContainerRequestFilter, WriterIn
      *            context
      * @see RequestResponseLogger#printResponseLine(String, int, String, String)
      */
-    protected void printResponseLine(StringBuffer b, WriterInterceptorContext context) {
+    protected void printResponseLine(StringBuilder b, WriterInterceptorContext context) {
         String fullPath = uriInfo.getAbsolutePath().toASCIIString();
         int status = httpServletResponse.getStatus();
         Status statusEnum = Status.fromStatusCode(status);
@@ -225,7 +210,7 @@ public abstract class BaseRestLogger implements ContainerRequestFilter, WriterIn
     }
 
     /**
-     * Prints response header values and appends given {@link StringBuffer} with the print result.
+     * Prints response header values and appends given {@link StringBuilder} with the print result.
      * 
      * @param b
      *            response message
@@ -233,12 +218,12 @@ public abstract class BaseRestLogger implements ContainerRequestFilter, WriterIn
      *            context
      * @see RequestResponseLogger#printResponseHeaders(java.util.Map)
      */
-    protected void printResponseHeaders(StringBuffer b, WriterInterceptorContext context) {
+    protected void printResponseHeaders(StringBuilder b, WriterInterceptorContext context) {
         b.append(requestResponseLogger.printResponseHeaders(context.getHeaders()));
     }
 
     /**
-     * Prints response from {@link WriterInterceptorContext} and appends given {@link StringBuffer} with the print result.
+     * Prints response from {@link WriterInterceptorContext} and appends given {@link StringBuilder} with the print result.
      * 
      * @param b
      *            response message
@@ -248,7 +233,7 @@ public abstract class BaseRestLogger implements ContainerRequestFilter, WriterIn
      *            entity
      * @see RequestResponseLogger#printResponseEntity(String, WriterInterceptorContext, byte[])
      */
-    protected void printResponseEntity(StringBuffer b, WriterInterceptorContext context, byte[] entityCopy) {
+    protected void printResponseEntity(StringBuilder b, WriterInterceptorContext context, byte[] entityCopy) {
         b.append(requestResponseLogger.printResponseEntity(uriInfo.getAbsolutePath().toASCIIString(), context, entityCopy));
     }
 }
