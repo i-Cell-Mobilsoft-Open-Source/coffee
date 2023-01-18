@@ -159,7 +159,7 @@ Ahhoz hogy működjon a CDI kezelt paraméter injecion kell a "@ExplicitParamInj
 annotáció is a teszt osztályra.
 
 === coffee-model-base
-A Deltaspike data függőség meg lett szüntetve. A korábbi deltaspike data CurrentUser helyett létre lett hozva a
+A deltaspike data függőség meg lett szüntetve. A korábbi deltaspike data CurrentUser helyett létre lett hozva a
 hu.icellmobilsoft.coffee.model.base.annotation CurrentUser annotáció. Az AuditProvider, TimestampsProvider osztályok a korábbi deltaspike data
 PrePersistAuditListener és PreUpdateAuditListener interfészek implementálása helyett metódusai a jakarta-s PrePersist és PreUpdate annotációkkal
 lettek ellátva. Az AbstractEntity-ről lekerült a deltaspike-os AuditEntityListener, helyette az AbstractAuditEntity osztályok megkapták a következő

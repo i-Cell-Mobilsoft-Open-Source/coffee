@@ -21,14 +21,16 @@ package hu.icellmobilsoft.coffee.model.base.audit;
 
 import hu.icellmobilsoft.coffee.model.base.annotation.CurrentUser;
 import hu.icellmobilsoft.coffee.model.base.javatime.AbstractAuditEntity;
+import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.Produces;
 
 /**
- * Teszt entitások létrehozásához szükséges {@link AbstractAuditEntity#getCreatorUser()} töltéséhez adatot szolgáltató osztály
+ * Class providing data for loading {@link AbstractAuditEntity#getCreatorUser()} required to create test entities
  *
  * @author zsolt.vasi
  * @since 2.0.0
  */
+@ApplicationScoped
 public class UserProvider {
 
     public static final String DEFAULT_SYSTEM_USER = "0";

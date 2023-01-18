@@ -60,10 +60,8 @@ class AuditProviderTest {
     void prePersistTest() {
         // given
         DefaultImplAbstractIdentifiedAuditEntity entity = new DefaultImplAbstractIdentifiedAuditEntity();
-
         // when
         auditProvider.prePersist(entity);
-
         // then
         assertEquals(UserProvider.DEFAULT_SYSTEM_USER, entity.getCreatorUser());
         assertNull(entity.getModifierUser());
@@ -74,7 +72,6 @@ class AuditProviderTest {
     void preUpdateTest() {
         // given
         DefaultImplAbstractIdentifiedAuditEntity entity = new DefaultImplAbstractIdentifiedAuditEntity();
-
         // when
         auditProvider.preUpdate(entity);
         // then
@@ -87,7 +84,6 @@ class AuditProviderTest {
     void prePersistIfModifiedByOnCreateTest() {
         // given
         ModifiedByOnCreateImplAbstractIdentifiedAuditEntity entity = new ModifiedByOnCreateImplAbstractIdentifiedAuditEntity();
-
         // when
         auditProvider.prePersist(entity);
         // then

@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * Abstract class pf providers.
+ * Abstract class of providers.
  *
  * @author zsolt.vasi
  * @since 2.0.0

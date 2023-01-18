@@ -30,6 +30,8 @@ import hu.icellmobilsoft.coffee.model.base.javatime.listener.TimestampsProvider;
  */
 public class ProviderException extends RuntimeException {
 
+    private static final long serialVersionUID = 1L;
+
     public ProviderException(String message, Throwable cause) {
         super(message, cause);
     }

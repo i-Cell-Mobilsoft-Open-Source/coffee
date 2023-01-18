@@ -69,7 +69,6 @@ public class AuditProvider extends AbstractProvider {
                 setProperty(entity, field, value);
             }
         }
-
     }
 
     /**
