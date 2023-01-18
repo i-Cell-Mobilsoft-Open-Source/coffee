@@ -99,13 +99,13 @@ public abstract class BaseRestLogger implements ContainerRequestFilter, WriterIn
             return;
         }
 
-        StringBuilder message = new StringBuilder();
+        var message = new StringBuilder();
         appendRequestLine(message, requestContext);
         appendRequestHeaders(message, requestContext);
 
         int maxRequestEntityLogSize = requestResponseLogger.getMaxRequestEntityLogSize(requestContext);
 
-        RequestLoggerInputStream requestLoggerInputStream = new RequestLoggerInputStream(requestContext.getEntityStream(), maxRequestEntityLogSize,
+        var requestLoggerInputStream = new RequestLoggerInputStream(requestContext.getEntityStream(), maxRequestEntityLogSize,
                 RequestResponseLogger.REQUEST_PREFIX, message);
 
         // a saját InputStream-et állítjuk be a context-be, ami majd az entity stream olvasáskor log-olja a request-et
@@ -120,6 +120,7 @@ public abstract class BaseRestLogger implements ContainerRequestFilter, WriterIn
      * @throws IOException
      *             if response cannot be processed.
      */
+    @SuppressWarnings("Var")
     protected void processResponse(WriterInterceptorContext context) throws IOException {
         if (RestLoggerUtil.logDisabled(context, LogSpecifierTarget.RESPONSE)) {
             context.proceed();
@@ -135,7 +136,7 @@ public abstract class BaseRestLogger implements ContainerRequestFilter, WriterIn
             byte[] entity = new byte[0];
             int maxResponseEntityLogSize = RestLoggerUtil.getMaxEntityLogSize(context, LogSpecifierTarget.RESPONSE);
             if (maxResponseEntityLogSize != LogSpecifier.NO_LOG) {
-                ResponseEntityCollectorOutputStream responseEntityCollectorOutputStream = new ResponseEntityCollectorOutputStream(originalStream);
+                var responseEntityCollectorOutputStream = new ResponseEntityCollectorOutputStream(originalStream);
                 // a saját OutputStream-et állítjuk be a context-be, ami majd az entity stream-be írásakor gyűjti azt a log-olás számára
                 context.setOutputStream(responseEntityCollectorOutputStream);
                 context.proceed();
