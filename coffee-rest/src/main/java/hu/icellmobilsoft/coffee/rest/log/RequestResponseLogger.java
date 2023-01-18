@@ -283,7 +283,7 @@ public class RequestResponseLogger {
         boolean isTextXml = RestLoggerUtil.isSameMediaTypeWithoutCharset(requestContext.getMediaType(), MediaType.TEXT_XML_TYPE);
 
         if (maxRequestEntityLogSize > RequestResponseLogger.ENTITY_MAX_LOG &&
-        // byte-code betoltesi fajlokat, json-t és xml-t ne loggoljuk ki egeszben
+        // byte-code betoltesi fajlokat, multipart-ot, json-t és xml-t ne loggoljuk ki egeszben
                 (isApplicationOctetStream || isMultipartFormData || isApplicationJson || isApplicationXml || isTextXml)) {
             maxRequestEntityLogSize = RequestResponseLogger.ENTITY_MAX_LOG;
         }
