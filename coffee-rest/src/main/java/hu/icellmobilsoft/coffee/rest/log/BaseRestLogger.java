@@ -21,6 +21,7 @@ package hu.icellmobilsoft.coffee.rest.log;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 
 import jakarta.inject.Inject;
 import jakarta.servlet.http.HttpServletResponse;
@@ -135,7 +136,7 @@ public abstract class BaseRestLogger implements ContainerRequestFilter, WriterIn
                 ResponseEntityCollectorOutputStream responseEntityCollectorOutputStream = new ResponseEntityCollectorOutputStream(originalStream);
                 context.setOutputStream(responseEntityCollectorOutputStream);
                 context.proceed();
-                entity = responseEntityCollectorOutputStream.getEntityText().getBytes();
+                entity = responseEntityCollectorOutputStream.getEntityText().getBytes(StandardCharsets.UTF_8);
             } else {
                 context.proceed();
             }
@@ -166,10 +167,11 @@ public abstract class BaseRestLogger implements ContainerRequestFilter, WriterIn
      * @see RequestResponseLogger#printRequestHeaders(java.util.Map)
      */
     protected void appendRequestHeaders(StringBuilder b, ContainerRequestContext requestContext) {
-        b.append(requestResponseLogger.printRequestHeaders(requestContext.getHeaders()));
+        MultivaluedMap<String, String> headers = requestContext.getHeaders();
+        b.append(requestResponseLogger.printRequestHeaders(headers));
         String sessionId = null;
-        if (requestContext.getHeaders().containsKey(sessionKey())) {
-            sessionId = requestContext.getHeaders().get(sessionKey()).get(0);
+        if (headers != null && headers.containsKey(sessionKey())) {
+            sessionId = headers.get(sessionKey()).get(0);
         }
         MDC.put(LogConstants.LOG_SESSION_ID, StringUtils.defaultIfBlank(sessionId, RandomUtil.generateId()));
     }
