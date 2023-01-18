@@ -37,16 +37,18 @@
  */
 package org.apache.deltaspike.core.impl.message;
 
-import org.apache.deltaspike.core.api.message.MessageContext;
-import org.apache.deltaspike.core.api.message.MessageResolver;
-import org.apache.deltaspike.core.util.PropertyFileUtils;
-
-import jakarta.enterprise.context.Dependent;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
+
+import jakarta.enterprise.context.Dependent;
+
+import org.apache.deltaspike.core.api.message.MessageContext;
+import org.apache.deltaspike.core.api.message.MessageResolver;
+import org.apache.deltaspike.core.util.PropertyFileUtils;
 
 /**
  * Copy from deltaspike project
@@ -78,9 +80,13 @@ public class DefaultMessageResolver implements MessageResolver
                 // using {} without a bundle is always an error
                 return null;
             }
-
-            Iterator<String> messageSourceIterator = messageSources.iterator();
-
+            
+            // org.apache.deltaspike.core.impl.message.DefaultMessageContext-ban elofordulhat hogy pont akkor valtoztatja meg a listat amikor
+            // mar az iteratort elkertuk, ezert ConcurrentModificationException dobodhat véletlenszeruen több property feloldas soran parhuzamosan
+            // Iterator<String> messageSourceIterator = messageSources.iterator();
+            
+            List<String> copy = new ArrayList<>(messageSources);
+            Iterator<String> messageSourceIterator = copy.iterator();
             Locale locale = messageContext.getLocale();
 
             String currentMessageSource;
