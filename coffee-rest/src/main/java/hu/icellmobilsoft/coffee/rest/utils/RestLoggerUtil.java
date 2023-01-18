@@ -22,8 +22,11 @@ package hu.icellmobilsoft.coffee.rest.utils;
 import java.lang.annotation.Annotation;
 import java.util.Arrays;
 
+import org.apache.commons.lang3.StringUtils;
+
 import jakarta.ws.rs.client.ClientRequestContext;
 import jakarta.ws.rs.container.ContainerRequestContext;
+import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.ext.WriterInterceptorContext;
 
 import hu.icellmobilsoft.coffee.rest.log.annotation.LogSpecifier;
@@ -219,4 +222,25 @@ public class RestLoggerUtil {
         return false;
     }
 
+    /**
+     * Returns if {@link MediaType}s are the same irrespective of charset
+     *
+     * @param mediaType1
+     *            {@link MediaType} to compare
+     * @param mediaType2
+     *            {@link MediaType} to compare
+     * @return if {@code MediaType}s are the same
+     */
+    public static boolean isSameMediaTypeWithoutCharset(MediaType mediaType1, MediaType mediaType2) {
+        if (mediaType1 == null || mediaType2 == null) {
+            return false;
+        }
+
+        String type1 = mediaType1.getType();
+        String subtype1 = mediaType1.getSubtype();
+        String type2 = mediaType2.getType();
+        String subtype2 = mediaType2.getSubtype();
+
+        return (StringUtils.equals(type1, type2) && StringUtils.equals(subtype1, subtype2));
+    }
 }
