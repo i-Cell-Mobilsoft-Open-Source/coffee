@@ -272,6 +272,7 @@ public class RequestResponseLogger {
      * 
      * @return the maximum log size of the entity
      */
+    @SuppressWarnings("Var")
     protected int getMaxRequestEntityLogSize(ContainerRequestContext requestContext) {
         int maxRequestEntityLogSize = RestLoggerUtil.getMaxEntityLogSize(requestContext, LogSpecifierTarget.REQUEST);
 
