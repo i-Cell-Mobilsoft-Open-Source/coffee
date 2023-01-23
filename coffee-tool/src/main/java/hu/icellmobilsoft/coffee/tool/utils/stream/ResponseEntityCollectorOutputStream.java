@@ -35,25 +35,33 @@ public class ResponseEntityCollectorOutputStream extends OutputStream {
 
     private final OutputStream outputStream;
     private final StringBuilder entity = new StringBuilder();
+    private int collectLimit;
 
     /**
      * Constructor
      *
      * @param outputStream
      *            original outputStream
+     * @param collectLimit
+     *            collect limit
      */
-    public ResponseEntityCollectorOutputStream(OutputStream outputStream) {
+    public ResponseEntityCollectorOutputStream(OutputStream outputStream, int collectLimit) {
         this.outputStream = outputStream;
+        this.collectLimit = collectLimit;
     }
 
     /**
      * {@inheritDoc}
      *
-     * Extra functionality: It appends the response entity data written to the original {@link OutputStream} to an internal {@link StringBuilder}.
+     * Extra functionality: It appends the response entity data written to the original {@link OutputStream} to an internal {@link StringBuilder}
+     * until the given limit has been reached.
      */
     @Override
     public void write(int b) throws IOException {
-        entity.append((char) b);
+        if (collectLimit != 0) {
+            entity.append((char) b);
+            collectLimit--;
+        }
         outputStream.write(b);
     }
 
