@@ -26,6 +26,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import hu.icellmobilsoft.coffee.model.base.DefaultImplAbstractIdentifiedAuditEntity;
+import hu.icellmobilsoft.coffee.model.base.GetterAnnotatedEntity;
 import hu.icellmobilsoft.coffee.model.base.javatime.listener.TimestampsProvider;
 
 /**
@@ -38,6 +39,7 @@ import hu.icellmobilsoft.coffee.model.base.javatime.listener.TimestampsProvider;
 class TimestampsProviderTest {
 
     @Test
+    @DisplayName("prePersist test")
     void testPrePersist() {
         // given
         TimestampsProvider timestampsProvider = new TimestampsProvider();
@@ -50,10 +52,37 @@ class TimestampsProviderTest {
     }
 
     @Test
+    @DisplayName("preUpdate test")
     void testPreUpdate() {
         // given
         TimestampsProvider timestampsProvider = new TimestampsProvider();
         DefaultImplAbstractIdentifiedAuditEntity testEntity = new DefaultImplAbstractIdentifiedAuditEntity();
+        // when
+        timestampsProvider.preUpdate(testEntity);
+        // then
+        assertNull(testEntity.getCreationDate());
+        assertNotNull(testEntity.getModificationDate());
+    }
+
+    @Test
+    @DisplayName("getter annotated prePersist test")
+    void testGetterAnnotatedPrePersist() {
+        // given
+        TimestampsProvider timestampsProvider = new TimestampsProvider();
+        GetterAnnotatedEntity testEntity = new GetterAnnotatedEntity();
+        // when
+        timestampsProvider.prePersist(testEntity);
+        // then
+        assertNotNull(testEntity.getCreationDate());
+        assertNull(testEntity.getModificationDate());
+    }
+
+    @Test
+    @DisplayName("getter annotated preUpdate test")
+    void testGetterAnnotatedPreUpdate() {
+        // given
+        TimestampsProvider timestampsProvider = new TimestampsProvider();
+        GetterAnnotatedEntity testEntity = new GetterAnnotatedEntity();
         // when
         timestampsProvider.preUpdate(testEntity);
         // then

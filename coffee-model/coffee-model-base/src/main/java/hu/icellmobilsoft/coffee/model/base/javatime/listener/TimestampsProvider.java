@@ -22,6 +22,7 @@ package hu.icellmobilsoft.coffee.model.base.javatime.listener;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -83,6 +84,13 @@ public class TimestampsProvider extends AbstractProvider {
                 setValue(entity, field.getType(), sysTime, field);
             }
         }
+        List<Method> allMethods = getAllMethods(entity.getClass());
+        for (Method method : allMethods) {
+            if (method.isAnnotationPresent(annotationClass)) {
+                Field field = getFieldByMethod(method, allFields);
+                setValue(entity, field.getType(), sysTime, field);
+            }
+        }
     }
 
     private void setValue(Object entity, Class<?> fieldClass, long systime, Field field) {
@@ -110,8 +118,8 @@ public class TimestampsProvider extends AbstractProvider {
             field.setAccessible(true);
             field.set(entity, object);
         } catch (IllegalAccessException | NoSuchMethodException | InstantiationException | InvocationTargetException exception) {
-            throw new ProviderException(
-                    "Failed to write value [" + object + "] to entity [" + entity.getClass() + "]: " + exception.getLocalizedMessage(), exception);
+            throw new ProviderException("Failed to write value [" + object + "] to field [" + field + "], fieldClass [" + fieldClass + "], entity ["
+                    + entity.getClass() + "]: " + exception.getLocalizedMessage(), exception);
         }
     }
 

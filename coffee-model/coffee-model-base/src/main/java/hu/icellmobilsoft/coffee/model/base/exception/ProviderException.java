@@ -32,6 +32,24 @@ public class ProviderException extends RuntimeException {
 
     private static final long serialVersionUID = 1L;
 
+    /**
+     * Creates the exception with the given message
+     *
+     * @param message
+     *            the exception message
+     */
+    public ProviderException(String message) {
+        super(message);
+    }
+
+    /**
+     * Creates the exception with the given message and cause
+     * 
+     * @param message
+     *            the exception message
+     * @param cause
+     *            {@link Throwable}
+     */
     public ProviderException(String message, Throwable cause) {
         super(message, cause);
     }

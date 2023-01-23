@@ -32,6 +32,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import hu.icellmobilsoft.coffee.model.base.DefaultImplAbstractIdentifiedAuditEntity;
+import hu.icellmobilsoft.coffee.model.base.GetterAnnotatedEntity;
 import hu.icellmobilsoft.coffee.model.base.ModifiedByOnCreateImplAbstractIdentifiedAuditEntity;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.enterprise.inject.spi.BeanManager;
@@ -89,6 +90,30 @@ class AuditProviderTest {
         // then
         assertEquals(UserProvider.DEFAULT_SYSTEM_USER, entity.getCreatorUser());
         assertEquals(UserProvider.DEFAULT_SYSTEM_USER, entity.getModifierUser());
+    }
+
+    @Test
+    @DisplayName("getter annoteted prePersist test")
+    void getterAnnotatedPrePersistTest() {
+        // given
+        GetterAnnotatedEntity entity = new GetterAnnotatedEntity();
+        // when
+        auditProvider.prePersist(entity);
+        // then
+        assertEquals(UserProvider.DEFAULT_SYSTEM_USER, entity.getCreatorUser());
+        assertNull(entity.getModifierUser());
+    }
+
+    @Test
+    @DisplayName("getter annotated preUpdate test")
+    void getterAnnotatedPreUpdateTest() {
+        // given
+        GetterAnnotatedEntity entity = new GetterAnnotatedEntity();
+        // when
+        auditProvider.preUpdate(entity);
+        // then
+        assertEquals(UserProvider.DEFAULT_SYSTEM_USER, entity.getModifierUser());
+        assertNull(entity.getCreatorUser());
     }
 
 }

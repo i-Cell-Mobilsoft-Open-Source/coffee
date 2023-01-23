@@ -20,11 +20,14 @@
 package hu.icellmobilsoft.coffee.model.base;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import hu.icellmobilsoft.coffee.model.base.exception.ProviderException;
 
 /**
  * Abstract class of providers.
@@ -42,7 +45,29 @@ public abstract class AbstractProvider {
         List<Field> result = new ArrayList<>(getAllFields(clazz.getSuperclass()));
         List<Field> filteredFields = Arrays.stream(clazz.getDeclaredFields()).collect(Collectors.toList());
         result.addAll(filteredFields);
-        return result;
+        return Collections.unmodifiableList(result);
+    }
+
+    protected List<Method> getAllMethods(Class<?> clazz) {
+        if (clazz == null) {
+            return Collections.emptyList();
+        }
+
+        List<Method> result = new ArrayList<>(getAllMethods(clazz.getSuperclass()));
+        List<Method> filteredMethods = Arrays.stream(clazz.getDeclaredMethods()).collect(Collectors.toList());
+        result.addAll(filteredMethods);
+        return Collections.unmodifiableList(result);
+    }
+
+    protected Field getFieldByMethod(Method method, List<Field> allFields) {
+        for (Field field : allFields) {
+            String fieldName = field.getName();
+            String methodName = "get" + fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1);
+            if (methodName.equals(method.getName()) && field.getDeclaringClass().equals(method.getDeclaringClass())) {
+                return field;
+            }
+        }
+        throw new ProviderException("Field is not found based on the name of the annotated method: " + method.getName());
     }
 
 }

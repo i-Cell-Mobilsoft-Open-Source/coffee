@@ -19,7 +19,9 @@
  */
 package hu.icellmobilsoft.coffee.model.base.audit;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Set;
 
@@ -60,14 +62,35 @@ public class AuditProvider extends AbstractProvider {
     public void prePersist(Object entity) {
         List<Field> allFields = getAllFields(entity.getClass());
         for (Field field : allFields) {
-            if (field.isAnnotationPresent(CreatedBy.class)) {
-                Object value = resolvePrincipal(field.getType());
-                setProperty(entity, field, value);
-            }
+            setPropertyIfAnnotated(entity, field, CreatedBy.class);
             if (field.isAnnotationPresent(ModifiedBy.class) && field.getAnnotation(ModifiedBy.class).onCreate()) {
                 Object value = resolvePrincipal(field.getType());
                 setProperty(entity, field, value);
             }
+        }
+        List<Method> allMethods = getAllMethods(entity.getClass());
+        for (Method method : allMethods) {
+            setPropertyIfGetterAnnotated(entity, allFields, method, CreatedBy.class);
+            if (method.isAnnotationPresent(ModifiedBy.class) && method.getAnnotation(ModifiedBy.class).onCreate()) {
+                Object value = resolvePrincipal(method.getReturnType());
+                Field field = getFieldByMethod(method, allFields);
+                setProperty(entity, field, value);
+            }
+        }
+    }
+
+    private void setPropertyIfGetterAnnotated(Object entity, List<Field> allFields, Method method, Class<? extends Annotation> annotationClass) {
+        if (method.isAnnotationPresent(annotationClass)) {
+            Object value = resolvePrincipal(method.getReturnType());
+            Field field = getFieldByMethod(method, allFields);
+            setProperty(entity, field, value);
+        }
+    }
+
+    private void setPropertyIfAnnotated(Object entity, Field field, Class<? extends Annotation> annotationClass) {
+        if (field.isAnnotationPresent(annotationClass)) {
+            Object value = resolvePrincipal(field.getType());
+            setProperty(entity, field, value);
         }
     }
 
@@ -81,10 +104,11 @@ public class AuditProvider extends AbstractProvider {
     public void preUpdate(Object entity) {
         List<Field> allFields = getAllFields(entity.getClass());
         for (Field field : allFields) {
-            if (field.isAnnotationPresent(ModifiedBy.class)) {
-                Object value = resolvePrincipal(field.getType());
-                setProperty(entity, field, value);
-            }
+            setPropertyIfAnnotated(entity, field, ModifiedBy.class);
+        }
+        List<Method> allMethods = getAllMethods(entity.getClass());
+        for (Method method : allMethods) {
+            setPropertyIfGetterAnnotated(entity, allFields, method, ModifiedBy.class);
         }
     }
 
@@ -93,7 +117,9 @@ public class AuditProvider extends AbstractProvider {
             field.setAccessible(true);
             field.set(entity, value);
         } catch (Exception e) {
-            throw new ProviderException("Failed to write value [" + value + "] to entity [" + entity.getClass() + "]: " + e.getLocalizedMessage(), e);
+            throw new ProviderException(
+                    "Failed to write value [" + value + "] to field[" + field + "], entity [" + entity.getClass() + "]: " + e.getLocalizedMessage(),
+                    e);
         }
     }
 
