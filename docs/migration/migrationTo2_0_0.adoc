@@ -76,6 +76,8 @@ A nyelvesítés egy "lite" másolata az eredetinek
 (https://deltaspike.apache.org/documentation/core.html#Messagesandi18n),
 @MessageBundle és @MessageTemplate nélkül.
 A MessageContext és a Locale resolver teljesen az eredeti szerint működik.
+`DefaultMessageResolver` és a `DefaultMessageContext` több szalon összeakadnak,
+`DefaultMessageResolve`-en keresztül javítva lett.
 
 .coffee-deltaspike-data
 Helyettesíti az eredeti
