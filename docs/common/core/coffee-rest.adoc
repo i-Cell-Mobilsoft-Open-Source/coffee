@@ -113,7 +113,7 @@ Jelenleg a LogSpecifier a következő esetekre van felkészítve:
 * a végponton a request-response logolása kikapcsolható a `LogSpecifier` annotáció `noLog` kapcsolójával.
 * a végponton a kilogolt body méretét a `LogSpecifier` annotáció `maxEntityLogSize` mezőjével lehet korlátozni.
 
-IMPORTANT: ha a `maxEntityLogSize` a `RequestResponseLogger.ENTITY_MAX_LOG = 5000`-nél nagyobb értékre van állítva, akkor a REST endpoint-hoz érkező `application/octet-stream`, `multipart/form-data`, `application/json`, `application/xml` és `text/xml` mediaType-ok esetében csak a kérés első 5000 karaktere íródik ki.
+IMPORTANT: ha a `maxEntityLogSize` a `LogSpecifier.NO_LOG`-tól *eltérő* értékre van állítva, akkor a REST endpoint-hoz érkező `application/octet-stream`, `multipart/form-data`, `application/json`, `application/xml` és `text/xml` mediaType-ok esetében csak a kérés első 5000 karaktere íródik ki.
 
 .LogSpecifier példa
 [source,java]
