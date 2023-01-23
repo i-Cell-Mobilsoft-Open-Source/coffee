@@ -37,6 +37,13 @@ import hu.icellmobilsoft.coffee.model.base.exception.ProviderException;
  */
 public abstract class AbstractProvider {
 
+    /**
+     * Returns all the fields of the specified class in a list
+     *
+     * @param clazz
+     *            the specified class
+     * @return list of fields
+     */
     protected List<Field> getAllFields(Class<?> clazz) {
         if (clazz == null) {
             return Collections.emptyList();
@@ -48,6 +55,13 @@ public abstract class AbstractProvider {
         return Collections.unmodifiableList(result);
     }
 
+    /**
+     * Returns all the methods of the specified class in a list
+     *
+     * @param clazz
+     *            the specified class
+     * @return list of methods
+     */
     protected List<Method> getAllMethods(Class<?> clazz) {
         if (clazz == null) {
             return Collections.emptyList();
@@ -59,6 +73,15 @@ public abstract class AbstractProvider {
         return Collections.unmodifiableList(result);
     }
 
+    /**
+     * Returns the field from the specified list associated with the specified getter method based on its name
+     *
+     * @param method
+     *            the getter method
+     * @param allFields
+     *            list of fields
+     * @return the associated field
+     */
     protected Field getFieldByMethod(Method method, List<Field> allFields) {
         for (Field field : allFields) {
             String fieldName = field.getName();
