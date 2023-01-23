@@ -223,15 +223,36 @@ public class RestLoggerUtil {
     }
 
     /**
-     * Returns if {@link MediaType}s are the same irrespective of charset
+     * Returns true if the {@link MediaType} of the request context matches one of the given ones
+     *
+     * @param requestContext
+     *            context
+     * @param mediaTypes
+     *            {@link MediaType}s to compare
+     * @return true if there is a matching {@code MediaType}
+     */
+    public static boolean isLogSizeLimited(ContainerRequestContext requestContext, MediaType... mediaTypes) {
+        if (requestContext == null || mediaTypes == null) {
+            return false;
+        }
+        for (MediaType mediaType : mediaTypes) {
+            if (RestLoggerUtil.isSameMediaTypeWithoutCharset(requestContext.getMediaType(), mediaType)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Returns true if {@link MediaType}s are the same irrespective of charset
      *
      * @param mediaType1
      *            {@link MediaType} to compare
      * @param mediaType2
      *            {@link MediaType} to compare
-     * @return if {@code MediaType}s are the same
+     * @return true if {@code MediaType}s are the same
      */
-    public static boolean isSameMediaTypeWithoutCharset(MediaType mediaType1, MediaType mediaType2) {
+    private static boolean isSameMediaTypeWithoutCharset(MediaType mediaType1, MediaType mediaType2) {
         if (mediaType1 == null || mediaType2 == null) {
             return false;
         }
