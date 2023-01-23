@@ -276,16 +276,10 @@ public class RequestResponseLogger {
     protected int getMaxRequestEntityLogSize(ContainerRequestContext requestContext) {
         int maxRequestEntityLogSize = RestLoggerUtil.getMaxEntityLogSize(requestContext, LogSpecifierTarget.REQUEST);
 
-        boolean isApplicationOctetStream = RestLoggerUtil.isSameMediaTypeWithoutCharset(requestContext.getMediaType(),
-                MediaType.APPLICATION_OCTET_STREAM_TYPE);
-        boolean isMultipartFormData = RestLoggerUtil.isSameMediaTypeWithoutCharset(requestContext.getMediaType(), MediaType.MULTIPART_FORM_DATA_TYPE);
-        boolean isApplicationJson = RestLoggerUtil.isSameMediaTypeWithoutCharset(requestContext.getMediaType(), MediaType.APPLICATION_JSON_TYPE);
-        boolean isApplicationXml = RestLoggerUtil.isSameMediaTypeWithoutCharset(requestContext.getMediaType(), MediaType.APPLICATION_XML_TYPE);
-        boolean isTextXml = RestLoggerUtil.isSameMediaTypeWithoutCharset(requestContext.getMediaType(), MediaType.TEXT_XML_TYPE);
-
-        if (maxRequestEntityLogSize > RequestResponseLogger.ENTITY_MAX_LOG &&
+        if (maxRequestEntityLogSize != LogSpecifier.NO_LOG &&
         // byte-code betoltesi fajlokat, multipart-ot, json-t és xml-t ne loggoljuk ki egeszben
-                (isApplicationOctetStream || isMultipartFormData || isApplicationJson || isApplicationXml || isTextXml)) {
+                RestLoggerUtil.isLogSizeLimited(requestContext, MediaType.APPLICATION_OCTET_STREAM_TYPE, MediaType.MULTIPART_FORM_DATA_TYPE,
+                        MediaType.APPLICATION_JSON_TYPE, MediaType.APPLICATION_XML_TYPE, MediaType.TEXT_XML_TYPE)) {
             maxRequestEntityLogSize = RequestResponseLogger.ENTITY_MAX_LOG;
         }
 
