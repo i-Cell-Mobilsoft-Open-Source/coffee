@@ -22,6 +22,7 @@ package hu.icellmobilsoft.coffee.rest.log;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.function.Consumer;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletResponse;
@@ -38,6 +39,7 @@ import javax.ws.rs.ext.WriterInterceptorContext;
 import org.apache.commons.lang3.StringUtils;
 
 import hu.icellmobilsoft.coffee.cdi.logger.AppLogger;
+import hu.icellmobilsoft.coffee.cdi.logger.LogProducer;
 import hu.icellmobilsoft.coffee.cdi.logger.ThisLogger;
 import hu.icellmobilsoft.coffee.dto.common.LogConstants;
 import hu.icellmobilsoft.coffee.rest.cdi.BaseApplicationContainer;
@@ -105,8 +107,9 @@ public abstract class BaseRestLogger implements ContainerRequestFilter, WriterIn
 
         int maxRequestEntityLogSize = requestResponseLogger.getMaxRequestEntityLogSize(requestContext);
 
+        Consumer<AppLogger> appLoggerConsumer = (AppLogger appLogger) -> appLogger.info(message.toString());
         var requestLoggerInputStream = new RequestLoggerInputStream(requestContext.getEntityStream(), maxRequestEntityLogSize,
-                RequestResponseLogger.REQUEST_PREFIX, message);
+                RequestResponseLogger.REQUEST_PREFIX, message, LogProducer::logToAppLogger, appLoggerConsumer, BaseRestLogger.class);
 
         // a saját InputStream-et állítjuk be a context-be, ami majd az entity stream olvasáskor log-olja a request-et
         requestContext.setEntityStream(requestLoggerInputStream);
