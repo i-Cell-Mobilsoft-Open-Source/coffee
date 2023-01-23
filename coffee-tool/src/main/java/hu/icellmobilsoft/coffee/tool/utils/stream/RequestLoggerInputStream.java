@@ -21,11 +21,12 @@ package hu.icellmobilsoft.coffee.tool.utils.stream;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 import jakarta.enterprise.inject.Vetoed;
 
 import hu.icellmobilsoft.coffee.cdi.logger.AppLogger;
-import hu.icellmobilsoft.coffee.cdi.logger.LogProducer;
 import hu.icellmobilsoft.coffee.tool.utils.string.StringHelper;
 
 /**
@@ -42,6 +43,9 @@ public class RequestLoggerInputStream extends InputStream {
     private final String requestPrefix;
     private final StringBuilder entity = new StringBuilder();
     private final StringBuilder message;
+    private final BiConsumer<Consumer<AppLogger>, Class<?>> logger;
+    private final Consumer<AppLogger> loggerConsumer;
+    private final Class<?> clazz;
     private int logReadLimit;
     private boolean firstReadCycle = true;
 
@@ -56,12 +60,22 @@ public class RequestLoggerInputStream extends InputStream {
      *            request log prefix
      * @param message
      *            log message
+     * @param logger
+     *            the function handling {@link AppLogger}
+     * @param loggerConsumer
+     *            the function doing the logging
+     * @param clazz
+     *            class for logging
      */
-    public RequestLoggerInputStream(InputStream inputStream, int logReadLimit, String requestPrefix, StringBuilder message) {
+    public RequestLoggerInputStream(InputStream inputStream, int logReadLimit, String requestPrefix, StringBuilder message,
+            BiConsumer<Consumer<AppLogger>, Class<?>> logger, Consumer<AppLogger> loggerConsumer, Class<?> clazz) {
         this.inputStream = inputStream;
         this.logReadLimit = logReadLimit;
         this.requestPrefix = requestPrefix;
         this.message = message;
+        this.logger = logger;
+        this.loggerConsumer = loggerConsumer;
+        this.clazz = clazz;
     }
 
     /**
@@ -98,7 +112,7 @@ public class RequestLoggerInputStream extends InputStream {
         }
         String maskedEntity = getMaskedEntity(entity.toString(), requestPrefix);
         message.append(maskedEntity);
-        LogProducer.logToAppLogger((AppLogger appLogger) -> appLogger.info(message.toString()), RequestLoggerInputStream.class);
+        logger.accept(loggerConsumer, clazz);
         firstReadCycle = false;
     }
 
