@@ -1,0 +1,20 @@
+= v1.13.0 → v1.14.0
+
+coff:ee v1.13.0 -> v1.14.0 migrációs leírás, újdonságok, változások leírása
+
+== Újdonságok
+
+Ebben a verzióban nem lettek új funkciók implementálva.
+
+== Változások
+
+
+=== coffee-jpa
+
+* A `BaseService` `repositoryFailed` metódusa `java.lang.IllegalArgumentException: can't parse argument number: explicit` hibát eredményezett olyan `org.hibernate.QueryException` esetén melynek üzenetében kapcsos zárójel is szerepelt (pld. `fetched association was not present in the select list [FromElement{explicit,not a collection join`). A `MessageFormat.format` úgy érzékelte, hogy ott egy paraméter placeholder van és megpróbált értéket behelyttesíteni a helyére.
+A hiba úgy került kezelésre, hogy egy új param placeholder került az üzenetbe `params.length` helyi értékkel, valamint az Exception `getLocalizedMessage` értéke hozzá lett fűzve az eredeti paraméter tömbhöz.
+
+==== Átállás
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
