@@ -20,6 +20,7 @@
 package hu.icellmobilsoft.coffee.jpa.service;
 
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -1854,9 +1855,12 @@ public class BaseService<T> {
      * @return {@link TechnicalException} with message from methodInfo.
      */
     protected TechnicalException repositoryFailed(Exception e, String methodInfo, Object... params) {
+        List<Object> paramsList = new ArrayList<>(Arrays.asList(params));
+        paramsList.add(e.getLocalizedMessage());
+
         StringBuilder sb = new StringBuilder();
-        sb.append("Error occurred in ").append(methodInfo).append(" : [").append(e.getLocalizedMessage()).append("]");
-        String msg = MessageFormat.format(sb.toString(), prepareParametersToLog(params));
+        sb.append("Error occurred in ").append(methodInfo).append(" : [{").append(params.length).append("}]");
+        String msg = MessageFormat.format(sb.toString(), prepareParametersToLog(paramsList.toArray()));
         return new TechnicalException(CoffeeFaultType.REPOSITORY_FAILED, msg, e);
     }
 
