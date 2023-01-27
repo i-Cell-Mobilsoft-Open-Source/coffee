@@ -21,11 +21,9 @@ package hu.icellmobilsoft.coffee.model.base;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
+
+import org.apache.commons.lang3.tuple.Pair;
 
 import hu.icellmobilsoft.coffee.model.base.exception.ProviderException;
 
@@ -37,41 +35,7 @@ import hu.icellmobilsoft.coffee.model.base.exception.ProviderException;
  */
 public abstract class AbstractProvider {
 
-    /**
-     * Returns all the fields of the specified class in a list
-     *
-     * @param clazz
-     *            the specified class
-     * @return list of fields
-     */
-    protected List<Field> getAllFields(Class<?> clazz) {
-        if (clazz == null) {
-            return Collections.emptyList();
-        }
-
-        List<Field> result = new ArrayList<>(getAllFields(clazz.getSuperclass()));
-        List<Field> filteredFields = Arrays.stream(clazz.getDeclaredFields()).collect(Collectors.toList());
-        result.addAll(filteredFields);
-        return Collections.unmodifiableList(result);
-    }
-
-    /**
-     * Returns all the methods of the specified class in a list
-     *
-     * @param clazz
-     *            the specified class
-     * @return list of methods
-     */
-    protected List<Method> getAllMethods(Class<?> clazz) {
-        if (clazz == null) {
-            return Collections.emptyList();
-        }
-
-        List<Method> result = new ArrayList<>(getAllMethods(clazz.getSuperclass()));
-        List<Method> filteredMethods = Arrays.stream(clazz.getDeclaredMethods()).collect(Collectors.toList());
-        result.addAll(filteredMethods);
-        return Collections.unmodifiableList(result);
-    }
+    private static ClassFieldsAndMethodsCache classFieldsAndMethodsCache = new ClassFieldsAndMethodsCache();
 
     /**
      * Returns the field from the specified list associated with the specified getter method based on its name
@@ -85,12 +49,25 @@ public abstract class AbstractProvider {
     protected Field getFieldByMethod(Method method, List<Field> allFields) {
         for (Field field : allFields) {
             String fieldName = field.getName();
-            String methodName = "get" + fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1);
-            if (methodName.equals(method.getName()) && field.getDeclaringClass().equals(method.getDeclaringClass())) {
+            String suffixMethodName = fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1);
+            List<String> possibleMethodNames = List.of("get" + suffixMethodName, "is" + suffixMethodName);
+            if (possibleMethodNames.contains(method.getName()) && field.getDeclaringClass().equals(method.getDeclaringClass())) {
                 return field;
             }
         }
-        throw new ProviderException("Field is not found based on the name of the annotated method: " + method.getName());
+        throw new ProviderException(
+                "Field is not found based on the name of the annotated method: " + method.getDeclaringClass() + "." + method.getName());
+    }
+
+    /**
+     * Returns all the fields and methods of the specified class in a pair of lists
+     *
+     * @param clazz
+     *            the specified class
+     * @return pair of fields and methods lists
+     */
+    protected Pair<List<Field>, List<Method>> getAllFieldsAndMethods(Class<?> clazz) {
+        return classFieldsAndMethodsCache.getFieldsAndMethods(clazz);
     }
 
 }

@@ -33,6 +33,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang3.tuple.Pair;
+
 import hu.icellmobilsoft.coffee.model.base.AbstractProvider;
 import hu.icellmobilsoft.coffee.model.base.exception.ProviderException;
 import hu.icellmobilsoft.coffee.model.base.javatime.annotation.CreatedOn;
@@ -78,14 +80,14 @@ public class TimestampsProvider extends AbstractProvider {
     private void updateTimestamps(Object entity, Class<? extends Annotation> annotationClass) {
         long sysTime = System.currentTimeMillis();
 
-        List<Field> allFields = getAllFields(entity.getClass());
+        Pair<List<Field>, List<Method>> pair = getAllFieldsAndMethods(entity.getClass());
+        List<Field> allFields = pair.getLeft();
         for (Field field : allFields) {
             if (field.isAnnotationPresent(annotationClass)) {
                 setValue(entity, field.getType(), sysTime, field);
             }
         }
-        List<Method> allMethods = getAllMethods(entity.getClass());
-        for (Method method : allMethods) {
+        for (Method method : pair.getRight()) {
             if (method.isAnnotationPresent(annotationClass)) {
                 Field field = getFieldByMethod(method, allFields);
                 setValue(entity, field.getType(), sysTime, field);

@@ -25,6 +25,8 @@ import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.lang3.tuple.Pair;
+
 import hu.icellmobilsoft.coffee.model.base.AbstractProvider;
 import hu.icellmobilsoft.coffee.model.base.annotation.CreatedBy;
 import hu.icellmobilsoft.coffee.model.base.annotation.CurrentUser;
@@ -60,7 +62,8 @@ public class AuditProvider extends AbstractProvider {
      */
     @PrePersist
     public void prePersist(Object entity) {
-        List<Field> allFields = getAllFields(entity.getClass());
+        Pair<List<Field>, List<Method>> pair = getAllFieldsAndMethods(entity.getClass());
+        List<Field> allFields = pair.getLeft();
         for (Field field : allFields) {
             setPropertyIfAnnotated(entity, field, CreatedBy.class);
             if (field.isAnnotationPresent(ModifiedBy.class) && field.getAnnotation(ModifiedBy.class).onCreate()) {
@@ -68,8 +71,7 @@ public class AuditProvider extends AbstractProvider {
                 setProperty(entity, field, value);
             }
         }
-        List<Method> allMethods = getAllMethods(entity.getClass());
-        for (Method method : allMethods) {
+        for (Method method : pair.getRight()) {
             setPropertyIfGetterAnnotated(entity, allFields, method, CreatedBy.class);
             if (method.isAnnotationPresent(ModifiedBy.class) && method.getAnnotation(ModifiedBy.class).onCreate()) {
                 Object value = resolvePrincipal(method.getReturnType());
@@ -102,11 +104,12 @@ public class AuditProvider extends AbstractProvider {
      */
     @PreUpdate
     public void preUpdate(Object entity) {
-        List<Field> allFields = getAllFields(entity.getClass());
+        Pair<List<Field>, List<Method>> pair = getAllFieldsAndMethods(entity.getClass());
+        List<Field> allFields = pair.getLeft();
         for (Field field : allFields) {
             setPropertyIfAnnotated(entity, field, ModifiedBy.class);
         }
-        List<Method> allMethods = getAllMethods(entity.getClass());
+        List<Method> allMethods = pair.getRight();
         for (Method method : allMethods) {
             setPropertyIfGetterAnnotated(entity, allFields, method, ModifiedBy.class);
         }

@@ -39,6 +39,11 @@
 			<scope>compile</scope>
 		</dependency>
 
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+		</dependency>
+
 		<!--Test dependecies -->
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
