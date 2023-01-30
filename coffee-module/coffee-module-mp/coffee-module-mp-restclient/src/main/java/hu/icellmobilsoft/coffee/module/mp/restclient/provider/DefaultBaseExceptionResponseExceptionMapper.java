@@ -21,9 +21,6 @@ package hu.icellmobilsoft.coffee.module.mp.restclient.provider;
 
 import java.text.MessageFormat;
 
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
-
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.microprofile.rest.client.ext.ResponseExceptionMapper;
 
@@ -37,6 +34,9 @@ import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 import hu.icellmobilsoft.coffee.module.mp.restclient.exception.FaultTypeParser;
 import hu.icellmobilsoft.coffee.tool.gson.JsonUtil;
 import hu.icellmobilsoft.coffee.tool.utils.marshalling.MarshallingUtil;
+import jakarta.enterprise.context.Dependent;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 
 /**
  * Default BaseException ResponseExceptionMapper. Maps HTTP error responses to {@link BaseException}.
@@ -44,6 +44,7 @@ import hu.icellmobilsoft.coffee.tool.utils.marshalling.MarshallingUtil;
  * @author adam.magyari
  * @since 1.2.0
  */
+@Dependent
 public class DefaultBaseExceptionResponseExceptionMapper implements ResponseExceptionMapper<BaseException> {
     /**
      * <a href="https://datatracker.ietf.org/doc/html/rfc2324#section-2.3.2">RFC 2324 - section 2.3.2</a>
