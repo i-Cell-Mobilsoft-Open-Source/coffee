@@ -25,15 +25,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.tuple.Pair;
-
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.CacheLoader;
-import com.google.common.cache.LoadingCache;
-
-import jakarta.enterprise.inject.Vetoed;
 
 /**
  * Cache for fields and methods of entity classes used in {@link AbstractProvider}
@@ -41,12 +36,11 @@ import jakarta.enterprise.inject.Vetoed;
  * @author zsolt.vasi
  * @since 2.0.0
  */
-@Vetoed
-public class ClassFieldsAndMethodsCache {
+public class ClassFieldsAndMethodsCache<K extends Class, V extends Pair<List<Field>, List<Method>>> extends java.util.LinkedHashMap<K, V> {
 
     private static final int DEFAULT_CACHE_SIZE = 10_000;
 
-    private final LoadingCache<Class<?>, Pair<List<Field>, List<Method>>> cache;
+    private final int cacheSize;
 
     /**
      * Instantiates a new class fields and methods cache
@@ -62,7 +56,8 @@ public class ClassFieldsAndMethodsCache {
      *            the cache size
      */
     public ClassFieldsAndMethodsCache(int cacheSize) {
-        cache = CacheBuilder.newBuilder().maximumSize(cacheSize).build(loader);
+        super(cacheSize);
+        this.cacheSize = cacheSize;
     }
 
     private List<Field> getAllFields(Class<?> clazz) {
@@ -87,13 +82,6 @@ public class ClassFieldsAndMethodsCache {
         return Collections.unmodifiableList(result);
     }
 
-    private CacheLoader<Class<?>, Pair<List<Field>, List<Method>>> loader = new CacheLoader<>() {
-        @Override
-        public Pair<List<Field>, List<Method>> load(Class<?> clazz) {
-            return Pair.of(getAllFields(clazz), getAllMethods(clazz));
-        }
-    };
-
     /**
      * Gets a pair of fields and methods lists of the given class from cache if found
      *
@@ -102,14 +90,19 @@ public class ClassFieldsAndMethodsCache {
      * @return a pair of fields and methods
      */
     public Pair<List<Field>, List<Method>> getFieldsAndMethods(Class<?> clazz) {
-        return cache.getUnchecked(clazz);
+        if (this.containsKey(clazz)) {
+            return this.get(clazz);
+        } else {
+            Pair<List<Field>, List<Method>> allFieldsAndMethods = Pair.of(getAllFields(clazz), getAllMethods(clazz));
+            this.put((K) clazz, (V) allFieldsAndMethods);
+
+            return allFieldsAndMethods;
+        }
     }
 
-    /**
-     * Clear cache values
-     */
-    public void clear() {
-        cache.invalidateAll();
+    @Override
+    protected boolean removeEldestEntry(Map.Entry<K, V> eldest) {
+        return size() > cacheSize;
     }
 
 }
