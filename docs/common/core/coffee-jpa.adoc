@@ -57,3 +57,435 @@ public class TransactionHelperExample {
     }
 }
 ----
+
+== BatchService [[BatchService]]
+
+A *BatchService* a tömeges adatbázis műveletek (insert, update, delete) csoportosan való végrehajtására szolgál. +
+Főként *PreparedStatement* alapon működő batch műveleteket tartalmaz, amelyekben az SQL összeállítást a *Hibernate* támogatásával végezzük el.
+
+=== Típus támogatás
+
+A *BatchService* a következő típusokkal kapcsolatos műveleteket támogatja biztosan:
+
+[%header,cols=2]
+|===
+| Támogatás típusa
+| Java típusok
+
+| link:#CustomType[CustomType] típusként kezelt
+| Minden enum típus.
+
+| link:#ManyToOneType[ManyToOneType] típusként kezelt
+| Minden @ManyToOne annotációval ellátott típus.
+
+| link:#ConvertedBasicType[ConvertedBasicType] típusként kezelt
+| Minden konverterrel rendelkező típus.
+
+.6+| link:#BasicType[BasicType] típusként kezelt
+| boolean, Boolean
+| char, Character
+| java.sql.Date, java.sql.Time, java.sql.Timestamp
+| java.util.Date, java.util.Calendar
+| LocalDate, LocalTime, LocalDateTime, OffsetTime, OffsetDateTime, ZonedDateTime, Instant
+| Blob, byte[], Byte[]
+
+.5+| JDBC driver által kezelt
+| byte, short, int, long, float, double
+| Byte, Short, Integer, Long, Float, Double
+| BigInteger, BigDecimal
+| String
+| Minden egyéb típus, ami nem szerepel a listában.
+|===
+
+NOTE: Különleges típusok esetén egyéni konverter használata ajánlott.
+
+IMPORTANT: Az itt fel nem sorolt típusok kezelése az adott *JDBC* driver-re van bízva.
+
+IMPORTANT: A típus támogatások tesztelése *postgresql* és *oracle* adatbázisok esetén történtek meg, így ezeknél biztosított a megfelelő működés. +
+Minden más adatbázis esetén a típusok lefedése elméletben nagyrészt biztosított, de előfordulhatnak anomáliák.
+
+=== CustomType kezelése [[CustomType]]
+
+A *Hibernate* az enum típusokat egy *CustomerType* típusba csomagolja be, mint *EnumType*. +
+A *BatchService* az *EnumType*-ok feloldását a következőképpen oldja meg:
+
+[%header,cols=2]
+|===
+| Java kód
+| BatchService által beillesztett érték
+
+a|
+[source,java]
+----
+@Column(name = "ENUM_DEFAULT")
+private EnumType enumDefault;
+----
+| Az adott enum értékhez tartozó sorrend, az *ordinal()* metódus szerinti érték kerül beszúrásra.
+
+a|
+[source,java]
+----
+@Column(name = "ENUM_ORDINAL")
+@Enumerated(value = EnumType.ORDINAL)
+private EnumType enumOrdinal;
+----
+| Az adott enum értékhez tartozó sorrend, az *ordinal()* metódus szerinti érték kerül beszúrásra.
+
+a|
+[source,java]
+----
+@Column(name = "ENUM_STRING")
+@Enumerated(value = EnumType.STRING)
+private EnumType enumString;
+----
+| Az adott nem értékhez tartozó név, a *name()* metódus szerinti érték kerül beszúrásra.
+|===
+
+A *BatchService* jelenleg csak a *CustomType*-ok esetén csak az *EnumType*-ot kezeli külön. +
+Minden más *CustomType* típus kezelését a használt *JDBC driver*-re bízzuk rá!
+
+=== ManyToOneType kezelése [[ManyToOneType]]
+
+Egy entitáson belül, azokat a mezőket, amelyeken a *@ManyToOne* (jakarta.persistence.ManyToOne) annotációt használjuk, a hibernate *ManyToOneType* típusként kezeli. +
+Ezen *ManyToOneType* típusok kezelése a *BatchService* által következőképpen történik meg:
+
+[%header,cols="55%,45%"]
+|===
+| Java kód
+| BatchService által beillesztett érték
+
+a|
+[source,java]
+----
+@ManyToOne(fetch = FetchType.LAZY)
+@JoinColumn(name = "MANY_TO_ONE_SAMPLE_ENTITY")
+private SampleEntity manyToOneSampleEntity;
+----
+| A *BatchService* az adott entitás egyedi azonosítóját veszi és szúrja be az *EntityHelper.getLazyId()* használatával.
+|===
+
+=== ConvertedBasicType kezelése [[ConvertedBasicType]]
+
+Egy entitáson belül azok a mezők, amelyek converter-rel rendelkeznek, tehát el van rajtuk helyezve a *@Convert* (jakarta.persistence.Convert) annotáció, a hibernate által *ConvertedBasicType*-ként kerülnek kezelésre.
+
+.Például:
+[source,java]
+----
+@Convert(converter = YearMonthAttributeConverter.class)
+@Column(name = "YEAR_MONTH")
+private YearMonth yearMonth;
+----
+
+Az ilyen típusok esetén a *Hibernate* tartalmazza a konvertált értékhez megfelelő *JDBC* típust és minden további beállítást, viszont a konvertálást manuálisan kell elvégezni. +
+Így a *BatchService* az átadott konvertert meghívja, majd a konvertálás során kapott értékkel és a hibernate által megfelelően beállított *ConvertedBasicType* (BasicType) típussal továbbengedi a link:#BasicType[BasicType] kezelés folyamatába.
+
+=== BasicType kezelése [[BasicType]]
+
+A *BasicType* típus egybefogja a java és jdbc típust, így minden java típushoz tartalmazza a megfelelő jdbc típust. +
+A szétválasztások így a jdbc típusban tárolt jdbc típuskód szerint történik.
+
+=== Date típusú BasicType kezelése [[DateBasicType]]
+
+Az *SqlTypes.DATE* jdbc típuskóddal rendelkező *BasicType* típusok a *BatchService* által a következőképpen kerülnek kezelésre:
+
+[%header,cols=2]
+|===
+| Java kód
+| BatchService által beillesztett érték
+
+a|
+[source,java]
+----
+@Column(name = "DATE")
+private java.sql.Date date;
+----
+| Közvetlenül, átalakítás nélkül beállítható a *PreparedStatement.setDate()* metódusa használatával.
+
+a|
+[source,java]
+----
+@Column(name = "LOCAL_DATE")
+private LocalDate localDate;
+----
+| Átkonvertálódik *java.sql.Date* típusra, majd a *PreparedStatement.setDate()* metódusa használatával kerül beállításra.
+
+a|
+[source,java]
+----
+@Temporal(TemporalType.DATE)
+@Column(name = "DATE_TEMPORAL_DATE")
+private java.util.Date dateTemporalDate;
+----
+| Átkonvertálódik *java.sql.Date* típusra, majd a *PreparedStatement.setDate()* metódusa használatával kerül beállításra.
+
+a|
+[source,java]
+----
+@Temporal(TemporalType.DATE)
+@Column(name = "CALENDAR_TEMPORAL_DATE")
+private Calendar calendarTemporalDate;
+----
+| Átkonvertálódik *java.sql.Date* típusra, majd a *PreparedStatement.setDate()* metódusa használatával kerül beállításra.
+
+|===
+
+IMPORTANT: A táblázatban nem szereplő típusok beállítását a *JDBC driver*-re bízzuk.
+
+=== Time típusú BasicType kezelése [[TimeBasicType]]
+
+Az *SqlTypes.TIME* és *SqlTypes.TIME_WITH_TIMEZONE* jdbc típuskóddal rendelkező *BasicType* típusok a *BatchService* által a következőképpen kerülnek kezelésre:
+
+[%header,cols=2]
+|===
+| Java kód
+| BatchService által beillesztett érték
+
+a|
+[source,java]
+----
+@Column(name = "TIME")
+private Time time;
+----
+| Közvetlenül, átalakítás nélkül beállítható a *PreparedStatement.setTime()* metódusa használatával.
+
+a|
+[source,java]
+----
+@Column(name = "LOCAL_TIME")
+private LocalTime localTime;
+----
+| Átkonvertálódik *java.sql.Time* típusra, majd a *PreparedStatement.setTime()* metódusa használatával kerül beállításra.
+
+a|
+[source,java]
+----
+@Column(name = "OFFSET_TIME")
+private OffsetTime offsetTime;
+----
+| A *ZoneId.systemDefault()* által visszaadott rendszer időzónára alakítjuk, ezután átkonvertálódik *java.sql.Time* típusra, majd a *PreparedStatement.setTime()* metódusa használatával kerül beállításra.
+
+a|
+[source,java]
+----
+@Temporal(TemporalType.TIME)
+@Column(name = "DATE_TEMPORAL_TIME")
+private java.util.Date dateTemporalTime;
+----
+| Átkonvertálódik *java.sql.Time* típusra, majd a *PreparedStatement.setTime()* metódusa használatával kerül beállításra.
+
+a|
+[source,java]
+----
+@Temporal(TemporalType.TIME)
+@Column(name = "CALENDAR_TEMPORAL_TIME")
+private Calendar calendarTemporalTime;
+----
+| Átkonvertálódik *java.sql.Time* típusra, majd a *PreparedStatement.setTime()* metódusa használatával kerül beállításra.
+
+|===
+
+A táblázatban szereplő típusok esetén, amennyiben a *hibernate.jdbc.time_zone* bevan állítva a *persistence.xml*-ben, akkor a *PreparedStatement.setTime()* metódusának az időzóna is átadódik, így a *JDBC driver* eltudja végezni a megfelelő időeltolást az időzóna szerint.
+
+IMPORTANT: A táblázatban nem szereplő típusok beállítását a *JDBC driver*-re bízzuk.
+
+=== Timestamp típusú BasicType kezelése [[TimestampBasicType]]
+
+Az *SqlTypes.TIMESTAMP*, *SqlTypes.TIMESTAMP_UTC* és *SqlTypes.TIMESTAMP_WITH_TIMEZONE* jdbc típuskóddal rendelkező *BasicType* típusok a *BatchService* által a következőképpen kerülnek kezelésre:
+
+[%header,cols=2]
+|===
+| Java kód
+| BatchService által beillesztett érték
+
+a|
+[source,java]
+----
+@Column(name = "TIMESTAMP_DEFAULT")
+private Timestamp timestampDefault;
+----
+| Közvetlenül, átalakítás nélkül beállítható a *PreparedStatement.setTimestamp()* metódusa használatával.
+
+a|
+[source,java]
+----
+@Column(name = "LOCAL_DATE_TIME")
+private LocalDateTime localDateTime;
+----
+| Átkonvertálódik *java.sql.Timestamp* típusra, majd a *PreparedStatement.setTimestamp()* metódusa használatával kerül beállításra.
+
+a|
+[source,java]
+----
+@Column(name = "OFFSET_DATE_TIME")
+private OffsetDateTime offsetDateTime;
+----
+|  A *ZoneId.systemDefault()* által visszaadott rendszer időzónára alakítjuk, ezután átkonvertálódik *java.sql.Timestamp* típusra, majd a *PreparedStatement.setTimestamp()* metódusa használatával kerül beállításra.
+
+a|
+[source,java]
+----
+@Column(name = "ZONED_DATE_TIME")
+private ZonedDateTime zonedDateTime;
+----
+| A *ZoneId.systemDefault()* által visszaadott rendszer időzónára alakítjuk, ezután átkonvertálódik *java.sql.Timestamp* típusra, majd a *PreparedStatement.setTimestamp()* metódusa használatával kerül beállításra.
+
+a|
+[source,java]
+----
+@Column(name = "INSTANT")
+private Instant instant;
+----
+| A *ZoneId.systemDefault()* által visszaadott rendszer időzónára alakítjuk, ezután átkonvertálódik *java.sql.Timestamp* típusra, majd a *PreparedStatement.setTimestamp()* metódusa használatával kerül beállításra.
+
+a|
+[source,java]
+----
+@Column(name = "DATE_DEFAULT")
+private java.util.Date dateDefault;
+----
+| Átkonvertálódik *java.sql.Timestamp* típusra, majd a *PreparedStatement.setTimestamp()* metódusa használatával kerül beállításra.
+
+a|
+[source,java]
+----
+@Temporal(TemporalType.TIMESTAMP)
+@Column(name = "DATE_TEMPORAL_TS")
+private java.util.Date dateTemporalTS;
+----
+| Átkonvertálódik *java.sql.Timestamp* típusra, majd a *PreparedStatement.setTimestamp()* metódusa használatával kerül beállításra.
+
+a|
+[source,java]
+----
+@Column(name = "CALENDAR_DEFAULT")
+private Calendar calendarDefault;
+----
+| Átkonvertálódik *java.sql.Timestamp* típusra, majd a *PreparedStatement.setTimestamp()* metódusa használatával kerül beállításra.
+
+a|
+[source,java]
+----
+@Temporal(TemporalType.TIMESTAMP)
+@Column(name = "CALENDAR_TEMPORAL_TS")
+private Calendar calendarTemporalTS;
+----
+| Átkonvertálódik *java.sql.Timestamp* típusra, majd a *PreparedStatement.setTimestamp()* metódusa használatával kerül beállításra.
+|===
+
+A táblázatban szereplő típusok esetén, amennyiben a *hibernate.jdbc.time_zone* bevan állítva a *persistence.xml*-ben, akkor a *PreparedStatement.setTimestamp()* metódusának az időzóna is átadódik, így a *JDBC driver* eltudja végezni a megfelelő időeltolást az időzóna szerint.
+
+IMPORTANT: A táblázatban nem szereplő típusok beállítását a *JDBC driver*-re bízzuk.
+
+=== Boolean típusú BasicType kezelése [[BooleanBasicType]]
+
+Az *SqlTypes.BOOLEAN* jdbc típuskóddal rendelkező *BasicType* típusok a *BatchService* által a következőképpen kerülnek kezelésre:
+
+[%header,cols=2]
+|===
+| Java kód
+| BatchService által beillesztett érték
+
+a|
+[source,java]
+----
+@Column(name = "BOOLEAN_PRIMITIVE")
+private boolean booleanPrimitive;
+----
+| Közvetlenül, átalakítás nélkül beállítható a *PreparedStatement.setBoolean()* metódusa használatával.
+
+a|
+[source,java]
+----
+@Column(name = "BOOLEAN_WRAPPER")
+private Boolean booleanWrapper;
+----
+| Közvetlenül, átalakítás nélkül beállítható a *PreparedStatement.setBoolean()* metódusa használatával.
+
+|===
+
+IMPORTANT: A táblázatban nem szereplő típusok beállítását a *JDBC driver*-re bízzuk.
+
+=== Char típusú BasicType kezelése [[CharBasicType]]
+
+Az *SqlTypes.BOOLEAN* jdbc típuskóddal rendelkező *BasicType* típusok a *BatchService* által a következőképpen kerülnek kezelésre:
+
+[%header,cols=2]
+|===
+| Java kód
+| BatchService által beillesztett érték
+
+a|
+[source,java]
+----
+@Column(name = "CHAR_PRIMITIVE")
+private char charPrimitive;
+----
+| Átkonvertálódik *String* típusra, majd a *PreparedStatement.setString()* metódusa használatával kerül beállításra.
+
+a|
+[source,java]
+----
+@Column(name = "CHAR_WRAPPER")
+private Character charWrapper;
+----
+| Átkonvertálódik *String* típusra, majd a *PreparedStatement.setString()* metódusa használatával kerül beállításra.
+
+|===
+
+IMPORTANT: A táblázatban nem szereplő típusok beállítását a *JDBC driver*-re bízzuk.
+
+=== Adat típusú BasicType kezelése [[DataBasicType]]
+
+Az *SqlTypes.BLOB*, *SqlTypes.VARBINARY* és *SqlTypes.LONGVARBINARY* jdbc típuskóddal rendelkező *BasicType* típusok a *BatchService* által a következőképpen kerülnek kezelésre:
+
+[%header,cols=2]
+|===
+| Java kód
+| BatchService által beillesztett érték
+
+a|
+[source,java]
+----
+@Lob
+@Column(name = "DEFAULT_BLOB")
+private Blob defaultBlob;
+----
+| Átkonvertálódik *InputStream* típusra, majd a *PreparedStatement.setBinaryStream()* metódusa használatával kerül beállításra.
+
+a|
+[source,java]
+----
+@Column(name = "PRIMITIVE_BYTE_ARRAY")
+private byte[] primitiveByteArray;
+----
+| Közvetlenül, átalakítás nélkül beállítható a *PreparedStatement.setBytes()* metódusa használatával.
+
+a|
+[source,java]
+----
+@Column(name = "WRAPPER_BYTE_ARRAY")
+private Byte[] wrapperByteArray;
+----
+| Átkonvertálódik primitív *byte[]* típusra, majd a *PreparedStatement.setBytes()* metódusa használatával kerül beállításra.
+
+a|
+[source,java]
+----
+@Lob
+@Column(name = "LOB_PRIMITIVE_BYTE_ARRAY")
+private byte[] lobPrimitiveByteArray;
+----
+| Közvetlenül, átalakítás nélkül beállítható a *PreparedStatement.setBytes()* metódusa használatával.
+
+a|
+[source,java]
+----
+@Lob
+@Column(name = "LOB_WRAPPER_BYTE_ARRAY")
+private Byte[] lobWrapperByteArray;
+----
+| Átkonvertálódik primitív *byte[]* típusra, majd a *PreparedStatement.setBytes()* metódusa használatával kerül beállításra.
+
+|===
+
+IMPORTANT: A táblázatban nem szereplő típusok beállítását a *JDBC driver*-re bízzuk.
