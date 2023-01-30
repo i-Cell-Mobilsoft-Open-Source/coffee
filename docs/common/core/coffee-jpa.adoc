@@ -17,12 +17,11 @@ Ezzel elkerüljük, hogy *@Transactional* annotációval ellátott *public* met�
 .TransactionHelper használati példa
 [source,java]
 ----
-import javax.enterprise.inject.Model;
-import javax.inject.Inject;
+import jakarta.enterprise.inject.Model;
+import jakarta.inject.Inject;
 
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
-import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
-import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
+import hu.icellmobilsoft.coffee.dto.exception.InvalidParameterException;
 import hu.icellmobilsoft.coffee.jpa.helper.TransactionHelper;
 
 @Model
@@ -36,7 +35,7 @@ public class TransactionHelperExample {
 
     public void example(Invoice invoice) throws BaseException {
         if (invoice == null) {
-            throw new TechnicalException(CoffeeFaultType.WRONG_OR_MISSING_PARAMETERS, "invoice is NULL!");
+            throw new InvalidParameterException("invoice is NULL!");
         }
 
         // tranzakción kívüli műveletek
