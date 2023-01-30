@@ -24,6 +24,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -36,7 +37,7 @@ import org.apache.commons.lang3.tuple.Pair;
  * @author zsolt.vasi
  * @since 2.0.0
  */
-public class ClassFieldsAndMethodsCache<K extends Class, V extends Pair<List<Field>, List<Method>>> extends java.util.LinkedHashMap<K, V> {
+public class ClassFieldsAndMethodsCache<K extends Class, V extends Pair<List<Field>, List<Method>>> extends LinkedHashMap<K, V> {
 
     private static final int DEFAULT_CACHE_SIZE = 10_000;
 
@@ -96,7 +97,7 @@ public class ClassFieldsAndMethodsCache<K extends Class, V extends Pair<List<Fie
         if (this.containsKey(clazz)) {
             return this.get(clazz);
         } else {
-            Pair<List<Field>, List<Method>> allFieldsAndMethods = Pair.of(getAllFields(clazz), getAllMethods(clazz));
+            var allFieldsAndMethods = Pair.of(getAllFields(clazz), getAllMethods(clazz));
             this.put((K) clazz, (V) allFieldsAndMethods);
 
             return allFieldsAndMethods;
