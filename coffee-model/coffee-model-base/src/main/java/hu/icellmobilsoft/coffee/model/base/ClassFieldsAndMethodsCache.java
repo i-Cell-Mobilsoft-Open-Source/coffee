@@ -40,6 +40,9 @@ public class ClassFieldsAndMethodsCache<K extends Class, V extends Pair<List<Fie
 
     private static final int DEFAULT_CACHE_SIZE = 10_000;
 
+    /**
+     * Size of cache
+     */
     private final int cacheSize;
 
     /**
