@@ -27,7 +27,6 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -70,8 +69,7 @@ public class ClassFieldsAndMethodsCache<K extends Class, V extends Pair<List<Fie
         }
 
         List<Field> result = new ArrayList<>(getAllFields(clazz.getSuperclass()));
-        List<Field> filteredFields = Arrays.stream(clazz.getDeclaredFields()).collect(Collectors.toList());
-        result.addAll(filteredFields);
+        result.addAll(Arrays.asList(clazz.getDeclaredFields()));
         return Collections.unmodifiableList(result);
     }
 
@@ -81,8 +79,7 @@ public class ClassFieldsAndMethodsCache<K extends Class, V extends Pair<List<Fie
         }
 
         List<Method> result = new ArrayList<>(getAllMethods(clazz.getSuperclass()));
-        List<Method> filteredMethods = Arrays.stream(clazz.getDeclaredMethods()).collect(Collectors.toList());
-        result.addAll(filteredMethods);
+        result.addAll(Arrays.asList(clazz.getDeclaredMethods()));
         return Collections.unmodifiableList(result);
     }
 
@@ -94,14 +91,7 @@ public class ClassFieldsAndMethodsCache<K extends Class, V extends Pair<List<Fie
      * @return a pair of fields and methods
      */
     public Pair<List<Field>, List<Method>> getFieldsAndMethods(Class<?> clazz) {
-        if (this.containsKey(clazz)) {
-            return this.get(clazz);
-        } else {
-            var allFieldsAndMethods = Pair.of(getAllFields(clazz), getAllMethods(clazz));
-            this.put((K) clazz, (V) allFieldsAndMethods);
-
-            return allFieldsAndMethods;
-        }
+        return this.computeIfAbsent((K) clazz, v -> (V) Pair.of(getAllFields(clazz), getAllMethods(clazz)));
     }
 
     @Override
