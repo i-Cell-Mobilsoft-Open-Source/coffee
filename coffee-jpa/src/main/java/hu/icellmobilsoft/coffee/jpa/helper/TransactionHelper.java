@@ -23,10 +23,10 @@ import java.util.Objects;
 
 import javax.enterprise.context.Dependent;
 
-import org.apache.deltaspike.jpa.api.transaction.Transactional;
 
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.dto.exception.InvalidParameterException;
+import hu.icellmobilsoft.coffee.jpa.annotation.Transactional;
 import hu.icellmobilsoft.coffee.tool.common.FunctionalInterfaces.BaseExceptionFunction;
 import hu.icellmobilsoft.coffee.tool.common.FunctionalInterfaces.BaseExceptionFunction2;
 import hu.icellmobilsoft.coffee.tool.common.FunctionalInterfaces.BaseExceptionFunction3;
