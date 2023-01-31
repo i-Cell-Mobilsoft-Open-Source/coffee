@@ -2,14 +2,14 @@
 = coffee-dto
 
 Modul célja hogy összefoglalja az alap DTO, adapterek és Exception osztályok őseit,
-főleg azért hogy egyátalán lehessen valami közos kódokat kiemelni a Coffee frameworkbe.
+főleg azért hogy egyátalán lehessen valami közos kódokat kiemelni a Coffee jakartaEE solution setbe.
 Lehetelőg semmilyen függősége (dependency) nem lehet,
 kivéve a dokumentációt és JAXB funkciókat kiszolgáló annotációk.
 
 Több almodulból ál.
 
 == coffee-dto-base
-Tartalma olyan java osztályok melyek ősként szolgálnak az egész Coffee framework-ben.
+Tartalma olyan java osztályok melyek ősként szolgálnak az egész Coffee jakartaEE solution set-ben.
 
 Itt táláható a java.time (java 8+) XSD univerzális adapterek és rest végpontokhoz tartozó alap path-okat kezelő osztály.
 

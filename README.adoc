@@ -1,6 +1,6 @@
 = coff:ee
 
-A coff:ee egy JakartaEE framework, melynek célja, hogy az enterprise világ gyakori algoritmusait összegyűjtse,
+A coff:ee egy JakartaEE megoldási készlet, melynek célja, hogy az enterprise világ gyakori algoritmusait összegyűjtse,
 azokra egy alapvető megoldást nyújtson, melyet, ha szükséges saját igényeinkre szabhatunk.
 
 A projekt ezeken a technológiákon alapszik:

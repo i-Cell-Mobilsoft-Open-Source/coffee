@@ -1,14 +1,13 @@
 [#common]
 = Általános
 
-Minden cég kifejleszt valami saját keretrendszert amely a projekteket próbálja összefogni, ne kelljen ugyanolyan modulokat újra megírni, másolni, karbantartani.
+Minden cég kifejleszt valami saját megoldási készletet, amely a projekteket próbálja összefogni, ne kelljen ugyanolyan modulokat újra megírni, másolni, karbantartani.
 
-Ez a keretrendszer alkalmas mind a SOA, mind a Microservice architektúra kiszolgálására. A felépítése moduláris, és felülírható projekt szinten szinte minden. A keretrendszer az alábbi rendszereken alapul, amelyek meghatározóak az egész működésre:
+Ez a megoldási készlet alkalmas mind a SOA, mind a Microservice architektúra kiszolgálására. A felépítése moduláris, és felülírható projekt szinten szinte minden. A keretrendszer az alábbi rendszereken alapul, amelyek meghatározóak az egész működésre:
 
 * Jakarta EE 8+
 * Java 11+
 * CDI 2.0+
-* Apache deltaspike 1.9+
 * Jboss logging
 * gson
 * guava
