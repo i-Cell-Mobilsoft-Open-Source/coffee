@@ -40,7 +40,7 @@ import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 public class MPRestClientUtil {
 
     /**
-     * Altalanos REST Client exception konverter framework szinture
+     * Altalanos REST Client exception konverter coffee projekt szinture
      *
      * @param e
      *            exception

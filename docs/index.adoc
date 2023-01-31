@@ -5,9 +5,7 @@
 :imagesdir: pic
 
 [#index]
-= Coffee Dokumentáció
-
-A Coffee framework célja hogy lefektessen bizonyos alapokat azoknak az eszközöknek, melyeket gyakran használunk a projektjeinkben.
+include::project-description.adoc[leveloffset=+1]
 
 include::common.adoc[leveloffset=+1]
 
