@@ -5,10 +5,7 @@
 :imagesdir: pic
 
 [#index]
-= Coffee Dokumentáció
-
-A coff:ee egy JakartaEE megoldási készlet, melynek célja, hogy az enterprise világ gyakori algoritmusait összegyűjtse,
-azokra egy alapvető megoldást nyújtson, melyet, ha szükséges saját igényeinkre szabhatunk.
+include::project-description.adoc[leveloffset=+1]
 
 include::common.adoc[leveloffset=+1]
 
