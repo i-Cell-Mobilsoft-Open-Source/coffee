@@ -19,6 +19,10 @@
  */
 package hu.icellmobilsoft.coffee.module.mp.restclient.provider;
 
+import jakarta.enterprise.context.Dependent;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+
 import java.text.MessageFormat;
 
 import org.apache.commons.lang3.StringUtils;
@@ -34,9 +38,6 @@ import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 import hu.icellmobilsoft.coffee.module.mp.restclient.exception.FaultTypeParser;
 import hu.icellmobilsoft.coffee.tool.gson.JsonUtil;
 import hu.icellmobilsoft.coffee.tool.utils.marshalling.MarshallingUtil;
-import jakarta.enterprise.context.Dependent;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
 
 /**
  * Default BaseException ResponseExceptionMapper. Maps HTTP error responses to {@link BaseException}.
