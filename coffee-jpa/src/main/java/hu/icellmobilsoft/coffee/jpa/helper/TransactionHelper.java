@@ -19,13 +19,13 @@
  */
 package hu.icellmobilsoft.coffee.jpa.helper;
 
-import java.util.Objects;
-
 import jakarta.enterprise.context.Dependent;
-import jakarta.transaction.Transactional;
+
+import java.util.Objects;
 
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.dto.exception.InvalidParameterException;
+import hu.icellmobilsoft.coffee.jpa.annotation.Transactional;
 import hu.icellmobilsoft.coffee.tool.common.FunctionalInterfaces.BaseExceptionFunction;
 import hu.icellmobilsoft.coffee.tool.common.FunctionalInterfaces.BaseExceptionFunction2;
 import hu.icellmobilsoft.coffee.tool.common.FunctionalInterfaces.BaseExceptionFunction3;

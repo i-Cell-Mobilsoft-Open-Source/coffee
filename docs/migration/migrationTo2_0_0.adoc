@@ -123,11 +123,9 @@ potolni kell az `hu.icellmobilsoft.coffee.rest.projectstage.ProjectStage` osztá
 
 Kidobásra került a `deltaspike-jpa-module`,
 alternatíva nincs helyette.
-Ez befolyásolja a `@Transactional` használatát, rollback mechanizmus így megváltozott.
 
 .Átállás
-Sajnos a Hibernate 6 upgrade ráhatott a BatchService-re,
-ezt jelenleg nem fogja a coffee támogatni.
+* Sajnos a Hibernate 6 upgrade ráhatott a BatchService-re, ezt jelenleg nem fogja a coffee támogatni.
 
 === coffee-module-artemis
 A driver _jakarta EE 10_ és abban történt _Jakarta Messaging 3.1_ változások miatt nagyon megváltozott:
