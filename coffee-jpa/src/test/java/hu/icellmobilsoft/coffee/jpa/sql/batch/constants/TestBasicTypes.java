@@ -30,8 +30,6 @@ import java.time.ZonedDateTime;
 import java.util.Calendar;
 import java.util.Date;
 
-import jakarta.enterprise.inject.Vetoed;
-
 import org.hibernate.type.BasicType;
 import org.hibernate.type.descriptor.java.BlobJavaType;
 import org.hibernate.type.descriptor.java.BooleanJavaType;
@@ -67,7 +65,6 @@ import org.hibernate.type.internal.BasicTypeImpl;
  * @author csaba.balogh
  * @since 2.0.0
  */
-@Vetoed
 public class TestBasicTypes {
 
     // date

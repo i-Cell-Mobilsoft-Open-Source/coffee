@@ -117,11 +117,11 @@ public class BatchService {
      */
     protected void validateInput(Collection<?> entities) throws BaseException {
         if (entities == null) {
-            log.warn("entities is null skipped to save!");
+            log.warn("Entities is null, the batch operation will be skipped!");
             throw new InvalidParameterException("entities is null!");
         }
         if (entities.isEmpty()) {
-            log.debug("No entity in list, skip merge.");
+            log.debug("No entity in list, the batch operation will be skipped!");
         }
     }
 
@@ -982,7 +982,7 @@ public class BatchService {
      * @return {@link Timestamp}
      */
     public static Timestamp getTimestamp(Date date) {
-        return date == null ? null : new java.sql.Timestamp(date.getTime());
+        return date == null ? null : new Timestamp(date.getTime());
     }
 
     /**
