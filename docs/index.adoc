@@ -7,12 +7,15 @@
 [#index]
 = Coffee Dokumentáció
 
-A Coffee framework célja hogy lefektessen bizonyos alapokat azoknak az eszközöknek, melyeket gyakran használunk a projektjeinkben.
+A coff:ee egy Java EE megoldási készlet, melynek célja, hogy az enterprise világ gyakori algoritmusait összegyűjtse,
+azokra egy alapvető megoldást nyújtson, melyet, ha szükséges saját igényeinkre szabhatunk.
+
 include::common.adoc[leveloffset=+1]
 
 include::migration.adoc[leveloffset=+1]
 
 == HOWTO
+
 include::howto/xsd-xml-validation-depend-on-version.adoc[leveloffset=+2]
 
 include::howto/xsd-catalog.adoc[leveloffset=+2]
