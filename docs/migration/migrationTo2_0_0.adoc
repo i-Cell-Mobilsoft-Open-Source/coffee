@@ -123,10 +123,8 @@ potolni kell az `hu.icellmobilsoft.coffee.rest.projectstage.ProjectStage` osztá
 
 Kidobásra került a `deltaspike-jpa-module`,
 alternatíva nincs helyette.
-Ez befolyásolja a `@Transactional` használatát, rollback mechanizmus, így saját `@Transactional` annotáció készült `hu.icellmobilsoft.coffee.jpa.annotation.Transactional` -ben.
 
 .Átállás
-* A használati helyeken ahol `@Transactional` annotáció van használva ott az importot át kell írni `hu.icellmobilsoft.coffee.jpa.annotation.Transactional`-re.
 * Sajnos a Hibernate 6 upgrade ráhatott a BatchService-re, ezt jelenleg nem fogja a coffee támogatni.
 
 === coffee-module-artemis
