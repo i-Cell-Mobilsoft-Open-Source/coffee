@@ -1,15 +1,12 @@
 = coff:ee
 
-A coff:ee egy JakartaEE megoldási készlet, melynek célja, hogy az enterprise világ gyakori algoritmusait összegyűjtse,
-azokra egy alapvető megoldást nyújtson, melyet, ha szükséges saját igényeinkre szabhatunk.
+image:https://github.com/i-Cell-Mobilsoft-Open-Source/coffee/actions/workflows/compile_maven.yml/badge.svg?style=plastic&branch=master[GitHub Compile workflow status in master branch]
+image:https://img.shields.io/maven-central/v/hu.icellmobilsoft.coffee/coffee?logo=apache-maven&style=for-the-badge)[Maven central version of Parent pom project]
+image:https://img.shields.io/github/license/i-Cell-Mobilsoft-Open-Source/coffee?style=plastic&logo=apache[License of Parent pom project]
+image:https://img.shields.io/badge/Use JakartaEE-project-brightgreen.svg?style=plastic&logo=jakartaee[Supported JVM Versions]
 
-A projekt ezeken a technológiákon alapszik:
 
-* Jakarta EE 8+
-* Java 11+
-* CDI 2.0+
-
-Bővebb leírás a http://i-cell-mobilsoft-open-source.github.io/coffee/[coff:ee dokumentáció] oldalon található.
+include::docs/project-description.adoc[leveloffset=+1]
 
 == Maven central
 A coff:ee megtalálható az official maven repository-ban is,
