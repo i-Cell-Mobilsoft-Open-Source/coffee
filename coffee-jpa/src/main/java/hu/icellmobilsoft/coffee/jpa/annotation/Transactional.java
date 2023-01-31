@@ -12,7 +12,7 @@ import java.lang.annotation.Target;
  * Customized {@link jakarta.transaction.Transactional} annotation with rollbackOn at {@link Throwable}.
  *
  * @author speter555
- * @since 2.0.0
+ * @since 1.14.0
  */
 @jakarta.transaction.Transactional(rollbackOn = Throwable.class)
 @InterceptorBinding
