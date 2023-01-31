@@ -121,18 +121,20 @@ potolni kell az `hu.icellmobilsoft.coffee.rest.projectstage.ProjectStage` osztá
 
 === coffee-jpa
 
-Kidobásra került a `deltaspike-jpa-module`,
-alternatíva nincs helyette.
+* Kidobásra került a `deltaspike-jpa-module`, alternatíva nincs helyette. +
+* A BatchService lekövette a hibernate 6 által hozott újdonságokat, a teljes típus átalakítást. +
+Maga a BatchService típuskezelése újra lett gondolva és szeparáltan kezeli a problémásabb típusokat. +
+Bővebben lásd: link:#BatchService[BatchService].
 
 .Átállás
-* Sajnos a Hibernate 6 upgrade ráhatott a BatchService-re, ezt jelenleg nem fogja a coffee támogatni.
+* Mivel a hibernate 6-nál újragondolták a típuskezelést és ezt a BatchService-nél mi is megléptük, így kiemelten tesztelni kell a projekteken a működést. Ha valamilyen metódusok felül vannak írva, meg kell nézni először, hogy a felülírások nélkül működik-e. Ez azért fontos, mert maga a hibernate 6 típusváltozásai és az újragondolt BatchService típuskezelés sok újdonságot hozott és magas típuslekezeléssel rendelkezik. Amennyiben mégis szükséges a projekteken bármilyen okból felülírás, azokat valószínűleg aktualizálni kell.
 
 === coffee-module-artemis
 A driver _jakarta EE 10_ és abban történt _Jakarta Messaging 3.1_ változások miatt nagyon megváltozott:
 https://blogs.apache.org/activemq/entry/activemq-artemis-embraces-jakarta-ee[ActiveMQ Artemis embraces Jakarta EE].
 
 .Átállás
-Kiemeleten tesztelni kell a *JmsHandler.createTextMessage*
+Kiemelten tesztelni kell a *JmsHandler.createTextMessage*
 és *JmsUtil.newJmsException* funkciókat,
 ott kifejezetten érintett volt a változás,
 megváltozott az eredeti koncepció a delay üzenetekkel. 
