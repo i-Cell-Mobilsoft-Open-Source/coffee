@@ -71,6 +71,9 @@ A *BatchService* a következő típusokkal kapcsolatos műveleteket támogatja b
 | Támogatás típusa
 | Java típusok
 
+| link:#NullValue[Null] értékként kezelt
+| Minden típus, amit a hibernate null-ként értékel ki.
+
 | link:#CustomType[CustomType] típusként kezelt
 | Minden enum típus.
 
@@ -102,6 +105,13 @@ IMPORTANT: Az itt fel nem sorolt típusok kezelése az adott *JDBC* driver-re va
 
 IMPORTANT: A típus támogatások tesztelése *postgresql* és *oracle* adatbázisok esetén történtek meg, így ezeknél biztosított a megfelelő működés. +
 Minden más adatbázis esetén a típusok lefedése elméletben nagyrészt biztosított, de előfordulhatnak anomáliák.
+
+=== Null értékek kezelése [[NullValue]]
+
+A *BatchService* a típusok kezelését egy null vizsgálattal kezdi. +
+Amennyiben bármilyen hibernate által visszaadott típus értéke null, a BatchService a *PreparedStatement.setNull()* metódusa használatával állítja be az adott értéket, mint *SqlTypes.NULL* JDBC típus.
+
+NOTE: A *JDBC driver*-ek is ezt a módszert alkalmazzák.
 
 === CustomType kezelése [[CustomType]]
 
@@ -140,7 +150,9 @@ private EnumType enumString;
 | Az adott nem értékhez tartozó név, a *name()* metódus szerinti érték kerül beszúrásra.
 |===
 
-A *BatchService* jelenleg csak a *CustomType*-ok esetén csak az *EnumType*-ot kezeli külön. +
+A táblázatban szereplő értékek beszúrása a *PreparedStatement.setObject()* metódusa használatával történik, így a típuskezelés az adott *JDBC driver*-re van bízva.
+
+A *BatchService* jelenleg a *CustomType*-ok esetén csak az *EnumType*-ot kezeli külön. +
 Minden más *CustomType* típus kezelését a használt *JDBC driver*-re bízzuk rá!
 
 === ManyToOneType kezelése [[ManyToOneType]]
