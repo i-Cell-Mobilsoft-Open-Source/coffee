@@ -13,7 +13,7 @@
 
 	<packaging>pom</packaging>
 
-	<description>Java Enterprise based framework</description>
+	<description>JakartaEE solution set</description>
 	<url>https://github.com/i-Cell-Mobilsoft-Open-Source/coffee</url>
 	<inceptionYear>2020</inceptionYear>
 
