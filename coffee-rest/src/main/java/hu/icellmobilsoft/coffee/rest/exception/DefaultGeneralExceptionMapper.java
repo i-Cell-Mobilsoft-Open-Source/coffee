@@ -21,6 +21,7 @@ package hu.icellmobilsoft.coffee.rest.exception;
 
 import java.util.function.BiConsumer;
 
+import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.ClientErrorException;
@@ -59,6 +60,7 @@ import hu.icellmobilsoft.coffee.tool.utils.string.RandomUtil;
  * @author imre.scheffer
  * @since 1.0.0
  */
+@Dependent
 public class DefaultGeneralExceptionMapper implements ExceptionMapper<Exception> {
 
     @Inject
