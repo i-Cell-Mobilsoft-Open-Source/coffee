@@ -1,3 +1,5 @@
+:sectnums:
+
 = coff:ee
 
 image:https://github.com/i-Cell-Mobilsoft-Open-Source/coffee/actions/workflows/compile_maven.yml/badge.svg?style=plastic&branch=master[GitHub Compile workflow status in master branch]
