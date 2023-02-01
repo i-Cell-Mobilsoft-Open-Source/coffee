@@ -1,8 +1,4 @@
-:toc: left
-:toclevels: 3
 :sectnums:
-:icons: font
-:imagesdir: pic
 
 = coff:ee
 
@@ -11,8 +7,25 @@ image:https://img.shields.io/maven-central/v/hu.icellmobilsoft.coffee/coffee?log
 image:https://img.shields.io/github/license/i-Cell-Mobilsoft-Open-Source/coffee?style=plastic&logo=apache[License of Parent pom project]
 image:https://img.shields.io/badge/Use JakartaEE-project-brightgreen.svg?style=plastic&logo=jakartaee[Use JakartaEE project]
 
+== Coffee Dokumentáció
 
-include::docs/project-description.adoc[leveloffset=+1]
+A coff:ee egy JakartaEE megoldási készlet, melynek célja, hogy az enterprise világ gyakori algoritmusait összegyűjtse,
+azokra egy alapvető megoldást nyújtson, melyet, ha szükséges saját igényeinkre szabhatunk.
+
+Minden cég kifejleszt valami saját megoldási készletet, amely a projekteket próbálja összefogni, ne kelljen ugyanolyan modulokat újra megírni, másolni, karbantartani.
+
+Ez a megoldási készlet alkalmas mind a SOA, mind a Microservice architektúra kiszolgálására. A felépítése moduláris, és felülírható projekt szinten szinte minden. A keretrendszer az alábbi rendszereken alapul, amelyek meghatározóak az egész működésre:
+
+* Jakarta EE 8+
+* Java 11+
+* CDI 2.0+
+* Jboss logging
+* gson
+* guava
+* commons-lang3
+* apache http
+* resteasy
+* microprofile.io 1.3+
 
 include::docs/migration.adoc[leveloffset=+1]
 
