@@ -170,3 +170,14 @@ annotációval ellátott osztályokat/metódusokat a tracing tételek közé.
 .JUnit @ParameterizedTest annotáció
 Ahhoz hogy működjon a CDI kezelt paraméter injecion kell a "@ExplicitParamInjection"
 annotáció is a teszt osztályra.
+
+=== coffee-model-base
+A deltaspike data függőség meg lett szüntetve. A korábbi deltaspike data CurrentUser helyett létre lett hozva a
+hu.icellmobilsoft.coffee.model.base.annotation CurrentUser annotáció. Az AuditProvider, TimestampsProvider osztályok a korábbi deltaspike data
+PrePersistAuditListener és PreUpdateAuditListener interfészek implementálása helyett metódusai a jakarta-s PrePersist és PreUpdate annotációkkal
+lettek ellátva. Az AbstractEntity-ről lekerült a deltaspike-os AuditEntityListener, helyette az AbstractAuditEntity osztályok megkapták a következő
+annotációt: @EntityListeners({ TimestampsProvider.class, AuditProvider.class }).
+
+.Átállás
+A deltaspike data CurrentUser annotáció leváltása miatt az EntityHelper-ben le kell cserélni a
+hu.icellmobilsoft.coffee.model.base.annotation.CurrentUser annotációra.

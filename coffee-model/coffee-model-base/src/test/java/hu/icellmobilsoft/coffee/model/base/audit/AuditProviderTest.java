@@ -19,11 +19,8 @@
  */
 package hu.icellmobilsoft.coffee.model.base.audit;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
-import jakarta.enterprise.context.RequestScoped;
-import jakarta.enterprise.inject.spi.BeanManager;
-import jakarta.inject.Inject;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import org.jboss.weld.junit5.EnableWeld;
 import org.jboss.weld.junit5.WeldInitiator;
@@ -35,46 +32,88 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import hu.icellmobilsoft.coffee.model.base.DefaultImplAbstractIdentifiedAuditEntity;
+import hu.icellmobilsoft.coffee.model.base.GetterAnnotatedEntity;
+import hu.icellmobilsoft.coffee.model.base.ModifiedByOnCreateImplAbstractIdentifiedAuditEntity;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.enterprise.inject.spi.BeanManager;
+import jakarta.inject.Inject;
 
 /**
  * Testing AuditProvider class
  *
  * @author arnold.bucher
+ * @author zsolt.vasi
  */
 @EnableWeld
 @Tag("weld")
 @ExtendWith(MockitoExtension.class)
 @DisplayName("Testing AuditProvider class")
-public class AuditProviderTest {
+class AuditProviderTest {
 
     @WeldSetup
-    public WeldInitiator weld = WeldInitiator.from(AuditProvider.class, BeanManager.class).activate(RequestScoped.class).build();
+    public WeldInitiator weld = WeldInitiator.from(AuditProvider.class, BeanManager.class, UserProvider.class).activate(RequestScoped.class).build();
 
     @Inject
     private AuditProvider auditProvider;
 
     @Test
-    @DisplayName("prePersist should throw Principal not found exception")
-    public void prePersistPrincipalNotFoundTest() {
+    @DisplayName("prePersist test")
+    void prePersistTest() {
         // given
         DefaultImplAbstractIdentifiedAuditEntity entity = new DefaultImplAbstractIdentifiedAuditEntity();
-
         // when
-
+        auditProvider.prePersist(entity);
         // then
-        assertThrows(IllegalArgumentException.class, () -> auditProvider.prePersist(entity));
+        assertEquals(UserProvider.DEFAULT_SYSTEM_USER, entity.getCreatorUser());
+        assertNull(entity.getModifierUser());
     }
 
     @Test
-    @DisplayName("preUpdate should throw Principal not found exception")
-    public void preUpdatePrincipalNotFoundTest() {
+    @DisplayName("preUpdate test")
+    void preUpdateTest() {
         // given
         DefaultImplAbstractIdentifiedAuditEntity entity = new DefaultImplAbstractIdentifiedAuditEntity();
-
         // when
-
+        auditProvider.preUpdate(entity);
         // then
-        assertThrows(IllegalArgumentException.class, () -> auditProvider.preUpdate(entity));
+        assertEquals(UserProvider.DEFAULT_SYSTEM_USER, entity.getModifierUser());
+        assertNull(entity.getCreatorUser());
+    }
+
+    @Test
+    @DisplayName("prePersist if modifiedBy oncreate true test")
+    void prePersistIfModifiedByOnCreateTest() {
+        // given
+        ModifiedByOnCreateImplAbstractIdentifiedAuditEntity entity = new ModifiedByOnCreateImplAbstractIdentifiedAuditEntity();
+        // when
+        auditProvider.prePersist(entity);
+        // then
+        assertEquals(UserProvider.DEFAULT_SYSTEM_USER, entity.getCreatorUser());
+        assertEquals(UserProvider.DEFAULT_SYSTEM_USER, entity.getModifierUser());
+    }
+
+    @Test
+    @DisplayName("getter annoteted prePersist test")
+    void getterAnnotatedPrePersistTest() {
+        // given
+        GetterAnnotatedEntity entity = new GetterAnnotatedEntity();
+        // when
+        auditProvider.prePersist(entity);
+        // then
+        assertEquals(UserProvider.DEFAULT_SYSTEM_USER, entity.getCreatorUser());
+        assertNull(entity.getModifierUser());
+    }
+
+    @Test
+    @DisplayName("getter annotated preUpdate test")
+    void getterAnnotatedPreUpdateTest() {
+        // given
+        GetterAnnotatedEntity entity = new GetterAnnotatedEntity();
+        // when
+        auditProvider.preUpdate(entity);
+        // then
+        assertEquals(UserProvider.DEFAULT_SYSTEM_USER, entity.getModifierUser());
+        assertNull(entity.getCreatorUser());
     }
 
 }

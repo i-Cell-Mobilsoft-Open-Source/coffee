@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * 
  *      http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -23,35 +23,30 @@ import java.util.Date;
 
 import hu.icellmobilsoft.coffee.model.base.annotation.CreatedBy;
 import hu.icellmobilsoft.coffee.model.base.annotation.ModifiedBy;
-import hu.icellmobilsoft.coffee.model.base.audit.AuditProvider;
 import hu.icellmobilsoft.coffee.model.base.javatime.annotation.CreatedOn;
 import hu.icellmobilsoft.coffee.model.base.javatime.annotation.ModifiedOn;
-import hu.icellmobilsoft.coffee.model.base.javatime.listener.TimestampsProvider;
 import jakarta.enterprise.inject.Vetoed;
 import jakarta.persistence.Column;
-import jakarta.persistence.EntityListeners;
-import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import jakarta.validation.constraints.NotNull;
 
 /**
- * Base class for audited entities.
+ * Getter annotated test entity
  *
- * @author imre.scheffer
- * @since 1.0.0
+ * @author zsolt.vasi
+ * @since 2.0.0
  */
 @Vetoed
-@MappedSuperclass
-@EntityListeners({ TimestampsProvider.class, AuditProvider.class })
-public abstract class AbstractAuditEntity<T> extends AbstractEntity implements IAuditEntity<Date, T> {
-
-    private static final long serialVersionUID = 1L;
+@Entity
+@Table(name = "dummy")
+public class GetterAnnotatedEntity extends AbstractIdentifiedEntity {
 
     /**
      * Creation date of the entity
      */
-    @CreatedOn
     @NotNull
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "X__INSDATE", updatable = false)
@@ -60,7 +55,6 @@ public abstract class AbstractAuditEntity<T> extends AbstractEntity implements I
     /**
      * Last modification date of the entity
      */
-    @ModifiedOn
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "X__MODDATE")
     private Date modificationDate;
@@ -68,23 +62,22 @@ public abstract class AbstractAuditEntity<T> extends AbstractEntity implements I
     /**
      * Creator user of the entity
      */
-    @CreatedBy
     @NotNull
     @Column(name = "X__INSUSER", length = 30, updatable = false)
-    private T creatorUser;
+    private String creatorUser;
 
     /**
      * The last modifier user of the entity
      */
-    @ModifiedBy
     @Column(name = "X__MODUSER", length = 30)
-    private T modifierUser;
+    private String modifierUser;
 
     /**
      * Getter for the field {@code creationDate}.
      *
      * @return creationDate
      */
+    @CreatedOn
     public Date getCreationDate() {
         return this.creationDate;
     }
@@ -104,6 +97,7 @@ public abstract class AbstractAuditEntity<T> extends AbstractEntity implements I
      *
      * @return modificationDate
      */
+    @ModifiedOn
     public Date getModificationDate() {
         return this.modificationDate;
     }
@@ -123,7 +117,8 @@ public abstract class AbstractAuditEntity<T> extends AbstractEntity implements I
      *
      * @return creatorUser
      */
-    public T getCreatorUser() {
+    @CreatedBy
+    public String getCreatorUser() {
         return this.creatorUser;
     }
 
@@ -133,7 +128,7 @@ public abstract class AbstractAuditEntity<T> extends AbstractEntity implements I
      * @param creatorUser
      *            creatorUser
      */
-    public void setCreatorUser(T creatorUser) {
+    public void setCreatorUser(String creatorUser) {
         this.creatorUser = creatorUser;
     }
 
@@ -142,7 +137,8 @@ public abstract class AbstractAuditEntity<T> extends AbstractEntity implements I
      *
      * @return modifierUser
      */
-    public T getModifierUser() {
+    @ModifiedBy
+    public String getModifierUser() {
         return this.modifierUser;
     }
 
@@ -152,7 +148,8 @@ public abstract class AbstractAuditEntity<T> extends AbstractEntity implements I
      * @param modifierUser
      *            modifierUser
      */
-    public void setModifierUser(T modifierUser) {
+    public void setModifierUser(String modifierUser) {
         this.modifierUser = modifierUser;
     }
+
 }
