@@ -14,6 +14,8 @@ image:https://img.shields.io/badge/Use JakartaEE-project-brightgreen.svg?style=p
 
 include::docs/project-description.adoc[leveloffset=+1]
 
+include::docs/migration.adoc[leveloffset=+1]
+
 == Maven central
 A coff:ee megtalálható az official maven repository-ban is,
 a projekten elég behúzni a BOM-ot mely minden almodult lekezel:
