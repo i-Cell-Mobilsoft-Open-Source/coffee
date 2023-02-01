@@ -68,7 +68,10 @@ import org.apache.deltaspike.data.api.Repository;
  * <br/>
  * <b>{@code @Observes AfterBeanDiscovery<X>}</b>:
  *     Raises any definition errors discovered before.
+ *     
+ * @deprecated Use {@link hu.icellmobilsoft.coffee.deltaspike.data.extension.RepositoryExtension} instead, forRemoval = true, since = "2.0.0"
  */
+@Deprecated(forRemoval = true, since = "2.0.0")
 public class RepositoryExtension implements Extension//, Deactivatable
 {
     private static final Logger LOG = Logger.getLogger(RepositoryExtension.class.getName());

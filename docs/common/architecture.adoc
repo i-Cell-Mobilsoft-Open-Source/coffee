@@ -21,7 +21,7 @@ DTO system
 +----------------------------------------+
                            |
                            |
-   Framework Core          |
+   JakartaEE solution set Core          |
 +---------------------------------------------+
 |cAEA                      |                  |
 |coffee-rest               |                  |
@@ -43,7 +43,7 @@ DTO system
 |                                             |
 +---------------------------------------------+
 
-Framework Model
+JakartaEE solution set Model
 +---------------------+
 |cF87                 |
 |coffee-model-security|

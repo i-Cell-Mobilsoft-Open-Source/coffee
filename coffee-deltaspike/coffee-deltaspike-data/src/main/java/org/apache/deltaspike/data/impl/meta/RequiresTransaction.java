@@ -43,6 +43,10 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
+/**
+ * @deprecated Icellmobilsoft deltaspike-data rewrite drops it
+ */
+@Deprecated(forRemoval = true, since = "2.0.0")
 @Target(METHOD)
 @Retention(RUNTIME)
 public @interface RequiresTransaction

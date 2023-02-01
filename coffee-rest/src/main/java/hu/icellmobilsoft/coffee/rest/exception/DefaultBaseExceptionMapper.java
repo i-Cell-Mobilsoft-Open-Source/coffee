@@ -21,6 +21,7 @@ package hu.icellmobilsoft.coffee.rest.exception;
 
 import java.util.Collection;
 
+import jakarta.enterprise.context.Dependent;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.ext.ExceptionMapper;
@@ -48,6 +49,7 @@ import hu.icellmobilsoft.coffee.rest.validation.xml.exception.XsdProcessingExcep
  * @author balazs.joo
  * @since 1.8.0
  */
+@Dependent
 public class DefaultBaseExceptionMapper implements ExceptionMapper<BaseException> {
 
     @Inject

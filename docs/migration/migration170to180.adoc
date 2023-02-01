@@ -50,6 +50,7 @@ kell terjeszteni a mappert az alábbi módon:
 [source,java]
 ----
 @Provider // <1>
+@Dependent
 public class BaseExceptionMapper extends DefaultBaseExceptionMapper {
 
     @Override // <2>

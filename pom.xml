@@ -13,7 +13,7 @@
 
 	<packaging>pom</packaging>
 
-	<description>Java Enterprise based framework</description>
+	<description>JakartaEE solution set</description>
 	<url>https://github.com/i-Cell-Mobilsoft-Open-Source/coffee</url>
 	<inceptionYear>2020</inceptionYear>
 
@@ -230,6 +230,32 @@
 			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
 		</repository>
 	</distributionManagement>
+
+	<repositories>
+		<repository>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+			<id>ossrh</id>
+			<name>Internal Release Repository</name>
+			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+		</repository>
+		<repository>
+			<releases>
+				<enabled>true</enabled>
+				<updatePolicy>never</updatePolicy>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+			<id>central</id>
+			<name>Central Repository</name>
+			<url>https://repo.maven.apache.org/maven2</url>
+		</repository>
+	</repositories>
 
 	<profiles>
 		<profile>

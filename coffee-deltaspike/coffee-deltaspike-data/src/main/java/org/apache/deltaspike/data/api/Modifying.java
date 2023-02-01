@@ -46,7 +46,9 @@ import java.lang.annotation.Target;
  * Marks a query method to be modifying. This will execute the
  * {@link javax.persistence.Query#executeUpdate()} method instead of
  * {@link javax.persistence.Query#getResultList()} (or the corresponding single result method).
+ * @deprecated Icellmobilsoft deltaspike-data rewrite drops it
  */
+@Deprecated(forRemoval = true, since = "2.0.0")
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface Modifying

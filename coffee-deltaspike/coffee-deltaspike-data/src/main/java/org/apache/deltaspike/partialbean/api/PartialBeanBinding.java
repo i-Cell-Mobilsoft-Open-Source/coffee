@@ -43,6 +43,10 @@ import java.lang.annotation.Target;
 import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
+/**
+ * @deprecated Icellmobilsoft deltaspike-data rewrite drops it
+ */
+@Deprecated(forRemoval = true, since = "2.0.0")
 @Retention(RUNTIME)
 @Target(ANNOTATION_TYPE)
 public @interface PartialBeanBinding

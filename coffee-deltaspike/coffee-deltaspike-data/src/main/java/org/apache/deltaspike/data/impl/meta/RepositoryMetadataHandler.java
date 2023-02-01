@@ -41,11 +41,14 @@ import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+
 import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.spi.BeanManager;
 import jakarta.inject.Inject;
-import org.apache.deltaspike.data.impl.RepositoryExtension;
+
+import hu.icellmobilsoft.coffee.deltaspike.data.extension.RepositoryExtension;
+//import org.apache.deltaspike.data.impl.RepositoryExtension;
 
 @ApplicationScoped
 public class RepositoryMetadataHandler

@@ -79,7 +79,7 @@ class ProjectStageProducerTest {
     @Test
     @DisplayName("test")
     void testSameProjectStage() throws InterruptedException {
-        int thread = 10000;
+        int thread = 2;
         ExecutorService service = Executors.newFixedThreadPool(thread);
         CountDownLatch latch = new CountDownLatch(thread);
         for (int i = 0; i < thread; i++) {

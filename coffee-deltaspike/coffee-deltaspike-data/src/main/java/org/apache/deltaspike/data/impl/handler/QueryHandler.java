@@ -39,7 +39,6 @@ package org.apache.deltaspike.data.impl.handler;
 
 //import org.apache.deltaspike.core.api.provider.BeanProvider;
 //import org.apache.deltaspike.core.util.ExceptionUtils;
-import org.apache.deltaspike.core.util.ProxyUtils;
 //import org.apache.deltaspike.core.util.interceptor.AbstractInvocationContext;
 //import org.apache.deltaspike.core.util.metadata.AnnotationInstanceProvider;
 import org.apache.deltaspike.data.api.QueryInvocationException;
@@ -64,6 +63,7 @@ import java.io.Serializable;
 //import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -107,7 +107,10 @@ public class QueryHandler implements Serializable, InvocationHandler
     @Override
     public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable
     {
-        List<Class<?>> candidates = ProxyUtils.getProxyAndBaseTypes(proxy.getClass());
+        // dynamic proxy interface always a repository
+        List<Class<?>> candidates = new ArrayList<Class<?>>();
+        Class<?>[] interfaces = proxy.getClass().getInterfaces();
+        candidates.add(interfaces[0]);
         final RepositoryMetadata repositoryMetadata =
                 metadataHandler.lookupMetadata(candidates);
         final RepositoryMethodMetadata repositoryMethodMetadata =
