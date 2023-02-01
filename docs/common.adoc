@@ -1,7 +1,5 @@
 [#common]
 
-include::project-description.adoc[leveloffset=+1]
-
 include::common/architecture.adoc[leveloffset=+1]
 
 include::common/coffee-core.adoc[leveloffset=+1]
