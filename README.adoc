@@ -5,10 +5,29 @@
 image:https://github.com/i-Cell-Mobilsoft-Open-Source/coffee/actions/workflows/compile_maven.yml/badge.svg?style=plastic&branch=master[GitHub Compile workflow status in master branch]
 image:https://img.shields.io/maven-central/v/hu.icellmobilsoft.coffee/coffee?logo=apache-maven&style=for-the-badge)[Maven central version of Parent pom project]
 image:https://img.shields.io/github/license/i-Cell-Mobilsoft-Open-Source/coffee?style=plastic&logo=apache[License of Parent pom project]
-image:https://img.shields.io/badge/Use JakartaEE-project-brightgreen.svg?style=plastic&logo=jakartaee[Supported JVM Versions]
+image:https://img.shields.io/badge/Use JakartaEE-project-brightgreen.svg?style=plastic&logo=jakartaee[Use JakartaEE project]
 
+== Coffee Dokumentáció
 
-include::docs/project-description.adoc[leveloffset=+1]
+A coff:ee egy JakartaEE megoldási készlet, melynek célja, hogy az enterprise világ gyakori algoritmusait összegyűjtse,
+azokra egy alapvető megoldást nyújtson, melyet, ha szükséges saját igényeinkre szabhatunk.
+
+Minden cég kifejleszt valami saját megoldási készletet, amely a projekteket próbálja összefogni, ne kelljen ugyanolyan modulokat újra megírni, másolni, karbantartani.
+
+Ez a megoldási készlet alkalmas mind a SOA, mind a Microservice architektúra kiszolgálására. A felépítése moduláris, és felülírható projekt szinten szinte minden. A keretrendszer az alábbi rendszereken alapul, amelyek meghatározóak az egész működésre:
+
+* Jakarta EE 8+
+* Java 11+
+* CDI 2.0+
+* Jboss logging
+* gson
+* guava
+* commons-lang3
+* apache http
+* resteasy
+* microprofile.io 1.3+
+
+include::docs/migration.adoc[leveloffset=+1]
 
 == Maven central
 A coff:ee megtalálható az official maven repository-ban is,

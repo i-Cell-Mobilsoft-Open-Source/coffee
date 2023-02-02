@@ -1,4 +1,4 @@
-= Coffee Dokumentáció
+== Coffee Dokumentáció
 
 A coff:ee egy JakartaEE megoldási készlet, melynek célja, hogy az enterprise világ gyakori algoritmusait összegyűjtse,
 azokra egy alapvető megoldást nyújtson, melyet, ha szükséges saját igényeinkre szabhatunk.
