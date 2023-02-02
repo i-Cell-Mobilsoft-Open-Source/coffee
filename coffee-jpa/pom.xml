@@ -32,18 +32,10 @@
 			<artifactId>hibernate-core</artifactId>
 		</dependency>
 
-		<!-- apache.deltaspike -->
-<!--
 		<dependency>
-			<groupId>org.apache.deltaspike.modules</groupId>
-			<artifactId>deltaspike-jpa-module-api</artifactId>
+			<groupId>hu.icellmobilsoft.coffee</groupId>
+			<artifactId>coffee-deltaspike-data</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>org.apache.deltaspike.modules</groupId>
-			<artifactId>deltaspike-jpa-module-impl</artifactId>
-			<scope>compile</scope>
-		</dependency>
--->
 
 		<!--Test dependecies -->
 		<dependency>
