@@ -19,8 +19,6 @@
  */
 package hu.icellmobilsoft.coffee.jpa.sql.batch.types;
 
-import jakarta.enterprise.inject.Vetoed;
-
 import org.hibernate.type.StandardBasicTypes;
 import org.hibernate.type.descriptor.java.StringJavaType;
 import org.hibernate.type.descriptor.jdbc.VarcharJdbcType;
@@ -32,7 +30,6 @@ import org.hibernate.type.internal.NamedBasicTypeImpl;
  * @author csaba.balogh
  * @since 2.0.0
  */
-@Vetoed
 public class StringBasicType extends NamedBasicTypeImpl<String> {
 
     /**
