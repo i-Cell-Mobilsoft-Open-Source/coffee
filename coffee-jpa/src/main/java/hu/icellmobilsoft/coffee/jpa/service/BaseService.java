@@ -163,7 +163,7 @@ public class BaseService<T> {
         log.trace(">> BaseService.findAll(class: [{0}])", clazz.getCanonicalName());
         try {
             try {
-                return getEntityManager().createQuery("FROM " + clazz.getSimpleName(), clazz).getResultList();
+                return getEntityManager().createQuery("SELECT e FROM " + clazz.getSimpleName() + " e", clazz).getResultList();
             } catch (Exception e) {
                 String msg = MessageFormat.format("Error occured in finding all class: [{0}] : [{1}]", clazz.getCanonicalName(),
                         e.getLocalizedMessage());
@@ -1883,7 +1883,7 @@ public class BaseService<T> {
      * @param methodName
      *            the REST method name e.g getCustomerInfoByUserId
      * @param paramNames
-     *            the REST param names of {@link javax.ws.rs.PathParam}s e.g userId,balanceId
+     *            the REST param names of {@link jakarta.ws.rs.PathParam}s e.g userId,balanceId
      * @return e.g. " getCustomerInfoByUserId(userId: [{0}])"
      */
     private String getCalledMethodWithOnlyPathParams(String methodName, String... paramNames) {
