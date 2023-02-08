@@ -1,5 +1,3 @@
-:sectnums:
-
 = coff:ee
 
 image:https://github.com/i-Cell-Mobilsoft-Open-Source/coffee/actions/workflows/compile_maven.yml/badge.svg?style=plastic&branch=master[GitHub Compile workflow status in master branch]
@@ -7,6 +5,10 @@ image:https://img.shields.io/maven-central/v/hu.icellmobilsoft.coffee/coffee?log
 image:https://img.shields.io/github/license/i-Cell-Mobilsoft-Open-Source/coffee?style=plastic&logo=apache[License of Parent pom project]
 image:https://img.shields.io/badge/Use JakartaEE-project-brightgreen.svg?style=plastic&logo=jakartaee[Use JakartaEE project]
 
+<<readme-en,English version>> 
+
+[%readme-hu]
+:sectnums:
 == Coffee Dokumentáció
 
 A coff:ee egy JakartaEE megoldási készlet, melynek célja, hogy az enterprise világ gyakori algoritmusait összegyűjtse,
@@ -16,7 +18,7 @@ Minden cég kifejleszt valami saját megoldási készletet, amely a projekteket 
 
 Ez a megoldási készlet alkalmas mind a SOA, mind a Microservice architektúra kiszolgálására. A felépítése moduláris, és felülírható projekt szinten szinte minden. A keretrendszer az alábbi rendszereken alapul, amelyek meghatározóak az egész működésre:
 
-* Jakarta EE 8+
+* Jakarta EE 10+
 * Java 11+
 * CDI 2.0+
 * Jboss logging
@@ -26,8 +28,6 @@ Ez a megoldási készlet alkalmas mind a SOA, mind a Microservice architektúra 
 * apache http
 * resteasy
 * microprofile.io 1.3+
-
-include::docs/migration.adoc[leveloffset=+1]
 
 == Maven central
 A coff:ee megtalálható az official maven repository-ban is,
@@ -72,5 +72,71 @@ a projekten elég behúzni a BOM-ot mely minden almodult lekezel:
 ----
 
 Bővebb leírás a http://i-cell-mobilsoft-open-source.github.io/coffee/[coff:ee dokumentáció] oldalon található.
+
+Copyright (C) 2020 i-Cell Mobilsoft Zrt.
+
+:sectnums!:
+[[readme-en]]
+== Coffee Documentation
+
+coff:ee is a JakartaEE based solution set, which aims to collect common algorithms of the enterprise world, provide basic solutions for them, which we can tailor to our own needs if necessary.
+
+Every mature ICT company develops its own set of solutions, which tries to unite it's projects, so that the same modules do not have to be rewritten, copied, and maintained.
+
+This solution set is suitable for serving both SOA and Microservice architectures. Its structure is modular, and almost everything can be overridden at the project level. The framework is based on the following systems, which are decisive for the entire operation:
+
+* Jakarta EE 10+
+* Java 11+
+* CDI 2.0+
+* Jboss logging
+* gson
+* guava
+* commons-lang3
+* apache http
+* resteasy
+* microprofile.io 1.3+
+
+== Maven central
+coff:ee can also be found in the official maven repository as well, it is enough to reference necessary BOM objects in the project which handles each sub-modules automatically:
+
+.dependencyManagement settings
+[source, xml]
+----
+<dependencyManagement>
+    <dependency>
+        <groupId>hu.icellmobilsoft.coffee</groupId>
+        <artifactId>coffee-bom</artifactId>
+        <version>${version.hu.icellmobilsoft.coffee}</version>
+        <type>pom</type>
+        <scope>import</scope>
+    </dependency>
+</dependencyManagement>
+----
+
+.usase of modules
+[source, xml]
+----
+<dependencies>
+    <dependency>
+        <groupId>hu.icellmobilsoft.coffee</groupId>
+        <artifactId>coffee-cdi</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>hu.icellmobilsoft.coffee</groupId>
+        <artifactId>coffee-dto-impl</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>hu.icellmobilsoft.coffee</groupId>
+        <artifactId>coffee-model-base</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>hu.icellmobilsoft.coffee</groupId>
+        <artifactId>coffee-jpa</artifactId>
+    </dependency>
+    ...other coff:ee modules...
+</dependencies>
+----
+
+For more detailed documentation please see: http://i-cell-mobilsoft-open-source.github.io/coffee/[coff:ee documentation]
 
 Copyright (C) 2020 i-Cell Mobilsoft Zrt.
