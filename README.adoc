@@ -137,6 +137,6 @@ coff:ee can also be found in the official maven repository as well, it is enough
 </dependencies>
 ----
 
-For more detailed documentation please see: http://i-cell-mobilsoft-open-source.github.io/coffee/[coff:ee dokumentáció]
+For more detailed documentation please see: http://i-cell-mobilsoft-open-source.github.io/coffee/[coff:ee documentation]
 
 Copyright (C) 2020 i-Cell Mobilsoft Zrt.
