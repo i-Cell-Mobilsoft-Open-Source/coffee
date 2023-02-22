@@ -27,7 +27,7 @@ import javax.ws.rs.core.Response.StatusType;
  * HttpStatus codes
  *
  * @author gabor.balazs
- * @since 1.13.0
+ * @since 2.0.0
  */
 public enum HttpStatus implements StatusType {
 

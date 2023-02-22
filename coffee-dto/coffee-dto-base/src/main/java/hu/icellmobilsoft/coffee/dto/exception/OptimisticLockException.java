@@ -25,7 +25,7 @@ import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
  * Exception for optimistic lock.
  * 
  * @author gabor.balazs
- * @since 1.13.0
+ * @since 2.0.0
  */
 public class OptimisticLockException extends TechnicalException {
 

@@ -190,7 +190,7 @@ public class DefaultGeneralExceptionMapper implements ExceptionMapper<Exception>
 
     /**
      * Creates a response builder for the given exception/error
-     *
+     * 
      * @param e
      *            exception
      * @param responseStatus
