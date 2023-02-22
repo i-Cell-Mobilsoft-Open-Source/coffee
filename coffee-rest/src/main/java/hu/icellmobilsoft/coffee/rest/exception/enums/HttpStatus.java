@@ -19,9 +19,9 @@
  */
 package hu.icellmobilsoft.coffee.rest.exception.enums;
 
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status.Family;
-import javax.ws.rs.core.Response.StatusType;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status.Family;
+import jakarta.ws.rs.core.Response.StatusType;
 
 /**
  * HttpStatus codes
