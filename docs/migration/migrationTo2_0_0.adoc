@@ -183,3 +183,14 @@ annotációt: @EntityListeners({ TimestampsProvider.class, AuditProvider.class }
 .Átállás
 A deltaspike data CurrentUser annotáció leváltása miatt az EntityHelper-ben le kell cserélni a
 hu.icellmobilsoft.coffee.model.base.annotation.CurrentUser annotációra.
+
+=== coffee-rest
+
+* Bevezetésre került az `OptimisticLockException`, alapértelmezetten `CoffeeFaultType.OPTIMISTIC_LOCK_EXCEPTION` hibakóddal.
+* Átalakításra került a `DefaultBaseExceptionMapper` osztályban a hibakezelés:
+* Uzleti hiba - BusinessException esetén 422 státuszkódot adunk az eddigi 500 Státuszkód helyett.
+* Technikai hiba - OptimisticLockException esetén 518 státuszkódot adunk az eddigi 500 Státuszkód helyett.
+
+==== Átállás
+
+* Az eddigi exception státuszkód kezelés megtartásához a projekteken saját ExceptionMapper létrehozása szükséges.
