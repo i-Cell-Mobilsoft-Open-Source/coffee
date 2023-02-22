@@ -23,8 +23,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.Optional;
 
-import javax.enterprise.context.RequestScoped;
-import javax.inject.Inject;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
 
 import org.jboss.weld.junit5.EnableWeld;
 import org.jboss.weld.junit5.WeldInitiator;
@@ -39,7 +39,6 @@ import hu.icellmobilsoft.coffee.cdi.logger.AppLoggerImpl;
 import hu.icellmobilsoft.coffee.cdi.logger.LogContainer;
 import hu.icellmobilsoft.coffee.cdi.logger.LogProducer;
 import hu.icellmobilsoft.coffee.tool.utils.string.RandomUtil;
-
 import io.smallrye.config.inject.ConfigExtension;
 
 /**

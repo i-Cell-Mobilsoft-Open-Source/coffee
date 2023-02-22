@@ -22,11 +22,11 @@ package hu.icellmobilsoft.coffee.module.mongodb.extension;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.ParameterizedType;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.context.Dependent;
-import javax.enterprise.inject.Instance;
-import javax.enterprise.inject.spi.CDI;
-import javax.enterprise.inject.spi.InjectionPoint;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.Dependent;
+import jakarta.enterprise.inject.Instance;
+import jakarta.enterprise.inject.spi.CDI;
+import jakarta.enterprise.inject.spi.InjectionPoint;
 
 import org.apache.commons.lang3.StringUtils;
 

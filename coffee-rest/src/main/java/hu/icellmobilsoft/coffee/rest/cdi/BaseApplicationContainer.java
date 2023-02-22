@@ -23,11 +23,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-import javax.annotation.Resource;
-import javax.enterprise.context.ApplicationScoped;
+import jakarta.annotation.Resource;
+import jakarta.enterprise.context.ApplicationScoped;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.microprofile.config.ConfigProvider;
+
+import hu.icellmobilsoft.coffee.cdi.config.IConfigKey;
 
 /**
  * Application scoped container class
@@ -37,11 +39,6 @@ import org.eclipse.microprofile.config.ConfigProvider;
  */
 @ApplicationScoped
 public class BaseApplicationContainer {
-
-    /**
-     * Coffee app name key
-     */
-    private static final String COFFEE_APP_NAME = "coffee.app.name";
 
     @Resource(lookup = "java:app/AppName")
     private String appName;
@@ -67,16 +64,16 @@ public class BaseApplicationContainer {
      */
     public synchronized String getCoffeeAppName() {
         final String coffeeAppName;
-        if (getObjectMap().containsKey(COFFEE_APP_NAME) && getObjectMap().get(COFFEE_APP_NAME) instanceof String) {
-            coffeeAppName = (String) getObjectMap().get(COFFEE_APP_NAME);
+        if (getObjectMap().containsKey(IConfigKey.COFFEE_APP_NAME) && getObjectMap().get(IConfigKey.COFFEE_APP_NAME) instanceof String) {
+            coffeeAppName = (String) getObjectMap().get(IConfigKey.COFFEE_APP_NAME);
         } else {
-            Optional<String> coffeeAppNameConfig = ConfigProvider.getConfig().getOptionalValue(COFFEE_APP_NAME, String.class);
+            Optional<String> coffeeAppNameConfig = ConfigProvider.getConfig().getOptionalValue(IConfigKey.COFFEE_APP_NAME, String.class);
             if (coffeeAppNameConfig.isEmpty()) {
                 coffeeAppName = appName;
             } else {
                 coffeeAppName = StringUtils.defaultIfBlank(coffeeAppNameConfig.get(), appName);
             }
-            getObjectMap().put(COFFEE_APP_NAME, coffeeAppName);
+            getObjectMap().put(IConfigKey.COFFEE_APP_NAME, coffeeAppName);
         }
 
         return coffeeAppName;

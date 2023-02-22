@@ -22,9 +22,9 @@ package hu.icellmobilsoft.coffee.module.document.service;
 import java.text.MessageFormat;
 import java.util.Date;
 
-import javax.enterprise.inject.Model;
-import javax.inject.Inject;
-import javax.persistence.NoResultException;
+import jakarta.enterprise.inject.Model;
+import jakarta.inject.Inject;
+import jakarta.persistence.NoResultException;
 
 import org.apache.commons.lang3.StringUtils;
 

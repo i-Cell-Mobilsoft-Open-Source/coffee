@@ -21,19 +21,15 @@ package hu.icellmobilsoft.coffee.model.base;
 
 import java.util.Set;
 
-import javax.validation.ConstraintViolation;
-import javax.validation.Validation;
-import javax.validation.Validator;
-import javax.validation.ValidatorFactory;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
+import jakarta.validation.ValidatorFactory;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
-import hu.icellmobilsoft.coffee.model.base.AbstractEntity;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Testing AbstractIdentifiedEntity class
@@ -60,7 +56,7 @@ public class AbstractIdentifiedEntityTest {
         // when
 
         // then
-        assertEquals(0, entity.getVersion());
+        Assertions.assertEquals(0, entity.getVersion());
     }
 
     @Test
@@ -74,7 +70,7 @@ public class AbstractIdentifiedEntityTest {
         entity.setVersion(2L);
 
         // then
-        assertEquals(2, entity.getVersion());
+        Assertions.assertEquals(2, entity.getVersion());
     }
 
     @Test
@@ -88,7 +84,7 @@ public class AbstractIdentifiedEntityTest {
         entity.setVersion(1L);
 
         // then
-        assertEquals(1, entity.getVersion());
+        Assertions.assertEquals(1, entity.getVersion());
     }
 
     @Test
@@ -103,7 +99,7 @@ public class AbstractIdentifiedEntityTest {
         entity.rollbackVersion();
 
         // then
-        assertEquals(0, entity.getVersion());
+        Assertions.assertEquals(0, entity.getVersion());
     }
 
     @Test
@@ -116,7 +112,7 @@ public class AbstractIdentifiedEntityTest {
         entity.setVersion(Long.MAX_VALUE);
 
         // then
-        assertEquals(Long.MAX_VALUE, entity.getVersion());
+        Assertions.assertEquals(Long.MAX_VALUE, entity.getVersion());
     }
 
     @Test
@@ -130,7 +126,7 @@ public class AbstractIdentifiedEntityTest {
         Set<ConstraintViolation<AbstractEntity>> violations = validator.validate(entity);
 
         // then
-        assertTrue(violations.isEmpty());
+        Assertions.assertTrue(violations.isEmpty());
     }
 
     @Test
@@ -144,7 +140,7 @@ public class AbstractIdentifiedEntityTest {
         entity.updateVersion();
 
         // then
-        assertEquals(Long.MAX_VALUE, entity.getVersion());
+        Assertions.assertEquals(Long.MAX_VALUE, entity.getVersion());
     }
 
     @Test
@@ -158,7 +154,7 @@ public class AbstractIdentifiedEntityTest {
         entity.setId(id);
 
         // then
-        assertEquals(id, entity.getId());
+        Assertions.assertEquals(id, entity.getId());
     }
 
 }

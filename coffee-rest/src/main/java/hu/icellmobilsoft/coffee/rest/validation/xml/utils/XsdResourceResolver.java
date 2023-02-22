@@ -24,7 +24,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.Enumeration;
 
-import javax.enterprise.inject.Alternative;
+import jakarta.enterprise.inject.Alternative;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.deltaspike.core.util.ClassUtils;

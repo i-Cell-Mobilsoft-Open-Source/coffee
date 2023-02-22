@@ -19,8 +19,8 @@
  */
 package hu.icellmobilsoft.coffee.module.mongodb.extension;
 
-import javax.enterprise.context.Dependent;
-import javax.inject.Inject;
+import jakarta.enterprise.context.Dependent;
+import jakarta.inject.Inject;
 
 import org.bson.conversions.Bson;
 

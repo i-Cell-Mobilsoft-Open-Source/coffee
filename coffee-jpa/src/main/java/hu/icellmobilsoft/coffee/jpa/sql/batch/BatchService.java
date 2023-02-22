@@ -19,14 +19,15 @@
  */
 package hu.icellmobilsoft.coffee.jpa.sql.batch;
 
+import java.sql.Blob;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Time;
 import java.sql.Timestamp;
-import java.sql.Types;
 import java.text.MessageFormat;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.OffsetDateTime;
@@ -45,27 +46,30 @@ import java.util.Map;
 import java.util.TimeZone;
 import java.util.stream.Collectors;
 
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.deltaspike.core.util.CollectionUtils;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.StatelessSession;
 import org.hibernate.engine.spi.SessionFactoryImplementor;
 import org.hibernate.engine.spi.SharedSessionContractImplementor;
-import org.hibernate.metamodel.spi.MetamodelImplementor;
+import org.hibernate.metamodel.model.convert.spi.BasicValueConverter;
+import org.hibernate.metamodel.spi.MappingMetamodelImplementor;
 import org.hibernate.persister.entity.SingleTableEntityPersister;
 import org.hibernate.sql.Delete;
 import org.hibernate.sql.Insert;
 import org.hibernate.sql.Update;
+import org.hibernate.type.BasicType;
+import org.hibernate.type.ConvertedBasicType;
 import org.hibernate.type.CustomType;
 import org.hibernate.type.EnumType;
 import org.hibernate.type.ManyToOneType;
-import org.hibernate.type.SingleColumnType;
-import org.hibernate.type.StringType;
+import org.hibernate.type.SqlTypes;
 import org.hibernate.type.Type;
+import org.hibernate.usertype.UserType;
 
 import hu.icellmobilsoft.coffee.cdi.logger.AppLogger;
 import hu.icellmobilsoft.coffee.cdi.logger.ThisLogger;
@@ -74,6 +78,7 @@ import hu.icellmobilsoft.coffee.dto.exception.InvalidParameterException;
 import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 import hu.icellmobilsoft.coffee.jpa.sql.batch.enums.Status;
+import hu.icellmobilsoft.coffee.jpa.sql.batch.types.StringBasicType;
 import hu.icellmobilsoft.coffee.jpa.sql.entity.EntityHelper;
 import hu.icellmobilsoft.coffee.tool.utils.string.RandomUtil;
 
@@ -82,6 +87,7 @@ import hu.icellmobilsoft.coffee.tool.utils.string.RandomUtil;
  *
  * @author imre.scheffer
  * @author robert.kaplar
+ * @author csaba.balogh
  * @since 1.0.0
  */
 public class BatchService {
@@ -111,11 +117,11 @@ public class BatchService {
      */
     protected void validateInput(Collection<?> entities) throws BaseException {
         if (entities == null) {
-            log.warn("entities is null skipped to save!");
+            log.warn("Entities is null, the batch operation will be skipped!");
             throw new InvalidParameterException("entities is null!");
         }
         if (entities.isEmpty()) {
-            log.debug("No entity in list, skip merge.");
+            log.debug("No entity in list, the batch operation will be skipped!");
         }
     }
 
@@ -172,6 +178,9 @@ public class BatchService {
             log.error(msg, e);
             throw new TechnicalException(CoffeeFaultType.ENTITY_SAVE_FAILED, msg, e);
         } finally {
+            if (statelessSession != null) {
+                statelessSession.close();
+            }
             log.debug("<< batchMerge: [{0}] list of [{1}] elements", entityName, entities.size());
         }
     }
@@ -234,11 +243,13 @@ public class BatchService {
             entityManager.joinTransaction();
 
             Session session = entityManager.unwrap(Session.class);
-            MetamodelImplementor metamodel = (MetamodelImplementor) entityManager.getMetamodel();
-            SingleTableEntityPersister persister = (SingleTableEntityPersister) metamodel.entityPersister(clazz);
+            SessionFactoryImplementor sfi = (SessionFactoryImplementor) session.getSessionFactory();
+
+            MappingMetamodelImplementor metamodel = sfi.getMappingMetamodel();
+            SingleTableEntityPersister persister = (SingleTableEntityPersister) metamodel.getEntityDescriptor(clazz);
+
             String[] names = persister.getPropertyNames();
 
-            SessionFactoryImplementor sfi = (SessionFactoryImplementor) session.getSessionFactory();
             Update u = new Update(sfi.getJdbcServices().getDialect());
             u.setPrimaryKeyColumnNames(persister.getIdentifierColumnNames());
             u.setTableName(persister.getTableName());
@@ -284,10 +295,9 @@ public class BatchService {
                             tmpProcessingEntities.clear();
                         }
                         i++;
-
                     }
 
-                    if (!CollectionUtils.isEmpty(tmpProcessingEntities)) {
+                    if (!tmpProcessingEntities.isEmpty()) {
                         executeBatch(result, ps, tmpProcessingEntities);
                     }
 
@@ -336,11 +346,12 @@ public class BatchService {
             entityManager.joinTransaction();
 
             Session session = entityManager.unwrap(Session.class);
-            MetamodelImplementor metamodel = (MetamodelImplementor) entityManager.getMetamodel();
-            SingleTableEntityPersister persister = (SingleTableEntityPersister) metamodel.entityPersister(clazz);
+            SessionFactoryImplementor sfi = (SessionFactoryImplementor) session.getSessionFactory();
+
+            MappingMetamodelImplementor metamodel = sfi.getMappingMetamodel();
+            SingleTableEntityPersister persister = (SingleTableEntityPersister) metamodel.getEntityDescriptor(clazz);
             String[] names = persister.getPropertyNames();
 
-            SessionFactoryImplementor sfi = (SessionFactoryImplementor) session.getSessionFactory();
             // IdentifierGenerator ig = persister.getEntityMetamodel().getIdentifierProperty().getIdentifierGenerator();
             Insert insert = new Insert(sfi.getJdbcServices().getDialect());
             insert.setTableName(persister.getTableName());
@@ -377,10 +388,9 @@ public class BatchService {
                             tmpProcessingEntities.clear();
                         }
                         i++;
-
                     }
 
-                    if (!CollectionUtils.isEmpty(tmpProcessingEntities)) {
+                    if (!tmpProcessingEntities.isEmpty()) {
                         executeBatch(result, ps, tmpProcessingEntities);
                     }
 
@@ -429,8 +439,10 @@ public class BatchService {
             entityManager.joinTransaction();
 
             Session session = entityManager.unwrap(Session.class);
-            MetamodelImplementor metamodel = (MetamodelImplementor) entityManager.getMetamodel();
-            SingleTableEntityPersister persister = (SingleTableEntityPersister) metamodel.entityPersister(clazz);
+            SessionFactoryImplementor sfi = (SessionFactoryImplementor) session.getSessionFactory();
+
+            MappingMetamodelImplementor metamodel = sfi.getMappingMetamodel();
+            SingleTableEntityPersister persister = (SingleTableEntityPersister) metamodel.getEntityDescriptor(clazz);
 
             Delete delete = new Delete();
             delete.setTableName(persister.getTableName());
@@ -460,10 +472,9 @@ public class BatchService {
                             tmpProcessingEntities.clear();
                         }
                         i++;
-
                     }
 
-                    if (!CollectionUtils.isEmpty(tmpProcessingEntities)) {
+                    if (!tmpProcessingEntities.isEmpty()) {
                         executeBatch(result, ps, tmpProcessingEntities);
                     }
 
@@ -503,7 +514,7 @@ public class BatchService {
 
         // Update version
         Object oldVersion = persister.getVersion(entity);
-        Object newVersion = persister.getVersionType().next(oldVersion, null);
+        Object newVersion = persister.getVersionJavaType().next(oldVersion, null, null, null, null);
         persister.setPropertyValue(entity, persister.getVersionProperty(), newVersion);
 
         for (String name : persister.getPropertyNames()) {
@@ -515,7 +526,7 @@ public class BatchService {
             i++;
         }
         // where
-        ps.setObject(i++, persister.getIdentifier(entity));
+        ps.setObject(i++, persister.getIdentifier(entity, (SharedSessionContractImplementor) null));
         ps.setObject(i, oldVersion);
     }
 
@@ -537,15 +548,16 @@ public class BatchService {
         int i = 1;
 
         // elso a PK
-        String entityId = (String) persister.getIdentifier(entity);
+        String entityId = (String) persister.getIdentifier(entity, (SharedSessionContractImplementor) null);
         if (entityId == null) {
             entityId = generateId();
             persister.setIdentifier(entity, entityId, (SharedSessionContractImplementor) null);
         }
-        setPsObject(ps, i++, StringType.INSTANCE, entityId);
+
+        setPsObject(ps, i++, StringBasicType.INSTANCE, entityId);
 
         // Init version
-        Object version = persister.getVersionType().seed(null);
+        Object version = persister.getVersionJavaType().seed(null, null, null, null);
         persister.setPropertyValue(entity, persister.getVersionProperty(), version);
 
         for (String name : persister.getPropertyNames()) {
@@ -576,67 +588,187 @@ public class BatchService {
      */
     @SuppressWarnings("unchecked")
     protected <E> void setPsObject(PreparedStatement ps, int parameterIndex, Type type, Object value) throws SQLException {
-        // enumokat le kell kezelni
+        if (value == null) {
+            ps.setNull(parameterIndex, SqlTypes.NULL);
+            return;
+        }
+
         if (type instanceof CustomType) {
-            if (((CustomType) type).getUserType() instanceof EnumType) {
-                if (value != null) {
-                    value = ((Enum<?>) value).name();
-                }
-            } else {
-                log.debug("Unhandled custom type: [{0}]", type.getName());
-                // a setOject el fog szalni
-            }
-            ps.setObject(parameterIndex, value);
-            return;
-        }
-        if (type instanceof ManyToOneType) {
+            // enum típusok kezelése
+            setCustomTypePsObject(ps, parameterIndex, (CustomType<?>) type, value);
+        } else if (type instanceof ManyToOneType) {
             E manyToOneEntity = (E) value;
-            ps.setObject(parameterIndex, manyToOneEntity != null ? EntityHelper.getLazyId(manyToOneEntity) : null);
-            return;
+            ps.setObject(parameterIndex, EntityHelper.getLazyId(manyToOneEntity));
+        } else if (type instanceof ConvertedBasicType) {
+            // konverterrel rendelkező típusok kezelése
+            setConvertedBasicTypePsObject(ps, parameterIndex, (ConvertedBasicType<?>) type, value);
+        } else if (type instanceof BasicType) {
+            setBasicTypePsObject(ps, parameterIndex, (BasicType<?>) type, value);
+        } else {
+            ps.setObject(parameterIndex, value);
         }
-
-        if (type instanceof SingleColumnType) {
-            setSingleColumnPsObject(ps, parameterIndex, (SingleColumnType<?>) type, value);
-            return;
-        }
-
-        ps.setObject(parameterIndex, value);
     }
 
     /**
-     * Sets a {@link SingleColumnType} object in the prepared statement.
-     * 
+     * Sets a {@link CustomType} object in the prepared statement.
+     *
      * @param ps
      *            the prepared statement.
      * @param parameterIndex
      *            index of the parameter in the prepared statement.
-     * @param singleColumn
-     *            {@link SingleColumnType}.
+     * @param customType
+     *            {@link CustomType}.
      * @param value
      *            value of the parameter.
      * @throws SQLException
      *             in case of any exception occurs during the process.
      */
-    protected void setSingleColumnPsObject(PreparedStatement ps, int parameterIndex, SingleColumnType<?> singleColumn, Object value)
-            throws SQLException {
-        if (value == null) {
-            ps.setNull(parameterIndex, Types.NULL);
+    protected void setCustomTypePsObject(PreparedStatement ps, int parameterIndex, CustomType<?> customType, Object value) throws SQLException {
+        UserType<?> userType = customType.getUserType();
+
+        if (userType instanceof EnumType) {
+            setEnumTypePsObject(ps, parameterIndex, (EnumType<?>) userType, (Enum<?>) value);
             return;
         }
 
-        switch (singleColumn.sqlType()) {
-        case Types.TIME:
+        // Általunk nem kezelt custom type, így rábízzuk a driver-re, hogy próbálja meg feloldani.
+        log.debug("Unhandled custom type: [{0}]", customType.getName());
+
+        ps.setObject(parameterIndex, value);
+    }
+
+    /**
+     * Sets a {@link EnumType} object in the prepared statement.
+     * 
+     * @param ps
+     *            the prepared statement.
+     * @param parameterIndex
+     *            index of the parameter in the prepared statement.
+     * @param enumType
+     *            {@link EnumType}.
+     * @param enumValue
+     *            value of the parameter.
+     * @throws SQLException
+     *             in case of any exception occurs during the process.
+     */
+    protected void setEnumTypePsObject(PreparedStatement ps, int parameterIndex, EnumType<?> enumType, Enum<?> enumValue) throws SQLException {
+        Object value = enumType.isOrdinal() ? enumValue.ordinal() : enumValue.name();
+        ps.setObject(parameterIndex, value);
+    }
+
+    /**
+     * Sets a {@link ConvertedBasicType} object in the prepared statement.
+     * 
+     * @param ps
+     *            the prepared statement.
+     * @param parameterIndex
+     *            index of the parameter in the prepared statement.
+     * @param convertedBasicType
+     *            {@link ConvertedBasicType}.
+     * @param value
+     *            value of the parameter.
+     * @throws SQLException
+     *             in case of any exception occurs during the process.
+     */
+    @SuppressWarnings("unchecked")
+    protected void setConvertedBasicTypePsObject(PreparedStatement ps, int parameterIndex, ConvertedBasicType<?> convertedBasicType, Object value)
+            throws SQLException {
+        BasicValueConverter<Object, Object> valueConverter = (BasicValueConverter<Object, Object>) convertedBasicType.getValueConverter();
+        setBasicTypePsObject(ps, parameterIndex, convertedBasicType, valueConverter.toRelationalValue(value));
+    }
+
+    /**
+     * Sets a {@link BasicType} object in the prepared statement.
+     *
+     * @param ps
+     *            the prepared statement.
+     * @param parameterIndex
+     *            index of the parameter in the prepared statement.
+     * @param basicType
+     *            {@link BasicType}.
+     * @param value
+     *            value of the parameter.
+     * @throws SQLException
+     *             in case of any exception occurs during the process.
+     */
+    protected void setBasicTypePsObject(PreparedStatement ps, int parameterIndex, BasicType<?> basicType, Object value) throws SQLException {
+        switch (basicType.getJdbcType().getJdbcTypeCode()) {
+        case SqlTypes.DATE:
+            setDatePsObject(ps, parameterIndex, value);
+            break;
+        case SqlTypes.TIME:
+        case SqlTypes.TIME_WITH_TIMEZONE:
             setTimePsObject(ps, parameterIndex, value);
             break;
-        case Types.TIMESTAMP:
+        case SqlTypes.TIMESTAMP:
+        case SqlTypes.TIMESTAMP_UTC:
+        case SqlTypes.TIMESTAMP_WITH_TIMEZONE:
             setTimestampPsObject(ps, parameterIndex, value);
             break;
-        case Types.BOOLEAN:
+        case SqlTypes.BOOLEAN:
             setBooleanPsObject(ps, parameterIndex, value);
+            break;
+        case SqlTypes.CHAR:
+            ps.setString(parameterIndex, String.valueOf(value));
+            break;
+        case SqlTypes.BLOB:
+        case SqlTypes.VARBINARY:
+        case SqlTypes.LONGVARBINARY:
+            setBinaryPsObject(ps, parameterIndex, value);
             break;
         default:
             ps.setObject(parameterIndex, value);
         }
+    }
+
+    /**
+     * Sets a date object in the prepared statement.
+     *
+     * @param ps
+     *            the prepared statement.
+     * @param parameterIndex
+     *            index of the parameter in the prepared statement.
+     * @param value
+     *            value of the parameter.
+     * @throws SQLException
+     *             in case of any exception occurs during the process.
+     */
+    protected void setDatePsObject(PreparedStatement ps, int parameterIndex, Object value) throws SQLException {
+        java.sql.Date date = toSQLDate(value);
+        if (date == null) {
+            // Ilyennek nem lenne szabad előfordulnia, de ha mégis null a konvertált date, akkor a részünkről nem lefedett típussal van dolgunk,
+            // ezért ilyenkor rábízzuk a driver-re, hogy próbálja meg feloldani.
+            log.debug("Unhandled date type: [{0}]", value.getClass().getSimpleName());
+            ps.setObject(parameterIndex, value);
+        } else {
+            ps.setDate(parameterIndex, date);
+        }
+    }
+
+    /**
+     * Converts an object to {@link java.sql.Date}.
+     * 
+     * @param value
+     *            the object.
+     * @return the converted {@link java.sql.Date} or null in case of unhandled java type.
+     */
+    protected java.sql.Date toSQLDate(Object value) {
+        java.sql.Date date = null;
+
+        if (value instanceof java.sql.Date) {
+            date = (java.sql.Date) value;
+        } else if (value instanceof LocalDate) {
+            LocalDate localDate = (LocalDate) value;
+            date = java.sql.Date.valueOf(localDate);
+        } else if (value instanceof Date) {
+            Date utilDate = (Date) value;
+            date = new java.sql.Date(utilDate.getTime());
+        } else if (value instanceof Calendar) {
+            Calendar calendar = (Calendar) value;
+            date = new java.sql.Date(calendar.getTimeInMillis());
+        }
+
+        return date;
     }
 
     /**
@@ -652,29 +784,46 @@ public class BatchService {
      *             in case of any exception occurs during the process.
      */
     protected void setTimePsObject(PreparedStatement ps, int parameterIndex, Object value) throws SQLException {
-        if (dbTimeZone == null) {
-            ps.setObject(parameterIndex, value, Types.TIME);
-            return;
-        }
-
-        ZoneId dbZoneId = dbTimeZone.toZoneId();
-
-        if (value instanceof LocalTime) {
-            ZoneOffset systemDefaultZoneOffset = getZoneOffset(ZoneId.systemDefault());
-            ZoneOffset dbZoneOffset = getZoneOffset(dbZoneId);
-            LocalTime localTime = ((LocalTime) value).atOffset(systemDefaultZoneOffset).withOffsetSameInstant(dbZoneOffset).toLocalTime();
-            ps.setObject(parameterIndex, localTime, Types.TIME);
-        } else if (value instanceof OffsetTime) {
-            OffsetTime offsetTime = ((OffsetTime) value).withOffsetSameInstant(getZoneOffset(dbZoneId));
-            ps.setObject(parameterIndex, offsetTime, Types.TIME);
-        } else if (value instanceof Time) {
-            ps.setTime(parameterIndex, (Time) value, Calendar.getInstance(dbTimeZone));
-        } else if (value instanceof Date) {
-            Time time = new Time(((Date) value).getTime());
-            ps.setTime(parameterIndex, time, Calendar.getInstance(dbTimeZone));
+        Time time = toSQLTime(value);
+        if (time == null) {
+            // Ilyennek nem lenne szabad előfordulnia, de ha mégis null a konvertált time, akkor a részünkről nem lefedett típussal van dolgunk,
+            // ezért ilyenkor rábízzuk a driver-re, hogy próbálja meg feloldani.
+            log.debug("Unhandled time type: [{0}]", value.getClass().getSimpleName());
+            ps.setObject(parameterIndex, value);
+        } else if (dbTimeZone == null) {
+            ps.setTime(parameterIndex, time);
         } else {
-            ps.setObject(parameterIndex, value, Types.TIME);
+            ps.setTime(parameterIndex, time, Calendar.getInstance(dbTimeZone));
         }
+    }
+
+    /**
+     * Converts an object to {@link java.sql.Time}.
+     *
+     * @param value
+     *            the object.
+     * @return the converted {@link java.sql.Time} or null in case of unhandled java type.
+     */
+    protected Time toSQLTime(Object value) {
+        Time time = null;
+
+        if (value instanceof Time) {
+            time = (Time) value;
+        } else if (value instanceof LocalTime) {
+            LocalTime localTime = (LocalTime) value;
+            time = Time.valueOf(localTime);
+        } else if (value instanceof OffsetTime) {
+            OffsetTime offsetTime = ((OffsetTime) value).withOffsetSameInstant(getZoneOffset(ZoneId.systemDefault()));
+            time = Time.valueOf(offsetTime.toLocalTime());
+        } else if (value instanceof Date) {
+            Date date = (Date) value;
+            time = new Time(date.getTime());
+        } else if (value instanceof Calendar) {
+            Calendar calendar = (Calendar) value;
+            time = new Time(calendar.getTimeInMillis());
+        }
+
+        return time;
     }
 
     /**
@@ -692,35 +841,52 @@ public class BatchService {
      *             in case of any exception occurs during the process.
      */
     protected void setTimestampPsObject(PreparedStatement ps, int parameterIndex, Object value) throws SQLException {
-        if (dbTimeZone == null) {
-            ps.setObject(parameterIndex, value, Types.TIMESTAMP);
-            return;
-        }
-
-        ZoneId dbZoneId = dbTimeZone.toZoneId();
-
-        if (value instanceof LocalDateTime) {
-            LocalDateTime localDateTime = ((LocalDateTime) value).atZone(ZoneId.systemDefault()).withZoneSameInstant(dbZoneId).toLocalDateTime();
-            ps.setObject(parameterIndex, localDateTime, Types.TIMESTAMP);
-        } else if (value instanceof OffsetDateTime) {
-            OffsetDateTime offsetDateTime = ((OffsetDateTime) value).atZoneSameInstant(dbZoneId).toOffsetDateTime();
-            ps.setObject(parameterIndex, offsetDateTime, Types.TIMESTAMP);
-        } else if (value instanceof ZonedDateTime) {
-            ZonedDateTime zonedDateTime = ((ZonedDateTime) value).withZoneSameInstant(dbZoneId);
-            ps.setObject(parameterIndex, zonedDateTime, Types.TIMESTAMP);
-        } else if (value instanceof Timestamp) {
-            ps.setTimestamp(parameterIndex, (Timestamp) value, Calendar.getInstance(dbTimeZone));
-        } else if (value instanceof Date) {
-            ps.setTimestamp(parameterIndex, getTimestamp((Date) value), Calendar.getInstance(dbTimeZone));
-        } else if (value instanceof Calendar) {
-            Timestamp timestamp = new Timestamp(((Calendar) value).getTimeInMillis());
-            ps.setTimestamp(parameterIndex, timestamp, Calendar.getInstance(dbTimeZone));
-        } else if (value instanceof Instant) {
-            Instant instant = ((Instant) value).atZone(ZoneId.systemDefault()).withZoneSameInstant(dbZoneId).toInstant();
-            ps.setObject(parameterIndex, instant, Types.TIMESTAMP);
+        Timestamp timestamp = toSQLTimestamp(value);
+        // Ilyennek nem lenne szabad előfordulnia, de ha mégis null a konvertált timestamp, akkor a részünkről nem lefedett típussal van dolgunk,
+        // ezért ilyenkor rábízzuk a driver-re, hogy próbálja meg feloldani.
+        if (timestamp == null) {
+            log.debug("Unhandled timestamp type: [{0}]", value.getClass().getSimpleName());
+            ps.setObject(parameterIndex, value);
+        } else if (dbTimeZone == null) {
+            ps.setTimestamp(parameterIndex, timestamp);
         } else {
-            ps.setObject(parameterIndex, value, Types.TIMESTAMP);
+            ps.setTimestamp(parameterIndex, timestamp, Calendar.getInstance(dbTimeZone));
         }
+    }
+
+    /**
+     * Converts an object to {@link java.sql.Timestamp}.
+     *
+     * @param value
+     *            the object.
+     * @return the converted {@link java.sql.Timestamp} or null in case of unhandled java type.
+     */
+    protected Timestamp toSQLTimestamp(Object value) {
+        Timestamp timestamp = null;
+
+        if (value instanceof Timestamp) {
+            timestamp = (Timestamp) value;
+        } else if (value instanceof LocalDateTime) {
+            LocalDateTime localDateTime = (LocalDateTime) value;
+            timestamp = Timestamp.valueOf(localDateTime);
+        } else if (value instanceof OffsetDateTime) {
+            LocalDateTime localDateTime = ((OffsetDateTime) value).atZoneSameInstant(ZoneId.systemDefault()).toLocalDateTime();
+            timestamp = Timestamp.valueOf(localDateTime);
+        } else if (value instanceof ZonedDateTime) {
+            LocalDateTime localDateTime = ((ZonedDateTime) value).withZoneSameInstant(ZoneId.systemDefault()).toLocalDateTime();
+            timestamp = Timestamp.valueOf(localDateTime);
+        } else if (value instanceof Instant) {
+            LocalDateTime localDateTime = ((Instant) value).atZone(ZoneId.systemDefault()).toLocalDateTime();
+            timestamp = Timestamp.valueOf(localDateTime);
+        } else if (value instanceof Date) {
+            Date date = (Date) value;
+            timestamp = new Timestamp(date.getTime());
+        } else if (value instanceof Calendar) {
+            Calendar calendar = (Calendar) value;
+            timestamp = new Timestamp(calendar.getTimeInMillis());
+        }
+
+        return timestamp;
     }
 
     /**
@@ -740,6 +906,30 @@ public class BatchService {
             ps.setBoolean(parameterIndex, (Boolean) value);
         } else {
             // Ilyen esetben rábízzuk a driver-re a mappelést
+            ps.setObject(parameterIndex, value);
+        }
+    }
+
+    /**
+     * Sets a binary object in the prepared statement.
+     * 
+     * @param ps
+     *            the prepared statement.
+     * @param parameterIndex
+     *            index of the parameter in the prepared statement.
+     * @param value
+     *            value of the parameter.
+     * @throws SQLException
+     *             in case of any exception occurs during the process.
+     */
+    protected void setBinaryPsObject(PreparedStatement ps, int parameterIndex, Object value) throws SQLException {
+        if (value instanceof Blob) {
+            ps.setBinaryStream(parameterIndex, ((Blob) value).getBinaryStream());
+        } else if (value instanceof byte[]) {
+            ps.setBytes(parameterIndex, (byte[]) value);
+        } else if (value instanceof Byte[]) {
+            ps.setBytes(parameterIndex, ArrayUtils.toPrimitive((Byte[]) value));
+        } else {
             ps.setObject(parameterIndex, value);
         }
     }
@@ -792,7 +982,7 @@ public class BatchService {
      * @return {@link Timestamp}
      */
     public static Timestamp getTimestamp(Date date) {
-        return date == null ? null : new java.sql.Timestamp(date.getTime());
+        return date == null ? null : new Timestamp(date.getTime());
     }
 
     /**
@@ -845,13 +1035,13 @@ public class BatchService {
         return OffsetDateTime.now(zoneId).getOffset();
     }
 
-    private <E> void executeBatch(Map<String, Status> result, PreparedStatement ps, List<String> tmpProcessedEntities) throws SQLException {
+    private void executeBatch(Map<String, Status> result, PreparedStatement ps, List<String> tmpProcessedEntities) throws SQLException {
         int[] executeBatchResult = ps.executeBatch();
         addBatchResult(result, tmpProcessedEntities, executeBatchResult);
     }
 
     private void addBatchResult(Map<String, Status> result, List<String> entityIds, int[] batchResult) {
-        if (CollectionUtils.isEmpty(entityIds)) {
+        if (entityIds == null || entityIds.isEmpty()) {
             return;
         } else if (entityIds.size() < batchResult.length) {
             throw new IllegalArgumentException("Each batchResult must have an associated entityId!");

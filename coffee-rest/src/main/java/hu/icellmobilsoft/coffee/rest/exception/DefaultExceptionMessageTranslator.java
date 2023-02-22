@@ -19,10 +19,9 @@
  */
 package hu.icellmobilsoft.coffee.rest.exception;
 
-import javax.inject.Inject;
-import javax.xml.bind.JAXBException;
-
-import org.apache.deltaspike.core.api.projectstage.ProjectStage;
+import jakarta.enterprise.context.Dependent;
+import jakarta.inject.Inject;
+import jakarta.xml.bind.JAXBException;
 
 import hu.icellmobilsoft.coffee.dto.common.commonservice.BaseExceptionResultType;
 import hu.icellmobilsoft.coffee.dto.common.commonservice.FunctionCodeType;
@@ -31,6 +30,7 @@ import hu.icellmobilsoft.coffee.dto.exception.RestClientResponseException;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 import hu.icellmobilsoft.coffee.module.localization.LocalizedMessage;
 import hu.icellmobilsoft.coffee.rest.cdi.BaseApplicationContainer;
+import hu.icellmobilsoft.coffee.rest.projectstage.ProjectStage;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
 
 /**
@@ -39,6 +39,7 @@ import hu.icellmobilsoft.coffee.se.logging.Logger;
  * @author imre.scheffer
  * @since 1.0.0
  */
+@Dependent
 public class DefaultExceptionMessageTranslator implements IExceptionMessageTranslator {
 
     @Inject
@@ -62,7 +63,7 @@ public class DefaultExceptionMessageTranslator implements IExceptionMessageTrans
     /** {@inheritDoc} */
     @Override
     public void addCommonInfo(BaseExceptionResultType dto, Exception e, Enum<?> faultType) {
-        boolean putExceptionToResponse = !ProjectStage.Production.equals(projectStage);
+        boolean putExceptionToResponse = !projectStage.isProductionStage();
         if (putExceptionToResponse) {
             if (e instanceof JAXBException) {
                 dto.setException(getLinkedExceptionLocalizedMessage((JAXBException) e));

@@ -21,7 +21,7 @@ package hu.icellmobilsoft.coffee.module.mongodb.extension;
 
 import java.lang.reflect.Type;
 
-import javax.enterprise.inject.Vetoed;
+import jakarta.enterprise.inject.Vetoed;
 
 import hu.icellmobilsoft.coffee.module.mongodb.service.MongoService;
 

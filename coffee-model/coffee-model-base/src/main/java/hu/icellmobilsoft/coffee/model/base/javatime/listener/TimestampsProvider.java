@@ -20,6 +20,9 @@
 package hu.icellmobilsoft.coffee.model.base.javatime.listener;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -30,36 +33,46 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.deltaspike.data.impl.audit.AuditPropertyException;
-import org.apache.deltaspike.data.impl.audit.PrePersistAuditListener;
-import org.apache.deltaspike.data.impl.audit.PreUpdateAuditListener;
-import org.apache.deltaspike.data.impl.property.Property;
-import org.apache.deltaspike.data.impl.property.query.AnnotatedPropertyCriteria;
-import org.apache.deltaspike.data.impl.property.query.PropertyQueries;
+import org.apache.commons.lang3.tuple.Pair;
 
+import hu.icellmobilsoft.coffee.model.base.AbstractProvider;
+import hu.icellmobilsoft.coffee.model.base.exception.ProviderException;
 import hu.icellmobilsoft.coffee.model.base.javatime.annotation.CreatedOn;
 import hu.icellmobilsoft.coffee.model.base.javatime.annotation.ModifiedOn;
+import jakarta.enterprise.context.Dependent;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 
 /**
  * Set java 8 timestamps on marked properties.
  *
- * TimestampsProvider nem tehető alternative-ra illetve csak Calendar/Date típusokat tud kezelni:<br>
- * https://issues.apache.org/jira/browse/DELTASPIKE-1229
  *
  * @author mark.petrenyi
- * @see org.apache.deltaspike.data.impl.audit.TimestampsProvider
+ * @author zsolt.vasi
  * @since 1.0.0
  */
-public class TimestampsProvider implements PrePersistAuditListener, PreUpdateAuditListener {
+@Dependent
+public class TimestampsProvider extends AbstractProvider {
 
-    /** {@inheritDoc} */
-    @Override
+    /**
+     * Persist entity @CreatedOn property before persist with the System current time value
+     *
+     * @param entity
+     *            Object entity to persist
+     */
+    @PrePersist
     public void prePersist(Object entity) {
         updateTimestamps(entity, CreatedOn.class);
     }
 
-    /** {@inheritDoc} */
-    @Override
+    /**
+     * Persist entity @ModifiedOn property before persist with the System current time value
+     *
+     *
+     * @param entity
+     *            Object entity to persist
+     */
+    @PreUpdate
     public void preUpdate(Object entity) {
         updateTimestamps(entity, ModifiedOn.class);
     }
@@ -67,48 +80,49 @@ public class TimestampsProvider implements PrePersistAuditListener, PreUpdateAud
     private void updateTimestamps(Object entity, Class<? extends Annotation> annotationClass) {
         long sysTime = System.currentTimeMillis();
 
-        List<Property<Object>> writableResultList = getWritableProperties(entity, annotationClass);
-        for (Property<Object> property : writableResultList) {
-            setProperty(entity, property, sysTime);
+        Pair<List<Field>, List<Method>> pair = getAllFieldsAndMethods(entity.getClass());
+        List<Field> allFields = pair.getLeft();
+        for (Field field : allFields) {
+            if (field.isAnnotationPresent(annotationClass)) {
+                setValue(entity, field.getType(), sysTime, field);
+            }
+        }
+        for (Method method : pair.getRight()) {
+            if (method.isAnnotationPresent(annotationClass)) {
+                Field field = getFieldByMethod(method, allFields);
+                setValue(entity, field.getType(), sysTime, field);
+            }
         }
     }
 
-    private List<Property<Object>> getWritableProperties(Object entity, Class<? extends Annotation> annotationClass) {
-        return PropertyQueries.createQuery(entity.getClass())//
-                .addCriteria(new AnnotatedPropertyCriteria(annotationClass))//
-                .getWritableResultList();
-    }
-
-    private void setProperty(Object entity, Property<Object> property, long sysTime) {
-        Object value = sysTime;
+    private void setValue(Object entity, Class<?> fieldClass, long systime, Field field) {
+        Object object = null;
         try {
-            value = now(property.getJavaClass(), sysTime);
-            property.setValue(entity, value);
-        } catch (Exception e) {
-            throw new AuditPropertyException("Failed to write value [" + value + "] to property [" + property.getName() + "] on entity ["
-                    + entity.getClass() + "]: " + e.getLocalizedMessage(), e);
+            if (isCalendarClass(fieldClass)) {
+                Calendar cal = Calendar.getInstance();
+                cal.setTimeInMillis(systime);
+                object = cal;
+            } else if (isDateClass(fieldClass)) {
+                object = fieldClass.getConstructor(Long.TYPE).newInstance(systime);
+            } else if (isOffsetDateTimeClass(fieldClass)) {
+                object = OffsetDateTime.ofInstant(Instant.ofEpochMilli(systime), ZoneId.systemDefault());
+            } else if (isOffsetTimeClass(fieldClass)) {
+                object = OffsetTime.ofInstant(Instant.ofEpochMilli(systime), ZoneId.systemDefault());
+            } else if (isLocalDateTimeClass(fieldClass)) {
+                object = LocalDateTime.ofInstant(Instant.ofEpochMilli(systime), ZoneId.systemDefault());
+            } else if (isLocalDateClass(fieldClass)) {
+                object = LocalDateTime.ofInstant(Instant.ofEpochMilli(systime), ZoneId.systemDefault()).toLocalDate();
+            } else if (isInstantClass(fieldClass)) {
+                object = Instant.ofEpochMilli(systime);
+            } else {
+                throw new IllegalArgumentException("Annotated fieldClass is not a date class: " + fieldClass);
+            }
+            field.setAccessible(true);
+            field.set(entity, object);
+        } catch (IllegalAccessException | NoSuchMethodException | InstantiationException | InvocationTargetException exception) {
+            throw new ProviderException("Failed to write value [" + object + "] to field [" + field + "], fieldClass [" + fieldClass + "], entity ["
+                    + entity.getClass() + "]: " + exception.getLocalizedMessage(), exception);
         }
-    }
-
-    private Object now(Class<?> field, long systime) throws Exception {
-        if (isCalendarClass(field)) {
-            Calendar cal = Calendar.getInstance();
-            cal.setTimeInMillis(systime);
-            return cal;
-        } else if (isDateClass(field)) {
-            return field.getConstructor(Long.TYPE).newInstance(systime);
-        } else if (isOffsetDateTimeClass(field)) {
-            return OffsetDateTime.ofInstant(Instant.ofEpochMilli(systime), ZoneId.systemDefault());
-        } else if (isOffsetTimeClass(field)) {
-            return OffsetTime.ofInstant(Instant.ofEpochMilli(systime), ZoneId.systemDefault());
-        } else if (isLocalDateTimeClass(field)) {
-            return LocalDateTime.ofInstant(Instant.ofEpochMilli(systime), ZoneId.systemDefault());
-        } else if (isLocalDateClass(field)) {
-            return LocalDateTime.ofInstant(Instant.ofEpochMilli(systime), ZoneId.systemDefault()).toLocalDate();
-        } else if (isInstantClass(field)) {
-            return Instant.ofEpochMilli(systime);
-        }
-        throw new IllegalArgumentException("Annotated field is not a date class: " + field);
     }
 
     private boolean isCalendarClass(Class<?> field) {
@@ -138,4 +152,5 @@ public class TimestampsProvider implements PrePersistAuditListener, PreUpdateAud
     private boolean isInstantClass(Class<?> field) {
         return Instant.class.isAssignableFrom(field);
     }
+
 }

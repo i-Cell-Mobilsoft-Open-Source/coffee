@@ -19,7 +19,7 @@
  */
 package hu.icellmobilsoft.coffee.module.mp.restclient.exception;
 
-import javax.enterprise.inject.Vetoed;
+import jakarta.enterprise.inject.Vetoed;
 
 import org.apache.commons.lang3.EnumUtils;
 

@@ -19,7 +19,7 @@
  */
 package hu.icellmobilsoft.coffee.rest.validation.xml.exception;
 
-import javax.ws.rs.ProcessingException;
+import jakarta.ws.rs.ProcessingException;
 
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.dto.exception.BaseExceptionWrapper;

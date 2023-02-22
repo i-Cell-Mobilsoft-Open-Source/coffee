@@ -19,7 +19,7 @@
  */
 package hu.icellmobilsoft.coffee.module.etcd.config;
 
-import javax.enterprise.context.Dependent;
+import jakarta.enterprise.context.Dependent;
 
 import org.apache.commons.lang3.StringUtils;
 

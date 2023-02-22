@@ -22,9 +22,9 @@ package hu.icellmobilsoft.coffee.module.notification.action.email;
 import java.io.Serializable;
 import java.util.Date;
 
-import javax.enterprise.context.Dependent;
-import javax.inject.Inject;
-import javax.mail.internet.InternetAddress;
+import jakarta.enterprise.context.Dependent;
+import jakarta.inject.Inject;
+import jakarta.mail.internet.InternetAddress;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.deltaspike.jpa.api.transaction.Transactional;

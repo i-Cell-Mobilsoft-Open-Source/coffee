@@ -30,8 +30,6 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import hu.icellmobilsoft.coffee.tool.utils.string.StringUtil;
-
 /**
  * @author balazs.joo
  */

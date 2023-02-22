@@ -2,6 +2,15 @@
 
 coff:ee v1.12.0 -> v1.13.0 migrációs leírás, újdonságok, változások leírása
 
+== Újdonságok
+
+=== coffee-module-redispubsub
+Bevezetésre ekrült a redis pub-sub támogatása micro-profile-reactive-messaging-en keresztül, leírás: <<common_module_coffee-module-redispubsub>>
+
+==== Átállás
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
 == Változások
 
 === Általános
@@ -95,6 +104,8 @@ A változtatások nem eredményeznek átállási munkálatokat, visszafelé komp
 * hu.icellmobilsoft.coffee.rest.utils.RequestUtil: kikerültek a WARN "ResourceMethodInvoker is null!!"
 és "invokedMethod is null!!" üzenetek.
 Kiderült hogy a nem létező objektum helyzet sok esetben és jogosan fordul elő.
+* ApiResponseUtil-ban lemaradtak a felsorolást adó sor elejei csillagok, ezek pótolva lettek.
+
 
 ==== Átállás
 
@@ -123,11 +134,29 @@ A változtatások nem eredményeznek átállási munkálatokat, visszafelé komp
 
 === coffee-rest
 
-* Bevezetésre került az `OptimisticLockException`, alapértelmezetten `CoffeeFaultType.OPTIMISTIC_LOCK_EXCEPTION` hibakóddal.
-* Átalakításra került a `DefaultBaseExceptionMapper` osztályban a hibakezelés:
-* Uzleti hiba - BusinessException esetén 422 státuszkódot adunk az eddigi 500 Státuszkód helyett.
-* Technikai hiba - OptimisticLockException esetén 518 státuszkódot adunk az eddigi 500 Státuszkód helyett.
+* Deltaspike álltal nyújtott ProjectStage leváltásra került egy coffee-ba implementált egyszerűsített változatra.
+* BaseApplicationContainer-ből a COFFEE_APP_NAME etcd kulcs átkerült az IConfigKey interface-be, ahol így dokumentálódik is.
 
 ==== Átállás
 
-* Az visszafelé kompatibilításhoz a projekteken saját ExceptionMapper létrehozása szükséges.
+* A deltaspike-os ProjectStage hivatkozásokat (`org.apache.deltaspike.core.api.projectstage.ProjectStage`) át kell állítani `hu.icellmobilsoft.coffee.rest.projectstage.ProjectStage` -re.
+Ahol ProjectStage.Production volt használva, ott át kell állni erre:
+
+[source,java]
+----
+@Dependent
+public class MyBean {
+    private @Inject ProjectStage projectStage;
+
+    public void fn() {
+        if (projectStage.isProductionStage()) {
+            // do some production stuff...
+        }
+    }
+}
+----
+
+
+Ezzel együtt a ProjectStage fajtái is lecsökkentek, és már csak Production, Development és Test lehetséges. Régi deltaspikeos alap projekt stage-ek bekerültek a Testbe, kivéve a Development és Productiont ami azonos néven maradt. Lásd `hu.icellmobilsoft.coffee.rest.projectstage.ProjectStageEnum`.
+
+Az eddig használt `org.apache.deltaspike.ProjectStage` konfiguráció használata megmaradt, és visszafelé a deltaspike által támogatott értékek is feldolgozásra kerülnek az enum értékeibe.

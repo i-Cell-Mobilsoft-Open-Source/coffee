@@ -28,14 +28,14 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 
-import javax.enterprise.inject.Instance;
-import javax.enterprise.inject.Model;
-import javax.enterprise.inject.spi.CDI;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.UnmarshalException;
-import javax.xml.bind.Unmarshaller;
+import jakarta.enterprise.inject.Instance;
+import jakarta.enterprise.inject.Model;
+import jakarta.enterprise.inject.spi.CDI;
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.JAXBException;
+import jakarta.xml.bind.Marshaller;
+import jakarta.xml.bind.UnmarshalException;
+import jakarta.xml.bind.Unmarshaller;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -269,8 +269,8 @@ public class JaxbTool {
      */
     public String marshalXML(Object obj, String schemaPath) throws BaseException {
         Map<String, Object> properties = new HashMap<>();
-        properties.put(javax.xml.bind.Marshaller.JAXB_FORMATTED_OUTPUT, true);
-        properties.put(javax.xml.bind.Marshaller.JAXB_FRAGMENT, Boolean.TRUE);
+        properties.put(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+        properties.put(Marshaller.JAXB_FRAGMENT, Boolean.TRUE);
         return marshalXML(obj, schemaPath, properties);
     }
 

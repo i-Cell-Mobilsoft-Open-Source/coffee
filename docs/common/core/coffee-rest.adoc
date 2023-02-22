@@ -400,3 +400,57 @@ A modul tartalmaz `application/octet-stream` + `BaseResultType` writert.
 Ennek köszönhetően octet-stream válaszban tudja küldeni a rendszer az esetleges
 saját DTO BaseResultType objektumot.
 Ez nagyon hasznos például a hibával elszált file generálásnál.
+
+== ProjectStage
+
+A modul tartalmaz egy Deltaspike által inspirált ProjectStage objektumot, melyet injectelni lehet.
+Ennek szerepe, hogy meghatározható legyen felfutáskor configuráción keresztül megadva, hogy a projekt production állapotban fut, vagy development, esetleg teszt állapotban.
+
+Használatához 2 konfiguráció megadásával van lehetőség:
+
+* coffee.app.projectStage
+* org.apache.deltaspike.ProjectStage
+
+Megadható értékek konvertálódnak a `hu.icellmobilsoft.coffee.rest.projectstage.ProjectStageEnum` értékeire.
+Minden enum érték tartalmazza, hogy mely config érték melyik enumot jelenti.
+
+IMPORTANT: Fontos kiemelni, hogyha nincs megadva, vagy ha nem található a configurációs érték egyik enum név listájában, akkor PRODUCTION-ként viselkedeik a ProjectStage!
+
+Configurációk az Microprofile Config segítségével megadhatók több helyről is, de csak a fent leírt sorrend szerint az elsőt fogja figyelembe venni.
+
+Jelenleg a projektben egyenlőre ha nem Production a ProjectStage értéke, akkor hibáknál tágabb választ ad vissza rendszer.
+
+Ennek használata a következő képpen működik:
+
+.MyBean
+[source,java]
+----
+@Dependent
+public class MyBean {
+    private @Inject ProjectStage projectStage;
+
+    public void fn() {
+        if (projectStage.isProductionStage()) {
+            // do some production stuff...
+        }
+    }
+}
+----
+
+Esetleges további bontásban következőképpen használható:
+
+.MyBean
+[source,java]
+----
+@Dependent
+public class MyBean {
+    private @Inject ProjectStage projectStage;
+
+    public void fn() {
+        if (projectStage.getProjectStageEnum() == ProjectStageEnum.DEVELOPMENT) {
+            // do some development stuff...
+        }
+    }
+}
+----
+

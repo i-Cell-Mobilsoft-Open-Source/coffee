@@ -19,13 +19,13 @@
  */
 package hu.icellmobilsoft.coffee.module.activemq.util;
 
-import javax.ejb.EJBException;
-import javax.enterprise.inject.Vetoed;
-import javax.jms.Connection;
-import javax.jms.JMSException;
-import javax.jms.Message;
-import javax.jms.MessageProducer;
-import javax.jms.TextMessage;
+import jakarta.ejb.EJBException;
+import jakarta.enterprise.inject.Vetoed;
+import jakarta.jms.Connection;
+import jakarta.jms.JMSException;
+import jakarta.jms.Message;
+import jakarta.jms.MessageProducer;
+import jakarta.jms.TextMessage;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
@@ -103,10 +103,11 @@ public class JmsUtil {
      */
     public static RuntimeException newJmsException(Message m, String errorText, Exception exception) {
         String mId = getMessageId(m);
-        org.apache.activemq.command.Message aMessage = (org.apache.activemq.command.Message) m;
+        // elozo EE8: org.apache.activemq.command.Message aMessage = (org.apache.activemq.command.Message) m;
+        // String redeliveryCounter = aMessage.getRedeliveryCounter();
+        String redeliveryCounter = "unknown";
         String msg = String.format("error in processing message messageId: [%s], deliveryCount: [%s], errorText: [%s]\n exception: [%s]", mId,
-                aMessage == null ? "null" : aMessage.getRedeliveryCounter(), errorText,
-                exception == null ? "null" : ExceptionUtils.getStackTrace(exception));
+                redeliveryCounter, errorText, exception == null ? "null" : ExceptionUtils.getStackTrace(exception));
         LOGGER.warn(msg);
         return new EJBException(msg, exception);
     }

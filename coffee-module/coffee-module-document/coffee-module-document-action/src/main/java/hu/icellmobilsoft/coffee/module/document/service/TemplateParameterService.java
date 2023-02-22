@@ -21,8 +21,8 @@ package hu.icellmobilsoft.coffee.module.document.service;
 
 import java.util.List;
 
-import javax.enterprise.inject.Model;
-import javax.inject.Inject;
+import jakarta.enterprise.inject.Model;
+import jakarta.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
 

@@ -228,16 +228,16 @@ A generálás a mi esetünkben a maven segítségével történik. Példa:
         <dependency>
             <groupId>org.eclipse.microprofile.openapi</groupId>
             <artifactId>microprofile-openapi-api</artifactId> //<2>
-            <version>1.0.1</version>
+            <version>3.0.0</version>
         </dependency>
     </dependencies>
 
     <build>
         <plugins>
             <plugin>
-                <groupId>org.jvnet.jaxb2.maven2</groupId>
-                <artifactId>maven-jaxb2-plugin</artifactId> //<3>
-                <version>0.14.0</version>
+                <groupId>com.helger.maven</groupId>
+                <artifactId>jaxb40-maven-plugin</artifactId> //<3>
+                <version>0.16.0</version>
                 <executions>
                     <execution>
                         <id>coffee-super</id>
@@ -269,8 +269,8 @@ A generálás a mi esetünkben a maven segítségével történik. Példa:
                     <plugins>
                         <plugin>
                             <groupId>hu.icellmobilsoft.jaxb</groupId>
-                            <artifactId>openapi-jaxb</artifactId> //<8>
-                            <version>1.1.0</version>
+                            <artifactId>openapi-jaxb-plugin</artifactId> //<8>
+                            <version>2.0.0/version>
                         </plugin>
                         <plugin>
                             <groupId>net.java.dev.jaxb2-commons</groupId>
@@ -305,7 +305,7 @@ Szintén olyankor a globális beállításokat egyenként kellene kezelni.
 <6> XJB fájl, itt lehet beállítani a testreszabott eltéréseket, például XMLGregorianCalendar -> java.time cseréje...
 <7> Hova generálódjanak az osztályok.
 A plugin ezt automatán beteszi a forráskódok forrásai közé, Eclipse és IDEA automatán fogja kezelni.
-<8> Kapcsoló hogy generálja az OpenApi annotációkat, `hu.icellmobilsoft.jaxb:openapi-jaxb` plugin által.
+<8> Kapcsoló hogy generálja az OpenApi annotációkat, `hu.icellmobilsoft.jaxb:openapi-jaxb-plugin` plugin által.
 <9> Kapcsoló hogy generálja az fluent kódoláshoz szükséges metódusokat, `net.java.dev.jaxb2-commons:jaxb-fluent-api` plugin által.
 Nagyon hasznos tud lenni, sok felesleges sort az üzleti logibában meg tud spórolni.
 <10> Kapcsoló hogy lehessen használni a javax.annotation.* annotáciokat

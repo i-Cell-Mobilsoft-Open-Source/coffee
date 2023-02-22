@@ -28,7 +28,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-import javax.inject.Qualifier;
+import jakarta.inject.Qualifier;
 
 /**
  * Eredeti AppLogger osztaly qualifier. Igazabol azert kell, hogy lehessen hasznalni a nativ Logger producer-t

@@ -19,7 +19,7 @@
  */
 package hu.icellmobilsoft.coffee.module.mongodb.util;
 
-import javax.enterprise.inject.Vetoed;
+import jakarta.enterprise.inject.Vetoed;
 
 import com.mongodb.BasicDBObject;
 

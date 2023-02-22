@@ -21,7 +21,7 @@ package hu.icellmobilsoft.coffee.configuration;
 
 import java.util.Objects;
 
-import javax.enterprise.inject.Vetoed;
+import jakarta.enterprise.inject.Vetoed;
 
 /**
  * Összetett kulcs osztály létrehozása az ApplicationConfiguration osztály cache - jéhez.

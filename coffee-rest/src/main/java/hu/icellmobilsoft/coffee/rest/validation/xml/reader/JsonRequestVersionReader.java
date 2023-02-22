@@ -22,8 +22,8 @@ package hu.icellmobilsoft.coffee.rest.validation.xml.reader;
 import java.lang.reflect.Method;
 import java.text.MessageFormat;
 
-import javax.enterprise.context.Dependent;
-import javax.enterprise.inject.Alternative;
+import jakarta.enterprise.context.Dependent;
+import jakarta.enterprise.inject.Alternative;
 
 import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;

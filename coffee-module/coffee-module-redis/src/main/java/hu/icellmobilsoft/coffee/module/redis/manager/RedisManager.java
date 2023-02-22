@@ -21,10 +21,10 @@ package hu.icellmobilsoft.coffee.module.redis.manager;
 
 import java.util.Optional;
 
-import javax.enterprise.context.Dependent;
-import javax.enterprise.inject.Instance;
-import javax.enterprise.inject.spi.CDI;
-import javax.inject.Inject;
+import jakarta.enterprise.context.Dependent;
+import jakarta.enterprise.inject.Instance;
+import jakarta.enterprise.inject.spi.CDI;
+import jakarta.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -41,7 +41,6 @@ import hu.icellmobilsoft.coffee.tool.common.FunctionalInterfaces.BaseExceptionFu
 import hu.icellmobilsoft.coffee.tool.common.FunctionalInterfaces.BaseExceptionFunction3;
 import hu.icellmobilsoft.coffee.tool.common.FunctionalInterfaces.BaseExceptionFunction4;
 import hu.icellmobilsoft.coffee.tool.common.FunctionalInterfaces.BaseExceptionFunction5;
-
 import redis.clients.jedis.Jedis;
 
 /**

@@ -19,10 +19,10 @@
  */
 package hu.icellmobilsoft.coffee.module.mongodb.handler;
 
-import javax.annotation.PreDestroy;
-import javax.enterprise.context.Dependent;
-import javax.enterprise.inject.spi.CDI;
-import javax.inject.Inject;
+import jakarta.annotation.PreDestroy;
+import jakarta.enterprise.context.Dependent;
+import jakarta.enterprise.inject.spi.CDI;
+import jakarta.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
 import org.bson.conversions.Bson;

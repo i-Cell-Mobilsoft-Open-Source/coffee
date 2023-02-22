@@ -21,24 +21,24 @@ package hu.icellmobilsoft.coffee.rest.exception;
 
 import java.util.function.BiConsumer;
 
-import javax.inject.Inject;
-import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.ClientErrorException;
-import javax.ws.rs.ForbiddenException;
-import javax.ws.rs.NotAcceptableException;
-import javax.ws.rs.NotAllowedException;
-import javax.ws.rs.NotAuthorizedException;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.ResponseBuilder;
-import javax.ws.rs.ext.ExceptionMapper;
-import javax.ws.rs.ext.Providers;
-import javax.xml.bind.UnmarshalException;
+import jakarta.enterprise.context.Dependent;
+import jakarta.inject.Inject;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.ws.rs.ClientErrorException;
+import jakarta.ws.rs.ForbiddenException;
+import jakarta.ws.rs.NotAcceptableException;
+import jakarta.ws.rs.NotAllowedException;
+import jakarta.ws.rs.NotAuthorizedException;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.HttpHeaders;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.ResponseBuilder;
+import jakarta.ws.rs.ext.ExceptionMapper;
+import jakarta.ws.rs.ext.Providers;
+import jakarta.xml.bind.UnmarshalException;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.deltaspike.core.api.projectstage.ProjectStage;
 import org.jboss.resteasy.spi.InternalServerErrorException;
 
 import hu.icellmobilsoft.coffee.cdi.logger.AppLogger;
@@ -50,6 +50,7 @@ import hu.icellmobilsoft.coffee.dto.exception.BaseExceptionWrapper;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 import hu.icellmobilsoft.coffee.rest.cdi.BaseApplicationContainer;
 import hu.icellmobilsoft.coffee.rest.log.RequestResponseLogger;
+import hu.icellmobilsoft.coffee.rest.projectstage.ProjectStage;
 import hu.icellmobilsoft.coffee.se.logging.mdc.MDC;
 import hu.icellmobilsoft.coffee.tool.utils.string.RandomUtil;
 
@@ -59,6 +60,7 @@ import hu.icellmobilsoft.coffee.tool.utils.string.RandomUtil;
  * @author imre.scheffer
  * @since 1.0.0
  */
+@Dependent
 public class DefaultGeneralExceptionMapper implements ExceptionMapper<Exception> {
 
     @Inject
@@ -158,7 +160,7 @@ public class DefaultGeneralExceptionMapper implements ExceptionMapper<Exception>
                 dto.setException(null);
             });
 
-            boolean productionStage = ProjectStage.Production.equals(projectStage);
+            boolean productionStage = projectStage.isProductionStage();
             if (productionStage) {
                 // NotFoundException, NotSupportedException, ...
                 handleRequestProcess();
@@ -205,7 +207,7 @@ public class DefaultGeneralExceptionMapper implements ExceptionMapper<Exception>
         exceptionMessageTranslator.addCommonInfo(dto, e, faultType);
         Response.Status statusCode = responseStatus;
         ResponseBuilder responseBuilder = Response.status(statusCode);
-        boolean productionStage = ProjectStage.Production.equals(projectStage);
+        boolean productionStage = projectStage.isProductionStage();
         if (productionStage) {
             productionStageConsumer.accept(dto, faultType);
         }

@@ -19,8 +19,8 @@
  */
 package hu.icellmobilsoft.coffee.rest.rest;
 
-import javax.ws.rs.ApplicationPath;
-import javax.ws.rs.core.Application;
+import jakarta.ws.rs.ApplicationPath;
+import jakarta.ws.rs.core.Application;
 
 /**
  * JAXActivator is an arbitrary name, what is important is that javax.ws.rs.core.Application is extended and the @ApplicationPath annotation is used

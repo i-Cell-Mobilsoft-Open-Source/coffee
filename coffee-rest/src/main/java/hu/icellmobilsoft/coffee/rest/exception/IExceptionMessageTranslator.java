@@ -19,7 +19,7 @@
  */
 package hu.icellmobilsoft.coffee.rest.exception;
 
-import javax.xml.bind.JAXBException;
+import jakarta.xml.bind.JAXBException;
 
 import hu.icellmobilsoft.coffee.dto.common.commonservice.BaseExceptionResultType;
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;

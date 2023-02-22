@@ -21,7 +21,7 @@ package hu.icellmobilsoft.coffee.rest.validation.xml.reader;
 
 import java.io.InputStream;
 
-import javax.enterprise.context.Dependent;
+import jakarta.enterprise.context.Dependent;
 
 import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
 

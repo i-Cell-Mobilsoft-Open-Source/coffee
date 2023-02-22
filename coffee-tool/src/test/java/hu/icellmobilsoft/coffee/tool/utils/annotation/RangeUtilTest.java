@@ -19,6 +19,8 @@
  */
 package hu.icellmobilsoft.coffee.tool.utils.annotation;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.text.MessageFormat;
 
 import org.junit.jupiter.api.Assertions;
@@ -29,9 +31,6 @@ import org.junit.jupiter.params.provider.CsvSource;
 
 import hu.icellmobilsoft.coffee.cdi.annotation.Range;
 import hu.icellmobilsoft.coffee.cdi.annotation.Range.RangeLiteral;
-import hu.icellmobilsoft.coffee.tool.utils.annotation.RangeUtil;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * RangeUtil test class

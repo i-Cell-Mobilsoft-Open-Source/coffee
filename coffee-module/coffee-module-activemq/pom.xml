@@ -3,7 +3,7 @@
 	<parent>
 		<groupId>hu.icellmobilsoft.coffee</groupId>
 		<artifactId>coffee-module</artifactId>
-		<version>1.13.0-SNAPSHOT</version>
+		<version>2.0.0-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>coffee-module-activemq</artifactId>
@@ -16,8 +16,8 @@
 
 		<dependency>
 			<groupId>org.apache.activemq</groupId>
-			<artifactId>activemq-client</artifactId>
-			<version>5.15.13</version>
+			<artifactId>artemis-jakarta-client</artifactId>
+			<version>2.27.0</version>
 		</dependency>
 	</dependencies>
 </project>

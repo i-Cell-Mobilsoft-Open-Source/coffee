@@ -24,11 +24,11 @@ import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.Optional;
 
-import javax.enterprise.inject.spi.CDI;
-import javax.inject.Inject;
-import javax.interceptor.AroundInvoke;
-import javax.interceptor.Interceptor;
-import javax.interceptor.InvocationContext;
+import jakarta.enterprise.inject.spi.CDI;
+import jakarta.inject.Inject;
+import jakarta.interceptor.AroundInvoke;
+import jakarta.interceptor.Interceptor;
+import jakarta.interceptor.InvocationContext;
 
 import org.apache.commons.lang3.StringUtils;
 

@@ -19,11 +19,9 @@
  */
 package hu.icellmobilsoft.coffee.model.base;
 
-import javax.enterprise.inject.Vetoed;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-
-import hu.icellmobilsoft.coffee.model.base.AbstractIdentifiedAuditEntity;
+import jakarta.enterprise.inject.Vetoed;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 
 /**
  * Default implementation of AbstractIdentifiedAuditEntity

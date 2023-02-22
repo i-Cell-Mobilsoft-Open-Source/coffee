@@ -22,8 +22,8 @@ package hu.icellmobilsoft.coffee.tool.utils.annotation;
 import java.lang.annotation.Annotation;
 import java.util.Optional;
 
-import javax.enterprise.inject.Vetoed;
-import javax.enterprise.inject.spi.InjectionPoint;
+import jakarta.enterprise.inject.Vetoed;
+import jakarta.enterprise.inject.spi.InjectionPoint;
 
 /**
  * Annotációkat kezelő gyűjtő

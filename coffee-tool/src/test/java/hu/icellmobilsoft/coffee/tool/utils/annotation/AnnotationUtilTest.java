@@ -24,11 +24,6 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import javax.enterprise.context.RequestScoped;
-import javax.enterprise.inject.Model;
-import javax.enterprise.inject.spi.CDI;
-import javax.inject.Inject;
-
 import org.jboss.weld.junit5.EnableWeld;
 import org.jboss.weld.junit5.WeldInitiator;
 import org.jboss.weld.junit5.WeldSetup;
@@ -42,9 +37,12 @@ import hu.icellmobilsoft.coffee.cdi.logger.DefaultAppLogger;
 import hu.icellmobilsoft.coffee.cdi.logger.LogContainer;
 import hu.icellmobilsoft.coffee.cdi.logger.LogProducer;
 import hu.icellmobilsoft.coffee.cdi.logger.ThisLogger;
-import hu.icellmobilsoft.coffee.tool.utils.annotation.AnnotationUtil;
 import hu.icellmobilsoft.coffee.tool.utils.annotation.bean.TestProducer;
 import hu.icellmobilsoft.coffee.tool.utils.annotation.bean.TestQualifier;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.enterprise.inject.Model;
+import jakarta.enterprise.inject.spi.CDI;
+import jakarta.inject.Inject;
 
 /**
  * AnnotationUtil test class

@@ -24,7 +24,7 @@ import hu.icellmobilsoft.coffee.dto.exception.DtoConversionException;
 import hu.icellmobilsoft.coffee.model.base.AbstractEntity;
 
 /**
- * In case of request we cannot be able to convert the {@link javax.persistence.Entity} back to request dto. it will throw
+ * In case of request we cannot be able to convert the {@link jakarta.persistence.Entity} back to request dto. it will throw
  * {@link DtoConversionException} by default
  *
  * @param <E>

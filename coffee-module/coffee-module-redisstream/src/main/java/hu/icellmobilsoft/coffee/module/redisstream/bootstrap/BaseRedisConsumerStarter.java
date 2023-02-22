@@ -21,13 +21,13 @@ package hu.icellmobilsoft.coffee.module.redisstream.bootstrap;
 
 import java.util.Set;
 
-import javax.annotation.Resource;
-import javax.enterprise.concurrent.ManagedExecutorService;
-import javax.enterprise.inject.Instance;
-import javax.enterprise.inject.spi.Bean;
-import javax.enterprise.inject.spi.BeanManager;
-import javax.enterprise.inject.spi.CDI;
-import javax.inject.Inject;
+import jakarta.annotation.Resource;
+import jakarta.enterprise.concurrent.ManagedExecutorService;
+import jakarta.enterprise.inject.Instance;
+import jakarta.enterprise.inject.spi.Bean;
+import jakarta.enterprise.inject.spi.BeanManager;
+import jakarta.enterprise.inject.spi.CDI;
+import jakarta.inject.Inject;
 
 import hu.icellmobilsoft.coffee.module.redisstream.annotation.RedisStreamConsumer;
 import hu.icellmobilsoft.coffee.module.redisstream.config.StreamGroupConfig;

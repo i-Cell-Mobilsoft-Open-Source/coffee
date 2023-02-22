@@ -26,14 +26,14 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.Objects;
 
-import javax.annotation.Priority;
-import javax.enterprise.context.Dependent;
-import javax.inject.Inject;
-import javax.ws.rs.client.ClientRequestContext;
-import javax.ws.rs.client.ClientResponseContext;
-import javax.ws.rs.client.ClientResponseFilter;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.NewCookie;
+import jakarta.annotation.Priority;
+import jakarta.enterprise.context.Dependent;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.client.ClientRequestContext;
+import jakarta.ws.rs.client.ClientResponseContext;
+import jakarta.ws.rs.client.ClientResponseFilter;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.NewCookie;
 
 import org.apache.commons.io.IOUtils;
 

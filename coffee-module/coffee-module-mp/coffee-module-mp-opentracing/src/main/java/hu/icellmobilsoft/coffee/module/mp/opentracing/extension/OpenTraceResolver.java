@@ -19,9 +19,9 @@
  */
 package hu.icellmobilsoft.coffee.module.mp.opentracing.extension;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.Instance;
-import javax.inject.Inject;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.inject.Instance;
+import jakarta.inject.Inject;
 
 import io.opentracing.Tracer;
 import io.opentracing.contrib.tracerresolver.TracerResolver;
