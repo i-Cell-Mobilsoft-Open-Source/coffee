@@ -194,3 +194,4 @@ hu.icellmobilsoft.coffee.model.base.annotation.CurrentUser annotációra.
 ==== Átállás
 
 * Az eddigi exception státuszkód kezelés megtartásához a projekteken saját ExceptionMapper létrehozása szükséges.
+* BaseService hívásoknál ha van javax `OptimisticLockException`-re catch, cserélni vagy bővíteni kell a coffee-s `OptimisticLockException`-el.
