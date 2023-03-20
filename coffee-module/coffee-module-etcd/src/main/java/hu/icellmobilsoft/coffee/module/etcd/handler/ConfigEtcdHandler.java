@@ -27,6 +27,8 @@ import jakarta.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
 
+import hu.icellmobilsoft.coffee.cdi.trace.annotation.Traced;
+import hu.icellmobilsoft.coffee.cdi.trace.constants.Tags;
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.dto.exception.InvalidParameterException;
 import hu.icellmobilsoft.coffee.module.etcd.service.ConfigEtcdService;
@@ -53,6 +55,7 @@ public class ConfigEtcdHandler {
      *             if technical error
      * @see ConfigEtcdService#getValue(String)
      */
+    @Traced(component = Tags.Etcd.Jetcd.COMPONENT, kind = Tags.Etcd.Jetcd.KIND, dbType = Tags.Etcd.DB_TYPE)
     public String getValue(String key) throws BaseException {
         Set<String> previousKeys = new HashSet<String>();
         return getValueWithCircleCheck(key, previousKeys);
@@ -69,6 +72,7 @@ public class ConfigEtcdHandler {
      *             if technical error
      * @see ConfigEtcdService#putValue(String, Object)
      */
+    @Traced(component = Tags.Etcd.Jetcd.COMPONENT, kind = Tags.Etcd.Jetcd.KIND, dbType = Tags.Etcd.DB_TYPE)
     public void putValue(String key, Object value) throws BaseException {
         if (StringUtils.isBlank(key)) {
             throw new InvalidParameterException("key is blank!");

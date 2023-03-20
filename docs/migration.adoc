@@ -1,19 +1,8 @@
 [#migration]
 = Migrációs leírások
 
-include::migration/migration100to110.adoc[leveloffset=+1]
-include::migration/migration110to120.adoc[leveloffset=+1]
-include::migration/migration120to130.adoc[leveloffset=+1]
-include::migration/migration130to140.adoc[leveloffset=+1]
-include::migration/migration140to150.adoc[leveloffset=+1]
-include::migration/migration150to160.adoc[leveloffset=+1]
-include::migration/migration160to170.adoc[leveloffset=+1]
-include::migration/migration170to180.adoc[leveloffset=+1]
-include::migration/migration180to181.adoc[leveloffset=+1]
-include::migration/migration180to190.adoc[leveloffset=+1]
-include::migration/migration190to1100.adoc[leveloffset=+1]
-include::migration/migration1100to1110.adoc[leveloffset=+1]
-include::migration/migration1110to1120.adoc[leveloffset=+1]
-include::migration/migration1120to1130.adoc[leveloffset=+1]
-include::migration/migration1130to1140.adoc[leveloffset=+1]
+Régebbi migrációs leírások a
+https://github.com/i-Cell-Mobilsoft-Open-Source/coffee/blob/master/docs/migration/v1/index.adoc[itt]
+találhatóak.
+
 include::migration/migrationTo2_0_0.adoc[leveloffset=+1]
