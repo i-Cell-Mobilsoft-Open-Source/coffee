@@ -69,4 +69,29 @@ public interface Tags {
 
     }
 
+    /**
+     * Default Etcd trace Tags
+     */
+    interface Etcd {
+
+        /**
+         * Etcd type trace tag ({@value})
+         */
+        String DB_TYPE = "etcd";
+
+        /**
+         * Etcd Stream trace keys
+         */
+        interface Jetcd {
+            /**
+             * Etcd trace kind tag ({@value})
+             */
+            String KIND = "client";
+            /**
+             * Etcd trace component tag ({@value}) for io.etcd:jetcd-core driver
+             */
+            String COMPONENT = "jetcd";
+        }
+    }
+
 }
