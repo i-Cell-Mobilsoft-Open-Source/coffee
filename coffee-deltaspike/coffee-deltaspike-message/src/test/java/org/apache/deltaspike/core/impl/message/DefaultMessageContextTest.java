@@ -75,7 +75,10 @@ class DefaultMessageContextTest {
         Message message = messageContext.localeResolver(localeResolver).messageSource(SOURCE).message();
         String translated = message.template("{first}")// .argument(arguments)
                 .toString();
-        Assertions.assertEquals("first default", translated);
+        String expectedMessage = Locale.getDefault().getLanguage().equalsIgnoreCase("hu") //
+                ? "első" //
+                : "first default";
+        Assertions.assertEquals(expectedMessage, translated);
     }
 
     @Test
@@ -83,7 +86,10 @@ class DefaultMessageContextTest {
     void defaultWithArgument() {
         Message message = messageContext.localeResolver(localeResolver).messageSource(SOURCE).message();
         String translated = message.template("{first.argument}").argument("blabla").toString();
-        Assertions.assertEquals("first default with argument blabla", translated);
+        String expectedMessage = Locale.getDefault().getLanguage().equalsIgnoreCase("hu") //
+                ? "első argumentummal blabla" //
+                : "first default with argument blabla";
+        Assertions.assertEquals(expectedMessage, translated);
     }
 
     @Test
