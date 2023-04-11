@@ -182,3 +182,6 @@ Paraméterezett junit tesztek `@ParameterizedTest` annotációval ellátva
 (pl. `hu.icellmobilsoft.coffee.rest.projectstage.ProjectStageProducerTest`)
 kaptak `@ExplicitParamInjection` annotációt.
 Ez nélkül nem működik a CDI kezelt paraméter injecion.
+
+=== coffee-se-logging
+JbossMDCAdpater-ben loggolásnál hibás volt a paraméter megadás, ami javítva lett.
