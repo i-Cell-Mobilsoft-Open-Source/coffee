@@ -65,7 +65,7 @@ public class JbossMDCAdapter implements MDCAdapter {
         try {
             put.invoke(null, key, val);
         } catch (Exception e) {
-            log.debug(MessageFormat.format("Could not put key:[{0}] with val:[{1}] into jboss MDC:[{2]}", key, val, e.getLocalizedMessage()), e);
+            log.debug(MessageFormat.format("Could not put key:[{0}] with val:[{1}] into jboss MDC:[{2}]", key, val, e.getLocalizedMessage()), e);
         }
     }
 
@@ -76,7 +76,7 @@ public class JbossMDCAdapter implements MDCAdapter {
             Object getResult = get.invoke(null, key);
             return toString(getResult);
         } catch (Exception e) {
-            log.debug(MessageFormat.format("Could not get key:[{0}] from jboss MDC:[{1]}", key, e.getLocalizedMessage()), e);
+            log.debug(MessageFormat.format("Could not get key:[{0}] from jboss MDC:[{1}]", key, e.getLocalizedMessage()), e);
         }
         return null;
     }
@@ -87,7 +87,7 @@ public class JbossMDCAdapter implements MDCAdapter {
         try {
             remove.invoke(null, key);
         } catch (Exception e) {
-            log.debug(MessageFormat.format("Could not remove key:[{0}] from jboss MDC:[{1]}", key, e.getLocalizedMessage()), e);
+            log.debug(MessageFormat.format("Could not remove key:[{0}] from jboss MDC:[{1}]", key, e.getLocalizedMessage()), e);
         }
     }
 
@@ -98,7 +98,7 @@ public class JbossMDCAdapter implements MDCAdapter {
             Map<String, Object> getMapResult = (Map<String, Object>) getMap.invoke(null);
             return getMapResult.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, e -> toString(e.getValue())));
         } catch (Exception e) {
-            log.debug(MessageFormat.format("Could not getMap from jboss MDC:[{0]}", e.getLocalizedMessage()), e);
+            log.debug(MessageFormat.format("Could not getMap from jboss MDC:[{0}]", e.getLocalizedMessage()), e);
         }
         return Collections.emptyMap();
     }
@@ -109,7 +109,7 @@ public class JbossMDCAdapter implements MDCAdapter {
         try {
             clear.invoke(null);
         } catch (Exception e) {
-            log.debug(MessageFormat.format("Could not clear jboss MDC:[{0]}", e.getLocalizedMessage()), e);
+            log.debug(MessageFormat.format("Could not clear jboss MDC:[{0}]", e.getLocalizedMessage()), e);
         }
     }
 
