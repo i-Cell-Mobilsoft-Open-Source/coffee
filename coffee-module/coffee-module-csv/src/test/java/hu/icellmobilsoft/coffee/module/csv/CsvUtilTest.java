@@ -29,8 +29,6 @@ import java.util.List;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.condition.DisabledOnOs;
-import org.junit.jupiter.api.condition.OS;
 
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 
@@ -54,7 +52,6 @@ class CsvUtilTest {
         TEST_CSV = new String(CsvUtilTest.class.getResourceAsStream("/test.csv").readAllBytes(), StandardCharsets.UTF_8);
     }
 
-    @DisabledOnOs(value = OS.WINDOWS, disabledReason = "CsvUtil.toCsv using ICSVWriter.DEFAULT_LINE_END, it needs to be optimized on windows (developed without windows)")
     @Test
     void shouldConvertToCsv() throws BaseException {
         // GIVEN

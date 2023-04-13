@@ -183,5 +183,18 @@ Paraméterezett junit tesztek `@ParameterizedTest` annotációval ellátva
 kaptak `@ExplicitParamInjection` annotációt.
 Ez nélkül nem működik a CDI kezelt paraméter injecion.
 
+=== coffee-module-csv
+
+A CsvUtil csv generálás során lecserélésre került a line separator: ICSVWriter.DEFAULT_LINE_END (\n) -> System.lineSeparator().
+Így az operációs rendszertől függő line separator kerül felhasználásra.
+
+.Átállás
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
 === coffee-se-logging
+
 JbossMDCAdpater-ben loggolásnál hibás volt a paraméter megadás, ami javítva lett.
+
+.Átállás
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
