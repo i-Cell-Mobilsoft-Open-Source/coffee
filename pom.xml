@@ -171,6 +171,27 @@
 						</dependency>
 					</dependencies>
 				</plugin>
+				<plugin>
+					<groupId>org.jboss.jandex</groupId>
+					<artifactId>jandex-maven-plugin</artifactId>
+					<version>1.2.3</version>
+					<executions>
+						<execution>
+							<id>make-index</id>
+							<goals>
+								<goal>jandex</goal>
+							</goals>
+							<!-- phase is 'process-classes by default' -->
+							<configuration>
+								<fileSets>
+									<fileSet>
+										<directory>${project.build.directory}</directory>
+									</fileSet>
+								</fileSets>
+							</configuration>
+						</execution>
+					</executions>
+				</plugin>
 			</plugins>
 		</pluginManagement>
 
@@ -201,6 +222,10 @@
 					<ignoreNoFileToScan>true</ignoreNoFileToScan>
 					<projectName>Coffee</projectName>
 				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.jboss.jandex</groupId>
+				<artifactId>jandex-maven-plugin</artifactId>
 			</plugin>
 		</plugins>
 	</build>
