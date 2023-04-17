@@ -190,3 +190,11 @@ A CsvUtil csv generálás során lecserélésre került a line separator: ICSVWr
 
 .Átállás
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+=== coffee-se-logging
+
+JbossMDCAdpater-ben loggolásnál hibás volt a paraméter megadás, ami javítva lett.
+
+.Átállás
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
