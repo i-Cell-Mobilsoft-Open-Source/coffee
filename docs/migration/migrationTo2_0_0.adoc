@@ -26,6 +26,8 @@ A beans.xml fájloknak frissültek a tartalmai:
 </beans>
 ----
 
+Jandex-maven-plugin bekötése minden modulon.
+
 ==== BOM verzió emelések:
 Fontosabb változás volt: 
 
