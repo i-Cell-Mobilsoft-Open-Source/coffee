@@ -36,6 +36,7 @@ import hu.icellmobilsoft.coffee.dto.exception.InvalidParameterException;
 import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 import hu.icellmobilsoft.coffee.module.etcd.repository.EtcdRepository;
+import hu.icellmobilsoft.coffee.module.etcd.util.EtcdClientBuilderUtil;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
 import hu.icellmobilsoft.coffee.tool.utils.string.StringHelper;
 import hu.icellmobilsoft.coffee.tool.utils.string.StringUtil;
@@ -113,7 +114,7 @@ public class EtcdService {
 
         try {
             ByteSequence bsKey = ByteSequence.from(key, StandardCharsets.UTF_8);
-            GetResponse response = etcdRepository.get(bsKey).get(200, TimeUnit.MILLISECONDS);
+            GetResponse response = etcdRepository.get(bsKey).get(EtcdClientBuilderUtil.CONNECT_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS);
             if (response.getCount() < 1) {
                 throw new BONotFoundException(MessageFormat.format("Etcd data not found for key [{0}], response: [{1}]", key, response));
             }
