@@ -47,13 +47,19 @@ public class EtcdClientBuilderUtil {
     private static final Logger logger = Logger.getLogger(EtcdClientBuilderUtil.class);
 
     /**
+     * Timeout param to establish connection with the etcd server, this timeout needs to be the base timeout param when getting value from the server.
+     */
+    public static final long CONNECT_TIMEOUT_MILLIS = 500;
+
+    /**
      *
      * Create {@link ClientBuilder} with urls with came from parameter
      *
      * @param urls
      *            etcd service urls
      * @return {@link ClientBuilder} instance
-     * @throws BaseException if exception occurs at create {@link  ClientBuilder}
+     * @throws BaseException
+     *             if exception occurs at create {@link ClientBuilder}
      */
     public static ClientBuilder getClientBuilder(String[] urls) throws BaseException {
         ClientBuilder etcdClientBuilder = null;
@@ -62,7 +68,7 @@ public class EtcdClientBuilderUtil {
                     // endpoints
                     .endpoints(urls)
                     // Connect timeout
-                    .connectTimeout(Duration.ofMillis(500)) // default null
+                    .connectTimeout(Duration.ofMillis(CONNECT_TIMEOUT_MILLIS)) // default null
                     // retryDelay
                     .retryDelay(500) // default 500
                     // retryMaxDelay
