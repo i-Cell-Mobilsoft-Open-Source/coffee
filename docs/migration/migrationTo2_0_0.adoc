@@ -200,3 +200,13 @@ JbossMDCAdpater-ben loggolásnál hibás volt a paraméter megadás, ami javítv
 .Átállás
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
 
+
+== coffee-module-etcd
+
+* A `hu.icellmobilsoft.coffee.module.etcd.util.EtcdClientBuilderUtil`-ba bevezetésre került a CONNECT_TIMEOUT_MILLIS paraméter, 
+ez megakadályozza a felfutásnál előforduló timeout hibákat, amik a lekérdezés és az etcd szerverhez való timeout paraméter eltérése okozott.
+
+==== Átállás
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
