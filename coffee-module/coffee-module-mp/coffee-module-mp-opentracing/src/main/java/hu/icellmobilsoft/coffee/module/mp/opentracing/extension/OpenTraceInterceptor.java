@@ -34,6 +34,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import hu.icellmobilsoft.coffee.cdi.trace.annotation.Traced;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
+import io.grpc.Context;
 import io.opentracing.Scope;
 import io.opentracing.Span;
 import io.opentracing.Tracer;
@@ -53,6 +54,11 @@ public class OpenTraceInterceptor {
 
     private static final Logger LOGGER = Logger.getLogger(OpenTraceInterceptor.class);
 
+    /**
+     * key for gRPC context propagation
+     */
+    public static Context.Key<Span> openTraceGrpcContextKey = Context.key("openTraceGrpcContextKey");
+
     @Inject
     private OpenTraceResolver openTraceResolver;
 
@@ -67,7 +73,7 @@ public class OpenTraceInterceptor {
      */
     @AroundInvoke
     public Object wrap(InvocationContext ctx) throws Exception {
-        if(ctx == null) {
+        if (ctx == null) {
             LOGGER.debug("ctx is null, skip OpenTraceInterceptor");
         }
         Tracer tracer = openTraceResolver.resolveTracer();
@@ -105,8 +111,15 @@ public class OpenTraceInterceptor {
         Traced methodTraced = method.getAnnotation(Traced.class);
         String operationName = ctx.getTarget().getClass().getSuperclass().getCanonicalName();
 
+        // gRPC propagated span
+        Span span = openTraceGrpcContextKey.get(Context.current());
+        if (span != null) {
+            tracer.activateSpan(span);
+        }
+
         // in case of jedis component, extract operation name from method, and check if there is an active span
         if (checkJedisComponent(methodTraced.component())) {
+
             // jedis operation needs active span to join
             if (!isActiveSpan(tracer)) {
                 LOGGER.debug("Skipping trace, no active span to join the jedis call.");

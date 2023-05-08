@@ -26,6 +26,13 @@
 			<artifactId>opentracing-tracerresolver</artifactId>
 			<version>${opentracing-tracerresolver}</version>
 		</dependency>
+		<!-- TODO gRPC modulokkal syncelni a verziot, és kiemelni ha azok elkészültek -->
+		<dependency>
+		    <groupId>io.grpc</groupId>
+		    <artifactId>grpc-context</artifactId>
+		    <version>1.51.0</version>
+		</dependency>
+		
 		<!-- TEST -->
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
