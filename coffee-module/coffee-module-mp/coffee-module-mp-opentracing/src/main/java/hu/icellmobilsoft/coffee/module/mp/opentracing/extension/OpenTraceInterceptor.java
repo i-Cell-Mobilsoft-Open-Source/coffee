@@ -57,7 +57,7 @@ public class OpenTraceInterceptor {
     /**
      * key for gRPC context propagation
      */
-    public static Context.Key<Span> openTraceGrpcContextKey = Context.key("openTraceGrpcContextKey");
+    public static Context.Key<Span> OPEN_TRACE_GRPC_CONTEXT_KEY = Context.key("openTraceGrpcContextKey");
 
     @Inject
     private OpenTraceResolver openTraceResolver;
@@ -112,7 +112,7 @@ public class OpenTraceInterceptor {
         String operationName = ctx.getTarget().getClass().getSuperclass().getCanonicalName();
 
         // gRPC propagated span
-        Span span = openTraceGrpcContextKey.get(Context.current());
+        Span span = OPEN_TRACE_GRPC_CONTEXT_KEY.get(Context.current());
         if (span != null) {
             tracer.activateSpan(span);
         }
