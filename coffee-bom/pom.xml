@@ -15,6 +15,7 @@
 		<version.jakartaee>8.0.0</version.jakartaee>
 		<version.jakarta.xml.bind.jaxb-api>2.3.2</version.jakarta.xml.bind.jaxb-api>
 		<version.jakarta.activation-api>1.2.1</version.jakarta.activation-api>
+		<version.com.google.code.findbugs.jsr305>3.0.2</version.com.google.code.findbugs.jsr305>
 
 		<version.google.code.gson>2.8.9</version.google.code.gson>
 
@@ -40,6 +41,9 @@
 		<version.smallrye-config>2.8.1</version.smallrye-config>
 		<version.microprofile-reactive-messaging-api>2.0.1</version.microprofile-reactive-messaging-api>
 		<version.microprofile-reactive-streams-operators-api>2.0</version.microprofile-reactive-streams-operators-api>
+
+		<version.io.etcd.jetcd-core>0.7.5</version.io.etcd.jetcd-core>
+		<version.io.grpc.version>1.51.0</version.io.grpc.version>
 	</properties>
 
 	<dependencyManagement>
@@ -49,6 +53,13 @@
 				<groupId>org.apache.deltaspike.distribution</groupId>
 				<artifactId>distributions-bom</artifactId>
 				<version>${version.apache.deltaspike}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+			<dependency>
+				<groupId>io.grpc</groupId>
+				<artifactId>grpc-bom</artifactId>
+				<version>${version.io.grpc.version}</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
@@ -69,6 +80,11 @@
 				<artifactId>jakarta.activation-api</artifactId>
 				<version>${version.jakarta.activation-api}</version>
 				<scope>provided</scope>
+			</dependency>
+			<dependency>
+				<groupId>com.google.code.findbugs</groupId>
+				<artifactId>jsr305</artifactId>
+				<version>${version.com.google.code.findbugs.jsr305}</version>
 			</dependency>
 
 			<dependency>
@@ -463,6 +479,19 @@
 					</exclusion>
 				</exclusions>
 			</dependency>
+
+			<dependency>
+				<groupId>io.etcd</groupId>
+				<artifactId>jetcd-core</artifactId>
+				<exclusions>
+					<exclusion>
+						<groupId>javax.annotation</groupId>
+						<artifactId>javax.annotation-api</artifactId>
+					</exclusion>
+				</exclusions>
+				<version>${version.io.etcd.jetcd-core}</version>
+			</dependency>
+
 		</dependencies>
 	</dependencyManagement>
 
