@@ -217,6 +217,7 @@
 		<module>coffee-system</module>
 		<module>coffee-module</module>
 		<module>coffee-se</module>
+		<module>coffee-grpc</module>
 	</modules>
 
 	<distributionManagement>
