@@ -39,5 +39,6 @@
 		<module>coffee-dto-base</module>
 		<module>coffee-dto-impl</module>
 		<module>coffee-dto-gen</module>
+		<module>coffee-dto-xsd-proto</module>
 	</modules>
 </project>

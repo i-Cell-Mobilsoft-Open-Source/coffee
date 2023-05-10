@@ -1,0 +1,160 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>hu.icellmobilsoft.coffee</groupId>
+    <artifactId>coffee-dto</artifactId>
+    <version>1.14.0-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>coffee-dto-xsd-proto</artifactId>
+
+    <properties>
+        <version.no.entur.schema2proto-maven-plugin>1.83</version.no.entur.schema2proto-maven-plugin>
+        <version.com.google.protobuf.protobuf-java>3.21.7</version.com.google.protobuf.protobuf-java>
+        <version.com.google.api.grpc.proto-google-common-protos>2.9.0</version.com.google.api.grpc.proto-google-common-protos>
+        <version.org.junit.jupiter>5.8.1</version.org.junit.jupiter>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>hu.icellmobilsoft.coffee</groupId>
+            <artifactId>coffee-dto-xsd</artifactId>
+        </dependency>
+        <!-- schema2proto miatt pluszba be kellett emelni mert nem tudta feloldani a google importokat -->
+        <dependency>
+            <groupId>com.google.protobuf</groupId>
+            <artifactId>protobuf-java</artifactId>
+            <version>${version.com.google.protobuf.protobuf-java}</version>
+        </dependency>
+        <!-- xsd:date and xsd:time equivalents -->
+        <dependency>
+            <groupId>com.google.api.grpc</groupId>
+            <artifactId>proto-google-common-protos</artifactId>
+            <version>${version.com.google.api.grpc.proto-google-common-protos}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>${version.org.junit.jupiter}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+            </resource>
+            <resource>
+                <directory>${project.build.directory}/generated-sources</directory>
+            </resource>
+        </resources>
+        <plugins>
+            <!-- schema2proto generáláshoz szükséges XSD és proto dependenciák másolása classpath-ra -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>resource-dependencies</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>unpack</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>hu.icellmobilsoft.coffee</groupId>
+                                    <artifactId>coffee-dto-xsd</artifactId>
+                                    <type>jar</type>
+                                    <overWrite>true</overWrite>
+                                    <includes>**/*.xsd</includes>
+                                    <outputDirectory>${project.build.directory}</outputDirectory>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>com.google.protobuf</groupId>
+                                    <artifactId>protobuf-java</artifactId>
+                                    <type>jar</type>
+                                    <overWrite>true</overWrite>
+                                    <includes>**/*.proto</includes>
+                                    <outputDirectory>${project.build.directory}/proto-google/protobuf</outputDirectory>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>com.google.api.grpc</groupId>
+                                    <artifactId>proto-google-common-protos</artifactId>
+                                    <type>jar</type>
+                                    <overWrite>true</overWrite>
+                                    <includes>**/*.proto</includes>
+                                    <outputDirectory>${project.build.directory}/proto-google/grpc-api</outputDirectory>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <!-- build.resources "process-resources" scopeban fut - korabbi kell a schema2proto confighoz-->
+                <artifactId>maven-resources-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-resources</id>
+                        <phase>process-sources</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/schema2proto</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>src/main/resources/schema2proto</directory>
+                                    <includes>
+                                        <include>config.yaml</include>
+                                    </includes>
+                                    <filtering>true</filtering>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                    <!-- generated-sources  keruljon a classes konyvtarba es igy a jarba is -->
+                    <execution>
+                        <id>copy-generated-sources</id>
+                        <phase>process-classes</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/classes</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>${project.build.directory}/generated-sources</directory>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>no.entur</groupId>
+                <artifactId>schema2proto-maven-plugin</artifactId>
+                <version>${version.no.entur.schema2proto-maven-plugin}</version>
+                <configuration>
+                    <!-- ez tartalmaz minden beállítást, részletes leírásokkal -->
+                    <configFile>${project.build.directory}/schema2proto/config.yaml</configFile>
+                    <!-- root xml/xsd amit konvertálni akarunk, szükséges mindenhova megadni a schemaLocation-t -->
+                    <xsdFile>src/main/resources/xsd/hu/icellmobilsoft/coffee/dto/proto/super-proto.xml</xsdFile>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>protobuf-file-generate</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>
