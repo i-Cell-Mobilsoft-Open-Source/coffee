@@ -27,6 +27,7 @@ A beans.xml fájloknak frissültek a tartalmai:
 ----
 
 Jandex-maven-plugin bekötése minden modulon.
+Több modult érintően egységesítésre került a classLoader használata, mindehova a Thread.currentThread().getContextClassLoader() került, kivéve a coffee-deltaspike modulban!
 
 ==== BOM verzió emelések:
 Fontosabb változás volt: 
