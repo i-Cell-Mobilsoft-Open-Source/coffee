@@ -119,6 +119,7 @@ mindenhol le kell cserélni.
 .Project stage kezelés
 Deltaspike core kidobása után a `org.apache.deltaspike.core.api.projectstage.ProjectStage`
 megszünt és a `hu.icellmobilsoft.coffee.rest.projectstage.ProjectStage` vette át a helyét.
+Minden configban keresi a megfelelő kulcsokat.
 
 .Átállás
 Lecserélni `org.apache.deltaspike.core.api.projectstage.ProjectStage` -> 
