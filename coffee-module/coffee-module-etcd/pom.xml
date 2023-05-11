@@ -17,13 +17,11 @@
 		<dependency>
 			<groupId>io.etcd</groupId>
 			<artifactId>jetcd-core</artifactId>
-			<version>0.6.1</version>
-			<exclusions>
-				<exclusion>
-					<groupId>javax.annotation</groupId>
-					<artifactId>javax.annotation-api</artifactId>
-				</exclusion>
-			</exclusions>
 		</dependency>
+		<dependency>
+			<groupId>com.google.code.findbugs</groupId>
+			<artifactId>jsr305</artifactId>
+		</dependency>
+
 	</dependencies>
 </project>

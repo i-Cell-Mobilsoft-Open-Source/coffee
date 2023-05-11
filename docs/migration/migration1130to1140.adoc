@@ -31,6 +31,7 @@ A változtatások nem eredményeznek átállási munkálatokat, visszafelé komp
 
 * A `hu.icellmobilsoft.coffee.module.etcd.util.EtcdClientBuilderUtil`-ba bevezetésre került a CONNECT_TIMEOUT_MILLIS paraméter, 
 ez megakadályozza a felfutásnál előforduló timeout hibákat, amik a lekérdezés és az etcd szerverhez való timeout paraméter eltérése okozott.
+* Bump io.etcd:jetcd-core 0.6.1 -> 0.7.5
 
 ==== Átállás
 
