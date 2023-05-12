@@ -1,0 +1,51 @@
+[#common_core_coffee-grpc]
+= coffee-grpc
+
+Modul célja a gRPC kommunikáció és a kezelés támogatása.
+
+== coffee-grpc-api
+Általános gRPC kezelés Coff:ee API (annotációk, verzió, ...) gyűjtője.
+
+== coffee-grpc-base
+Protobuf és gRPC általános osztályok gyűjtője.
+Tartalma exception, státusz kezelés és egyéb CDI, Coff:ee általános funkciók.
+
+== coffee-grpc-protoc
+Segéd tool ami a proto -> class generálására szolgál.
+A logika https://mustache.github.io/[mustache] template rendszert használja fel,
+ami a `com.salesforce.jprotoc.ProtocPlugin` rendszerbn fog szerepelni.
+
+.pom.xml minta felhasználása
+[source,xml]
+----
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.github.os72</groupId>
+                <artifactId>protoc-jar-maven-plugin</artifactId>
+                <configuration>
+...
+                    <outputTargets>
+...
+                        <outputTarget>
+                            <type>grpc-coffee</type>
+                            <pluginArtifact>hu.icellmobilsoft.coffee:coffee-grpc-protoc:${version.hu.icellmobilsoft.coffee}</pluginArtifact>
+                        </outputTarget>
+                    </outputTargets>
+                </configuration>
+...
+            </plugin>
+        </plugins>
+    </build>
+----
+Komplexebb minta a https://github.com/i-Cell-Mobilsoft-Open-Source/backend-sampler[backend-sampler]
+projektben https://github.com/i-Cell-Mobilsoft-Open-Source/backend-sampler/blob/main/api/api-grpc/api-grpc-stub-gen/pom.xml[található]. 
+
+
+== coffee-dto/coffee-dto-xsd-proto
+Coff:ee tartalmaz általános XSD leírókat a `coffee-dto-xsd` csomagban
+- ennek a proto generált és egyéb kézi proto fájlok gyűjtője. 
+Egyben szolgál mintának az XSD - proto generálás folyamatára.
+
+Ezt a csomag szolgál a Coff:ee proto fájlok használatához,
+nem kell a projekteknek Coff:ee proto fájlokat újragenerálni.
