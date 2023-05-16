@@ -37,12 +37,12 @@
 			</dependency>
 			<dependency>
 				<groupId>hu.icellmobilsoft.coffee</groupId>
-				<artifactId>coffee-dto-xsd-proto</artifactId>
+				<artifactId>coffee-dto-xsd2proto</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>hu.icellmobilsoft.coffee</groupId>
-				<artifactId>coffee-dto-proto-gen</artifactId>
+				<artifactId>coffee-dto-stub-gen</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
@@ -76,7 +76,7 @@
 		<module>coffee-dto-base</module>
 		<module>coffee-dto-impl</module>
 		<module>coffee-dto-gen</module>
-		<module>coffee-dto-xsd-proto</module>
-		<module>coffee-dto-proto-gen</module>
+		<module>coffee-dto-xsd2proto</module>
+		<module>coffee-dto-stub-gen</module>
 	</modules>
 </project>

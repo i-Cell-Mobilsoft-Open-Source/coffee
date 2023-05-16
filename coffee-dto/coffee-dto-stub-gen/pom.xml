@@ -8,7 +8,7 @@
 		<version>1.14.0-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>coffee-dto-proto-gen</artifactId>
+	<artifactId>coffee-dto-stub-gen</artifactId>
 
 	<description>Generating classes from coffee proto files</description>
 
@@ -36,7 +36,7 @@
 		</dependency>
 		<dependency>
 			<groupId>hu.icellmobilsoft.coffee</groupId>
-			<artifactId>coffee-dto-xsd-proto</artifactId>
+			<artifactId>coffee-dto-xsd2proto</artifactId>
 		</dependency>
 
 		<dependency>
@@ -68,7 +68,7 @@
 							<artifactItems>
 								<artifactItem>
 									<groupId>hu.icellmobilsoft.coffee</groupId>
-									<artifactId>coffee-dto-xsd-proto</artifactId>
+									<artifactId>coffee-dto-xsd2proto</artifactId>
 									<type>jar</type>
 									<overWrite>true</overWrite>
 									<includes>**/*.proto</includes>

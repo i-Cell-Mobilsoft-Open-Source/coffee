@@ -8,7 +8,7 @@
 		<version>1.14.0-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>coffee-dto-xsd-proto</artifactId>
+	<artifactId>coffee-dto-xsd2proto</artifactId>
 
 	<description>Generating proto files from coffee xsd files</description>
 

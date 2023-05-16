@@ -42,7 +42,7 @@ Komplexebb minta a https://github.com/i-Cell-Mobilsoft-Open-Source/backend-sampl
 projektben https://github.com/i-Cell-Mobilsoft-Open-Source/backend-sampler/blob/main/api/api-grpc/api-grpc-stub-gen/pom.xml[található]. 
 
 
-== coffee-dto/coffee-dto-xsd-proto
+== coffee-dto/coffee-dto-xsd2proto
 Coff:ee tartalmaz általános XSD leírókat a `coffee-dto-xsd` csomagban
 - ennek a proto generált és egyéb kézi proto fájlok gyűjtője. 
 Egyben szolgál mintának az XSD - proto generálás folyamatára.
@@ -50,6 +50,6 @@ Egyben szolgál mintának az XSD - proto generálás folyamatára.
 Ezt a csomag szolgál a Coff:ee proto fájlok használatához,
 nem kell a projekteknek Coff:ee proto fájlokat újragenerálni.
 
-== coffee-dto/coffee-dto-proto-gen
+== coffee-dto/coffee-dto-stub-gen
 Minden Coff:ee proto fájl a generált osztályai.
 
