@@ -17,7 +17,6 @@
 		<version.io.grpc.version>1.52.1</version.io.grpc.version>
 		<version.protoc.version>3.21.7</version.protoc.version>
 		<version.os-maven-plugin.version>1.7.1</version.os-maven-plugin.version>
-		<version.proto-google-common-protos.version>2.9.0</version.proto-google-common-protos.version>
 	</properties>
 
 	<dependencies>
@@ -38,18 +37,6 @@
 		<dependency>
 			<groupId>hu.icellmobilsoft.coffee</groupId>
 			<artifactId>coffee-dto-xsd-proto</artifactId>
-		</dependency>
-
-		<!-- google compiled classes -->
-		<dependency>
-			<groupId>com.google.protobuf</groupId>
-			<artifactId>protobuf-java</artifactId>
-			<version>${version.protoc.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.google.api.grpc</groupId>
-			<artifactId>proto-google-common-protos</artifactId>
-			<version>${version.proto-google-common-protos.version}</version>
 		</dependency>
 
 		<dependency>
@@ -80,22 +67,6 @@
 						<configuration>
 							<artifactItems>
 								<artifactItem>
-									<groupId>com.google.protobuf</groupId>
-									<artifactId>protobuf-java</artifactId>
-									<type>jar</type>
-									<overWrite>true</overWrite>
-									<includes>**/*.proto</includes>
-									<outputDirectory>${project.build.directory}/proto-external</outputDirectory>
-								</artifactItem>
-								<artifactItem>
-									<groupId>com.google.api.grpc</groupId>
-									<artifactId>proto-google-common-protos</artifactId>
-									<type>jar</type>
-									<overWrite>true</overWrite>
-									<includes>**/*.proto</includes>
-									<outputDirectory>${project.build.directory}/proto-external</outputDirectory>
-								</artifactItem>
-								<artifactItem>
 									<groupId>hu.icellmobilsoft.coffee</groupId>
 									<artifactId>coffee-dto-xsd-proto</artifactId>
 									<type>jar</type>
@@ -118,6 +89,7 @@
 						<!-- only own coffee proto files generate -->
 						<include>${project.build.directory}/proto-external/hu</include>
 					</inputDirectories>
+					<includeMavenTypes>transitive</includeMavenTypes>
 					<includeDirectories>
 						<directory>${project.build.directory}/proto-external</directory>
 					</includeDirectories>
