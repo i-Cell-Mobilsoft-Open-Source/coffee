@@ -14,6 +14,7 @@ Következő funkció támogatások kerültek a rendszerbe:
 * coffee-grpc-base - protobuf és gRPC stub általános gyűjtője
 * coffee-grpc-protoc - proto -> class generálás támogatása
 * coffee-dto/coffee-dto-xsd-proto - Generált proto fájlok ami a `coffee-dto-xsd` XSD fájlokból vannak generálva.
+* coffee-dto/coffee-dto-proto-gen - Generált osztályok a Coff:ee proto fajlokból 
 
 == Változások
 

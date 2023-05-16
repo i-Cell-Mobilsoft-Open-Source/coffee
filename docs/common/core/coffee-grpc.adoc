@@ -49,3 +49,7 @@ Egyben szolgál mintának az XSD - proto generálás folyamatára.
 
 Ezt a csomag szolgál a Coff:ee proto fájlok használatához,
 nem kell a projekteknek Coff:ee proto fájlokat újragenerálni.
+
+== coffee-dto/coffee-dto-proto-gen
+Minden Coff:ee proto fájl a generált osztályai.
+
