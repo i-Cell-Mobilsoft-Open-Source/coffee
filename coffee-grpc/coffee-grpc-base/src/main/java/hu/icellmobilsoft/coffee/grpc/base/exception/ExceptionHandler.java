@@ -38,7 +38,9 @@ import javax.enterprise.inject.spi.CDI;
 
 import org.apache.commons.lang3.reflect.TypeUtils;
 
+import com.google.common.collect.ImmutableList;
 import com.google.protobuf.Any;
+import com.google.rpc.Code;
 import com.google.rpc.ErrorInfo;
 import com.google.rpc.Status;
 
@@ -151,10 +153,10 @@ public class ExceptionHandler {
         }
     }
 
-    private List<Bean<?>> resolveParameterizedBeans(Class<?> beanClass, Class<?> parameterClass) {
+    private ImmutableList<Bean<?>> resolveParameterizedBeans(Class<?> beanClass, Class<?> parameterClass) {
         List<Bean<?>> beansFound = new ArrayList<>();
         if (Object.class == parameterClass) {
-            return Collections.emptyList();
+            return ImmutableList.of();
         }
         ParameterizedType parameterizedType = TypeUtils.parameterize(beanClass, parameterClass);
         Set<Bean<?>> beans = CDI.current().getBeanManager().getBeans(parameterizedType);
@@ -163,14 +165,14 @@ public class ExceptionHandler {
         }
         // összeszedjük az exception parentjére írt mappereket is
         beansFound.addAll(resolveParameterizedBeans(beanClass, parameterClass.getSuperclass()));
-        return beansFound;
+        return ImmutableList.copyOf(beansFound);
     }
 
     private StatusResponse buildInternalErrorStatus(Throwable throwableNotHandled, String reason) {
         // ha exception mapper elszáll, akkor internal server error.
         Status.Builder statusBuilder = Status.newBuilder();
 
-        statusBuilder.setCode(com.google.rpc.Code.INTERNAL.getNumber());
+        statusBuilder.setCode(Code.INTERNAL.getNumber());
         statusBuilder.setMessage("Could not handle error - " + throwableNotHandled.getMessage());
         statusBuilder.addDetails(Any.pack(ErrorInfo.newBuilder() //
                 .setReason(reason) //

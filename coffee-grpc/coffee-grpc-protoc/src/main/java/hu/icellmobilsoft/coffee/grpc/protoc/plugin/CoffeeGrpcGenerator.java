@@ -20,7 +20,7 @@
 package hu.icellmobilsoft.coffee.grpc.protoc.plugin;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+//import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
@@ -28,7 +28,7 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import com.google.common.base.Strings;
-import com.google.common.html.HtmlEscapers;
+//import com.google.common.html.HtmlEscapers;
 import com.google.protobuf.DescriptorProtos;
 import com.google.protobuf.compiler.PluginProtos;
 import com.salesforce.jprotoc.Generator;
@@ -51,17 +51,17 @@ public class CoffeeGrpcGenerator extends Generator {
 
     private static final Logger log = Logger.getLogger(CoffeeGrpcGenerator.class.getName());
 
-    private static final int SERVICE_NUMBER_OF_PATHS = 2;
-    private static final int METHOD_NUMBER_OF_PATHS = 4;
+//    private static final int SERVICE_NUMBER_OF_PATHS = 2;
+//    private static final int METHOD_NUMBER_OF_PATHS = 4;
     // public static final String CLASS_PREFIX = "Mutiny";
+//
+//    private String getServiceJavaDocPrefix() {
+//        return "    ";
+//    }
 
-    private String getServiceJavaDocPrefix() {
-        return "    ";
-    }
-
-    private String getMethodJavaDocPrefix() {
-        return "        ";
-    }
+//    private String getMethodJavaDocPrefix() {
+//        return "        ";
+//    }
 
     @Override
     protected List<PluginProtos.CodeGeneratorResponse.Feature> supportedFeatures() {
@@ -130,64 +130,64 @@ public class CoffeeGrpcGenerator extends Generator {
         // serviceContext.className = CLASS_PREFIX + serviceProto.getName() + "Grpc";
         // serviceContext.classPrefix = CLASS_PREFIX;
         serviceContext.fileName = serviceProto.getName() + "Grpc.java";
-        serviceContext.className = serviceProto.getName() + "Grpc";
-        serviceContext.implBaseName = serviceProto.getName() + "Grpc." + serviceProto.getName() + "ImplBase";
+//        serviceContext.className = serviceProto.getName() + "Grpc";
+//        serviceContext.implBaseName = serviceProto.getName() + "Grpc." + serviceProto.getName() + "ImplBase";
         serviceContext.delegatorImplName = serviceProto.getName() + "DelegatorImpl";
         serviceContext.serviceName = serviceProto.getName();
-        serviceContext.deprecated = serviceProto.getOptions() != null && serviceProto.getOptions().getDeprecated();
-
-        List<DescriptorProtos.SourceCodeInfo.Location> allLocationsForService = locations
-                .stream().filter(location -> location.getPathCount() >= 2
-                        && location.getPath(0) == DescriptorProtos.FileDescriptorProto.SERVICE_FIELD_NUMBER && location.getPath(1) == serviceNumber)
-                .collect(Collectors.toList());
-
-        DescriptorProtos.SourceCodeInfo.Location serviceLocation = allLocationsForService.stream()
-                .filter(location -> location.getPathCount() == SERVICE_NUMBER_OF_PATHS).findFirst()
-                .orElseGet(DescriptorProtos.SourceCodeInfo.Location::getDefaultInstance);
-        serviceContext.javaDoc = getJavaDoc(getComments(serviceLocation), getServiceJavaDocPrefix());
-
-        for (int methodNumber = 0; methodNumber < serviceProto.getMethodCount(); methodNumber++) {
-            MethodContext methodContext = buildMethodContext(serviceProto.getMethod(methodNumber), typeMap, locations, methodNumber);
-
-            serviceContext.methods.add(methodContext);
-        }
+//        serviceContext.deprecated = serviceProto.getOptions() != null && serviceProto.getOptions().getDeprecated();
+//
+//        List<DescriptorProtos.SourceCodeInfo.Location> allLocationsForService = locations
+//                .stream().filter(location -> location.getPathCount() >= 2
+//                        && location.getPath(0) == DescriptorProtos.FileDescriptorProto.SERVICE_FIELD_NUMBER && location.getPath(1) == serviceNumber)
+//                .collect(Collectors.toList());
+//
+//        DescriptorProtos.SourceCodeInfo.Location serviceLocation = allLocationsForService.stream()
+//                .filter(location -> location.getPathCount() == SERVICE_NUMBER_OF_PATHS).findFirst()
+//                .orElseGet(DescriptorProtos.SourceCodeInfo.Location::getDefaultInstance);
+//        serviceContext.javaDoc = getJavaDoc(getComments(serviceLocation), getServiceJavaDocPrefix());
+//
+//        for (int methodNumber = 0; methodNumber < serviceProto.getMethodCount(); methodNumber++) {
+//            MethodContext methodContext = buildMethodContext(serviceProto.getMethod(methodNumber), typeMap, locations, methodNumber);
+//
+//            serviceContext.methods.add(methodContext);
+//        }
         return serviceContext;
     }
 
-    private MethodContext buildMethodContext(DescriptorProtos.MethodDescriptorProto methodProto, ProtoTypeMap typeMap,
-            List<DescriptorProtos.SourceCodeInfo.Location> locations, int methodNumber) {
-        MethodContext methodContext = new MethodContext();
-        methodContext.methodName = adaptMethodName(methodProto.getName());
-        methodContext.inputType = typeMap.toJavaTypeName(methodProto.getInputType());
-        methodContext.outputType = typeMap.toJavaTypeName(methodProto.getOutputType());
-        methodContext.deprecated = methodProto.getOptions() != null && methodProto.getOptions().getDeprecated();
-        methodContext.isManyInput = methodProto.getClientStreaming();
-        methodContext.isManyOutput = methodProto.getServerStreaming();
-        methodContext.methodNumber = methodNumber;
-
-        DescriptorProtos.SourceCodeInfo.Location methodLocation = locations.stream()
-                .filter(location -> location.getPathCount() == METHOD_NUMBER_OF_PATHS && location.getPath(METHOD_NUMBER_OF_PATHS - 1) == methodNumber)
-                .findFirst().orElseGet(DescriptorProtos.SourceCodeInfo.Location::getDefaultInstance);
-        methodContext.javaDoc = getJavaDoc(getComments(methodLocation), getMethodJavaDocPrefix());
-
-        if (!methodProto.getClientStreaming() && !methodProto.getServerStreaming()) {
-            methodContext.mutinyCallsMethodName = "oneToOne";
-            methodContext.grpcCallsMethodName = "asyncUnaryCall";
-        }
-        if (!methodProto.getClientStreaming() && methodProto.getServerStreaming()) {
-            methodContext.mutinyCallsMethodName = "oneToMany";
-            methodContext.grpcCallsMethodName = "asyncServerStreamingCall";
-        }
-        if (methodProto.getClientStreaming() && !methodProto.getServerStreaming()) {
-            methodContext.mutinyCallsMethodName = "manyToOne";
-            methodContext.grpcCallsMethodName = "asyncClientStreamingCall";
-        }
-        if (methodProto.getClientStreaming() && methodProto.getServerStreaming()) {
-            methodContext.mutinyCallsMethodName = "manyToMany";
-            methodContext.grpcCallsMethodName = "asyncBidiStreamingCall";
-        }
-        return methodContext;
-    }
+//    private MethodContext buildMethodContext(DescriptorProtos.MethodDescriptorProto methodProto, ProtoTypeMap typeMap,
+//            List<DescriptorProtos.SourceCodeInfo.Location> locations, int methodNumber) {
+//        MethodContext methodContext = new MethodContext();
+//        methodContext.methodName = adaptMethodName(methodProto.getName());
+//        methodContext.inputType = typeMap.toJavaTypeName(methodProto.getInputType());
+//        methodContext.outputType = typeMap.toJavaTypeName(methodProto.getOutputType());
+//        methodContext.deprecated = methodProto.getOptions() != null && methodProto.getOptions().getDeprecated();
+//        methodContext.isManyInput = methodProto.getClientStreaming();
+//        methodContext.isManyOutput = methodProto.getServerStreaming();
+//        methodContext.methodNumber = methodNumber;
+//
+//        DescriptorProtos.SourceCodeInfo.Location methodLocation = locations.stream()
+//                .filter(location -> location.getPathCount() == METHOD_NUMBER_OF_PATHS && location.getPath(METHOD_NUMBER_OF_PATHS - 1) == methodNumber)
+//                .findFirst().orElseGet(DescriptorProtos.SourceCodeInfo.Location::getDefaultInstance);
+//        methodContext.javaDoc = getJavaDoc(getComments(methodLocation), getMethodJavaDocPrefix());
+//
+//        if (!methodProto.getClientStreaming() && !methodProto.getServerStreaming()) {
+//            methodContext.mutinyCallsMethodName = "oneToOne";
+//            methodContext.grpcCallsMethodName = "asyncUnaryCall";
+//        }
+//        if (!methodProto.getClientStreaming() && methodProto.getServerStreaming()) {
+//            methodContext.mutinyCallsMethodName = "oneToMany";
+//            methodContext.grpcCallsMethodName = "asyncServerStreamingCall";
+//        }
+//        if (methodProto.getClientStreaming() && !methodProto.getServerStreaming()) {
+//            methodContext.mutinyCallsMethodName = "manyToOne";
+//            methodContext.grpcCallsMethodName = "asyncClientStreamingCall";
+//        }
+//        if (methodProto.getClientStreaming() && methodProto.getServerStreaming()) {
+//            methodContext.mutinyCallsMethodName = "manyToMany";
+//            methodContext.grpcCallsMethodName = "asyncBidiStreamingCall";
+//        }
+//        return methodContext;
+//    }
 
     static String adaptMethodName(String name) {
         if (name == null || name.isEmpty()) {
@@ -307,20 +307,20 @@ public class CoffeeGrpcGenerator extends Generator {
         }
     }
 
-    private String getComments(DescriptorProtos.SourceCodeInfo.Location location) {
-        return location.getLeadingComments().isEmpty() ? location.getTrailingComments() : location.getLeadingComments();
-    }
-
-    private String getJavaDoc(String comments, String prefix) {
-        if (!comments.isEmpty()) {
-            StringBuilder builder = new StringBuilder("/**\n").append(prefix).append(" * <pre>\n");
-            Arrays.stream(HtmlEscapers.htmlEscaper().escape(comments).split("\n")).map(line -> line.replace("*/", "&#42;&#47;").replace("*", "&#42;"))
-                    .forEach(line -> builder.append(prefix).append(" * ").append(line).append("\n"));
-            builder.append(prefix).append(" * </pre>\n").append(prefix).append(" */");
-            return builder.toString();
-        }
-        return null;
-    }
+//    private String getComments(DescriptorProtos.SourceCodeInfo.Location location) {
+//        return location.getLeadingComments().isEmpty() ? location.getTrailingComments() : location.getLeadingComments();
+//    }
+//
+//    private String getJavaDoc(String comments, String prefix) {
+//        if (!comments.isEmpty()) {
+//            StringBuilder builder = new StringBuilder("/**\n").append(prefix).append(" * <pre>\n");
+//            Arrays.stream(HtmlEscapers.htmlEscaper().escape(comments).split("\n")).map(line -> line.replace("*/", "&#42;&#47;").replace("*", "&#42;"))
+//                    .forEach(line -> builder.append(prefix).append(" * ").append(line).append("\n"));
+//            builder.append(prefix).append(" * </pre>\n").append(prefix).append(" */");
+//            return builder.toString();
+//        }
+//        return null;
+//    }
 
     /**
      * Template class for proto Service objects.
@@ -330,85 +330,85 @@ public class CoffeeGrpcGenerator extends Generator {
         public String fileName;
         public String protoName;
         public String packageName;
-        public String className;
-        public String classPrefix;
+//        public String className;
+//        public String classPrefix;
         public String serviceName;
-        public String implBaseName;
+//        public String implBaseName;
         public String delegatorImplName;
-        public boolean deprecated;
-        public String javaDoc;
-        public List<MethodContext> methods = new ArrayList<>();
+//        public boolean deprecated;
+//        public String javaDoc;
+//        public List<MethodContext> methods = new ArrayList<>();
 
-        public List<MethodContext> unaryUnaryMethods() {
-            return methods.stream().filter(m -> !m.isManyInput && !m.isManyOutput).collect(Collectors.toList());
-        }
-
-        public List<MethodContext> unaryManyMethods() {
-            return methods.stream().filter(m -> !m.isManyInput && m.isManyOutput).collect(Collectors.toList());
-        }
-
-        public List<MethodContext> manyUnaryMethods() {
-            return methods.stream().filter(m -> m.isManyInput && !m.isManyOutput).collect(Collectors.toList());
-        }
-
-        public List<MethodContext> manyManyMethods() {
-            return methods.stream().filter(m -> m.isManyInput && m.isManyOutput).collect(Collectors.toList());
-        }
+//        public List<MethodContext> unaryUnaryMethods() {
+//            return methods.stream().filter(m -> !m.isManyInput && !m.isManyOutput).collect(Collectors.toList());
+//        }
+//
+//        public List<MethodContext> unaryManyMethods() {
+//            return methods.stream().filter(m -> !m.isManyInput && m.isManyOutput).collect(Collectors.toList());
+//        }
+//
+//        public List<MethodContext> manyUnaryMethods() {
+//            return methods.stream().filter(m -> m.isManyInput && !m.isManyOutput).collect(Collectors.toList());
+//        }
+//
+//        public List<MethodContext> manyManyMethods() {
+//            return methods.stream().filter(m -> m.isManyInput && m.isManyOutput).collect(Collectors.toList());
+//        }
     }
 
-    /**
-     * Template class for proto RPC objects.
-     */
-    private static class MethodContext {
-        // CHECKSTYLE DISABLE VisibilityModifier FOR 10 LINES
-        public String methodName;
-        public String inputType;
-        public String outputType;
-        public boolean deprecated;
-        public boolean isManyInput;
-        public boolean isManyOutput;
-        public String mutinyCallsMethodName;
-        public String grpcCallsMethodName;
-        public int methodNumber;
-        public String javaDoc;
-
-        // This method mimics the upper-casing method ogf gRPC to ensure compatibility
-        // See https://github.com/grpc/grpc-java/blob/v1.8.0/compiler/src/java_plugin/cpp/java_generator.cpp#L58
-        public String methodNameUpperUnderscore() {
-            StringBuilder s = new StringBuilder();
-            for (int i = 0; i < methodName.length(); i++) {
-                char c = methodName.charAt(i);
-                s.append(Character.toUpperCase(c));
-                if ((i < methodName.length() - 1) && Character.isLowerCase(c) && Character.isUpperCase(methodName.charAt(i + 1))) {
-                    s.append('_');
-                }
-            }
-            return s.toString();
-        }
-
-        public String methodNamePascalCase() {
-            String mn = methodName.replace("_", "");
-            return String.valueOf(Character.toUpperCase(mn.charAt(0))) + mn.substring(1);
-        }
-
-        public String methodNameCamelCase() {
-            String mn = methodName.replace("_", "");
-            return String.valueOf(Character.toLowerCase(mn.charAt(0))) + mn.substring(1);
-        }
-
-        public String methodHeader() {
-            String mh = "";
-            if (!Strings.isNullOrEmpty(javaDoc)) {
-                mh = javaDoc;
-            }
-
-            if (deprecated) {
-                mh += "\n        @Deprecated";
-            }
-
-            return mh;
-        }
-    }
+//    /**
+//     * Template class for proto RPC objects.
+//     */
+//    private static class MethodContext {
+//        // CHECKSTYLE DISABLE VisibilityModifier FOR 10 LINES
+//        public String methodName;
+//        public String inputType;
+//        public String outputType;
+//        public boolean deprecated;
+//        public boolean isManyInput;
+//        public boolean isManyOutput;
+//        public String mutinyCallsMethodName;
+//        public String grpcCallsMethodName;
+//        public int methodNumber;
+//        public String javaDoc;
+//
+//        // This method mimics the upper-casing method ogf gRPC to ensure compatibility
+//        // See https://github.com/grpc/grpc-java/blob/v1.8.0/compiler/src/java_plugin/cpp/java_generator.cpp#L58
+//        public String methodNameUpperUnderscore() {
+//            StringBuilder s = new StringBuilder();
+//            for (int i = 0; i < methodName.length(); i++) {
+//                char c = methodName.charAt(i);
+//                s.append(Character.toUpperCase(c));
+//                if ((i < methodName.length() - 1) && Character.isLowerCase(c) && Character.isUpperCase(methodName.charAt(i + 1))) {
+//                    s.append('_');
+//                }
+//            }
+//            return s.toString();
+//        }
+//
+//        public String methodNamePascalCase() {
+//            String mn = methodName.replace("_", "");
+//            return String.valueOf(Character.toUpperCase(mn.charAt(0))) + mn.substring(1);
+//        }
+//
+//        public String methodNameCamelCase() {
+//            String mn = methodName.replace("_", "");
+//            return String.valueOf(Character.toLowerCase(mn.charAt(0))) + mn.substring(1);
+//        }
+//
+//        public String methodHeader() {
+//            String mh = "";
+//            if (!Strings.isNullOrEmpty(javaDoc)) {
+//                mh = javaDoc;
+//            }
+//
+//            if (deprecated) {
+//                mh += "\n        @Deprecated";
+//            }
+//
+//            return mh;
+//        }
+//    }
 
     /**
      * main
