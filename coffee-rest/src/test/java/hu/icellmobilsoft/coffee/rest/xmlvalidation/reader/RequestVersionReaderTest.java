@@ -42,7 +42,7 @@ public class RequestVersionReaderTest {
     @DisplayName("Testing read existing requestVersion from xml")
     void readFromXML() throws TechnicalException {
         // Given
-        InputStream is = this.getClass().getClassLoader().getResourceAsStream("reqversion.xml");
+        InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream("reqversion.xml");
         // When
         String requestVersion = requestVersionReader.readFromXML(is);
         // Then
@@ -53,7 +53,7 @@ public class RequestVersionReaderTest {
     @DisplayName("Testing not existing requestVersion in xml")
     void readXmlWithNotExistingRequestVersion() {
         // Given
-        InputStream is = this.getClass().getClassLoader().getResourceAsStream("reqversion_not_exists.xml");
+        InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream("reqversion_not_exists.xml");
         // When
         TechnicalException te = assertThrows(TechnicalException.class, () -> {
             requestVersionReader.readFromXML(is);

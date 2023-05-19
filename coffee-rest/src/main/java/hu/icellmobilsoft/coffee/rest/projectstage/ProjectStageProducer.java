@@ -22,14 +22,15 @@ package hu.icellmobilsoft.coffee.rest.projectstage;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.logging.Logger;
+
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.Produces;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.microprofile.config.Config;
+import org.eclipse.microprofile.config.ConfigProvider;
 
 import hu.icellmobilsoft.coffee.cdi.config.IConfigKey;
-import hu.icellmobilsoft.coffee.tool.utils.config.ConfigUtil;
 
 /**
  * <p>
@@ -95,7 +96,7 @@ public class ProjectStageProducer {
      * Resolves the project-stage. Read configurations from config sources and create ProjectStage from first found config, otherwise create Project
      */
     private void initProjectStage() {
-        Config config = ConfigUtil.getInstance().defaultConfig();
+        Config config = ConfigProvider.getConfig();
         Iterator<String> iterator = Arrays.stream(CONFIG_SETTING_KEYS).iterator();
         while (projectStage == null && iterator.hasNext()) {
             String projectStageConfig = iterator.next();
