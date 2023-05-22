@@ -48,11 +48,9 @@
 			<!-- schema2proto does not work on Windows, the developer must manually copy the created files to the directory -->
 			<id>schema2proto</id>
 			<activation>
-				<!-- disabled on release and non unix OS -->
-				<activeByDefault>true</activeByDefault>
-				<os>
-					<family>unix</family>
-				</os>
+				<property>
+					<name>schema2proto</name>
+				</property>
 			</activation>
 			<build>
 				<plugins>
