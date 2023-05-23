@@ -87,11 +87,11 @@
 					<protocArtifact>com.google.protobuf:protoc:${version.protoc.version}:exe:${os.detected.classifier}</protocArtifact>
 					<inputDirectories>
 						<!-- only own coffee proto files generate -->
-						<include>${project.build.directory}/proto-external/generated-proto</include>
+						<include>${project.build.directory}/proto-external</include>
 					</inputDirectories>
 					<includeMavenTypes>transitive</includeMavenTypes>
 					<includeDirectories>
-						<directory>${project.build.directory}/proto-external/generated-proto</directory>
+						<directory>${project.build.directory}/proto-external</directory>
 					</includeDirectories>
 					<outputTargets>
 						<outputTarget>

@@ -120,22 +120,6 @@
 									</resources>
 								</configuration>
 							</execution>
-							<!-- copy generated-sources classes to target.classes dir -->
-							<execution>
-								<id>copy-generated-sources</id>
-								<phase>process-classes</phase>
-								<goals>
-									<goal>copy-resources</goal>
-								</goals>
-								<configuration>
-									<outputDirectory>${project.build.directory}/classes/generated-proto</outputDirectory>
-									<resources>
-										<resource>
-											<directory>${project.build.directory}/generated-sources</directory>
-										</resource>
-									</resources>
-								</configuration>
-							</execution>
 						</executions>
 					</plugin>
 
@@ -154,6 +138,39 @@
 								<goals>
 									<goal>generate</goal>
 								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<!-- Copy generated proto files to resources -->
+			<id>copy-generated-sources</id>
+			<activation>
+				<property>
+					<name>copy-generated-sources</name>
+				</property>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<artifactId>maven-resources-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>copy-generated-sources</id>
+								<phase>process-classes</phase>
+								<goals>
+									<goal>copy-resources</goal>
+								</goals>
+								<configuration>
+									<outputDirectory>${project.build.sourceDirectory}/../resources</outputDirectory>
+									<resources>
+										<resource>
+											<directory>${project.build.directory}/generated-sources</directory>
+										</resource>
+									</resources>
+								</configuration>
 							</execution>
 						</executions>
 					</plugin>
