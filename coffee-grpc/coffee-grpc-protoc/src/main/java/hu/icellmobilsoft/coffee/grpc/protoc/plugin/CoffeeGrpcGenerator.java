@@ -131,7 +131,7 @@ public class CoffeeGrpcGenerator extends Generator {
         // serviceContext.classPrefix = CLASS_PREFIX;
         serviceContext.fileName = serviceProto.getName() + "Grpc.java";
 //        serviceContext.className = serviceProto.getName() + "Grpc";
-//        serviceContext.implBaseName = serviceProto.getName() + "Grpc." + serviceProto.getName() + "ImplBase";
+        serviceContext.implBaseName = serviceProto.getName() + "Grpc." + serviceProto.getName() + "ImplBase";
         serviceContext.delegatorImplName = serviceProto.getName() + "DelegatorImpl";
         serviceContext.serviceName = serviceProto.getName();
 //        serviceContext.deprecated = serviceProto.getOptions() != null && serviceProto.getOptions().getDeprecated();
@@ -333,7 +333,7 @@ public class CoffeeGrpcGenerator extends Generator {
 //        public String className;
 //        public String classPrefix;
         public String serviceName;
-//        public String implBaseName;
+        public String implBaseName;
         public String delegatorImplName;
 //        public boolean deprecated;
 //        public String javaDoc;
