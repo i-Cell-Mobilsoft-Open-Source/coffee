@@ -43,12 +43,23 @@ projektben https://github.com/i-Cell-Mobilsoft-Open-Source/backend-sampler/blob/
 
 
 == coffee-dto/coffee-dto-xsd2proto
-Coff:ee tartalmaz általános XSD leírókat a `coffee-dto-xsd` csomagban
-- ennek a proto generált és egyéb kézi proto fájlok gyűjtője. 
-Egyben szolgál mintának az XSD - proto generálás folyamatára.
-
+Coff:ee általános XSD leírók (`coffee-dto-xsd` modul) schema2proto generált
+és egyéb kézi proto fájlok gyűjtője. 
 Ezt a csomag szolgál a Coff:ee proto fájlok használatához,
-nem kell a projekteknek Coff:ee proto fájlokat újragenerálni.
+hogy a projektek ne generálják újea a Coff:ee proto fájlokat.
+
+Sajnos a használt schema2proto plugin nem kompatibilis a Windows operációs rendszerrel,
+ezért nem automata kompilációs generálás van beállítva.
+Ha változás van a XSD fájlokon akkor Linux kompatibilis rendszren kell kiadni a következő parancsot:
+
+[source,bash]
+----
+mvn clean install -Dschema2proto -Dcopy-generated-sources
+----
+Ahol a `schema2proto` paraméter aktiválja az XSD -> proto generálást,
+majd a `copy-generated-sources` paraméter aktiválja a generált proto fájlok bemásolását a források közé.
+Ezután a git diff-ben megjelenik a változás.
+
 
 == coffee-dto/coffee-dto-stub-gen
 Minden Coff:ee proto fájl a generált osztályai.
