@@ -1,6 +1,9 @@
 = v2.0.0
 
-coff:ee v1.x.x -> v2.0.0 migrációs leírás, újdonságok, változások leírása
+A főverzió ugrás a coff:ee v1.13.x verzióból indult ki,
+későbbi funkciók már eltérhetnek a V1 és V2 verzióban. 
+
+coff:ee v1.13.x -> v2.0.0 migrációs leírás, újdonságok, változások leírása
 
 == Változások
 
