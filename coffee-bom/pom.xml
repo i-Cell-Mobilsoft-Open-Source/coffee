@@ -14,6 +14,7 @@
 		<version.jakarta.xml.bind.jaxb-api>4.0.0</version.jakarta.xml.bind.jaxb-api>
 		<version.jakarta.activation-api>2.1.0</version.jakarta.activation-api>
 
+		<version.com.google.code.findbugs.jsr305>3.0.2</version.com.google.code.findbugs.jsr305>
 		<version.google.code.gson>2.8.9</version.google.code.gson>
 
 		<version.org.jboss.logging.jboss-logging>3.4.3.Final</version.org.jboss.logging.jboss-logging>
@@ -39,11 +40,22 @@
 		<version.org.glassfish.jaxb.jaxb-runtime>4.0.1</version.org.glassfish.jaxb.jaxb-runtime>
 		<version.microprofile-reactive-messaging-api>3.0</version.microprofile-reactive-messaging-api>
 		<version.microprofile-reactive-streams-operators-api>3.0</version.microprofile-reactive-streams-operators-api>
+
+		<version.io.etcd.jetcd-core>0.7.5</version.io.etcd.jetcd-core>
+		<version.io.grpc.version>1.51.0</version.io.grpc.version>
 	</properties>
 
 	<dependencyManagement>
 		<dependencies>
 			<!-- bom imports -->
+			<dependency>
+				<groupId>io.grpc</groupId>
+				<artifactId>grpc-bom</artifactId>
+				<version>${version.io.grpc.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+
 			<dependency>
 				<groupId>jakarta.platform</groupId>
 				<artifactId>jakarta.jakartaee-api</artifactId>
@@ -55,6 +67,12 @@
 				<artifactId>jakarta.xml.bind-api</artifactId>
 				<version>${version.jakarta.xml.bind.jaxb-api}</version>
 			</dependency>
+			<dependency>
+				<groupId>com.google.code.findbugs</groupId>
+				<artifactId>jsr305</artifactId>
+				<version>${version.com.google.code.findbugs.jsr305}</version>
+			</dependency>
+
 <!-- benne van a ee csomagban
 			<dependency>
 				<groupId>jakarta.activation</groupId>
@@ -472,6 +490,19 @@
 					</exclusion>
 				</exclusions>
 			</dependency>
+
+			<dependency>
+				<groupId>io.etcd</groupId>
+				<artifactId>jetcd-core</artifactId>
+				<exclusions>
+					<exclusion>
+						<groupId>javax.annotation</groupId>
+						<artifactId>javax.annotation-api</artifactId>
+					</exclusion>
+				</exclusions>
+				<version>${version.io.etcd.jetcd-core}</version>
+			</dependency>
+
 		</dependencies>
 	</dependencyManagement>
 

@@ -1,0 +1,19 @@
+= v2.0.0 → v2.1.0
+
+coff:ee v2.0.0 -> v2.1.0 migrációs leírás, újdonságok, változások leírása
+
+== Újdonságok
+
+Nem lettek új funkciók implementálva.
+
+== Változások
+
+
+=== coffee-module-etcd
+
+** Bump io.etcd:jetcd-core 0.6.1 -> 0.7.5
+
+==== Átállás
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
