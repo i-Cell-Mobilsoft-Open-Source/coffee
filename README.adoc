@@ -20,14 +20,14 @@ Ez a megoldási készlet alkalmas mind a SOA, mind a Microservice architektúra 
 
 * Jakarta EE 10+
 * Java 11+
-* CDI 2.0+
+* CDI 4.0+
 * Jboss logging
 * gson
 * guava
 * commons-lang3
 * apache http
 * resteasy
-* microprofile.io 1.3+
+* microprofile.io 5.0+
 
 == Maven central
 A coff:ee megtalálható az official maven repository-ban is,
