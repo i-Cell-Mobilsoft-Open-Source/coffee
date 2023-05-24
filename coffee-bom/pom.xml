@@ -298,6 +298,31 @@
 				<version>${project.version}</version>
 				<scope>provided</scope>
 			</dependency>
+			<dependency>
+				<groupId>hu.icellmobilsoft.coffee</groupId>
+				<artifactId>coffee-grpc-api</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>hu.icellmobilsoft.coffee</groupId>
+				<artifactId>coffee-grpc-base</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>hu.icellmobilsoft.coffee</groupId>
+				<artifactId>coffee-grpc-protoc</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>hu.icellmobilsoft.coffee</groupId>
+				<artifactId>coffee-dto-xsd2proto</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>hu.icellmobilsoft.coffee</groupId>
+				<artifactId>coffee-dto-stub-gen</artifactId>
+				<version>${project.version}</version>
+			</dependency>
 
 			<dependency>
 				<groupId>org.jboss.logging</groupId>

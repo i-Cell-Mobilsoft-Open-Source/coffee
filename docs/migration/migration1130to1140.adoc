@@ -4,10 +4,19 @@ coff:ee v1.13.0 -> v1.14.0 migrációs leírás, újdonságok, változások leí
 
 == Újdonságok
 
-Ebben a verzióban nem lettek új funkciók implementálva.
+Bevezetésre került a https://grpc.io/[gRPC] támogatása.
+Ennek köszönhetően létrejöt új subprojekt gyűjtő `coffee-grpc` néven.
+
+=== coffee-grpc
+Következő funkció támogatások kerültek a rendszerbe:
+
+* coffee-grpc-api - Általános gRPC kezelés Coff:ee API (annotációk, verzió, ...)
+* coffee-grpc-base - protobuf és gRPC stub általános gyűjtője
+* coffee-grpc-protoc - proto -> class generálás támogatása
+* coffee-dto/coffee-dto-xsd2proto - Generált proto fájlok ami a `coffee-dto-xsd` XSD fájlokból vannak generálva.
+* coffee-dto/coffee-dto-stub-gen - Generált osztályok a Coff:ee proto fajlokból 
 
 == Változások
-
 
 === coffee-jpa
 
