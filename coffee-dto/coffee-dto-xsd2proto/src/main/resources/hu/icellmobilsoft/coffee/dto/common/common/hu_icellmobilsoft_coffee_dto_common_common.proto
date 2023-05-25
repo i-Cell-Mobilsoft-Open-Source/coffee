@@ -1,0 +1,58 @@
+// hu_icellmobilsoft_coffee_dto_common_common.proto at 0:0
+syntax = "proto3";
+package hu.icellmobilsoft.coffee.dto.common.common;
+
+import "google/protobuf/timestamp.proto";
+
+option java_multiple_files = false;
+option java_outer_classname = "XsdProtoWrapper";
+
+message AbstractAuditDtoType {
+  int64 version = 1;
+  google.protobuf.Timestamp creation_date = 21;
+  google.protobuf.Timestamp modification_date = 22;
+  string creator_user = 31;
+  string modifier_user = 32;
+}
+message AbstractDtoType {
+  int64 version = 1;
+}
+message CommonIdListType {
+  repeated string id = 1;
+}
+message GPSCoordinateType {
+  double latitude = 1;
+  double longitude = 2;
+}
+message KeyValueBasicType {
+  string key = 1;
+  string value = 2;
+}
+enum OrderByTypeType {
+  // Default
+  ORDER_BY_TYPE_TYPE_UNSPECIFIED = 0;
+  ORDER_BY_TYPE_TYPE_ASC = 1;
+  ORDER_BY_TYPE_TYPE_DESC = 2;
+}
+message QueryRequestDetails {
+  // Adott lapra eső lekérdezett rekordok száma, aktuális result set rowcount
+  int32 rows = 1;
+  // Query-ben jött, a kért lap sorszáma
+  int32 page = 2;
+}
+message QueryResponseDetails {
+  // Adott lapra eső lekérdezett rekordok száma, aktuális result set rowcount
+  int32 rows = 1;
+  // Query-ben jött, a kért lap sorszáma
+  int32 page = 2;
+  // Teljes rekordszám, ami a lekérdezési feltételekkel elérhető
+  int32 total_rows = 21;
+  // Ennyi lap van összesen a kért rowCount/page paraméter alapján
+  int32 max_page = 22;
+}
+enum StatusType {
+  // Default
+  STATUS_TYPE_UNSPECIFIED = 0;
+  STATUS_TYPE_ACTIVE = 1;
+  STATUS_TYPE_INACTIVE = 2;
+}

@@ -1,0 +1,62 @@
+// hu_icellmobilsoft_coffee_dto_common_commonsecurity.proto at 0:0
+syntax = "proto3";
+package hu.icellmobilsoft.coffee.dto.common.commonsecurity;
+
+import "google/protobuf/timestamp.proto";
+
+option java_multiple_files = false;
+option java_outer_classname = "XsdProtoWrapper";
+
+message GroupListType {
+  repeated GroupType group = 1;
+}
+message GroupType {
+  string id = 1;
+  string name = 2;
+  string description = 3;
+}
+message LoginType {
+  string login_name = 1;
+  string password = 2;
+}
+message PermissionListType {
+  repeated PermissionType permisson = 1;
+}
+message PermissionType {
+  string id = 1;
+  string name = 2;
+  string description = 3;
+}
+message RedisUserAuthenticationType {
+  string user_id = 1;
+  string user_name = 2;
+  string session_id = 21;
+  PermissionListType permission_list = 22;
+  RoleListType role_list = 23;
+  GroupListType group_list = 24;
+  google.protobuf.Timestamp last_refresh_time = 71;
+  string refresh_token = 72;
+}
+message RoleListType {
+  repeated RoleType role = 1;
+}
+message RoleType {
+  string id = 1;
+  string name = 2;
+  string description = 3;
+}
+message SecurityType {
+  string user_id = 1;
+  string user_name = 2;
+  string session_id = 21;
+  PermissionListType permission_list = 22;
+  RoleListType role_list = 23;
+  GroupListType group_list = 24;
+}
+message UserListType {
+  repeated UserType user = 1;
+}
+message UserType {
+  string user_id = 1;
+  string user_name = 2;
+}

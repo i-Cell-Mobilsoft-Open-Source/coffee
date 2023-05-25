@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"
+            xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc"
+            xmlns="http://dto.coffee.icellmobilsoft.hu/proto/super-proto"
+            targetNamespace="http://dto.coffee.icellmobilsoft.hu/proto/super-proto"
+            elementFormDefault="qualified" attributeFormDefault="unqualified"
+            jaxb:version="2.0" jaxb:extensionBindingPrefixes="xjc">
+
+    <xsd:import namespace="http://common.dto.coffee.icellmobilsoft.hu/common" schemaLocation="../../../../../../../../../target/xsd/hu/icellmobilsoft/coffee/dto/common/common.xsd" />
+    <xsd:import namespace="http://common.dto.coffee.icellmobilsoft.hu/commonservice" schemaLocation="../../../../../../../../../target/xsd/hu/icellmobilsoft/coffee/dto/common/commonservice.xsd" />
+    <xsd:import namespace="http://common.dto.coffee.icellmobilsoft.hu/commonsecurity" schemaLocation="../../../../../../../../../target/xsd/hu/icellmobilsoft/coffee/dto/common/commonsecurity.xsd" />
+
+    <xsd:import namespace="http://document.dto.coffee.icellmobilsoft.hu/document" schemaLocation="../../../../../../../../../target/xsd/hu/icellmobilsoft/coffee/dto/document/document.xsd" />
+
+    <xsd:import namespace="http://notification.dto.coffee.icellmobilsoft.hu/notification" schemaLocation="../../../../../../../../../target/xsd/hu/icellmobilsoft/coffee/dto/notification/notification.xsd" />
+
+</xsd:schema>
