@@ -1,0 +1,77 @@
+== CDI Extension creation
+To create an extension, you need to implement the `Extension` interface, which is defined in the Java SE service provider architecture.
+According to the CDI 2.0 specification: *javax.enterprise.inject.spi.Extension*
+
+.extension
+[source,xml]
+----
+// Our class that handles Extension
+public class MongoExtension implements javax.enterprise.inject.spi.Extension {
+}
+----
+We need to create a file called `META-INF/services/javax.enterprise.inject.spi.Extension`,
+in which we define our own class that implements the interface: *hu.icellmobilsoft.coffee.module.mongodb.extension.MongoExtension*
+
+In the `MongoExtension` class, we can capture events defined by the CDI container and modify the classes functionality.
+The full list can be found here: https://docs.jboss.org/cdi/spec/2.0/cdi-spec.html[JSR 365].
+
+There are two main groups of events:
+ 
+* Application lifecycle events: they are called once
+* Bean discovery events: called multiple times
+
+Of these, we will process the *afterBeanDiscovery* (Application lifecycle) and the *processInjectionTarget* (Bean discovery) events.
+
+.processInjectionTarget event
+[source,xml]
+----
+// gives the possibility to check the types read by the CDI container
+// this is used to collect classes implementing the MongoService<T> class
+public <T> void processInjectionTarget(final @Observes ProcessInjectionTarget<T> pit) {
+}
+----
+
+.afterBeanDiscovery event
+[source,xml]
+----
+// once the CDI container has initialized all the beans, we can still modify the classes at this point
+// this is where the Producers that make the classes that extend MongoService inject-able are built
+public void afterBeanDiscovery(@Observes final AfterBeanDiscovery abd, BeanManager beanManager) {
+}
+----
+
+To create the producers, the `MongoServiceProducerFactory` class was created.
+It contains a mongoServiceTemplateProducer method which is used as a base by MongoExtension, this provides the template for the producers.
+
+
+=== MongoDbClientFactory
+It is responsible for producing `MongoDbClient`. It produces it based on the configKey given in yml and includes
+initializes the `com.mongodb.client.MongoClient` class and `com.mongodb.client.MongoDatabase` interface,
+which is used to communicate with MongoDb. At this point we use the parameters defined in yml, using configKey.
+
+.produceMongoDbClient producer
+[source,xml]
+----
+@Produces
+@MongoClientConfiguration(configKey = "")
+@Dependent
+public MongoDbClient produceMongoDbClient(InjectionPoint injectionPoint) throws BaseException {
+----
+=== MongoDbClient
+Contains the `com.mongodb.client.MongoDatabase` class which can already handle the selected Mongo database.
+It contains basic functions if you want to work with non POJO mongo entities. Delegate operations
+to MongoService<BasicDBObject>.
+
+=== MongoServiceProducerFactory
+Defines a template method for producing producers. Inside the template method, it requests the `MongoDbClient` class from the CDI container, 
+so it is generic and uses the functionality of the already created `MongoDbClientFactory`. With the collectionKey value from the annotation,
+after initializing `MongoDbClient`, sets the Mongo collection to use.
+It then creates a class extending the MongoService defined in the project with the MongoEntity type specified in the generic parameter.
+
+.mongoServiceTemplateProducer template method
+[source,xml]
+----
+// producer template
+@MongoServiceConfiguration(configKey = "", collectionKey = "")
+public <T> MongoService<T> mongoServiceTemplateProducer(final InjectionPoint injectionPoint) {
+----

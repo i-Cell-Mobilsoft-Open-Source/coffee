@@ -1,0 +1,80 @@
+[#common_module_coffee-module-mp-opentracing]
+= coffee-module-mp-opentracing
+
+The purpose of this module is to support microprofile opentracing which includes the following principles:
+
+* Coffee compatibility - allows coffee modules to provide trace information. The included interceptor can handle the modules of coff:ee, it can be enhanced by introducing its own members, which are contained in the coffee-cdi module.
+* It complements metrics and logging for full observability.
+* Currently we use our own classes as it is not possible to manage well at extension level which component should provide trace information.
+
+== microprofile-opentracing
+Based on https://github.com/eclipse/microprofile-opentracing and the
+https://github.com/opentracing-contrib/java-interceptors project.
+We use our own binding instead of the `org.eclipse.microprofile.opentracing.Traced` annotation, as this way we can completely decouple the traceability of our modules.
+
+== Core
+The bindings in the extension are used to make the different technologies of the modules traceable.
+
+=== OpenTraceInterceptor
+The extension gives classes that are marked with the `@Traceable` annotation the `hu.icellmobilsoft.coffee.cdi.trace.annotation.Traced` binding.
+This is used by the `OpenTraceInterceptor`. With this solution, it is easy to change/modify the trace interceptor later.
+Currently, we rely on the `@Traced` annotation to handle modules, class level `@Traceable` annotation will only result in default operation without exact span data.
+
+=== coffee-module-redis trace
+The `OpenTraceInterceptor` works with span values filled in the `@Traced` annotation. If the value of `@Traced.component` in the annotation is 'Jedis'
+then the interceptor will take the functionName parameter as the basis for determining the span name, otherwise the class name of the annotated method will be used. This value decides whether the Jedis client operation should join an existing trace stream, rather than start a new trace stream by itself. This operation is implemented via the `RedisManager`.
+
+=== coffee-module-redisstream trace
+Annotated the `AbstractStreamConsumer.onStream` method and the `AbstractStreamPipeConsumer.onStream` method.
+A new trace is started with the tag values specified via the `@Traced` annotation. It automatically includes Rest calls and Jedis operations outgoing from here. The span operation name will be the name of the class containing the annotated method.
+
+=== coffee-module-etcd trace
+The `ConfigEtcdHandler` has been annotated, the method calls in it will return trace data.
+
+=== OpenTraceErrorResponseFilter
+Other operations that return an HTTP500 or higher error code will not appear as errors in the trace.
+This filter should handle it, but it is currently exception based, which will not happen in the trace.
+https://github.com/opentracing-contrib/java-jaxrs/blob/master/opentracing-jaxrs2/src/main/java/io/opentracing/contrib/jaxrs2/server/SpanFinishingFilter.java
+The filter is supposed to handle this case.
+
+
+=== Thorntail based project config
+Default uses the Jaeger trace implementation.
+https://docs.thorntail.io/2.5.0.Final/#_jaeger
+
+
+.project-defaults.yml
+[source,yaml]
+----
+thorntail:
+    jaeger:
+        service-name: ${service.name}
+        sampler-type: const #4 supported types: 'const', 'probabilistic', 'ratelimiting' and 'remote'.
+        sampler-parameter: 1 #For 'Constant' sampler, 0 means no traces and 1 means all traces.
+        remote-reporter-http-endpoint: 'http://jaeger-collector.istio-system:14268/api/traces'
+----
+.pom.xml
+----
+<dependency>.
+    <groupId>hu.icellmobilsoft.coffee</groupId>
+    <artifactId>coffee-module-mp-opentracing</artifactId>
+</dependency>
+<dependency>.
+    <groupId>io.thorntail</groupId>
+    <artifactId>microprofile-opentracing</artifactId>
+</dependency>
+<dependency>
+    <groupId>io.thorntail</groupId>
+    <artifactId>jaeger</artifactId>
+</dependency>
+----
+=== Wildfly based project config
+Default is using the Jaeger trace implementation.
+https://docs.wildfly.org/20/wildscribe/subsystem/microprofile-opentracing-smallrye/jaeger-tracer/index.html
+.pom.xml
+----
+<dependency>
+    <groupId>hu.icellmobilsoft.coffee</groupId>
+    <artifactId>coffee-module-mp-opentracing</artifactId>
+</dependency>
+----

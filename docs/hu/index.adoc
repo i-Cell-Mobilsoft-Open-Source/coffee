@@ -1,0 +1,18 @@
+:toc: left
+:toclevels: 3
+:sectnums:
+:icons: font
+:imagesdir: pic
+
+[#index]
+include::project-description.adoc[leveloffset=+1]
+
+include::common.adoc[leveloffset=+1]
+
+include::migration.adoc[leveloffset=+1]
+
+== HOWTO
+
+include::howto/xsd-xml-validation-depend-on-version.adoc[leveloffset=+2]
+
+include::howto/xsd-catalog.adoc[leveloffset=+2]

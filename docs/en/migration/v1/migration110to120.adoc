@@ -1,0 +1,89 @@
+= v1.1.0 → v1.2.0
+
+coff:ee v1.1.0 -> v1.2.0 migration description, news, changes
+
+== Changes
+
+=== coffee-cdi
+* In LogContainer, when specifying different log levels, only Varargs (multiple arguments) is retained among the multiple argument options for formatted messages.
+* LogContainer's logs automatically get a LocalDateTime.now() when they are created, which is also printed when logs are written.
+* In LogContainer, when a Throwable is written, the message received in the argument is now also written, and the stacktrace is written in a more structured way.
+
+==== Transition
+
+Changes do not result in migration work, backwards compatible.
+
+=== coffee-dto
+* In common.xsd, the regex describing the TimestampType type has been extended, it can now accommodate fractional seconds with 6 digits precision instead of the previous 3.
+
+==== Migration
+
+Changes do not result in migration work, backwards compatible.
+
+=== coffee-rest
+
+* RequestResponseLogger response printout extended with xml printout if mediaType is application/xml,text/xml or application/atom+xml.
+* For RequestResponseLogger response printout, the json printout has also been made mediaType dependent.
+* For RequestResponseLogger response printout, in all other non-string object cases, the response object is printed using the toString() method of the object.
+* The BaseServicePath class has been moved to the coffee-dto package.
+* ApplicationConfiguration - if no value is found for the configuration key - now only logs a WARN line, without stacktrace.
+* All methods of JsonMessageBodyReaderBase can be extended.
+
+==== Migration
+
+In classes using the `BaseServicePath` class as ancestor, the import must be changed:
+`hu.icellmobilsoft.coffee.rest.url.BaseServicePath` -> `hu.icellmobilsoft.coffee.dto.url.BaseServicePath`
+
+=== coffee-tool
+* A method to convert from LocalDate to Date has been added to the DateUtil class.
+
+==== Migration
+
+The changes do not result in any migration work, backwards compatible.
+
+=== coffee-module-mp-restclient
+* Default ResponseExceptionMapper<BaseException> implementation
+
+==== Migration
+
+The default ResponseExceptionMapper<BaseException> was created without priority, a different implementation can be used by specifying priority.
+
+=== coffee-dto-base
+* InvalidRequestException deprecated
+* SaxParseBaseException deprecated
+
+==== Migration
+
+Changes do not result in migration work, backwards compatible.
+The two exceptions are not in use, their role is fulfilled by XsdProcessingException.
+
+=== coffee-jpa
+* BaseService log and error handling functions `private` -> `protected`
+
+==== Migration
+
+Changes do not result in migration work, backwards compatible.
+
+=== coffee - cdi-based modules
+* beans.xml has been added to these modules.
+
+==== Migration
+
+Changes do not result in migration work, backwards compatible.
+
+=== coffee-cdi
+* `hu.icellmobilsoft.coffee.cdi.logger.LogProducer.getStaticDefaultLogger(String)` deprecated lett.
+* `hu.icellmobilsoft.coffee.cdi.logger.LogProducer.getStaticDefaultLogger(Class)` deprecated lett.
+
+==== Migration
+
+Changes do not result in migration work, backwards compatible.
+The hash `hu.icellmobilsoft.coffee.cdi.logger.LogProducer.getStaticDefaultLogger(String)` is recommended instead of `hu.icellmobilsoft.coffee.se.logging.DefaultLogger.getLogger(String)`.
+The hash `hu.icellmobilsoft.coffee.cdi.logger.LogProducer.getStaticDefaultLogger(Class)` is recommended instead of `hu.icellmobilsoft.coffee.se.logging.DefaultLogger.getLogger(Class)`.
+
+=== coffee-se-logging
+* `hu.icellmobilsoft.coffee.se.logging.DefaultLogger` has been given a private constructor.
+
+==== Migration
+
+Changes do not result in migration work, backwards compatible.

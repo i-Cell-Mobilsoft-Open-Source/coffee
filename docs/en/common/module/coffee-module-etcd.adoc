@@ -1,0 +1,169 @@
+[#common_module_coffee-module-etcd]
+= coffee-module-etcd
+
+Module to manage ETCD, implement Microprofile ConfigSource
+
+Functioning of the official 
+
+.maven
+[source,xml]
+----
+<dependency>
+    <groupId>io.etcd</groupId>
+    <artifactId>jetcd-core</artifactId>
+    <version>0.5.0</version>
+</dependency>
+----
+based driver, extended with enterprise usage model options. More precise description on separate page
+
+== Deploying configurations, configuring ETCD host
+To deploy ETCD configurations, the coffee-module-etcd module is pulled in as a dependency.
+This will provide the auxiliary classes needed for configuration management,
+and contains an `EtcdConfig` implementation to define it,
+that the `coffee.etcd.default.url` property included in the configuration will be the ETCD's reachability.
+
+On the backend side, there are several ways to manage configurations.
+These typically support and complement each other.
+
+== Microprofile-config
+The microprofile-config annotation can be used to inject specific configuration values.
+In order for microprofile-config to detect ETCD storage,
+in our code, we need to activate the `coffee-module-etcd` in
+ConfigSource implementation in the code of your code:
+
+* `hu.icellmobilsoft.coffee.module.etcd.producer.DefaultEtcdConfigSource` - default config source
+* `hu.icellmobilsoft.coffee.module.etcd.producer.CachedEtcdConfigSource` - cached config source.
+The cache will remember the retrieved value for 30 minutes,
+even if the ETCD does not contain it,
+so we can reduce a lot of repetitive queries.
+Cache is a thread safe singleton,
+it is possible to clear it by calling `EtcdConfigSourceCache.instance().clear()`.
+
+It is activated in the following file:
+
+.src/main/resources/META-INF/services/org.eclipse.microprofile.config.spi.ConfigSource
+[source,java]
+----
+hu.icellmobilsoft.coffee.module.etcd.producer.CachedEtcdConfigSource
+----
+
+The priority of this ConfigSource is set to 150.
+
+It is possible to inject String, Integer, Boolean, Long, Float and Double configurations. The ETCD always stores String, the parsing to the desired type is done after reading the value. The mechanism uses ConfigEtcdHandler in the background to read the values.
+See link:#common_core_coffee-configuration[configuration module]
+
+== ConfigEtcdHandler class
+Provides a way to read and write ETCD configuration values in a context.
+It uses ConfigEtcdService in the background.
+
+.Write configuration
+[source,java]
+----
+@Inject
+private ConfigEtcdHandler configEtcdHandler;
+...
+configEtcdHandler.putValue("public.email.sender", "noreply@sample.teszt.hu");
+----
+
+.query configuration
+[source,java]
+----
+@Inject
+private ConfigEtcdHandler configEtcdHandler;
+...
+String adminEmail = configEtcdHandler.getValue("public.email.sender");
+----
+
+=== Reference to another configuration
+ConfigEtcdHandler, and thus indirectly ConfigurationHelper and the @ConfigProperty annotation, also allow it,
+the value of one config to refer to another config. In this case, { and } characters
+to specify the referenced configuration.
+
+.reference to another configuration
+[source,java]
+----
+@Inject
+private ConfigEtcdHandler configEtcdHandler;
+...
+configEtcdHandler.putValue("protected.iop.url.main", "http://sample-sandbox.hu/kr_esb_gateway/services/IOPService?wsdl");
+configEtcdHandler.putValue("protected.iop.url.alternate", "http://localhost:8178/SampleMockService/IOPService2?wsdl");
+configEtcdHandler.putValue("public.iop.url", "{protected.iop.url.main}");
+String contactEmail = configEtcdHandler.getValue("public.iop.url"); //A return value "http://sample-sandbox.hu/kr_esb_gateway/services/IOPService?wsdl"
+----
+The reference must strictly refer to a specific other configuration, no other content is allowed.
+For example, the embedded reference will not be resolved ("http://{masik.etcd.conf}:8178/SampleMockService/IOPService2?wsdl").
+
+== ConfigEtcdService class
+Provides the ability to query, write, list, search for configuration values.
+The lowest class of those listed. All of the above mechanisms work through this
+implement their functionality. Presumably you will only need to use it if you delete it,
+list configurations.
+
+.Write, query, delete a configuration
+[source,java]
+----
+@Inject
+private ConfigEtcdService configEtcdService;
+...
+configEtcdService.putValue("protected.iop.url.main", "http://sample-sandbox.hu/kr_esb_gateway/services/IOPService?wsdl"); //write
+String senderEmail = configEtcdService.getValue("protected.iop.url.main"); //read
+configEtcdService.delete("protected.iop.url.main"); //delete
+----
+
+.list configurations
+[source,java]
+----
+@Inject
+private ConfigEtcdService configEtcdService;
+...
+Map<String, String> allConfigMap = configEtcdService.getList(); //list all configuration
+Map<String, String> publicConfigMap = configEtcdService.searchList("public."); //list configurations with a given prefix key (cannot be an empty String)
+----
+
+When requesting or deleting a non-existent configuration, the service throws a BONotFoundException.
+Since this mechanism is used by all listed options, this is true for all of them.
+
+== Namespaces, configuration naming conventions
+The configuration handler does not support separate namespaces, all information stored in etcd is accessible.
+
+Each configuration key starts with a visibility prefix.
+They are managed according to the following conventions:
+[options="header",cols="1,1"]
+|===
+|Prefix |Description   
+//-------------
+|`private.` |Only the configuration available to the backend   
+|`protected.` |Accessible for both backend and frontend, frontend read-only configuration   
+|`public.` |A configuration available to both backend and frontend, frontend can change its value   
+|===
+
+== Configuration management using Command Line Tool
+Download and unpack the ETCD package for your system: https://github.com/coreos/etcd/releases/
+
+Set the ETCDCTL_API environment variable to 3:
+[source,batch]
+----
+#Linux
+export ETCDCTL_API=3
+ 
+#Windows
+set ETCDCTL_API=3
+----
+
+From the command line, you can use etcdctl to read and write the values in the ETCD configuration:
+
+[source,batch]
+----
+#Read the whole configuration
+etcdctl --endpoints=%ETCD_ENDPOINTS% get "" --from-key
+ 
+#Read the value of a given configuration
+etcdctl --endpoints=%ETCD_ENDPOINTS% get private.sample
+ 
+#Write the value of a given configuration
+etcdctl --endpoints=%ETCD_ENDPOINTS% put private.sample ertek
+----
+
+== Logging
+The retrieved keys and the resulting values are logged unless the key matches the regular expression `+++[\w\s]*?secret[\w\s]*?+++` or `+++[\w\s]*?pass[\w\s]*?+++`, in which case the value is masked and logged.
+The default regex can be overridden by specifying `coffee.config.log.sensitive.key.pattern` in one of the *default* microprofile-config sources (sys var, env var, META-INF/microprofile-config.properties), multiple patterns can be specified separated by commas.

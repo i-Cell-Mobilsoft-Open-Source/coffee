@@ -1,0 +1,216 @@
+= v2.0.0
+
+The major version jump was made from coff:ee v1.13.x,
+later features may already differ between V1 and V2 versions. 
+
+coff:ee v1.13.x -> v2.0.0 migration description, new features, changes
+
+== Changes
+
+=== General
+This version aims to implement Jakarta EE 10,
+which follows the change from java import javax.* -> jakarta.* throughout the project.
+
+Since almost all dependencies have been updated,
+so listing them one by one is redundant.
+Mostly cosmetic version changes, or EE10 implementations.
+
+The content of the beans.xml files has been updated:
+
+.beans.xml
+[source,xml]
+----
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="https://jakarta.ee/xml/ns/jakartaee"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="
+      https://jakarta.ee/xml/ns/jakartaee 
+      https://jakarta.ee/xml/ns/jakartaee/beans_4_0.xsd">
+</beans>
+----
+
+Include Jandex-maven-plugin on all modules.
+Consolidated the use of classLoader across several modules, using Thread.currentThread().getContextClassLoader() everywhere except in the coffee-deltaspike module!
+
+==== BOM version elevations:
+Major changes were: 
+
+* org.jboss.resteasy.resteasy-jaxrs 3.6.2.Final -> org.jboss.resteasy.resteasy-core 6.2.1.Final - went through resteasy dependency breakdown,
+this should be noted on projects
+* org.hibernate.hibernate-core 5.4.24.Final -> 6.1.5.Final
+* org.apache.activemq.activemq-client 5.15.13 -> org.apache.activemq.artemis-jakarta-client 2.27.0 - this is a big jump in drivers,
+a lot of changes have been made.
+You have to be very careful when implementing changes in projects.
+
+
+=== coffee-dto
+* The jakarta conversion is `/coffee-dto-gen/src/main/resources/xsd/hu/icellmobilsoft/coffee/dto/bindings.xjb`
+file requires modification of the header:
+
+[source,xml]
+----
+<jaxb:bindings version="3.0"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:jaxb="https://jakarta.ee/xml/ns/jaxb"
+    xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc"
+    xmlns:annox="http://annox.dev.java.net"
+    jaxb:extensionBindingPrefixes="xjc annox">
+...
+</jaxb:bindings>
+----
+
+IMPORTANT:: In the JAXB 4.0 specification, the version of the jaxb xml schema, remains `3.0`!
+https://jakarta.ee/specifications/xml-binding/4.0/[Jakarta XML Binding 4.0]
+
+For XSD -> DTO generation, the project uses a forked jaxb4 maven plugin:
+https://github.com/phax/maven-jaxb2-plugin/tree/v016[phax/maven-jaxb2-plugin#v016].
+The plugin is a fork of the previously used jaxb2 plugin, a dependency swap is sufficient
+`com.helger.maven:jaxb40-maven-plugin:0.16.0`.
+
+WARNING:: No jaxb3 or jaxb4 versions of the `org.jvnet.jaxb2_commons:jaxb2-basics-annotate` plugin are currently available,
+In coffee, the earlier one works with the 4.0 plugin, but may cause problems in projects or later.
+
+=== coffee-deltaspike
+The coffee-deltaspike subproject has been created for this purpose,
+to replace the functionality that was lost by dropping the deltaspike dependency
+there is nothing to replace it with.
+This could be a permanent solution, time will tell.
+
+.coffee-deltaspike-message
+Contains the classes responsible for the language,
+1:1 correspondence to the solution used so far - at class name level.
+The language is a "lite" copy of the original
+(https://deltaspike.apache.org/documentation/core.html#Messagesandi18n),
+without @MessageBundle and @MessageTemplate.
+The MessageContext and Locale resolvers are completely as in the original.
+The `DefaultMessageResolver` and the `DefaultMessageContext` are interleaved on several threads,
+fixed via `DefaultMessageResolve`.
+
+.coffee-deltaspike-data
+Replaces the original
+https://deltaspike.apache.org/documentation/data.html[deltaspike-data-module]
+functionality, except for a few things:
+
+* Deactivating Repositories
+* Transactions
+* Multiple entityManager
+* Auditing
+
+Changes from the original deltaspike code:
+
+* EntityRepositoryHandler got a @Dependent annotation,
+It is not yet known why it was not included.
+It was originally on CriteriaSupportHandler for a similar purpose,
+without it, `DelegateQueryBuilder.lookup` (line 111) could not find it
+the correct server class for the `EntityRepository` interface.
+* The asm dependency has been removed, instead repository calls are made via dynamic proxies.
+* New extension `hu.icellmobilsoft.coffee.deltaspike.data.extension.RepositoryExtension` which handles repository interfaces and their associated proxies.
+The extension's job is to channel the resulting proxy calls to the central QueryHandler class.
+* `QueryHandler` interface lookup has been partially changed due to the new proxies.
+This is necessary in order to be able to use the processed repository metadata, 
+so it is not necessary to rewrite the deltaspike core logic.
+
+.Migration
+On implementing projects, possible deltaspike message and data dependency
+should be replaced by the `coffee-deltaspike-message` and `coffee-deltaspike-data` dependency respectively.
+The `org.apache.deltaspike.jpa.api.transaction.Transactional`
+annotation is replaced by `hu.icellmobilsoft.coffee.jpa.annotation.Transactional`,
+must be replaced everywhere.
+
+=== coffee-rest
+
+.Project stage management
+Deltaspike core after ejecting `org.apache.deltaspike.core.api.projectstage.ProjectStage`
+was removed and replaced by `hu.icellmobilsoft.coffee.rest.projectstage.ProjectStage`.
+It searches for the correct keys in all configs.
+
+.Migration
+Replace `org.apache.deltaspike.core.api.projectstage.ProjectStage` -> 
+`hu.icellmobilsoft.coffee.rest.projectstage.ProjectStage` class.
+
+=== coffee-model-base
+The deltaspike data dependency has been removed.
+The former deltaspike data CurrentUser has been replaced by
+`hu.icellmobilsoft.coffee.model.base.annotation.CurrentUser` annotation. The AuditProvider, TimestampsProvider classes are replaced by the former deltaspike data
+Instead of implementing the PrePersistAuditListener and PreUpdateAuditListener interfaces, they are implemented as methods with the java-like PrePersist and PreUpdate annotations
+have been provided. The deltaspike AuditEntityListener has been removed from AbstractEntity, and the AbstractAuditEntity classes have been replaced by the following
+annotation: @EntityListeners({ TimestampsProvider.class, AuditProvider.class }).
+
+.Migration
+Change the annotation of deltaspike data `org.apache.deltaspike.data.api.audit.CurrentUser` to `hu.icellmobilsoft.coffee.model.base.annotation.CurrentUser`.
+
+=== coffee-jpa
+
+* The `deltaspike-jpa-module` has been discarded, it is no longer needed.
+* BatchService has been updated with the new features of hibernate 6, full type conversion. +
+BatchService's type handling itself has been rethought and handles the more problematic types separately.
+For more information see link:#BatchService[BatchService].
+
+.Migration
+* Since hibernate 6 has rethought the type handling and coffee has done the same for BatchService,
+so special attention must be paid to projects to ensure that all types in the entity work as expected.
+If any methods are overwritten, they should be checked first,
+if it works without the overrides.
+This is important because the type changes in hibernate 6 itself and the re-thought BatchService type handling
+brought a lot of new features and high type handling.
+If you do need to override projects for whatever reason,
+they will probably need to be updated.
+
+=== coffee-module-artemis
+The driver _jakarta EE 10_ and the changes to _Jakarta Messaging 3.1_ in it have changed a lot:
+https://blogs.apache.org/activemq/entry/activemq-artemis-embraces-jakarta-ee[ActiveMQ Artemis embraces Jakarta EE].
+
+You should test the *JmsHandler.createTextMessage*
+and *JmsUtil.newJmsException* functions,
+where the change was specifically affected,
+changed the original concept with delay messages. 
+
+=== coffee-module-notification
+Unfortunately there is no java-compatible release of the Apache commons-email dependency yet,
+so the `coffee-module-notification` module has been removed from the coffee modules.
+Next issue handles: https://issues.apache.org/jira/browse/EMAIL-203[EMAIL-203] or
+https://github.com/apache/commons-email/pull/133[commons-email Gihub PR] pull request.
+
+.Migration
+coffee-module-notification module has been removed.
+
+=== coffee-module-mp-opentracing
+Module has been optimized, so some classes (e.g. `OpenTraceExtension`) have become redundant.
+The `@hu.icellmobilsoft.coffee.cdi.trace.annotation.Traced` annotation replaces all functions,
+which can still be used to trace the individual modules of coffee.
+
+.Migration
+The former `@Traceable` annotation should be replaced by `@hu.icellmobilsoft.coffee.cdi.trace.annotation.Traced`
+annotation.
+
+=== junit tests
+Parameterized junit tests with `@ParameterizedTest` annotation
+(e.g. `hu.icellmobilsoft.coffee.rest.projectstage.ProjectStageProducerTest`)
+are annotated with `@ExplicitParamInjection`.
+Without this, the CDI managed parameter injection will not work.
+
+=== coffee-module-csv
+
+During csvUtil csv generation, the line separator was replaced: ICSVWriter.DEFAULT_LINE_END (\n) -> System.lineSeparator().
+Thus, an operating system dependent line separator is used.
+
+.Migration
+The changes do not result in any changeover work, it is backwards compatible.
+
+=== coffee-se-logging
+
+In JbossMDCAdpater, there was an error in logging the parameter, which has been fixed.
+
+.Migration
+Changes do not result in migration work, backwards compatible.
+
+
+== coffee-module-etcd
+
+* The CONNECT_TIMEOUT_MILLIS parameter has been introduced in `hu.icellmobilsoft.coffee.module.etcd.util.EtcdClientBuilderUtil`, 
+this prevents ramp-up timeout errors caused by a mismatch between the query and the timeout parameter to the etcd server.
+
+==== Migration
+
+The changes do not result in any migration work, it is backwards compatible.
+

@@ -1,0 +1,56 @@
+= v1.6.0 → v1.7.0
+
+coff:ee v1.6.0 -> v1.7.0 migration description, new features, changes
+
+== What's new
+
+=== coffee-module-ruleng
+The `dispose` method in `AbstractEvaluator` has been redesigned,
+by default, it does not destroy selected IRules because their scope is not known.
+The `preDestroy` method has been introduced, which can be overridden to handle CDI destroy on rules at the project level.
+
+==== Migration
+If there was no `Dependent` implementation of the `IRule` interface,
+changes do not result in migration work, it is backwards compatible.
+Otherwise, `AbstractEvaluator.preDestroy` must be overwritten at the project level to release `Dependent` instances.
+
+=== coffee-module-redis
+RedisManager has been introduced.
+
+* Unified error handling
+* Unified connection handling
+* Fully CDI Jedis management
+
+RedisManager's run and runWithConnection methods have been @Traced annotated.
+
+==== Migration
+Changes do not result in migration work, backwards compatible.
+
+=== coffee-jpa
+In a batchService, it is possible that the array returned by executeBatch consists of fewer elements than the number of entities for which the batchService was run.
+Previously, this was thrown with an `IllegalArgumentException`, this has been fixed, henceforth those records will be marked with `UNKNOWN` status,
+for which no result was returned by executeBatch.
+
+==== Migration
+The changes do not result in any migration work, it is backwards compatible.
+
+=== coffee-module-redisstream
+* AbstractStreamConsumer.onStream method @Traced annotated
+* AbstractStreamPipeConsumer.onStream method @Traced annotated
+
+==== Migration
+Changes do not result in migration work, backwards compatible.
+
+=== coffee-cdi
+* Traced annotation has been extended, span values can be specified for trace punctuation.
+* Traced annotation moved to coffee-cdi module.
+
+==== Migration
+* Migration work in coff:ee resulted in 2 modules being connected, coffee-redis, coffee-redisstream
+* Traced annotation import: hu.icellmobilsoft.coffee.module.mp.opentracing.extension -> hu.icellmobilsoft.coffee.cdi.trace.annotation
+
+=== coffee-module-opentracing
+* Redis operations and Redis stream consumers are channeled into the existing opentrace flow.
+
+==== Migration
+Changes do not result in migration work, backwards compatible.

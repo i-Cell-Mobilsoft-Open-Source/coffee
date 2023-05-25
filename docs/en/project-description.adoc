@@ -1,0 +1,19 @@
+== Coffee Documentation
+
+The coff:ee is a JakartaEE solution set designed to bring together common algorithms from the enterprise world,
+and provide a basic solution that can be tailored to our own needs if required.
+
+Each company develops its own solution set, which tries to bring projects together, so that the same modules don't have to be rewritten, copied and maintained.
+
+This solution set is suitable to serve both SOA and Microservice architecture. Its architecture is modular and can be overwritten at project level for almost everything. The framework is based on the following systems, which are crucial for the whole operation:
+
+* Jakarta EE 8+
+* Java 11+
+* CDI 2.0+
+* Jboss logging
+* gson
+* guava
+* commons-lang3
+* apache http
+* resteasy
+* microprofile.io 1.3+

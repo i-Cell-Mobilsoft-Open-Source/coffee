@@ -1,0 +1,18 @@
+= v2.0.0 → v2.1.0
+
+coff:ee v2.0.0 -> v2.1.0 migration description, news, changes
+
+== What's new
+
+No new features have been implemented.
+
+== Changes
+
+
+=== coffee-module-etcd
+
+** Bump io.etcd:jetcd-core 0.6.1 -> 0.7.5
+
+==== Migration
+
+Changes do not result in migration work, backwards compatible.

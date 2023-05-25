@@ -1,0 +1,134 @@
+= v1.8.0 → v1.9.0
+
+coff:ee v1.8.0 -> v1.9.0 migration description, new features, changes
+
+== What's new
+
+=== JDK 17 support
+The project now supports java 17,
+so it can be used in this java based project.
+Most of the problematic parts have been fixed with dependency updates,
+the only problematic part is the use of gson.
+
+.gson
+This module is dependency reflection based (there are several official issues with this in the gson project),
+which is restricted with java17 so configuration is required for test cases.
+It is expected that the implemented project will also need the following jvm parameter:
+
+[source,bash]
+----
+--add-exports=java.xml/com.sun.org.apache.xerces.internal.jaxp.datatype=ALL-UNNAMED
+--add-opens=java.xml/com.sun.org.apache.xerces.internal.jaxp.datatype=ALL-UNNAMED
+----
+In future versions we will revise the dependency.
+
+.java 11 && 17
+The coff:ee 1.x.x will continue to be compiled with java 11,
+but will also get compile and test checks for java 17.
+This will minimize java version dependency problems.
+
+==== BOM version elevations:
+* google.code:gson 2.8.3 -> 2.8.9
+* junit:jupiter 5.5.2 -> 5.8.1
+* org.jboss.weld:weld-junit5 2.0.1.Final -> 2.0.2.Final
+* jedis 3.6.0 -> 4.2.1
+
+
+=== coffee-module-configdoc
+* The module has been created
+* Output file configurability
+
+==== Migration
+Changes do not result in migration work, backwards compatible.
+
+=== coffee-tool
+* DateXmlUtil -> XmlGregorianCalendar optimization: serving DatatypeFactory.newInstance() instance from cache for performance reasons
+
+=== coffee-module-mongodb
+* Retrieve cached instance of DatatypeFactory.newInstance() based on DateXmlUtil
+
+==== Migration
+Changes do not result in migration work, backwards compatible.
+
+=== coffee-model-base
+* Common generic interface fix for 2 `AbstractIdentifiedAuditEntity` classes (based on `java.util.Date` and `OffsetDateTime`) due to jackson deserialization bug. Separated `IAuditEntity` and `IIdentifiedEntity` interfaces.
+
+==== Migration
+Changes do not result in migration work, backwards compatible.
+
+=== coffee-module-redis
+* jedis version upgrade done 3.6.0 -> 4.2.1
+
+==== Migration
+Package changes have been made and should be followed
+
+=== coffee-module-redisstream
+* jedis version upgrade done 3.6.0 -> 4.2.1
+
+==== Migration
+Package changes have been made and need to be tracked
+
+== Changes
+
+=== General
+
+==== Java EE 8 -> Jakarta EE 8 migration
+First released Jakarta version is completely identical at package and class level
+with the previous Java EE 8, differing only in maven coordinates.
+
+==== Transition
+
+* Replace the `javax` dependencies with https://wiki.eclipse.org/Jakarta_EE_Maven_Coordinates[corresponding
+`jakarta` pair], for example:
++
+.javax
+[source,xml]
+----
+<dependency>.
+    <groupId>javax</groupId>
+    <artifactId>javaee-api</artifactId>
+    <version>8.0</version>
+    <scope>provided</scope>
+</dependency>
+----
++
+.jakarta
+[source,xml]
+----
+
+<dependency>
+    <groupId>jakarta.platform</groupId>
+    <artifactId>jakarta.jakartaee-api</artifactId>
+    <version>8.0.0</version>
+    <scope>provided</scope>
+</dependency>
+----
++
+Or for separately managed dependencies:
++
+.javax
+[source,xml]
+----
+<dependency>.
+    <groupId>javax.xml.bind</groupId>
+    <artifactId>jaxb-api</artifactId>
+    <version>2.3.1</version>
+    <scope>provided</scope>
+</dependency>
+----
++
+.jakarta
+[source,xml]
+----
+<dependency>
+    <groupId>jakarta.xml.bind</groupId>
+    <artifactId>jakarta.xml.bind-api</artifactId>
+    <version>2.3.2</version>
+    <scope>provided</scope>
+</dependency>
+----
++
+* You should also check for dependencies that have been transitively pulled in, after the migration there should be no `javax` dependencies left in the project,
+because this may result in unexpected errors. For this, you can use the `dependency:tree` goal of the maven dependency plugin.
+It is possible that we have exploited the exclude-ed transitive dependency in code at project level, in which case a compilation error
+which can be corrected by adding the `jakarta` pair of the exclude-olt `javax` artifact to the dependency.
