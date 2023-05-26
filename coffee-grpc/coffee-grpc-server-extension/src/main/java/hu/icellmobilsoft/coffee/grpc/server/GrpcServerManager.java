@@ -103,6 +103,14 @@ public class GrpcServerManager {
         server = serverBuilder.build();
     }
 
+    /**
+     * Configure gRPC server instance common settings
+     * 
+     * @param serverBuilder
+     *            gRPC server instance
+     * @throws BaseException
+     *             on error
+     */
     protected void configureServer(ServerBuilder<?> serverBuilder) throws BaseException {
         // NettyServerBuilder server config
         serverBuilder.maxConnectionAge(serverConfig.getMaxConnectionAge(), TimeUnit.SECONDS);
@@ -116,6 +124,14 @@ public class GrpcServerManager {
         serverBuilder.permitKeepAliveWithoutCalls(serverConfig.isPermitKeepAliveWithoutCalls());
     }
 
+    /**
+     * Configure gRPC server instance thread pool executor
+     * 
+     * @param serverBuilder
+     *            gRPC server instance
+     * @throws BaseException
+     *             on error
+     */
     protected void configureServerPool(ServerBuilder<?> serverBuilder) throws BaseException {
         if (serverConfig.isThreadPoolJakartaActive()) {
             serverBuilder.executor(managedExecutorService);
