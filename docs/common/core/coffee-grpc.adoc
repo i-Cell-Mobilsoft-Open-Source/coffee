@@ -10,6 +10,10 @@ Modul célja a gRPC kommunikáció és a kezelés támogatása.
 Protobuf és gRPC általános osztályok gyűjtője.
 Tartalma exception, státusz kezelés és egyéb CDI, Coff:ee általános funkciók.
 
+.ExceptionMapper és ExceptionHandler
+Generikus ExceptionMapper interface JAX-RS mintára,
+adott Exception típus grpc Status-ra konvertálását teszi lehetővé a CDI adta lehetőségeket kihasználva.
+
 == coffee-grpc-protoc
 Segéd tool ami a proto -> class generálására szolgál.
 A logika https://mustache.github.io/[mustache] template rendszert használja fel,
@@ -41,6 +45,54 @@ ami a `com.salesforce.jprotoc.ProtocPlugin` rendszerbn fog szerepelni.
 Komplexebb minta a https://github.com/i-Cell-Mobilsoft-Open-Source/backend-sampler[backend-sampler]
 projektben https://github.com/i-Cell-Mobilsoft-Open-Source/backend-sampler/blob/main/api/api-grpc/api-grpc-stub-gen/pom.xml[található]. 
 
+== coffee-grpc-server-extension
+Modul egy gRPC szerver CDI kompatibilis implementaciója.
+
+Felolvas minden `IGrpcService` implementáló osztályt
+és delegálja a `GrpcServerManager`-en keresztül a gRPC servicebe.
+
+Implementált funkciók:
+
+* gRPC szerver konfiguráció, https://github.com/grpc/grpc-java/blob/master/netty/src/main/java/io/grpc/netty/NettyServerBuilder.java[NettyServerBuilder] alapon
+* MDC kezelés
+* Request/Response log
+* Exception kezelés
+
+=== Szerver thread pool
+A gRPC server fontos része a szál kezelés.
+Erre 2 megoldás készült:
+
+* `ThreadPoolExecutor` - default thread pool:
+** Kezelése `coffee.grpc.server.threadpool.default` konfiguráción keresztül
+* `ManagedExecutorService` - jakartaEE managed thread pool:
+** Szerver által kezelt thread pool, context propagation support
+
+.gRPC server configuration
+[source,yaml]
+----
+coffee:
+  grpc:
+    server:
+      port: 8199 # default 8199
+      maxConnectionAge: 60000000 # nano seconds, default Long.MAX_VALUE
+      maxConnectionAgeGrace: 60000000 # nano seconds, default Long.MAX_VALUE
+      maxInboundMessageSize: 4194304 # Byte, defult 4 * 1024 * 1024 (4MiB)
+      maxInboundMetadataSize: 8192 # Byte, default 8192 (8KiB)
+      maxConnectionIdle: 60000000 # nano seconds, default Long.MAX_VALUE
+      keepAliveTime: 5 # minutes, default 5
+      keepAliveTimeout: 20 # seconds, default 20
+      permitKeepAliveTime: 5 # minutes, default 5
+      permitKeepAliveWithoutCalls: false # default false
+      threadPool:
+        default:
+          corePoolSize: 64 # default 32
+          maximumPoolSize: 64 # default 32
+          keepAliveTime: 60000 # milliseconds, default 0
+        jakarta:
+          active: true # default false <1>
+----
+<1> if `true` then `coffee.grpc.server.threadpool.default` ignored
+
 
 == coffee-dto/coffee-dto-xsd2proto
 Coff:ee általános XSD leírók (`coffee-dto-xsd` modul) schema2proto generált
@@ -62,5 +114,7 @@ Ezután a git diff-ben megjelenik a változás.
 
 
 == coffee-dto/coffee-dto-stub-gen
-Minden Coff:ee proto fájl a generált osztályai.
-
+Minden Coff:ee proto fájl és generált osztályai.
+Plugin generál egy interface leírót, amit full CDI környezetben tudunk implementálni.
+Valamint egy BindableService implementációt,
+ami az interface CDI implementációjának delegálja a grpc hívásokat.
