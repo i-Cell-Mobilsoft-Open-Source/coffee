@@ -59,7 +59,7 @@ public class GrpcStarter {
     }
 
     /**
-     * Start gRPC server in unmanaged mode
+     * Stop gRPC server
      * 
      * @param payload
      *            observe object
@@ -81,7 +81,7 @@ public class GrpcStarter {
     }
 
     /**
-     * Stop all gRPC server
+     * Stop all possible gRPC server
      */
     protected void stop() {
         log.info("Stopping grpc server services...");
