@@ -5,33 +5,15 @@
 :imagesdir: pic
 
 [#index]
-:leveloffset: -1
-= Coffee Dokumentáció
+:leveloffset: 0
+include::project-description.adoc[leveloffset=-2]
 
-A coff:ee egy JakartaEE megoldási készlet, melynek célja, hogy az enterprise világ gyakori algoritmusait összegyűjtse,
-azokra egy alapvető megoldást nyújtson, melyet, ha szükséges saját igényeinkre szabhatunk.
+include::common.adoc[]
 
-Minden cég kifejleszt valami saját megoldási készletet, amely a projekteket próbálja összefogni, ne kelljen ugyanolyan modulokat újra megírni, másolni, karbantartani.
-
-Ez a megoldási készlet alkalmas mind a SOA, mind a Microservice architektúra kiszolgálására. A felépítése moduláris, és felülírható projekt szinten szinte minden. A keretrendszer az alábbi rendszereken alapul, amelyek meghatározóak az egész működésre:
-
-* Jakarta EE 8+
-* Java 11+
-* CDI 2.0+
-* Jboss logging
-* gson
-* guava
-* commons-lang3
-* apache http
-* resteasy
-* microprofile.io 1.3+
-
-include::common.adoc[leveloffset=+1]
-
-include::migration.adoc[leveloffset=+1]
+include::migration.adoc[]
 
 == HOWTO
 
-include::howto/xsd-xml-validation-depend-on-version.adoc[leveloffset=+2]
+include::howto/xsd-xml-validation-depend-on-version.adoc[]
 
-include::howto/xsd-catalog.adoc[leveloffset=+2]
+include::howto/xsd-catalog.adoc[]

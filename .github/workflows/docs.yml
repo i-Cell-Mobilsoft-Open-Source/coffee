@@ -28,8 +28,8 @@ jobs:
       - name: Generate docs with Maven
         run: |
           mvn org.asciidoctor:asciidoctor-maven-plugin:2.2.2:process-asciidoc \
-          -Dasciidoctor.sourceDirectory=./docs/hu \
-          -Dasciidoctor.outputDirectory=./docs/html/hu \
+          -Dasciidoctor.sourceDirectory=./docs \
+          -Dasciidoctor.outputDirectory=. \
           -Dasciidoctor.preserveDirectories=true \
           -Dasciidoctor.sourceHighlighter=coderay \
           -Dasciidoctor.backend=html5 \
