@@ -472,7 +472,7 @@ Maga a `maven:` protocol ismeretlen a java.net.URL számára, így írnunk kell 
 .coffee-tool/src/main/java/hu/icellmobilsoft/coffee/tool/protocol/handler/MavenURLHandler.java tartalmi lényege
 [source,java,indent=0]
 ----
-include::../../coffee-tool/src/main/java/hu/icellmobilsoft/coffee/tool/protocol/handler/MavenURLHandler.java[lines=29..44]
+include::../../../coffee-tool/src/main/java/hu/icellmobilsoft/coffee/tool/protocol/handler/MavenURLHandler.java[lines=29..44]
 ----
 Ezt a handlert még be kell regisztrálni a következő módon:
 
