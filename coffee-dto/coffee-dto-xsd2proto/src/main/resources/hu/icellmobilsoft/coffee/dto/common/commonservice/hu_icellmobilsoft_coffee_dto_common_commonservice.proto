@@ -1,0 +1,201 @@
+// hu_icellmobilsoft_coffee_dto_common_commonservice.proto at 0:0
+syntax = "proto3";
+package hu.icellmobilsoft.coffee.dto.common.commonservice;
+
+import "google/protobuf/timestamp.proto";
+
+option java_multiple_files = false;
+option java_outer_classname = "XsdProtoWrapper";
+
+message BONotFoundGeneratedTypePlaceholder {
+  ContextType context = 1;
+  FunctionCodeType func_code = 2;
+  string message = 3;
+  // Keletkezett hiba típus, kód.
+  string fault_type = 21;
+  // Osztály neve ahol keletkezett a hiba.
+  string class_name = 22;
+  // Hiba stacktrace.
+  string exception = 23;
+  // Service neve ahol keletkezett a hiba.
+  string service = 24;
+  // A hiba eredeti okozója.
+  BaseExceptionResultType caused_by = 25;
+}
+message BONotFoundType {
+  ContextType context = 1;
+  FunctionCodeType func_code = 2;
+  string message = 3;
+  // Keletkezett hiba típus, kód.
+  string fault_type = 21;
+  // Osztály neve ahol keletkezett a hiba.
+  string class_name = 22;
+  // Hiba stacktrace.
+  string exception = 23;
+  // Service neve ahol keletkezett a hiba.
+  string service = 24;
+  // A hiba eredeti okozója.
+  BaseExceptionResultType caused_by = 25;
+}
+message BaseCommonIdListRequestGeneratedTypePlaceholder {
+  ContextType context = 1;
+  repeated string ids = 21;
+}
+message BaseCommonIdListRequestType {
+  ContextType context = 1;
+  repeated string ids = 21;
+}
+message BaseExceptionResultType {
+  ContextType context = 1;
+  FunctionCodeType func_code = 2;
+  string message = 3;
+  // Keletkezett hiba típus, kód.
+  string fault_type = 21;
+  // Osztály neve ahol keletkezett a hiba.
+  string class_name = 22;
+  // Hiba stacktrace.
+  string exception = 23;
+  // Service neve ahol keletkezett a hiba.
+  string service = 24;
+  // A hiba eredeti okozója.
+  BaseExceptionResultType caused_by = 25;
+}
+message BaseRequestGeneratedTypePlaceholder {
+  ContextType context = 1;
+}
+message BaseRequestType {
+  ContextType context = 1;
+}
+message BaseResponseGeneratedTypePlaceholder {
+  ContextType context = 1;
+  FunctionCodeType func_code = 2;
+  string message = 3;
+}
+message BaseResponseType {
+  ContextType context = 1;
+  FunctionCodeType func_code = 2;
+  string message = 3;
+}
+message BaseResultType {
+  ContextType context = 1;
+  FunctionCodeType func_code = 2;
+  string message = 3;
+}
+message BusinessFaultGeneratedTypePlaceholder {
+  ContextType context = 1;
+  FunctionCodeType func_code = 2;
+  string message = 3;
+  // Keletkezett hiba típus, kód.
+  string fault_type = 21;
+  // Osztály neve ahol keletkezett a hiba.
+  string class_name = 22;
+  // Hiba stacktrace.
+  string exception = 23;
+  // Service neve ahol keletkezett a hiba.
+  string service = 24;
+  // A hiba eredeti okozója.
+  BaseExceptionResultType caused_by = 25;
+}
+message BusinessFaultType {
+  ContextType context = 1;
+  FunctionCodeType func_code = 2;
+  string message = 3;
+  // Keletkezett hiba típus, kód.
+  string fault_type = 21;
+  // Osztály neve ahol keletkezett a hiba.
+  string class_name = 22;
+  // Hiba stacktrace.
+  string exception = 23;
+  // Service neve ahol keletkezett a hiba.
+  string service = 24;
+  // A hiba eredeti okozója.
+  BaseExceptionResultType caused_by = 25;
+}
+message ContextType {
+  // A service hívás azonosítója, elvárt hogy globálisan egyedi.
+  string request_id = 1;
+  // A service hívás kliens időpontja.
+  google.protobuf.Timestamp timestamp = 2;
+}
+enum FunctionCodeType {
+  // Default
+  FUNCTION_CODE_TYPE_UNSPECIFIED = 0;
+  // OK
+  FUNCTION_CODE_TYPE_OK = 1;
+  // Warning
+  FUNCTION_CODE_TYPE_WARN = 2;
+  // Error
+  FUNCTION_CODE_TYPE_ERROR = 3;
+}
+message InvalidRequestFaultGeneratedTypePlaceholder {
+  ContextType context = 1;
+  FunctionCodeType func_code = 2;
+  string message = 3;
+  // Keletkezett hiba típus, kód.
+  string fault_type = 21;
+  // Osztály neve ahol keletkezett a hiba.
+  string class_name = 22;
+  // Hiba stacktrace.
+  string exception = 23;
+  // Service neve ahol keletkezett a hiba.
+  string service = 24;
+  // A hiba eredeti okozója.
+  BaseExceptionResultType caused_by = 25;
+  repeated ValidationType error = 71;
+}
+message InvalidRequestFaultType {
+  ContextType context = 1;
+  FunctionCodeType func_code = 2;
+  string message = 3;
+  // Keletkezett hiba típus, kód.
+  string fault_type = 21;
+  // Osztály neve ahol keletkezett a hiba.
+  string class_name = 22;
+  // Hiba stacktrace.
+  string exception = 23;
+  // Service neve ahol keletkezett a hiba.
+  string service = 24;
+  // A hiba eredeti okozója.
+  BaseExceptionResultType caused_by = 25;
+  repeated ValidationType error = 71;
+}
+message TechnicalFaultGeneratedTypePlaceholder {
+  ContextType context = 1;
+  FunctionCodeType func_code = 2;
+  string message = 3;
+  // Keletkezett hiba típus, kód.
+  string fault_type = 21;
+  // Osztály neve ahol keletkezett a hiba.
+  string class_name = 22;
+  // Hiba stacktrace.
+  string exception = 23;
+  // Service neve ahol keletkezett a hiba.
+  string service = 24;
+  // A hiba eredeti okozója.
+  BaseExceptionResultType caused_by = 25;
+}
+message TechnicalFaultType {
+  ContextType context = 1;
+  FunctionCodeType func_code = 2;
+  string message = 3;
+  // Keletkezett hiba típus, kód.
+  string fault_type = 21;
+  // Osztály neve ahol keletkezett a hiba.
+  string class_name = 22;
+  // Hiba stacktrace.
+  string exception = 23;
+  // Service neve ahol keletkezett a hiba.
+  string service = 24;
+  // A hiba eredeti okozója.
+  BaseExceptionResultType caused_by = 25;
+}
+message ValidationType {
+  // A probléma mezője.
+  string field = 1;
+  // A probléma leírása.
+  string error = 2;
+  // A probléma forrásának sora.
+  int32 line_number = 3;
+  // A probléma forrásának oszlopa.
+  int32 column_number = 4;
+}

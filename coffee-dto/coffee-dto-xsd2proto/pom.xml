@@ -1,0 +1,181 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>hu.icellmobilsoft.coffee</groupId>
+		<artifactId>coffee-dto</artifactId>
+		<version>2.1.0-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>coffee-dto-xsd2proto</artifactId>
+
+	<description>Generating proto files from coffee xsd files</description>
+
+	<properties>
+		<version.no.entur.schema2proto-maven-plugin>1.83</version.no.entur.schema2proto-maven-plugin>
+		<version.com.google.protobuf.protobuf-java>3.21.7</version.com.google.protobuf.protobuf-java>
+		<version.com.google.api.grpc.proto-google-common-protos>2.9.0</version.com.google.api.grpc.proto-google-common-protos>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>hu.icellmobilsoft.coffee</groupId>
+			<artifactId>coffee-dto-xsd</artifactId>
+		</dependency>
+
+		<!--  google proto file import -->
+		<dependency>
+			<groupId>com.google.protobuf</groupId>
+			<artifactId>protobuf-java</artifactId>
+			<version>${version.com.google.protobuf.protobuf-java}</version>
+		</dependency>
+		<!-- xsd:date and xsd:time equivalents -->
+		<dependency>
+			<groupId>com.google.api.grpc</groupId>
+			<artifactId>proto-google-common-protos</artifactId>
+			<version>${version.com.google.api.grpc.proto-google-common-protos}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter</artifactId>
+		</dependency>
+	</dependencies>
+
+	<profiles>
+		<profile>
+			<!-- schema2proto does not work on Windows, the developer must manually copy the created files to the directory -->
+			<id>schema2proto</id>
+			<activation>
+				<property>
+					<name>schema2proto</name>
+				</property>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-dependency-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>resource-dependencies</id>
+								<phase>generate-sources</phase>
+								<goals>
+									<goal>unpack</goal>
+								</goals>
+								<configuration>
+									<artifactItems>
+										<artifactItem>
+											<groupId>hu.icellmobilsoft.coffee</groupId>
+											<artifactId>coffee-dto-xsd</artifactId>
+											<type>jar</type>
+											<overWrite>true</overWrite>
+											<includes>**/*.xsd</includes>
+											<outputDirectory>${project.build.directory}</outputDirectory>
+										</artifactItem>
+										<!-- proto file dependency copy to classpath (schema2proto needed) -->
+										<artifactItem>
+											<groupId>com.google.protobuf</groupId>
+											<artifactId>protobuf-java</artifactId>
+											<type>jar</type>
+											<overWrite>true</overWrite>
+											<includes>**/*.proto</includes>
+											<outputDirectory>${project.build.directory}/proto-external</outputDirectory>
+										</artifactItem>
+										<artifactItem>
+											<groupId>com.google.api.grpc</groupId>
+											<artifactId>proto-google-common-protos</artifactId>
+											<type>jar</type>
+											<overWrite>true</overWrite>
+											<includes>**/*.proto</includes>
+											<outputDirectory>${project.build.directory}/proto-external</outputDirectory>
+										</artifactItem>
+									</artifactItems>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<!-- build.resources running in "process-resources" scope, we need 
+							earlier scope for schema2proto config filtering -->
+						<artifactId>maven-resources-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>copy-resources</id>
+								<phase>process-sources</phase>
+								<goals>
+									<goal>copy-resources</goal>
+								</goals>
+								<configuration>
+									<outputDirectory>${project.build.directory}/schema2proto</outputDirectory>
+									<resources>
+										<resource>
+											<directory>src/main/resources/schema2proto</directory>
+											<includes>
+												<include>config.yaml</include>
+											</includes>
+											<filtering>true</filtering>
+										</resource>
+									</resources>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+
+					<plugin>
+						<groupId>no.entur</groupId>
+						<artifactId>schema2proto-maven-plugin</artifactId>
+						<version>${version.no.entur.schema2proto-maven-plugin}</version>
+						<configuration>
+							<configFile>${project.build.directory}/schema2proto/config.yaml</configFile>
+							<xsdFile>src/main/resources/xsd/hu/icellmobilsoft/coffee/dto/proto/super-proto.xml</xsdFile>
+						</configuration>
+						<executions>
+							<execution>
+								<id>protobuf-file-generate</id>
+								<phase>process-resources</phase>
+								<goals>
+									<goal>generate</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<!-- Copy generated proto files to resources -->
+			<id>copy-generated-sources</id>
+			<activation>
+				<property>
+					<name>copy-generated-sources</name>
+				</property>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<artifactId>maven-resources-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>copy-generated-sources</id>
+								<phase>process-classes</phase>
+								<goals>
+									<goal>copy-resources</goal>
+								</goals>
+								<configuration>
+									<outputDirectory>${project.build.sourceDirectory}/../resources</outputDirectory>
+									<resources>
+										<resource>
+											<directory>${project.build.directory}/generated-sources</directory>
+										</resource>
+									</resources>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+</project>

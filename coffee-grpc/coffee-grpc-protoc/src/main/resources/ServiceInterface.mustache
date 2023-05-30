@@ -1,0 +1,37 @@
+{{#packageName}}
+    package {{packageName}};
+{{/packageName}}
+
+import hu.icellmobilsoft.coffee.grpc.api.service.IGrpcService;
+
+@jakarta.annotation.Generated(
+value = "by {{classPrefix}} Coffee Grpc generator",
+comments = "Source: {{protoName}}")
+public interface {{serviceName}} extends IGrpcService {
+
+    @Override
+    default Class<? extends io.grpc.BindableService> bindableDelegator(){
+        return {{delegatorImplName}}.class;
+    }
+
+{{#unaryUnaryMethods}}
+    {{{methodHeader}}}
+    void {{methodName}}({{inputType}} request, io.grpc.stub.StreamObserver<{{outputType}}> responseObserver) throws java.lang.Exception;
+{{/unaryUnaryMethods}}
+
+{{#unaryManyMethods}}
+    {{{methodHeader}}}
+    void {{methodName}}({{inputType}} request, io.grpc.stub.StreamObserver<{{outputType}}> responseObserver) throws java.lang.Exception;
+{{/unaryManyMethods}}
+
+{{#manyUnaryMethods}}
+    {{{methodHeader}}}
+    io.grpc.stub.StreamObserver<{{inputType}}> {{methodName}}(io.grpc.stub.StreamObserver<{{outputType}}> responseObserver) throws java.lang.Exception;
+{{/manyUnaryMethods}}
+
+{{#manyManyMethods}}
+    {{{methodHeader}}}
+    io.grpc.stub.StreamObserver<{{inputType}}> {{methodName}}(io.grpc.stub.StreamObserver<{{outputType}}> responseObserver) throws java.lang.Exception;
+{{/manyManyMethods}}
+
+}

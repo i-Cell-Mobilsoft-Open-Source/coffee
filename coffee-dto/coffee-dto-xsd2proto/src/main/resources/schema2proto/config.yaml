@@ -1,0 +1,82 @@
+# Output proto file with this name. Only used when there is 1 file generated. Multiple XML namespaces give multiple files
+#outputFilename: generated-file.proto
+
+# Target directory to write resulting proto files. Proto files are placed in sub folders according to their package name
+outputDirectory: ${project.build.directory}/generated-sources
+
+# Include XSD annotation/documentation on message level
+#includeMessageDocs: true
+
+# Include XSD annotation/documentation on field level
+#includeFieldDocs: true
+
+# Add XSD file location as message/field comment as well. Useful when debugging where a particular field/message arised
+#includeSourceLocationInDoc: false
+
+# Parse schema validation rules (minOccurs, maxOccurs, minLenght etc) from xsd and include them as proto validation rules using https://github.com/bufbuild/protoc-gen-validate
+includeValidationRules: false
+
+# If true, each xsd extension base is treated as a field member of the parent type.
+# Ie if structure is C extends B extends A, the resulting structure will be a message C with fields a and b referring respectively to message a and b.
+#  Any elements or attributes declared in message a or be will be contained there.
+# If false, all attributes and elements from all parents are added to the generated proto message.
+inheritanceToComposition: false
+
+# Any options that will be added to each proto file
+options:
+#  java_package: hu.icellmobilsoft.schemas
+  java_outer_classname: XsdProtoWrapper
+  java_multiple_files: false
+
+# Any extra imports added to each proto file. Must be used if referring to external types
+customImports:
+  - google/protobuf/timestamp.proto
+  - google/protobuf/duration.proto
+  - google/type/timeofday.proto
+  - google/type/date.proto
+
+# Any extra import locations to use when the linker is trying to validate the generated proto files.
+# Used in conjunction with customImports
+customImportLocations:
+  - ${project.build.directory}/proto-external
+
+# Ignore computed output fields. Note that the field name is the one used before converting to lower_case
+#ignoreOutputFields:
+#  - package.name/MessageName/FieldName
+
+# Any type mappings to perform. Use this to either rename message types or to do replacement of default mappings from
+# xml primitives to proto primitives. Regex supported.
+# Since possibly several expressions may match, the declaration order is honoured
+customTypeMappings:
+  ^duration$: google.protobuf.Duration
+  ^dateTime$: google.protobuf.Timestamp
+  ^date$: google.type.Date
+  ^time$: google.type.TimeOfDay
+  ^gMonthDay$: google.type.Date
+
+# Same as customTypeMappings except used for field names. Regex also supported here as well
+#customNameMappings:
+#  a: b
+#  x: y
+
+# Replace given type with the new type. The new type must exist. Does not change message names, but only changes references to given message type
+#customTypeReplacings:
+#  MessageTypeX: MessageTypeY
+#  x: y
+
+# If a type extends another type without adding any new fields, skip this type and
+#skipEmptyTypeInheritance: false
+
+# Name and location of the proto.lock file produced by prototool https://github.com/nilslice/protolock (or the maven plugin). This is used to detect backwards incompatibilities
+#protoLockFile: proto.lock
+
+# If possible backwards incompatibility is detected during parsing when protoLockFile has been specified, fail the conversion in order to allow manual intervention / verification.
+# Setting `failIfRemovedFields: false` will print warnings but not fail the conversion. When using the Maven plugin you may also specify this as -DfailIfRemovedFields=false on the cmd line
+#failIfRemovedFields: true
+
+# Support derivation by subsumption. See https://cs.au.dk/~amoeller/XML/schemas/xmlschema-inheritance.html under "Subsumption"
+#derivationBySubsumption: false
+
+# Include 'go_package' options in all files
+#includeGoPackageOptions: false
+#goPackageSourcePrefix: xxx.github/go/otobuf/any.proto

@@ -1,0 +1,89 @@
+// hu_icellmobilsoft_coffee_dto_notification_notification.proto at 0:0
+syntax = "proto3";
+package hu.icellmobilsoft.coffee.dto.notification.notification;
+
+import "hu/icellmobilsoft/coffee/dto/common/common/hu_icellmobilsoft_coffee_dto_common_common.proto";
+import "hu/icellmobilsoft/coffee/dto/common/commonservice/hu_icellmobilsoft_coffee_dto_common_commonservice.proto";
+
+option java_multiple_files = false;
+option java_outer_classname = "XsdProtoWrapper";
+
+enum DeviceOSType {
+  // Default
+  DEVICE_O_S_TYPE_UNSPECIFIED = 0;
+  // Apple device
+  DEVICE_O_S_TYPE_IOS = 1;
+  // Android device
+  DEVICE_O_S_TYPE_ANDROID = 2;
+}
+message DeviceType {
+  // device id
+  string channel_id = 1;
+  // device operation system
+  DeviceOSType device_o_s = 2;
+}
+message EmailPlainTextType {
+  string from = 1;
+  repeated string to = 2;
+  // email copy
+  repeated string cc = 3;
+  // email hidden copy
+  repeated string bcc = 4;
+  // Encoded email attachment
+  repeated string attachment = 5;
+  string user_id = 6;
+  string source_service = 7;
+  string subject = 11;
+  string body = 12;
+}
+message EmailTemplateType {
+  string from = 1;
+  repeated string to = 2;
+  // email copy
+  repeated string cc = 3;
+  // email hidden copy
+  repeated string bcc = 4;
+  // Encoded email attachment
+  repeated string attachment = 5;
+  string user_id = 6;
+  string source_service = 7;
+  // email template key. Template or body must be defined
+  string template_key = 11;
+  // email template parameter
+  repeated hu.icellmobilsoft.coffee.dto.common.common.KeyValueBasicType parameter = 12;
+  string language = 13;
+}
+message PushRequestType {
+  hu.icellmobilsoft.coffee.dto.common.commonservice.ContextType context = 1;
+  // device list to push notification
+  repeated DeviceType device = 21;
+  // push message template key
+  string template_key = 22;
+  // message template parameter
+  repeated hu.icellmobilsoft.coffee.dto.common.common.KeyValueBasicType parameter = 23;
+  // message payload parameter
+  repeated hu.icellmobilsoft.coffee.dto.common.common.KeyValueBasicType payload = 24;
+  // message expiration time in seconds
+  int32 expire = 25;
+  string user_id = 26;
+  string source_service = 27;
+  string language = 28;
+  string external_id = 29;
+}
+message PushType {
+  hu.icellmobilsoft.coffee.dto.common.commonservice.ContextType context = 1;
+  // device list to push notification
+  repeated DeviceType device = 21;
+  // push message template key
+  string template_key = 22;
+  // message template parameter
+  repeated hu.icellmobilsoft.coffee.dto.common.common.KeyValueBasicType parameter = 23;
+  // message payload parameter
+  repeated hu.icellmobilsoft.coffee.dto.common.common.KeyValueBasicType payload = 24;
+  // message expiration time in seconds
+  int32 expire = 25;
+  string user_id = 26;
+  string source_service = 27;
+  string language = 28;
+  string external_id = 29;
+}

@@ -1,0 +1,66 @@
+[#common_core_coffee-grpc]
+= coffee-grpc
+
+Modul célja a gRPC kommunikáció és a kezelés támogatása.
+
+== coffee-grpc-api
+Általános gRPC kezelés Coff:ee API (annotációk, verzió, ...) gyűjtője.
+
+== coffee-grpc-base
+Protobuf és gRPC általános osztályok gyűjtője.
+Tartalma exception, státusz kezelés és egyéb CDI, Coff:ee általános funkciók.
+
+== coffee-grpc-protoc
+Segéd tool ami a proto -> class generálására szolgál.
+A logika https://mustache.github.io/[mustache] template rendszert használja fel,
+ami a `com.salesforce.jprotoc.ProtocPlugin` rendszerbn fog szerepelni.
+
+.pom.xml minta felhasználása
+[source,xml]
+----
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.github.os72</groupId>
+                <artifactId>protoc-jar-maven-plugin</artifactId>
+                <configuration>
+...
+                    <outputTargets>
+...
+                        <outputTarget>
+                            <type>grpc-coffee</type>
+                            <pluginArtifact>hu.icellmobilsoft.coffee:coffee-grpc-protoc:${version.hu.icellmobilsoft.coffee}</pluginArtifact>
+                        </outputTarget>
+                    </outputTargets>
+                </configuration>
+...
+            </plugin>
+        </plugins>
+    </build>
+----
+Komplexebb minta a https://github.com/i-Cell-Mobilsoft-Open-Source/backend-sampler[backend-sampler]
+projektben https://github.com/i-Cell-Mobilsoft-Open-Source/backend-sampler/blob/main/api/api-grpc/api-grpc-stub-gen/pom.xml[található]. 
+
+
+== coffee-dto/coffee-dto-xsd2proto
+Coff:ee általános XSD leírók (`coffee-dto-xsd` modul) schema2proto generált
+és egyéb kézi proto fájlok gyűjtője. 
+Ezt a csomag szolgál a Coff:ee proto fájlok használatához,
+hogy a projektek ne generálják újea a Coff:ee proto fájlokat.
+
+Sajnos a használt schema2proto plugin nem kompatibilis a Windows operációs rendszerrel,
+ezért nem automata kompilációs generálás van beállítva.
+Ha változás van a XSD fájlokon akkor Linux kompatibilis rendszren kell kiadni a következő parancsot:
+
+[source,bash]
+----
+mvn clean install -Dschema2proto -Dcopy-generated-sources
+----
+Ahol a `schema2proto` paraméter aktiválja az XSD -> proto generálást,
+majd a `copy-generated-sources` paraméter aktiválja a generált proto fájlok bemásolását a források közé.
+Ezután a git diff-ben megjelenik a változás.
+
+
+== coffee-dto/coffee-dto-stub-gen
+Minden Coff:ee proto fájl a generált osztályai.
+
