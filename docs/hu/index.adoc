@@ -5,7 +5,6 @@
 :imagesdir: pic
 
 [#index]
-:leveloffset: 0
 include::project-description.adoc[leveloffset=-2]
 
 include::common.adoc[]
