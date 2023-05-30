@@ -9,7 +9,25 @@ image:https://img.shields.io/badge/Use JakartaEE-project-brightgreen.svg?style=p
 
 [%readme-hu]
 :sectnums:
-include::docs/hu/project-description.adoc[]
+== Coffee Dokumentáció
+
+A coff:ee egy JakartaEE megoldási készlet, melynek célja, hogy az enterprise világ gyakori algoritmusait összegyűjtse,
+azokra egy alapvető megoldást nyújtson, melyet, ha szükséges saját igényeinkre szabhatunk.
+
+Minden cég kifejleszt valami saját megoldási készletet, amely a projekteket próbálja összefogni, ne kelljen ugyanolyan modulokat újra megírni, másolni, karbantartani.
+
+Ez a megoldási készlet alkalmas mind a SOA, mind a Microservice architektúra kiszolgálására. A felépítése moduláris, és felülírható projekt szinten szinte minden. A keretrendszer az alábbi rendszereken alapul, amelyek meghatározóak az egész működésre:
+
+* Jakarta EE 10+
+* Java 11+
+* CDI 4.0+
+* Jboss logging
+* gson
+* guava
+* commons-lang3
+* apache http
+* resteasy
+* microprofile.io 5.0+
 
 == Maven central
 A coff:ee megtalálható az official maven repository-ban is,
