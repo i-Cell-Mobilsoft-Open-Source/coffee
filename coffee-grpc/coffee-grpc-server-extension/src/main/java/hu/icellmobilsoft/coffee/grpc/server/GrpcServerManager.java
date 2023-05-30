@@ -103,9 +103,8 @@ public class GrpcServerManager {
         server = serverBuilder.build();
     }
 
-    private void configureServer(ServerBuilder<?> serverBuilder) throws BaseException {
-        // NettyServerBuilder
-        // server config
+    protected void configureServer(ServerBuilder<?> serverBuilder) throws BaseException {
+        // NettyServerBuilder server config
         serverBuilder.maxConnectionAge(serverConfig.getMaxConnectionAge(), TimeUnit.SECONDS);
         serverBuilder.maxConnectionAgeGrace(serverConfig.getMaxConnectionAgeGrace(), TimeUnit.SECONDS);
         serverBuilder.keepAliveTime(serverConfig.getKeepAliveTime(), TimeUnit.MINUTES);
@@ -117,7 +116,7 @@ public class GrpcServerManager {
         serverBuilder.permitKeepAliveWithoutCalls(serverConfig.isPermitKeepAliveWithoutCalls());
     }
 
-    private void configureServerPool(ServerBuilder<?> serverBuilder) throws BaseException {
+    protected void configureServerPool(ServerBuilder<?> serverBuilder) throws BaseException {
         if (serverConfig.isThreadPoolJakartaActive()) {
             serverBuilder.executor(managedExecutorService);
             log.info("gRPC server using Jakarta ManagedExecutorService.");
@@ -142,7 +141,7 @@ public class GrpcServerManager {
      * @param serverBuilder
      *            GRPC server builder
      */
-    private void addService(Bean<?> bean, ServerBuilder<?> serverBuilder) {
+    protected void addService(Bean<?> bean, ServerBuilder<?> serverBuilder) {
         IGrpcService service = (IGrpcService) beanManager.getReference(bean, bean.getBeanClass(), beanManager.createCreationalContext(bean));
         Class<? extends BindableService> grpcImpl = service.bindableDelegator();
         Constructor<? extends BindableService> constructor = findConstructor(bean, grpcImpl);
@@ -162,6 +161,7 @@ public class GrpcServerManager {
 
     }
 
+    @SuppressWarnings("unchecked")
     private Constructor<? extends BindableService> findConstructor(Bean<?> bean, Class<? extends BindableService> grpcImpl) {
         if (grpcImpl == null) {
             return null;
@@ -187,7 +187,7 @@ public class GrpcServerManager {
      * @param serverBuilder
      *            GRPC server builder
      */
-    private void addInterceptor(ServerBuilder<?> serverBuilder) {
+    protected void addInterceptor(ServerBuilder<?> serverBuilder) {
         serverBuilder.intercept(new ErrorHandlerInterceptor()); // 5
         serverBuilder.intercept(new ServerResponseInterceptor()); // 4
         serverBuilder.intercept(new ServerRequestInterceptor()); // 3

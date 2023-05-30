@@ -155,7 +155,7 @@ public interface IGrpcServerConfig {
     Integer getThreadPoolMaximumPoolSize() throws BaseException;
 
     /**
-     * Sets the keep alive time for the pool, the default is {@code 0}.
+     * Sets the keep alive time for the pool, the default is {@code 0} milliseconds.
      * 
      * @return when the number of threads is greater than the core, this is the maximum time that excess idle threads will wait for new tasks before
      *         terminating.
@@ -165,7 +165,8 @@ public interface IGrpcServerConfig {
     Long getThreadPoolKeepAliveTime() throws BaseException;
 
     /**
-     * Gets whether to use {@code ManagedExecutorService} provided by Jakarta, the default is false.
+     * Gets whether to use {@code ManagedExecutorService} provided by Jakarta, the default is false. If value is {@code true},
+     * {@link #getThreadPoolCorePoolSize()}, {@link #getThreadPoolMaximumPoolSize()} and {@link #getThreadPoolKeepAliveTime()} values ignored
      * 
      * @return the server uses {@code ManagedExecutorService} to handle threads.
      * @throws BaseException

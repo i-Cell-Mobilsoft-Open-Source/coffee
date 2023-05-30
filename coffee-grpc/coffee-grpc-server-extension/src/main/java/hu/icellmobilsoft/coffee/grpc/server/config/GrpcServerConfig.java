@@ -33,19 +33,23 @@ import hu.icellmobilsoft.coffee.dto.exception.BaseException;
  * coffee:
  *   grpc:
  *     server:
- *       port: 8199
- *       maxConnectionAge: 60
- *       maxConnectionAgeGrace: 60
- *       maxInboundMessageSize: 4 * 1024 * 1024
- *       maxInboundMetadataSize: 8192
- *       keepAliveTime: 5
- *       keepAliveTimout: 20
- *       permitKeepAliveTime: 5
- *       permitKeepAliveWithoutCalls: false
- *       threadpool.default.corePoolSize: 32
- *       threadpool.default.maximumPoolSize: 32
- *       threadpool.default.keepAliveTime: 0 #milliseconds
- *       threadpool.jakarta.active: true  #default false
+ *       port: 8199 # default 8199
+ *       maxConnectionAge: 60000000 # nano seconds, default Long.MAX_VALUE
+ *       maxConnectionAgeGrace: 60000000 # nano seconds, default Long.MAX_VALUE
+ *       maxInboundMessageSize: 4194304 # Byte, defult 4 * 1024 * 1024 (4MiB)
+ *       maxInboundMetadataSize: 8192 # Byte, default 8192 (8KiB)
+ *       maxConnectionIdle: 60000000 # nano seconds, default Long.MAX_VALUE
+ *       keepAliveTime: 5 # minutes, default 5
+ *       keepAliveTimeout: 20 # seconds, default 20
+ *       permitKeepAliveTime: 5 # minutes, default 5
+ *       permitKeepAliveWithoutCalls: false # default false
+ *       threadPool:
+ *         jakarta:
+ *           active: true  # default false, if true then coffee.grpc.server.threadpool.default is ignored
+ *         default:
+ *           corePoolSize: 32 # default 32
+ *           maximumPoolSize: 32 # default 32
+ *           keepAliveTime: 0 # milliseconds, default 0
  * </pre>
  * 
  * @author czenczl
@@ -95,7 +99,7 @@ public class GrpcServerConfig implements IGrpcServerConfig {
     /**
      * gRPC server {@value} config
      */
-    public static final String KEEP_ALIVE_TIMEOUT = "keepAliveTimout";
+    public static final String KEEP_ALIVE_TIMEOUT = "keepAliveTimeout";
     /**
      * gRPC server {@value} config
      */
@@ -108,22 +112,22 @@ public class GrpcServerConfig implements IGrpcServerConfig {
     /**
      * gRPC server thread pool {@value} config
      */
-    public static final String THREAD_POOL_CORE_POOL_SIZE = "threadpool.default.corePoolSize";
+    public static final String THREAD_POOL_CORE_POOL_SIZE = "threadPool.default.corePoolSize";
 
     /**
      * gRPC server thread pool {@value} config
      */
-    public static final String THREAD_POOL_MAXIMUM_POOL_SIZE = "threadpool.default.maximumPoolSize";
+    public static final String THREAD_POOL_MAXIMUM_POOL_SIZE = "threadPool.default.maximumPoolSize";
 
     /**
      * gRPC server thread pool {@value} config
      */
-    public static final String THREAD_POOL_KEEP_ALIVE_TIME = "threadpool.default.keepAliveTime";
+    public static final String THREAD_POOL_KEEP_ALIVE_TIME = "threadPool.default.keepAliveTime";
 
     /**
      * gRPC server thread pool {@value} config
      */
-    public static final String THREAD_POOL_JAKARTA_ACTIVE = "threadpool.jakarta.active";
+    public static final String THREAD_POOL_JAKARTA_ACTIVE = "threadPool.jakarta.active";
 
     @Inject
     private Config config;
