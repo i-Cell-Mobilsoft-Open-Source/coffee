@@ -328,6 +328,11 @@
 				<artifactId>coffee-grpc-server-extension</artifactId>
 				<version>${project.version}</version>
 			</dependency>
+			<dependency>
+				<groupId>hu.icellmobilsoft.coffee</groupId>
+				<artifactId>coffee-grpc-client-extension</artifactId>
+				<version>${project.version}</version>
+			</dependency>
 
 			<dependency>
 				<groupId>org.jboss.logging</groupId>
