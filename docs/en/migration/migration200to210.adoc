@@ -8,7 +8,6 @@ THe gRPC support has been introduced.
 Thanks to this, a new subproject collector named `coffee-grpc` was created.
 
 === coffee-grpc
-
 The following feature supports have been added to the system:
 
 * `coffee-grpc-api`: General gRPC handling for the Coff:ee API, including annotations and versioning.
@@ -16,6 +15,8 @@ The following feature supports have been added to the system:
 * `coffee-grpc-protoc`: Support for generating classes from proto files.
 * `coffee-dto/coffee-dto-xsd2proto`: Generated proto files generated from the `coffee-dto-xsd` XSD files.
 * `coffee-dto/coffee-dto-stub-gen`: Generated classes from Coff:ee proto files.
+
+== Changes
 
 === coffee-module-etcd
 
