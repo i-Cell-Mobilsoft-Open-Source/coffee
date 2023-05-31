@@ -1,0 +1,126 @@
+[#common_module_coffee-module-mongodb]
+= coffee-module-mongodb
+
+The module is designed to support the management of the MongoDB NOSQL database, for which it contains various server classes and methods.
+It is based on the CDI extension http://cdi-spec.org/[cdi-spec]. 
+
+
+== Implementation in the project
+
+.Coffee module activation
+=== pom.xml
+[source,xml]
+----
+<dependency>
+    <groupId>hu.icellmobilsoft.coffee</groupId>
+    <artifactId>coffee-module-mongodb</artifactId>
+</dependency>
+----
+
+
+=== Configuration in yml:
+
+.project-defaults.yml
+[source,yaml]
+----
+coffee:
+    mongodb:
+        xmlapi: #<1>
+             database: xmlapi
+             uri: mongodb://sample_xmlapi:sample_xmlapi@sample-sandbox.icellmobilsoft.hu:27017/sample_xmlapi?ssl=false
+             connectionsPerHost: 150 #default: 100
+             minConnectionsPerHost: 1 #default: 1
+             connectTimeout: 10000 #default: 10000
+             serverSelectionTimeout: 5000 #default: 5000
+             socketTimeout: 0 #default: 0
+             maxConnectionIdleTime: 20000 #default: 20000
+             maxConnectionLifeTime: 20000 #default: 20000
+             heartbeatFrequency: 500 #default: 500
+             minHeartbeatFrequency: 500 #default: 500
+        tada:
+            database: tada
+            uri: mongodb://sample_tada:sample_tada@sample-sandbox.icellmobilsoft.hu:27017
+            connectionsPerHost: 400 #default: 150
+----
+<1> Unique identifier for the mongoDB connection (configKey). Specifying "database" and "uri" is mandatory. All others have default values.
+Parameters are described in detail in the MongoConfigHelper class.
+
+You can specify parameters for multiple monogDB servers. The uniqueness of configKey defines the database. 
+
+=== Usage
+
+==== @MongoClientConfiguration annotation
+This annotation allows you to inject a MongoDbClient object. MongoDB can be accessed through this.
+[source,java]
+----
+@Inject
+@MongoClientConfiguration(configKey = "xmlapi") #<1>
+private MongoDbClient mongoDbClient;
+----
+<1> The configKey value defined in the yml. Unique identifier.
+
+The coff:ee mongoDB module will build the MongoDbClient object based on the values specified in the yml.
+The collection to use must be specified separately.
+This is the default MongoService implementation which can work with BasicDBObject type.
+
+Using .Service 
+[source,java]
+----
+// specify collection
+mongoDbClient.initRepositoryCollection("xmlapi_collection");
+
+// use MongoUtils to manage typed objects
+String dtoJson = MongoJsonUtil.toJson(dtoDocumentType);
+BasicDBObject dtoDocument = MongoUtil.jsonToBasicDbObject(dtoJson);
+
+// insert the element
+mongoDbClient.insertOne(dtoDocument);
+
+// get the id of the inserted element
+String id = dtoDocument.getString(MongoConstants.COLUMN_MONGO_ID);
+
+// search with filter
+BasicDBObject filter = new BasicDBObject();
+filter.put(MongoConstants.COLUMN_MONGO_ID, new ObjectId(mongoId));
+BasicDBObject result = mongoDbClient.findFirst(filter);
+
+// search by id
+BasicDBObject result = mongoDbClient.findById(mongoId);
+----
+
+==== @MongoServiceConfiguration annotation
+This annotation is exploited by the CDI extension, for all classes that extend the MongoService<T> class, it is automatically generated
+an @Producer to allow injection.
+
+Using .Service 
+[source,java]
+----
+/**
+ * MongoService extension, specifying POJO
+ */
+@Dependent
+public class CustomMongoService extends MongoService<MongoEntity> {
+    //no need to overwrite anything
+}
+
+/**
+ * The extension injects CustomMongoService based on the configKey and collectionKey parameters
+ */
+@Inject
+@MongoServiceConfiguration(configKey = "xmlapi", collectionKey = "xmlapi_collection")
+private CustomMongoService customMongoService;
+----
+The ancestor of CustomMongoService is MongoService<T>, which causes the extension to process and set the generic parameter in the background
+object (MongoEntity) that CustomMongoService is working with. The operations in the ancestor can be overridden. The CustomMongoService scope value can also be overridden if the @Dependent would not be correct.
+When used from @Stateless EJB, the @Model scope does not work, it is only applicable on Rest interfaces where injected MongoService instances are terminated at the end of the http call. 
+
+In use, it is not necessary to specify the collection, as this is done in the annotation. Any MongoService can use any collection, no restrictions.
+[source,java]
+----
+// query
+MongoEntity entity = customMongoService.findById("mongoId");
+
+// insert
+MongoEntity mongoEntity = new MongoEntity();
+customMongoService.insertOne(mongoEntity);
+----
