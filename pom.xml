@@ -243,6 +243,7 @@
 		<module>coffee-jpa</module>
 		<module>coffee-system</module>
 		<module>coffee-deltaspike</module>
+		<module>coffee-grpc</module>
 	</modules>
 
 	<distributionManagement>
