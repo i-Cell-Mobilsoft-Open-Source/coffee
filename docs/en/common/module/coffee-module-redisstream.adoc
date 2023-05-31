@@ -1,0 +1,355 @@
+[#common_module_coffee-module-redisstream]
+= coffee-module-redisstream
+
+Module designed to support the increasingly popular stream in the personification of Redis.
+Redis Stream is a new feature that was added to Redis 5+.
+It combines the classic Redis publisher/subscriber functionality with the JMS queue needs,
+providing an alternative solution to replace JMS.
+The concept description can be found at https://redis.io/topics/streams-intro[Redis streams-intro],
+from which this implementation was derived, with the addition of enterprise requirements. 
+
+== RedisConnection
+
+The coffee-module-redisstream module uses the <<coffee-module-redis>> module for Redis connection management.
+The Redis connection setup is the same as described for <<coffee-module-redis>>,
+it is based on the "key" there, only through its own annotation class,
+which also allows other stream settings.
+
+NOTE: with the current jedis version 4.2.1, Redis compatibility is backwards to 2.8.x
+
+== Message and content
+
+Since the implementation uses the jedis driver,
+so there is a restriction on the format in which the
+general message frame.
+Normally this is an XSD which is part of an API,
+but now, due to the specificity of the driver (`redis.clients.jedis.StreamEntry` object is the carrier), these are just keys.
+These keys are called
+`hu.icellmobilsoft.coffee.module.redisstream.config.IRedisStreamConstant.Common`
+interface:
+
+* *_message_* - business content of redis stream message.
+This is preferably mostly a *String ID (DB PK)* for some data,
+*or* if the need is more complicated, a *JSON* referring to a custom API.
+You should aim to keep them to a minimum,
+contain "reusable" structures.
+Of course, business needs do not always allow this,
+but practice tells us that in most cases only one identifier is used.
+* *_ttl_* - redis stream message expiry time in Long epoch millisec format.
+So a timestamp that will tell the consumer when it expires and
+then the consumer just ACKs the message without processing the content. 
+* hu.icellmobilsoft.coffee.dto.common.LogConstants.LOG_SESSION_ID pointer (*"_extSessionId_"*) -
+The "process identifier" in the system,
+which can be linked beyond the rest input and asynch message operations.
+** Attention must be paid to "uniqueness" when training the value,
+especially when 1 process forks into N asynch processes.
+This is the case of failower jobs for example,
+so the original process identifier must be supplemented with a new unique identifier.
+Expect the possibility of several such levels.
+This is done by the `StreamMessageParameter.FLOW_ID_EXTENSION` (*"_flowIdExtension_"*) variable in the system,
+currently only used for redis streams.
+
+When browsing Redis content, this may look like this:
+
+.sample of simple content:
+[source,json]
+----
+{
+  "extSessionId": "3OXV5ZUSUAF1KA8G_3OCISPU2RW0NWR7M",
+  "flowIdExtension": "3OCISPU2RW0NWR7M",
+  "message": "sample-10415900/2022-01/",
+  "ttl": "1646381700045"
+}
+----
+The value of `extSessionId` here is already seen to be a "composite" process identifier,
+where "3OXV5ZUSUAF1KA8G" is the original process ID,
+and then appended with "3OCISPU2RW0NWR7M" which is the unique identifier of the asynch.
+When browsing the logs, you can then clearly see where the process is split.
+
+.sample for more complex content:
+[source,json]
+----
+{
+  "extSessionId": "#TEST-SimpleTest5546-3OW013B5CP8CMH07_3OW013Z1JLNPOP09",
+  "message": {
+    "blacklisted": false,
+    "changeDate": "2022-03-03T01:50:38.035812+01:00",
+    "identifier": "3OW01426SX6BP5KW",
+    "inputDate": "2022-03-02T23:00:00Z",
+    "version": 0
+  },
+  "ttl": "1646268938291"
+}
+----
+The `message` shown here is a more complex message content,
+should belong somewhere in the API (XSD) and JSON format is recommended to use.
+
+[#common_module_coffee-module-redisstream-config]
+== Configuration
+
+Configuration is done via the `@RedisStreamConsumer` and `@RedisStreamProducer` qualifiers.
+Configuration in yaml:
+
+.yaml config file
+[source,yaml]
+----
+coffee:
+   redisstream:
+       sampleGroup: #<1>
+           stream:
+               read:
+                   timeoutmillis: 60000 #default: 60000 <2>
+           producer:
+               maxlen: 10000 #default none <3>
+               ttl: 300000 #millisec, default none <4>
+           consumer:
+               threadsCount: 2 #default: 1 <5>
+               retryCount: 2 #default: 1 <6>
+               manualAck: true # default: false <7>
+----
+<1> Unique name of the stream group. All fields are optional.
+<2> Stream consumer timeout - how long to wait for the message in 1 iteration.
+If no message is received in the stream for this number of ms,
+it will close the connection and reopen a new connection in a new iteration.
+<3> Maximum size of stream messages.
+Each time a new message is inserted, it deletes older messages from the stream,
+even if they have or have not been processed.
+<4> (Coff:ee 1.6.0+) Stream message expiration time.
+On inserting each new message, discard older messages from the stream,
+even if they have or have not been processed.
+<5> The number of independent threads to start in a given group (sampleGroup) consumer.
+<6> (Coff:ee 1.4.0+) The number of times the given group (sampleGroup) consumer should retry on `BaseException`.
+For other errors not resulting from `BaseException` this setting is ignored.
+<7> If true, an explicit `XACK` call is required at the end of message processing.
+If an exception is thrown during processing, this is omitted and the message can be reprocessed manually.
+If false, then an automatic ack occurs already during message processing. Default: `false`.
+See redis https://redis.io/commands/xreadgroup/[XREADGROUP documentation]:
+[quote]
+____
+The NOACK subcommand can be used to avoid adding the message to the PEL in cases where reliability is not a requirement
+and the occasional message loss is acceptable. This is equivalent to acknowledging the message when it is read.
+____
+
+WARNING: When specifying `...producer.maxlen` and `...producer.ttl` at the same time
+the parameter `...producer.ttl` will not be taken into account!
+
+This includes an EE level setting,
+which is needed if the default is not enough to start extra threads (e.g. maximum thread count).
+These settings vary by application server, e.g:
+
+* Wildfly 21:
+
+** use https://docs.wildfly.org/21/Developer_Guide.html#managed-executor-service 
+** configuration https://docs.wildfly.org/21/Admin_Guide.html#managed-executor-services
+
+* Thorntail 2.7:
+
+** configuration https://docs.thorntail.io/2.7.0.Final/#_ee
+
+.MDC
+The system logs at MDC level as "retryCounter",
+the number of iterations of the retry
+(`coffee.redisstream.sampleGroup.consumer.retryCount` configuration).
+
+=== RedisStreamService
+
+All Redis stream operations are handled by the
+`hu.icellmobilsoft.coffee.module.redisstream.service.RedisStreamService`
+class.
+If needed, it can be accessed directly via CDI,
+but it is more practical to use the classes created for _Producer_ and _Consumer_.
+
+=== Producer
+
+To send messages to a stream, use the
+`hu.icellmobilsoft.coffee.module.redisstream.publisher.RedisStreamPublisher`
+class, such as:
+
+[source,java]
+----
+@Inject
+@RedisStreamProducer(configKey = "streamConfigKey", group = "streamGroup") //<1>
+private RedisStreamPublisher redisStreamPublisher;
+...
+redisStreamPublisher.publish("message"); //<2>
+// vagy
+redisStreamPublisher.publish("alternativeGroup", "message");
+redisStreamPublisher.publish(List.of("message-1", "message-2"));
+redisStreamPublisher.publish("alternativeGroup", List.of("message-1", "message-2"));
+redisStreamPublisher.publishPublications(List.of(
+        RedisStreamPublication.of("group-1", "message-1"),
+        RedisStreamPublication.of("group-2", "message-2")
+// üzenet paraméterezése
+long expiry = Instant.now().plus(5, ChronoUnit.MINUTES).toEpochMilli();
+Map<String, String> map = Map.ofEntries(RedisStreamPublisher.parameterOf(StreamMessageParameter.TTL, expiry));
+redisStreamPublisher.publish("message", parameters); //<3>
+
+// vagy
+RedisStreamPublication publication = RedisStreamPublication.of(id).withTTL(defaultTTL).withParameter(StreamMessageParameter.FLOW_ID_EXTENSION, id))
+redisStreamPublisher.publishPublication(publication); //<4>
+----
+<1> "group" is not mandatory in all cases
+<2> The "message" content itself will be stored in a kind of coffee stream message structure,
+which is the key of `IRedisStreamConstant.Common.DATA_KEY_MESSAGE`.
+The message itself is supplemented with extra information, such as a process identifier.
+<3> It is also possible to specify custom project specific parameters.
+The options provided by the system are described in `hu.icellmobilsoft.coffee.module.redisstream.config.StreamMessageParameter`
+enum class
+<4> `RedisStreamPublication` plays an all-in-one role in the message sending process,
+parameters set override the _group_ set in `redisStreamPublisher`.
+
+TIP: Each `publish` call is made on a separate Jedis connection, so given
+In some cases, you may want to collect the messages and pass them as a list.
+
+.RedisStreamPublication
+If you need to submit several messages at once, you may want to use the
+`hu.icellmobilsoft.coffee.module.redisstream.publisher.RedisStreamPublication` class,
+which is prepared to add its own parameters to each message,
+or even send messages to other streams,
+than what happens with the `RedisStreamPublisher` inject.
+
+Examples are:
+
+* `StreamMessageParameter.TTL` - Message expiry time
+* `StreamMessageParameter.FLOW_ID_EXTENSION` - Role to complement the SID logging
+for easier browsing of logs
+* + other custom settings
+
+=== Consumer
+
+Use SampleConsumer for the above config:
+
+.IRedisStreamConsumer.class
+[source,java]
+----
+package hu.icellmobilsoft.redis.consume;
+
+import javax.enterprise.context.Dependent;
+import javax.inject.Inject;
+
+import hu.icellmobilsoft.coffee.dto.exception.BaseException;
+import hu.icellmobilsoft.coffee.module.redisstream.annotation.RedisStreamConsumer;
+import hu.icellmobilsoft.coffee.module.redisstream.consumer.IRedisStreamConsumer;
+import hu.icellmobilsoft.coffee.se.logging.Logger;
+import hu.icellmobilsoft.sample.requestScope.Counter;
+import hu.icellmobilsoft.sample.dependent.CounterDependent;
+import hu.icellmobilsoft.sample.applicationScope.CounterApplication;
+import redis.clients.jedis.StreamEntry;
+
+@Dependent
+@RedisStreamConsumer(configKey = "redisConfigKey", group = "sampleGroup")
+public class SampleConsumer implements IRedisStreamConsumer {
+
+    @Inject
+    private Logger log;
+
+    @Inject
+    private Counter counter; // <1>
+
+    @Inject
+    private CounterDependent counterDependent; // <2>
+
+    @Inject
+    private CounterApplication counterApplication; // <3>
+
+    @Override
+    public void onStream(StreamEntry streamEntry) throws BaseException {
+        log.info("Processing streamEntry [{0}]", streamEntry);
+        counter.print();
+        counterDependent.print();
+        counterApplication.print();
+    }
+}
+----
+<1> The Counter class works in RequestScope
+<2> The CounterDependent class works as Dependent
+<3> The CounterApplication class operates in ApplicationScope
+
+.IRedisStreamPipeConsumer.class
+There is a more complex `IRedisStreamPipeConsumer`,
+which is designed to allow extended stream consumption.
+Compared to the `IRedisStreamConsumer` there are so many changes,
+the return value of `Map<String, Object> onStream(StreamEntry streamEntry)` is
+is the input of `void afterAck(StreamEntry streamEntry, Map<String, Object> onStreamResult)`.
+The two functions run completely separate in their own requestScope.
+
+In an EE environment, it is necessary to add other logic to the consumer,
+such as the process identifier, unique metadata,
+therefore it is recommended to use the
+`hu.icellmobilsoft.coffee.module.redisstream.consumer.AbstractStreamConsumer`
+which will prepare the implementing consumer.
+This logic is used to send messages to the
+`hu.icellmobilsoft.coffee.module.redisstream.publisher.RedisStreamPublisher`
+class.
+ 
+[source,java]
+----
+import javax.enterprise.inject.Model;
+import javax.inject.Inject;
+
+import hu.icellmobilsoft.coffee.dto.exception.BaseException;
+import hu.icellmobilsoft.coffee.module.redisstream.annotation.RedisStreamConsumer;
+import hu.icellmobilsoft.coffee.module.redisstream.consumer.AbstractStreamConsumer;
+
+@Model
+@RedisStreamConsumer(configKey = "redisConfigKey", group = "redisGroup")
+public class SampleConsumer extends AbstractStreamConsumer {
+
+    @Inject
+    private Provider<Sample> sample;
+
+    @Override
+    public void doWork(String text) throws BaseException { // <1>
+        sample.process(text);
+    }
+}
+----
+<1> The content can be string or json,
+which from _StreamEntry_ is the value of the key RedisStreamConstant.Common#DATA_KEY_MAIN 
+
+==== How does it work?
+
+At application startup, for example (there are several options), it looks for the CDI `@Observes @Initialized(ApplicationScoped.class)` event
+all classes that:
+
+* `hu.icellmobilsoft.coffee.module.redisstream.consumer.IRedisStreamConsumer`
+interface
+* `hu.icellmobilsoft.coffee.module.redisstream.annotation.RedisStreamConsumer`
+annotated with
+
+From the annotation of the classes found, the redis connection key and the stream group name are known,
+from which the name of the stream key and the settings are added.
+It iterates through the classes and creates as many instances as each one is configured to create,
+which it runs in separate threads using `hu.icellmobilsoft.coffee.module.redisstream.consumer.RedisStreamConsumerExecutor`.
+
+In an infinite loop in each thread, the algorithm queries Redis for messages.
+First it checks if there is a specified group and stream, if not it creates one.
+In subsequent rounds it does not check this.
+If a message is received, it creates an automatically handled RequestScope to execute the business:
+
+. so that our usual RequestScope logic can be used to process the message
+. each message is actually a real request, except that it does not come in REST
+. this logic also follows the JMS scope handling
+
+After successful message processing, it closes the RequestScope and issues the ACK command.
+
+=== Starter
+
+There are several ways to start a consumer,
+CDI event, CDI extension, manual/delayed start, etc...
+
+For these, a
+`hu.icellmobilsoft.coffee.module.redisstream.bootstrap.BaseRedisConsumerStarter`
+class and a
+`hu.icellmobilsoft.coffee.module.redisstream.bootstrap.ConsumerStarterExtension`
+CDI extension pattern (this can be a problem for example for JNDI bindings used in consumers)
+
+WARNING: coffee does not start consumers by itself, this has to be done by everyone in the project based on their own needs. 
+
+== Non-ACKed messages
+
+This implementation does not deal with retrieved but not ACKed messages.
+These need to be handled locally on a case by case basis as to what to do with them.
+The `hu.icellmobilsoft.coffee.module.redisstream.service.RedisStreamService` class
+contains query and handling methods for this purpose,
+which can be used in the stuck business process.

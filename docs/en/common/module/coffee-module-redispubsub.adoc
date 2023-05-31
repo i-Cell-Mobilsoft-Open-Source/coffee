@@ -1,0 +1,380 @@
+ifndef::imagesdir[:imagesdir: ../../pic]
+[#common_module_coffee-module-redispubsub]
+= coffee-module-redispubsub
+
+Module is designed to implement "topic" messaging using the https://redis.io/docs/manual/pubsub/[Redis Pub/Sub] function
+on the basis of https://download.eclipse.org/microprofile/microprofile-reactive-messaging-2.0.1/microprofile-reactive-messaging-spec-2.0.1.html[microprofile-reactive-messaging].
+
+== Redis Pub/Sub
+The Pub/Sub function implements classic publisher-subscriber messaging. Publishers send a message
+to a given Redis pub/sub channel, which is received by all subscribers who have just subscribed.
+Unlike Redis streams, messages are not even stored in-memory on the channel,
+if a subscriber subscribes to the channel afterwards, he will not receive the previous messages, and therefore the subscription will not be
+by repeated requests (e.g. `XREAD`), but on a reserved grpc connection.
+
+== RedisConnection
+
+The coffee-module-redispubsub module uses the <<coffee-module-redis>> module to handle Redis connection.
+The Redis connection setup is the same as described in <<coffee-module-redis>>,
+it is based on the "key" there.
+
+== Microprofile-reactive-messaging
+The module integrates the Pub/Sub solution using the microprofile reactive messaging API,
+thus configuration and message sending/receiving is done according to the specification
+(therefore, with minimal code modification, the module can be used as a replacement for existing connectors (e.g. Kafka, MQTT, Google Pub/Sub...)).
+Integration is done via the `PubSubConnector` class, which is used to register subscribers,
+and is used to send messages
+
+=== Wildfly configuration
+To use this module, you need to activate `microprofile-reactive-streams-operators-smallrye` under wildfly,
+`microprofile-reactive-messaging-smallrye` subsystems:
+
+.jboss-cli.sh
+[source]
+----
+/extension=org.wildfly.extension.microprofile.reactive-messaging-smallrye:add
+/extension=org.wildfly.extension.microprofile.reactive-streams-operators-smallrye:add
+/subsystem=microprofile-reactive-streams-operators-smallrye:add
+/subsystem=microprofile-reactive-messaging-smallrye:add
+----
+
+== Subscriber(consumer) creation
+
+Subscriber creation is done with the configurations and annotations defined by microprofile-reactive-messaging.
+
+.mp reactive incoming config
+[source, yaml]
+----
+coffee:
+  redis:
+    pubsubredis: #<1>
+    #...
+      pool:
+        pubsubpool:
+        #...
+
+mp:
+  messaging:
+    incoming:
+      test-in: #<2>
+        connector: coffee-redis-pubsub #<3>
+        connection-key: pubsubredis #<4>
+        pool-key: pubsubpool #<5>
+        pub-sub-channel: channel1 #<6>
+        retry-seconds: 60 #<7>
+----
+<1> Redis connection and pool settings to use
+<2> Incoming mp channel key, in code you can refer to it to process the message.
+<3> The channel uses the module connector, fixed to `coffee-redis-pubsub`.
+<4> Coffee redis module connection key coffee.redis.+*+, required parameter
+<5> Coffee redis pool key coffee.redis.+*+.pool.+*+, optional, default value `default`
+<6> Optional parameter, redis Pub/Sub channel name,
+if not specified, the incoming mp channel key (key <1> - `test-in`) is taken as redis channel by default,
+for a more detailed description of when it might be necessary to specify this parameter: <<common_module_coffee-module-redispubsub_same_channel_pub_sub>>.
+<7> Optional parameter, in case of subscribe failure, how many seconds to wait before retrying, default 30s
+
+
+.subscriber method
+[source, java]
+----
+@ApplicationScoped //<1>
+public class TestListener {
+
+
+    @Incoming("test-in") //<2>
+    void consume(String test) {
+        //logic
+    }
+}
+----
+<1> microprofile-reactive-messaging only allows `Dependent` or `ApplicationScoped` beans for consumer
+<2> work with the mp channel key specified in the config
+
+
+== Publisher creation
+
+
+Publisher creation is also done with the configurations and annotations defined by microprofile-reactive-messaging.
+
+
+.mp reactive outgoing config
+[source, yaml]
+----
+coffee:
+  redis:
+    pubsubredis: #<1>
+    #...
+      pool:
+        pubsubpool:
+        #...
+
+
+mp:
+  messaging:
+    outgoing:
+      test-out: #<2>
+        connector: coffee-redis-pubsub #<3>
+        connection-key: pubsubredis #<4>
+        pool-key: pubsubpool #<5>
+        pub-sub-channel: channel1 #<6>
+----
+<1> The redis connection and pool settings to use
+<2> Outgoing mp channel key, in code you can refer to it to process the message.
+<3> The channel uses the module connector, fixed to `coffee-redis-pubsub`.
+<4> Coffee redis module connection key coffee.redis.+*+, mandatory parameter
+<5> Coffee redis module pool key coffee.redis.+*+.pool.+*+, optional, default value `default`
+<6> Optional parameter, redis Pub/Sub channel name,
+if not specified, then by default the outgoing mp channel key (key <1> - `test-out`) is taken as redis channel,
+for a more detailed description of when it might be necessary to specify this parameter: <<common_module_coffee-module-redispubsub_same_channel_pub_sub>>.
+
+
+.publishing method
+[source, java]
+----
+@Model
+public class TestAction {
+
+
+    @Inject
+    @Channel("test-out") //<1>
+    private Emitter<String> emitter;
+
+
+    void sendMessage(String test) {
+        //logic
+        emitter.send(test); //<2>
+    }
+}
+----
+<1> work with the mp channel key specified in the config
+<2> send message, returning with completionStage.
+
+
+== Message
+
+
+The module wraps all messages in a `PubSubMessage` object, this contains the sender SID, which is read by the consumer and set in MDC.
+The class implements `org.eclipse.microprofile.reactive.messaging.Message` so that the consumer method parameter
+as described in the documentation
+https://download.eclipse.org/microprofile/microprofile-reactive-messaging-2.0.1/microprofile-reactive-messaging-spec-2.0.1.html#_methods_consuming_data[Methods consuming data].
+
+.message example
+[source, json]
+----
+{
+    "context": {
+        "extSessionId": "3VUTBZCQOIHUAM07"
+    },
+    "payload": "test0"
+}
+----
+
+=== set/override SID in message
+If you want to manually set the SID of the message, you have to send `PubSubMessage` to the emitter instead of payload.
+
+.example for own sid
+[source, java]
+----
+@Model
+public class TestAction {
+
+    @Inject
+    @Channel("test")
+    private Emitter<PubSubMessage> emitter;
+
+    void sendMessage() {
+        //logic
+        emitter.send(PubSubMessage.of("test", Map.of(LogConstants.LOG_SESSION_ID, "customSID")));
+    }
+}
+----
+
+== mp-reactive-messaging own shares
+
+[#common_module_coffee-module-redispubsub_same_channel_pub_sub]
+=== Same channel publisher and subscriber within a service
+
+Within a microservice, microprofile-reactive-messaging does not allow to create both publisher and subscriber
+for the same key, but if such a need should arise, it can be separated using the `pub-sub-channel` attribute
+the name of the microprofile channel within the service and the name of the associated redis pub/sub channel, example: <<common_module_coffee-module-redispubsub_same_pub_sub>>.
+
+=== Using multiple producers on the same channel
+By default, a message can be sent to a channel from a single location within the service,
+if you want to have multiple beans, you can do so by activating the `mp.messaging.outgoing.test-out.merge=true` config.
+
+=== Configuration key constraints
+
+If the microprofile-reactive-messaging subtype is activated and there is any `mp.messaging.*` in mp-config then
+there must be a corresponding subscriber or producer in the deployment! This can cause problems with shared config files.
+
+== Examples
+[#common_module_coffee-module-redispubsub_seperated_pub_sub]
+=== Subscriber and producer on separate service
+
+image::seperated_pub_sub.drawio.svg[]
+
+==== Publisher
+.publisher config
+[source, yaml]
+----
+coffee:
+  redis:
+    sample: #<1>
+      database: 0
+      host: bs-sample-redis
+      port: 6379
+mp:
+  messaging:
+    outgoing:
+      test: #<2>
+        connector: coffee-redis-pubsub
+        connection-key: sample #<1>
+----
+<1> redis connection setup
+<2> emitter key
+
+.publishing method
+[source, java]
+----
+@Model
+public class TestAction {
+
+    @Inject
+    @Channel("test") //<1>
+    private Emitter<String> emitter;
+
+    void sendMessage() {
+        //logic
+        emitter.send("test123");
+    }
+}
+----
+<1> `mp.messaging.outgoing` key
+
+==== Subscriber
+.config
+[source, yaml]
+----
+coffee:
+  redis:
+    sample: #<1>
+      database: 0
+      host: bs-sample-redis
+      port: 6379
+mp:
+  messaging:
+    incoming:
+      test: #<2>
+        connector: coffee-redis-pubsub
+        connection-key: sample #<1>
+----
+<1> redis connection setup
+<2> subscriber key
+
+.subscriber method
+[source, java]
+----
+@ApplicationScoped
+public class TestListener {
+
+    @Incoming("test") //<1>
+    void consume(String test) {
+        //logic
+    }
+}
+----
+<1> `mp.messaging.incoming` key
+
+[#common_module_coffee-module-redispubsub_same_pub_sub]
+=== Subscriber and producer on same service
+
+image::same_pub_sub.drawio.svg[]
+
+.config
+[source, yaml]
+----
+coffee:
+  redis:
+    sample: #<1>
+      database: 0
+      host: bs-sample-redis
+      port: 6379
+mp:
+  messaging:
+    incoming:
+      test-in: #<2>
+        connector: coffee-redis-pubsub
+        connection-key: sample #<1>
+        pub-sub-channel: test #<4>
+    outgoing:
+      test-out: #<3>
+        connector: coffee-redis-pubsub
+        connection-key: sample #<1>
+        pub-sub-channel: test #<4>
+----
+<1> redis connection setup
+<2> subscriber key
+<3> emitter key
+<4> redis channel name
+
+
+.publishing method
+[source, java]
+----
+@Model
+public class TestAction {
+
+    @Inject
+    @Channel("test-out") //<1>
+    private Emitter<String> emitter;
+
+    void sendMessage() {
+        //logic
+        emitter.send("test");
+    }
+}
+----
+<1> `mp.messaging.outgoing` key
+
+.subscriber method
+[source, java]
+----
+@ApplicationScoped
+public class TestListener {
+
+    @Incoming("test-in") //<1>
+    void consume(String test) {
+        //logic
+    }
+}
+----
+<1> `mp.messaging.incoming` key
+
+== Shortcomings, possibilities for further development
+* Multi-threaded async processing
++
+Since all subscribers receive the message, it makes sense to subscribe one thread per redis channel,
+currently the logic after message arrival is also implemented on a single thread (similar to the JMS topic mdb's). Consumer side
+multi-threading can be solved, for this you could have Util/Helper class (e.g. for MDC setup, number of threads etc...)
++
+.multi-threaded processing
+[source, java]
+----
+@ApplicationScoped
+public class TestListener {
+
+    @Resource(name = "java:jboss/ee/concurrency/executor/default")
+    private ExecutorService executorService;
+
+    @Incoming("test")
+    CompletionStage<Void> consume(Message<String> test){
+        return CompletableFuture.runAsync(() -> {
+            //logic
+        }, executorService);
+    }
+}
+----
+* Support for Redis Pub/Sub `PSUBSCRIBE` operation, allowing to subscribe to patterns, e.g. with `PSUBSCRIBE ch*`
+the subscribing client will also receive messages sent to `ch1`,`ch2`,`cha` channels.
+* Project level override possibility e.g. with service loader mechanism
+* Tracing how to
