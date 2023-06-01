@@ -270,7 +270,7 @@ The generation is done in our case with maven. Example:
                         <plugin>
                             <groupId>hu.icellmobilsoft.jaxb</groupId>
                             <artifactId>openapi-jaxb-plugin</artifactId> //<8>
-                            <version>2.0.0/version>
+                            <version>2.0.0</version>
                         </plugin>
                         <plugin>
                             <groupId>net.java.dev.jaxb2-commons</groupId>
@@ -359,7 +359,7 @@ These annotations (OpenApi) will be displayed in a user interface using a progra
 
 This results in the generation of a class - a subset of the following:
 
-.generált AbstractAuditDtoType.java osztály része
+.part of generated AbstractAuditDtoType.java class
 [source,java]
 ----
 ...

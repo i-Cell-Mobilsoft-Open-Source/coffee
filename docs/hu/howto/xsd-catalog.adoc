@@ -270,7 +270,7 @@ A generálás a mi esetünkben a maven segítségével történik. Példa:
                         <plugin>
                             <groupId>hu.icellmobilsoft.jaxb</groupId>
                             <artifactId>openapi-jaxb-plugin</artifactId> //<8>
-                            <version>2.0.0/version>
+                            <version>2.0.0</version>
                         </plugin>
                         <plugin>
                             <groupId>net.java.dev.jaxb2-commons</groupId>

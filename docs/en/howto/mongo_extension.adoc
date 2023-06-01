@@ -2,7 +2,7 @@
 To create an extension, you need to implement the `Extension` interface, which is defined in the Java SE service provider architecture.
 According to the CDI 2.0 specification: *javax.enterprise.inject.spi.Extension*
 
-.extension
+.Extension
 [source,xml]
 ----
 // Our class that handles Extension
