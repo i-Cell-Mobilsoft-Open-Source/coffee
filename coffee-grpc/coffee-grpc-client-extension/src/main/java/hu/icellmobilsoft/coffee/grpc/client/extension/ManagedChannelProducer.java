@@ -30,10 +30,9 @@ import javax.enterprise.inject.Produces;
 import javax.enterprise.inject.spi.InjectionPoint;
 import javax.inject.Inject;
 
-import org.eclipse.microprofile.config.Config;
-
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.grpc.client.GrpcClient;
+import hu.icellmobilsoft.coffee.grpc.client.config.GrpcClientConfig;
 import hu.icellmobilsoft.coffee.grpc.client.interceptor.ClientRequestInterceptor;
 import hu.icellmobilsoft.coffee.grpc.client.interceptor.ClientResponseInterceptor;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
@@ -55,7 +54,7 @@ public class ManagedChannelProducer {
     private Logger log;
 
     @Inject
-    private Config config;
+    private GrpcClientConfig grpcClientConfig;
 
     private Map<String, ManagedChannel> managedChannelInstances = new HashMap<>();
 
@@ -82,15 +81,10 @@ public class ManagedChannelProducer {
 
     private ManagedChannel createManagedChannel(String configKey) {
         log.info("Creating ManagedChannel for configKey:[{0}]", configKey);
+        grpcClientConfig.setConfigKey(configKey);
+        String host = grpcClientConfig.getHost();
+        int port = grpcClientConfig.getPort();
         try {
-
-            String host = config.getOptionalValue("coffee.grpc.client." + configKey + ".host", String.class)
-                    .orElseThrow(() -> new IllegalArgumentException(
-                            "Missing configuration property by `configKey` " + configKey + ", must be set with `host` parameter"));
-
-            int port = config.getOptionalValue("coffee.grpc.client." + configKey + ".port", Integer.class)
-                    .orElseThrow(() -> new IllegalArgumentException(
-                            "Missing configuration property by `configKey` " + configKey + ", must be set with `port` parameter"));
 
             // TODO usePlaintext config
             ManagedChannelBuilder<?> channelBuilder = ManagedChannelBuilder.forAddress(host, port).usePlaintext();
@@ -99,8 +93,8 @@ public class ManagedChannelProducer {
 
             return channelBuilder.build();
         } catch (Exception e) {
-            log.error(MessageFormat.format("Exception on initializing ManagedChannel for configKey [{0}]: [{1}]", configKey, e.getLocalizedMessage()),
-                    e);
+            log.error(MessageFormat.format("Exception on initializing ManagedChannel for configKey [{0}], host: [{1}], port: [{2}]: [{3}]", configKey,
+                    host, port, e.getLocalizedMessage()), e);
             throw new IllegalStateException(e);
         }
     }
