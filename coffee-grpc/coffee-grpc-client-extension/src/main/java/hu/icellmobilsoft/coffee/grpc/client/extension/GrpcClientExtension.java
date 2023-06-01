@@ -41,6 +41,7 @@ import javax.enterprise.inject.spi.ProcessInjectionPoint;
 
 import hu.icellmobilsoft.coffee.grpc.client.GrpcClient;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
+import io.grpc.stub.AbstractBlockingStub;
 
 /**
  * Extension for gRPC client injection
@@ -128,7 +129,7 @@ public class GrpcClientExtension implements Extension {
         Set<AnnotatedMethod<? super GrpcClientProducerFactory>> methods = factory.getMethods();
 
         // find method by return type
-        return methods.stream().filter(m -> m.getJavaMember().getReturnType() == io.grpc.stub.AbstractBlockingStub.class).findFirst().get();
+        return methods.stream().filter(m -> m.getJavaMember().getReturnType() == AbstractBlockingStub.class).findFirst().get();
     }
 
 }

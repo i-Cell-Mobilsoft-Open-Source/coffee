@@ -33,7 +33,9 @@ import org.apache.commons.lang3.StringUtils;
 
 import hu.icellmobilsoft.coffee.grpc.client.GrpcClient;
 import hu.icellmobilsoft.coffee.tool.utils.annotation.AnnotationUtil;
+import io.grpc.Channel;
 import io.grpc.ManagedChannel;
+import io.grpc.stub.AbstractBlockingStub;
 
 /**
  * Factory class for grpc producer template
@@ -65,7 +67,7 @@ public class GrpcClientProducerFactory {
     @SuppressWarnings("rawtypes")
     @Dependent
     @GrpcClient(configKey = "")
-    public io.grpc.stub.AbstractBlockingStub grpcClientTemplateProducer(final InjectionPoint injectionPoint)
+    public AbstractBlockingStub grpcClientTemplateProducer(final InjectionPoint injectionPoint)
             throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 
         Optional<GrpcClient> annotation = AnnotationUtil.getAnnotation(injectionPoint, GrpcClient.class);
@@ -76,15 +78,14 @@ public class GrpcClientProducerFactory {
         }
 
         @SuppressWarnings("unchecked")
-        Class<? extends io.grpc.stub.AbstractBlockingStub> pType = (Class<? extends io.grpc.stub.AbstractBlockingStub>) injectionPoint.getAnnotated()
-                .getBaseType();
+        Class<? extends AbstractBlockingStub> pType = (Class<? extends AbstractBlockingStub>) injectionPoint.getAnnotated().getBaseType();
 
         // only need for blocking stub
-        Method stubCreate = pType.getDeclaringClass().getMethod("newBlockingStub", io.grpc.Channel.class);
+        Method stubCreate = pType.getDeclaringClass().getMethod("newBlockingStub", Channel.class);
 
         Instance<ManagedChannel> instance = CDI.current().select(ManagedChannel.class, new GrpcClient.Literal(configKey));
         ManagedChannel channel = instance.get();
-        io.grpc.stub.AbstractBlockingStub blockingStub = (io.grpc.stub.AbstractBlockingStub) stubCreate.invoke(null, channel);
+        AbstractBlockingStub blockingStub = (AbstractBlockingStub) stubCreate.invoke(null, channel);
 
         instance.destroy(channel);
 
