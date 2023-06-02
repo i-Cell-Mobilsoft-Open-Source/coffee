@@ -69,7 +69,7 @@ TIP: If you also want to localize custom types, or want to localize managed type
 If you want to use localization types or change the logic of managed types, you can do so by deriving from `LocalizationConverter`.
 
 Then we need to specify the language for the columns and the values of the fields we want to annotate
-(e.g. in the `messages_hu.properties` file):
+(e.g. in the `messages_en.properties` file):
 
 [source,properties]
 ----
@@ -78,7 +78,7 @@ java.lang.Boolean.FALSE=No
 hu.icellmobilsoft.coffee.module.csv.LocalizedTestBean.status=Status
 hu.icellmobilsoft.coffee.module.csv.LocalizedTestBean.active=Active
 hu.icellmobilsoft.coffee.module.csv.LocalizedTestBean$Status.IN_PROGRESS=Progress
-hu.icellmobilsoft.coffee.module.csv.LocalizedTestBean$Status.DONE=DONE
+hu.icellmobilsoft.coffee.module.csv.LocalizedTestBean$Status.DONE=Done
 ----
 
 Finally, you need to call the `CsvUtil#toLocalizedCsv` method with the selected language:
@@ -92,7 +92,7 @@ The code in the examples will result in the following CSV:
 
 [source,csv]
 ----
-"STATUS"; "ACTIVE"
-"in progress"; "yes"
+"Status"; "Active"
+"Progress"; "Yes"
 "Done"; "No"
 ----
