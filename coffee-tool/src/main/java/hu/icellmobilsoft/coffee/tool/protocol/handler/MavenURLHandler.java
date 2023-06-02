@@ -27,15 +27,15 @@ import java.net.URLStreamHandler;
 import org.apache.commons.lang3.StringUtils;
 
 /**
- * URL protocol kezeles ilyen formatumra:
+ * Handling URL protocol for this format:
  *
  * <pre>
  * maven:hu.icellmobilsoft.coffee:coffee-dto-xsd:jar::!/xsd/hu/icellmobilsoft/coffee/dto/common/common.xsd
  * </pre>
  *
- * Ennek a formatuma a kovetkezo: <code>maven:groupId:atifactId:package:version:!fajl_path</code>
+ * Format is: <code>maven:groupId:atifactId:package:version:!file_path</code>
  * <ul>
- * <li>protocol - URL schema protocol, ebben az esetben "maven"</li>
+ * <li>protocol - URL schema protocol, in this case "maven"</li>
  * <li>hu.icellmobilsoft.coffee.dto.xsd - maven groupId</li>
  * <li>coffee-dto-xsd - maven artifactId</li>
  * <li>jar - maven package</li>
