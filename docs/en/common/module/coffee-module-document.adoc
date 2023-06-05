@@ -1,0 +1,13 @@
+[#common_module_coffee-module-document]
+= coffee-module-document
+
+The purpose of this module is to store and manage template texts. So if you have a SMS, Email,
+PDF or other text to be filled with variable parameters in different languages,
+this module will handle it.
+
+It contains a generic DTO submodule (optional) in which are predefined
+the communication objects. The working principle is to input the code of the template,
+key-value pairs of parameters to be filled in, it is substituted into the template,
+and return it in response. If not all the required parameters are entered, it loads the default values,
+which are also stored in the module. The module is also capable of saving files,
+but this is of limited use because it saves them to a database.

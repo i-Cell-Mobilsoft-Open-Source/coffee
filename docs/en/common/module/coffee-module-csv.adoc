@@ -1,0 +1,98 @@
+[#common_module_coffee-module-csv]
+= coffee-module-csv
+
+Module to generate a CSV file from Java beans using binding annotations,
+or parse a CSV file to produce beans.
+
+The bean annotation looks like this:
+[source,java]
+----
+public class TestBean {
+
+    @CsvBindByNamePosition(position = 0, column = "IDENTIFIER")
+    private long id;
+
+    @CsvBindByNamePosition(position = 4)
+    private String name;
+
+    @CsvBindByNamePosition(position = 2)
+    private boolean active;
+
+    @CsvDate("yyyy-MM-dd")
+    @CsvBindByNamePosition(position = 3)
+    private LocalDate creationDate;
+
+    @CsvBindByNamePosition(position = 1)
+    private status status;
+
+    // getters, setters...
+}
+----
+
+The module provides a `@CsvBindByNamePosition` annotation to specify the position and name of a CSV column.
+
+A list of instances of such a class can be converted to CSV with the following call:
+[source,java]
+----
+String csv = CsvUtil.toCsv(beans, TestBean.class);
+----
+
+The result of the above call:
+[source,csv]
+----
+"IDENTIFIER"; "STATUS"; "ACTIVE"; "CREATIONDATE"; "NAME"
+"11";"IN_PROGRESS";"true";"2021-11-23";"foo"
+"12";"DONE";"false";"2020-01-02";"bar"
+----
+
+To convert backwards, the following call can be used:
+[source,java]
+----
+List<TestBean> beans = CsvUtil.toBean(csv, TestBean.class);
+----
+
+== Disambiguation
+
+The field spacing in which we want to languageize the values must be specified in the
+`LocalizationConverter` , which can be done with annotations starting with `@CsvCustomBind`:
+
+[source,java]
+----
+@CsvCustomBindByNamePosition(position = 0, converter = LocalizationConverter.class)
+private status status;
+
+@CsvCustomBindByNamePosition(position = 1, converter = LocalizationConverter.class)
+private boolean active;
+----
+
+TIP: If you also want to localize custom types, or want to localize managed types
+If you want to use localization types or change the logic of managed types, you can do so by deriving from `LocalizationConverter`.
+
+Then we need to specify the language for the columns and the values of the fields we want to annotate
+(e.g. in the `messages_en.properties` file):
+
+[source,properties]
+----
+java.lang.Boolean.TRUE=Yes
+java.lang.Boolean.FALSE=No
+hu.icellmobilsoft.coffee.module.csv.LocalizedTestBean.status=Status
+hu.icellmobilsoft.coffee.module.csv.LocalizedTestBean.active=Active
+hu.icellmobilsoft.coffee.module.csv.LocalizedTestBean$Status.IN_PROGRESS=Progress
+hu.icellmobilsoft.coffee.module.csv.LocalizedTestBean$Status.DONE=Done
+----
+
+Finally, you need to call the `CsvUtil#toLocalizedCsv` method with the selected language:
+
+[source,java]
+----
+String csv = CsvUtil.toLocalizedCsv(beans, TestBean.class, "en");
+----
+
+The code in the examples will result in the following CSV:
+
+[source,csv]
+----
+"Status"; "Active"
+"Progress"; "Yes"
+"Done"; "No"
+----

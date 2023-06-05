@@ -92,7 +92,7 @@ A példákban szereplő kód az alábbi CSV-t eredményezi:
 
 [source,csv]
 ----
-"STÁTUSZ";"AKTÍV"
+"Státusz";"Aktív"
 "Folyamatban";"Igen"
 "Kész";"Nem"
 ----
