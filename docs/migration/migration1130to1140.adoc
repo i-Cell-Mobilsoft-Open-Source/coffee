@@ -15,7 +15,8 @@ Következő funkció támogatások kerültek a rendszerbe:
 * coffee-grpc-protoc - proto -> class generálás támogatása
 * coffee-dto/coffee-dto-xsd2proto - Generált proto fájlok ami a `coffee-dto-xsd` XSD fájlokból vannak generálva.
 * coffee-dto/coffee-dto-stub-gen - Generált osztályok a Coff:ee proto fajlokból
-* coffee-grpc-server-extension - CDI gRPC szerver implementációja
+* coffee-grpc-server-extension - CDI gRPC szerver implementáció támogatása
+* coffee-grpc-client-extension - CDI gRPC client implementáció támogatása
 
 == Változások
 

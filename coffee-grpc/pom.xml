@@ -28,5 +28,6 @@
         <module>coffee-grpc-base</module>
         <module>coffee-grpc-protoc</module>
         <module>coffee-grpc-server-extension</module>
+        <module>coffee-grpc-client-extension</module>
     </modules>
 </project>

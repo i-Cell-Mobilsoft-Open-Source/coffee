@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package hu.icellmobilsoft.coffee.grpc.server.config;
+package hu.icellmobilsoft.coffee.grpc.client.config;
 
 import java.util.Optional;
 
@@ -27,33 +27,33 @@ import javax.enterprise.inject.Produces;
 import javax.enterprise.inject.spi.CDI;
 import javax.enterprise.inject.spi.InjectionPoint;
 
+import hu.icellmobilsoft.coffee.grpc.client.GrpcClient;
 import hu.icellmobilsoft.coffee.tool.utils.annotation.AnnotationUtil;
 
 /**
- * Producer for creating GrpcServerConfig
+ * Producer for creating GrpcClientConfig
  *
- * @author czenczl
+ * @author Imre Scheffer
  * @since 1.14.0
  */
 @ApplicationScoped
-public class GrpcServerConfigProducer {
+public class GrpcClientConfigProducer {
 
     /**
-     * Creates {@link GrpcServerConfig} for the injected config key
+     * Creates {@link GrpcClientConfig} for the injected config key
      *
      * @param injectionPoint
      *            injection metadata
-     * @return GrpcServerConfig
+     * @return GrpcClientConfig
      */
     @Produces
     @Dependent
-    @GrpcServerConnection(configKey = "")
-    public GrpcServerConfig produceGrpcServerConfig(InjectionPoint injectionPoint) {
-        Optional<GrpcServerConnection> annotation = AnnotationUtil.getAnnotation(injectionPoint, GrpcServerConnection.class);
-        String configKey = annotation.map(GrpcServerConnection::configKey).orElse(null);
-        GrpcServerConfig grpcServerConfig = CDI.current().select(GrpcServerConfig.class).get();
-        grpcServerConfig.setConfigKey(configKey);
-        return grpcServerConfig;
+    @GrpcClient(configKey = "")
+    public GrpcClientConfig produceGrpcServerConfig(InjectionPoint injectionPoint) {
+        Optional<GrpcClient> annotation = AnnotationUtil.getAnnotation(injectionPoint, GrpcClient.class);
+        String configKey = annotation.map(GrpcClient::configKey).orElse(null);
+        GrpcClientConfig grpcClientConfig = CDI.current().select(GrpcClientConfig.class).get();
+        grpcClientConfig.setConfigKey(configKey);
+        return grpcClientConfig;
     }
-
 }
