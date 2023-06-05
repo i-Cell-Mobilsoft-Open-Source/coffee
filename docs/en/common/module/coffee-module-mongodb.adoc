@@ -63,7 +63,7 @@ The coff:ee mongoDB module will build the MongoDbClient object based on the valu
 The collection to use must be specified separately.
 This is the default MongoService implementation which can work with BasicDBObject type.
 
-Using .Service 
+.Using Service 
 [source,java]
 ----
 // specify collection
@@ -92,7 +92,7 @@ BasicDBObject result = mongoDbClient.findById(mongoId);
 This annotation is exploited by the CDI extension, for all classes that extend the MongoService<T> class, it is automatically generated
 an @Producer to allow injection.
 
-Using .Service 
+.Using Service 
 [source,java]
 ----
 /**

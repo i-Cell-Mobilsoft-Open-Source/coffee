@@ -34,6 +34,7 @@ Table 1 shows the configuration keys used by the module.
 |totp.verify.additional.windows.count |0 |This parameter is used to extend the password verification to adjacent time windows   
 |===
 The default values are set so that the module generates the same otp as google authenticator, but of course you can deviate from this.
+
 .The main methods
 * TOTPVerifier.verify
 

@@ -91,7 +91,7 @@ configEtcdHandler.putValue("public.iop.url", "{protected.iop.url.main}");
 String contactEmail = configEtcdHandler.getValue("public.iop.url"); //A return value "http://sample-sandbox.hu/kr_esb_gateway/services/IOPService?wsdl"
 ----
 The reference must strictly refer to a specific other configuration, no other content is allowed.
-For example, the embedded reference will not be resolved ("http://{masik.etcd.conf}:8178/SampleMockService/IOPService2?wsdl").
+For example, the embedded reference will not be resolved (http://{other.etcd.conf}:8178/SampleMockService/IOPService2?wsdl).
 
 == ConfigEtcdService class
 Provides the ability to query, write, list, search for configuration values.
