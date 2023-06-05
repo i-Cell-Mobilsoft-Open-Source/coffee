@@ -1,0 +1,8 @@
+[#migration]
+= Migration descriptions
+
+Older migration descriptions are available at
+https://github.com/i-Cell-Mobilsoft-Open-Source/coffee/blob/master/docs/migration/v1/index.adoc[here]
+
+include::migration/migrationTo2_0_0.adoc[leveloffset=+1]
+include::migration/migration200to210.adoc[leveloffset=+1]
