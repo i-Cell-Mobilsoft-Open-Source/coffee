@@ -1,0 +1,85 @@
+[#common_core_coffee-se_coffee-se-logging]
+= coffee-se-logging
+
+Loggolással és MDC-vel kapcsolatos JakartaEE függőséget nem tartalmazó komponensek modulja.
+
+== Loggolás
+Tartalmaz egy `java.util.logging.Logger`-t használó alap loggolási rendszert.
+
+.Minta használat SE környezetben
+[source,java]
+----
+import hu.icellmobilsoft.coffee.se.logging.Logger;
+
+private Logger log = Logger.getLogger(BlaBla.class);
+
+public String blabla() {
+    log.trace("blabla log message");
+    return "blabla";
+}
+----
+
+Bővebb leírás és CDI-on keresztüli használat a <<common_core_coffee-cdi_logger, coffee-cdi/logger>> részen olvasható.
+
+[#common_core_coffee-se_coffee-se-logging_MDC]
+== MDC
+A modul saját keretrendszer-t tartalmaz az MDC (Mapped Diagnostic Context) kezelésre.
+Ennek oka, hogy adott projekteken eltérő MDC megoldások lehetnek (pl. jboss, slf4j, logback...).
+Használata a `hu.icellmobilsoft.coffee.se.logging.mdc.MDC` osztály static metódusain keresztül történik.
+
+Az MDC osztály belül megpróbál a classpath-on elérhető MDC megoldást keresni, és a talált osztálynak delegálni a kéréseket.
+Jelenleg a `org.jboss.logging.MDC` és a `org.slf4j.MDC` implementációk támogatottak,
+azonban a modul service loader segítségével projekt szinten kiterjeszthető.
+
+=== MDC kiterjesztése
+Coffee szinten nem támogatott MDC implementáció használatához az `MDCAdapter` és `MDCAdapterProvider`
+interface-eket szükséges implementálni, majd service loader mechanizmussal betölteni az implementált `MDCAdapterProvider`-t.
+
+==== Példa `CustomMDC` bekötése:
+. `MDCAdapter` implementálása `CustomMDC`-hez:
++
+.com.project.CustomMDCAdapter
+[source,java]
+----
+public class CustomMDCAdapter implements MDCAdapter {
+
+    @Override
+    public String get(String key){
+        //The adapter delegates its calls to our CustomMdc
+        return CustomMDC.get(key);
+    }
+}
+----
+. `MDCAdapterProvider` implementálása `CustomMDCAdapter` legyártásához:
++
+.com.project.CustomMDCAdapterProvider
+[source,java]
+----
+public class CustomMDCAdapterProvider implements MDCAdapterProvider {
+
+    @Override
+    public MDCAdapter getAdapter() throws Exception;{
+        return new CustomMDCAdapter();
+    }
+}
+----
+. `CustomMDCAdapterProvider` bekötése service loaderen keresztül:
++
+.META-INF/services/hu.icellmobilsoft.coffee.se.logging.mdc.MDCAdapterProvider
+[source,text]
+----
+com.project.CustomMDCAdapterProvider
+----
+
+=== MDC sorrend
+
+Az elérhető MDC implementációkat az alábbi sorrendben próbálja felolvasni.
+A belül használt MDC az első működő lesz:
+
+. ServiceLoader kiterjesztések
+. `org.jboss.logging.MDC`
+. `org.slf4j.MDC`
+. `CoffeeMDCAdapter`
+** coff:ee implementáció, csak fallback-nek van
+** az értékeket `ThreadLocal`-ban tárolja
+** külön le kell kezelni, ha szeretnénk, hogy loggolva legyen.
