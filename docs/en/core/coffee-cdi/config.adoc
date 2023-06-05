@@ -1,0 +1,53 @@
+[#common_core_coffee-cdi_logger]
+= config
+
+As a configuration solution we use the microprofile-config solution.
+
+NOTE: microprofile.io +
+https://github.com/eclipse/microprofile-config +
+http://mirrors.ibiblio.org/eclipse/microprofile/microprofile-config-1.3/microprofile-config-spec.pdf
+
+In short, what is it? You can specify configuration parameters in a wide range of ways. It is not enough to burn a configuration parameter into some properties file, because it may have a different value from environment to environment. The values can be specified at a separate level, be it ETCD, properties, system property, environment property or whatever. The microprofile-config can look up a given key from all available sources and use the highest priority value. Basic use cases:
+
+* in code - when not using CDI container, static methods and other cases
+* static - at runtime of the program all 
+* dynamic - the key value is searched for dynamically, each time it is used. configuration changes can be made without restarting (for example, setting some system property at runtime)
+
+.configuration sample
+[source,java]
+----
+import org.eclipse.microprofile.config.inject.ConfigProperty;
+import org.eclipse.microprofile.config.ConfigProvider;
+import javax.inject.Provider;
+ 
+ 
+// <1>
+public String kodban() {
+    Config config = ConfigProvider.getConfig();
+    String keyValue = config.getValue("key", String.class);
+    return keyValue;
+}
+ 
+ 
+// <2>
+@Inject
+@ConfigProperty(name="key")
+String keyValue;
+ 
+public String statikusan() {
+    return keyValue;
+}
+ 
+ 
+// <3>
+@Inject
+@ConfigProperty(name="key")
+Provider<String> keyValue;
+ 
+public String dynamic() {
+    return keyValue.get();
+}
+----
+<1> value retrieved in code
+<2> static value input
+<3> dynamic value retrieval
