@@ -1,10 +1,9 @@
 [#common_module_coffee-module-csv]
 = coffee-module-csv
 
-Modul célja Java bean-ekből binding annotációk segítségével CSV fájlt tudjunk generálni,
-vagy egy CSV fájlt parsolva elő tudjuk állítani a bean-eket.
+The purpose of this module is to generate a CSV file from Java beans using binding annotations, or to create beans by parsing a CSV file.
 
-A bean annotálás így néz ki:
+Here is an example of bean annotation:
 [source,java]
 ----
 public class TestBean {
@@ -29,15 +28,15 @@ public class TestBean {
 }
 ----
 
-A modul által nyújtott `@CsvBindByNamePosition` annotációval lehet megadni a CSV oszlop pozícióját és nevét.
+The `@CsvBindByNamePosition` annotation provided by the module allows specifying the position and name of the CSV column.
 
-Egy ilyen osztály példányaiból álló listát az alábbi hívással lehet CSV-re konvertálni:
+You can convert a list of instances of such classes to CSV using the following call:
 [source,java]
 ----
 String csv = CsvUtil.toCsv(beans, TestBean.class);
 ----
 
-A fenti hívás eredménye:
+The result of the above call would be:
 [source,csv]
 ----
 "IDENTIFIER";"STATUS";"ACTIVE";"CREATIONDATE";"NAME"
@@ -45,16 +44,15 @@ A fenti hívás eredménye:
 "12";"DONE";"false";"2020-01-02";"bar"
 ----
 
-A visszafelé konverzióhoz az alábbi hívás használható:
+For reverse conversion, you can use the following call:
 [source,java]
 ----
 List<TestBean> beans = CsvUtil.toBean(csv, TestBean.class);
 ----
 
-== Nyelvesítés
+== Localization
 
-Azokat a mezőköz amikben lévő értékeket nyelvesíteni szeretnénk meg kell adni a
-`LocalizationConverter`-t , amit a `@CsvCustomBind` kezdetű annotációkkal tudunk megtenni:
+To localize the values in fields, you need to specify a `LocalizationConverter` using annotations starting with `@CsvCustomBind`:
 
 [source,java]
 ----
@@ -65,11 +63,10 @@ private Status status;
 private boolean active;
 ----
 
-TIP: Ha saját típusokat is szeretnénk nyelvesíteni, vagy a kezelt típusok nyelvesítési
-logikáját szeretnénk megváltoztatni, azt a `LocalizationConverter`-ből leszármazással megtehetjük
+TIP: If you want to localize custom types or change the localization logic for handled types, you can do so by inheriting from `LocalizationConverter`.
 
-Ezután meg kell adnunk az oszlopok, és a felannotált mezők értékeihez tartozó nyelvesítést
-(pl.: a `messages_hu.properties` fájlban):
+Next, you need to provide the localization for columns and the values associated with annotated fields
+(e.g., in the `messages_hu.properties` file):
 
 [source,properties]
 ----
@@ -81,14 +78,14 @@ hu.icellmobilsoft.coffee.module.csv.LocalizedTestBean$Status.IN_PROGRESS=Folyama
 hu.icellmobilsoft.coffee.module.csv.LocalizedTestBean$Status.DONE=Kész
 ----
 
-Végezetül meg kell hívni a `CsvUtil#toLocalizedCsv` metódust a kiválasztott nyelvvel:
+Finally, you need to call the `CsvUtil#toLocalizedCsv` method with the desired language:
 
 [source,java]
 ----
 String csv = CsvUtil.toLocalizedCsv(beans, TestBean.class, "hu");
 ----
 
-A példákban szereplő kód az alábbi CSV-t eredményezi:
+The provided code examples would result in the following CSV:
 
 [source,csv]
 ----

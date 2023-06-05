@@ -9,6 +9,9 @@ Collector of general gRPC handling for the Coff:ee API (annotations, version, ..
 == coffee-grpc-base
 Collector of general Protobuf and gRPC classes. It includes exception handling, status management, CDI, and other general Coff:ee functionalities.
 
+.ExceptionMapper and ExceptionHandler
+The generic ExceptionMapper interface follows the JAX-RS pattern and enables the conversion of a given Exception type to a gRPC Status, leveraging the capabilities provided by CDI.
+
 == coffee-grpc-protoc
 Helper tool for generating classes from proto files. It uses the https://mustache.github.io/[Mustache] template system, which will be included in the `com.salesforce.jprotoc.ProtocPlugin` system.
 
@@ -37,6 +40,52 @@ Sample usage in a .pom.xml file:
 ----
 
 For a more complex example, refer to the https://github.com/i-Cell-Mobilsoft-Open-Source/backend-sampler[backend-sampler] project, specifically the https://github.com/i-Cell-Mobilsoft-Open-Source/backend-sampler/blob/main/api/api-grpc/api-grpc-stub-gen/pom.xml[pom.xml] file.
+
+== coffee-grpc-server-extension
+This module provides a CDI-compatible implementation of a gRPC server.
+
+It scans and reads all classes that implement `IGrpcService` and delegates them to the gRPC service via the `GrpcServerManager`.
+
+Implemented features:
+
+* gRPC server configuration based on `NettyServerBuilder` (https://github.com/grpc/grpc-java/blob/master/netty/src/main/java/io/grpc/netty/NettyServerBuilder.java)
+* MDC (Mapped Diagnostic Context) handling
+* Request/Response logging
+* Exception handling
+
+=== Server Thread Pool
+The thread handling is an important part of the gRPC server. Two solutions have been implemented:
+
+* `ThreadPoolExecutor` - default thread pool:
+** Managed through the `coffee.grpc.server.threadpool.default` configuration
+* `ManagedExecutorService` - Jakarta EE managed thread pool:
+** Server-managed thread pool with context propagation support
+
+.gRPC server configuration
+[source,yaml]
+----
+coffee:
+  grpc:
+    server:
+      port: 8199 # default 8199
+      maxConnectionAge: 60000000 # nano seconds, default Long.MAX_VALUE
+      maxConnectionAgeGrace: 60000000 # nano seconds, default Long.MAX_VALUE
+      maxInboundMessageSize: 4194304 # Byte, default 4 * 1024 * 1024 (4MiB)
+      maxInboundMetadataSize: 8192 # Byte, default 8192 (8KiB)
+      maxConnectionIdle: 60000000 # nano seconds, default Long.MAX_VALUE
+      keepAliveTime: 5 # minutes, default 5
+      keepAliveTimeout: 20 # seconds, default 20
+      permitKeepAliveTime: 5 # minutes, default 5
+      permitKeepAliveWithoutCalls: false # default false
+      threadPool:
+        default:
+          corePoolSize: 64 # default 32
+          maximumPoolSize: 64 # default 32
+          keepAliveTime: 60000 # milliseconds, default 0
+        jakarta:
+          active: true # default false <1>
+----
+<1> if `true`, the `coffee.grpc.server.threadpool.default` is ignored.
 
 == coffee-dto/coffee-dto-xsd2proto
 Collector of generated schema2proto files for general Coff:ee XSD descriptors (`coffee-dto-xsd` module) and other manually created proto files. This package is used for using Coff:ee proto files, so projects don't need to generate their own Coff:ee proto files.
