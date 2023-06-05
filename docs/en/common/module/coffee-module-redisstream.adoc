@@ -172,19 +172,19 @@ class, such as:
 private RedisStreamPublisher redisStreamPublisher;
 ...
 redisStreamPublisher.publish("message"); //<2>
-// vagy
+// or
 redisStreamPublisher.publish("alternativeGroup", "message");
 redisStreamPublisher.publish(List.of("message-1", "message-2"));
 redisStreamPublisher.publish("alternativeGroup", List.of("message-1", "message-2"));
 redisStreamPublisher.publishPublications(List.of(
         RedisStreamPublication.of("group-1", "message-1"),
         RedisStreamPublication.of("group-2", "message-2")
-// üzenet paraméterezése
+// parameterization of the message
 long expiry = Instant.now().plus(5, ChronoUnit.MINUTES).toEpochMilli();
 Map<String, String> map = Map.ofEntries(RedisStreamPublisher.parameterOf(StreamMessageParameter.TTL, expiry));
 redisStreamPublisher.publish("message", parameters); //<3>
 
-// vagy
+// or
 RedisStreamPublication publication = RedisStreamPublication.of(id).withTTL(defaultTTL).withParameter(StreamMessageParameter.FLOW_ID_EXTENSION, id))
 redisStreamPublisher.publishPublication(publication); //<4>
 ----
