@@ -1,0 +1,172 @@
+[#common_module_coffee-module-ruleng]
+= coffee-module-ruleng
+
+The purpose of this module is to support a universal rule system evaluation.
+
+There is a growing need to perform multiple evaluations on a single data set,
+the results of which determine the output of the overall processing. Example use cases:
+
+* submitted invoice processing
+** invoice header checks (simple data, external dependency)
+** invoice item checks (scroll through list)
+** invoice summary checks (calculated data)
+** special checks (combination of the above)
+* rent, discount checks
+** real owner, maturity, issuer (external dependency)
+** discount rate, eligibility for use (calculated data)
+* loan application
+** check application data
+** reviews
+* many other use cases
+
+
+== Principles
+It works entirely on the basis of CDI, focusing on the following needs:
+
+. modularizable according to CDI principles, almost all framework operations can be individually modified
+. 1 rule 1 independent class
+. the internal logic of the rule follows the KISS (keep is simple, stupid) principle
+. traditional unlimited EE logic can be used
+. the rule evaluation must be fault-tolerant, null-safe, only focusing on its own data,
+not interested in evaluating another rule
+. possibility to sort and group rules (parallel evaluation)
+. possibility to interrupt the processing in the queue while the processing of the other group is independent
+. evaluation result can be positive or negative, logic does not matter how it is used
+. disable/enable rule according to versioned data
+. all rules must end with the same class type
+. multiple evaluations are possible within 1 rule (to be avoided, but sometimes required)
+
+== Rule
+Many types of rule evaluation are possible, starting from the following pattern
+
+.Sample Rule
+[source,java]
+----
+import javax.enterprise.inject.Model;
+import javax.inject.Inject;
+
+import hu.icellmobilsoft.coffee.cdi.annotation.Range;
+import hu.icellmobilsoft.coffee.cdi.annotation.Version;
+import hu.icellmobilsoft.coffee.dto.exception.BaseException;
+import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
+import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
+import hu.icellmobilsoft.coffee.module.ruleng.rule.IRule;
+import hu.icellmobilsoft.project.enums.ValidatorFaultType;
+import hu.icellmobilsoft.project.rule.RuleException;
+import hu.icellmobilsoft.project.rule.CustomRuleResult;
+import hu.icellmobilsoft.project.rule.DataHelper;
+import hu.icellmobilsoft.project.annotation.Ac;
+import hu.icellmobilsoft.project.schemas.data.LineType;
+
+@Model
+@Version(include = @Range(from = "1.1")) // Optional <1>
+@Ac // Rule category <2>
+public class AcExampleRule implements
+    IRule<LineType, CustomRuleResult>, //<3>
+    IRuleSelector { // Optional <4>
+
+    @Inject
+    private DataHelper dataHelper; //<5>
+
+    @Override
+    public CustomRuleResult apply(LineType input) throws RuleException, BaseException { //<6>
+        if (input == null) {
+            throw new TechnicalException(CoffeeFaultType.WRONG_OR_MISSING_PARAMETERS, "input is null");
+        }
+
+        if (input.getSub() != null && !input.getSub().getData() ! = null //<7>
+            && input.getSub().getData().compareTo(dataHelper.getValue()) == 0) {
+            return new CustomRuleResult(ValidatorFaultType.INVALID_SUB_DATA);
+        }
+        return null; //<8>
+    }
+
+    @Override
+    public int order() { //<9>
+        return 0;
+    }
+
+    @Override
+    public Enum<?> group() { //<10>
+        return RuleGroup.NONE; 
+    }
+}
+----
+<1> Rule activation by data version - NOT REQUIRED
+<2> Rule category. This is an annotation of type @Qualifier
+<3> IRule<InputType, CustomRuleResult> - input data type and output
+<4> Rule grouping and ordering options - NOT REQUIRED
+<5> This is how to input the precalculated data to be used by the rule for evaluation
+<6> RuleException - thrown when an interrupt is needed in the rule evaluation
+<7> null-safe checks
+<8> Can return a positive workaround if required
+<9> Rule order, 0 by default
+<10> Rule group, by default NONE
+
+.How it works:
+* AcExampleRule will be activated on data with version 1.1+.
+This is determined by the `hu.icellmobilsoft.coffee.tool.version.ComparableVersion` class.
+** It is possible to specify different version intervals
+* AcExampleRule is a rule of category "Ac" with input LineType (can be anything)
+and a CustomRuleResult (`extends hu.icellmobilsoft.coffee.module.ruleng.rule.RuleResult`) is evaluated
+* Currently also uses IRuleSelector, which is optional.
+The implemented methods use the default values in the example. If you have multiple rules
+for the same combination of category and implementation, the system will group and implement them accordingly
+** order() - will apply the evaluation in ascending order.
+** group() - rule group. If a rule in the group is caught by a RuleException,
+then the subsequent rules in the order will not be executed. No other group is affected by the interruption,
+groups are independent of each other
+
+NOTE: If you do not put an IRuleSelector interface on the rule, the rules will run by default according to Class.SimpleName,
+and will belong to RuleGroup.NONE
+
+* Check the input data, focus only on whether the data to check exists
+* The data is evaluated and the role of the rule ends here
+
+NOTE: The evaluation CustomRuleResult can be customized to the needs of the project, the condition is that `hu.icellmobilsoft.coffee.module.ruleng.rule.RuleResult` is the ancestor
+
+
+
+== Validator
+It is intended to handle rules belonging to the rule category.
+
+.Sample validator
+
+[source,java]
+----
+import java.lang.annotation.Annotation;
+
+import javax.enterprise.inject.Model;
+import javax.enterprise.util.TypeLiteral;
+
+import hu.icellmobilsoft.coffee.module.ruleng.rule.IRule;
+import hu.icellmobilsoft.coffee.module.ruleng.evaluator.AbstractEvaluator;
+import hu.icellmobilsoft.project.schemas.data.LineType;
+import hu.icellmobilsoft.sample.common.system.validator.rule.CustomRuleResult;
+import hu.icellmobilsoft.sample.invoice.common.action.evaluator.annotation.Ac;
+
+@Model
+public class ACEvaluatorLineType extends AbstractEvaluator<LineType, CustomRuleResult> {
+
+    @Override
+    protected Annotation cdiSelectLiteral() {
+        return new Ac.Literal(); //<1>
+    }
+
+    @Override
+    protected TypeLiteral<IRule<LineType, CustomRuleResult>> cdiTypeLiteral() {
+        return new TypeLiteral<IRule<LineType, CustomRuleResult>>() { <2>
+            private static final long serialVersionUID = 1L;
+        };
+    }
+}
+----
+<1> Rule category Qualifier annotation
+<2> IRule<LineType, CustomRuleResult> implemeted rules of type CDI literal
+
+.How it works:
+* There can also be more than one validator, each rule category and implementation must have its own.
+* The first thing it does is read from the CDI container the category and implementation rules it handles.
+** It tries to group them by the IRuleSelector mentioned above and then sorts them by order and then by class name
+* Runs through the categorized rules, collects the results
+* Returns in response the results of all rules run

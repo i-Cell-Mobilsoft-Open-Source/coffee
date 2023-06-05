@@ -1,0 +1,269 @@
+[#common_module_coffee-module-mp-restclient]
+= coffee-module-mp-restclient
+
+The purpose of this module is to support a microprofile restclient which includes the following principles:
+
+* Coffee compatibility - copying original request headers, passing log MDC keys, exception handling
+* Business process traceability - request/response logging
+* HTTP communication customization - internal/external HTTP communication modifiability (e.g. between services
+different REST http than say when sending request to XY, different headers,
+content, content-type, etc..), TLS encryption, URL and behaviour (timeout, repeat, etc...) override
+* Exception customization - locally modifiable error handling
+
+== microprofile-rest-client
+The starting point is https://github.com/eclipse/microprofile-rest-client[microprofile-rest-client]
+which is a member of the https://microprofile.io/[micropfile.io] group. It can do many things
+off our shoulders, it can be used on its own but needs to be extended to meet the needs of projects
+some useful features. 
+
+== Core
+Most of the above principles are implemented in the https://github.com/eclipse/microprofile-rest-client[microprofile-rest-client]
+the rest is done by the next few classes.
+
+=== DefaultLoggerClientRequestFilter
+This is a default REST client *REQUEST logger*,
+which takes into account if `LogSpecifier` is specified with `CLIENT_REQUEST` target (<<common_core_coffee-rest_LogSpecifier,LogSpecifier>>).
+So it will log the HTTP *request* data sent by the client:
+
+* HTTP method, URL address
+* HTTP headers
+* cookies
+* Entity
+
+It sends all this to the logger at INFO level.
+
+=== DefaultLoggerClientResponseFilter
+This is a default REST client *RESPONSE logger*,
+which takes into account if you have specified `LogSpecifier` with `CLIENT_RESPONSE` target (<<common_core_coffee-rest_LogSpecifier,LogSpecifier>>).
+So it will log the HTTP *request response* data sent by the client:
+
+* HTTP status + accessories
+* HTTP headers
+* cookies
+* locale, location values
+* Entity
+
+All this is sent to the logger at INFO level
+
+=== DefaultSettingClientRequestFilter
+This is a default REST client "REST setting copy".
+Its job is to bind the REST call through *services*,
+so that, for example, the basics of logging and *authentication* can work.
+
+In other words, when a REST request comes into the service,
+processing in the microservice requires a call through to another microservice,
+then that HTTP call needs to include those HTTP headers in the same way,
+which were entered in the service request, so that the authentication there can be successful.
+Specifically, the setting of the authentication MDC variables will be included in the HTTP headers sent out.
+
+=== DefaultBaseExceptionResponseExceptionMapper
+Its purpose is to process the error received in the response,
+from the usual coffee BaseException `hu.icellmobilsoft.coffee.dto.exception.RestClientResponseException`
+class.
+
+[#common_module_coffee-module-mp-restclient_DefaultRestClientBuilderListener]
+=== DefaultRestClientBuilderListener
+This is a *default "activator" for connecting the above listed classes*.
+This class can be used directly or configured freely.
+Additionally, the HTTP client timeout values are defined in this class:
+
+* 5 sec connect timeout
+* 1 min read timeout
+
+If there is any operational change request,
+it can be influenced through this central "activator" class,
+further options are mentioned below,
+which are done according to the rules of https://github.com/eclipse/microprofile-rest-client[microprofile-rest-client].
+
+That "activator" should also be taken into account in the
+https://github.com/eclipse/microprofile-rest-client[microprofile-rest-client]
+must be registered in the following file:
+
+.src/main/resources/META-INF/services/org.eclipse.microprofile.rest.client.spi.RestClientBuilderListener 
+[source,txt]
+----
+# coffee default
+hu.icellmobilsoft.coffee.module.mp.restclient.provider.DefaultRestClientBuilderListener
+# projects customized
+#hu.icellmobilsoft.sample.invoice.service.provider.ProjectRestClientBuilderListener
+----
+This is a plain txt file without postfix and extension.
+
+=== FaultTypeParserExtension
+Gathers enum classes implementing the `IFaultType` interface.
+Based on this, `FaultTypeParser` is able to parse the response String faultCode in mp rest client calls to enum and map it to the corresponding exception.
+
+IMPORTANT:: It can only parse enums accessible by the container, this requires that `beans.xml` is present in the implementation module.
+
+The read implementations can be ordered by the `@Priority` annotation, the default priority is 500.
+
+== Implementation in the project
+
+=== pom.xml
+
+.Coffee module activation
+[source,xml]
+----
+<dependency>
+    <groupId>hu.icellmobilsoft.coffee.module.mp.restclient</groupId>
+    <artifactId>coffee-module-mp-restclient</artifactId>
+</dependency>
+----
+
+You may also need to activate the application server extension,
+which for example in thorntail server is:
+
+.thorntail application server activation
+[source,xml]
+----
+<dependency>
+    <groupId>io.thorntail</groupId>
+    <artifactId>microprofile-restclient</artifactId>
+</dependency>
+----
+
+== Usage examples
+IMPORTANT: For a complete detailed description of the usage itself, see
+https://github.com/eclipse/microprofile-rest-client[microprofile-rest-client]
+relese releases. We will mention a few examples here locally.
+
+=== Sample usage
+==== Initialization
+In the class where the REST operations are defined
+(if you follow the company recommended REST structure then this is the REST interface) you need to add the
+@RegisterRestClient annotation.
+This basically tells the microprofile-rest-client system
+to refer to the REST endpoints defined in it as HTTP REST clients.
+In the client itself you will be able to use the types and annotations used here,
+the burden falls on the separate settings for these (e.g. text/xml, application/json, entity class, etc...)
+[source,java]
+----
+@Tag(name = IInvoiceTestRest.TAG_TEST, description = "SYSTEM REST test operations required for Invoice Processor")
+@Path(InvoicePath.TEST_INVOICE_SERVICE)
+@RegisterRestClient // <1>
+public interface IInvoiceTestRest {
+
+    static final String TAG_TEST = "Test";
+    ...
+----
+<1> add the @RegisterRestClient annotation.
+Usually nothing else is needed (unless there are some special needs), old functionality is not affected
+
+==== Using HTTP client
+The most used instances of HTTP REST client in the code:
+
+.CDI inject
+[source,java]
+----
+import javax.enterprise.inject.Model;
+import javax.inject.Inject;
+
+import org.eclipse.microprofile.rest.client.inject.RestClient;
+
+import hu.icellmobilsoft.coffee.dto.exception.BaseException;
+import hu.icellmobilsoft.coffee.module.mp.restclient.util.MPRestClienUtil;
+
+@Model
+public class TestAction {
+
+    @Inject
+    @RestClient // <1>
+    private IInvoiceTestRest iInvoiceTestRest; // <2>
+
+    public String test() throws BaseException {
+        try {
+            iInvoiceTestRest.postValidatorTest(entityClass); // <3>
+        } catch (Exception e) { // <4>
+            throw MPRestClientUtil.toBaseException(e); // <5>
+        }
+        return null;
+    }
+}
+----
+<1> mp-rest-client @Qualifier annotation that creates the HTTP client wrapper
+<2> interface marked with the @RegisterRestClient annotation
+<3> HTTP REST client call - this is where the configuration settings (URL, HTTP header, timeout, etc...) come into play
+<4> general HTTP management. The operation itself is defined as BaseException but it is at the service level,
+we are using it as a client and at <1> we wrapped it in a wrapper,
+which may return with other RuntimeException errors
+<5> Coffee level pre-written Exception compiler
+
+In fact, a boilerplate wrapper will be created for the whole thing to simplify the coding even more.
+
+.inline
+[source,java]
+----
+import java.net.URI;
+
+import javax.enterprise.inject.Model;
+import javax.inject.Inject;
+
+import org.eclipse.microprofile.rest.client.RestClientBuilder;
+
+import hu.icellmobilsoft.coffee.dto.exception.BaseException;
+import hu.icellmobilsoft.coffee.module.mp.restclient.util.MPRestClienUtil;
+
+@Model
+public class TestAction {
+
+    public String doWorkAgainstApi(URI uri, Object entity) {
+        try {
+            IInvoiceTestRest iInvoiceTestRest = RestClientBuilder //
+                    .newBuilder() // <1>
+                    .baseUri(uri) // <2>
+                    .build(IInvoiceTestRest.class); <3>
+            return iInvoiceTestRest.postValidatorTest(entity);
+        } catch (Exception e) { // <4>
+            throw MPRestClientUtil.toBaseException(e); // <5>
+        }
+        return null;
+    }
+}
+----
+<1> here calls <<common_module_coffee-module-mp-restclient_DefaultRestClientBuilderListener,DefaultRestClientBuilderListener>>,
+any setting of which can be overridden.
+<2> override the URI defined in the configs
+<3> interface marked with the @RegisterRestClient annotation
+<4> general error handling. The operation itself has BaseException defined but the builder wrapped it in a wrapper,
+which may return other RuntimeException errors
+<5> Exception compiler pre-written in Coffee
+
+This use case is very specific,
+if possible, strive for a CDI and configuration level solution.
+
+=== Configuration options
+Configurations can be specified at the same time as annotations,
+but of course the options of microprofile-config are also given now.
+I will also list some of the most common configuration patterns.
+The syntax itself is the covariate:
+
+[source,txt]
+----
+category-key-name/mp-rest/key
+
+or
+
+full-class-name/mp-rest/key
+----
+Where:
+
+* *category-key-name* - keyword we choose in our code
+and used in the `@RegisterRestClient(configKey="invoiceService")` annotation,
+which in our case is for example "invoiceService"
+* *full-class-name* - class (in our case, rather interface) name,
+where the @RegisterRestClient annotation is loaded. Avoid *this kind of configuration* if possible,
+as later refactoring may cause hidden errors in the configurations
+* */mp-rest* - microprofile-rest-client default keyword 
+* */key* - the key itself supported by microprofile-rest-client, e.g.: url, providers, readTimeout, etc...
+
+.project-default.yml - sample configuration
+[source,yaml]
+----
+"invoiceService/mp-rest/url": http://localhost:8083
+"invoiceService/mp-rest/providers": hu.icellmobilsoft.project.invoice.CustomProvider
+
+#or the other option
+
+"hu.icellmobilsoft.project.invoice.service.rest.IInvoiceTestRest/mp-rest/url": http://localhost:8083
+"hu.icellmobilsoft.project.invoice.service.rest.IInvoiceTestRest/mp-rest/providers": hu.icellmobilsoft.project.invoice.CustomProvider
+----
