@@ -69,7 +69,7 @@ try (RedisManagerConnection connection = redisManager.initConnection()) { #<1>
 }
 
 ----
-<1> Initialize the Jedi instance on which the operations are performed, use try-with-resource to automatically close it
+<1> Initialize the Jedis instance on which the operations are performed, use try-with-resource to automatically close it
 
 Example of performing an operation.
 
