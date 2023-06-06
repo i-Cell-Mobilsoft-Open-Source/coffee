@@ -93,6 +93,40 @@ coffee:
 ----
 <1> if `true` then `coffee.grpc.server.threadpool.default` ignored
 
+Minta alkalmazás: https://github.com/i-Cell-Mobilsoft-Open-Source/backend-sampler/tree/main/sample/sample-grpc-server-service[sample-grpc-server-service]
+
+== coffee-grpc-client-extension
+Támogatást tartalmaz egy gRPC kliens megvalósítására.
+Ezek közé tartozik:
+
+* Konfiguráció kezelés
+* Request logolás
+* Response logolás
+
+.gRPC client configuration
+[source,yaml]
+----
+coffee:
+  grpc:
+    client:
+      _configKey_:
+        host: localhost # default localhost
+        port: 8199 # default 8199
+----
+
+.CDI inject DummyServiceGrpc haszálata
+----
+@Inject
+@GrpcClient(configKey = "_configKey_") //<1>
+private DummyServiceGrpc.DummyServiceBlockingStub dummyGrpcService; //<2>
+
+...
+DummyResponse helloResponse = dummyGrpcService.getDummy(dummyRequest); //<3>
+...
+----
+<1> Konfigurációs kulcs a csatlakozási paraméterekről (pl. szerver host és port)
+<2> Generált service Stub
+<3> gRPC service hívás
 
 == coffee-dto/coffee-dto-xsd2proto
 Coff:ee általános XSD leírók (`coffee-dto-xsd` modul) schema2proto generált
