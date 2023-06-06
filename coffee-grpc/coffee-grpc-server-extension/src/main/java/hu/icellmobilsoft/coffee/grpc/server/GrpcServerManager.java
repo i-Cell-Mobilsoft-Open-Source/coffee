@@ -34,14 +34,18 @@ import java.util.concurrent.TimeUnit;
 import javax.annotation.Resource;
 import javax.enterprise.concurrent.ManagedExecutorService;
 import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.inject.Instance;
 import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
+import javax.enterprise.inject.spi.CDI;
 import javax.inject.Inject;
 
 import org.apache.commons.lang3.ArrayUtils;
 
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.grpc.api.service.IGrpcService;
+import hu.icellmobilsoft.coffee.grpc.metrics.api.IMetricsInterceptor;
+import hu.icellmobilsoft.coffee.grpc.metrics.api.ServerMetricsInterceptorQualifier;
 import hu.icellmobilsoft.coffee.grpc.server.config.GrpcServerConfig;
 import hu.icellmobilsoft.coffee.grpc.server.config.GrpcServerConnection;
 import hu.icellmobilsoft.coffee.grpc.server.config.IGrpcServerConfig;
@@ -52,6 +56,7 @@ import hu.icellmobilsoft.coffee.se.logging.Logger;
 import io.grpc.BindableService;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
+import io.grpc.ServerInterceptor;
 
 /**
  * Sample gRPC server manager
@@ -207,6 +212,13 @@ public class GrpcServerManager {
         serverBuilder.intercept(new ErrorHandlerInterceptor()); // 5
         serverBuilder.intercept(new ServerResponseInterceptor()); // 4
         serverBuilder.intercept(new ServerRequestInterceptor()); // 3
+
+        Instance<IMetricsInterceptor> instanceMetric = CDI.current().select(IMetricsInterceptor.class, new ServerMetricsInterceptorQualifier.Literal());
+        if (instanceMetric.isResolvable()) {
+            serverBuilder.intercept((ServerInterceptor) instanceMetric.get()); // 2
+        } else {
+            log.warn("Could not find Metric interceptor implementation for gRPC server.");
+        }
     }
 
     /**
