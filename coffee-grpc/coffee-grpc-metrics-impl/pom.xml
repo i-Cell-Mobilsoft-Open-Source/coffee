@@ -8,28 +8,20 @@
         <version>2.1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>coffee-grpc-server-extension</artifactId>
+    <artifactId>coffee-grpc-metrics-impl</artifactId>
 
     <dependencies>
-        <dependency>
-            <groupId>hu.icellmobilsoft.coffee</groupId>
-            <artifactId>coffee-tool</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>hu.icellmobilsoft.coffee</groupId>
-            <artifactId>coffee-dto-impl</artifactId>
-        </dependency>
         <dependency>
             <groupId>hu.icellmobilsoft.coffee</groupId>
             <artifactId>coffee-grpc-api</artifactId>
         </dependency>
         <dependency>
             <groupId>hu.icellmobilsoft.coffee</groupId>
-            <artifactId>coffee-grpc-base</artifactId>
+            <artifactId>coffee-grpc-metrics-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>hu.icellmobilsoft.coffee</groupId>
-            <artifactId>coffee-grpc-metrics-api</artifactId>
+            <groupId>org.eclipse.microprofile.metrics</groupId>
+            <artifactId>microprofile-metrics-api</artifactId>
         </dependency>
 
         <dependency>

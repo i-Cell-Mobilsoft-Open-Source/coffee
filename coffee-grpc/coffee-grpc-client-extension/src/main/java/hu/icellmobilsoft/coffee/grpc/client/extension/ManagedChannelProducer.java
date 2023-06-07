@@ -26,7 +26,9 @@ import java.util.Optional;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.context.Dependent;
+import jakarta.enterprise.inject.Instance;
 import jakarta.enterprise.inject.Produces;
+import jakarta.enterprise.inject.spi.CDI;
 import jakarta.enterprise.inject.spi.InjectionPoint;
 import jakarta.inject.Inject;
 
@@ -35,8 +37,11 @@ import hu.icellmobilsoft.coffee.grpc.client.GrpcClient;
 import hu.icellmobilsoft.coffee.grpc.client.config.GrpcClientConfig;
 import hu.icellmobilsoft.coffee.grpc.client.interceptor.ClientRequestInterceptor;
 import hu.icellmobilsoft.coffee.grpc.client.interceptor.ClientResponseInterceptor;
+import hu.icellmobilsoft.coffee.grpc.metrics.api.ClientMetricsInterceptorQualifier;
+import hu.icellmobilsoft.coffee.grpc.metrics.api.IMetricsInterceptor;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
 import hu.icellmobilsoft.coffee.tool.utils.annotation.AnnotationUtil;
+import io.grpc.ClientInterceptor;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 
@@ -111,5 +116,14 @@ public class ManagedChannelProducer {
         // request/response interceptor
         channelBuilder.intercept(new ClientRequestInterceptor());
         channelBuilder.intercept(new ClientResponseInterceptor());
+
+        // metric
+        Instance<IMetricsInterceptor> instanceMetric = CDI.current().select(IMetricsInterceptor.class,
+                new ClientMetricsInterceptorQualifier.Literal());
+        if (instanceMetric.isResolvable()) {
+            channelBuilder.intercept((ClientInterceptor) instanceMetric.get());
+        } else {
+            log.warn("Could not find Metric interceptor implementation for gRPC client.");
+        }
     }
 }
