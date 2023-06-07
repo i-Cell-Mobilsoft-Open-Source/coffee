@@ -21,6 +21,7 @@ package hu.icellmobilsoft.coffee.grpc.metrics.impl.server;
 
 import hu.icellmobilsoft.coffee.grpc.metrics.impl.bundle.MetricsBundle;
 import io.grpc.ForwardingServerCall;
+import io.grpc.Metadata;
 import io.grpc.MethodDescriptor;
 import io.grpc.ServerCall;
 import io.grpc.Status;
@@ -82,7 +83,7 @@ public class MetricsServerCall<ReqT, RespT> extends ForwardingServerCall.SimpleF
     }
 
     @Override
-    public void close(Status status, io.grpc.Metadata trailers) {
+    public void close(Status status, Metadata trailers) {
         // set status code for metric
         this.responseCode = status.getCode();
         // inc response counter because communication close
