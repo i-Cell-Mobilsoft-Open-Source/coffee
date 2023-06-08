@@ -41,6 +41,7 @@
 		<version.smallrye-config>2.8.1</version.smallrye-config>
 		<version.microprofile-reactive-messaging-api>2.0.1</version.microprofile-reactive-messaging-api>
 		<version.microprofile-reactive-streams-operators-api>2.0</version.microprofile-reactive-streams-operators-api>
+		<version.org.eclipse.microprofile.metrics>3.0</version.org.eclipse.microprofile.metrics>
 
 		<version.io.etcd.jetcd-core>0.7.5</version.io.etcd.jetcd-core>
 		<version.io.grpc.version>1.51.0</version.io.grpc.version>
@@ -333,6 +334,16 @@
 				<artifactId>coffee-grpc-client-extension</artifactId>
 				<version>${project.version}</version>
 			</dependency>
+			<dependency>
+				<groupId>hu.icellmobilsoft.coffee</groupId>
+				<artifactId>coffee-grpc-metrics-api</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>hu.icellmobilsoft.coffee</groupId>
+				<artifactId>coffee-grpc-metrics-impl</artifactId>
+				<version>${project.version}</version>
+			</dependency>
 
 			<dependency>
 				<groupId>org.jboss.logging</groupId>
@@ -424,6 +435,11 @@
 				<artifactId>osgi.annotation</artifactId>
 				<version>${version.osgi.annotation}</version>
 				<scope>provided</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.microprofile.metrics</groupId>
+				<artifactId>microprofile-metrics-api</artifactId>
+				<version>${version.org.eclipse.microprofile.metrics}</version>
 			</dependency>
 
 			<!-- Resteasy 4+: resteasy-jaxrs szet van bontva core, core-spi es egyebekre-->

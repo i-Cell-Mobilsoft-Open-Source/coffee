@@ -45,7 +45,7 @@ ami a `com.salesforce.jprotoc.ProtocPlugin` rendszerbn fog szerepelni.
 Komplexebb minta a https://github.com/i-Cell-Mobilsoft-Open-Source/backend-sampler[backend-sampler]
 projektben https://github.com/i-Cell-Mobilsoft-Open-Source/backend-sampler/blob/main/api/api-grpc/api-grpc-stub-gen/pom.xml[található]. 
 
-== coffee-grpc-server-extension
+== gRPC Server (coffee-grpc-server-extension)
 Modul egy gRPC szerver CDI kompatibilis implementaciója.
 
 Felolvas minden `IGrpcService` implementáló osztályt
@@ -95,7 +95,7 @@ coffee:
 
 Minta alkalmazás: https://github.com/i-Cell-Mobilsoft-Open-Source/backend-sampler/tree/main/sample/sample-grpc-server-service[sample-grpc-server-service]
 
-== coffee-grpc-client-extension
+== gRPC client (coffee-grpc-client-extension)
 Támogatást tartalmaz egy gRPC kliens megvalósítására.
 Ezek közé tartozik:
 
@@ -127,6 +127,50 @@ DummyResponse helloResponse = dummyGrpcService.getDummy(dummyRequest); //<3>
 <1> Konfigurációs kulcs a csatlakozási paraméterekről (pl. szerver host és port)
 <2> Generált service Stub
 <3> gRPC service hívás
+
+== gRPC Metrics
+gRPC szerver és kliens opcionálisan aktiválhat interceptorokat metrika adatok szolgáltatására.
+Ehhez csak a maven dependency bekötése szükséges:
+
+.enable gRPC server metrics - https://github.com/eclipse/microprofile-metrics[microprofile-metrics] implementation
+[source,xml]
+----
+<dependency>
+    <groupId>hu.icellmobilsoft.coffee</groupId>
+    <artifactId>coffee-grpc-server-extension</artifactId>
+</dependency>
+<dependency>
+    <groupId>hu.icellmobilsoft.coffee</groupId>
+    <artifactId>coffee-grpc-metrics-impl</artifactId>
+</dependency>
+----
+
+.enable gRPC client metrics - https://github.com/eclipse/microprofile-metrics[microprofile-metrics] implementation
+[source,xml]
+----
+<dependency>
+    <groupId>hu.icellmobilsoft.coffee</groupId>
+    <artifactId>coffee-grpc-client-extension</artifactId>
+</dependency>
+<dependency>
+    <groupId>hu.icellmobilsoft.coffee</groupId>
+    <artifactId>coffee-grpc-metrics-impl</artifactId>
+</dependency>
+----
+
+Ha nincs dependency szinten bekötve az adott metrika modul akkor a szerver/kliens működés az eredeti,
+csak nem szolgáltat metrika adatot.
+
+Szolgáltatott metrikák: 
+
+* gRPC szerver
+** fogadott request számláló
+** válaszolt response számláló
+** request-response feldolgozás másodpercben
+* gRPC kliens
+** elküldött request számláló
+** válaszolt response számláló
+** request-response feldolgozás másodpercben
 
 == coffee-dto/coffee-dto-xsd2proto
 Coff:ee általános XSD leírók (`coffee-dto-xsd` modul) schema2proto generált
