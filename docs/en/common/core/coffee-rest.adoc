@@ -1,0 +1,454 @@
+[#common_core_coffee-rest]
+= coffee-rest
+Module designed for REST communication and management.
+
+It includes the apache http client, various REST loggers and filters. It also contains the language, REST activator and Response util class.
+
+== BaseRestLogger
+This class is used to log HTTP request-response requests to the application.
+It is activated manually at the project level using the following pattern:
+
+.activate in project
+[source,java]
+----
+package hu.icellmobilsoft.project.common.rest.logger;
+
+import javax.inject.Inject;
+import javax.ws.rs.ext.Provider;
+
+import hu.icellmobilsoft.coffee.cdi.logger.AppLogger;
+import hu.icellmobilsoft.coffee.cdi.logger.ThisLogger;
+import hu.icellmobilsoft.coffee.rest.log.BaseRestLogger;
+import hu.icellmobilsoft.coffee.rest.log.LogConstants;
+
+@Provider // <1>
+public class RestLogger extends BaseRestLogger {
+
+    @Inject
+    @ThisLogger
+    private AppLogger log;
+
+    @Override
+    public String sessionKey() { // <2>
+        return LogConstants.LOG_SESSION_ID;
+    }
+}
+----
+<1> JAX-RS activator (this is the thing that activates it)
+<2> Session ID key name in HTTP header
+
+The HTTP request-response log itself is compiled by the `hu.icellmobilsoft.coffee.rest.log.RequestResponseLogger` class, and can be used in other situations if needed, for example logging an error.
+
+During request logging, sensitive data is masked both from the headers and from the json/xml body (e.g. `X-PASSWORD: 1234` instead of `X_PASSWORD: +++*+++`).
+The data is determined whether it is to be protected based on its key (key for headers and JSON content, tag for XML), which by default is a key corresponding to the regexes `+++[\w\s]*?secret[\w\s]*?+++` or `+++[\w\s]*?pass[\w\s]*?+++` (e.g. userPassword, secretToken, ...),
+if needed in the project, the regex can be overwritten by specifying the configuration `coffee.config.log.sensitive.key.pattern` in one of the *default* microprofile-config sources (sys var, env var, META-INF/microprofile-config.properties), multiple patterns can be specified separated by commas.
+
+.example request log
+[source,text]
+----
+2019-02-01 16:31:33.044 INFO  [thread:default task-1] [hu.icellmobilsoft.coffee.rest.log.BaseRestLogger] [sid:2G7XOSOJBCFRMW08] - * Server in-bound request
+> POST http://localhost:8083/external/public/sampleService/sample/interface
+> -- Path parameters:
+> -- Query parameters:
+> -- Header parameters:
+> accept: text/xml;charset=utf-8
+> Connection: keep-alive
+> Content-Length: 106420
+> content-type: text/xml;charset=utf-8
+> Host: localhost:8083
+> User-Agent: Apache-HttpClient/4.5.3 (Java/1.8.0_191)
+> X-Client-Address: 10.10.20.49
+> X-CustomerNumber: 10098990
+> X-Password: *
+> X-UserName: sample
+> 
+> entity: [<?xml version="1.0" encoding="UTF-8"?>
+<SampleRequest xmlns="http://schemas.nav.gov.hu/OSA/1.0/api">
+    <header>
+        <requestId>RID314802331803</requestId>
+        <timestamp>2019-02-01T15:31:32.432Z</timestamp>
+        <requestVersion>1.1</requestVersion>
+        <headerVersion>1.0</headerVersion>
+    </header>
+    <user>
+        <passwordHash>*</passwordHash>
+... // röviditve
+----
+
+.example response log
+[source,text]
+----
+2019-02-01 16:31:34.042 INFO  [thread:default task-1] [hu.icellmobilsoft.coffee.rest.log.BaseRestLogger] [sid:2G7XOSOJBCFRMW08] - < Server response from [http://localhost:8083/external/public/sampleService/sample/interface]:
+< Status: [200], [OK]
+< Media type: [text/xml;charset=UTF-8]
+< -- Header parameters:
+< Content-Type: [text/xml;charset=UTF-8]
+< entity: [{"transactionId":"2G7XOSYJ6VUEJJ09","header":{"requestId":"RID314802331803","timestamp":"2019-02-01T15:31:32.432Z","requestVersion":"1.1","headerVersion":"1.0"},"result":{"funcCode":"OK"},"software":{"softwareId":"123456789123456789","softwareName":"string","softwareOperation":"LOCAL_SOFTWARE","softwareMainVersion":"string","softwareDevName":"string","softwareDevContact":"string","softwareCountryCode":"HU","softwareDescription":"string"}]
+----
+
+[#common_core_coffee-rest_LogSpecifier]
+== LogSpecifier
+REST logging can be customized per endpoint with the `hu.icellmobilsoft.coffee.rest.log.annotation.LogSpecifier` annotation,
+this can be specified multiple times in one place, and its scope can be limited by the `target` field,
+field, of which more than one can be specified in the annotation (activated by default for all targets);
+this gives the possibility to customize REST request-response, microprofile-client request-response separately.
+
+IMPORTANT: Only one LogSpecifier per endpoint `LogSpecifierTarget` can be used.
+
+Specifiable `targets` are enum values of `hu.icellmobilsoft.coffee.rest.log.annotation.enumeration.LogSpecifierTarget`:
+|===
+| LogSpecifierTarget | Scope
+
+| `REQUEST` | REST endpoint request
+
+| `RESPONSE` | REST endpoint response-a
+
+| `CLIENT_REQUEST` | Microprofile REST Client endpoint request
+
+| `CLIENT_RESPONSE` | Microprofile REST Client endpoint response-a
+|===
+
+Currently the LogSpecifier is prepared for the following cases:
+
+* logging of the request-response on the endpoint can be disabled with the `noLog` option of the `LogSpecifier` annotation.
+* on the endpoint, the size of the logged body can be limited by the `maxEntityLogSize` field of the `LogSpecifier` annotation.
+
+IMPORTANT: if `maxEntityLogSize` is set to a value *other* than `LogSpecifier.NO_LOG`, then only the first 5000 characters of the request will be written for the `application/octet-stream` mediaType received by the REST endpoint.
+
+.LogSpecifier example
+[source,java]
+----
+    @POST
+    @Produces({ MediaType.APPLICATION_JSON, MediaType.TEXT_XML, MediaType.APPLICATION_XML })
+    @Consumes({ MediaType.APPLICATION_JSON, MediaType.TEXT_XML, MediaType.APPLICATION_XML })
+    @LogSpecifier(target={LogSpecifierTarget.REQUEST, LogSpecifierTarget.CLIENT_REQUEST}, maxEntityLogSize = 100) //<1>
+    @LogSpecifier(target=LogSpecifierTarget.RESPONSE, maxEntityLogSize = 5000) //<2>
+    @LogSpecifier(target=LogSpecifierTarget.CLIENT_RESPONSE, noLog = true) //<3>
+    WithoutLogResponse postWithoutLog(WithoutLogRequest withoutLogRequest) throws BaseException;
+----
+<1> Request entity log size is limited to 100 bytes, also for REST calls and microprofile client usage
+<2> Response entity log size limited to 5000 characters for REST calls
+<3> Disables response logging for microprofile rest client responses.
+
+=== LogSpecifiersAnnotationProcessor
+
+The `LogSpecifier` is associated with `hu.icellmobilsoft.coffee.rest.log.annotation.processing.LogSpecifiersAnnotationProcessor`,
+whose purpose is to prevent multiple values from being defined for the same `target` due to the redefinability of `LogSpecifier`.
+To do this, it checks at compile time how many `@LogSpecifier` have been defined per `LogSpecifierTarget`, if it finds more than one, it fails the compilation.
+
+.Invalid example
+[source,java]
+----
+    @POST
+    @Produces({ MediaType.APPLICATION_JSON, MediaType.TEXT_XML, MediaType.APPLICATION_XML })
+    @Consumes({ MediaType.APPLICATION_JSON, MediaType.TEXT_XML, MediaType.APPLICATION_XML })
+    @LogSpecifier(maxEntityLogSize =  100) //<1>
+    @LogSpecifier(target = LogSpecifierTarget.RESPONSE, maxEntityLogSize =  5000) //<2>
+    ValidatorResponse postValidatorTest(ValidatorRequest validatorRequest) throws BaseException;
+----
+<1> Since no target is specified, the log size of each entity is limited to 100 bytes/character, including `LogSpecifierTarget.RESPONSE`.
+<2> *LogSpecifierTarget.RESPONSE* limits entity log size to 5000 characters.
+
+Since in the above example the size of the REST response should be 100 for the first annotation and 5000 for the second annotation, to avoid hidden logic the `LogSpecifiersAnnotationProcessor` will fail the translation with the following error:
+
+[source,log]
+----
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-compiler-plugin:3.8.1:compile (default-compile) on project project-sample-service: Compilation failure
+[ERROR] .../project-sample-service/src/main/java/hu/icellmobilsoft/project/sample/service/rest/ISampleTestRest.java:[43,23] Multiple LogSpecifiers are defined for the [RESPONSE] of [postValidatorTest]! Conflicting LogSpecifiers:[[@hu.icellmobilsoft.coffee.rest.log.annotation.LogSpecifier(noLog=false, maxEntityLogSize=100, target={REQUEST, RESPONSE, CLIENT_REQUEST, CLIENT_RESPONSE}), @hu. icellmobilsoft.coffee.rest.log.annotation.LogSpecifier(noLog=false, maxEntityLogSize=5000, target={RESPONSE})]]
+----
+
+[#common_core_coffee-rest_JaxbTool]
+== JaxbTool
+The purpose of this class is to summarize the transformations and manipulations related to XML objects.
+Its structure is fully modular, you can customize everything to your project's needs using the CDI.
+Its modules provide this functionality by default:
+
+=== Request version determination
+This is provided by the `*IXmlRequestVersionReader*` interface.
+It implements a built-in and replaceable class `hu.icellmobilsoft.coffee.rest.validation.xml.reader.XmlRequestVersionReader`.
+
+Based on the pattern of the
+
+[source,text]
+----
+ ...<header>...<requestVersion>1.1</requestVersion>...</header>...
+----
+
+XML structure, of course you are free to modify it to another structure or even read the HTTP header.
+
+=== XSD error collection
+In the case of marshal (DTO -> XML String) or unmarshal (XML String/Stream -> DTO), you can request a check according to XSD.
+In this case `hu.icellmobilsoft.coffee.rest.validation.xml.exception.XsdProcessingException`
+to get a list of errors that violate XSD rules.
+These errors are handled and provided by the `*IXsdValidationErrorCollector*` interface.
+
+The implementing built-in and replaceable class is `hu.icellmobilsoft.coffee.rest.validation.xml.error.XsdValidationErrorCollector`.
+
+=== XSD (schema) file handling
+Additional logic is required to handle XSD schema description files, since they can have various bindings.
+This problem is addressed by the `*IXsdResourceResolver*` interface.
+
+The implementor is a built-in and interchangeable class `hu.icellmobilsoft.coffee.rest.validation.xml.utils.XsdResourceResolver`.
+The basic problem that XSDs import each other in a common directory is also a basic problem,
+but being able to import XSDs from another project requires extra logic.
+In this class this situation is handled.
+
+== XSD Catalog schema management
+The description in <<howto_xsd_catalog, XSD Catalog and generation>> deals with XSD generation.
+This section focuses on the activation in the code - XML validation using XSD catalog.
+
+The whole function is performed by the <<common_core_coffee-rest_JaxbTool,JaxbTool>> class.
+It is intentionally built in a modular way so that it can be easily adapted to needs.
+As described above, Coffee includes an implementation of `*IXsdResourceResolver*`,
+that can read the schema structure specified in the XSD Catalog.
+This class is called 
+
+.hu.icellmobilsoft.coffee.rest.validation.catalog.PublicCatalogResolver
+[source,java]
+----
+@Alternative
+@Priority(100)
+public class PublicCatalogResolver implements LSResourceResolver, IXsdResourceResolver {
+----
+Since we use maven-bound dependencies to generate the XSD Catalog, such as:
+
+./xxx/super.catalog.xsd
+[source,xml]
+----
+...
+<public publicId="http://common.dto.coffee.icellmobilsoft.hu/common" uri="maven:hu.icellmobilsoft.coffee.dto.xsd:coffee-dto-xsd:jar::!/xsd/hu.icellmobilsoft.coffee/dto/common/common.xsd"/>
+...
+----
+So you need to be prepared to manage the `maven:` URI protocol.
+This is done in the `hu.icellmobilsoft.coffee.tool.protocol.handler.MavenURLHandler` class,
+which needs to be activated.
+This can be done in several ways, the recommended solution is the following: 
+
+.src/main/resources/META-INF/services/java.net.spi.URLStreamHandlerProvider
+[source,txt]
+----
+hu.icellmobilsoft.coffee.rest.validation.catalog.MavenURLStreamHandlerProvider
+----
+So you need to create the file `src/main/resources/META-INF/services/java.net.spi.URLStreamHandlerProvider`
+and include the class that handles it (Coffee part).
+
+WARNING: There may be systems (e.g. Thorntail),
+which are not able to read this file in time for the application to run.
+In such cases, there is another option via `URL.setURLStreamHandlerFactory(factory);`.
+
+=== Catalog JaxbTool activation
+After the `maven:` URI protocol handling setup, there are only 2 things left to do:
+
+* activate `PublicCatalogResolver`
+* Specify catalog file
+
+Activating `PublicCatalogResolver` is done in the classic CDI way:
+
+.beans.xml
+[source,xml]
+----
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://www.oracle.com/webfolder/technetwork/jsc/xml/ns/javaee/beans_1_1.xsd"
+    version="1.1" bean-discovery-mode="all">
+
+    <alternatives>.
+        <class>hu.icellmobilsoft.coffee.rest.validation.catalog.PublicCatalogResolver</class>
+    </alternatives>
+</beans>
+----
+
+And the catalog xsd file is specified via the configuration, more specifically the key 
+
+ coffee.config.xml.catalog.path
+
+here is an example:
+
+.project-defaults.yml
+[source,yml]
+----
+coffee:
+    config:
+        xml:
+            catalog:
+                path: xsd/hu/icellmobilsoft/project/dto/super.catalog.xml
+----
+After that we are ready and the XSD Catalog will do the XSD schema reading.
+
+== Json support
+
+The framework supports JSON format messages in addition to XML for REST communication.
+To serialize/deserialize these messages, it uses an external module, https://github.com/google/gson[Gson], maintained by Google The framework complements/upgrades Gson with some custom adapters.
+Below is an example JSON, and its own added adapters.
+The ISO 8601 standard is used for the time-related values, except in one case.
+In the case of the ```Date``` class, the format has been changed to the universal UNIX epoch in milliseconds
+
+.example.json
+[source,json]
+----
+{
+    "date": 1549898614051,
+    "xmlGregorianCalendar": "2019-02-11T15:23:34.051Z",
+    }, "bytes": "dGVzdFN0cmluZw==",
+    "string": "test1",
+    "clazz": "hu.icellmobilsoft.coffee.tool.gson.JsonUtilTest",
+    "offsetDateTime": "2019-02-11T15:23:34.051Z",
+    "offsetTime": "15:23:34.051Z",
+    "localDate": "2019-02-11",
+    "duration": "P1Y1M1DT1H1M1S"
+}
+----
+
+.format of serialization of own added adapters for each type
+|===
+| Java type | Format
+
+| `Class` | Return value of the ``Class.getName()``` method.
+
+| ``XMLGregorianCalendar`` | Return value of the ``XMLGregorianCalendar.toXMLFormat()``` method.
+By default, ```XMLGregorianCalendarImpl`` is the available descendant for this abstract class.
+
+| `Date` | Returns the time since 1970-01-01T00:00:00.000 in milliseconds.
+
+| `OffsetDateTime`` | Return value of the ```DateTimeFormatter.ISO_OFFSET_DATE_TIME``` method, where offset is specified instead of zone.
+| `OffsetTime`` | Return value of the method ```DateTimeFormatter.ISO_OFFSET_TIME``` where offset is specified instead of zone.
+| `LocalDate` | Return value of the ```DateTimeFormatter.ISO_DATE`` method.
+| `Duration` | Return value of ```javax.xml.datatype.Duration.toString()```.
+| `byte[]` ` | Return value of ```Base64.getName().encodeToString()```.
+Default encoder: RFC4648
+|===
+
+Note: Most of the JSON-related operations are of a utility nature and are publicly available under link:coffee-tool.adoc[coffee-tool] in the `JsonUtil` class.
+
+
+[#common_core_coffee-rest_OpenAPIFilter]
+== OpenApiFilter
+Microprofile OpenApi provides the ability to set additional OpenApi configuration via the implementation of the org.eclipse.microprofile.openapi.OASFilter interface.
+The implementation of hu.icellmobilsoft.coffee.rest.filter.OpenAPIFilter contains within the project the generic error codes related to coffee error handling and the corresponding response objects, which are generally applied to all endpoints crossed by the filter, providing more accurate documentation compared to the openapi.yml config file written in microservices using coffee, since this information is dynamically loaded.
+To activate this filter in the configuration, you need to specify `mp.openapi.filter` in the configuration key `hu.icellmobilsoft.coffee.rest.filter.OpenAPIFilter`, which is the class that implements it.
+
+Example in a microprofile default properties config:
+
+.microprofile-default.properties
+[source,properties]
+----
+mp.openapi.filter=hu.icellmobilsoft.coffee.rest.filter.OpenAPIFilter
+----
+
+=== Customizability
+The implementation can be further refined by adding a mapping, of which an example is given:
+
+.CustomerOpenAPIFilter
+[source,java]
+----
+package hu.icellmobilsoft.test.rest.filter;
+
+...
+
+@Vetoed
+public class CustomerOpenAPIFilter extends OpenAPIFilter {
+
+    private static final String CUSTOM_999_RESPONSE = "#/components/schemas/Custom999Response";
+
+    @Override
+    protected Map<Integer, APIResponse> getCommonApiResponseByStatusCodeMap() { // <1>
+        Map<Integer, APIResponse> apiResponseByStatusCodeMap = super.getCommonApiResponseByStatusCodeMap();
+        APIResponse customApiResponse = OASFactory.createAPIResponse() //
+                .content(OASFactory.createContent()
+                        .addMediaType(MediaType.APPLICATION_JSON,
+                                OASFactory.createMediaType().schema(OASFactory.createSchema().ref(CUSTOM_999_RESPONSE)))
+                        .addMediaType(MediaType.APPLICATION_XML,
+                                OASFactory.createMediaType().schema(OASFactory.createSchema().ref(CUSTOM_999_RESPONSE)))
+                        .addMediaType(MediaType.TEXT_XML,
+                                OASFactory.createMediaType().schema(OASFactory.createSchema().ref(CUSTOM_999_RESPONSE))))
+                .description(Response.Status.BAD_REQUEST.getReasonPhrase() //
+                        + "\n" + "* Custom 999 error" //
+                        + "\n\t **resultCode** = *OPERATION_FAILED*" //
+                );
+        apiResponseByStatusCodeMap.put(999,customApiResponse );
+        return apiResponseByStatusCodeMap;
+    }
+
+    @Override
+    protected List<Parameter> getCommonRequestHeaderParameters() { //<2>
+        Parameter xCustomHeader1 = OASFactory.createObject(Parameter.class).name("X-CUSTOM-HEADER-1").in(Parameter.In.HEADER).required(false)
+                .description("Description of custom header 1").schema(OASFactory.createObject(Schema.class).type(Schema.SchemaType.STRING));
+        Parameter xCustomHeader2 = OASFactory.createObject(Parameter.class).name("X-CUSTOM-HEADER-2").in(Parameter.In.HEADER).required(false)
+                .description("Description of custom header 2").schema(OASFactory.createObject(Schema.class).type(Schema.SchemaType.STRING));
+        List<Parameter> headerParams = new ArrayList();
+        headerParams.add(xCustomHeader1);
+        headerParams.add(xCustomHeader2);
+        return headerParams;
+    }
+}
+----
+<1> Example of adding a custom response with http status code 999. It is important to note that Custom999Response must exist in the DTOs.
+<2> Example of specifying 2 custom headers with description schema.
+
+and so the configuration of the following is added:
+
+.microprofile-default.properties
+[source,properties]
+----
+mp.openapi.filter=hu.icellmobilsoft.test.rest.filter.CustomerOpenAPIFilter
+----
+
+== MessageBodyWriter
+
+A module contains `application/octet-stream` + `BaseResultType` writert.
+This allows the system to send an octet-stream response to any
+own DTO BaseResultType object.
+This is very useful, for example, when generating a file with an error.
+
+== ProjectStage
+
+The module contains a Deltaspike inspired ProjectStage object which can be injected.
+Its role is to be able to specify at runtime, via configuration, whether the project is running in production, development or test mode.
+
+It can be used by specifying 2 configurations:
+
+* coffee.app.projectStage
+* org.apache.deltaspike.ProjectStage
+
+The values that can be specified are converted to `hu.icellmobilsoft.coffee.rest.projectstage.ProjectStageEnum`.
+Each enum value contains which config value represents which enum.
+
+IMPORTANT: It is important to point out that if no config value is specified, or if no config value is found in the list of one of the enum names, they behave as PRODUCTIONs in ProjectStage!
+
+Configurations can be specified from multiple locations using Microprofile Config, but only the first one in the order described above will be considered.
+
+Currently, in the project, if the ProjectStage value is not Production, the system will return a broader response for errors.
+
+Using this works as follows:
+
+.MyBean
+[source,java]
+----
+@Dependent
+public class MyBean {
+    private @Inject ProjectStage projectStage;
+
+    public void fn() {
+        if (projectStage.isProductionStage()) {
+            // do some production stuff...
+        }
+    }
+}
+----
+
+For possible further breakdowns, use as follows:
+
+.MyBean
+[source,java]
+----
+@Dependent
+public class MyBean {
+    private @Inject ProjectStage projectStage;
+
+    public void fn() {
+        if (projectStage.getProjectStageEnum() == ProjectStageEnum.DEVELOPMENT) {
+            // do some development stuff...
+        }
+    }
+}
+----
