@@ -1,0 +1,52 @@
+[#common_core_coffee-configuration]
+= coffee-configuration
+
+The purpose of this module is to complement the Microprofile config, e.g. by caching
+
+.inject configuration values
+[source,java]
+----
+// for limited use where speed and high transaction count are not important,
+// in such cases it is worth choosing one of the other methods
+@Inject
+@ConfigProperty(name="key")
+Provider<String> keyValue;
+
+
+// traditional microprofile-config query
+public String kodban() {
+    Config config = ConfigProvider.getConfig();
+    String keyValue = config.getValue("key", String.class);
+    return keyValue;
+}
+----
+
+== ConfigurationHelper class
+This class allows you to query type specific configurations.
+
+.Query configuration
+[source,java]
+----
+@Inject
+private ConfigurationHelper configurationHelper;
+...
+Integer ttl = configurationHelper.getInteger("public.login.session.token.validity");
+----
+
+== ApplicationConfiguration class
+Similar to the ConfigurationHelper class, but uses @ApplicationScope level caching,
+where cached values are stored for 30 minutes. It allows these cached values to be immediately
+which can be used to build additional logic (e.g. change the value externally in ETCD),
+and then topic JMS to forget the values and immediately read them again).
+
+.ApplicationConfiguration example
+[source,java]
+----
+@Inject
+private ApplicationConfiguration applicationConfiguration;
+
+public String kodban() {
+    String minVersion = applicationConfiguration.getString(EtcdVal.KEY_PUBLIC_INVOICE_MIN_REQUEST_VERSION);
+    return minVersion;
+}
+----

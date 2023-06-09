@@ -1,0 +1,12 @@
+[#common_core_coffee-cdi]
+= coffee-cdi
+
+The purpose of this module is to connect the jakarta EE, logger, deltaspike and microprofile-config.
+
+All CDI based. Description of components and use cases below:
+
+include::coffee-cdi/logger.adoc[leveloffset=+1]
+
+include::coffee-cdi/config.adoc[leveloffset=+1]
+
+include::coffee-cdi/trace.adoc[leveloffset=+1]
