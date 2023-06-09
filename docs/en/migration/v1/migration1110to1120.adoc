@@ -1,0 +1,62 @@
+= v1.11.0 → v1.12.0
+
+coff:ee v1.11.0 -> v1.12.0 migration description, new features, changes
+
+== What's new
+
+=== coffee-jpa
+
+* Introduced the link:#TransactionHelper[TransactionHelper] class.
+
+=== coffee-rest
+
+* Added a new MessageBodyWriter,
+which handles `application/octet-stream` + `BaseResultType` responses.
+It is enabled by default,
+as there was no similar solution in the system and Resteasy did not provide any response,
+it just absorbed the response body.
+
+==== Migration
+
+Only affect something when `application/octet-stream` mediatype is the expected response and intercept
+occurs on remote stream generation.
+It may be that there was some custom mapper/writter handling for these cases in the project.
+
+== Changes
+
+=== coffee-tool
+
+* In the RandomUtil class, generateId could return 17 characters instead of the 16 characters written in javadoc, because it could continue to run the index up to 1296 in the getNextIndex method, which it converted to 100 in generateId in 36 number system, thus overflowing. Correction lets the index go up to 1295.
+
+* In the ConfigUtil class, loading default configs in the newer Smallrye Config (Microprofile config implementation) version became very CPU intensive, so a singleton implementation was used for loading.
+
+==== Migration
+
+* Due to a change in the ConfigUtil class, the previous `ConfigUtil.defaultConfig()` has been replaced with `ConfigUtil.getInstance().defaultConfig()`.
+
+=== coffee-module-redisstream
+* Implement `coffee.redisstream.{0}.consumer.manualAck` configuration. See: link:#common_module_coffee-module-redisstream-config[coffee-module-redisstream-configuration]
+
+==== Migration
+* If you want to use the old functionality, i.e. if you throw an exception to the redis stream consumer,
+then `XACK` should not occur, then the key `coffee.redisstream.{0}.consumer.manualAck` should be added to the stream config with the value `true`.
+
+=== coffee-module-mp-restclient
+* `DefaultBaseExceptionResponseExceptionMapper` has been set up for `application/octet-stream` response.
+In this case, it tries to parse the `BaseExceptionResultType` responded in the stream by json or xml.
+
+==== Migration
+
+The changes do not result in migration work, it is backwards compatible.
+
+=== coffee-jpa
+
+* The insert and update methods of *BatchService* when setting *java.util.Date* to *cannot cast 'java.util.Date' to 'java.sql.Timestamp'* threw an error (since coffee 1.10.0).
+In the *setPsObject()* method, from now on, the basic hibernate types are checked uniformly for *SingleColumnType* ancestor.
+This includes exactly which *java.sql.Types* the value is mapped to, so all such values are now inserted according to the correct type.
+In addition, there are separate checks for values set according to *java.sql.Types.TIME* and *java.sql.Types.TIMESTAMP*, where we check that *hibernate.jdbc.time_zone* is set in *persistence.xml*.
+If it is set, then we make the appropriate time zone settings based on the *instanceof* value.
+
+==== Migration
+
+The changes do not result in any changeover work, backwards compatible.
