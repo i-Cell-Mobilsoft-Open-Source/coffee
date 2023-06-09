@@ -17,6 +17,8 @@ Következő funkció támogatások kerültek a rendszerbe:
 * coffee-dto/coffee-dto-stub-gen - Generált osztályok a Coff:ee proto fajlokból
 * coffee-grpc-server-extension - CDI gRPC szerver implementáció támogatása
 * coffee-grpc-client-extension - CDI gRPC client implementáció támogatása
+* coffee-grpc-traces-api - Coffee tracing API (annotációk...)
+* coffee-grpc-opentracing-impl - gRPC https://github.com/eclipse/microprofile-opentracing[microprofile-opentracing] implementáció
 
 == Változások
 

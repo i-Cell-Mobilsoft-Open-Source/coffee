@@ -6,24 +6,20 @@
     <version>2.1.0-SNAPSHOT</version>
   </parent>
 
-  <artifactId>coffee-grpc-client-extension</artifactId>
+  <artifactId>coffee-grpc-opentracing-impl</artifactId>
 
-   <dependencies>
-        <dependency>
-            <groupId>hu.icellmobilsoft.coffee</groupId>
-            <artifactId>coffee-tool</artifactId>
-        </dependency>
+    <dependencies>
         <dependency>
             <groupId>hu.icellmobilsoft.coffee</groupId>
             <artifactId>coffee-grpc-base</artifactId>
         </dependency>
         <dependency>
             <groupId>hu.icellmobilsoft.coffee</groupId>
-            <artifactId>coffee-grpc-metrics-api</artifactId>
+            <artifactId>coffee-grpc-traces-api</artifactId>
         </dependency>
         <dependency>
             <groupId>hu.icellmobilsoft.coffee</groupId>
-            <artifactId>coffee-grpc-traces-api</artifactId>
+            <artifactId>coffee-module-mp-opentracing</artifactId>
         </dependency>
 
         <dependency>
