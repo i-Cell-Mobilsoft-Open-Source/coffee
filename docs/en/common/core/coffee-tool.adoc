@@ -1,0 +1,34 @@
+[#common_core_coffee-tool]
+= coffee-tool
+
+The purpose of this module is to collect basic util classes.
+
+All date, String, Number or other static classes should be placed here.
+
+`MavenURLHandler`::
+Auxiliary class for XSD Catalog usage, allows to
++
+ maven:hu.icellmobilsoft.coffee.dto.xsd:coffee-dto-xsd:jar::!/xsd/en/icellmobilsoft/coffee/dto/common/common.xsd
++
+URL handling in the code.
+It needs to be activated separately, so it's not a complication (but it's not activated either).
+
+`AesGcmUtil`::
+AES 256 GCM encryption and decryption helper class. The cipher is based on `AES/GCM/NoPadding`, the key must be 256 bits long, the IV is 12 bytes long. Includes helper methods for key and IV generation.
++
+Example usage:
++
+[source, java]
+----
+String inputText = "test input test";
+byte[] key = AesGcmUtil.generateKey(); //B64: HMTpQ4/aEDKoPGMMqMtjeTJ2s26eOEv1aUrE+syjcB8=
+byte[] iv = AesGcmUtil.generateIv(); //B64: 5nqOVSjoGYk/oSwj
+
+byte[] encoded = AesGcmUtil.encryptWithAes256GcmNoPadding(key, inputText.getBytes(StandardCharsets.UTF_8), iv);
+String encodedB64 = Base64.getEncoder().encodeToString(encoded); //fRCURHp5DWXtrESNHMo1DUoAcejvKDu9Y5wd5zXblg==
+
+byte[] decoded = AesGcmUtil.decryptWithAes256GcmNoPadding(key, encoded, iv);
+String decodedString = new String(decoded, StandardCharsets.UTF_8); //test input test
+----
++
+IMPORTANT: Given key-IV pair must not be reused! For this reason, encrypt/decrypt without IV should only be called with single-use keys!
