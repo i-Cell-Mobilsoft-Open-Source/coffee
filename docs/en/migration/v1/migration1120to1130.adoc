@@ -1,0 +1,162 @@
+= v1.12.0 → v1.13.0
+
+coff:ee v1.12.0 -> v1.13.0 migration description, new features, changes
+
+== What's new
+
+=== coffee-module-redispubsub
+Support for redis pub-sub via micro-profile-reactive-messaging is introduced, description: <<common_module_coffee-module-redispubsub>>
+
+==== Migration
+
+Changes do not result in migration work, backwards compatible.
+
+== Changes
+
+=== General
+
+==== BOM version upgrades:
+* resteasy-jaxrs has been discontinued!
+* resteasy-core 4.7.6.Final
+* resteasy-core-spi 4.7.6.Final
+
+
+==== Migration
+Changes are package level and may involve additional changes due to differences.
+
+NOTE: Help:
+https://docs.jboss.org/resteasy/docs/4.1.0.Final/userguide/html/Migration_from_older_versions.html#d4e4276
+https://stackoverflow.com/questions/57598426/why-is-there-no-maven-resteasy-jaxrs-package-for-version-4-2-0
+
+== What's new
+
+=== coffee-tool
+
+* A `JsonUtil.initGson()` has been added to `JsonUtil.initGson()` with a `YearMonthConverter` type adapter class named `java.time.YearMonth`.
+
+==== Migration
+
+The changes do not result in any migration work, it is backwards compatible.
+
+=== coffee-dto-base
+
+* Introduced `InvalidParameterException`, by default with error code `CoffeeFaultType.WRONG_OR_MISSING_PARAMETERS`, which is intended to throw a uniform exception for invalid parameters when checking methods for parameter.
+For example, a typical example is the null check for public methods.
+In the implementation, where previously an exception extending `BaseException` was thrown for an invalid parameter, an `InvalidParameterException` is now thrown.
+
+==== Migration
+
+* It is recommended to use `InvalidParameterException` for invalid parameters consistently across projects.
+* The `BaseService.newInvalidParameterException(String msg)` method has been marked `@Deprecated`, instead it is required to use `InvalidParameterException` directly.
+* The `AbstractBaseAction.newInvalidParameterException(String msg)` method is marked `@Deprecated` and must be replaced directly with `InvalidParameterException`.
+* The methods of the `IXsdHelper` and `JaxbTool` classes now throw `BaseException` instead of `XsdProcessingException`.
+Changes need to be tracked.
+* The other methods where `InvalidParameterException` was introduced always threw `BaseException`, so no changes have been made.
+
+=== coffee-rest
+
+* The `BaseProcessingExceptionWrapper` has been introduced, which serves the purpose of being able to throw a `BaseException` from classes extending `MessageBodyReader` and `MessageBodyWriter`.
+Originally, we used `XsdProcessingExceptionWrapper` for this, but it only wrapped `XsdProcessingException` in a dedicated way, so we replaced it.
+So now, not only `XsdProcessingException` can be thrown in `MessageBodyReader` and `MessageBodyWriter` classes, but any `BaseException`.
+
+==== Migration
+
+* The `readFrom()` methods of the `JsonMessageBodyReaderBase` and `XmlMessageBodyReaderBase` classes now catch a `BaseException` and throw a `BaseProcessingExceptionWrapper` instead of `XsdProcessingExceptionWrapper`.
+The changes need to be tracked in the classes used/overwritten in the project.
+* The `XsdProcessingExceptionWrapper` is marked `@Deprecated` and the use of `BaseProcessingExceptionWrapper` is recommended instead.
+
+== Changes
+
+* Bump jackson-databind from 2.13.2.1 to 2.13.4.2 - used for DTO generators.
+
+=== coffee-module-configdoc
+
+* When compiling `coffee-module-configdoc` on windows, `java.lang.IllegalArgumentException: Invalid relative name: META-INF\config_keys.adoc` resulted in an error.
+The problem affected the `ConfigDocProcessor` and `DynamicConfigDocsProcessor` classes, where the file access was passed based on Path in the `processingEnv.getFiler().createResource()` call:
+
+** Paths.get("META-INF/", "config_keys.adoc") -> "META-INF\config_keys.adoc"
+** Paths.get("META-INF/", "dynamic_config_keys") -> "META-INF\dynamic_config_keys"
+
++
+This is a problem because the aforementioned method will use the `JavacFileManager`, in which a `new URI(u)` instantiation is done in the `isRelativeUri(String u)` method.
+And `new URI(u)` will throw a `URISyntaxException` exception for the above examples due to the `\` characters.
+The bug has been handled by passing file accesses to `processingEnv.getFiler().createResource()` method calls with the `/` sign in all cases.
+
+==== Migration
+
+The changes will not result in any migration work, it is backwards compatible.
+
+=== coffee-jpa
+
+* When saving `BatchService` with `java.sql.Types.BOOLEAN` using oracle jdbc driver, `java.sql.SQLException: Invalid column type` error.
+Objects with `null` were stripped of SQL types when set to `prepared statement` and set to `java.sql.Types.NULL` universally.
+The `java.sql.Types.BOOLEAN` types are handled in a separate branch, where if the value to be set is `java.lang.Boolean`, then the `setBoolean(int parameterIndex, boolean x)` method provided for this purpose in the `prepared statement` is used, otherwise `setObject(int parameterIndex, Object x)` is used, where the driver is left to handle the value.
+* Also, when saving `BatchService` using `java.sql.Types.BLOB` using oracle jdbc driver, a `java.sql.SQLException: Invalid column type` exception is thrown.
+If in the `BatchService.setSingleColumnPsObject()` method, the resulting `org.hibernate.type.SingleColumnType<?>` parameter does not match on any branch, 
+on the default branch, the `setObject(int parameterIndex, Object x)` call is invoked without passing a type, so that the Oracle driver itself detects the corresponding type.
+
+==== Migration
+
+The changes will not result in any migration work, it is backwards compatible.
+
+=== coffee-rest
+
+* hu.icellmobilsoft.coffee.rest.utils.RequestUtil: the WARN "ResourceMethodInvoker is null!!"
+and "invokedMethod is null!!" messages.
+It turns out that the non-existent object situation occurs in many cases and rightfully so.
+* ApiResponseUtil had missing asterisks at the beginning of the enumeration line, these have been replaced.
+
+
+==== Migration
+
+Changes do not result in migration work, backwards compatible.
+
+=== coffee-module-etcd
+
+In the DefaultEtcdConfigSource class, the getProperties() method only handled BaseException, and if the etcd service is not available, an Exception is thrown (more specifically java.util.concurrent.ExecutionException: io.grpc.StatusRuntimeException: UNAVAILABLE: unresolved address -> java.nio.channels.UnresolvedAddressException), this has been handled.
+
+The ClientBuilder used for EtcdClient has been given a util class to have its settings in a common place.
+
+The EtcdService get(String key) method uses the EtcdRepository get(ByteSequence bsKey) method, where CompletableFuture<GetResponse> is returned, and it got a 200 millisec timeout.
+
+==== Migration
+
+The changes do not result in any changeover work, it is backwards compatible.
+
+
+=== coffee-model-base
+
+* In the EntityIdGenerator class, the getNextIndex() method can return 1296 which is now 3 characters in 36 number system logic, so it can generate one character more.
+
+==== Migration
+
+The changes do not result in any migration work, it is backwards compatible.
+
+=== coffee-rest
+
+* ProjectStage provided by Deltaspike has been replaced by a simplified version implemented in coffee.
+* The COFFEE_APP_NAME etcd key has been moved from BaseApplicationContainer to the IConfigKey interface, where it is documented.
+
+==== Migration
+
+* The ProjectStage references in deltaspike (`org.apache.deltaspike.core.api.projectstage.ProjectStage`) need to be converted to `hu.icellmobilsoft.coffee.rest.projectstage.ProjectStage`.
+Where ProjectStage.Production was used, it should be changed to this:
+
+[source,java]
+----
+@Dependent
+public class MyBean {
+    private @Inject ProjectStage projectStage;
+
+    public void fn() {
+        if (projectStage.isProductionStage()) {
+            // do some production stuff...
+        }
+    }
+}
+----
+
+
+At the same time, the types of ProjectStage have been reduced, and only Production, Development and Test are possible. Old deltaspike base project stages have been moved into Test, except Development and Production which remain the same name. See `hu.icellmobilsoft.coffee.rest.projectstage.ProjectStageEnum`.
+
+The `org.apache.deltaspike.ProjectStage` configuration used so far is still used, and backwards the values supported by deltaspike are processed into the enum values.
