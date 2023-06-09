@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import io.grpc.ForwardingServerCall.SimpleForwardingServerCall;
+import io.grpc.Metadata;
 import io.grpc.ServerCall;
 import io.grpc.Status;
 import io.grpc.Status.Code;
@@ -65,7 +66,7 @@ public class OpenTraceServerCall<ReqT, RespT> extends SimpleForwardingServerCall
     }
 
     @Override
-    public void close(Status status, io.grpc.Metadata trailers) {
+    public void close(Status status, Metadata trailers) {
         super.close(status, trailers);
 
         if (!status.isOk()) {

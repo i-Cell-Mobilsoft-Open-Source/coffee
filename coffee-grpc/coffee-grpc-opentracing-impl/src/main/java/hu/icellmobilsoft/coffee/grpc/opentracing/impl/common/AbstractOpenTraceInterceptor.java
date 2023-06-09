@@ -21,6 +21,7 @@ package hu.icellmobilsoft.coffee.grpc.opentracing.impl.common;
 
 import java.util.StringJoiner;
 
+import hu.icellmobilsoft.coffee.cdi.trace.constants.Tags.Grpc;
 import io.grpc.MethodDescriptor;
 import io.opentracing.Tracer;
 import io.opentracing.Tracer.SpanBuilder;
@@ -55,7 +56,7 @@ public abstract class AbstractOpenTraceInterceptor {
 
         SpanBuilder spanBuilder = tracer.buildSpan(joiner.toString());
         spanBuilder.withTag(Tags.SPAN_KIND.getKey(), getSpanKind());
-        spanBuilder.withTag(Tags.COMPONENT.getKey(), hu.icellmobilsoft.coffee.cdi.trace.constants.Tags.Grpc.COMPONENT);
+        spanBuilder.withTag(Tags.COMPONENT.getKey(), Grpc.COMPONENT);
 
         return spanBuilder;
     }
