@@ -31,6 +31,10 @@
             <groupId>hu.icellmobilsoft.coffee</groupId>
             <artifactId>coffee-grpc-metrics-api</artifactId>
         </dependency>
+        <dependency>
+            <groupId>hu.icellmobilsoft.coffee</groupId>
+            <artifactId>coffee-grpc-traces-api</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>org.junit.jupiter</groupId>

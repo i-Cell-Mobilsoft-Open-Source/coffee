@@ -32,6 +32,8 @@ A `@Traced` annotáción keresztül megadott Tag értékekkel indít új trace f
 === coffee-module-etcd trace
 A `ConfigEtcdHandler` lett annotálva, az ebben lévő metódushívások adnak trace adatot.
 
+=== coffee-grpc-opentracing-impl trace
+Az `OpenTraceInterceptor` kezeli a gRPC-n keresztül jövő trace adatokat, összeköti a többi művelettel amik a trace részei. (redis, consumerek, rest).
 
 === OpenTraceErrorResponseFilter
 Azok a rest operációk amik HTTP500, vagy magasabb hibakódot adnak, nem látszanak a trace-ben hibásnak.

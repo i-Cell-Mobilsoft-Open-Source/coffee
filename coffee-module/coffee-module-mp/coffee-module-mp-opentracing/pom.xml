@@ -26,6 +26,11 @@
 			<artifactId>opentracing-tracerresolver</artifactId>
 			<version>${opentracing-tracerresolver}</version>
 		</dependency>
+		<dependency>
+			<groupId>io.grpc</groupId>
+			<artifactId>grpc-context</artifactId>
+		</dependency>
+		
 		<!-- TEST -->
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>

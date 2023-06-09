@@ -31,5 +31,7 @@
         <module>coffee-grpc-client-extension</module>
         <module>coffee-grpc-metrics-api</module>
         <module>coffee-grpc-metrics-impl</module>
+        <module>coffee-grpc-traces-api</module>
+        <module>coffee-grpc-opentracing-impl</module>
     </modules>
 </project>
