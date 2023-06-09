@@ -1,0 +1,107 @@
+= v1.7.0 → v1.8.0
+
+coff:ee v1.7.0 -> v1.8.0 migration description, new features, changes
+
+== What's new
+
+* log level optimization
+
+
+=== coffee-configuration
+* Added module, separated from `coffee-rest` module
+* `ConfigurationHelper` no longer uses `BaseRequestContainer` (thus eliminating double caching).
+For config caching, `ApplicationConfiguration` is used, which uses guava caching.
+
+==== Migration
+* Imports must be rewritten from `hu.icellmobilsoft.coffee.rest.configuration` to `hu.icellmobilsoft.coffee.configuration`.
+
+
+=== coffee-dto
+* The UtcOffsetDateTimeXmlAdapter and the UtcOffsetTimeXmlAdapter have been created.
+* The `user` field has been removed from `ContextType` and UUIDs can be specified in `requestId`.
+
+==== Migration
+* The `user` field has been removed from `ContextType` and the `UserType` in `commonservice` has been removed. References to these should be removed.
+
+== Changes
+
+=== General
+
+==== BOM version elevations:
+* microprofile-config-api 1.3 -> 2.0
+* smallrye-config 1.7.0 -> 2.8.1
+* opencsv 3.9 -> 5.5.2
+
+=== coffee-module-etcd
+* jetcd-core version update <version>0.5.0</version> -> <version>0.6.1</version>
+
+==== Migration
+Changes do not result in migration work, backwards compatible.
+
+=== coffee-rest
+* The value that can be specified in the "coffee.app.name" parameter is no longer mandatory, "java:app/AppName" is used by default.
+* Addition of unmarshalXML methods to JaxbTool to receive `byte[]`
+* Create DefaultBaseExceptionMapper to handle built-in BaseExceptions
+
+==== Migration
+* The deprecated InvalidRequestException and SaxParseBaseException have been removed, instead the use of XsdProcessingException is recommended
+* Migration to DefaultBaseExceptionMapper. If there is a project specific exception that you want to handle, you can
+you need to extend the mapper as follows:
+[source,java]
+----
+@Provider // <1>
+@Dependent
+public class BaseExceptionMapper extends DefaultBaseExceptionMapper {
+
+    @Override // <2>
+    protected Response handleException(BaseException e) {
+        if (e instanceof SampleException) {
+            return createResponse(e, Response.Status.BAD_REQUEST, new BusinessFault());
+        }
+
+        return super.handleException(e);
+    }
+}
+----
+<1> @Provider is required to extend the DefaultBaseExceptionMapper
+<2> handleException @Override if project specific exception mapping is required
+
+=== coffee-jpa
+* The `BatchService` automatically sets the version of the passed entities
+
+==== Migration
+* If the version has been manually incremented after a batch save, it must be removed
+
+
+=== coffee-model-base
+* The 2 `AbstractIdentifiedAuditEntity` classes (based on `java.util.Date` and `OffsetDateTime`) have been given a common generic interface
+
+==== Migration
+The changes do not result in migration work, backwards compatible.
+
+
+=== coffee-module-localization
+* The module has been created, separated from the `coffee-rest` module
+
+==== Migration
+* Imports need to be rewritten from `hu.icellmobilsoft.coffee.rest.locale` to `hu.icellmobilsoft.coffee.module.localization`.
+
+
+=== coffee-module-csv
+* opencsv upgrade 3.9 -> 5.5.2
+* impelmenting csvUtil localization management
+
+==== Migration
+* replace `@CsvBind` annotations with `@CsvBindByNamePosition`
+
+=== coffee-module-redisstream
+* `RedisStreamConsumerExecutor` now logs all `Throwable`, not just `Exception`
+
+==== Migration
+Changes do not result in migration work, backwards compatible.
+
+=== coffee-module-mongodb
+* Using `MongoDbClient` with `@MongoClientConfiguration` qualifier no longer requires the request scope to be active
+
+==== Migration
+Changes do not result in migration work, backwards compatible.
