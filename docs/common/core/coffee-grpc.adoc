@@ -132,7 +132,7 @@ DummyResponse helloResponse = dummyGrpcService.getDummy(dummyRequest); //<3>
 gRPC szerver és kliens opcionálisan aktiválhat interceptorokat metrika adatok szolgáltatására.
 Ehhez csak a maven dependency bekötése szükséges:
 
-.enable gRPC server metrics - https://github.com/eclipse/microprofile-metrics[microprofile-metrics] implementation
+.enable gRPC server https://github.com/eclipse/microprofile-metrics[microprofile-metrics] implementation
 [source,xml]
 ----
 <dependency>
@@ -145,7 +145,7 @@ Ehhez csak a maven dependency bekötése szükséges:
 </dependency>
 ----
 
-.enable gRPC client metrics - https://github.com/eclipse/microprofile-metrics[microprofile-metrics] implementation
+.enable gRPC client https://github.com/eclipse/microprofile-metrics[microprofile-metrics] implementation
 [source,xml]
 ----
 <dependency>
@@ -171,6 +171,39 @@ Szolgáltatott metrikák:
 ** elküldött request számláló
 ** válaszolt response számláló
 ** request-response feldolgozás másodpercben
+
+== gRPC Tracing
+gRPC szerver és kliens opcionálisan aktiválhat interceptorokat tracing adatok szolgáltatására.
+Ehhez csak a maven dependency bekötése szükséges:
+
+.enable gRPC server https://github.com/eclipse/microprofile-opentracing[microprofile-opentracing] implementation
+[source,xml]
+----
+<dependency>
+    <groupId>hu.icellmobilsoft.coffee</groupId>
+    <artifactId>coffee-grpc-server-extension</artifactId>
+</dependency>
+<dependency>
+    <groupId>hu.icellmobilsoft.coffee</groupId>
+    <artifactId>coffee-grpc-opentracing-impl</artifactId>
+</dependency>
+----
+
+.enable gRPC client https://github.com/eclipse/microprofile-opentracing[microprofile-opentracing] implementation
+[source,xml]
+----
+<dependency>
+    <groupId>hu.icellmobilsoft.coffee</groupId>
+    <artifactId>coffee-grpc-client-extension</artifactId>
+</dependency>
+<dependency>
+    <groupId>hu.icellmobilsoft.coffee</groupId>
+    <artifactId>coffee-grpc-opentracing-impl</artifactId>
+</dependency>
+----
+
+Ha nincs dependency szinten bekötve az adott trasing modul akkor a szerver/kliens működés az eredeti,
+csak nem szolgáltat tracing adatot.
 
 == coffee-dto/coffee-dto-xsd2proto
 Coff:ee általános XSD leírók (`coffee-dto-xsd` modul) schema2proto generált

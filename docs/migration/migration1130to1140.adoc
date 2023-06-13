@@ -19,6 +19,8 @@ Következő funkció támogatások kerültek a rendszerbe:
 * coffee-grpc-client-extension - CDI gRPC client implementáció támogatása
 * coffee-grpc-metrics-api - Coffee metrika API (annotációk...)
 * coffee-grpc-metrics-impl - gRPC https://github.com/eclipse/microprofile-metrics[microprofile-metrics] implementáció
+* coffee-grpc-traces-api - Coffee tracing API (annotációk...)
+* coffee-grpc-opentracing-impl - gRPC https://github.com/eclipse/microprofile-opentracing[microprofile-opentracing] implementáció
 
 == Változások
 
