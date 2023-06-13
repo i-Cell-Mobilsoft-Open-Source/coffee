@@ -39,6 +39,8 @@ import hu.icellmobilsoft.coffee.grpc.client.interceptor.ClientRequestInterceptor
 import hu.icellmobilsoft.coffee.grpc.client.interceptor.ClientResponseInterceptor;
 import hu.icellmobilsoft.coffee.grpc.metrics.api.ClientMetricsInterceptorQualifier;
 import hu.icellmobilsoft.coffee.grpc.metrics.api.IMetricsInterceptor;
+import hu.icellmobilsoft.coffee.grpc.traces.api.ClientTracesInterceptorQualifier;
+import hu.icellmobilsoft.coffee.grpc.traces.api.ITracesInterceptor;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
 import hu.icellmobilsoft.coffee.tool.utils.annotation.AnnotationUtil;
 import io.grpc.ClientInterceptor;
@@ -124,6 +126,14 @@ public class ManagedChannelProducer {
             channelBuilder.intercept((ClientInterceptor) instanceMetric.get());
         } else {
             log.warn("Could not find Metric interceptor implementation for gRPC client.");
+        }
+
+        // tracing
+        Instance<ITracesInterceptor> instanceTracing = CDI.current().select(ITracesInterceptor.class, new ClientTracesInterceptorQualifier.Literal());
+        if (instanceTracing.isResolvable()) {
+            channelBuilder.intercept((ClientInterceptor) instanceTracing.get());
+        } else {
+            log.warn("Could not find Tracing interceptor implementation for gRPC client.");
         }
     }
 }

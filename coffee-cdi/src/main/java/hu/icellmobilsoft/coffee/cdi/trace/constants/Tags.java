@@ -94,4 +94,16 @@ public interface Tags {
         }
     }
 
+    /**
+     * Default gRPC trace Tags
+     * 
+     * @since 2.1.0
+     */
+    interface Grpc {
+        /**
+         * gRPC trace component tag ({@value})
+         */
+        String COMPONENT = "gRPC";
+    }
+
 }
