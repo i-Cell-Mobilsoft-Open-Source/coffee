@@ -338,15 +338,13 @@ public class BatchService {
             Session session = entityManager.unwrap(Session.class);
             MetamodelImplementor metamodel = (MetamodelImplementor) entityManager.getMetamodel();
             SingleTableEntityPersister persister = (SingleTableEntityPersister) metamodel.entityPersister(clazz);
-            String[] names = persister.getPropertyNames();
+            String[] entityFieldNames = getEntityFieldNamesForInsert(persister);
 
             SessionFactoryImplementor sfi = (SessionFactoryImplementor) session.getSessionFactory();
-            // IdentifierGenerator ig = persister.getEntityMetamodel().getIdentifierProperty().getIdentifierGenerator();
             Insert insert = new Insert(sfi.getJdbcServices().getDialect());
             insert.setTableName(persister.getTableName());
             insert.addColumn(persister.getRootTableKeyColumnNames()[0], "?");
-            // insert.addIdentityColumn(persister.getIdentifierColumnNames()[0]);
-            for (String name : names) {
+            for (String name : entityFieldNames) {
                 insert.addColumns(persister.getPropertyColumnNames(name));
             }
 
@@ -366,7 +364,7 @@ public class BatchService {
                         handleInsertAudit(entity);
 
                         // klasszikus parameter betoltesek: ps.setLong(1, entity.getVersion() + 1);
-                        setParametersForInsert(ps, persister, entity);
+                        setParametersForInsert(ps, persister, entity, entityFieldNames);
                         ps.addBatch();
 
                         // mivel {batchSize} csomagokban hajtjuk vegre a muveletet, meg kell jelolnunk azokat az entitasokat amiken vegigmegyunk
@@ -399,6 +397,19 @@ public class BatchService {
         } finally {
             log.debug("<< batchInsertNative: [{0}] list of [{1}] elements", entityName, entities.size());
         }
+    }
+
+    private String[] getEntityFieldNamesForInsert(SingleTableEntityPersister persister) {
+        String[] allPropertyNames = persister.getPropertyNames();
+        boolean[] propertiesToInsert = persister.getPropertyInsertability();
+        List<String> entityFieldnameList = new ArrayList<>();
+        for (int i = 0; i < propertiesToInsert.length; i++) {
+            if (propertiesToInsert[i]) {
+                entityFieldnameList.add(allPropertyNames[i]);
+            }
+        }
+
+        return entityFieldnameList.stream().toArray(String[]::new);
     }
 
     /**
@@ -530,10 +541,13 @@ public class BatchService {
      *            - persister
      * @param entity
      *            - beszurni kivant entitas
+     * @param entityFieldNames
+     *            - entitas field nevek tomb
      * @throws SQLException
      *             exception
      */
-    protected <E> void setParametersForInsert(PreparedStatement ps, SingleTableEntityPersister persister, E entity) throws SQLException {
+    protected <E> void setParametersForInsert(PreparedStatement ps, SingleTableEntityPersister persister, E entity, String[] entityFieldNames)
+            throws SQLException {
         int i = 1;
 
         // elso a PK
@@ -548,8 +562,7 @@ public class BatchService {
         Object version = persister.getVersionType().seed(null);
         persister.setPropertyValue(entity, persister.getVersionProperty(), version);
 
-        for (String name : persister.getPropertyNames()) {
-            // remeljuk az index es a persister.getPropertyNames() osszhangban van
+        for (String name : entityFieldNames) {
             int index = persister.getPropertyIndex(name);
             Object value = persister.getPropertyValue(entity, index);
             Type type = persister.getPropertyType(name);
