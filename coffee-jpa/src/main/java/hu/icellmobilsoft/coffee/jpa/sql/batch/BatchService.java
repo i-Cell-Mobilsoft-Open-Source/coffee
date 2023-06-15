@@ -236,25 +236,22 @@ public class BatchService {
             Session session = entityManager.unwrap(Session.class);
             MetamodelImplementor metamodel = (MetamodelImplementor) entityManager.getMetamodel();
             SingleTableEntityPersister persister = (SingleTableEntityPersister) metamodel.entityPersister(clazz);
-            String[] names = persister.getPropertyNames();
+            String[] entityFieldNames = getEntityFieldNamesForUpdate(persister);
 
             SessionFactoryImplementor sfi = (SessionFactoryImplementor) session.getSessionFactory();
             Update u = new Update(sfi.getJdbcServices().getDialect());
             u.setPrimaryKeyColumnNames(persister.getIdentifierColumnNames());
             u.setTableName(persister.getTableName());
             u.setVersionColumnName(persister.getVersionColumnName());
-            for (String name : names) {
+            for (String name : entityFieldNames) {
                 u.addColumns(persister.getPropertyColumnNames(name));
             }
             // where column automatan belekerul
-            // u.addWhereColumn(persister.getIdentifierColumnNames()[0]);
-            // u.addWhereColumn(persister.getVersionColumnName());
 
             dbTimeZone = sfi.getSessionFactoryOptions().getJdbcTimeZone();
 
             String sql = u.toStatementString() + StringUtils.defaultString(getSqlPostfix());
 
-            // String sql = update.toString();
             log.debug("Running update:\n[{0}]", sql);
 
             session.doWork(connection -> {
@@ -269,7 +266,7 @@ public class BatchService {
                         handleUpdateAudit(entity);
 
                         // klasszikus parameter betoltesek: ps.setLong(1, entity.getVersion() + 1);
-                        setParametersForUpdate(ps, persister, entity);
+                        setParametersForUpdate(ps, persister, entity, entityFieldNames);
                         ps.addBatch();
 
                         // ezt az entitast ki kell szedni az entityManagerbol,
@@ -306,6 +303,20 @@ public class BatchService {
         } finally {
             log.debug("<< batchMerge: [{0}] list of [{1}] elements", entityName, entities.size());
         }
+    }
+
+    private static String[] getEntityFieldNamesForUpdate(SingleTableEntityPersister persister) {
+        String[] allPropertyNames = persister.getPropertyNames();
+        boolean[] propertiesToUpdate = persister.getPropertyUpdateability();
+
+        List<String> entityFieldnameList = new ArrayList<>();
+        for (int i = 0; i < propertiesToUpdate.length; i++) {
+            if (propertiesToUpdate[i]) {
+                entityFieldnameList.add(allPropertyNames[i]);
+            }
+        }
+
+        return entityFieldnameList.stream().toArray(String[]::new);
     }
 
     /**
@@ -506,10 +517,13 @@ public class BatchService {
      *            - persister
      * @param entity
      *            - modositani kivant entitas
+     * @param entityFieldNames
+     *            - entitas field nevek tomb
      * @throws SQLException
      *             exception
      */
-    protected <E> void setParametersForUpdate(PreparedStatement ps, SingleTableEntityPersister persister, E entity) throws SQLException {
+    protected <E> void setParametersForUpdate(PreparedStatement ps, SingleTableEntityPersister persister, E entity, String[] entityFieldNames)
+            throws SQLException {
         int i = 1;
 
         // Update version
@@ -517,7 +531,7 @@ public class BatchService {
         Object newVersion = persister.getVersionType().next(oldVersion, null);
         persister.setPropertyValue(entity, persister.getVersionProperty(), newVersion);
 
-        for (String name : persister.getPropertyNames()) {
+        for (String name : entityFieldNames) {
             // remeljuk az index es a persister.getPropertyNames() osszhangban van
             int index = persister.getPropertyIndex(name);
             Object value = persister.getPropertyValue(entity, index);
