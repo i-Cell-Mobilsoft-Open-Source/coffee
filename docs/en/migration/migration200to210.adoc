@@ -25,3 +25,11 @@ The following feature supports have been added to the system:
 ==== Migration
 
 Changes do not result in migration work, backwards compatible.
+
+== BatchService
+
+** Even the native insert/update methods (batchMergeNative, batchInsertNative, batchUpdateNative) take the insertable and updateable flags into account.
+
+==== Migration
+
+Changes do not result in migration work, backwards compatible.
