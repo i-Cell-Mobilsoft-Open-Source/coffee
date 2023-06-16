@@ -139,34 +139,35 @@ public class BatchService {
 
         String entityName = entities.iterator().next().getClass().getSimpleName();
         log.debug(">> batchMerge: [{0}] list of [{1}] elements", entityName, entities.size());
-        StatelessSession statelessSession = null;
         try {
             // ha nincs tranzakció nem szabad hogy autoCommit történjen
             entityManager.joinTransaction();
 
             Session session = entityManager.unwrap(Session.class);
             SessionFactory sessionFactory = session.getSessionFactory();
-            statelessSession = sessionFactory.openStatelessSession();
+            try (StatelessSession statelessSession = sessionFactory.openStatelessSession()) {
 
-            log.debug(">> batchMerge: start");
-            List<String> ids = new ArrayList<>();
-            for (E entity : entities) {
-                // ezt az entitas ki kell szedni az entityManagerbol,
-                // kulonben ugy fogja erzekelni hogy az adat mar valtozott masik tranzakcioban
-                entityManager.detach(entity);
+                log.debug(">> batchMerge: start");
+                List<String> ids = new ArrayList<>();
+                for (E entity : entities) {
+                    // ezt az entitas ki kell szedni az entityManagerbol,
+                    // kulonben ugy fogja erzekelni hogy az adat mar valtozott masik tranzakcioban
+                    entityManager.detach(entity);
 
-                String entityId = getId(entity);
-                if (entityId == null) {
-                    String id = (String) statelessSession.insert(entity);
-                    ids.add(id);
-                } else {
-                    statelessSession.update(entity);
-                    ids.add(entityId);
+                    String entityId = getId(entity);
+                    if (entityId == null) {
+                        String id = (String) statelessSession.insert(entity);
+                        ids.add(id);
+                    } else {
+                        statelessSession.update(entity);
+                        ids.add(entityId);
+                    }
                 }
-            }
-            log.debug(">> batchMerge: end");
 
-            return ids;
+                log.debug(">> batchMerge: end");
+
+                return ids;
+            }
         } catch (Exception e) {
             String msg = MessageFormat.format("Error in batch merge [{0}]: [{1}]", entityName, e.getLocalizedMessage());
             log.error(msg, e);
@@ -305,7 +306,14 @@ public class BatchService {
         }
     }
 
-    private static String[] getEntityFieldNamesForUpdate(SingleTableEntityPersister persister) {
+    /**
+     * Visszaadja a módosítható entitás mezők neveit tömbben.
+     *
+     * @param persister
+     *            {@link SingleTableEntityPersister}
+     * @return módosítható entitás mezők nevei tömb
+     */
+    protected String[] getEntityFieldNamesForUpdate(SingleTableEntityPersister persister) {
         String[] allPropertyNames = persister.getPropertyNames();
         boolean[] propertiesToUpdate = persister.getPropertyUpdateability();
 
@@ -410,7 +418,14 @@ public class BatchService {
         }
     }
 
-    private String[] getEntityFieldNamesForInsert(SingleTableEntityPersister persister) {
+    /**
+     * Visszaadja a beszúrható entitás mezők neveit tömbben.
+     * 
+     * @param persister
+     *            {@link SingleTableEntityPersister}
+     * @return beszúrható entitás mezők nevei tömb
+     */
+    protected String[] getEntityFieldNamesForInsert(SingleTableEntityPersister persister) {
         String[] allPropertyNames = persister.getPropertyNames();
         boolean[] propertiesToInsert = persister.getPropertyInsertability();
         List<String> entityFieldnameList = new ArrayList<>();
