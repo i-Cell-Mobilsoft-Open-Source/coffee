@@ -21,12 +21,12 @@ Support for serialization/deserialization of durations in JsonUtil (DurationConv
 Introduced several methods in `DateUtil` to help date management.
 
 * `public static OffsetDateTime nowUTC()`
-* ` `public static OffsetDateTime nowUTCTruncatedToMillis()`
-* ` `public static LocalDate lastDayOfMonth(LocalDate baseDate)`
-* ` `public static LocalDate lastDayOfQuarter(LocalDate baseDate)`
-* ` `public static LocalDate lastDayOfYear(LocalDate baseDate)`
-* ` `public static OffsetDateTime tryToParse(String isoDateTime)`
-* ` `public static OffsetDateTime toOffsetDateTime(LocalDateTime localDateTime)`
+* `public static OffsetDateTime nowUTCTruncatedToMillis()`
+* `public static LocalDate lastDayOfMonth(LocalDate baseDate)`
+* `public static LocalDate lastDayOfQuarter(LocalDate baseDate)`
+* `public static LocalDate lastDayOfYear(LocalDate baseDate)`
+* `public static OffsetDateTime tryToParse(String isoDateTime)`
+* `public static OffsetDateTime toOffsetDateTime(LocalDateTime localDateTime)`
 
 ==== Migration
 As a result of the changes, the deserialisation of Duration Json has changed.
