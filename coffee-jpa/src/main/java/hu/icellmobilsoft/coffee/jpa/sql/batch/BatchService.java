@@ -46,6 +46,9 @@ import java.util.Map;
 import java.util.TimeZone;
 import java.util.stream.Collectors;
 
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
+
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.Session;
@@ -78,9 +81,6 @@ import hu.icellmobilsoft.coffee.jpa.sql.batch.enums.Status;
 import hu.icellmobilsoft.coffee.jpa.sql.batch.types.StringBasicType;
 import hu.icellmobilsoft.coffee.jpa.sql.entity.EntityHelper;
 import hu.icellmobilsoft.coffee.tool.utils.string.RandomUtil;
-
-import jakarta.inject.Inject;
-import jakarta.persistence.EntityManager;
 
 /**
  * Batch mentessekkel foglalkozo osztaly
