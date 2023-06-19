@@ -72,7 +72,7 @@ public class CustomMongoService extends MongoService<MongoEntity> {
 @MongoServiceConfiguration(configKey = "configKey", collectionKey = "collectionKey")
 private CustomMongoService customMongoService;
 ----
-*Pagination
+*Pagination*
 
 Before using the MongoService find() method, *initRepositoryCollection(getMongoCollection())* must be called 
 if not used with the new annotation.
