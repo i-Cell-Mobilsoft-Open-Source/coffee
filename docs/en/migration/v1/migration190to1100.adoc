@@ -1,0 +1,74 @@
+= v1.9.0 → v1.10.0
+
+coff:ee v1.9.0 -> v1.10.0 migration description, news, changes
+
+== Changes
+
+=== General
+
+==== BOM version upgrades:
+* mongo-java-driver 3.12.5 -> mongodb-driver-sync 4.5.1
+* apache deltaspike 1.9.1 -> 1.9.6
+
+=== coffee-module-mongodb
+* replaced mongo-java-driver with the new mongodb-driver-sync
+* the `heartbeatConnectTimeout` and `heartbeatSocketTimeout` parameters have been removed from the configuration, as the new api does not support setting them directly. Their values will be identical to `connectTimeout` and `socketTimeout`.
+* mongo import changes
+
+==== Migration
+* the `heartbeatConnectTimeout` and `heartbeatSocketTimeout` parameters can be deleted from the configuration
+* the `com.mongodb.util` package is no longer available, the `Util` class in it has no replacement. If there is a reference to the included `JSON` class, serialization and de-serialization can be replaced by the corresponding methods of `BasicDBObject` (`parse`, `toJson`)
+* More information about the changes: https://www.mongodb.com/docs/drivers/java/sync/current/legacy/#api-changes
+
+=== coffee-jpa
+* `BatchService` already handles time types well if `hibernate.jdbc.time_zone` is set in `persistence.xml`.
+
+==== Migration
+The changes do not result in any migration work, it is backwards compatible.
+
+=== coffee-module-configdoc
+* Configuration document generation option for dynamic keys.
+
+==== Migration
+Changes do not result in migration work, backwards compatible.
+
+=== coffee-module-redis
+* Added `@Disposes` to `RedisManagerProducer`, dependent beans caused memory leaks.
+* `RedisService`, `RedisRepository` has been removed (as it is incompatible with the new 4.2.1 jedis)
+* jedis upgrade `4.2.1` -> `4.2.3`
+
+==== Migration
+* `RedisService` replaced by `RedisManager`. E.g.:
+[source,java]
+----
+redisService.getRedisData("key", String.class);
+----
+->
+[source,java]
+----
+redisManager.runWithConnection(Jedis::get, "get", "key");
+----
+
+=== coffee-module-redisstream
+* `RedisStreamHandler` renamed to `RedisStreamPublisher` to make the purpose of the class clear
+* `RedisStreamPublisher` and `RedisStreamService` have been changed to `RedisManager`, so the publish methods return `Optional`.
+* `RedisStreamPublisher` and `RedisStreamPublication` moved to ` hu.icellmobilsoft.coffee.module.redisstream.publisher` package
+* The `RedisManagerConnection` class has been created to simplify the closing of `RedisManager` connections
+
+==== Migration
+* Rename `RedisStreamHandler` to `RedisStreamPublisher`
+* Rename `hu.icellmobilsoft.coffee.module.redisstream.common` package to `hu.icellmobilsoft.coffee.module.redisstream.publisher`
+* Where the return value of the `RedisStreamPublisher` and `RedisStreamService` methods is used, handle `Optional`
+
+=== coffee-dto-base
+* In the `UtcOffsetDateTimeXmlAdapter` class, if the second was zero it was truncated, this has been fixed.
+
+==== Migration
+The changes do not result in any migration work, backwards compatible.
+
+=== coffee-module-configdoc
+* Extract the contents of the `@since` tag from javadoc and display it in a new column
+* Configure the columns to be displayed in the generated table and their order (e.g. `-Acoffee.configDoc.columns=key,since,description`)
+
+==== Migration
+Changes do not result in migration work, backwards compatible.
