@@ -1,0 +1,27 @@
+= v1.3.0 → v1.4.0
+
+coff:ee v1.3.0 -> v1.4.0 migration description, new features, changes
+
+== Changes
+
+=== coffee-model-base
+
+* Fields `creationDate`, `creatorUser` of audited entities have been changed to `updatable = false` property,
+so that in the future they will not be included in the SQL run by hibernate when updating.
+
+==== Migration
+
+If there is an entity where the fields are overwritten on a record that has already been saved, the overwritten values will no longer be saved to the database, if this is still required, you will need to implement your own `AbstractAuditEntity` at the project level.
+
+== coffee-module-redisstream
+The Consumer *retryCount* option has been introduced as `@RedisStreamConsumer` in the configuration.
+
+==== Migration
+The changes do not result in migration work, backwards compatible.
+
+=== coffee-module-redis
+Introduced the *lpop* operation to the `RedisService` class.
+The *rpushRedisData* operation in the `RedisService` class now returns the list size.
+
+==== Migration
+Changes do not result in migration work, backwards compatible.

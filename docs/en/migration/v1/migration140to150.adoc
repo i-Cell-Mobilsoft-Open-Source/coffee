@@ -1,0 +1,66 @@
+= v1.4.0 → v1.5.0
+
+coff:ee v1.4.0 -> v1.5.0 migration description, new features, changes
+
+== Changes
+
+* Bump guava to 25.1 -> 29.0 - The update was triggered by https://github.com/advisories/GHSA-5mg8-w23w-74h3.
+Since coff:ee only binds used dependencies,
+had to enable the com.google.guava:failureaccess dependency,
+which became mandatory with https://github.com/google/guava/releases/tag/v27.0:
+https://groups.google.com/g/guava-announce/c/Km82fZG68Sw .
+* Bump guava to 29.0 -> 30.1.1
+* Bump commons-io 2.6 -> 2.8.0
+* WildFly 23 compatibility
+
+=== coffee-tool
+Introduced the `StringUtil.maskUriAuthenticationCredentials` function.
+
+Support for serialization/deserialization of durations in JsonUtil (DurationConverter.class) has been introduced.
+
+Introduced several methods in `DateUtil` to help date management.
+
+* `public static OffsetDateTime nowUTC()`
+* `public static OffsetDateTime nowUTCTruncatedToMillis()`
+* `public static LocalDate lastDayOfMonth(LocalDate baseDate)`
+* `public static LocalDate lastDayOfQuarter(LocalDate baseDate)`
+* `public static LocalDate lastDayOfYear(LocalDate baseDate)`
+* `public static OffsetDateTime tryToParse(String isoDateTime)`
+* `public static OffsetDateTime toOffsetDateTime(LocalDateTime localDateTime)`
+
+==== Migration
+As a result of the changes, the deserialisation of Duration Json has changed.
+Previous format: "duration":{"signum":1, "years":1, "months":1, "days":1, "hours":1, "minutes":1, "seconds":1}
+Current format: "duration": "P1Y1M1DT1H1M1S" (ISO 8601 standard)
+
+This means that the change is not fully backwards compatible. Changes may result in migration work.
+To help with the migration and to make it easier to understand, the documentation has been extended to include a description of 'Json support' in link:../common/core/coffee-rest.adoc[coffee-rest]
+
+=== coffee-module-mongodb
+Implemented the `StringUtil.maskUriAuthenticationCredentials` function in `MongoDbClientFactory.createMongoClient`.
+for masking MongoDB uri when logging.
+
+==== Migration
+Changes do not result in migration work, backwards compatible.
+
+=== coffee-module-redis
+Introduced an optional version of *lpop* in the `RedisService` class,
+and its counterpart *rpop*.
+
+==== Migration
+Changes do not result in migration work, backwards compatible.
+
+=== coffee-module-redisstream
+* The handling of the stream consumer has undergone further minor changes to make it easier to customize the project.
+An `IRedisStreamPipeConsumer` has been created to allow extended stream consumption.
+* RedisStreamConsumerExecutor has been brought to the MDC configuration level,
+so that in the logging, the elapses are given the same sid.
+Also a "retryCounter" MDC has been introduced,
+which counts the number of iterations if there are more than one.
+* A central role was given to `hu.icellmobilsoft.coffee.module.redisstream.common.RedisStreamPublication`
+Stream message wrapper class, complete with TTL and custom message parameters
+* Introduction of the `StreamMessageParameter.FLOW_ID_EXTENSION` message parameter,
+which complements the SID logging.
+
+==== Migration
+Changes do not result in migration work, backwards compatible.

@@ -1,0 +1,96 @@
+= v1.2.0 → v1.3.0
+
+coff:ee v1.2.0 -> v1.3.0 migration description, new features, changes
+
+== What's new
+
+=== coffee-module-redisstream
+New module that provides a basic enterprise CDI framework for the redis stream solution,
+more info in the description
+
+== Changes
+
+=== coffee-dto
+* Added SimpleText1024NotBlankType type in common.xsd.
+
+==== Transition
+
+Changes do not result in migration work, backwards compatible.
+
+=== coffee-model
+
+* The `modificationDate` field of audited entities is not auto-filled on creation, only on modification.
+
+==== Migration
+
+Changes do not result in migration work, backwards compatible.
+
+=== coffee-jpa
+* Replace `List` types as input in BatchService class with `Collection`.
+
+==== Migration
+
+Changes do not result in migration work, backwards compatible.
+
+=== coffee-rest
+
+* `RequestResponseLogger#printEntity(byte[], Integer, String)` correctly returns the log message if the byte array parameter (entity) is null or empty.
+* `RequestResponseLogger#printEntity` has been fixed to truncate the last character in LogSpecifier.UNLIMIT (this is the default)
+* `CoffeeFaultType.INVALID_XML` localisation has been rewritten
+
+==== Migration
+
+Changes do not result in migration work, backwards compatible.
+
+=== coffee-module-mp-restclient
+
+* `DefaultLoggerClientResponseFilter#logEntity` logs correctly if there is no entity in the response.
+* `RestClientPriority#REQUEST_LOG` priority Priorities.AUTHENTICATION -> Priorities.HEADER_DECORATOR + 100, so trace information is logged.
+* Automatic detection of enums implementing `IFaultType` with `FaultTypeParserExtension`. This makes it possible to map error responses to an exception with the corresponding FaultCode.
+
+==== Migration
+
+The changes do not result in any migration work, it is backwards compatible.
+To find `IFaultType` implementations, you may need to include `beans.xml` in the module of the enum to be recognized at the project level.
+
+=== coffee-module-redis
+* jedis update 3.1.0 -> 3.3.0
+
+==== Migration
+Changes do not result in migration work, backwards compatible.
+
+=== coffee-module-etcd
+* `etcd.default.url` -> `coffee.etcd.default.url` configuration key change.
+* `EtcdRepository` and `ConfigEtcdService` have been reworked to be used
+non-CDI locations (e.g. MP-ConfigSource, test), have been given separate CDI producers. 
+* Introduction of `hu.icellmobilsoft.coffee.module.etcd.producer.CachedEtcdConfigSource` config source,
+see <<Microprofile-config>>
+* Minor logging optimization.
+* `hu.icellmobilsoft.coffee.module.etcd.service.BaseEtcdService` deprecated.
+The structure was very old and the initial concept did not fit the Microprofile-Config
+principles of Micro-Config.
+Its full-fledged replacement is the `hu.icellmobilsoft.coffee.module.etcd.service.EtcdService` class,
+which works explicitly with String values.
+
+==== Migration
+The `etcd.default.url` key included in the configuration must be supplemented with the prefix `coffee.`.
+It is recommended to use the config source `hu.icellmobilsoft.coffee.module.etcd.producer.CachedEtcdConfigSource`.
+
+=== coffee-module-opentracing
+* New module, more info in the description.
+
+=== coffee-cdi
+* New annotation: `hu.icellmobilsoft.coffee.cdi.trace.annotation.Traceable`, see description for details.
+
+=== coffee-tool
+* Introduction and use of `hu.icellmobilsoft.coffee.tool.utils.string.RegexPatternCache` in the `StringUtil` class in the
+class to optimize regular expressions.
+
+==== Migration
+This change does not result in any migration work, it is backwards compatible.
+
+=== coffee-module-redis
+* The hscan operation can be parameterized with count. 
+
+==== Migration
+The change does not result in any migration work, backwards compatible.
