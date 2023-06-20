@@ -1,0 +1,108 @@
+= v1.10.0 → v1.11.0
+
+coff:ee v1.10.0 -> v1.11.0 migration description, new features, changes
+
+== Changes
+
+=== coffee-module-redis
+
+* *JedisDataException has been wrapped into TechnicalException*, so old logic couldn't handle it, so it's in *cause*
+in *JedisDataException* had to be modified to handle the flow.
+* In `RedisStreamConsumerExecutor`, `handleGroup` closed the jedis connection that `consumeOne` would have used,
+so an exception was thrown.
+* Introduced the poolConfigKey option in the Redis connection settings.
+
+[source,yaml]
+----
+coffee:
+    redis:
+        auth: #<1>
+            host: sample-sandbox.icellmobilsoft.hu #default: localhost
+            port: 6380 #default: 6380
+            password: pass1234 #default: null
+            database: 1 #default: 0
+            # previous setting, cancelled
+            #pool:
+            # maxtotal: 128 #default: 64
+            # maxidle: 32 #default: 16
+            pool:
+                default: #<2>
+                    maxtotal: 128 #default: 64
+                    maxidle: 32 #default: 16
+                custom:
+                    maxtotal: 12 #default: 64
+                    maxidle: 3 #default: 16
+            timeout: 5000 #default: 5000
+----
+
+==== Migration
+
+Since the Redis keying option has changed,
+so you have to change the "default" group in the project configuration.
+Other changes will not result in a migration, they are backwards compatible.
+
+=== coffee-module-redis-stream
+
+* `coffee.redisstream.{0}.producer.{1}` configuration keys not valid, fixed
+
+==== Migration
+
+Changes do not result in migration work, backwards compatible.
+
+=== coffee-module-mp-opentracing
+
+* *OpenTraceErrorResponseFilter* NPE error thrown when request in filter chain was stuck before opentrace filter, which could not generate
+spans, e.g. if an unexpected error occurs during authentication is such a case, since auth is usually at a higher priority than opentrace.
+The error has been handled, we only log cases where we can't add to the trace flow because it doesn't exist.
+
+
+==== Migration
+
+The changes do not result in any migration work, backwards compatible.
+
+=== coffee-rest
+* Added a default OpenApiFilter that can be activated with the following configuration:
+[source,properties]
+----
+mp.openapi.filter=hu.icellmobilsoft.coffee.rest.filter.OpenAPIFilter
+----
+
+==== Migration
+The changes do not result in migration work, it is backwards compatible.
+
+=== coffee-cdi
+* Deltaspike dependencies removed, moved to coffee-module-localization module. Along with this, `LogProducer.getAppLogger()` has been removed,
+instead, `LogProducer.logToAppLogger(...)` is now usable, expects a functional interface and class, handles AppLogger creation and termination by itself.
+* Methods previously deprecated from `LogProducer` are deprecated and replaced by `Logger.getLogger(...)`:
+** createDefaultJbossLogger(InjectionPoint injectionPoint)
+** getStaticLogger(Class<?> clazz)
+** getStaticLogger(String className)
+** getStaticDefaultLogger(Class<?> clazz)
+** getStaticDefaultLogger(String className)
+* Dependencies are removed:
+** deltaspike-core-api
+** deltaspike-core-impl
+
+==== Migration
+Since coffee-cdi no longer pulls in the deltaspike dependencies, you need to add them in the project pom.xml.
+
+[source,xml]
+----
+<dependency>
+    <groupId>org.apache.deltaspike.core</groupId>
+    <artifactId>deltaspike-core-api</artifactId>
+</dependency>
+<dependency>
+    <groupId>org.apache.deltaspike.core</groupId>
+    <artifactId>deltaspike-core-impl</artifactId>
+</dependency>
+----
+
+Using `LogProducer.logToAppLogger(...)`.
+
+[source,java]
+----
+...
+LogProducer.logToAppLogger((AppLogger appLogger) -> appLogger.info(msg.toString()), DefaultLoggerClientRequestFilter.class))
+...
+----

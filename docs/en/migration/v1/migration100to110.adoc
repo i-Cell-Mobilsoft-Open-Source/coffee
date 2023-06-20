@@ -1,0 +1,223 @@
+= v1.0.0 → v1.1.0
+
+coff:ee v1.0.0 -> v1.1.0 migration description, new features, changes
+
+== Changes
+=== coffee-module-mongodb
+
+* Updated mongo-java-driver (3.12.5).
+* Introduction of CDI extension for dynamic MongoService production
+* More efficient connection handling
+* yml parameterization
+
+MongoDbHandler deprecated, instead MongoDbClient or MongoService<T> extension can be used.
+
+[source,java]
+----
+// old definition
+@Inject
+@MongoCustomConfiguration(databaseName = "database", urlKey = "urlKey")
+private MongoDbHandler mongoDbHandler;
+
+mongoDbHandler.setCollection("collection");
+mongoDbHandler.insertOne(dtoDocument);
+----
+
+instead of using MongoDbClient
+
+[source,java]
+----
+// new usage
+@Inject
+@MongoClientConfiguration(configKey = "configKey")
+private MongoDbClient mongoDbClient;
+
+mongoDbClient.initRepositoryCollection(collection);
+mongoDbClient.insertOne(dtoDocument);
+----
+
+Using MongoService with POJO
+
+[source,java]
+----
+// old definition
+@Model
+public class CustomMongoService extends MongoService<MongoEntity> {
+
+    @Inject
+    @MongoCustomConfiguration(databaseName = "database", urlKey = "urlKey")
+    private MongoDbHandler mongoDbHandler;
+
+    @Override
+    protected MongoCollection<MongoEntity> getMongoCollection() throws BaseException {
+        return mongoDbHandler.getDatabase().getCollection("collection", MongoEntity.class);
+    }
+}
+    
+@Inject
+private CustomMongoService customMongoService;
+
+----
+
+instead of 
+
+[source,java]
+----
+// new usage
+@Dependent
+public class CustomMongoService extends MongoService<MongoEntity> {
+}
+
+@Inject
+@MongoServiceConfiguration(configKey = "configKey", collectionKey = "collectionKey")
+private CustomMongoService customMongoService;
+----
+*Pagination*
+
+Before using the MongoService find() method, *initRepositoryCollection(getMongoCollection())* must be called 
+if not used with the new annotation.
+[source,java]
+----
+// old definition
+@Model
+public class CustomMongoService extends MongoService<MongoEntity> {
+
+    public PagingResult<MongoEntity> findByQueryParams(...) {
+        ...
+        // MongoService pagination find
+        // initRepositoryCollection(getMongoCollection());
+        find(filter, order, rows, page, InvoiceLog.class);
+        ...
+    }
+}
+
+@Inject
+private CustomMongoService customMongoService;
+----
+ 
+Instead of using @MongoServiceConfiguration annotation, the collection is automatically loaded.
+ 
+[source,java]
+----
+// old definition
+@Dependent
+public class CustomMongoService extends MongoService<MongoEntity> {
+
+    public PagingResult<MongoEntity> findByQueryParams(...) {
+        ...
+        // MongoService pagination find
+        find(filter, order, rows, page, InvoiceLog.class);
+        ...
+    }
+}
+
+
+@Inject
+@MongoServiceConfiguration(configKey = "configKey", collectionKey = "collectionKey")
+private CustomMongoService customMongoService;
+----
+=== Logging
+The logging system used inside `AppLogger` has been changed from jboss to java.util.logging,
+so that projects using coffee are not forced into a jboss environment.
+At the same time, CDI independent classes have been outsourced to the `coffee-se-logging` module.
+For the time being, backwards compatibility has been preserved, but deprecated, so you may want to switch as follows:
+
+==== Migration
+
+
+. jboss Logger inject
++
+you can use your own coffee `hu.icellmobilsoft.coffee.se.logging.Logger` instead of the former jboss Logger.
+Because of the class replacement, methods like `org.jobs.logging.Logger.tracev` must also be replaced with e.g. `hu.icellmobilsoft.coffee.se.logging.Logger.trace` (Logger default supports parameterization with MessageFormat)
++
+NOTE: It still works with jboss Logger Inject, however this may change in later versions.
++
+.Coffee 1.0.0
+[source,java]
+----
+import org.jboss.logging.Logger;
+...
+    @Inject
+    private Logger log;
+...
+log.tracev("Some traced log:[{0}]", param);
+----
++
+.Coffee 1.1.0+
+[source,java]
+----
+import hu.icellmobilsoft.coffee.cdi.logger.AppLogger;
+...
+    @Inject
+    private AppLogger log;
+...
+log.trace("Some traced log:[{0}]", param);
+----
+
+
+. static logger
++
+The `LogProducer.getStaticLogger` has been deprecated and `LogProducer.getStaticDefaultLogger` can be used instead.
++
+.Coffee 1.0.0
+[source,java]
+----
+LogProducer.getStaticLogger(BlaBla.class).trace("class blabla");
+----
++
+.Coffee 1.1.0+
+[source,java]
+----
+LogProducer.getStaticDefaultLogger(BlaBla.class).trace("class blabla");
+----
+
+=== MDC
+MDC management is also handled through its own system;
+where `org.jboss.logging.MDC` was used at project level until now,
+you should change the import to `hu.icellmobilsoft.coffee.se.logging.mdc.MDC`. Read more: <<common_core_coffee-se_coffee-se-logging_MDC, MDC>>.
+
+=== Sensitive logging
+During logging, the default pattern used to mask sensitive data was too slow for large input sizes,
+so it was replaced by a more optimal regex. The previous default pattern was `+++.*?(pass|secret).*+++?` instead:
+
+* The `|` operator has been removed, instead it is possible to specify multiple patterns, which are checked one by one.
+* The prefix and suffix `+++.*?+++` was unnecessarily generic, instead `+++[\w\s]*?+++` (`[a-zA-Z0-9_]` and whitespace) is sufficient.
+
+Thus, the default patterns are `+++[\w\s]*?secret[\w\s]*?+++` and `+++[\w\s]*?pass[\w\s]*?+++`
+
+The default pattern can still be overridden with the `coffee.config.log.sensitive.key.pattern` key based on mp-config.
+Multiple patterns separated by commas(`,`) can be specified e.g. `+++[\w\s]*?secret[\w\s]*?,[\w\s]*?pass[\w\s]*?,[\w\s]*?login[\w\s]*?+++`
+
+=== @Priority + @Alternative correction
+In the project, @Alternative was incorrectly handled, specifically in these classes:
+
+* AppLoggerNoContainerImpl (@Alternative for the AppLoggerImpl class)
+* JsonRequestVersionReader (@Alternative to the EmptyRequestVersionReader class)
+* XmlRequestVersionReader (@Alternative to EmptyRequestVersionReader class)
+* XsdResourceResolver (@Alternative to PublicCatalogResolver class)
+
+In all places @Alternative was only counted as a secondary input,
+but @Priority changed them to primary.
+The exception is `PublicCatalogResolver` where it was intended to be primary,
+and this has now been moved as well.
+
+If you still want to have one of the alternatives as primary then:
+
+* local module: just activate it in the beans.xml file
+* multi module project: create a new class, as in the following example
+
+[source,java]
+----
+@Priority(100)
+@Alternative
+public class ProjectXsdResourceResolver extends XsdResourceResolver {
+}
+----
+And you don't need beans.xml activation either
+
+
+=== DefaultGeneralExceptionMapper
+
+Refactored the `DefaultGeneralExceptionMapper` to include a set of if-else in both the `handleException` and `handleProductionStageException` methods.
+These two have been merged, so that code must be modified in one place to handle new exceptions. At the same time, the `handleProductionStageException` method has been deleted,
+instead, the logic to be executed on production can be redefined via consumer as required.
