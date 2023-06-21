@@ -5,14 +5,14 @@
 :imagesdir: pic
 
 [#index]
-include::hu/project-description.adoc[leveloffset=-2]
+include::en/project-description.adoc[leveloffset=-2]
 
-include::hu/common.adoc[]
+include::en/common.adoc[]
 
-include::hu/migration.adoc[]
+include::en/migration.adoc[]
 
 == HOWTO
 
-include::hu/howto/xsd-xml-validation-depend-on-version.adoc[leveloffset=+1]
+include::en/howto/xsd-xml-validation-depend-on-version.adoc[leveloffset=+1]
 
-include::hu/howto/xsd-catalog.adoc[leveloffset=+1]
+include::en/howto/xsd-catalog.adoc[leveloffset=+1]
