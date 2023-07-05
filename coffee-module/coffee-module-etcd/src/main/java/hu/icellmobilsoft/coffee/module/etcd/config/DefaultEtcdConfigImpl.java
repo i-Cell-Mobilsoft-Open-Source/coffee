@@ -38,24 +38,27 @@ import hu.icellmobilsoft.coffee.tool.utils.config.ConfigUtil;
 @Dependent
 public class DefaultEtcdConfigImpl implements EtcdConfig {
 
-	/**
-	 * Configurationa key for ETCD URL
-	 */
-	public static final String URL_KEY = "coffee.etcd.default.url";
+    /**
+     * Configurationa key for ETCD URL
+     */
+    public static final String URL_KEY = "coffee.etcd.default.url";
 
-	/** {@inheritDoc} */
-	@Override
-	public String[] getUrl() {
-		String url = "";
-		Optional<String> optUrl = ConfigUtil.getInstance().defaultConfig().getOptionalValue(URL_KEY, String.class);
-		if (optUrl.isEmpty()) {
-			Config config = ConfigProviderResolver.instance().getBuilder().forClassLoader(DefaultEtcdConfigImpl.class.getClassLoader())
-					.addDefaultSources().build();
-			url = config.getOptionalValue(URL_KEY, String.class).orElse("http://localhost:2379");
-		} else {
-			url = optUrl.get();
-		}
-		return StringUtils.split(url, ",");
-	}
+    /** {@inheritDoc} */
+    @Override
+    public String[] getUrl() {
+        String url = "";
+        Optional<String> optUrl = ConfigUtil.getInstance().defaultConfig().getOptionalValue(URL_KEY, String.class);
+        if (optUrl.isEmpty()) {
+            Config config = ConfigProviderResolver.instance()
+                    .getBuilder()
+                    .forClassLoader(DefaultEtcdConfigImpl.class.getClassLoader())
+                    .addDefaultSources()
+                    .build();
+            url = config.getOptionalValue(URL_KEY, String.class).orElse("http://localhost:2379");
+        } else {
+            url = optUrl.get();
+        }
+        return StringUtils.split(url, ",");
+    }
 
 }
