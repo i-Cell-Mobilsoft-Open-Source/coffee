@@ -94,7 +94,7 @@ public class XsdHelper implements IXsdHelper {
         }
         Schema schema = xsdCache.get(xsd);
         if (schema == null) {
-            InputStream stream = this.getClass().getClassLoader().getResourceAsStream(xsd);
+            InputStream stream = Thread.currentThread().getContextClassLoader().getResourceAsStream(xsd);
             if (stream == null) {
                 throw new XsdProcessingException(CoffeeFaultType.OPERATION_FAILED, "cannot find schema to validate");
             }

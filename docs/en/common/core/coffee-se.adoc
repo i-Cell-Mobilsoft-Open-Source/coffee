@@ -1,0 +1,6 @@
+[#common_core_coffee-se]
+= coffee-se
+
+The purpose of this module is to collect classes that are as independent as possible from the Jakarta EE API.
+
+include::coffee-se/coffee-se-logging.adoc[leveloffset=+1]

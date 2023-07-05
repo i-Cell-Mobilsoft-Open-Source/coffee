@@ -1,0 +1,144 @@
+[#howto_xsd-xml-validation-depend-on-version]
+= XML XSD version dependent validation
+
+Implementation of incoming xml validation depending on different xsd versions.
+
+== Version dependent validation outside Coffee in projects
+
+Example of how to use validation:
+The annotated endpoint:
+[source,java]
+----
+public interface ISampleService {
+
+    @POST
+    @Path("/customer/sample")
+    @Consumes(value = { MediaType.TEXT_XML, MediaType.APPLICATION_XML })
+    @Produces(value = { MediaType.TEXT_XML, MediaType.APPLICATION_XML })
+    @LogSpecifier(maxResponseEntityLogSize = LogSpecifier.NO_LOG)
+    SampleResponse postSampleRequest(
+        @ValidateXMLs({
+            @ValidateXML(version = @Version(include = @Range(from = "1.0", to = "1.9")), xsdPath = ""),
+            @ValidateXML(version = @Version(include = @Range(from = "1.10")), xsdPath = "xsd_wsdl/hu/icellmobilsoft/sample/1.0/sample.xsd")
+        }) SampleRequest sampleRequest) throws BaseException;
+----
+or for example:
+[source,java]
+----
+public interface ISampleService {
+
+    @POST
+    @Path("/customer/sample")
+    @Consumes(value = { MediaType.TEXT_XML, MediaType.APPLICATION_XML })
+    @Produces(value = { MediaType.TEXT_XML, MediaType.APPLICATION_XML })
+    @LogSpecifier(maxResponseEntityLogSize = LogSpecifier.NO_LOG)
+    SampleResponse postSampleRequest(
+        @ValidateXML(version = @Version(include = @Range(from = "1.10")), xsdPath = "xsd_wsdl/hu/icellmobilsoft/sample/1.0/sample.xsd") SampleRequest sampleRequest) throws BaseException;
+----
+or for example:
+[source,java]
+----
+public interface ISampleService {
+
+    @POST
+    @Path("/customer/sample")
+    @Consumes(value = { MediaType.TEXT_XML, MediaType.APPLICATION_XML })
+    @Produces(value = { MediaType.TEXT_XML, MediaType.APPLICATION_XML })
+    @LogSpecifier(maxResponseEntityLogSize = LogSpecifier.NO_LOG)
+    SampleResponse postSampleRequest(
+        @ValidateXML(xsdPath = "xsd_wsdl/hu/icellmobilsoft/sample/1.0/sample.xsd") SampleRequest sampleRequest) throws BaseException;
+----
+
+== Also prepare the providers
+
+We need one for the XML
+[source,java]
+----
+@Provider
+@Consumes({MediaType.APPLICATION_XML, MediaType.TEXT_XML})
+@Priority(Priorities.ENTITY_CODER)
+public class XMLRequestMessageBodyReader extends XmlMessageBodyReaderBase<BasicRequestType> {
+
+}
+----
+
+Another one for JSON
+[source,java]
+----
+@Provider
+@Consumes({ MediaType.APPLICATION_JSON })
+@Priority(Priorities.ENTITY_CODER)
+public class JsonRequestMessageBodyReader extends JsonMessageBodyReaderBase<BaseRequestType> {
+
+}
+----
+
+The JSON XSD validation is done by converting the inputStream to a DTO using the JSON parser
+(which is returned by the provider for further business logic processing),
+and then run an XML marshaller with XSD enabled on it to validate it.
+If errors occur during this process, they are handled at provider level.
+Then everything is done with the errors as with the XML validation.
+
+== If you want to use your own LSResourceResolver
+
+We need to implement the IXsdResourceResolver interface (with @Alternative annotation).
+Then we need to register the alternative class in beans.xml e.g.:
+[source,xml]
+----
+<alternatives>
+    <class>hu.icellmobilsoft.sample.xmlvalidation.xmlutils.ProjectXsdResourceResolver</class>
+</alternatives>
+----
+You can also use your own implementations of XsdHelper (IXsdHelper), XmlRequestVersionReader (IXmlRequestVersionReader), XsdValidationErrorCollector (IXsdValidationErrorCollector).
+
+== Troubleshooting at project level
+Our ExceptionMapper implementation may also be complementary:
+[source,java]
+----
+    private Response handleException(Exception e, ReasonCodeType reasonCode, FunctionCodeType functionCode) {
+        if (e instanceof XsdProcessingExceptionWrapper) {
+            XsdProcessingExceptionWrapper processingException = (XsdProcessingExceptionWrapper) e;
+            if (processingException.getCause() instanceof XsdProcessingException) {
+                XsdProcessingException xsdEx = (XsdProcessingException) processingException.getCause();
+                return restExceptionMapper.toResponse(xsdEx);
+            }
+        }
+
+
+    public Response toResponse(BaseException e) {
+        ...
+        } else if (e instanceof XsdProcessingException) {
+            TechnicalFault f = new TechnicalFault();
+            // getLocalizedMessage-ben osszeszedjuk a hibakat
+            f.setMsg(HandleXsdProcessingException.generateDetailedMessage((XsdProcessingException) e));
+            f.setReasonCode(ReasonCodeType.INVALID_REQUEST);
+            f.setFuncCode(FunctionCodeType.ERROR);
+            return Response.status(Response.Status.BAD_REQUEST).entity(f).build();
+
+----
+
+Here's what else to watch out for: all XSD errors are returned by Coffee.
+These should be extracted separately, e.g. like this:
+[source,java]
+----
+public static String generateDetailedMessage(XsdProcessingException invalidRequestException) {
+       if (invalidRequestException == null) {
+           return null;
+       }
+       StringBuilder msg = new StringBuilder();
+       for (XMLValidationError xmlValidationError : invalidRequestException.getErrors()) {
+           if (xmlValidationError != null) {
+               if (msg.length() > 0) {
+                   msg.append('\n');
+               }
+               msg.append(xmlValidationError.getField()).append(" - ").append(xmlValidationError.getError());
+           }
+       }
+
+	return msg.length() > 0 ? invalidRequestException.getLocalizedMessage() + " errors:\n" + msg.toString() : invalidRequestException.getLocalizedMessage();
+}
+----
+== If there has been no XSD validation so far
+
+... and you want to handle the transition period (the old version does not validate, the new one does).
+Then give schemaPath an empty ("") String.

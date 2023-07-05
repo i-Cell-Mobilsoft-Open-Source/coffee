@@ -1,0 +1,14 @@
+[#common_module_coffee-module-notification]
+= coffee-module-notification
+
+Module for central management of notifications (email, push notification,...).
+
+The module can be tightly coupled with the coffee-module-document module, from which it collects the messages and texts to be sent.
+It not only handles the sending, but also stores who sent what, to whom, when and what.
+Currently it can handle these notifications:
+
+* email
+* push notification
+
+Includes a generic DTO submodule (optional) with predefined
+communication objects.

@@ -1,0 +1,51 @@
+= v2.0.0 → v2.1.0
+
+coff:ee v2.0.0 -> v2.1.0 migrációs leírás, újdonságok, változások leírása
+
+== Újdonságok
+
+Bevezetésre került a https://grpc.io/[gRPC] támogatása.
+Ennek köszönhetően létrejöt új subprojekt gyűjtő `coffee-grpc` néven.
+
+=== coffee-grpc
+Következő funkció támogatások kerültek a rendszerbe:
+
+* coffee-grpc-api - Általános gRPC kezelés Coff:ee API (annotációk, verzió, ...)
+* coffee-grpc-base - protobuf és gRPC stub általános gyűjtője
+* coffee-grpc-protoc - proto -> class generálás támogatása
+* coffee-dto/coffee-dto-xsd2proto - Generált proto fájlok ami a `coffee-dto-xsd` XSD fájlokból vannak generálva.
+* coffee-dto/coffee-dto-stub-gen - Generált osztályok a Coff:ee proto fajlokból
+* coffee-grpc-server-extension - CDI gRPC szerver implementáció támogatása
+* coffee-grpc-client-extension - CDI gRPC client implementáció támogatása
+* coffee-grpc-traces-api - Coffee tracing API (annotációk...)
+* coffee-grpc-opentracing-impl - gRPC https://github.com/eclipse/microprofile-opentracing[microprofile-opentracing] implementáció
+
+== Változások
+
+=== coffee-module-etcd
+
+** Bump io.etcd:jetcd-core 0.6.1 -> 0.7.5
+
+==== Átállás
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+=== coffee-rest
+
+* Bevezetésre került az `OptimisticLockException`, alapértelmezetten `CoffeeFaultType.OPTIMISTIC_LOCK_EXCEPTION` hibakóddal.
+* Átalakításra került a `DefaultBaseExceptionMapper` osztályban a hibakezelés:
+* Üzleti hiba - BusinessException esetén 422 státuszkódot adunk az eddigi 500 státuszkód helyett.
+* Technikai hiba - OptimisticLockException esetén 518 státuszkódot adunk az eddigi 500 státuszkód helyett.
+
+==== Átállás
+
+* Az eddigi exception státuszkód kezelés megtartásához a projekteken saját ExceptionMapper létrehozása szükséges.
+
+== BatchService
+
+** Már a natív insert/update metódusok is (batchMergeNative, batchInsertNative, batchUpdateNative) figyelembe veszik az insertable és updateable flag-eket.
+
+==== Átállás
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+

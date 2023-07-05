@@ -1,0 +1,50 @@
+= v2.0.0 → v2.1.0
+
+coff:ee v2.0.0 -> v2.1.0 migration description, news, changes
+
+== What's new
+
+THe gRPC support has been introduced. 
+Thanks to this, a new subproject collector named `coffee-grpc` was created.
+
+=== coffee-grpc
+The following feature supports have been added to the system:
+
+* `coffee-grpc-api`: General gRPC handling for the Coff:ee API, including annotations and versioning.
+* `coffee-grpc-base`: Collector of protobuf and gRPC stubs for general usage.
+* `coffee-grpc-protoc`: Support for generating classes from proto files.
+* `coffee-dto/coffee-dto-xsd2proto`: Generated proto files generated from the `coffee-dto-xsd` XSD files.
+* `coffee-dto/coffee-dto-stub-gen`: Generated classes from Coff:ee proto files.
+* `coffee-grpc-server-extension` - Support for CDI gRPC server implementation.
+* `coffee-grpc-client-extension` - Support for CDI gRPC client implementation.
+* `coffee-grpc-traces-api` - Coffee tracing API (annotations...)
+* `coffee-grpc-opentracing-impl` - gRPC https://github.com/eclipse/microprofile-opentracing[microprofile-opentracing] implementation
+
+== Changes
+
+=== coffee-module-etcd
+
+** Bump io.etcd:jetcd-core 0.6.1 -> 0.7.5
+
+==== Migration
+
+Changes do not result in migration work, backwards compatible.
+
+== coffee-rest
+
+* An `OptimisticLockException` has been introduced, with the default error code `CoffeeFaultType.OPTIMISTIC_LOCK_EXCEPTION`.
+* The error handling in the `DefaultBaseExceptionMapper` class has been redesigned:
+* Business error - for BusinessException, a status code of 422 is given instead of the previous 500 status codes.
+* For a technical error - OptimisticLockException, a status code of 518 is given instead of the previous 500 status codes.
+
+==== Migration
+
+* To keep the exception status code handling as before, it is necessary to create a separate ExceptionMapper on projects.
+
+== BatchService
+
+** Even the native insert/update methods (batchMergeNative, batchInsertNative, batchUpdateNative) take the insertable and updateable flags into account.
+
+==== Migration
+
+Changes do not result in migration work, backwards compatible.

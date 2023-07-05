@@ -1,0 +1,231 @@
+[#common_core_coffee-grpc]
+= coffee-grpc
+
+Modul célja a gRPC kommunikáció és a kezelés támogatása.
+
+== coffee-grpc-api
+Általános gRPC kezelés Coff:ee API (annotációk, verzió, ...) gyűjtője.
+
+== coffee-grpc-base
+Protobuf és gRPC általános osztályok gyűjtője.
+Tartalma exception, státusz kezelés és egyéb CDI, Coff:ee általános funkciók.
+
+.ExceptionMapper és ExceptionHandler
+Generikus ExceptionMapper interface JAX-RS mintára,
+adott Exception típus grpc Status-ra konvertálását teszi lehetővé a CDI adta lehetőségeket kihasználva.
+
+== coffee-grpc-protoc
+Segéd tool ami a proto -> class generálására szolgál.
+A logika https://mustache.github.io/[mustache] template rendszert használja fel,
+ami a `com.salesforce.jprotoc.ProtocPlugin` rendszerbn fog szerepelni.
+
+.pom.xml minta felhasználása
+[source,xml]
+----
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.github.os72</groupId>
+                <artifactId>protoc-jar-maven-plugin</artifactId>
+                <configuration>
+...
+                    <outputTargets>
+...
+                        <outputTarget>
+                            <type>grpc-coffee</type>
+                            <pluginArtifact>hu.icellmobilsoft.coffee:coffee-grpc-protoc:${version.hu.icellmobilsoft.coffee}</pluginArtifact>
+                        </outputTarget>
+                    </outputTargets>
+                </configuration>
+...
+            </plugin>
+        </plugins>
+    </build>
+----
+Komplexebb minta a https://github.com/i-Cell-Mobilsoft-Open-Source/backend-sampler[backend-sampler]
+projektben https://github.com/i-Cell-Mobilsoft-Open-Source/backend-sampler/blob/main/api/api-grpc/api-grpc-stub-gen/pom.xml[található]. 
+
+== gRPC Server (coffee-grpc-server-extension)
+Modul egy gRPC szerver CDI kompatibilis implementaciója.
+
+Felolvas minden `IGrpcService` implementáló osztályt
+és delegálja a `GrpcServerManager`-en keresztül a gRPC servicebe.
+
+Implementált funkciók:
+
+* gRPC szerver konfiguráció, https://github.com/grpc/grpc-java/blob/master/netty/src/main/java/io/grpc/netty/NettyServerBuilder.java[NettyServerBuilder] alapon
+* MDC kezelés
+* Request/Response log
+* Exception kezelés
+
+=== Szerver thread pool
+A gRPC server fontos része a szál kezelés.
+Erre 2 megoldás készült:
+
+* `ThreadPoolExecutor` - default thread pool:
+** Kezelése `coffee.grpc.server.threadpool.default` konfiguráción keresztül
+* `ManagedExecutorService` - jakartaEE managed thread pool:
+** Szerver által kezelt thread pool, context propagation support
+
+.gRPC server configuration
+[source,yaml]
+----
+coffee:
+  grpc:
+    server:
+      port: 8199 # default 8199
+      maxConnectionAge: 60000000 # nano seconds, default Long.MAX_VALUE
+      maxConnectionAgeGrace: 60000000 # nano seconds, default Long.MAX_VALUE
+      maxInboundMessageSize: 4194304 # Byte, defult 4 * 1024 * 1024 (4MiB)
+      maxInboundMetadataSize: 8192 # Byte, default 8192 (8KiB)
+      maxConnectionIdle: 60000000 # nano seconds, default Long.MAX_VALUE
+      keepAliveTime: 5 # minutes, default 5
+      keepAliveTimeout: 20 # seconds, default 20
+      permitKeepAliveTime: 5 # minutes, default 5
+      permitKeepAliveWithoutCalls: false # default false
+      threadPool:
+        default:
+          corePoolSize: 64 # default 32
+          maximumPoolSize: 64 # default 32
+          keepAliveTime: 60000 # milliseconds, default 0
+        jakarta:
+          active: true # default false <1>
+----
+<1> if `true` then `coffee.grpc.server.threadpool.default` ignored
+
+Minta alkalmazás: https://github.com/i-Cell-Mobilsoft-Open-Source/backend-sampler/tree/main/sample/sample-grpc-server-service[sample-grpc-server-service]
+
+== gRPC client (coffee-grpc-client-extension)
+Támogatást tartalmaz egy gRPC kliens megvalósítására.
+Ezek közé tartozik:
+
+* Konfiguráció kezelés
+* Request logolás
+* Response logolás
+
+.gRPC client configuration
+[source,yaml]
+----
+coffee:
+  grpc:
+    client:
+      _configKey_:
+        host: localhost # default localhost
+        port: 8199 # default 8199
+----
+
+.CDI inject DummyServiceGrpc haszálata
+----
+@Inject
+@GrpcClient(configKey = "_configKey_") //<1>
+private DummyServiceGrpc.DummyServiceBlockingStub dummyGrpcService; //<2>
+
+...
+DummyResponse helloResponse = dummyGrpcService.getDummy(dummyRequest); //<3>
+...
+----
+<1> Konfigurációs kulcs a csatlakozási paraméterekről (pl. szerver host és port)
+<2> Generált service Stub
+<3> gRPC service hívás
+
+== gRPC Metrics
+gRPC szerver és kliens opcionálisan aktiválhat interceptorokat metrika adatok szolgáltatására.
+Ehhez csak a maven dependency bekötése szükséges:
+
+.enable gRPC server https://github.com/eclipse/microprofile-metrics[microprofile-metrics] implementation
+[source,xml]
+----
+<dependency>
+    <groupId>hu.icellmobilsoft.coffee</groupId>
+    <artifactId>coffee-grpc-server-extension</artifactId>
+</dependency>
+<dependency>
+    <groupId>hu.icellmobilsoft.coffee</groupId>
+    <artifactId>coffee-grpc-metrics-impl</artifactId>
+</dependency>
+----
+
+.enable gRPC client https://github.com/eclipse/microprofile-metrics[microprofile-metrics] implementation
+[source,xml]
+----
+<dependency>
+    <groupId>hu.icellmobilsoft.coffee</groupId>
+    <artifactId>coffee-grpc-client-extension</artifactId>
+</dependency>
+<dependency>
+    <groupId>hu.icellmobilsoft.coffee</groupId>
+    <artifactId>coffee-grpc-metrics-impl</artifactId>
+</dependency>
+----
+
+Ha nincs dependency szinten bekötve az adott metrika modul akkor a szerver/kliens működés az eredeti,
+csak nem szolgáltat metrika adatot.
+
+Szolgáltatott metrikák: 
+
+* gRPC szerver
+** fogadott request számláló
+** válaszolt response számláló
+** request-response feldolgozás másodpercben
+* gRPC kliens
+** elküldött request számláló
+** válaszolt response számláló
+** request-response feldolgozás másodpercben
+
+== gRPC Tracing
+gRPC szerver és kliens opcionálisan aktiválhat interceptorokat tracing adatok szolgáltatására.
+Ehhez csak a maven dependency bekötése szükséges:
+
+.enable gRPC server https://github.com/eclipse/microprofile-opentracing[microprofile-opentracing] implementation
+[source,xml]
+----
+<dependency>
+    <groupId>hu.icellmobilsoft.coffee</groupId>
+    <artifactId>coffee-grpc-server-extension</artifactId>
+</dependency>
+<dependency>
+    <groupId>hu.icellmobilsoft.coffee</groupId>
+    <artifactId>coffee-grpc-opentracing-impl</artifactId>
+</dependency>
+----
+
+.enable gRPC client https://github.com/eclipse/microprofile-opentracing[microprofile-opentracing] implementation
+[source,xml]
+----
+<dependency>
+    <groupId>hu.icellmobilsoft.coffee</groupId>
+    <artifactId>coffee-grpc-client-extension</artifactId>
+</dependency>
+<dependency>
+    <groupId>hu.icellmobilsoft.coffee</groupId>
+    <artifactId>coffee-grpc-opentracing-impl</artifactId>
+</dependency>
+----
+
+Ha nincs dependency szinten bekötve az adott trasing modul akkor a szerver/kliens működés az eredeti,
+csak nem szolgáltat tracing adatot.
+
+== coffee-dto/coffee-dto-xsd2proto
+Coff:ee általános XSD leírók (`coffee-dto-xsd` modul) schema2proto generált
+és egyéb kézi proto fájlok gyűjtője. 
+Ezt a csomag szolgál a Coff:ee proto fájlok használatához,
+hogy a projektek ne generálják újea a Coff:ee proto fájlokat.
+
+Sajnos a használt schema2proto plugin nem kompatibilis a Windows operációs rendszerrel,
+ezért nem automata kompilációs generálás van beállítva.
+Ha változás van a XSD fájlokon akkor Linux kompatibilis rendszren kell kiadni a következő parancsot:
+
+[source,bash]
+----
+mvn clean install -Dschema2proto -Dcopy-generated-sources
+----
+Ahol a `schema2proto` paraméter aktiválja az XSD -> proto generálást,
+majd a `copy-generated-sources` paraméter aktiválja a generált proto fájlok bemásolását a források közé.
+Ezután a git diff-ben megjelenik a változás.
+
+
+== coffee-dto/coffee-dto-stub-gen
+Minden Coff:ee proto fájl és generált osztályai.
+Plugin generál egy interface leírót, amit full CDI környezetben tudunk implementálni.
+Valamint egy BindableService implementációt,
+ami az interface CDI implementációjának delegálja a grpc hívásokat.

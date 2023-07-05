@@ -248,24 +248,21 @@ public class BatchService {
             MappingMetamodelImplementor metamodel = sfi.getMappingMetamodel();
             SingleTableEntityPersister persister = (SingleTableEntityPersister) metamodel.getEntityDescriptor(clazz);
 
-            String[] names = persister.getPropertyNames();
+            String[] entityFieldNames = getEntityFieldNamesForUpdate(persister);
 
             Update u = new Update(sfi.getJdbcServices().getDialect());
             u.setPrimaryKeyColumnNames(persister.getIdentifierColumnNames());
             u.setTableName(persister.getTableName());
             u.setVersionColumnName(persister.getVersionColumnName());
-            for (String name : names) {
+            for (String name : entityFieldNames) {
                 u.addColumns(persister.getPropertyColumnNames(name));
             }
             // where column automatan belekerul
-            // u.addWhereColumn(persister.getIdentifierColumnNames()[0]);
-            // u.addWhereColumn(persister.getVersionColumnName());
 
             dbTimeZone = sfi.getSessionFactoryOptions().getJdbcTimeZone();
 
             String sql = u.toStatementString() + StringUtils.defaultString(getSqlPostfix());
 
-            // String sql = update.toString();
             log.debug("Running update:\n[{0}]", sql);
 
             session.doWork(connection -> {
@@ -280,7 +277,7 @@ public class BatchService {
                         handleUpdateAudit(entity);
 
                         // klasszikus parameter betoltesek: ps.setLong(1, entity.getVersion() + 1);
-                        setParametersForUpdate(ps, persister, entity);
+                        setParametersForUpdate(ps, persister, entity, entityFieldNames);
                         ps.addBatch();
 
                         // ezt az entitast ki kell szedni az entityManagerbol,
@@ -319,6 +316,27 @@ public class BatchService {
     }
 
     /**
+     * Visszaadja a módosítható entitás mezők neveit tömbben.
+     *
+     * @param persister
+     *            {@link SingleTableEntityPersister}
+     * @return módosítható entitás mezők nevei tömb
+     */
+    protected String[] getEntityFieldNamesForUpdate(SingleTableEntityPersister persister) {
+        String[] allPropertyNames = persister.getPropertyNames();
+        boolean[] propertiesToUpdate = persister.getPropertyUpdateability();
+
+        List<String> entityFieldnameList = new ArrayList<>();
+        for (int i = 0; i < propertiesToUpdate.length; i++) {
+            if (propertiesToUpdate[i]) {
+                entityFieldnameList.add(allPropertyNames[i]);
+            }
+        }
+
+        return entityFieldnameList.stream().toArray(String[]::new);
+    }
+
+    /**
      * Klasszikus PreparedStatement alapon mukododo batch insert mentes. A SQL osszeallitasara a hibernate dolgai vannak felhasznalva, de a futas mar
      * klasszikusan folyik. Nagyon gyors a mentes, kicsi memoria hasznalattal
      *
@@ -350,14 +368,12 @@ public class BatchService {
 
             MappingMetamodelImplementor metamodel = sfi.getMappingMetamodel();
             SingleTableEntityPersister persister = (SingleTableEntityPersister) metamodel.getEntityDescriptor(clazz);
-            String[] names = persister.getPropertyNames();
+            String[] entityFieldNames = getEntityFieldNamesForInsert(persister);
 
-            // IdentifierGenerator ig = persister.getEntityMetamodel().getIdentifierProperty().getIdentifierGenerator();
             Insert insert = new Insert(sfi.getJdbcServices().getDialect());
             insert.setTableName(persister.getTableName());
             insert.addColumn(persister.getRootTableKeyColumnNames()[0], "?");
-            // insert.addIdentityColumn(persister.getIdentifierColumnNames()[0]);
-            for (String name : names) {
+            for (String name : entityFieldNames) {
                 insert.addColumns(persister.getPropertyColumnNames(name));
             }
 
@@ -377,7 +393,7 @@ public class BatchService {
                         handleInsertAudit(entity);
 
                         // klasszikus parameter betoltesek: ps.setLong(1, entity.getVersion() + 1);
-                        setParametersForInsert(ps, persister, entity);
+                        setParametersForInsert(ps, persister, entity, entityFieldNames);
                         ps.addBatch();
 
                         // mivel {batchSize} csomagokban hajtjuk vegre a muveletet, meg kell jelolnunk azokat az entitasokat amiken vegigmegyunk
@@ -409,6 +425,26 @@ public class BatchService {
         } finally {
             log.debug("<< batchInsertNative: [{0}] list of [{1}] elements", entityName, entities.size());
         }
+    }
+
+    /**
+     * Visszaadja a beszúrható entitás mezők neveit tömbben.
+     *
+     * @param persister
+     *            {@link SingleTableEntityPersister}
+     * @return beszúrható entitás mezők nevei tömb
+     */
+    protected String[] getEntityFieldNamesForInsert(SingleTableEntityPersister persister) {
+        String[] allPropertyNames = persister.getPropertyNames();
+        boolean[] propertiesToInsert = persister.getPropertyInsertability();
+        List<String> entityFieldnameList = new ArrayList<>();
+        for (int i = 0; i < propertiesToInsert.length; i++) {
+            if (propertiesToInsert[i]) {
+                entityFieldnameList.add(allPropertyNames[i]);
+            }
+        }
+
+        return entityFieldnameList.stream().toArray(String[]::new);
     }
 
     /**
@@ -506,10 +542,13 @@ public class BatchService {
      *            - persister
      * @param entity
      *            - modositani kivant entitas
+     * @param entityFieldNames
+     *            - entitas field nevek tomb
      * @throws SQLException
      *             exception
      */
-    protected <E> void setParametersForUpdate(PreparedStatement ps, SingleTableEntityPersister persister, E entity) throws SQLException {
+    protected <E> void setParametersForUpdate(PreparedStatement ps, SingleTableEntityPersister persister, E entity, String[] entityFieldNames)
+            throws SQLException {
         int i = 1;
 
         // Update version
@@ -517,8 +556,7 @@ public class BatchService {
         Object newVersion = persister.getVersionJavaType().next(oldVersion, null, null, null, null);
         persister.setPropertyValue(entity, persister.getVersionProperty(), newVersion);
 
-        for (String name : persister.getPropertyNames()) {
-            // remeljuk az index es a persister.getPropertyNames() osszhangban van
+        for (String name : entityFieldNames) {
             int index = persister.getPropertyIndex(name);
             Object value = persister.getPropertyValue(entity, index);
             Type type = persister.getPropertyType(name);
@@ -541,10 +579,13 @@ public class BatchService {
      *            - persister
      * @param entity
      *            - beszurni kivant entitas
+     * @param entityFieldNames
+     *            - entitas field nevek tomb
      * @throws SQLException
      *             exception
      */
-    protected <E> void setParametersForInsert(PreparedStatement ps, SingleTableEntityPersister persister, E entity) throws SQLException {
+    protected <E> void setParametersForInsert(PreparedStatement ps, SingleTableEntityPersister persister, E entity, String[] entityFieldNames)
+            throws SQLException {
         int i = 1;
 
         // elso a PK
@@ -560,8 +601,7 @@ public class BatchService {
         Object version = persister.getVersionJavaType().seed(null, null, null, null);
         persister.setPropertyValue(entity, persister.getVersionProperty(), version);
 
-        for (String name : persister.getPropertyNames()) {
-            // remeljuk az index es a persister.getPropertyNames() osszhangban van
+        for (String name : entityFieldNames) {
             int index = persister.getPropertyIndex(name);
             Object value = persister.getPropertyValue(entity, index);
             Type type = persister.getPropertyType(name);

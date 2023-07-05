@@ -1,0 +1,19 @@
+= v1.13.0 → v1.14.0
+
+coff:ee v1.13.0 -> v1.14.0 migration description, new features, changes
+
+== What's new
+
+No new features have been implemented in this version.
+
+== Changes
+
+
+=== coffee-jpa
+
+* `BaseService` `repositoryFailed` method `java.lang.IllegalArgumentException: can't parse argument number: explicit` caused an error for `org.hibernate.QueryException` with a message containing a bracket (e.g. `fetched association was not present in the select list [FromElement{explicit,not a collection join`). The `MessageFormat.format` detected that there was a parameter placeholder and tried to insert a value in its place.
+The error was handled by adding a new param placeholder with a local value of `params.length` to the message and appending the value of the Exception `getLocalizedMessage` to the original parameter array.
+
+==== Migration
+
+The changes do not result in any migration work, it is backwards compatible.

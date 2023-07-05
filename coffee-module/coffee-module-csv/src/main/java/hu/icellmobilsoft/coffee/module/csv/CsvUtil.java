@@ -134,7 +134,7 @@ public class CsvUtil {
         }
         StringWriter sw = new StringWriter();
         CSVWriter csvWriter = new CSVWriter(sw, DEFAULT_SEPARATOR, ICSVWriter.DEFAULT_QUOTE_CHARACTER, ICSVWriter.DEFAULT_ESCAPE_CHARACTER,
-                ICSVWriter.DEFAULT_LINE_END);
+                System.lineSeparator());
         StatefulBeanToCsv<T> bc = new StatefulBeanToCsv<>(initMappingStrategy(mappingStrategy, clazz), new ExceptionHandlerThrow(), true, csvWriter,
                 new ArrayListValuedHashMap<>(), null);
 

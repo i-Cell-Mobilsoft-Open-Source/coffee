@@ -1,0 +1,104 @@
+[#common_core_coffee-grpc]
+= coffee-grpc
+
+The purpose of this module is to support gRPC communication and handling.
+
+== coffee-grpc-api
+A collector for general gRPC handling of the Coff:ee API (annotations, version, ...).
+
+== coffee-grpc-base
+A collector for general Protobuf and gRPC classes. It includes exception handling, status handling, and other general CDI (Contexts and Dependency Injection) and Coff:ee functionalities.
+
+.ExceptionMapper and ExceptionHandler
+A generic ExceptionMapper interface following the JAX-RS pattern. It allows converting a specific Exception type to a gRPC Status using the capabilities provided by CDI.
+
+== coffee-grpc-protoc
+A helper tool used for proto -> class generation. The logic utilizes the https://mustache.github.io/[Mustache] template system, which will be present in the `com.salesforce.jprotoc.ProtocPlugin` system.
+
+Example usage in a pom.xml:
+[source,xml]
+----
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.github.os72</groupId>
+                <artifactId>protoc-jar-maven-plugin</artifactId>
+                <configuration>
+...
+                    <outputTargets>
+...
+                        <outputTarget>
+                            <type>grpc-coffee</type>
+                            <pluginArtifact>hu.icellmobilsoft.coffee:coffee-grpc-protoc:${version.hu.icellmobilsoft.coffee}</pluginArtifact>
+                        </outputTarget>
+                    </outputTargets>
+                </configuration>
+...
+            </plugin>
+        </plugins>
+    </build>
+----
+A more complex example can be found in the https://github.com/i-Cell-Mobilsoft-Open-Source/backend-sampler[backend-sampler] project's https://github.com/i-Cell-Mobilsoft-Open-Source/backend-sampler/blob/main/api/api-grpc/api-grpc-stub-gen/pom.xml[pom.xml].
+
+== coffee-grpc-server-extension
+Module containing a CDI-compatible implementation of a gRPC server.
+
+It reads all classes implementing `IGrpcService` and delegates them to the gRPC service through the `GrpcServerManager`.
+
+Implemented features:
+
+* gRPC server configuration based on https://github.com/grpc/grpc-java/blob/master/netty/src/main/java/io/grpc/netty/NettyServerBuilder.java[NettyServerBuilder]
+* MDC (Mapped Diagnostic Context) handling
+* Request/Response log
+* Exception handling
+
+=== Server thread pool
+The thread handling is an important part of the gRPC server. Two solutions have been implemented:
+
+* `ThreadPoolExecutor` - default thread pool:
+** Configurable through the `coffee.grpc.server.threadpool.default` configuration.
+* `ManagedExecutorService` - Jakarta EE managed thread pool:
+** A thread pool managed by the server, with context propagation support.
+
+.gRPC server configuration
+[source,yaml]
+----
+coffee:
+  grpc:
+    server:
+      port: 8199 # default 8199
+      maxConnectionAge: 60000000 # nano seconds, default Long.MAX_VALUE
+      maxConnectionAgeGrace: 60000000 # nano seconds, default Long.MAX_VALUE
+      maxInboundMessageSize: 4194304 # Bytes, default 4 * 1024 * 1024 (4MiB)
+      maxInboundMetadataSize: 8192 # Bytes, default 8192 (8KiB)
+      maxConnectionIdle: 60000000 # nano seconds, default Long.MAX_VALUE
+      keepAliveTime: 5 # minutes, default 5
+      keepAliveTimeout: 20 # seconds, default 20
+      permitKeepAliveTime: 5 # minutes, default 5
+      permitKeepAliveWithoutCalls: false
+
+ # default false
+      threadPool:
+        default:
+          corePoolSize: 64 # default 32
+          maximumPoolSize: 64 # default 32
+          keepAliveTime: 60000 # milliseconds, default 0
+        jakarta:
+          active: true # default false <1>
+----
+<1> if `true`, then `coffee.grpc.server.threadpool.default` is ignored.
+
+
+== coffee-dto/coffee-dto-xsd2proto
+A collector of generated schema2proto for general XSD descriptors (`coffee-dto-xsd` module) and other manually created proto files. This package serves to use Coff:ee proto files, so projects don't need to generate them again.
+
+Unfortunately, the used schema2proto plugin is not compatible with the Windows operating system, so automatic compilation generation is not set. If there are any changes to the XSD files, the following command needs to be executed on a Linux-compatible system:
+
+[source,bash]
+----
+mvn clean install -Dschema2proto -Dcopy-generated-sources
+----
+The `schema2proto` parameter activates XSD -> proto generation, and the `copy-generated-sources` parameter activates copying the generated proto files into the sources. Afterward, the changes will appear in the git diff.
+
+== coffee-dto/coffee-dto-stub-gen
+Contains all Coff:ee proto files and their generated classes. The plugin generates an interface descriptor that can be implemented in a full CDI environment. It also generates a BindableService implementation that delegates gRPC calls to the implemented interface.

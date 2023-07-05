@@ -1,0 +1,13 @@
+= v1.8.0 → v1.8.1
+
+coff:ee v1.8.0 -> v1.8.1 migration description, new features, changes
+
+== Changes
+
+=== General
+
+=== coffee-model-base
+* Common generic interface fix for 2 `AbstractIdentifiedAuditEntity` classes (based on `java.util.Date` and `OffsetDateTime`) due to jackson deserialization bug. Separated `IAuditEntity` and `IIdentifiedEntity` interfaces.
+
+==== Migration
+Changes do not result in migration work, backwards compatible.

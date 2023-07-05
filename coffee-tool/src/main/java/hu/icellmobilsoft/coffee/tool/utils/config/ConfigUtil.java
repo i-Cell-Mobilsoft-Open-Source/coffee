@@ -54,7 +54,7 @@ public class ConfigUtil {
     private Config config;
 
     private ConfigUtil() {
-        config = ConfigProviderResolver.instance().getBuilder().forClassLoader(ConfigUtil.class.getClassLoader()).addDefaultSources().build();
+        config = ConfigProviderResolver.instance().getBuilder().forClassLoader(Thread.currentThread().getContextClassLoader()).addDefaultSources().build();
     }
 
     /**
