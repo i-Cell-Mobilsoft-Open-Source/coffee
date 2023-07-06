@@ -25,6 +25,7 @@ Következő funkció támogatások kerültek a rendszerbe:
 === coffee-module-etcd
 
 ** Bump io.etcd:jetcd-core 0.6.1 -> 0.7.5
+** `DefaultEtcdConfigImpl` több classloader esetén nem találta a microprofile-config.properties-ben felvett értékeket.
 
 ==== Átállás
 

@@ -25,6 +25,7 @@ The following feature supports have been added to the system:
 === coffee-module-etcd
 
 ** Bump io.etcd:jetcd-core 0.6.1 -> 0.7.5
+** In case of multiple classloaders, the `DefaultEtcdConfigImpl` class was unable to find the values defined in the microprofile-config.properties file.
 
 ==== Migration
 
