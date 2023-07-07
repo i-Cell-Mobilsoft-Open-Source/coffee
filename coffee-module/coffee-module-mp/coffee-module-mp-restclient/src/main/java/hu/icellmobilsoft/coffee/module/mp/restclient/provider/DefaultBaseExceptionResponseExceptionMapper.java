@@ -63,6 +63,7 @@ public class DefaultBaseExceptionResponseExceptionMapper implements ResponseExce
             restClientResponseException.setClassName(dto.getClassName());
             restClientResponseException.setException(dto.getException());
             restClientResponseException.setService(dto.getService());
+            restClientResponseException.setStatusCode(responseStatus);
             return restClientResponseException;
         }
         return new TechnicalException(CoffeeFaultType.OPERATION_FAILED,

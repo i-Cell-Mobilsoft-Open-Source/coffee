@@ -29,7 +29,16 @@ The following feature supports have been added to the system:
 
 ==== Migration
 
-Changes do not result in migration work, backwards compatible.
+Changes are backwards compatible doesnt need any migration.
+
+
+=== coffee-module-mp-restclient
+
+** The `DefaultBaseExceptionResponseExceptionMapper` sets the HTTP status code in the `RestClientResponseException` 
+
+==== Migration
+
+Changes are backwards compatible doesnt need any migration.
 
 == BatchService
 
@@ -37,4 +46,4 @@ Changes do not result in migration work, backwards compatible.
 
 ==== Migration
 
-Changes do not result in migration work, backwards compatible.
+Changes are backwards compatible doesnt need any migration.
