@@ -25,6 +25,7 @@ Következő funkció támogatások kerültek a rendszerbe:
 === coffee-module-etcd
 
 ** Bump io.etcd:jetcd-core 0.6.1 -> 0.7.5
+** `DefaultEtcdConfigImpl` több classloader esetén nem találta a microprofile-config.properties-ben felvett értékeket.
 
 ==== Átállás
 
@@ -41,7 +42,15 @@ A változtatások nem eredményeznek átállási munkálatokat, visszafelé komp
 
 * Az eddigi exception státuszkód kezelés megtartásához a projekteken saját ExceptionMapper létrehozása szükséges.
 
-== BatchService
+=== coffee-module-mp-restclient
+
+** A `DefaultBaseExceptionResponseExceptionMapper` beállítja a HTTP státusz kódot a `RestClientResponseException`-ben 
+
+==== Átállás
+
+* Az eddigi exception státuszkód kezelés megtartásához a projekteken saját ExceptionMapper létrehozása szükséges.
+
+=== BatchService
 
 ** Már a natív insert/update metódusok is (batchMergeNative, batchInsertNative, batchUpdateNative) figyelembe veszik az insertable és updateable flag-eket.
 

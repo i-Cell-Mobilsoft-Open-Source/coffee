@@ -19,9 +19,13 @@
  */
 package hu.icellmobilsoft.coffee.module.etcd.config;
 
+import java.util.Optional;
+
 import jakarta.enterprise.context.Dependent;
 
 import org.apache.commons.lang3.StringUtils;
+import org.eclipse.microprofile.config.Config;
+import org.eclipse.microprofile.config.spi.ConfigProviderResolver;
 
 import hu.icellmobilsoft.coffee.tool.utils.config.ConfigUtil;
 
@@ -42,8 +46,19 @@ public class DefaultEtcdConfigImpl implements EtcdConfig {
     /** {@inheritDoc} */
     @Override
     public String[] getUrl() {
-        String urlString = ConfigUtil.getInstance().defaultConfig().getOptionalValue(URL_KEY, String.class).orElse("http://localhost:2379");
-        return StringUtils.split(urlString, ",");
+        String url = "";
+        Optional<String> optUrl = ConfigUtil.getInstance().defaultConfig().getOptionalValue(URL_KEY, String.class);
+        if (optUrl.isEmpty()) {
+            Config config = ConfigProviderResolver.instance()
+                    .getBuilder()
+                    .forClassLoader(DefaultEtcdConfigImpl.class.getClassLoader())
+                    .addDefaultSources()
+                    .build();
+            url = config.getOptionalValue(URL_KEY, String.class).orElse("http://localhost:2379");
+        } else {
+            url = optUrl.get();
+        }
+        return StringUtils.split(url, ",");
     }
 
 }

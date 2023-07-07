@@ -25,12 +25,13 @@ The following feature supports have been added to the system:
 === coffee-module-etcd
 
 ** Bump io.etcd:jetcd-core 0.6.1 -> 0.7.5
+** In case of multiple classloaders, the `DefaultEtcdConfigImpl` class was unable to find the values defined in the microprofile-config.properties file.
 
 ==== Migration
 
-Changes do not result in migration work, backwards compatible.
+Changes are backwards compatible doesnt need any migration.
 
-== coffee-rest
+=== coffee-rest
 
 * An `OptimisticLockException` has been introduced, with the default error code `CoffeeFaultType.OPTIMISTIC_LOCK_EXCEPTION`.
 * The error handling in the `DefaultBaseExceptionMapper` class has been redesigned:
@@ -41,10 +42,18 @@ Changes do not result in migration work, backwards compatible.
 
 * To keep the exception status code handling as before, it is necessary to create a separate ExceptionMapper on projects.
 
-== BatchService
+=== coffee-module-mp-restclient
+
+** The `DefaultBaseExceptionResponseExceptionMapper` sets the HTTP status code in the `RestClientResponseException` 
+
+==== Migration
+
+Changes are backwards compatible doesnt need any migration.
+
+=== BatchService
 
 ** Even the native insert/update methods (batchMergeNative, batchInsertNative, batchUpdateNative) take the insertable and updateable flags into account.
 
 ==== Migration
 
-Changes do not result in migration work, backwards compatible.
+Changes are backwards compatible doesnt need any migration.
