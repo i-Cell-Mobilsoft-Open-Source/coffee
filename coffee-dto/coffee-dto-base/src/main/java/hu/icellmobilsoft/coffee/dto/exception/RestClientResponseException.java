@@ -113,6 +113,8 @@ public class RestClientResponseException extends BaseException {
     }
 
     /**
+     * Getter for the field <code>service</code>.
+     *
      * @return the statusCode
      */
     public int getStatusCode() {
@@ -120,7 +122,10 @@ public class RestClientResponseException extends BaseException {
     }
 
     /**
-     * @param statusCode the statusCode to set
+     * Setter for the field <code>service</code>.
+     *
+     * @param statusCode
+     *            the statusCode to set
      */
     public void setStatusCode(int statusCode) {
         this.statusCode = statusCode;
