@@ -33,6 +33,7 @@ public class RestClientResponseException extends BaseException {
     private String service;
     private String className;
     private String exception;
+    private int statusCode;
 
     public RestClientResponseException(String message) {
         super(CoffeeFaultType.REST_CLIENT_EXCEPTION, message);
@@ -109,5 +110,19 @@ public class RestClientResponseException extends BaseException {
      */
     public void setService(String service) {
         this.service = service;
+    }
+
+    /**
+     * @return the statusCode
+     */
+    public int getStatusCode() {
+        return statusCode;
+    }
+
+    /**
+     * @param statusCode the statusCode to set
+     */
+    public void setStatusCode(int statusCode) {
+        this.statusCode = statusCode;
     }
 }
