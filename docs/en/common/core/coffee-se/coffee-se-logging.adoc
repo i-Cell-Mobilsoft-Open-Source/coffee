@@ -1,42 +1,42 @@
 [#common_core_coffee-se_coffee-se-logging]
 = coffee-se-logging
 
-Loggolással és MDC-vel kapcsolatos JakartaEE függőséget nem tartalmazó komponensek modulja.
+Module for logging- and MDC-related JakartaEE components without any dependencies.
 
-== Loggolás
-Tartalmaz egy `java.util.logging.Logger`-t használó alap loggolási rendszert.
+== Logging
+Contains a basic logging system using `java.util.logging.Logger`.
 
-.Minta használat SE környezetben
+.sample usage in SE environment
 [source,java]
 ----
-import hu.icellmobilsoft.coffee.se.logging.Logger;
+import en.icellmobilsoft.coffee.se.logging.Logger;
 
-private Logger log = Logger.getLogger(BlaBla.class);
+private Logger log = Logger.getLogger(LogSample.class);
 
-public String blabla() {
-    log.trace("blabla log message");
-    return "blabla";
+public String logMessage() {
+    log.trace("sample log message");
+    return "something";
 }
 ----
 
-Bővebb leírás és CDI-on keresztüli használat a <<common_core_coffee-cdi_logger, coffee-cdi/logger>> részen olvasható.
+For more description and usage via CDI, see <<common_core_coffee-cdi_logger, coffee-cdi/logger>>.
 
 [#common_core_coffee-se_coffee-se-logging_MDC]
 == MDC
-A modul saját keretrendszer-t tartalmaz az MDC (Mapped Diagnostic Context) kezelésre.
-Ennek oka, hogy adott projekteken eltérő MDC megoldások lehetnek (pl. jboss, slf4j, logback...).
-Használata a `hu.icellmobilsoft.coffee.se.logging.mdc.MDC` osztály static metódusain keresztül történik.
+The module contains its own framework for MDC (Mapped Diagnostic Context) management.
+This is because there may be different MDC solutions on specific projects (e.g. jboss, slf4j, logback...).
+It is used via the static methods of the `hu.icellmobilsoft.coffee.se.logging.mdc.MDC` class.
 
-Az MDC osztály belül megpróbál a classpath-on elérhető MDC megoldást keresni, és a talált osztálynak delegálni a kéréseket.
-Jelenleg a `org.jboss.logging.MDC` és a `org.slf4j.MDC` implementációk támogatottak,
-azonban a modul service loader segítségével projekt szinten kiterjeszthető.
+Inside the MDC class, it tries to search for an MDC solution available on the classpath and delegate requests to the found class.
+Currently the `org.jboss.logging.MDC` and `org.slf4j.MDC` implementations are supported,
+but can be extended to the project level using the service loader module.
 
-=== MDC kiterjesztése
-Coffee szinten nem támogatott MDC implementáció használatához az `MDCAdapter` és `MDCAdapterProvider`
-interface-eket szükséges implementálni, majd service loader mechanizmussal betölteni az implementált `MDCAdapterProvider`-t.
+=== MDC extension
+To use unsupported MDC implementations at the Coffee level, the `MDCAdapter` and `MDCAdapterProvider`
+interfaces and then load the implemented `MDCAdapterProvider` using the service loader mechanism.
 
-==== Példa `CustomMDC` bekötése:
-. `MDCAdapter` implementálása `CustomMDC`-hez:
+==== Example of `CustomMDC` connection:
+. Implement `MDCAdapter` for `CustomMDC`:
 +
 .com.project.CustomMDCAdapter
 [source,java]
@@ -50,7 +50,7 @@ public class CustomMDCAdapter implements MDCAdapter {
     }
 }
 ----
-. `MDCAdapterProvider` implementálása `CustomMDCAdapter` legyártásához:
+. Implement `MDCAdapterProvider` to build `CustomMDCAdapter`:
 +
 .com.project.CustomMDCAdapterProvider
 [source,java]
@@ -63,23 +63,23 @@ public class CustomMDCAdapterProvider implements MDCAdapterProvider {
     }
 }
 ----
-. `CustomMDCAdapterProvider` bekötése service loaderen keresztül:
+. Bind `CustomMDCAdapterProvider` via service loader:
 +
-.META-INF/services/hu.icellmobilsoft.coffee.se.logging.mdc.MDCAdapterProvider
+.META-INF/services/en.icellmobilsoft.coffee.se.logging.mdc.MDCAdapterProvider
 [source,text]
 ----
 com.project.CustomMDCAdapterProvider
 ----
 
-=== MDC sorrend
+=== MDC order
 
-Az elérhető MDC implementációkat az alábbi sorrendben próbálja felolvasni.
-A belül használt MDC az első működő lesz:
+Try to list the available MDC implementations in the following order.
+The MDC used inside will be the first one working:
 
-. ServiceLoader kiterjesztések
+. ServiceLoader extensions
 . `org.jboss.logging.MDC`
-. `org.slf4j.MDC`
-. `CoffeeMDCAdapter`
-** coff:ee implementáció, csak fallback-nek van
-** az értékeket `ThreadLocal`-ban tárolja
-** külön le kell kezelni, ha szeretnénk, hogy loggolva legyen.
+. `org.slf4j.MDC` .
+. `CoffeeMDCAdapter` .
+** coff:ee implementation, fallback only
+** values are stored in `ThreadLocal`
+** must be handled separately if you want it to be logged.
