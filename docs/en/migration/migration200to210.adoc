@@ -36,7 +36,7 @@ Changes are backwards compatible doesnt need any migration.
 * An `OptimisticLockException` has been introduced, with the default error code `CoffeeFaultType.OPTIMISTIC_LOCK_EXCEPTION`.
 * The error handling in the `DefaultBaseExceptionMapper` class has been redesigned:
 * Business error - for BusinessException, a status code of 422 is given instead of the previous 500 status codes.
-* For a technical error - OptimisticLockException, a status code of 518 is given instead of the previous 500 status codes.
+* For a technical error - OptimisticLockException, a status code of 409 is given instead of the previous 500 status codes.
 
 ==== Migration
 

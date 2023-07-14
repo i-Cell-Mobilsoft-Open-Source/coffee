@@ -27,19 +27,19 @@ import jakarta.ws.rs.core.Response.StatusType;
  * HttpStatus codes
  *
  * @author gabor.balazs
- * @since 2.0.0
+ * @since 2.1.0
  */
 public enum HttpStatus implements StatusType {
 
     /**
-     * 422 Unprocessable Entity.
+     * 409 Optimistic Lock.
      */
-    UNPROCESSABLE_ENTITY(422, "Unprocessable Entity"),
+    OPTIMISTIC_LOCK(409, "Optimistic Lock"),
 
     /**
-     * 518 Optimistic Lock.
+     * 422 Unprocessable Entity.
      */
-    OPTIMISTIC_LOCK(518, "Optimistic Lock");
+    UNPROCESSABLE_ENTITY(422, "Unprocessable Entity");
 
     private final int code;
     private final String reason;
