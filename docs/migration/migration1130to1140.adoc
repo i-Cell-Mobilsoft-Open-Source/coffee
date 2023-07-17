@@ -38,7 +38,7 @@ A hiba úgy került kezelésre, hogy egy új param placeholder került az üzene
 
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
 
-== coffee-module-notification-action
+=== coffee-module-notification-action
 
 * Az email és push esetén az adatbázis mentés a deltaspike-os tranzakció kezelés helyett a coffee-ban testreszabott `hu.icellmobilsoft.coffee.jpa.annotation.Transactional` annotációt kapta.
 
@@ -46,7 +46,7 @@ A változtatások nem eredményeznek átállási munkálatokat, visszafelé komp
 
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
 
-== coffee-module-etcd
+=== coffee-module-etcd
 
 * A `hu.icellmobilsoft.coffee.module.etcd.util.EtcdClientBuilderUtil`-ba bevezetésre került a CONNECT_TIMEOUT_MILLIS paraméter, 
 ez megakadályozza a felfutásnál előforduló timeout hibákat, amik a lekérdezés és az etcd szerverhez való timeout paraméter eltérése okozott.
@@ -64,7 +64,18 @@ A változtatások nem eredményeznek átállási munkálatokat, visszafelé komp
 
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
 
-== BatchService
+=== coffee-rest
+
+* Bevezetésre került az `OptimisticLockException`, alapértelmezetten `CoffeeFaultType.OPTIMISTIC_LOCK_EXCEPTION` hibakóddal.
+* Átalakításra került a `DefaultBaseExceptionMapper` osztályban a hibakezelés:
+* Üzleti hiba - BusinessException esetén 422 státuszkódot adunk az eddigi 500 státuszkód helyett.
+* Technikai hiba - OptimisticLockException esetén 409 státuszkódot adunk az eddigi 500 státuszkód helyett.
+
+==== Átállás
+
+* Az eddigi exception státuszkód kezelés megtartásához a projekteken saját ExceptionMapper létrehozása szükséges.
+
+=== BatchService
 
 * Már a natív insert/update metódusok is (batchMergeNative, batchInsertNative, batchUpdateNative) figyelembe veszik az insertable és updateable flag-eket.
 
