@@ -35,18 +35,30 @@ Következő funkció támogatások kerültek a rendszerbe:
 
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
 
+=== coffee-rest
+
+* Bevezetésre került az `OptimisticLockException`, alapértelmezetten `CoffeeFaultType.OPTIMISTIC_LOCK_EXCEPTION` hibakóddal.
+* Átalakításra került a `DefaultBaseExceptionMapper` osztályban a hibakezelés:
+* Üzleti hiba - BusinessException esetén 422 státuszkódot adunk az eddigi 500 státuszkód helyett.
+* Technikai hiba - OptimisticLockException esetén 409 státuszkódot adunk az eddigi 500 státuszkód helyett.
+
+==== Átállás
+
+* Az eddigi exception státuszkód kezelés megtartásához a projekteken saját ExceptionMapper létrehozása szükséges.
+
 === coffee-module-mp-restclient
 
 ** A `DefaultBaseExceptionResponseExceptionMapper` beállítja a HTTP státusz kódot a `RestClientResponseException`-ben 
 
 ==== Átállás
 
-A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+* Az eddigi exception státuszkód kezelés megtartásához a projekteken saját ExceptionMapper létrehozása szükséges.
 
-== BatchService
+=== BatchService
 
 ** Már a natív insert/update metódusok is (batchMergeNative, batchInsertNative, batchUpdateNative) figyelembe veszik az insertable és updateable flag-eket.
 
 ==== Átállás
 
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+

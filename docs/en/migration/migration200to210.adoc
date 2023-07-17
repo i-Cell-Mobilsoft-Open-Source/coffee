@@ -35,6 +35,16 @@ The following feature supports have been added to the system:
 
 Changes are backwards compatible doesnt need any migration.
 
+=== coffee-rest
+
+* An `OptimisticLockException` has been introduced, with the default error code `CoffeeFaultType.OPTIMISTIC_LOCK_EXCEPTION`.
+* The error handling in the `DefaultBaseExceptionMapper` class has been redesigned:
+* Business error - for BusinessException, a status code of 422 is given instead of the previous 500 status codes.
+* For a technical error - OptimisticLockException, a status code of 409 is given instead of the previous 500 status codes.
+
+==== Migration
+
+* To keep the exception status code handling as before, it is necessary to create a separate ExceptionMapper on projects.
 
 === coffee-module-mp-restclient
 
@@ -44,7 +54,7 @@ Changes are backwards compatible doesnt need any migration.
 
 Changes are backwards compatible doesnt need any migration.
 
-== BatchService
+=== BatchService
 
 ** Even the native insert/update methods (batchMergeNative, batchInsertNative, batchUpdateNative) take the insertable and updateable flags into account.
 
