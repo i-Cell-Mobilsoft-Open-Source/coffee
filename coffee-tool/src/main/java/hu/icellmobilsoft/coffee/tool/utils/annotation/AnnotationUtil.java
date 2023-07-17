@@ -47,6 +47,9 @@ public class AnnotationUtil {
      * @return {@code Annotation} instance
      */
     public static <A extends Annotation> A getAnnotation(Class<?> clazz, Class<A> annotationClass) {
+        if (clazz == null) {
+            return null;
+        }
         final A annotation = clazz.getAnnotation(annotationClass);
 
         if (annotation == null && (clazz.isSynthetic())) {
