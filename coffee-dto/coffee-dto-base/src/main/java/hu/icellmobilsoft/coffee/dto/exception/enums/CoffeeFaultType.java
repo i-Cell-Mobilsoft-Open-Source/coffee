@@ -213,4 +213,8 @@ public enum CoffeeFaultType implements IFaultType<CoffeeFaultType> {
      * Rest client exception
      */
     REST_CLIENT_EXCEPTION,
+    /**
+     * Optimistic lock exception
+     */
+    OPTIMISTIC_LOCK_EXCEPTION,
 }
