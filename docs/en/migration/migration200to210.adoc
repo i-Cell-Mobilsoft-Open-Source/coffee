@@ -54,6 +54,14 @@ Changes are backwards compatible doesnt need any migration.
 
 Changes are backwards compatible doesnt need any migration.
 
+=== coffee-tool
+
+** NPE fix in AnnotationUtil.getAnnotation(Class<?> clazz, Class<A> annotationClass) method 
+
+==== Migration
+
+Changes are backwards compatible doesnt need any migration.
+
 === BatchService
 
 ** Even the native insert/update methods (batchMergeNative, batchInsertNative, batchUpdateNative) take the insertable and updateable flags into account.
