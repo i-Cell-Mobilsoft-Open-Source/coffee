@@ -52,13 +52,14 @@ import hu.icellmobilsoft.coffee.se.logging.Logger;
 public class JpaUtil {
 
     /**
-     * Get native SQL from created Query, exception is logged only. Entity manager parameter is ignored!
+     * Get native SQL from created Query, exception is logged only.
      *
      * @param em
-     *            entity manager
+     *            entity manager (ignored)
      * @param query
      *            created query
      * @return native SQL of query or null
+     * @deprecated use {@link #toNativeSQLNoEx(Query)} instead
      */
     @Deprecated(since = "2.1.0", forRemoval = true)
     public static String toNativeSQLNoEx(EntityManager em, Query query) {
@@ -89,16 +90,33 @@ public class JpaUtil {
     /**
      * Get native SQL from created Query
      *
+     * @param em
+     *            entity manager
      * @param criteriaQuery
      *            created query
      * @return native SQL of query
      * @throws BaseException
-     *             exception
+     *             on error
+     * @deprecated use {@link #toNativeSQL(Query)} instead
+     */
+    @Deprecated(since = "2.1.0", forRemoval = true)
+    public static String toNativeSQL(EntityManager em, Query criteriaQuery) throws BaseException {
+        return toNativeSQL(criteriaQuery);
+    }
+
+    /**
+     * Get native SQL from created Query
+     *
+     * @param criteriaQuery
+     *            created query
+     * @return native SQL of query
+     * @throws BaseException
+     *             on error
      */
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public static String toNativeSQL(Query criteriaQuery) throws BaseException {
         QueryImplementor query = criteriaQuery.unwrap(QueryImplementor.class);
-        if (query instanceof SqmInterpretationsKey.InterpretationsKeySource && query instanceof QueryImplementor && query instanceof QuerySqmImpl) {
+        if (query instanceof SqmInterpretationsKey.InterpretationsKeySource && query instanceof QuerySqmImpl) {
             QueryInterpretationCache.Key cacheKey = SqmInterpretationsKey
                     .createInterpretationsKey((SqmInterpretationsKey.InterpretationsKeySource) query);
             QuerySqmImpl<?> querySqm = (QuerySqmImpl<?>) query;
