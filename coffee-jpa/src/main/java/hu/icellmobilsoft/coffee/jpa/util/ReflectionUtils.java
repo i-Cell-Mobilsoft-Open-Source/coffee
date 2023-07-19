@@ -85,16 +85,19 @@ public final class ReflectionUtils {
      *            target {@link Object} whose field we are retrieving the value from
      * @param fieldName
      *            field name
+     * @param clazz
+     *            class of returning object
      * @param <T>
      *            field type
      * @return field value matching the given name or {@code null}
      */
-    public static <T> T getFieldValueOrNull(Object target, String fieldName) {
+    public static <T> T getFieldValueOrNull(Object target, String fieldName, Class<T> clazz) {
         try {
             Field field = getField(target.getClass(), fieldName);
-            @SuppressWarnings("unchecked")
-            T returnValue = (T) field.get(target);
-            return returnValue;
+            if (field == null) {
+                return null;
+            }
+            return clazz.cast(field.get(target));
         } catch (Exception e) {
             return null;
         }
@@ -155,6 +158,8 @@ public final class ReflectionUtils {
      *            target {@link Object} whose method we are invoking
      * @param methodName
      *            method name to invoke
+     * @param clazz
+     *            class of returning object
      * @param parameters
      *            parameters passed to the method call
      * @param <T>
@@ -163,7 +168,7 @@ public final class ReflectionUtils {
      * @throws BaseException
      *             on error
      */
-    public static <T> T invokeMethod(Object target, String methodName, Object... parameters) throws BaseException {
+    public static <T> T invokeMethod(Object target, String methodName, Class<T> clazz, Object... parameters) throws BaseException {
         try {
             Class<?>[] parameterClasses = new Class[parameters.length];
 
@@ -173,9 +178,7 @@ public final class ReflectionUtils {
 
             Method method = getMethod(target, methodName, parameterClasses);
             method.setAccessible(true);
-            @SuppressWarnings("unchecked")
-            T returnValue = (T) method.invoke(target, parameters);
-            return returnValue;
+            return clazz.cast(method.invoke(target, parameters));
         } catch (InvocationTargetException e) {
             throw handleException(e);
         } catch (IllegalAccessException e) {
@@ -188,6 +191,8 @@ public final class ReflectionUtils {
      *
      * @param method
      *            target {@code static} {@link Method} to invoke
+     * @param clazz
+     *            class of returning object
      * @param parameters
      *            parameters passed to the method call
      * @param <T>
@@ -196,11 +201,10 @@ public final class ReflectionUtils {
      * @throws BaseException
      *             on error
      */
-    @SuppressWarnings("unchecked")
-    public static <T> T invokeStaticMethod(Method method, Object... parameters) throws BaseException {
+    public static <T> T invokeStaticMethod(Method method, Class<T> clazz, Object... parameters) throws BaseException {
         try {
             method.setAccessible(true);
-            return (T) method.invoke(null, parameters);
+            return clazz.cast(method.invoke(null, parameters));
         } catch (InvocationTargetException e) {
             throw handleException(e);
         } catch (IllegalAccessException e) {

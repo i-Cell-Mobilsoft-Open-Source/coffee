@@ -122,7 +122,7 @@ public class JpaUtil {
             QuerySqmImpl<?> querySqm = (QuerySqmImpl<?>) query;
             Supplier buildSelectQueryPlan = () -> {
                 try {
-                    return ReflectionUtils.invokeMethod(querySqm, "buildSelectQueryPlan");
+                    return ReflectionUtils.invokeMethod(querySqm, "buildSelectQueryPlan", ConcreteSqmSelectQueryPlan.class);
                 } catch (BaseException e) {
                     Logger.getLogger(JpaUtil.class).warn("Exception on calling buildSelectQueryPlan()!", e);
                     return null;
@@ -137,7 +137,7 @@ public class JpaUtil {
                     : (SelectQueryPlan<?>) buildSelectQueryPlan.get();
             if (plan instanceof ConcreteSqmSelectQueryPlan) {
                 ConcreteSqmSelectQueryPlan<?> selectQueryPlan = (ConcreteSqmSelectQueryPlan<?>) plan;
-                Object cacheableSqmInterpretation = ReflectionUtils.getFieldValueOrNull(selectQueryPlan, "cacheableSqmInterpretation");
+                Object cacheableSqmInterpretation = ReflectionUtils.getFieldValueOrNull(selectQueryPlan, "cacheableSqmInterpretation", Object.class);
                 if (cacheableSqmInterpretation == null) {
                     DomainQueryExecutionContext domainQueryExecutionContext = DomainQueryExecutionContext.class.cast(querySqm);
                     cacheableSqmInterpretation = ReflectionUtils.invokeStaticMethod(
@@ -147,12 +147,13 @@ public class JpaUtil {
                                     SqmSelectStatement.class,
                                     DomainParameterXref.class,
                                     DomainQueryExecutionContext.class),
-                            ReflectionUtils.getFieldValueOrNull(selectQueryPlan, "sqm"),
-                            ReflectionUtils.getFieldValueOrNull(selectQueryPlan, "domainParameterXref"),
+                            Object.class,
+                            ReflectionUtils.getFieldValueOrNull(selectQueryPlan, "sqm", SqmSelectStatement.class),
+                            ReflectionUtils.getFieldValueOrNull(selectQueryPlan, "domainParameterXref", DomainParameterXref.class),
                             domainQueryExecutionContext);
                 }
                 if (cacheableSqmInterpretation != null) {
-                    JdbcSelect jdbcSelect = ReflectionUtils.getFieldValueOrNull(cacheableSqmInterpretation, "jdbcSelect");
+                    JdbcSelect jdbcSelect = ReflectionUtils.getFieldValueOrNull(cacheableSqmInterpretation, "jdbcSelect", JdbcSelect.class);
                     if (jdbcSelect != null) {
                         return jdbcSelect.getSql();
                     }
@@ -161,6 +162,6 @@ public class JpaUtil {
                 throw new TechnicalException(CoffeeFaultType.OPERATION_FAILED, "Cannot invoke buildSelectQueryPlan()");
             }
         }
-        return ReflectionUtils.invokeMethod(query, "getQueryString");
+        return ReflectionUtils.invokeMethod(query, "getQueryString", String.class);
     }
 }
