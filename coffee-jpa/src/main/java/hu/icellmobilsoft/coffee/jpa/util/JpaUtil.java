@@ -91,7 +91,7 @@ public class JpaUtil {
      * Get native SQL from created Query
      *
      * @param em
-     *            entity manager
+     *            entity manager (ignored)
      * @param criteriaQuery
      *            created query
      * @return native SQL of query
