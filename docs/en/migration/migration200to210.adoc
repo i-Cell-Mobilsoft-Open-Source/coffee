@@ -41,6 +41,7 @@ Changes are backwards compatible doesnt need any migration.
 * The error handling in the `DefaultBaseExceptionMapper` class has been redesigned:
 * Business error - for BusinessException, a status code of 422 is given instead of the previous 500 status codes.
 * For a technical error - OptimisticLockException, a status code of 409 is given instead of the previous 500 status codes.
+* `JsonMessageBodyReaderBase` uses the charset attribute coming in HTTP header `Content-Type` when deserializing the JSON request. Proper use of header: `Content-Type: application/json; charset=utf-8`. If charset is not specified the deserialization uses UTF-8 by default!
 
 ==== Migration
 
