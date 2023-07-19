@@ -54,6 +54,14 @@ A változtatások nem eredményeznek átállási munkálatokat, visszafelé komp
 
 * Az eddigi exception státuszkód kezelés megtartásához a projekteken saját ExceptionMapper létrehozása szükséges.
 
+=== coffee-tool
+
+** NPE javítás az AnnotationUtil.getAnnotation(Class<?> clazz, Class<A> annotationClass) metódusban. 
+
+==== Átállás
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
 === BatchService
 
 ** Már a natív insert/update metódusok is (batchMergeNative, batchInsertNative, batchUpdateNative) figyelembe veszik az insertable és updateable flag-eket.
