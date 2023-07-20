@@ -109,12 +109,15 @@ public class JpaUtil {
      *
      * @param criteriaQuery
      *            created query
-     * @return native SQL of query
+     * @return native SQL of query or {@code null} if criteriaQuery parameter is null
      * @throws BaseException
      *             on error
      */
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public static String toNativeSQL(Query criteriaQuery) throws BaseException {
+        if (criteriaQuery == null) {
+            return null;
+        }
         QueryImplementor query = criteriaQuery.unwrap(QueryImplementor.class);
         if (query instanceof SqmInterpretationsKey.InterpretationsKeySource && query instanceof QuerySqmImpl) {
             QueryInterpretationCache.Key cacheKey = SqmInterpretationsKey

@@ -23,7 +23,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import jakarta.enterprise.inject.Vetoed;
+import org.apache.commons.lang3.StringUtils;
 
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
@@ -35,7 +35,6 @@ import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
  * @author tamas.cserhati
  * @since 2.1.0
  */
-@Vetoed
 public final class ReflectionUtils {
 
     private ReflectionUtils() {
@@ -48,11 +47,15 @@ public final class ReflectionUtils {
      *            the provided Java {@link Class} the field belongs to
      * @param fieldName
      *            the {@link Field} name
-     * @return the {@link Field} matching the given name
+     * @return the {@link Field} matching the given name or {@code null} if one parameter is null or empty
      * @throws BaseException
      *             on error
      */
     public static Field getField(Class<?> targetClass, String fieldName) throws BaseException {
+        if (targetClass == null || StringUtils.isBlank(fieldName)) {
+            return null;
+        }
+
         Field field = null;
 
         try {
@@ -79,7 +82,7 @@ public final class ReflectionUtils {
     }
 
     /**
-     * Get the value of the field matching the given name and belonging to target {@link Object} or {@code null} if no {@link Field} was found..
+     * Get the value of the field matching the given name and belonging to target {@link Object}
      *
      * @param target
      *            target {@link Object} whose field we are retrieving the value from
@@ -92,6 +95,9 @@ public final class ReflectionUtils {
      * @return field value matching the given name or {@code null}
      */
     public static <T> T getFieldValueOrNull(Object target, String fieldName, Class<T> clazz) {
+        if (target == null || clazz == null || StringUtils.isBlank(fieldName)) {
+            return null;
+        }
         try {
             Field field = getField(target.getClass(), fieldName);
             if (field == null) {
@@ -112,11 +118,14 @@ public final class ReflectionUtils {
      *            method name
      * @param parameterTypes
      *            method parameter types
-     * @return return {@link Method} matching the provided signature
+     * @return return {@link Method} matching the provided signature or {@code null}
      * @throws BaseException
      *             on error
      */
     public static Method getMethod(Object target, String methodName, Class<?>... parameterTypes) throws BaseException {
+        if (target == null || StringUtils.isBlank(methodName)) {
+            return null;
+        }
         return getMethod(target.getClass(), methodName, parameterTypes);
     }
 
@@ -129,11 +138,14 @@ public final class ReflectionUtils {
      *            method name
      * @param parameterTypes
      *            method parameter types
-     * @return the {@link Method} matching the provided signature
+     * @return the {@link Method} matching the provided signature or {@code null}
      * @throws BaseException
      *             on error
      */
     public static Method getMethod(Class<?> targetClass, String methodName, Class<?>... parameterTypes) throws BaseException {
+        if (targetClass == null || StringUtils.isBlank(methodName)) {
+            return null;
+        }
         try {
             return targetClass.getDeclaredMethod(methodName, parameterTypes);
         } catch (NoSuchMethodException e) {
@@ -164,11 +176,14 @@ public final class ReflectionUtils {
      *            parameters passed to the method call
      * @param <T>
      *            return value object type
-     * @return the value return by the method invocation
+     * @return the value return by the method invocation or {@code null}
      * @throws BaseException
      *             on error
      */
     public static <T> T invokeMethod(Object target, String methodName, Class<T> clazz, Object... parameters) throws BaseException {
+        if (target == null || clazz == null || StringUtils.isBlank(methodName)) {
+            return null;
+        }
         try {
             Class<?>[] parameterClasses = new Class[parameters.length];
 
@@ -197,11 +212,14 @@ public final class ReflectionUtils {
      *            parameters passed to the method call
      * @param <T>
      *            return value object type
-     * @return the value return by the method invocation
+     * @return the value return by the method invocation or {@code null}
      * @throws BaseException
      *             on error
      */
     public static <T> T invokeStaticMethod(Method method, Class<T> clazz, Object... parameters) throws BaseException {
+        if (method == null || clazz == null) {
+            return null;
+        }
         try {
             method.setAccessible(true);
             return clazz.cast(method.invoke(null, parameters));
