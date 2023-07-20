@@ -51,7 +51,7 @@ public final class ReflectionUtils {
      * @throws BaseException
      *             on error
      */
-    public static Field getField(Class<?> targetClass, String fieldName) throws BaseException {
+    private static Field getField(Class<?> targetClass, String fieldName) throws BaseException {
         if (targetClass == null || StringUtils.isBlank(fieldName)) {
             return null;
         }
@@ -94,7 +94,7 @@ public final class ReflectionUtils {
      *            field type
      * @return field value matching the given name or {@code null}
      */
-    public static <T> T getFieldValueOrNull(Object target, String fieldName, Class<T> clazz) {
+    protected static <T> T getFieldValueOrNull(Object target, String fieldName, Class<T> clazz) {
         if (target == null || clazz == null || StringUtils.isBlank(fieldName)) {
             return null;
         }
@@ -122,7 +122,7 @@ public final class ReflectionUtils {
      * @throws BaseException
      *             on error
      */
-    public static Method getMethod(Object target, String methodName, Class<?>... parameterTypes) throws BaseException {
+    private static Method getMethod(Object target, String methodName, Class<?>... parameterTypes) throws BaseException {
         if (target == null || StringUtils.isBlank(methodName)) {
             return null;
         }
@@ -142,7 +142,7 @@ public final class ReflectionUtils {
      * @throws BaseException
      *             on error
      */
-    public static Method getMethod(Class<?> targetClass, String methodName, Class<?>... parameterTypes) throws BaseException {
+    protected static Method getMethod(Class<?> targetClass, String methodName, Class<?>... parameterTypes) throws BaseException {
         if (targetClass == null || StringUtils.isBlank(methodName)) {
             return null;
         }
@@ -180,7 +180,7 @@ public final class ReflectionUtils {
      * @throws BaseException
      *             on error
      */
-    public static <T> T invokeMethod(Object target, String methodName, Class<T> clazz, Object... parameters) throws BaseException {
+    protected static <T> T invokeMethod(Object target, String methodName, Class<T> clazz, Object... parameters) throws BaseException {
         if (target == null || clazz == null || StringUtils.isBlank(methodName)) {
             return null;
         }
@@ -192,6 +192,9 @@ public final class ReflectionUtils {
             }
 
             Method method = getMethod(target, methodName, parameterClasses);
+            if (method == null) {
+                return null;
+            }
             method.setAccessible(true);
             return clazz.cast(method.invoke(target, parameters));
         } catch (InvocationTargetException e) {
@@ -216,7 +219,7 @@ public final class ReflectionUtils {
      * @throws BaseException
      *             on error
      */
-    public static <T> T invokeStaticMethod(Method method, Class<T> clazz, Object... parameters) throws BaseException {
+    protected static <T> T invokeStaticMethod(Method method, Class<T> clazz, Object... parameters) throws BaseException {
         if (method == null || clazz == null) {
             return null;
         }
