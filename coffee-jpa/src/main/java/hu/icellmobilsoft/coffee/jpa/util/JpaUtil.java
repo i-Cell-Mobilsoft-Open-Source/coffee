@@ -19,14 +19,22 @@
  */
 package hu.icellmobilsoft.coffee.jpa.util;
 
-import java.lang.reflect.Method;
+import java.util.function.Supplier;
 
 import jakarta.enterprise.inject.Vetoed;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 
-import org.apache.commons.lang3.StringUtils;
+import org.hibernate.query.spi.DomainQueryExecutionContext;
 import org.hibernate.query.spi.QueryImplementor;
+import org.hibernate.query.spi.QueryInterpretationCache;
+import org.hibernate.query.spi.SelectQueryPlan;
+import org.hibernate.query.sqm.internal.ConcreteSqmSelectQueryPlan;
+import org.hibernate.query.sqm.internal.DomainParameterXref;
+import org.hibernate.query.sqm.internal.QuerySqmImpl;
+import org.hibernate.query.sqm.internal.SqmInterpretationsKey;
+import org.hibernate.query.sqm.tree.select.SqmSelectStatement;
+import org.hibernate.sql.exec.spi.JdbcSelect;
 
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
@@ -37,23 +45,42 @@ import hu.icellmobilsoft.coffee.se.logging.Logger;
  * JPA common functions.
  *
  * @author imre.scheffer
+ * @author tamas.cserhati
  * @since 1.0.0
  */
 @Vetoed
 public class JpaUtil {
 
     /**
-     * Get native SQL from created Query, exception is logged only
+     * Get native SQL from created Query, exception is logged only.
      *
      * @param em
-     *            entity manager
+     *            entity manager (ignored)
+     * @param query
+     *            created query
+     * @return native SQL of query or null
+     * @deprecated use {@link #toNativeSQLNoEx(Query)} instead
+     */
+    @Deprecated(since = "2.1.0", forRemoval = true)
+    public static String toNativeSQLNoEx(EntityManager em, Query query) {
+        try {
+            return toNativeSQL(query);
+        } catch (BaseException e) {
+            Logger.getLogger(JpaUtil.class).warn("Exception on converting Query to native SQL!", e);
+        }
+        return null;
+    }
+
+    /**
+     * Get native SQL from created Query, exception is logged only
+     *
      * @param query
      *            created query
      * @return native SQL of query or null
      */
-    public static String toNativeSQLNoEx(EntityManager em, Query query) {
+    public static String toNativeSQLNoEx(Query query) {
         try {
-            return toNativeSQL(em, query);
+            return toNativeSQL(query);
         } catch (BaseException e) {
             Logger.getLogger(JpaUtil.class).warn("Exception on converting Query to native SQL!", e);
         }
@@ -64,53 +91,80 @@ public class JpaUtil {
      * Get native SQL from created Query
      *
      * @param em
-     *            entity manager
-     * @param query
+     *            entity manager (ignored)
+     * @param criteriaQuery
      *            created query
      * @return native SQL of query
      * @throws BaseException
-     *             exception
+     *             on error
+     * @deprecated use {@link #toNativeSQL(Query)} instead
      */
-    public static String toNativeSQL(EntityManager em, Query query) throws BaseException {
-        if (em == null) {
-            return null;
-        }
-        String sql = getJPQLString(query);
-        if (StringUtils.isNotBlank(sql)) {
-            sql = getSQLString(em, sql);
-            return sql;
-        }
-        return null;
+    @Deprecated(since = "2.1.0", forRemoval = true)
+    public static String toNativeSQL(EntityManager em, Query criteriaQuery) throws BaseException {
+        return toNativeSQL(criteriaQuery);
     }
 
-    @SuppressWarnings("rawtypes")
-    private static String getJPQLString(Query query) throws BaseException {
-        if (query == null) {
+    /**
+     * Get native SQL from created Query
+     *
+     * @param criteriaQuery
+     *            created query
+     * @return native SQL of query or {@code null} if criteriaQuery parameter is null
+     * @throws BaseException
+     *             on error
+     */
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    public static String toNativeSQL(Query criteriaQuery) throws BaseException {
+        if (criteriaQuery == null) {
             return null;
         }
-        try {
-            QueryImplementor queryObj = query.unwrap(QueryImplementor.class);
-            return queryObj.getQueryString();
-        } catch (Exception e) {
-            throw new TechnicalException(CoffeeFaultType.OPERATION_FAILED, "Failed to unwrap QueryImpl from Query", e);
+        QueryImplementor query = criteriaQuery.unwrap(QueryImplementor.class);
+        if (query instanceof SqmInterpretationsKey.InterpretationsKeySource && query instanceof QuerySqmImpl) {
+            QueryInterpretationCache.Key cacheKey = SqmInterpretationsKey
+                    .createInterpretationsKey((SqmInterpretationsKey.InterpretationsKeySource) query);
+            QuerySqmImpl<?> querySqm = (QuerySqmImpl<?>) query;
+            Supplier buildSelectQueryPlan = () -> {
+                try {
+                    return ReflectionUtils.invokeMethod(querySqm, "buildSelectQueryPlan", ConcreteSqmSelectQueryPlan.class);
+                } catch (BaseException e) {
+                    Logger.getLogger(JpaUtil.class).warn("Exception on calling buildSelectQueryPlan()!", e);
+                    return null;
+                }
+            };
+            SelectQueryPlan plan = cacheKey != null
+                    ? ((QueryImplementor<?>) query).getSession()
+                            .getFactory()
+                            .getQueryEngine()
+                            .getInterpretationCache()
+                            .resolveSelectQueryPlan(cacheKey, buildSelectQueryPlan)
+                    : (SelectQueryPlan<?>) buildSelectQueryPlan.get();
+            if (plan instanceof ConcreteSqmSelectQueryPlan) {
+                ConcreteSqmSelectQueryPlan<?> selectQueryPlan = (ConcreteSqmSelectQueryPlan<?>) plan;
+                Object cacheableSqmInterpretation = ReflectionUtils.getFieldValueOrNull(selectQueryPlan, "cacheableSqmInterpretation", Object.class);
+                if (cacheableSqmInterpretation == null) {
+                    DomainQueryExecutionContext domainQueryExecutionContext = DomainQueryExecutionContext.class.cast(querySqm);
+                    cacheableSqmInterpretation = ReflectionUtils.invokeStaticMethod(
+                            ReflectionUtils.getMethod(
+                                    ConcreteSqmSelectQueryPlan.class,
+                                    "buildCacheableSqmInterpretation",
+                                    SqmSelectStatement.class,
+                                    DomainParameterXref.class,
+                                    DomainQueryExecutionContext.class),
+                            Object.class,
+                            ReflectionUtils.getFieldValueOrNull(selectQueryPlan, "sqm", SqmSelectStatement.class),
+                            ReflectionUtils.getFieldValueOrNull(selectQueryPlan, "domainParameterXref", DomainParameterXref.class),
+                            domainQueryExecutionContext);
+                }
+                if (cacheableSqmInterpretation != null) {
+                    JdbcSelect jdbcSelect = ReflectionUtils.getFieldValueOrNull(cacheableSqmInterpretation, "jdbcSelect", JdbcSelect.class);
+                    if (jdbcSelect != null) {
+                        return jdbcSelect.getSql();
+                    }
+                }
+            } else {
+                throw new TechnicalException(CoffeeFaultType.OPERATION_FAILED, "Cannot invoke buildSelectQueryPlan()");
+            }
         }
-    }
-
-    private static String getSQLString(EntityManager em, String jpqlString) throws BaseException {
-        try {
-            Object sessionImpl = em.unwrap(Class.forName("org.hibernate.internal.SessionImpl"));
-            Class<?> clazzInner = sessionImpl.getClass().getSuperclass();
-            Class<?> clazz = clazzInner.getSuperclass();
-            Method m = clazz.getDeclaredMethod("getQueryPlan", new Class[] { String.class, boolean.class });
-            m.setAccessible(true);
-            Object hqlQueryPlan = m.invoke(sessionImpl, new Object[] { jpqlString, false });
-
-            Class<?> planClazz = hqlQueryPlan.getClass();
-            Method plm = planClazz.getMethod("getSqlStrings");
-            String[] res = (String[]) plm.invoke(hqlQueryPlan);
-            return res[0];
-        } catch (Exception e) {
-            throw new TechnicalException(CoffeeFaultType.OPERATION_FAILED, "Getting native SQL from JPQL failed", e);
-        }
+        return ReflectionUtils.invokeMethod(query, "getQueryString", String.class);
     }
 }

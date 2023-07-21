@@ -63,6 +63,14 @@ Changes are backwards compatible doesnt need any migration.
 
 Changes are backwards compatible doesnt need any migration.
 
+=== coffee-jpa
+
+** NoSuchMethodException fix in JPAUtil.toNativeSQL(NoEx) which has been caused by the hibernate 6.x upgrade. 
+
+==== Migration
+
+Changes are backwards compatible doesnt need any migration.
+
 === BatchService
 
 ** Even the native insert/update methods (batchMergeNative, batchInsertNative, batchUpdateNative) take the insertable and updateable flags into account.
