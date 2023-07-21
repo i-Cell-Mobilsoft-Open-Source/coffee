@@ -41,6 +41,7 @@ A változtatások nem eredményeznek átállási munkálatokat, visszafelé komp
 * Átalakításra került a `DefaultBaseExceptionMapper` osztályban a hibakezelés:
 * Üzleti hiba - BusinessException esetén 422 státuszkódot adunk az eddigi 500 státuszkód helyett.
 * Technikai hiba - OptimisticLockException esetén 409 státuszkódot adunk az eddigi 500 státuszkód helyett.
+* A `JsonMessageBodyReaderReaderBase` a JSON-kérés deserializálásakor a HTTP `Content-Type` fejlécben szereplő charset attribútumot használja. A fejléc helyes használata: `Content-Type: application/json; charset=utf-8`. Ha a charset nincs megadva, a deserializálás alapértelmezés szerint UTF-8-at használ!
 
 ==== Átállás
 
