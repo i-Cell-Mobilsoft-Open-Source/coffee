@@ -20,8 +20,6 @@
 package hu.icellmobilsoft.coffee.module.mp.opentracing.extension;
 
 import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 
 import jakarta.annotation.Priority;
@@ -39,7 +37,6 @@ import io.opentracing.Scope;
 import io.opentracing.Span;
 import io.opentracing.Tracer;
 import io.opentracing.Tracer.SpanBuilder;
-import io.opentracing.tag.Tags;
 
 /**
  * Default interceptor for {@link Traced} binding
@@ -94,7 +91,7 @@ public class OpenTraceInterceptor {
         try {
             return ctx.proceed();
         } catch (Exception e) {
-            logException(span, e);
+            OpenTraceUtil.tagException(span, e);
             throw e;
         } finally {
             span.finish();
@@ -129,7 +126,7 @@ public class OpenTraceInterceptor {
                 operationName = String.valueOf(ctx.getParameters()[1]);
             }
         }
-        return Optional.of(createSpanBuilder(tracer, methodTraced, operationName));
+        return Optional.of(OpenTraceUtil.createSpanBuilder(tracer, methodTraced, operationName));
 
     }
 
@@ -137,23 +134,8 @@ public class OpenTraceInterceptor {
         return tracer.activeSpan() != null;
     }
 
-    private SpanBuilder createSpanBuilder(Tracer tracer, Traced traced, String operationName) {
-        SpanBuilder spanBuilder = tracer.buildSpan(operationName);
-        spanBuilder.withTag(Tags.SPAN_KIND.getKey(), traced.kind());
-        spanBuilder.withTag(Tags.COMPONENT.getKey(), traced.component());
-        spanBuilder.withTag(Tags.DB_TYPE.getKey(), traced.dbType());
-        return spanBuilder;
-    }
-
     private boolean checkJedisComponent(String component) {
         return StringUtils.equals(component, hu.icellmobilsoft.coffee.cdi.trace.constants.Tags.Redis.Jedis.COMPONENT);
     }
 
-    private void logException(Span span, Exception e) {
-        Map<String, Object> errorLogs = new HashMap<>(2);
-        errorLogs.put("event", Tags.ERROR.getKey());
-        errorLogs.put("error.object", e);
-        span.log(errorLogs);
-        Tags.ERROR.set(span, true);
-    }
 }

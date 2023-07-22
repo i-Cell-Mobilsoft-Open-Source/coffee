@@ -106,4 +106,26 @@ public interface Tags {
         String COMPONENT = "gRPC";
     }
 
+    /**
+     * Default Relational database Tags
+     * 
+     * @since 2.1.0
+     */
+    interface Database {
+        /**
+         * Database trace component tag ({@value})
+         */
+        String DB_TYPE = "relational";
+
+        /**
+         * Database trace kind tag ({@value})
+         */
+        String KIND = "client";
+
+        /**
+         * Database trace component tag ({@value})
+         */
+        String COMPONENT = "database";
+    }
+
 }

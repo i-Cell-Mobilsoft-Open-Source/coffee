@@ -79,3 +79,31 @@ A változtatások nem eredményeznek átállási munkálatokat, visszafelé komp
 
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
 
+=== coffee-cdi
+
+** A `hu.icellmobilsoft.coffee.cdi.trace.constants.Tags` új értékeket kapott relaciós adatbázis trace adatok átadására.
+** Új package tracing műveletek modularizálására, `hu.icellmobilsoft.coffee.cdi.trace.spi`
+** `IOpenTraceHandler` dinamikus tracing implementáció bekötését teszi lehetővé
+** `OpenTraceHandlerProducer` szolgáltatja az aktivált tracing modult, és default működést ad ha nincs bekötve tracing modul
+
+==== Átállás
+
+* A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+=== coffee-deltaspike-data
+
+** A repository réget dinamikus trace kezelést kapott, amennyiben tracing modul aktív.
+
+==== Átállás
+
+* A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+=== coffee-module-mp-opentracing
+
+** `OpenTraceHandler` segíti a modulok trace flow-ba helyezését, ott ahol nem lehet a meglévő `OpenTraceInterceptor`-ra hagyatkozni.
+
+==== Átállás
+
+* A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+
