@@ -65,11 +65,14 @@ Changes are backwards compatible doesnt need any migration.
 
 === coffee-jpa
 
-** NoSuchMethodException fix in JPAUtil.toNativeSQL(NoEx) which has been caused by the hibernate 6.x upgrade. 
+** NoSuchMethodException fix in JPAUtil.toNativeSQL(NoEx) which has been caused by the hibernate 6.x upgrade.
+** Possible integer-overflow fix in PagingUtil.getPagingResult* methods. XSD validation and some internal checks have been added. 
 
 ==== Migration
 
-Changes are backwards compatible doesnt need any migration.
+PagingUtil methods may throw BaseException from now on, which may need to be handled in the calling application. (though probably not necessary) 
+
+The rest of changes are backwards compatible and doesnt need any migration.
 
 === BatchService
 
