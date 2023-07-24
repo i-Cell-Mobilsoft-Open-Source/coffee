@@ -1,12 +1,10 @@
 [#common_core_coffee-cdi_trace]
 = Trace
 
-A `hu.icellmobilsoft.coffee.cdi.trace.annotation` csomagban található annotációk lehetővé teszik hogy a coff::ee moduljai trace információt szolgáltassanak. Az annotácoók azt a célt szolgálják hogy a coff::ee moduljai képesek legyenek becsatlakozni egy meglévő trace flow-ba vagy új flow tudjanak indítani.
+A `hu.icellmobilsoft.coffee.cdi.trace.annotation` csomagban található annotációk lehetővé teszik hogy a coff::ee moduljai trace információt szolgáltassanak. Az annotációk azt a célt szolgálják hogy a coff::ee moduljai képesek legyenek becsatlakozni egy meglévő trace flow-ba vagy új flow tudjanak indítani.
 
 
 * Trace használat
-
-** A `@Traceable` annotáción keresztül lehetőséget biztosít hogy a class összes metódusa trace-elhetővé váljon.
 
 ** A `@Traced` annotáció lehetővé teszi hogy metódus trace-elhetővé váljon.
 
@@ -19,12 +17,19 @@ A `hu.icellmobilsoft.coffee.cdi.trace.annotation` csomagban található annotác
 **** dbType - adatbázis típusa, pl redis
 
 
-.minta @Traceable
+.minta IOpenTraceHandler
 [source,java]
 ----
-@Traceable
-public class ConfigEtcdHandler {
 ...
+@Inject
+private IOpenTraceHandler traceHandler;
+...
+
+public Object execute(CdiQueryInvocationContext context) {
+//create jpa query ...
+Traced traced = new Traced.Literal(Tags.Database.COMPONENT, Tags.Database.KIND, Tags.Database.DB_TYPE);
+String operation = context.getRepositoryClass() + "." + method.getName();
+return traceHandler.runWithTrace(() -> context.executeQuery(jpaQuery), traced, operation);
 }
 ----
 

@@ -26,6 +26,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
+import jakarta.enterprise.util.AnnotationLiteral;
 import jakarta.enterprise.util.Nonbinding;
 import jakarta.interceptor.InterceptorBinding;
 
@@ -69,5 +70,68 @@ public @interface Traced {
      */
     @Nonbinding
     String dbType() default "";
+
+    /**
+     * Default empty literal
+     */
+    AnnotationLiteral<Traced> LITERAL = new Literal("", "", "");
+
+    /**
+     * AnnotationLiteral for Traced annotation
+     * 
+     * @author czenczl
+     * @since 2.1.0
+     */
+    final class Literal extends AnnotationLiteral<Traced> implements Traced {
+
+        private static final long serialVersionUID = 1L;
+
+        /**
+         * Trace component
+         */
+        final String component;
+        /**
+         * Trace kind
+         */
+        final String kind;
+        /**
+         * Trace dbType
+         */
+        final String dbType;
+
+        /**
+         * Instantiates the literal with component, kind and dbType
+         * 
+         * @param component
+         *            trace component, e.g. jetcd, jedis, database
+         * @param kind
+         *            trace kind, e.g. client, server
+         * @param dbType
+         *            trace dbType, e.g. relational, etcd, redis
+         */
+        public Literal(String component, String kind, String dbType) {
+            this.component = component;
+            this.kind = kind;
+            this.dbType = dbType;
+        }
+
+        @Nonbinding
+        @Override
+        public String component() {
+            return component;
+        }
+
+        @Nonbinding
+        @Override
+        public String kind() {
+            return kind;
+        }
+
+        @Nonbinding
+        @Override
+        public String dbType() {
+            return dbType;
+        }
+    }
 
 }

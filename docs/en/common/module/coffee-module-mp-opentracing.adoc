@@ -16,9 +16,7 @@ We use our own binding instead of the `org.eclipse.microprofile.opentracing.Trac
 The bindings in the extension are used to make the different technologies of the modules traceable.
 
 === OpenTraceInterceptor
-The extension gives classes that are marked with the `@Traceable` annotation the `hu.icellmobilsoft.coffee.cdi.trace.annotation.Traced` binding.
-This is used by the `OpenTraceInterceptor`. With this solution, it is easy to change/modify the trace interceptor later.
-Currently, we rely on the `@Traced` annotation to handle modules, class level `@Traceable` annotation will only result in default operation without exact span data.
+The interceptor handles methods annotated with `hu.icellmobilsoft.coffee.cdi.trace.annotation.Traced`. This is used by the `OpenTraceInterceptor`. With this solution, it becomes easy to later replace/modify the trace interceptor's behavior. It automatically handles the trace flow for rest, redis, redis-stream, etcd and gRPC.
 
 === coffee-module-redis trace
 The `OpenTraceInterceptor` works with span values filled in the `@Traced` annotation. If the value of `@Traced.component` in the annotation is 'Jedis'
@@ -30,6 +28,9 @@ A new trace is started with the tag values specified via the `@Traced` annotatio
 
 === coffee-module-etcd trace
 The `ConfigEtcdHandler` has been annotated, the method calls in it will return trace data.
+
+=== coffee-deltaspike-data trace
+The `OpenTraceHandler` manages the channeling of database operations in the repository layer into the trace flow.
 
 === OpenTraceErrorResponseFilter
 Other operations that return an HTTP500 or higher error code will not appear as errors in the trace.

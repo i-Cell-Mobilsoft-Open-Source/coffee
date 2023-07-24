@@ -17,9 +17,9 @@ Az extension-ben található bindingok szolgálnak arra hogy a modulok különb�
 
 
 === OpenTraceInterceptor
-Az extension azokat a classokat amik `@Traceable` annotációval vannak jelölve, megkapják a `hu.icellmobilsoft.coffee.cdi.trace.annotation.Traced` bindingot.
+Az interceptor azokat a metódusokat kezeli amik `hu.icellmobilsoft.coffee.cdi.trace.annotation.Traced`.
 Ezt használja fel az `OpenTraceInterceptor`. Ezzel a megoldással később könnyen lehet cserélni/módosítani a trace interceptor működését.
-Jelenleg a `@Traced` annotációra építjük a modulok kezelését, osztály szinten használható `@Traceable` annotáció csak a default működést fogja eredményezni, pontos span adatok nélkül.
+Automatikusan kezeli a rest, redis, redis-stream, etcd, gRPC trace flow kezelését.
 
 === coffee-module-redis trace
 Az `OpenTraceInterceptor` a `@Traced` annotációban kitöltött span értékekkel dolgozik. Ha az annotációban található `@Traced.component` értéke 'Jedis'
@@ -34,6 +34,9 @@ A `ConfigEtcdHandler` lett annotálva, az ebben lévő metódushívások adnak t
 
 === coffee-grpc-opentracing-impl trace
 Az `OpenTraceInterceptor` kezeli a gRPC-n keresztül jövő trace adatokat, összeköti a többi művelettel amik a trace részei. (redis, consumerek, rest).
+
+=== coffee-deltaspike-data trace
+Az `OpenTraceHandler` kezeli a repository rétegben lévő adatbázis műveletek trace flowba csatornázását.
 
 === OpenTraceErrorResponseFilter
 Azok a rest operációk amik HTTP500, vagy magasabb hibakódot adnak, nem látszanak a trace-ben hibásnak.

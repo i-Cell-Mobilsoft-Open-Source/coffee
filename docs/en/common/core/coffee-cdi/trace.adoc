@@ -6,8 +6,6 @@ The annotations in the `hu.icellmobilsoft.coffee.cdi.trace.annotation` package a
 
 * Trace usage
 
-** The `@Traceable` annotation provides the possibility to make all methods of a class traceable.
-
 ** The `@Traced` annotation allows a method to become traceable.
 
 *** Tags - links the span data of coff:ee modules to the values of mp-opentracing io.opentracing.tag.Tags
@@ -19,12 +17,19 @@ The annotations in the `hu.icellmobilsoft.coffee.cdi.trace.annotation` package a
 **** dbType - database type, e.g. redis
 
 
-.sample @Traceable
+.sample IOpenTraceHandler
 [source,java]
 ----
-@Traceable
-public class ConfigEtcdHandler {
 ...
+@Inject
+private IOpenTraceHandler traceHandler;
+...
+
+public Object execute(CdiQueryInvocationContext context) {
+//create jpa query ...
+Traced traced = new Traced.Literal(Tags.Database.COMPONENT, Tags.Database.KIND, Tags.Database.DB_TYPE);
+String operation = context.getRepositoryClass() + "." + method.getName();
+return traceHandler.runWithTrace(() -> context.executeQuery(jpaQuery), traced, operation);
 }
 ----
 

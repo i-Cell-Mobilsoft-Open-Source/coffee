@@ -37,18 +37,24 @@
  */
 package org.apache.deltaspike.data.impl.builder;
 
+import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
+import java.util.List;
+
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EntityManager;
+
+import org.apache.deltaspike.core.util.ClassUtils;
 import org.apache.deltaspike.data.api.Query;
 import org.apache.deltaspike.data.impl.handler.CdiQueryInvocationContext;
 import org.apache.deltaspike.data.impl.param.Parameters;
 import org.apache.deltaspike.data.impl.util.jpa.QueryStringExtractorFactory;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.EntityManager;
-import java.lang.reflect.Method;
-import java.lang.reflect.ParameterizedType;
-import java.util.List;
-import jakarta.enterprise.context.ApplicationScoped;
-import org.apache.deltaspike.core.util.ClassUtils;
+import hu.icellmobilsoft.coffee.cdi.trace.annotation.Traced;
+import hu.icellmobilsoft.coffee.cdi.trace.constants.Tags;
+import hu.icellmobilsoft.coffee.cdi.trace.spi.IOpenTraceHandler;
 
 //import static org.apache.deltaspike.core.util.StringUtils.isNotEmpty;
 
@@ -61,13 +67,18 @@ public class AnnotatedQueryBuilder extends QueryBuilder
 
     private final QueryStringExtractorFactory factory = new QueryStringExtractorFactory();
 
+    @Inject
+    private IOpenTraceHandler traceHandler;
+    
     @Override
-    public Object execute(CdiQueryInvocationContext context)
-    {
+    public Object execute(CdiQueryInvocationContext context) {
         Method method = context.getMethod();
         Query query = method.getAnnotation(Query.class);
         jakarta.persistence.Query jpaQuery = createJpaQuery(query, context);
-        return context.executeQuery(jpaQuery);
+
+        Traced traced = new Traced.Literal(Tags.Database.COMPONENT, Tags.Database.KIND, Tags.Database.DB_TYPE);
+        String operation = context.getRepositoryClass() + "." + method.getName();
+        return traceHandler.runWithTrace(() -> context.executeQuery(jpaQuery), traced, operation);
     }
 
     private jakarta.persistence.Query createJpaQuery(Query query, CdiQueryInvocationContext context)

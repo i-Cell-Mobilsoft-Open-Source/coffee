@@ -78,3 +78,31 @@ Changes are backwards compatible doesnt need any migration.
 ==== Migration
 
 Changes are backwards compatible doesnt need any migration.
+
+=== coffee-cdi
+
+** The `hu.icellmobilsoft.coffee.cdi.trace.constants.Tags` has received new values for passing relational database trace data.
+** New package for modularizing tracing operations, `hu.icellmobilsoft.coffee.cdi.trace.spi`
+** `IOpenTraceHandler` Enables the integration of dynamic tracing implementation.
+** `OpenTraceHandlerProducer` Provides the activated tracing module and gives default behavior if no tracing module is plugged in.
+
+==== Migration
+
+The changes do not result in any migration work, it is backwards compatible.
+
+=== coffee-deltaspike-data
+
+** The repository layer received dynamic trace handling, provided that the tracing module is active.
+
+==== Migration
+
+The changes do not result in any migration work, it is backwards compatible.
+
+=== coffee-module-mp-opentracing
+
+** `OpenTraceHandler` Facilitates the placement of modules into the trace flow where reliance on the existing OpenTraceInterceptor is not possible.
+
+==== Migration
+
+The changes do not result in any migration work, it is backwards compatible.
+
