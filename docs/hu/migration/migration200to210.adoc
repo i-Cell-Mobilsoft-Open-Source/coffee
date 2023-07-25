@@ -66,10 +66,13 @@ A változtatások nem eredményeznek átállási munkálatokat, visszafelé komp
 === coffee-jpa
 
 ** NoSuchMethodException javítás a JPAUtil.toNativeSQL(NoEx) metódusban, amit a hibernate 6.x upgrade okozott. 
+** Lehetséges integer-overflow hiba javítása a PagingUtil.getPagingResult* metódusokban. XSD szinten történt egy addícionális megkötés, valamint néhány belső vizsgálat került hozzáadásra.
 
 ==== Átállás
 
-A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+A PagingUtil metódusok innentől kezdve dobhatnak BaseExceptiont, amit a hívó alkalmazásban esetleg le kell kezelni. (bár valószínűleg nem szükséges)
+
+A többi változtatás nem eredményez átállási munkálatokat, visszafelé kompatibilis.
 
 === BatchService
 
