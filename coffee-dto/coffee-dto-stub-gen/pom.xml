@@ -13,7 +13,6 @@
 	<description>Generating classes from coffee proto files</description>
 
 	<properties>
-		<maven.javadoc.skip>true</maven.javadoc.skip>
 		<version.io.grpc.version>1.52.1</version.io.grpc.version>
 		<version.protoc.version>3.21.7</version.protoc.version>
 		<version.os-maven-plugin.version>1.7.1</version.os-maven-plugin.version>
