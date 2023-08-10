@@ -21,6 +21,7 @@ package hu.icellmobilsoft.coffee.tool.gson;
 
 import java.io.Reader;
 import java.io.StringReader;
+import java.lang.reflect.Type;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.time.OffsetTime;
@@ -54,6 +55,77 @@ public class JsonUtil {
     private static final Logger LOGGER = Logger.getLogger(JsonUtil.class);
 
     /**
+     * Converting JSON string to DTO object without throwing exception
+     *
+     * @param <T>
+     *            type of returned object
+     * @param json
+     *            JSON String
+     * @param typeOfT
+     *            type of returned object
+     * @return object
+     * @throws BaseException
+     *             exception
+     */
+    public static <T> T toObjectEx(String json, Type typeOfT) throws BaseException {
+        try {
+            T dto = toObjectGson(json, typeOfT);
+            LOGGER.debug("Converting to Object successful: [" + dto + "]");
+            return dto;
+        } catch (Exception e) {
+            throw new BaseException("Error in converting json [" + json + "] to [" + typeOfT + "]: " + e.getLocalizedMessage(), e);
+        }
+    }
+
+    /**
+     * Convert JSON String to DTO object without throwing exception
+     *
+     * @param <T>
+     *            type of returned object
+     * @param json
+     *            JSON String
+     * @param typeOfT
+     *            type of returned object
+     * @return DTO
+     */
+    public static <T> T toObjectGson(String json, Type typeOfT) {
+        Gson gson = initGson();
+
+        try {
+            return gson.fromJson(json, typeOfT);
+        } catch (JsonSyntaxException e) {
+            LOGGER.warn("Error in parse JSON [" + e.getLocalizedMessage() + "], try lenient... ");
+            JsonReader reader = new JsonReader(new StringReader(json));
+            reader.setLenient(true);
+            return gson.fromJson(reader, typeOfT);
+        }
+    }
+
+    /**
+     * Convert JSON String to DTO object without throwing exception
+     *
+     * @param <T>
+     *            type of returned object
+     * @param reader
+     *            JSON reader
+     * @param typeOfT
+     *            type of returned object
+     * @return DTO
+     */
+    public static <T> T toObjectGson(Reader reader, Type typeOfT) {
+        Gson gson = initGson();
+
+        try {
+            return gson.fromJson(reader, typeOfT);
+        } catch (JsonSyntaxException e) {
+            LOGGER.warn("Error in parse JSON [" + e.getLocalizedMessage() + "], try lenient... ");
+            JsonReader jsonreader = new JsonReader(reader);
+            jsonreader.setLenient(true);
+            return gson.fromJson(jsonreader, typeOfT);
+        }
+    }
+
+    /**
      * Converting DTO object to JSON string without throwing exception
      *
      * @param dto
@@ -83,6 +155,26 @@ public class JsonUtil {
     public static <T> T toObject(String json, Class<T> classType) {
         try {
             return toObjectEx(json, classType);
+        } catch (BaseException e) {
+            LOGGER.error(e.getLocalizedMessage(), e);
+            return null;
+        }
+    }
+
+    /**
+     * Converting JSON string to DTO object without throwing exception
+     *
+     * @param <T>
+     *            type of returned object
+     * @param json
+     *            JSON String
+     * @param typeOfT
+     *            type of returned object
+     * @return object
+     */
+    public static <T> T toObject(String json, Type typeOfT) {
+        try {
+            return toObjectEx(json, typeOfT);
         } catch (BaseException e) {
             LOGGER.error(e.getLocalizedMessage(), e);
             return null;

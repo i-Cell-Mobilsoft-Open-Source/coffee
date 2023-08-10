@@ -5,7 +5,7 @@ coff:ee v2.0.0 -> v2.1.0 migrációs leírás, újdonságok, változások leír�
 == Újdonságok
 
 Bevezetésre került a https://grpc.io/[gRPC] támogatása.
-Ennek köszönhetően létrejöt új subprojekt gyűjtő `coffee-grpc` néven.
+Ennek köszönhetően létrejött egy új subprojekt gyűjtő `coffee-grpc` néven.
 
 === coffee-grpc
 Következő funkció támogatások kerültek a rendszerbe:

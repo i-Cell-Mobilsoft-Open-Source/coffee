@@ -32,3 +32,15 @@ String decodedString = new String(decoded, "UTF-8"); //test input test
 ----
 +
 IMPORTANT: Adott kulcs-IV párt nem szabad újra használni! Emiatt az IV nélküli encrypt/decrypt-et csak egyszer használatos kulcsokkal szabad meghívni!
+
+`JsonUtil`::
+A JsonUtil osztály egy a Gson használatára épülő util osztály
++
+[source, java]
+.példa - generikus típus deszerializációja
+----
+String paramString = "[{\"key\":\"testTitleKey\",\"value\":\"testTitleValue\"}]";
+Type paramListType = new TypeToken<List<ParameterType>>() {}.getType();
+List<ParameterType> list = JsonUtil.toObjectEx(paramString, paramListType);
+System.out.println(list.get(0).getKey());
+----

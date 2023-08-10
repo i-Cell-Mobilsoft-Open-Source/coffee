@@ -1,0 +1,13 @@
+= v2.1.0 → v2.2.0
+
+coff:ee v2.1.0 -> v2.2.0 migration description, news, changes
+
+== What's new
+
+=== coffee-tool
+
+* JsonUtil is able to deserialize generic types as well. 
+
+==== Migration
+
+Changes are backwards compatible doesnt need any migration.

@@ -32,3 +32,15 @@ String decodedString = new String(decoded, StandardCharsets.UTF_8); //test input
 ----
 +
 IMPORTANT: Given key-IV pair must not be reused! For this reason, encrypt/decrypt without IV should only be called with single-use keys!
+
+`JsonUtil`::
+JsonUtil is a kind of wrapper of Gson
++
+[source, java]
+.example - deserialization of generic type
+----
+String paramString = "[{\"key\":\"testTitleKey\",\"value\":\"testTitleValue\"}]";
+Type paramListType = new TypeToken<List<ParameterType>>() {}.getType();
+List<ParameterType> list = JsonUtil.toObjectEx(paramString, paramListType);
+System.out.println(list.get(0).getKey());
+----
