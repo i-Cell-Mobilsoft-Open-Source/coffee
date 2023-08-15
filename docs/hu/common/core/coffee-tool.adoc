@@ -41,6 +41,6 @@ A JsonUtil osztály egy a Gson használatára épülő util osztály
 ----
 String paramString = "[{\"key\":\"testTitleKey\",\"value\":\"testTitleValue\"}]";
 Type paramListType = new TypeToken<List<ParameterType>>() {}.getType();
-List<ParameterType> list = JsonUtil.toObjectEx(paramString, paramListType);
+List<ParameterType> list = JsonUtil.toObjectUncheckedEx(paramString, paramListType);
 System.out.println(list.get(0).getKey());
 ----

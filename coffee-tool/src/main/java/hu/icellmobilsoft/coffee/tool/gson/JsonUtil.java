@@ -54,6 +54,9 @@ public class JsonUtil {
 
     private static final Logger LOGGER = Logger.getLogger(JsonUtil.class);
 
+    private JsonUtil() {
+    }
+
     /**
      * Converting JSON string to DTO object without throwing exception
      *
@@ -67,9 +70,9 @@ public class JsonUtil {
      * @throws BaseException
      *             exception
      */
-    public static <T> T toObjectEx(String json, Type typeOfT) throws BaseException {
+    public static <T> T toObjectUncheckedEx(String json, Type typeOfT) throws BaseException {
         try {
-            T dto = toObjectGson(json, typeOfT);
+            T dto = toObjectUncheckedGson(json, typeOfT);
             LOGGER.debug("Converting to Object successful: [" + dto + "]");
             return dto;
         } catch (Exception e) {
@@ -88,13 +91,13 @@ public class JsonUtil {
      *            type of returned object
      * @return DTO
      */
-    public static <T> T toObjectGson(String json, Type typeOfT) {
+    public static <T> T toObjectUncheckedGson(String json, Type typeOfT) {
         Gson gson = initGson();
 
         try {
             return gson.fromJson(json, typeOfT);
         } catch (JsonSyntaxException e) {
-            LOGGER.warn("Error in parse JSON [" + e.getLocalizedMessage() + "], try lenient... ");
+            LOGGER.warn("Error in parse JSON [{0}], try lenient... ", e.getLocalizedMessage());
             JsonReader reader = new JsonReader(new StringReader(json));
             reader.setLenient(true);
             return gson.fromJson(reader, typeOfT);
@@ -112,13 +115,13 @@ public class JsonUtil {
      *            type of returned object
      * @return DTO
      */
-    public static <T> T toObjectGson(Reader reader, Type typeOfT) {
+    public static <T> T toObjectUncheckedGson(Reader reader, Type typeOfT) {
         Gson gson = initGson();
 
         try {
             return gson.fromJson(reader, typeOfT);
         } catch (JsonSyntaxException e) {
-            LOGGER.warn("Error in parse JSON [" + e.getLocalizedMessage() + "], try lenient... ");
+            LOGGER.warn("Error in parse JSON [{0}], try lenient... ", e.getLocalizedMessage());
             JsonReader jsonreader = new JsonReader(reader);
             jsonreader.setLenient(true);
             return gson.fromJson(jsonreader, typeOfT);
@@ -172,9 +175,9 @@ public class JsonUtil {
      *            type of returned object
      * @return object
      */
-    public static <T> T toObject(String json, Type typeOfT) {
+    public static <T> T toObjectUnchecked(String json, Type typeOfT) {
         try {
-            return toObjectEx(json, typeOfT);
+            return toObjectUncheckedEx(json, typeOfT);
         } catch (BaseException e) {
             LOGGER.error(e.getLocalizedMessage(), e);
             return null;
@@ -193,7 +196,7 @@ public class JsonUtil {
     public static String toJsonEx(Object dto) throws BaseException {
         try {
             String json = toJsonGson(dto);
-            LOGGER.debug("Converting to JSON successful: [" + StringUtils.abbreviate(json, 1000) + "]");
+            LOGGER.debug("Converting to JSON successful: [{0}]", StringUtils.abbreviate(json, 1000));
             return json;
         } catch (Exception e) {
             throw new BaseException("Error in converting dto [" + dto.getClass() + "] to String: " + e.getLocalizedMessage(), e);
@@ -216,7 +219,7 @@ public class JsonUtil {
     public static <T> T toObjectEx(String json, Class<T> classType) throws BaseException {
         try {
             T dto = toObjectGson(json, classType);
-            LOGGER.debug("Converting to Object successful: [" + dto + "]");
+            LOGGER.debug("Converting to Object successful: [{0}]", dto);
             return dto;
         } catch (Exception e) {
             throw new BaseException("Error in converting json [" + json + "] to [" + classType + "]: " + e.getLocalizedMessage(), e);
@@ -253,7 +256,7 @@ public class JsonUtil {
         try {
             return gson.fromJson(json, classType);
         } catch (JsonSyntaxException e) {
-            LOGGER.warn("Error in parse JSON [" + e.getLocalizedMessage() + "], try lenient... ");
+            LOGGER.warn("Error in parse JSON [{0}], try lenient... ", e.getLocalizedMessage());
             JsonReader reader = new JsonReader(new StringReader(json));
             reader.setLenient(true);
             return gson.fromJson(reader, classType);
@@ -277,7 +280,7 @@ public class JsonUtil {
         try {
             return gson.fromJson(reader, classType);
         } catch (JsonSyntaxException e) {
-            LOGGER.warn("Error in parse JSON [" + e.getLocalizedMessage() + "], try lenient... ");
+            LOGGER.warn("Error in parse JSON [{0}], try lenient... ", e.getLocalizedMessage());
             JsonReader jsonreader = new JsonReader(reader);
             jsonreader.setLenient(true);
             return gson.fromJson(jsonreader, classType);
