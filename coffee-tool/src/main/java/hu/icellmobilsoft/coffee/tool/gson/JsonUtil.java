@@ -61,7 +61,7 @@ public class JsonUtil {
     }
 
     /**
-     * Converting JSON string to DTO object without throwing exception
+     * Converting JSON string to DTO object
      *
      * @param <T>
      *            type of returned object
@@ -207,7 +207,7 @@ public class JsonUtil {
     }
 
     /**
-     * Converting JSON string to DTO object without throwing exception
+     * Converting JSON string to DTO object
      *
      * @param <T>
      *            type of returned object
