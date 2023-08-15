@@ -54,6 +54,8 @@ public class JsonUtil {
 
     private static final Logger LOGGER = Logger.getLogger(JsonUtil.class);
     private static final String ERROR_IN_PARSE_JSON_0_TRY_LENIENT = "Error in parse JSON [{0}], try lenient... ";
+    private static final String CONVERTING_TO_OBJECT_SUCCESSFUL_0 = "Converting to Object successful: [{0}]";
+    private static final String CONVERTING_TO_JSON_SUCCESSFUL_0 = "Converting to JSON successful: [{0}]";
 
     private JsonUtil() {
     }
@@ -74,7 +76,7 @@ public class JsonUtil {
     public static <T> T toObjectUncheckedEx(String json, Type typeOfT) throws BaseException {
         try {
             T dto = toObjectUncheckedGson(json, typeOfT);
-            LOGGER.debug("Converting to Object successful: [" + dto + "]");
+            LOGGER.debug(CONVERTING_TO_OBJECT_SUCCESSFUL_0, dto);
             return dto;
         } catch (Exception e) {
             throw new BaseException("Error in converting json [" + json + "] to [" + typeOfT + "]: " + e.getLocalizedMessage(), e);
@@ -197,7 +199,7 @@ public class JsonUtil {
     public static String toJsonEx(Object dto) throws BaseException {
         try {
             String json = toJsonGson(dto);
-            LOGGER.debug("Converting to JSON successful: [{0}]", StringUtils.abbreviate(json, 1000));
+            LOGGER.debug(CONVERTING_TO_JSON_SUCCESSFUL_0, StringUtils.abbreviate(json, 1000));
             return json;
         } catch (Exception e) {
             throw new BaseException("Error in converting dto [" + dto.getClass() + "] to String: " + e.getLocalizedMessage(), e);
@@ -220,7 +222,7 @@ public class JsonUtil {
     public static <T> T toObjectEx(String json, Class<T> classType) throws BaseException {
         try {
             T dto = toObjectGson(json, classType);
-            LOGGER.debug("Converting to Object successful: [{0}]", dto);
+            LOGGER.debug(CONVERTING_TO_OBJECT_SUCCESSFUL_0, dto);
             return dto;
         } catch (Exception e) {
             throw new BaseException("Error in converting json [" + json + "] to [" + classType + "]: " + e.getLocalizedMessage(), e);
