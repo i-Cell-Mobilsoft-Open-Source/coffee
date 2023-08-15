@@ -1,0 +1,11 @@
+= v2.1.0 → v2.2.0
+
+coff:ee v2.1.0 -> v2.2.0 migrációs leírás, újdonságok, változások leírása
+
+=== coffee-tool
+
+** JsonUtil használatával is lehetséges a generikus típusok deszerializációja.
+
+==== Átállás
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
