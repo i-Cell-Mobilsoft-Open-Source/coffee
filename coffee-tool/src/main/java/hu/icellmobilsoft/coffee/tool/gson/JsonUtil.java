@@ -53,6 +53,7 @@ import hu.icellmobilsoft.coffee.se.logging.Logger;
 public class JsonUtil {
 
     private static final Logger LOGGER = Logger.getLogger(JsonUtil.class);
+    private static final String ERROR_IN_PARSE_JSON_0_TRY_LENIENT = "Error in parse JSON [{0}], try lenient... ";
 
     private JsonUtil() {
     }
@@ -97,7 +98,7 @@ public class JsonUtil {
         try {
             return gson.fromJson(json, typeOfT);
         } catch (JsonSyntaxException e) {
-            LOGGER.warn("Error in parse JSON [{0}], try lenient... ", e.getLocalizedMessage());
+            LOGGER.warn(ERROR_IN_PARSE_JSON_0_TRY_LENIENT, e.getLocalizedMessage());
             JsonReader reader = new JsonReader(new StringReader(json));
             reader.setLenient(true);
             return gson.fromJson(reader, typeOfT);
@@ -121,7 +122,7 @@ public class JsonUtil {
         try {
             return gson.fromJson(reader, typeOfT);
         } catch (JsonSyntaxException e) {
-            LOGGER.warn("Error in parse JSON [{0}], try lenient... ", e.getLocalizedMessage());
+            LOGGER.warn(ERROR_IN_PARSE_JSON_0_TRY_LENIENT, e.getLocalizedMessage());
             JsonReader jsonreader = new JsonReader(reader);
             jsonreader.setLenient(true);
             return gson.fromJson(jsonreader, typeOfT);
@@ -256,7 +257,7 @@ public class JsonUtil {
         try {
             return gson.fromJson(json, classType);
         } catch (JsonSyntaxException e) {
-            LOGGER.warn("Error in parse JSON [{0}], try lenient... ", e.getLocalizedMessage());
+            LOGGER.warn(ERROR_IN_PARSE_JSON_0_TRY_LENIENT, e.getLocalizedMessage());
             JsonReader reader = new JsonReader(new StringReader(json));
             reader.setLenient(true);
             return gson.fromJson(reader, classType);
@@ -280,7 +281,7 @@ public class JsonUtil {
         try {
             return gson.fromJson(reader, classType);
         } catch (JsonSyntaxException e) {
-            LOGGER.warn("Error in parse JSON [{0}], try lenient... ", e.getLocalizedMessage());
+            LOGGER.warn(ERROR_IN_PARSE_JSON_0_TRY_LENIENT, e.getLocalizedMessage());
             JsonReader jsonreader = new JsonReader(reader);
             jsonreader.setLenient(true);
             return gson.fromJson(jsonreader, classType);
