@@ -154,3 +154,33 @@ For more information see: https://redis.io/commands/lrem
 ----
 redisManager.runWithConnection(Jedis::lrem, "removeValueFromList", listKey, 0, "removeValue");
 ----
+
+== microprofile-health support
+
+The *RedisHealth* can check if the Redis server is reachable.
+
+.Startup example
+[source,java]
+----
+@ApplicationScoped
+public class RedisHealthCheck {
+
+    @Inject
+    private RedisHealth databaseHealth;
+
+    public HealthCheckResponse check(String redisConfig) {
+        ManagedRedisConfig managedRedisConfig = ...
+        try {
+            return redisHealth.checkConnection(managedRedisConfig, "redis");
+        } catch (BaseException e) {
+            return HealthCheckResponse.builder().name("redis").up().build();
+        }
+    }
+    
+    @Produces
+    @Startup
+    public HealthCheck produceRedisCheck() {
+        return this::check;
+    }
+}
+----

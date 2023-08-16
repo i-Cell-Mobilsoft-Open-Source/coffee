@@ -154,3 +154,33 @@ Bővebb leírás: https://redis.io/commands/lrem
 ----
 redisManager.runWithConnection(Jedis::lrem, "removeValueFromList", listKey, 0, "removeValue");
 ----
+
+== microprofile-health támogatás
+
+A *RedisHealth* ellenőrizni tudja hogy elérhető-e a redis server.
+
+.Startup használati példa
+[source,java]
+----
+@ApplicationScoped
+public class RedisHealthCheck {
+
+    @Inject
+    private RedisHealth databaseHealth;
+
+    public HealthCheckResponse check(String redisConfig) {
+        ManagedRedisConfig managedRedisConfig = ...
+        try {
+            return redisHealth.checkConnection(managedRedisConfig, "redis");
+        } catch (BaseException e) {
+            return HealthCheckResponse.builder().name("redis").up().build();
+        }
+    }
+    
+    @Produces
+    @Startup
+    public HealthCheck produceRedisCheck() {
+        return this::check;
+    }
+}
+----

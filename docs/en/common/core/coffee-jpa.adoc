@@ -500,3 +500,63 @@ private Byte[] lobWrapperByteArray;
 |===
 
 IMPORTANT: The *JDBC driver* is responsible for setting types not included in the table.
+
+== microprofile-health support
+
+The *DatabaseHealth* can check if the database is reachable.
+The *DatabasePoolHealth* can check how loaded the connection pool used for operations to the database is.
+
+.Startup example
+[source,java]
+----
+@ApplicationScoped
+public class DatabaseHealthCheck {
+
+    @Inject
+    private DatabaseHealth databaseHealth;
+
+    public HealthCheckResponse checkDatabaseConnection() {
+        DatabaseHealthResourceConfig config = new DatabaseHealthResourceConfig();
+        config.setBuilderName("oracle");
+        config.setDatasourceUrl(DatabaseHealthConstant.Database.ORACLE_DATASOURCE_URL);
+        config.setDsName(DatabaseHealthConstant.Database.DEFAULT_DATASOURCE_NAME);
+        try {
+            return databaseHealth.checkDatabaseConnection(config);
+        }catch (BaseException e) {
+            // need to be careful with exceptions, because the probe check will fail if we don't handle the exception correctly
+            return HealthCheckResponse.builder().name("oracle").up().build();
+        }
+    }
+    
+    @Produces
+    @Startup
+    public HealthCheck produceDataBaseCheck() {
+        return this::checkDatabaseConnection;
+    }
+}
+----
+
+.Readiness example
+[source,java]
+----
+@ApplicationScoped
+public class DatabaseHealthCheck {
+
+    @Inject
+    private DatabaseHealth databaseHealth;
+
+    public HealthCheckResponse checkDatabasePoolUsage() {
+        try {
+            return databasePoolHealth.checkDatabasePoolUsage("oracle");
+        }catch (BaseException e) {
+            return HealthCheckResponse.builder().name("oracle").up().build();
+        }
+    }
+    
+    @Produces
+    @Readiness
+    public HealthCheck produceDataBasePoolCheck() {
+        return this::checkDatabasePoolUsage;
+    }
+}
+----

@@ -15,6 +15,11 @@
         </dependency>
 
         <dependency>
+            <groupId>org.eclipse.microprofile.health</groupId>
+            <artifactId>microprofile-health-api</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>redis.clients</groupId>
             <artifactId>jedis</artifactId>
             <version>4.2.3</version>

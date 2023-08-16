@@ -9,3 +9,27 @@ coff:ee v2.1.0 -> v2.2.0 migrációs leírás, újdonságok, változások leír�
 ==== Átállás
 
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+=== coffee-jpa
+
+** microprofile-health támogatást kapott
+
+==== Átállás
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+=== coffee-module-redis
+
+** microprofile-health támogatást kapott
+
+==== Átállás
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+=== coffee-module-etcd
+
+** microprofile-health támogatást kapott
+
+==== Átállás
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
