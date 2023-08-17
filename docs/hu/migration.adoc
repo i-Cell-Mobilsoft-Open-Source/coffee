@@ -7,3 +7,4 @@ találhatóak.
 
 include::migration/migrationTo2_0_0.adoc[leveloffset=+1]
 include::migration/migration200to210.adoc[leveloffset=+1]
+include::migration/migration210to220.adoc[leveloffset=+1]
