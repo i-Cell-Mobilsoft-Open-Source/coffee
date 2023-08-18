@@ -32,6 +32,7 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
+import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
@@ -58,6 +59,16 @@ public class DatabaseHealth {
 
     @Inject
     private Config config;
+
+    private ExecutorService executor;
+
+    /**
+     * init executor
+     */
+    @PostConstruct
+    public void init() {
+        executor = Executors.newSingleThreadExecutor();
+    }
 
     /**
      * 
@@ -147,7 +158,6 @@ public class DatabaseHealth {
 
     private Connection connectWithTimeout(DataSource datasource, long timeout, TimeUnit unit)
             throws InterruptedException, ExecutionException, TimeoutException {
-        ExecutorService executor = Executors.newSingleThreadExecutor();
         Future<Connection> future = executor.submit(() -> {
             try (Connection connection = datasource.getConnection()) {
                 connection.isValid(1);
