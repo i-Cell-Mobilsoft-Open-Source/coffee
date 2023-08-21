@@ -21,6 +21,7 @@ package hu.icellmobilsoft.coffee.tool.gson;
 
 import java.io.Reader;
 import java.io.StringReader;
+import java.lang.reflect.Type;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.time.OffsetTime;
@@ -51,6 +52,83 @@ import hu.icellmobilsoft.coffee.se.logging.Logger;
 public class JsonUtil {
 
     private static final Logger LOGGER = Logger.getLogger(JsonUtil.class);
+    private static final String ERROR_IN_PARSE_JSON_0_TRY_LENIENT = "Error in parse JSON [{0}], try lenient... ";
+    private static final String CONVERTING_TO_OBJECT_SUCCESSFUL_0 = "Converting to Object successful: [{0}]";
+    private static final String CONVERTING_TO_JSON_SUCCESSFUL_0 = "Converting to JSON successful: [{0}]";
+
+    private JsonUtil() {
+    }
+
+    /**
+     * Converting JSON string to DTO object
+     *
+     * @param <T>
+     *            type of returned object
+     * @param json
+     *            JSON String
+     * @param typeOfT
+     *            type of returned object
+     * @return object
+     * @throws BaseException
+     *             exception
+     */
+    public static <T> T toObjectUncheckedEx(String json, Type typeOfT) throws BaseException {
+        try {
+            T dto = toObjectUncheckedGson(json, typeOfT);
+            LOGGER.debug(CONVERTING_TO_OBJECT_SUCCESSFUL_0, dto);
+            return dto;
+        } catch (Exception e) {
+            throw new BaseException("Error in converting json [" + json + "] to [" + typeOfT + "]: " + e.getLocalizedMessage(), e);
+        }
+    }
+
+    /**
+     * Convert JSON String to DTO object without throwing exception
+     *
+     * @param <T>
+     *            type of returned object
+     * @param json
+     *            JSON String
+     * @param typeOfT
+     *            type of returned object
+     * @return DTO
+     */
+    public static <T> T toObjectUncheckedGson(String json, Type typeOfT) {
+        Gson gson = initGson();
+
+        try {
+            return gson.fromJson(json, typeOfT);
+        } catch (JsonSyntaxException e) {
+            LOGGER.warn(ERROR_IN_PARSE_JSON_0_TRY_LENIENT, e.getLocalizedMessage());
+            JsonReader reader = new JsonReader(new StringReader(json));
+            reader.setLenient(true);
+            return gson.fromJson(reader, typeOfT);
+        }
+    }
+
+    /**
+     * Convert JSON String to DTO object without throwing exception
+     *
+     * @param <T>
+     *            type of returned object
+     * @param reader
+     *            JSON reader
+     * @param typeOfT
+     *            type of returned object
+     * @return DTO
+     */
+    public static <T> T toObjectUncheckedGson(Reader reader, Type typeOfT) {
+        Gson gson = initGson();
+
+        try {
+            return gson.fromJson(reader, typeOfT);
+        } catch (JsonSyntaxException e) {
+            LOGGER.warn(ERROR_IN_PARSE_JSON_0_TRY_LENIENT, e.getLocalizedMessage());
+            JsonReader jsonreader = new JsonReader(reader);
+            jsonreader.setLenient(true);
+            return gson.fromJson(jsonreader, typeOfT);
+        }
+    }
 
     /**
      * Converting DTO object to JSON string without throwing exception
@@ -89,6 +167,26 @@ public class JsonUtil {
     }
 
     /**
+     * Converting JSON string to DTO object without throwing exception
+     *
+     * @param <T>
+     *            type of returned object
+     * @param json
+     *            JSON String
+     * @param typeOfT
+     *            type of returned object
+     * @return object
+     */
+    public static <T> T toObjectUnchecked(String json, Type typeOfT) {
+        try {
+            return toObjectUncheckedEx(json, typeOfT);
+        } catch (BaseException e) {
+            LOGGER.error(e.getLocalizedMessage(), e);
+            return null;
+        }
+    }
+
+    /**
      * Converting DTO object to JSON string
      *
      * @param dto
@@ -100,7 +198,7 @@ public class JsonUtil {
     public static String toJsonEx(Object dto) throws BaseException {
         try {
             String json = toJsonGson(dto);
-            LOGGER.debug("Converting to JSON successful: [" + StringUtils.abbreviate(json, 1000) + "]");
+            LOGGER.debug(CONVERTING_TO_JSON_SUCCESSFUL_0, StringUtils.abbreviate(json, 1000));
             return json;
         } catch (Exception e) {
             throw new BaseException("Error in converting dto [" + dto.getClass() + "] to String: " + e.getLocalizedMessage(), e);
@@ -108,7 +206,7 @@ public class JsonUtil {
     }
 
     /**
-     * Converting JSON string to DTO object without throwing exception
+     * Converting JSON string to DTO object
      *
      * @param <T>
      *            type of returned object
@@ -123,7 +221,7 @@ public class JsonUtil {
     public static <T> T toObjectEx(String json, Class<T> classType) throws BaseException {
         try {
             T dto = toObjectGson(json, classType);
-            LOGGER.debug("Converting to Object successful: [" + dto + "]");
+            LOGGER.debug(CONVERTING_TO_OBJECT_SUCCESSFUL_0, dto);
             return dto;
         } catch (Exception e) {
             throw new BaseException("Error in converting json [" + json + "] to [" + classType + "]: " + e.getLocalizedMessage(), e);
@@ -160,7 +258,7 @@ public class JsonUtil {
         try {
             return gson.fromJson(json, classType);
         } catch (JsonSyntaxException e) {
-            LOGGER.warn("Error in parse JSON [" + e.getLocalizedMessage() + "], try lenient... ");
+            LOGGER.warn(ERROR_IN_PARSE_JSON_0_TRY_LENIENT, e.getLocalizedMessage());
             JsonReader reader = new JsonReader(new StringReader(json));
             reader.setLenient(true);
             return gson.fromJson(reader, classType);
@@ -184,7 +282,7 @@ public class JsonUtil {
         try {
             return gson.fromJson(reader, classType);
         } catch (JsonSyntaxException e) {
-            LOGGER.warn("Error in parse JSON [" + e.getLocalizedMessage() + "], try lenient... ");
+            LOGGER.warn(ERROR_IN_PARSE_JSON_0_TRY_LENIENT, e.getLocalizedMessage());
             JsonReader jsonreader = new JsonReader(reader);
             jsonreader.setLenient(true);
             return gson.fromJson(jsonreader, classType);
