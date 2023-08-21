@@ -11,3 +11,27 @@ coff:ee v2.1.0 -> v2.2.0 migration description, news, changes
 ==== Migration
 
 Changes are backwards compatible doesnt need any migration.
+
+=== coffee-jpa
+
+** microprofile-health support
+
+==== Migration
+
+Changes are backwards compatible doesnt need any migration.
+
+=== coffee-module-redis
+
+** microprofile-health support
+
+==== Migration
+
+Changes are backwards compatible doesnt need any migration.
+
+=== coffee-module-etcd
+
+** microprofile-health support
+
+==== Migration
+
+Changes are backwards compatible doesnt need any migration.

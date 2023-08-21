@@ -37,6 +37,15 @@
 			<artifactId>coffee-deltaspike-data</artifactId>
 		</dependency>
 
+		<dependency>
+			<groupId>org.eclipse.microprofile.health</groupId>
+			<artifactId>microprofile-health-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.microprofile.metrics</groupId>
+			<artifactId>microprofile-metrics-api</artifactId>
+		</dependency>
+
 		<!--Test dependecies -->
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>

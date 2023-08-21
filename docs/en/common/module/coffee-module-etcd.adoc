@@ -167,3 +167,32 @@ etcdctl --endpoints=%ETCD_ENDPOINTS% put private.sample ertek
 == Logging
 The retrieved keys and the resulting values are logged unless the key matches the regular expression `+++[\w\s]*?secret[\w\s]*?+++` or `+++[\w\s]*?pass[\w\s]*?+++`, in which case the value is masked and logged.
 The default regex can be overridden by specifying `coffee.config.log.sensitive.key.pattern` in one of the *default* microprofile-config sources (sys var, env var, META-INF/microprofile-config.properties), multiple patterns can be specified separated by commas.
+
+== microprofile-health támogatás
+
+The *EtcdHealth* can check if the etcd server is reachable.
+
+.Startup example
+[source,java]
+----
+@ApplicationScoped
+public class EtcdHealthCheck {
+
+    @Inject
+    private EtcdHealth etcdHealth;
+
+    public HealthCheckResponse check() {
+        try {
+            return etcdHealth.checkConnection("etcd");
+        } catch (BaseException e) {
+            return HealthCheckResponse.builder().name("etcd").up().build();
+        }
+    }
+
+    @Produces
+    @Startup
+    public HealthCheck produceEtcdCheck() {
+        return this::check;
+    }
+}
+----
