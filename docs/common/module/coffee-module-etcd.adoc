@@ -168,3 +168,32 @@ etcdctl --endpoints=%ETCD_ENDPOINTS% put private.sample ertek
 == Loggolás
 A lekérdezett kulcsok és a kapott értékek logolásra kerülnek, kivéve ha a kulcs megfelel a `+++[\w\s]*?secret[\w\s]*?+++` vagy `+++[\w\s]*?pass[\w\s]*?+++` reguláris kifejezésnek, ez esetben az érték maszkolva lesz kilogolva.
 Az alapértelmezett regex felülírható, ha valamelyik *alapértelmezett* microprofile-config forrásban (sys var, env var, META-INF/microprofile-config.properties) megadjuk a `coffee.config.log.sensitive.key.pattern` konfigot, több pattern is megadható vesszővel elválasztva.
+
+== microprofile-health támogatás
+
+A *EtcdHealth* ellenőrizni tudja hogy elérhető-e az etcd server.
+
+.Startup használati példa
+[source,java]
+----
+@ApplicationScoped
+public class EtcdHealthCheck {
+
+    @Inject
+    private EtcdHealth etcdHealth;
+
+    public HealthCheckResponse check() {
+        try {
+            return etcdHealth.checkConnection("etcd");
+        } catch (BaseException e) {
+            return HealthCheckResponse.builder().name("etcd").up().build();
+        }
+    }
+
+    @Produces
+    @Startup
+    public HealthCheck produceEtcdCheck() {
+        return this::check;
+    }
+}
+----

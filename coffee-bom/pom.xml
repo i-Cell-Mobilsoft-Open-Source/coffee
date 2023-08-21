@@ -42,6 +42,7 @@
 		<version.microprofile-reactive-messaging-api>2.0.1</version.microprofile-reactive-messaging-api>
 		<version.microprofile-reactive-streams-operators-api>2.0</version.microprofile-reactive-streams-operators-api>
 		<version.org.eclipse.microprofile.metrics>3.0</version.org.eclipse.microprofile.metrics>
+		<version.org.eclipse.microprofile.health>4.0</version.org.eclipse.microprofile.health>
 
 		<version.io.etcd.jetcd-core>0.7.5</version.io.etcd.jetcd-core>
 		<version.io.grpc.version>1.51.0</version.io.grpc.version>
@@ -450,6 +451,11 @@
 				<groupId>org.eclipse.microprofile.metrics</groupId>
 				<artifactId>microprofile-metrics-api</artifactId>
 				<version>${version.org.eclipse.microprofile.metrics}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.microprofile.health</groupId>
+				<artifactId>microprofile-health-api</artifactId>
+				<version>${version.org.eclipse.microprofile.health}</version>
 			</dependency>
 
 			<!-- Resteasy 4+: resteasy-jaxrs szet van bontva core, core-spi es egyebekre-->
