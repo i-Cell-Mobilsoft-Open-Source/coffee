@@ -31,11 +31,17 @@ import jakarta.enterprise.inject.spi.CDI;
 import jakarta.enterprise.inject.spi.InjectionPoint;
 import jakarta.inject.Inject;
 
+import org.eclipse.microprofile.metrics.Metadata;
+import org.eclipse.microprofile.metrics.MetricRegistry;
+import org.eclipse.microprofile.metrics.MetricType;
+import org.eclipse.microprofile.metrics.Tag;
+
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 import hu.icellmobilsoft.coffee.module.redis.annotation.RedisConnection;
 import hu.icellmobilsoft.coffee.module.redis.config.RedisConfig;
+import hu.icellmobilsoft.coffee.module.redis.metrics.JedisMetricsConstants;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
 import hu.icellmobilsoft.coffee.tool.utils.annotation.AnnotationUtil;
 import redis.clients.jedis.Jedis;
@@ -53,6 +59,9 @@ public class JedisConnectionProducer {
 
     @Inject
     private Logger log;
+
+    @Inject
+    private MetricRegistry metricRegistry;
 
     /**
      * Creates or returns {@link Jedis} resource for the given configKey.
@@ -79,19 +88,43 @@ public class JedisConnectionProducer {
 
         if (jedisPool != null) {
             try {
+                addMetric(configKey, poolConfigKey, jedisPool);
+
                 return jedisPool.getResource();
             } catch (JedisConnectionException ex) {
-                String msg = MessageFormat.format("Problems trying to get the Redis connection for the configKey:[{0}], poolConfigKey:[{1}]",
-                        configKey, poolConfigKey);
+                String msg = MessageFormat
+                        .format("Problems trying to get the Redis connection for the configKey:[{0}], poolConfigKey:[{1}]", configKey, poolConfigKey);
                 log.error(msg, ex);
                 throw new TechnicalException(CoffeeFaultType.REPOSITORY_FAILED, msg, ex);
             } finally {
                 jedisPoolInstance.destroy(jedisPool);
             }
         }
-        String msg = MessageFormat.format("Could not create Redis connection for the configKey:[{0}], poolConfigKey:[{1}]! Jedis pool is null",
-                configKey, poolConfigKey);
+        String msg = MessageFormat.format(
+                "Could not create Redis connection for the configKey:[{0}], poolConfigKey:[{1}]! Jedis pool is null",
+                configKey,
+                poolConfigKey);
         throw new TechnicalException(CoffeeFaultType.REPOSITORY_FAILED, msg);
+    }
+
+    private void addMetric(String configKey, String poolConfigKey, JedisPool jedisPool) {
+        // config
+        Tag configKeyTag = new Tag(JedisMetricsConstants.Tag.COFFEE_JEDIS_CONFIG_KEY, configKey);
+        Tag poolConfigKeyTag = new Tag(JedisMetricsConstants.Tag.COFFEE_JEDIS_POOL_CONFIG_KEY, poolConfigKey);
+
+        Metadata metadataActive = Metadata.builder()
+                .withName(JedisMetricsConstants.Gauge.COFFEE_JEDIS_POOL_ACTIVE)
+                .withDescription(JedisMetricsConstants.Description.COFFEE_JEDIS_POOL_ACTIVE_DESCRIPTION)
+                .withType(MetricType.GAUGE)
+                .build();
+        metricRegistry.gauge(metadataActive, jedisPool::getNumActive, configKeyTag, poolConfigKeyTag);
+
+        Metadata metadataIdle = Metadata.builder()
+                .withName(JedisMetricsConstants.Gauge.COFFEE_JEDIS_POOL_IDLE)
+                .withDescription(JedisMetricsConstants.Description.COFFEE_JEDIS_POOL_IDLE_DESCRIPTION)
+                .withType(MetricType.GAUGE)
+                .build();
+        metricRegistry.gauge(metadataIdle, jedisPool::getNumIdle, configKeyTag, poolConfigKeyTag);
     }
 
     /**

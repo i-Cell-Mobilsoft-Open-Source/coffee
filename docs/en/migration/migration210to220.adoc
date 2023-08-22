@@ -23,6 +23,7 @@ Changes are backwards compatible doesnt need any migration.
 === coffee-module-redis
 
 ** microprofile-health support
+** Jedis connection metrics support
 
 ==== Migration
 
