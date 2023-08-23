@@ -200,3 +200,16 @@ application_coffee_jedis_pool_active{configKey="redisConfig",poolConfigKey="defa
 application_coffee_jedis_pool_idle{configKey="redisConfig",poolConfigKey="default"} 5.0
 ----
 
+A metrikák felülírhatóak @Alternative vagy @Specializes segítségével.
+.metrics felülírás minta
+[source,java]
+----
+@ApplicationScoped
+@Alternative
+public class CustomJedisMetricsHandler extends JedisMetricsHandler {
+  public void addMetric(String configKey, String poolConfigKey, JedisPool jedisPool) throws BaseException {
+  ...
+  }
+}
+----
+

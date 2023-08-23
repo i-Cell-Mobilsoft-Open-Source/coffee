@@ -198,3 +198,16 @@ application_coffee_jedis_pool_active{configKey="redisConfig",poolConfigKey="defa
 # TYPE application_coffee_jedis_pool_idle gauge
 application_coffee_jedis_pool_idle{configKey="redisConfig",poolConfigKey="default"} 5.0
 ----
+
+The metrics can be overridden using the @Alternative or @Specializes annotations.
+.metrics override example
+[source,java]
+----
+@ApplicationScoped
+@Alternative
+public class CustomJedisMetricsHandler extends JedisMetricsHandler {
+  public void addMetric(String configKey, String poolConfigKey, JedisPool jedisPool) throws BaseException {
+  ...
+  }
+}
+----
