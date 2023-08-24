@@ -41,6 +41,6 @@ Changes are backwards compatible doesnt need any migration.
 
 ** The ClassFieldsAndMethodsCache caused a ConcurrentModificationException error under high load.
 
-==== Átállás
+==== Migration
 
-A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+Changes are backwards compatible doesnt need any migration.
