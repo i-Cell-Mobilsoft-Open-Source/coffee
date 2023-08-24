@@ -21,6 +21,7 @@ A változtatások nem eredményeznek átállási munkálatokat, visszafelé komp
 === coffee-module-redis
 
 ** microprofile-health támogatást kapott
+** Jedis kapcsolati metrikát szolgáltat
 
 ==== Átállás
 

@@ -36,6 +36,7 @@ import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 import hu.icellmobilsoft.coffee.module.redis.annotation.RedisConnection;
 import hu.icellmobilsoft.coffee.module.redis.config.RedisConfig;
+import hu.icellmobilsoft.coffee.module.redis.metrics.JedisMetricsHandler;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
 import hu.icellmobilsoft.coffee.tool.utils.annotation.AnnotationUtil;
 import redis.clients.jedis.Jedis;
@@ -53,6 +54,9 @@ public class JedisConnectionProducer {
 
     @Inject
     private Logger log;
+
+    @Inject
+    private JedisMetricsHandler jedisMetricsHandler;
 
     /**
      * Creates or returns {@link Jedis} resource for the given configKey.
@@ -79,18 +83,23 @@ public class JedisConnectionProducer {
 
         if (jedisPool != null) {
             try {
+
+                jedisMetricsHandler.addMetric(configKey, poolConfigKey, jedisPool);
+
                 return jedisPool.getResource();
             } catch (JedisConnectionException ex) {
-                String msg = MessageFormat.format("Problems trying to get the Redis connection for the configKey:[{0}], poolConfigKey:[{1}]",
-                        configKey, poolConfigKey);
+                String msg = MessageFormat
+                        .format("Problems trying to get the Redis connection for the configKey:[{0}], poolConfigKey:[{1}]", configKey, poolConfigKey);
                 log.error(msg, ex);
                 throw new TechnicalException(CoffeeFaultType.REPOSITORY_FAILED, msg, ex);
             } finally {
                 jedisPoolInstance.destroy(jedisPool);
             }
         }
-        String msg = MessageFormat.format("Could not create Redis connection for the configKey:[{0}], poolConfigKey:[{1}]! Jedis pool is null",
-                configKey, poolConfigKey);
+        String msg = MessageFormat.format(
+                "Could not create Redis connection for the configKey:[{0}], poolConfigKey:[{1}]! Jedis pool is null",
+                configKey,
+                poolConfigKey);
         throw new TechnicalException(CoffeeFaultType.REPOSITORY_FAILED, msg);
     }
 

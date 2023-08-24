@@ -36,37 +36,32 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
+import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.module.redis.annotation.RedisConnection;
+import hu.icellmobilsoft.coffee.module.redis.metrics.JedisMetricsHandler;
 import redis.clients.jedis.JedisPool;
 
 /**
- * Test for Redis pool config producer
+ * Test for JedisMetricsHandler
  * 
- * @author imre.scheffer
- * @since 1.11.0
+ * @author czenczl
+ * @since 2.2.0
  *
  */
 @EnableWeld
 @Tag("weld")
 @ExtendWith(WeldJunit5Extension.class)
 @DisplayName("Redis pool config tests")
-class JedisPoolTest {
+class JedisMetricsHandlerTest {
 
     static final String CONFIG_KEY = "test";
-    static final String CONFIG_KEY_YML = "yamlconfig";
-    static final String POOL_CONFIG_KEY_CUSTOM1 = "custom1";
 
     @Inject
     @RedisConnection(configKey = CONFIG_KEY)
     private JedisPool jedisPool;
 
     @Inject
-    @RedisConnection(configKey = CONFIG_KEY_YML)
-    private JedisPool ymlDefaultJedisPool;
-
-    @Inject
-    @RedisConnection(configKey = CONFIG_KEY_YML, poolConfigKey = POOL_CONFIG_KEY_CUSTOM1)
-    private JedisPool ymlCustom1PoolJedisPool;
+    private JedisMetricsHandler jedisMetricsHandler;
 
     @WeldSetup
     public WeldInitiator weld = WeldInitiator.from(
@@ -79,25 +74,12 @@ class JedisPoolTest {
             .build();
 
     @Test
-    @DisplayName("default pool test")
-    void defaultValues() {
-        // tobbet sajnos nem tudunk kiszedni belole
-        // de azert a producer loggol infokat
-        Assertions.assertEquals(16, jedisPool.getMaxIdle());
-        Assertions.assertEquals(64, jedisPool.getMaxTotal());
+    @DisplayName("jedis metric test")
+    void metricsHandler() {
+        Assertions.assertNotNull(jedisPool);
+        Assertions.assertThrows(BaseException.class, () -> {
+            jedisMetricsHandler.addMetric(null, CONFIG_KEY, jedisPool);
+        });
     }
 
-    @Test
-    @DisplayName("yml default pool test")
-    void yamlDefaultPoolValues() {
-        Assertions.assertEquals(2, ymlDefaultJedisPool.getMaxIdle());
-        Assertions.assertEquals(1, ymlDefaultJedisPool.getMaxTotal());
-    }
-
-    @Test
-    @DisplayName("yml custom1 pool test")
-    void yamlCustom1PoolValues() {
-        Assertions.assertEquals(4, ymlCustom1PoolJedisPool.getMaxIdle());
-        Assertions.assertEquals(3, ymlCustom1PoolJedisPool.getMaxTotal());
-    }
 }
