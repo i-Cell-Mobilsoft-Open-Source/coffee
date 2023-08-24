@@ -91,7 +91,13 @@ public class ClassFieldsAndMethodsCache<K extends Class, V extends Pair<List<Fie
      * @return a pair of fields and methods
      */
     public Pair<List<Field>, List<Method>> getFieldsAndMethods(Class<?> clazz) {
-        return this.computeIfAbsent((K) clazz, v -> (V) Pair.of(getAllFields(clazz), getAllMethods(clazz)));
+        // we should optimize this cache mechanics with CDI, we can collect all information after the AfterDeploymentValidation phase
+        if (this.containsKey(clazz)) {
+            return this.get(clazz);
+        }
+        V fieldMethodPair = (V) Pair.of(getAllFields(clazz), getAllMethods(clazz));
+        this.put((K) clazz, fieldMethodPair);
+        return fieldMethodPair;
     }
 
     @Override

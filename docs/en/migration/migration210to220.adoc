@@ -36,3 +36,11 @@ Changes are backwards compatible doesnt need any migration.
 ==== Migration
 
 Changes are backwards compatible doesnt need any migration.
+
+=== coffee-module-base
+
+** The ClassFieldsAndMethodsCache caused a ConcurrentModificationException error under high load.
+
+==== Átállás
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
