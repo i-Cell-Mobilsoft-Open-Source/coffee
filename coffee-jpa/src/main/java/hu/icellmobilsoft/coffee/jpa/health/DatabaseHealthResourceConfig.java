@@ -54,7 +54,7 @@ public class DatabaseHealthResourceConfig {
     }
 
     /**
-     * Gets the database datasource url e.g. "postgres.ds.connection.url"
+     * Gets the database datasource url e.g. "jdbc:postgresql://service-postgredb:5432/tax_i_db?currentSchema=service"
      * 
      * @return database datasource url
      */
@@ -63,7 +63,7 @@ public class DatabaseHealthResourceConfig {
     }
 
     /**
-     * Sets the database datasource url e.g. "postgres.ds.connection.url"
+     * Sets the database datasource url e.g. "jdbc:postgresql://service-postgredb:5432/tax_i_db?currentSchema=service"
      * 
      * @param datasourceUrl
      *            datasource url

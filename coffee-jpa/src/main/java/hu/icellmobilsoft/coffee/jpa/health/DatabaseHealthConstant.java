@@ -36,14 +36,6 @@ public interface DatabaseHealthConstant {
          * the default datasource name
          */
         String DEFAULT_DATASOURCE_NAME = "icellmobilsoftDS";
-        /**
-         * oracle connection url
-         */
-        String ORACLE_DATASOURCE_URL = "oracle.ds.connection.url";
-        /**
-         * postgres connection url
-         */
-        String POSTGRES_DATASOURCE_URL = "postgres.ds.connection.url";
 
         /**
          * wildfly specific metric keys

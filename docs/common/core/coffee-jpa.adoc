@@ -73,7 +73,7 @@ public class DatabaseHealthCheck {
     public HealthCheckResponse checkDatabaseConnection() {
         DatabaseHealthResourceConfig config = new DatabaseHealthResourceConfig();
         config.setBuilderName("oracle");
-        config.setDatasourceUrl(DatabaseHealthConstant.Database.ORACLE_DATASOURCE_URL);
+        config.setDatasourceUrl("jdbc:postgresql://service-postgredb:5432/service_db?currentSchema=service");
         config.setDsName(DatabaseHealthConstant.Database.DEFAULT_DATASOURCE_NAME);
         try {
             return databaseHealth.checkDatabaseConnection(config);
