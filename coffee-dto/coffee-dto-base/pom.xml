@@ -24,8 +24,22 @@
 		</dependency>
 		<dependency>
 			<groupId>hu.icellmobilsoft.coffee</groupId>
-			<artifactId>coffee-se-logging</artifactId>
+			<artifactId>coffee-cdi</artifactId>
 			<version>${project.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.jboss.logging</groupId>
+					<artifactId>jboss-logging</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.eclipse.microprofile.config</groupId>
+					<artifactId>microprofile-config-api</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>jakarta.platform</groupId>
+					<artifactId>jakarta.jakartaee-api</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<!-- java 16+: dependency -->
 <!-- kell ez meg?

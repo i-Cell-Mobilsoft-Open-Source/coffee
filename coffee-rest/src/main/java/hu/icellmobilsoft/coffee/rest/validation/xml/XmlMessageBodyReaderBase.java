@@ -33,8 +33,8 @@ import jakarta.ws.rs.ext.MessageBodyReader;
 import org.apache.commons.lang3.ArrayUtils;
 
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
-import hu.icellmobilsoft.coffee.rest.validation.xml.annotation.ValidateXML;
-import hu.icellmobilsoft.coffee.rest.validation.xml.annotation.ValidateXMLs;
+import hu.icellmobilsoft.coffee.dto.validation.xml.annotation.ValidateXML;
+import hu.icellmobilsoft.coffee.dto.validation.xml.annotation.ValidateXMLs;
 import hu.icellmobilsoft.coffee.rest.validation.xml.exception.BaseProcessingExceptionWrapper;
 
 /**
