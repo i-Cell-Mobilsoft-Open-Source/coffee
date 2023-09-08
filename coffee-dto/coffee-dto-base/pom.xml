@@ -35,10 +35,6 @@
 					<groupId>org.eclipse.microprofile.config</groupId>
 					<artifactId>microprofile-config-api</artifactId>
 				</exclusion>
-				<exclusion>
-					<groupId>jakarta.platform</groupId>
-					<artifactId>jakarta.jakartaee-api</artifactId>
-				</exclusion>
 			</exclusions>
 		</dependency>
 		<!-- java 16+: dependency -->
