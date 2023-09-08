@@ -43,3 +43,13 @@ A változtatások nem eredményeznek átállási munkálatokat, visszafelé komp
 
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
 
+=== coffee-rest
+
+** hu.icellmobilsoft.coffee.rest.validation.xml.annotation.ValidateXML és hu.icellmobilsoft.coffee.rest.validation.xml.annotation.ValidateXMLs annotációk átkerültek a coffee-dto-base modulba.
+
+==== Átállás
+
+A változás path változással járt, amit esetlegesen le kell követni az implementációs helyen:
+
+* hu.icellmobilsoft.coffee.rest.validation.xml.annotation.ValidateXML -> hu.icellmobilsoft.coffee.*dto*.validation.xml.annotation.ValidateXML
+* hu.icellmobilsoft.coffee.rest.validation.xml.annotation.ValidateXMLs -> hu.icellmobilsoft.coffee.*dto*.validation.xml.annotation.ValidateXMLs
