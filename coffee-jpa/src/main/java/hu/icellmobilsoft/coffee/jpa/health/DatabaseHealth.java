@@ -29,14 +29,12 @@ import java.util.concurrent.TimeoutException;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
 import org.apache.commons.lang3.StringUtils;
-import org.eclipse.microprofile.config.Config;
 import org.eclipse.microprofile.health.HealthCheckResponse;
 import org.eclipse.microprofile.health.HealthCheckResponseBuilder;
 
@@ -55,9 +53,6 @@ import hu.icellmobilsoft.coffee.tool.utils.health.HealthUtil;
  */
 @ApplicationScoped
 public class DatabaseHealth {
-
-    @Inject
-    private Config config;
 
     private ExecutorService executor;
 
@@ -121,9 +116,7 @@ public class DatabaseHealth {
 
         HealthCheckResponseBuilder builder = HealthCheckResponse.builder().name(builderName);
         builder.withData(HealthConstant.Common.NODE_NAME, HealthUtil.getNodeId(nodeId));
-
-        String dbUrlValue = config.getValue(datasourceUrl, String.class);
-        builder.withData(HealthConstant.Common.URL, dbUrlValue);
+        builder.withData(HealthConstant.Common.URL, datasourceUrl);
 
         DataSource datasource = getDataSource(datasourcePrefix, dsName);
         if (datasource == null) {

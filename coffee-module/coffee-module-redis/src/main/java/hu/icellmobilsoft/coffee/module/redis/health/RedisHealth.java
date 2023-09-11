@@ -49,11 +49,6 @@ import redis.clients.jedis.JedisPoolConfig;
 public class RedisHealth {
 
     /**
-     * redis resource prefix
-     */
-    public static final String REDIS_PREFIX = "redis.";
-
-    /**
      * Checking whether the redis is reachable
      * 
      * @param managedRedisConfig

@@ -72,14 +72,14 @@ public class DatabaseHealthCheck {
     private DatabaseHealth databaseHealth;
     public HealthCheckResponse checkDatabaseConnection() {
         DatabaseHealthResourceConfig config = new DatabaseHealthResourceConfig();
-        config.setBuilderName("oracle");
-        config.setDatasourceUrl(DatabaseHealthConstant.Database.ORACLE_DATASOURCE_URL);
+        config.setBuilderName("postgre");
+        config.setDatasourceUrl("jdbc:postgresql://service-postgredb:5432/service_db?currentSchema=service");
         config.setDsName(DatabaseHealthConstant.Database.DEFAULT_DATASOURCE_NAME);
         try {
             return databaseHealth.checkDatabaseConnection(config);
         }catch (BaseException e) {
             // need to be careful with exceptions, because the probe check will fail if we don't handle the exception correctly
-            return HealthCheckResponse.builder().name("oracle").up().build();
+            return HealthCheckResponse.builder().name("postgre").up().build();
         }
     }
     
