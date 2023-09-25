@@ -20,6 +20,7 @@
 package hu.icellmobilsoft.coffee.module.mp.restclient.provider;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map.Entry;
@@ -27,15 +28,19 @@ import java.util.Map.Entry;
 import jakarta.annotation.Priority;
 import jakarta.enterprise.context.Dependent;
 import jakarta.inject.Inject;
+import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.client.ClientRequestContext;
 import jakarta.ws.rs.client.ClientRequestFilter;
 import jakarta.ws.rs.core.Cookie;
 import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.ext.WriterInterceptor;
+import jakarta.ws.rs.ext.WriterInterceptorContext;
 
 import hu.icellmobilsoft.coffee.cdi.logger.AppLogger;
 import hu.icellmobilsoft.coffee.cdi.logger.LogProducer;
 import hu.icellmobilsoft.coffee.module.mp.restclient.RestClientPriority;
 import hu.icellmobilsoft.coffee.rest.log.RequestResponseLogger;
+import hu.icellmobilsoft.coffee.rest.log.annotation.LogSpecifier;
 import hu.icellmobilsoft.coffee.rest.log.annotation.enumeration.LogSpecifierTarget;
 import hu.icellmobilsoft.coffee.rest.utils.RestLoggerUtil;
 import hu.icellmobilsoft.coffee.tool.utils.stream.OutputStreamCopier;
@@ -49,7 +54,7 @@ import hu.icellmobilsoft.coffee.tool.utils.string.StringHelper;
  */
 @Priority(value = RestClientPriority.REQUEST_LOG)
 @Dependent
-public class DefaultLoggerClientRequestFilter implements ClientRequestFilter {
+public class DefaultLoggerClientRequestFilter implements ClientRequestFilter, WriterInterceptor {
 
     @Inject
     private RequestResponseLogger requestResponseLogger;
@@ -64,8 +69,35 @@ public class DefaultLoggerClientRequestFilter implements ClientRequestFilter {
         msg.append(">> ").append(getClass().getName()).append(" request ->\n");
         msg.append(logUrl(requestContext));
         msg.append(logHeader(requestContext));
-        msg.append(logEntity(requestContext));
         LogProducer.logToAppLogger((AppLogger appLogger) -> appLogger.info(msg.toString()), DefaultLoggerClientRequestFilter.class);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void aroundWriteTo(WriterInterceptorContext context) throws IOException, WebApplicationException {
+        int maxResponseEntityLogSize = RestLoggerUtil.getMaxEntityLogSize(context, LogSpecifierTarget.CLIENT_REQUEST);
+        if (maxResponseEntityLogSize == LogSpecifier.NO_LOG) {
+            context.proceed();
+            return;
+        }
+
+        OutputStream originalStream = context.getOutputStream();
+        byte[] entityCopy = new byte[0];
+        OutputStreamCopier osc = new OutputStreamCopier(originalStream);
+        context.setOutputStream(osc);
+        // elegessuk a stream-et, kozben masoljuk a tartalmat
+        try {
+            context.proceed();
+        } finally {
+            // IS: kerdeses erdemes-e vissza irni az eredeti stream-et...
+            context.setOutputStream(originalStream);
+        }
+        entityCopy = osc.getCopy();
+        MediaType mediaType = context.getMediaType();
+        String requestText = new String(entityCopy, StandardCharsets.UTF_8);
+        String requestEntity = requestResponseLogger
+                .printEntity(requestText, maxResponseEntityLogSize, RequestResponseLogger.REQUEST_PREFIX, true, mediaType);
+        LogProducer.logToAppLogger((AppLogger appLogger) -> appLogger.info(requestEntity.toString()), DefaultLoggerClientRequestFilter.class);
     }
 
     /**
@@ -107,31 +139,4 @@ public class DefaultLoggerClientRequestFilter implements ClientRequestFilter {
         return msg.toString();
     }
 
-    /**
-     * Logs entity, trimmed according to {@link LogSpecifierTarget#CLIENT_REQUEST}.
-     *
-     * @param requestContext
-     *            context
-     * @return entity {@link String}
-     * @throws IOException
-     *             exception
-     */
-    protected String logEntity(ClientRequestContext requestContext) throws IOException {
-        StringBuilder msg = new StringBuilder();
-        Object entity = requestContext.getEntity();
-        MediaType mediaType = requestContext.getMediaType();
-        if (entity != null) {
-            msg.append(
-                    requestResponseLogger.printEntity(entity, RestLoggerUtil.getMaxEntityLogSize(requestContext, LogSpecifierTarget.CLIENT_REQUEST),
-                            RequestResponseLogger.REQUEST_PREFIX, true, mediaType));
-        } else {
-            OutputStreamCopier osc = new OutputStreamCopier(requestContext.getEntityStream());
-            requestContext.setEntityStream(osc);
-            String requestText = new String(osc.getCopy(), StandardCharsets.UTF_8);
-            msg.append(requestResponseLogger.printEntity(requestText,
-                    RestLoggerUtil.getMaxEntityLogSize(requestContext, LogSpecifierTarget.CLIENT_REQUEST), RequestResponseLogger.REQUEST_PREFIX, true,
-                    mediaType));
-        }
-        return msg.toString();
-    }
 }
