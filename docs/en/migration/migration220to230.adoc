@@ -1,0 +1,12 @@
+= v2.2.0 → v2.3.0
+
+coff:ee v2.2.0 -> v2.3.0 migration description, news, changes
+
+=== coffee-model-base
+
+** The `AbstractEntity.toString()` function uses the type of the column instead of the value in case of `java.sql.Blob` and `java.sql.Clob`.
+It used the value of the field in such cases, for e.g. it read the stream in case of logging.
+
+==== Migration
+
+Changes are backwards compatible doesnt need any migration.
