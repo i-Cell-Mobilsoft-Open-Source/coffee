@@ -1,0 +1,199 @@
+[#common_module_coffee-module-etcd]
+= coffee-module-etcd
+
+Modul célja az ETCD kezelése, Microprofile Config forrás (ConfigSource) implementálása
+
+Működése a hivatalos 
+
+.maven
+[source,xml]
+----
+<dependency>
+    <groupId>io.etcd</groupId>
+    <artifactId>jetcd-core</artifactId>
+    <version>0.5.0</version>
+</dependency>
+----
+driveren alapszik, kiterjesztve céges használati modell lehetőségekkel. Pontosabb leírás külön oldalon található
+
+== Konfigurációk használatba vétele, ETCD host bekonfigurálása
+Az ETCD konfigurációk használatba vételéhez az coffee-module-etcd modult húzzuk be függőségként.
+Ez szolgáltatja majd a konfigurációkezeléshez szükséges segédosztályokat,
+valamint tartalmaz egy `EtcdConfig` implementációt, ami azt határozza meg,
+hogy a konfigurációban felvett `coffee.etcd.default.url` property lesz az ETCD elérhetősége.
+
+Backend oldalon több mód is van a konfigurációk kezelésére.
+Ezek jellemzően egymást támogatják, egymást egészítik ki.
+
+== Microprofile-config
+A microprofile-config  annotáció segítségével injectelhetőek az egyes konfiguráció értékek.
+Ahhoz hogy a microprofile-config észlelje az ETCD tárhelyet,
+a kódunkban aktiválni kell a `coffee-module-etcd`-ben
+található valamelyik ConfigSource implementációt:
+
+* `hu.icellmobilsoft.coffee.module.etcd.producer.DefaultEtcdConfigSource` - alap config source
+* `hu.icellmobilsoft.coffee.module.etcd.producer.CachedEtcdConfigSource` - cachelt config source.
+A cache 30 perc-re megjegyzi a lekért értéket,
+azt is hogyha az ETCD nem tartalmazza,
+így csökkenthetjük a rengeteg ismétlődő lekérdezést.
+A Cache egy thread safe singleton,
+lehetőség van üríteni a `EtcdConfigSourceCache.instance().clear()` hívással.
+
+Aktiválása a következő fájban történik:
+
+.src/main/resources/META-INF/services/org.eclipse.microprofile.config.spi.ConfigSource
+[source,java]
+----
+hu.icellmobilsoft.coffee.module.etcd.producer.CachedEtcdConfigSource
+----
+
+Ennek a ConfigSource-nak 150 értékre van állítva a prioritása.
+
+Lehetőség van String, Integer, Boolean, Long, Float ás Double típusú konfigurációk injectelésére. Az ETCD-ben mindenképp String tárolódik, az érték kiolvasása után történik meg a parsolás a kívánt típusra. A mechanizmus a háttérben a ConfigEtcdHandler-t használja az értékek kiolvasására.
+Lásd: link:#common_core_coffee-configuration[configuration modul]
+
+== ConfigEtcdHandler osztály
+Lehetőséget biztosít konktrétan az ETCD konfiguráció értékek írására és olvasására.
+A háttérben a ConfigEtcdService-t használja.
+
+.Konfiguráció írása
+[source,java]
+----
+@Inject
+private ConfigEtcdHandler configEtcdHandler;
+...
+configEtcdHandler.putValue("public.email.sender", "noreply@sample.teszt.hu");
+----
+
+.Konfiguráció lekérdezése
+[source,java]
+----
+@Inject
+private ConfigEtcdHandler configEtcdHandler;
+...
+String adminEmail = configEtcdHandler.getValue("public.email.sender");
+----
+
+=== Hivatkozás másik konfigurációra
+A ConfigEtcdHandler, és így közvetett módon a ConfigurationHelper és a @ConfigProperty annotáció is lehetővé teszi,
+hogy az egyik konfig értéke egy másik konfigurációra hivatkozzon. Ilyen esetben { és } karakterek
+közt kell a hivatkozott konfigurációt megadni.
+
+.Hivatkozás másik konfigurációra
+[source,java]
+----
+@Inject
+private ConfigEtcdHandler configEtcdHandler;
+...
+configEtcdHandler.putValue("protected.iop.url.main",      "http://sample-sandbox.hu/kr_esb_gateway/services/IOPService?wsdl");
+configEtcdHandler.putValue("protected.iop.url.alternate", "http://localhost:8178/SampleMockService/IOPService2?wsdl");
+configEtcdHandler.putValue("public.iop.url", "{protected.iop.url.main}");
+String contactEmail = configEtcdHandler.getValue("public.iop.url"); //A visszaadott érték "http://sample-sandbox.hu/kr_esb_gateway/services/IOPService?wsdl"
+----
+A hivatkozás szigorúan egy adott másik konfigurációra kell, hogy hivatkozzon, más tartalom nem engedélyezett.
+Pl. a beágyazott hivatkozás nem kerül feloldásra (http://{masik.etcd.conf}:8178/SampleMockService/IOPService2?wsdl").
+
+== ConfigEtcdService osztály
+Lehetőséget nyújt konfigurációs értékek lekérdezésére, írására, listázására, keresésére.
+A felsoroltak közül a legalacsonyabban fekvő osztály. A fenti mechanizmusok mindegyike ezen keresztül
+valósítja meg működését. Vélhetően csak akkor lesz szükség a használatára, ha törölni,
+listázni szeretnénk a konfigurációkat.
+
+.Konfiguráció írása, lekérdezése, törlése
+[source,java]
+----
+@Inject
+private ConfigEtcdService configEtcdService;
+...
+configEtcdService.putValue("protected.iop.url.main", "http://sample-sandbox.hu/kr_esb_gateway/services/IOPService?wsdl"); //írás
+String senderEmail = configEtcdService.getValue("protected.iop.url.main"); //olvasás
+configEtcdService.delete("protected.iop.url.main"); //törlés
+----
+
+.Konfigurációk listázása
+[source,java]
+----
+@Inject
+private ConfigEtcdService configEtcdService;
+...
+Map<String, String> allConfigMap = configEtcdService.getList(); //összes konfiguráció listázása
+Map<String, String> publicConfigMap = configEtcdService.searchList("public."); //adott prefixű kulccsal rendelkező konfigok listázása (nem lehet üres String)
+----
+
+Nem létező konfiguráció elkérése, törlése esetén BONotFoundException-t dob a service.
+Mivel ezt a mechanizmust használja minden felsorolt lehetőség, így ez mindegyikre igaz.
+
+== Namespace-ek, konfiguráció elnevezési konvenciók
+A konfiguráció kezelő nem támogat külön namespace-ket, minden, az etcd-ben tárolt információhoz hozzáférünk.
+
+Minden konfiguráció kulcsa egy láthatósági prefix-szel kezdődik.
+A következő konvenciók alapján kezelik ezeket:
+
+[options="header",cols="1,1"]
+|===
+|Prefix   |Leírás   
+//-------------
+|`private.`   |Csak a backend számára elérhető konfiguráció   
+|`protected.` |A backend és a frontend számára is elérhető konfiguráció, a frontend csak olvashat   
+|`public.`    |A backend és a frontend számára is elérhető konfiguráció, a frontend is módosíthatja az értékét   
+|===
+
+== Konfigurációk kezelés Command Line Tool segítségével
+Töltsük le és csomagoljuk ki a rendszerünknek megfelelő ETCD csomagot: https://github.com/coreos/etcd/releases/
+
+Állítsuk az ETCDCTL_API környezeti változó értékét 3-ra:
+[source,batch]
+----
+#Linux
+export ETCDCTL_API=3
+ 
+#Windows
+set ETCDCTL_API=3
+----
+
+Parancssorból az etcdctl segítségével írhatjuk, olvashatjuk az ETCD konfigurációban található értékeket:
+
+[source,batch]
+----
+#Összes konfiguráció kiolvasása
+etcdctl --endpoints=%ETCD_ENDPOINTS% get "" --from-key
+ 
+#Egy adott konfiguráció értékének kiolvasása
+etcdctl --endpoints=%ETCD_ENDPOINTS% get private.sample
+ 
+#Egy adott konfiguráció értékének írása
+etcdctl --endpoints=%ETCD_ENDPOINTS% put private.sample ertek
+----
+
+== Loggolás
+A lekérdezett kulcsok és a kapott értékek logolásra kerülnek, kivéve ha a kulcs megfelel a `+++[\w\s]*?secret[\w\s]*?+++` vagy `+++[\w\s]*?pass[\w\s]*?+++` reguláris kifejezésnek, ez esetben az érték maszkolva lesz kilogolva.
+Az alapértelmezett regex felülírható, ha valamelyik *alapértelmezett* microprofile-config forrásban (sys var, env var, META-INF/microprofile-config.properties) megadjuk a `coffee.config.log.sensitive.key.pattern` konfigot, több pattern is megadható vesszővel elválasztva.
+
+== microprofile-health támogatás
+
+A *EtcdHealth* ellenőrizni tudja hogy elérhető-e az etcd server.
+
+.Startup használati példa
+[source,java]
+----
+@ApplicationScoped
+public class EtcdHealthCheck {
+
+    @Inject
+    private EtcdHealth etcdHealth;
+
+    public HealthCheckResponse check() {
+        try {
+            return etcdHealth.checkConnection("etcd");
+        } catch (BaseException e) {
+            return HealthCheckResponse.builder().name("etcd").up().build();
+        }
+    }
+
+    @Produces
+    @Startup
+    public HealthCheck produceEtcdCheck() {
+        return this::check;
+    }
+}
+----

@@ -1,0 +1,493 @@
+ifndef::imagesdir[:imagesdir: ../pic]
+
+[#howto_xsd_catalog]
+= XSD Catalog és generálás
+
+Személyre szabható XSD generálás és validalás. 
+
+Maga az XSD catalog egy elég bonyorult témakör az XSD szabványon belül.
+Mélyebben nem fontos vele ismerkedni, az alábbiakban csak azzal fogunk foglalkozni ami nekünk kell,
+és érdemes használni, hogy modulosítani lehessen a keretrendszerben és a projekteken egyaránt.
+Az egész "XSD catalog" egy OASIS szabvány, ami a
+https://www.oasis-open.org/committees/download.php/14809/xml-catalogs.html[xml-catalogs]
+oldalon található.
+
+== Általános
+Mi általában az XSD-t arra használjuk hogy megszabaduljunk a DTO objektumok alap valadálásától, mint pl.:
+
+* input string hossza - milyen hosszú lehet a mező értéke (karakter hossz)
+* kötelezőség - kötelező kitölteni vagy sem
+* minimum, maximum értékek - például minimum 0, 1970-01-01, -3.14, ... 
+* típus kötelezőség - dátum, int, boolean, stb...
+* definiált értékek - ENUM
+* string, dátum pattern - "\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(.\d{1,3})?Z", "[a-zA-Z0-9\-@\.]{6,30}", ...
+* egyéb XSD lehetőségek...
+
+Ez mellett nagyban segíti az objektum orientált DTO generálást, újrahasznosítást
+- egy jó megírt XSD struktúra nagyon könnyen felhasználható a kódolásnál.
+
+Nem mellékes az sem hogy mi ugyan JAVA nyelvet használunk de az általunk megírt REST interface objektumok
+definíciója így XSD-ben van és az tovább adható egy csatlakozó külső ügyfélnek.
+Az XSD-ből akármilyen nyelven képesek generálni saját DTO-kat nem kell kézzel újra megírni.
+
+Az XSD-t igyekszünk a lehető legjobban komplex, dokumentáltan tartani mivel a DTO generálásnál használunk egy openapi-jaxb
+plugint mely kiegészíti a DTO-kat openapi annotációkkal, melyben ki van fejtve minden adat, korlátozás és
+leírás. Ennek köszönhető hogy a Swagger egy komplett REST interfész dokumentációként is tud szolgálni a fejlesztő,
+tesztelő, frontend, szervező és ügyfél számára, nem kell plussz munkát fektetni a termék utólagos dokumentáciojára.
+
+Hogy ne tűnjön úgy hogy a XSD tökéletes, megemlítem azért az egyik legnagyobb hátrányát is
+- ha nem XML az input (pl. JSON) akkor csak plussz XML-re transformációval tudjuk megoldani a validációt.
+A fenti felsorolt kihasznált előnyei viszont akkora időspórolást tudnak hozni hogy ezt az árat
+hajlandóak vagyunk megfizetni - egyenlőre minden probléma megoldható volt...
+
+== Minta
+Tegyük fel hogy van több XSD-ből álló struktúránk. Jelen esetben akarunk egy felhasználó DTO-t melynek
+2 eleme van, `userName` és `password`, ezek a következő korlátoknak kell megfelelniük:
+
+./coffee-dto-xsd/src/main/resources/xsd/hu/icellmobilsoft/coffee/dto/common/common.xsd
+[source,xml]
+----
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://common.dto.coffee.icellmobilsoft.hu/common"
+    targetNamespace="http://common.dto.coffee.icellmobilsoft.hu/common" elementFormDefault="qualified"
+    attributeFormDefault="unqualified">
+
+...
+
+    <!-- SIMPLE TYPES -->
+    <xsd:simpleType name="SimpleText255Type">
+        <xsd:restriction base="xsd:string">
+            <xsd:maxLength value="255" />
+        </xsd:restriction>
+    </xsd:simpleType>
+    <xsd:simpleType name="EmailType">
+        <xsd:restriction base="xsd:string">
+            <xsd:maxLength value="200" />
+            <xsd:pattern value="[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}" />
+        </xsd:restriction>
+    </xsd:simpleType>
+
+...
+
+<xsd:schema
+----
+
+=== Hagyományos megoldás
+
+./coffee-dto-xsd/src/main/resources/xsd/hu/icellmobilsoft/coffee/dto/common/commonservice.xsd
+[source,xml]
+----
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:common="http://common.dto.coffee.icellmobilsoft.hu/common" //<1>
+    xmlns="http://common.dto.coffee.icellmobilsoft.hu/commonservice"
+    targetNamespace="http://common.dto.coffee.icellmobilsoft.hu/commonservice"
+    elementFormDefault="qualified" attributeFormDefault="unqualified">
+
+    <xsd:import namespace="http://common.dto.coffee.icellmobilsoft.hu/common" schemaLocation="common.xsd"/> //<2>
+
+...
+
+    <xsd:complexType name="UserType">
+        <xsd:sequence>
+            <xsd:element name="userName" type="common:EmailType"> //<3>
+                <xsd:annotation>
+                    <xsd:documentation>Felhasználó bejelentkezési azonosító.
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="password"
+                type="common:SimpleText255Type">  //<3>
+                <xsd:annotation>
+                    <xsd:documentation>Felhasználó bejelentkezési jelszó hash.
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+
+...
+
+<xsd:schema
+----
+<1> xml namespace definiálás, ami a "common" nevet kapta és a "http://common.dto.coffee.icellmobilsoft.hu/common" import fogja megdani a forrását
+<2> A hivatkozott namespace bekötése (import), file path segítségével.
+<3> Hivatkozás egy másik XSD-ben lévő típusra.
+
+Előnyei:
+
+* Könnyen kezelhető és olvasható függőségek.
+* Minden XSD/XML kezelő program natívan tudja használni, működik rajta a code assist, natív XSD validálás.
+
+Hátrányai:
+
+* Kódban az XSD szerinti validálás külső függőség esetében egyéni resolver megírását igényli.
+* A `schemaLocation` útvonalban definiált xsd file helyileg elérhető kell hogy legyen.
+* Projekten belül egy másik modulból származó import nagyon bonyorult lehet (pl. "../../../../../../../../../target/unpacked-files/coffee-resources/xsd/hu/icellmobilsoft/coffee/dto/common/common.xsd"). 
+* *Nem testreszabható* (bővebb kifejtése lejebb).
+
+[#howto_xsd_catalog_CatalogMegoldas]
+== Catalog megoldás
+Ebben az esetben 2 fájl szükséges:
+
+./coffee-dto-xsd/src/main/resources/xsd/hu/icellmobilsoft/coffee/dto/common/commonservice.xsd
+[source,xml]
+----
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:common="http://common.dto.coffee.icellmobilsoft.hu/common" //<1>
+    xmlns="http://common.dto.coffee.icellmobilsoft.hu/commonservice"
+    targetNamespace="http://common.dto.coffee.icellmobilsoft.hu/commonservice"
+    elementFormDefault="qualified" attributeFormDefault="unqualified">
+
+    <xsd:import namespace="http://common.dto.coffee.icellmobilsoft.hu/common"/> //<2>
+
+...
+
+    <xsd:complexType name="UserType">
+        <xsd:sequence>
+            <xsd:element name="userName" type="common:EmailType"> //<3>
+                <xsd:annotation>
+                    <xsd:documentation>Felhasználó bejelentkezési azonosító.
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="password"
+                type="common:SimpleText255Type">  //<3>
+                <xsd:annotation>
+                    <xsd:documentation>Felhasználó bejelentkezési jelszó hash.
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+
+...
+
+<xsd:schema
+----
+<1> xml namespace definiálás, ami a "common" nevet kapta és a "http://common.dto.coffee.icellmobilsoft.hu/common" import fogja megdani a forrását
+<2> A hivatkozott namespace bekötése (import) - csak namespace hivatkozás! (nincs file path).
+<3> Hivatkozás egy másik XSD-ben lévő típusra.
+
+./coffee-dto-impl/src/main/resources/xsd/hu/icellmobilsoft/coffee/dto/super.catalog.xml
+[source,xml]
+----
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
+    <public publicId="http://common.dto.coffee.icellmobilsoft.hu/common" //<1>
+        uri="maven:hu.icellmobilsoft.coffee.dto.xsd:coffee-dto-xsd:jar::!/xsd/hu/icellmobilsoft/coffee/dto/common/common.xsd" />
+</catalog>
+----
+<1> xml namespace definiálás, "http://common.dto.coffee.icellmobilsoft.hu/common" import namespace hol keresse a fájl forrást.
+
+Előnyei:
+
+* *Testreszabható*
+* Független XSD fájlok importálhatóak, melyek nem a projektben találhatóak.
+* Egy helyen található minden importált XSD file.
+* Kódban az XSD szerinti validálás egyszerűbben oldható meg mint az általános megoldásban és univerzális.
+
+Hátrányai:
+
+* XSD/XML kezelő programokhoz beállítás szüséges, vagy saját catalog fájl gyártása.
+
+== Használati esetek
+Képzeljünk el olyan esetet, hogy a Coffee generál néhány nagyon alap DTO objektumokat.
+Ez azért fontos hogy a Coffee-ben lehessen közös "generikum" kódbázist alkotni,
+például egy általános hibakezelés, loggolás, apache kliens válasz feldolgozásra, stb. (ahol a DTO-k érintettek).
+Hogyha nincs általános osztály amire lehet a típusokat "castolni" nem lehetséges ilyen boilerkód
+kiemelése a Coffee-ben, mivel csak maga az "Object"-re lehetne hivatkozni.
+Az sem megoldás hogy a Coffee kikényszerítene valami fix típusokat,
+mert akkor a projektek nem tudnák azt testreszabni, bővíteni (például XMLGregorianCalendar cseréje java.time.OffsetDateTime-ra).
+A hagyományos XSD import ebben az helyzetben nem megfelelő,
+mivel fix helyen keresi az import xsd path fájlt, ami ráadásul nem is a projektünk része hanem a Coffee része,
+és Coffee-n belüli relatív útvonalra hivatkozik.
+
+Erre nyújt megoldás a catalog fájl.
+A catalog egy szeparált fájl, csinálhatunk ebből egy saját verziót.
+Ebben csak azt az alap XSD-t használunk fel, melyek megfelelnek az igényeinknek.
+Ami nekünk nem felel meg, le kell másolnunk az eredeti XSD-t mindennel együtt és kibővíteni benne a Coffee DTO típust.
+Hogyha nem változik a namespace és a complexType neve,
+akkor ugyan olyan DTO class fog generálódni belőle mint Coffee-ben.
+Ezt a classpath-on keresztül a JAVA megtalálja és minden Coffee logika működhet tovább.
+Ha a változás nagyon drasztikus akkor a CDI segítségével az Coffee logikát komplett le lehet cserélni.
+
+=== Generálás
+A generálás a mi esetünkben a maven segítségével történik. Példa:
+[source,xml]
+----
+    <dependencies>
+        <dependency>
+            <groupId>hu.icellmobilsoft.coffee.dto.xsd</groupId>
+            <artifactId>coffee-dto-xsd</artifactId> //<1>
+        </dependency>
+
+        ...
+
+        <dependency>
+            <groupId>org.eclipse.microprofile.openapi</groupId>
+            <artifactId>microprofile-openapi-api</artifactId> //<2>
+            <version>3.0.0</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.helger.maven</groupId>
+                <artifactId>jaxb40-maven-plugin</artifactId> //<3>
+                <version>0.16.0</version>
+                <executions>
+                    <execution>
+                        <id>coffee-super</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <strict>false</strict>
+                            <!-- https://github.com/highsource/maven-jaxb2-plugin/wiki/Catalogs-in-Strict-Mode -->
+                            <catalog>src/main/resources/xsd/hu/icellmobilsoft/coffee/dto/super.catalog.xml</catalog>  //<4>
+                            <schemaIncludes>
+                                <include>xsd/hu/icellmobilsoft/coffee/dto/super.xsd</include>  //<5>
+                            </schemaIncludes>
+                            <bindingIncludes>
+                                <include>xsd/hu/icellmobilsoft/coffee/dto/bindings.xjb</include>  //<6>
+                            </bindingIncludes>
+                            <generateDirectory>${project.build.directory}/generated-sources/src/main/java</generateDirectory>  //<7>
+                        </configuration>
+                    </execution>
+                </executions>
+                <configuration>
+                    <verbose>true</verbose>
+                    <schemaDirectory>src/main/resources</schemaDirectory>
+                    <args>
+                        <arguments>-openapify</arguments> //<8>
+                        <arguments>-Xfluent-api</arguments> //<9>
+                        <arguments>-Xannotate</arguments> //<10>
+                    </args>
+                    <plugins>
+                        <plugin>
+                            <groupId>hu.icellmobilsoft.jaxb</groupId>
+                            <artifactId>openapi-jaxb-plugin</artifactId> //<8>
+                            <version>2.0.0</version>
+                        </plugin>
+                        <plugin>
+                            <groupId>net.java.dev.jaxb2-commons</groupId>
+                            <artifactId>jaxb-fluent-api</artifactId> //<9>
+                            <version>2.1.8</version>
+                        </plugin>
+                        <plugin>
+                            <groupId>org.jvnet.jaxb2_commons</groupId>
+                            <artifactId>jaxb2-basics-annotate</artifactId> //<10>
+                            <version>1.0.4</version>
+                        </plugin>
+                        <plugin>
+                            <groupId>com.fasterxml.jackson.core</groupId>
+                            <artifactId>jackson-databind</artifactId> //<10>
+                            <version>2.9.9.1</version>
+                        </plugin>
+                    </plugins>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+...
+----
+<1> Ez a csomag tartalmazza az XSD fájlokat 
+<2> A kigenerált DTO-k tartalmaznak OpenApi annotációkat, és hogy a generált osztályok forduljanak, szükséges a specifikáció bekötése
+<3> Maven plugin mely vezérli a generálást
+<4> XSD catalog fájl eléresi helye
+<5> Fő XSD melyet generálunk.
+Ez valójában lehet több kicsi is, de akkor folyton módosítani kell a pom.xml-t ha változás történik.
+Egyszerűbb egy centrális xsd-ben felsorolni őket.
+Szintén olyankor a globális beállításokat egyenként kellene kezelni.
+<6> XJB fájl, itt lehet beállítani a testreszabott eltéréseket, például XMLGregorianCalendar -> java.time cseréje...
+<7> Hova generálódjanak az osztályok.
+A plugin ezt automatán beteszi a forráskódok forrásai közé, Eclipse és IDEA automatán fogja kezelni.
+<8> Kapcsoló hogy generálja az OpenApi annotációkat, `hu.icellmobilsoft.jaxb:openapi-jaxb-plugin` plugin által.
+<9> Kapcsoló hogy generálja az fluent kódoláshoz szükséges metódusokat, `net.java.dev.jaxb2-commons:jaxb-fluent-api` plugin által.
+Nagyon hasznos tud lenni, sok felesleges sort az üzleti logibában meg tud spórolni.
+<10> Kapcsoló hogy lehessen használni a javax.annotation.* annotáciokat
+az XSD-ben és az szerint is tudjon generálni.
+Bővebb leírás a https://github.com/highsource/jaxb2-annotate-plugin[jaxb2-annotate-plugin]
+és https://stackoverflow.com/questions/26430199/http-annox-dev-java-net-customizations-require-the-xannotate-switch[stackoverflow.com]  oldalakon
+
+=== OpenApi, Swagger
+Ahogy már említve volt a generált DTO-k a komplett dokumentáció részei.
+Lehetőleg tartalmazniuk kell minden információt ami szükséges lehet a többi fejlesztőnek, tesztelőnek, szervezőnek, stb...
+Hogy ez megtörténjen az XSD alkotásánál a lehető legjobban tölteni kell az XSD elemeket,
+mert a generátor ezekbők fogja rágenerálni az dokumentációs annotációkat.
+
+Ezeket az annotációkat (OpenApi) egy Swagger nevezetű program segítségével felhasználói interfészen meg is jelenítjük.
+
+.xml fájl forrása
+[source,xml]
+----
+..
+    <xsd:simpleType name="EntityIdType">
+        <xsd:restriction base="xsd:string">
+            <xsd:maxLength value="30" />
+            <xsd:pattern value="[+a-zA-Z0-9_]{1,30}" />
+        </xsd:restriction>
+    </xsd:simpleType>
+    <xsd:group name="BaseAuditUserGroup">
+        <xsd:sequence>
+            <xsd:element name="creatorUser" type="EntityIdType"
+                minOccurs="0" />
+            <xsd:element name="modifierUser" type="EntityIdType"
+                minOccurs="0" />
+        </xsd:sequence>
+    </xsd:group>
+    <xsd:group name="BaseAuditGroup">
+        <xsd:sequence>
+            <xsd:group ref="BaseAuditDateGroup" />
+            <xsd:group ref="BaseAuditUserGroup" />
+        </xsd:sequence>
+    </xsd:group>
+    <xsd:complexType name="AbstractAuditDtoType">
+        <xsd:complexContent>
+            <xsd:extension base="AbstractDtoType">
+                <xsd:sequence>
+                    <xsd:group ref="BaseAuditGroup" />
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+...
+----
+
+Ebből keletkezik a generálásnál osztály - egy részlete a következő:
+
+.generált AbstractAuditDtoType.java osztály része
+[source,java]
+----
+...
+    @Schema(name = "creatorUser", title = "creatorUser", description = "creatorUser", maxLength = 30, pattern = "[+a-zA-Z0-9_]{1,30}")
+    protected String creatorUser;
+...
+----
+
+A dokumentációs felhasználói felületen ez így látszódik:
+
+.swagger UI
+image::XSD_catalog_swaggerUI_sample.png[]
+
+A példában nem szerepel a xsd:documentation mert nem találtam rá megfelelő pici példát,
+de működik annak a generálása is.
+
+=== XSD editorok
+Ha nem használunk catalog fájlt akkor rendszerint minden XSD editor tudja kezelni a importokat.
+Catalog használatával már komplikálódik a helyzet.
+Maga a catalog fájl egy kiegészítő konfigurációs fájl,
+nem feltétlenül kell hogy a XSD fájlok melett legyen.
+
+A XSD kezelő szoftverekben ezt külön be kell adni hogy fel tudja oldani a hivatkozott namespace prefixeket.
+Mivel fejlesztői oldalról legtöbben Eclipse vagy IDEA-t használunk így ezeket részletezzük.
+
+==== IDEA
+Ezzel nem történik különösebb probléma a beállításoknál,
+mivel úgy látszik hogy az IDEA XSD kezelője a maven pom.xml-ből ki tudja olvasni a projekt beállításokat,
+így a catalog fájl is.
+Igaz, nem próbálta még ki senki külső catalog fájlal... 
+
+==== Eclipse
+Catalog XSD esetén kézzel kell elkészítenünk saját catalog fájl, mivel az amit a generátor használ,
+nem felel meg a Eclipse XSD/XML pluginnak.
+Maga a plugin nem tud maven struktúrából olvasni úgy ahogy azt a generátor teszi.
+Az Eclipse plugin a catalogban fix absolut path-ot kér, ami minden fejlesztőnek egyedi,
+relatív útvonallal nem tud dolgozni (amit szerintem maga a bekötés folyamata zárja ki).
+
+Segíség képpen egy minta mit kell kézzel létrehozni:
+
+./coffee-dto-xsd/example.eclipse.catalog.xml
+[source,xml]
+----
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
+    <public publicId="http://common.dto.coffee.icellmobilsoft.hu/common"
+        uri="/home/ss/PROJECTS/ICELL/COFFEE/workspace/coffee/coffee-dto/coffee-dto-xsd/src/main/resources/xsd/hu/icellmobilsoft/coffee/dto/common/common.xsd" />
+    <public publicId="http://common.dto.coffee.icellmobilsoft.hu/commonservice"
+        uri="/home/ss/PROJECTS/ICELL/COFFEE/workspace/coffee/coffee-dto/coffee-dto-xsd/src/main/resources/xsd/hu/icellmobilsoft/coffee/dto/common/commonservice.xsd" />
+    <public publicId="http://common.dto.coffee.icellmobilsoft.hu/commonsecurity"
+        uri="/home/ss/PROJECTS/ICELL/COFFEE/workspace/coffee/coffee-dto/coffee-dto-xsd/src/main/resources/xsd/hu/icellmobilsoft/coffee/dto/common/commonsecurity.xsd" />
+</catalog>
+----
+
+Mindenkinek saját útvonalra kell állítani!
+
+[#howto_xsd_catalog_CatalogImport]
+===== Catalog import
+Az Eclipse menüpontok keresztül a következő a lépés:
+
+. `File` -> `Import`
+. Az ablakban belül lent: `XML` -> `XML Catalog`
+. Majd `Next` és be kell adni neki a fent említett kézzel lekezelt catalog fájlt.
+
+Ha jól töltöttük ki az útvonalakat az Eclipse innentől kezdve a namespace hivatkozásokat fel tudja oldani
+és a code assist is működni fog.
+
+===== Catalog delete
+Ha változások történnek az XSD struktúrában akkor újra a <<howto_xsd_catalog_CatalogImport,Catalog import>>-ot
+meg kell csinálni, de előtte ki kell törölni a régit.
+
+Ezt a következőképpen kell megtenni:
+
+. `Window` -> `Preferences`
+. Az ablakban navigálunk: `XML` -> `XML Catalog`
+. Valami ilyesmi fogunk látni: image:XSD_catalog_catalog_delete.png[title="Eclipse Catalog Törlés"]
+. Kiválasztjük a `User Specified Entries` tételeket, majd `Remove`
+. Ezután újra mehet a <<howto_xsd_catalog_CatalogImport,Catalog import>>
+
+CAUTION: Ne próbáljunk semmiféle módosítást végezni a `User Specified Entries` tételeken,
+mert azok a mentést követően Eclipse hibásan fogja elmenteni és nem fog működni az Catalog feloldása.
+Ez valami Eclipse Bug lehet.
+
+=== XML Séma Validálás
+A <<howto_xsd_catalog_CatalogMegoldas,Catalog megoldás>> címben ott egy példa a super.catalog.xml fájlra.
+Ebben láthatjuk, hogy a fájl elérése maven dependency-n keresztül van megadva:
+
+ uri="maven:hu.icellmobilsoft.coffee.dto.xsd:coffee-dto-xsd:jar::!/xsd/hu/icellmobilsoft/coffee/dto/common/common.xsd"
+
+Ez valójában a következőre utal:
+
+.pom.xml
+[source,xml]
+----
+...
+<dependency>
+    <groupId>hu.icellmobilsoft.coffee.dto</groupId>
+    <artifactId>coffee-dto</artifactId>
+</dependency>
+...
+----
+
+Tehát a .m2/repository/hu/icellmobilsoft/coffee/dto/coffee-dto/+_VERZIÓ_+/coffee-dto.jar fájból kicsomagolva szedi
+a /xsd/hu/icellmobilsoft/coffee/dto/common/common.xsd XSD fájlt.
+
+IMPORTANT: Az alábbi megoldáshoz *java 9+ szükséges!*
+
+Maga a `maven:` protocol ismeretlen a java.net.URL számára, így írnunk kell hozzá egy handlert:
+
+.coffee-tool/src/main/java/hu/icellmobilsoft/coffee/tool/protocol/handler/MavenURLHandler.java tartalmi lényege
+[source,java,indent=0]
+----
+include::../../../coffee-tool/src/main/java/hu/icellmobilsoft/coffee/tool/protocol/handler/MavenURLHandler.java[lines=29..44]
+----
+Ezt a handlert még be kell regisztrálni a következő módon:
+
+* Létre kell honzni egy `java.net.spi.URLStreamHandlerProvider` nevű text fájlt (végződés nélkül)
+* A tartalmába bele kell írni a saját elkészített handlert.
+Ha több volna belőlük akkor egyenként új sorba.
+
+Mi esetünkben így fog kinézni:
+
+.src/main/resources/META-INF/services/java.net.spi.URLStreamHandlerProvider
+[source,txt]
+----
+hu.icellmobilsoft.coffee.tool.protocol.handler.MavenURLStreamHandlerProvider
+----
+Innentől kezdve a java 9+ XSD Catalog kezelése képes felolvasni a generátor által ismert útvonalat.
+
+NOTE: Hogy maga a JAXB tudjon validálni Catalog-on keresztül, szükséges volt pár osztályt létrehozni,
+melyek még nem Coffee ready. Erről később fog születni dokumentáció, addig projekteken kell keresni.

@@ -5,16 +5,14 @@
 :imagesdir: pic
 
 [#index]
-= Coffee Dokumentáció
+include::en/project-description.adoc[leveloffset=-2]
 
-A Coffee framework célja hogy lefektessen bizonyos alapokat azoknak az eszközöknek, melyeket gyakran használunk a projektjeinkben.
+include::en/common.adoc[]
 
-include::common.adoc[leveloffset=+1]
-
-include::migration.adoc[leveloffset=+1]
+include::en/migration.adoc[]
 
 == HOWTO
 
-include::howto/xsd-xml-validation-depend-on-version.adoc[leveloffset=+2]
+include::en/howto/xsd-xml-validation-depend-on-version.adoc[leveloffset=+1]
 
-include::howto/xsd-catalog.adoc[leveloffset=+2]
+include::en/howto/xsd-catalog.adoc[leveloffset=+1]

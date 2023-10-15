@@ -20,6 +20,7 @@
 package hu.icellmobilsoft.coffee.jpa.service;
 
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -31,6 +32,7 @@ import jakarta.enterprise.context.Dependent;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
+import jakarta.persistence.OptimisticLockException;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -162,7 +164,7 @@ public class BaseService<T> {
         log.trace(">> BaseService.findAll(class: [{0}])", clazz.getCanonicalName());
         try {
             try {
-                return getEntityManager().createQuery("FROM " + clazz.getSimpleName(), clazz).getResultList();
+                return getEntityManager().createQuery("SELECT e FROM " + clazz.getSimpleName() + " e", clazz).getResultList();
             } catch (Exception e) {
                 String msg = MessageFormat.format("Error occured in finding all class: [{0}] : [{1}]", clazz.getCanonicalName(),
                         e.getLocalizedMessage());
@@ -197,6 +199,10 @@ public class BaseService<T> {
             getEntityManager().refresh(savedEntity);
             log.debug("[{0}] entity has been saved", entityName);
             return savedEntity;
+        } catch (OptimisticLockException e) {
+            String msg = MessageFormat.format("Optimistic Lock Error in saving [{0}]: [{1}]", entityName, e.getLocalizedMessage());
+            log.error(msg, e);
+            throw new hu.icellmobilsoft.coffee.dto.exception.OptimisticLockException(CoffeeFaultType.OPTIMISTIC_LOCK_EXCEPTION, msg, e);
         } catch (Exception e) {
             String msg = MessageFormat.format("Error in saving [{0}]: [{1}]", entityName, e.getLocalizedMessage());
             log.error(msg, e);
@@ -254,6 +260,10 @@ public class BaseService<T> {
             getEntityManager().remove(entity);
             getEntityManager().flush();
             log.debug("[{0}] entity has been deleted", entityName);
+        } catch (OptimisticLockException e) {
+            String msg = MessageFormat.format("Optimistic Lock Error in deleting [{0}]: [{1}]", entityName, e.getLocalizedMessage());
+            log.error(msg, e);
+            throw new hu.icellmobilsoft.coffee.dto.exception.OptimisticLockException(CoffeeFaultType.OPTIMISTIC_LOCK_EXCEPTION, msg, e);
         } catch (Exception e) {
             String msg = MessageFormat.format("Error in deleting [{0}]: [{1}]", entityName, e.getLocalizedMessage());
             log.error(msg, e);
@@ -1854,9 +1864,12 @@ public class BaseService<T> {
      * @return {@link TechnicalException} with message from methodInfo.
      */
     protected TechnicalException repositoryFailed(Exception e, String methodInfo, Object... params) {
+        List<Object> paramsList = new ArrayList<>(Arrays.asList(params));
+        paramsList.add(e.getLocalizedMessage());
+
         StringBuilder sb = new StringBuilder();
-        sb.append("Error occurred in ").append(methodInfo).append(" : [").append(e.getLocalizedMessage()).append("]");
-        String msg = MessageFormat.format(sb.toString(), prepareParametersToLog(params));
+        sb.append("Error occurred in ").append(methodInfo).append(" : [{").append(params.length).append("}]");
+        String msg = MessageFormat.format(sb.toString(), prepareParametersToLog(paramsList.toArray()));
         return new TechnicalException(CoffeeFaultType.REPOSITORY_FAILED, msg, e);
     }
 
@@ -1879,7 +1892,7 @@ public class BaseService<T> {
      * @param methodName
      *            the REST method name e.g getCustomerInfoByUserId
      * @param paramNames
-     *            the REST param names of {@link javax.ws.rs.PathParam}s e.g userId,balanceId
+     *            the REST param names of {@link jakarta.ws.rs.PathParam}s e.g userId,balanceId
      * @return e.g. " getCustomerInfoByUserId(userId: [{0}])"
      */
     private String getCalledMethodWithOnlyPathParams(String methodName, String... paramNames) {

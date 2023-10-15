@@ -1,0 +1,10 @@
+[#migration]
+= Migrációs leírások
+
+Régebbi migrációs leírások a
+https://github.com/i-Cell-Mobilsoft-Open-Source/coffee/blob/master/docs/hu/migration/v1/index.adoc[itt]
+találhatóak.
+
+include::migration/migrationTo2_0_0.adoc[leveloffset=+1]
+include::migration/migration200to210.adoc[leveloffset=+1]
+include::migration/migration210to220.adoc[leveloffset=+1]

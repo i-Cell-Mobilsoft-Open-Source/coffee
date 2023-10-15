@@ -1,0 +1,45 @@
+[#common_core_coffee-cdi_trace]
+= trace
+
+The annotations in the `hu.icellmobilsoft.coffee.cdi.trace.annotation` package allow the modules of coff::ee to provide trace information. The annotations are used to allow coff::ee modules to plug into an existing trace flow or to start a new flow.
+
+
+* Trace usage
+
+** The `@Traced` annotation allows a method to become traceable.
+
+*** Tags - links the span data of coff:ee modules to the values of mp-opentracing io.opentracing.tag.Tags
+
+**** component - module identifier that is part of the trace, e.g. redis-stream
+
+**** kind - specify type of span, e.g. consumer
+
+**** dbType - database type, e.g. redis
+
+
+.sample IOpenTraceHandler
+[source,java]
+----
+...
+@Inject
+private IOpenTraceHandler traceHandler;
+...
+
+public Object execute(CdiQueryInvocationContext context) {
+//create jpa query ...
+Traced traced = new Traced.Literal(Tags.Database.COMPONENT, Tags.Database.KIND, Tags.Database.DB_TYPE);
+String operation = context.getRepositoryClass() + "." + method.getName();
+return traceHandler.runWithTrace(() -> context.executeQuery(jpaQuery), traced, operation);
+}
+----
+
+.sample @Traced
+[source,java]
+----
+@Traced(component = Tags.Redis.Stream.COMPONENT, kind = Tags.Redis.Stream.KIND, dbType = Tags.Redis.DB_TYPE)
+@Override
+public void onStream(StreamEntry streamEntry) throws BaseException {
+...
+}
+
+----

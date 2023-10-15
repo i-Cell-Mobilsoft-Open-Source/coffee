@@ -1,0 +1,18 @@
+[#migration_v1]
+= Migrációs leírások (v1)
+
+include::migration100to110.adoc[leveloffset=+1]
+include::migration110to120.adoc[leveloffset=+1]
+include::migration120to130.adoc[leveloffset=+1]
+include::migration130to140.adoc[leveloffset=+1]
+include::migration140to150.adoc[leveloffset=+1]
+include::migration150to160.adoc[leveloffset=+1]
+include::migration160to170.adoc[leveloffset=+1]
+include::migration170to180.adoc[leveloffset=+1]
+include::migration180to181.adoc[leveloffset=+1]
+include::migration180to190.adoc[leveloffset=+1]
+include::migration190to1100.adoc[leveloffset=+1]
+include::migration1100to1110.adoc[leveloffset=+1]
+include::migration1110to1120.adoc[leveloffset=+1]
+include::migration1120to1130.adoc[leveloffset=+1]
+include::migration1130to1140.adoc[leveloffset=+1]

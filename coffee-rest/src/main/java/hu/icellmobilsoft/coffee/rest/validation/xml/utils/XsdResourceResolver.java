@@ -27,7 +27,6 @@ import java.util.Enumeration;
 import jakarta.enterprise.inject.Alternative;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.deltaspike.core.util.ClassUtils;
 import org.apache.deltaspike.core.util.PropertyFileUtils;
 import org.w3c.dom.DOMImplementationSource;
 import org.w3c.dom.bootstrap.DOMImplementationRegistry;
@@ -69,7 +68,7 @@ public class XsdResourceResolver implements LSResourceResolver, IXsdResourceReso
             return null;
         }
         DOMImplementationLS domImplLS = getDOMImplementationLS();
-        ClassLoader classLoader = ClassUtils.getClassLoader(null);
+        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 
         final LSInput input = domImplLS.createLSInput();
 
@@ -140,7 +139,7 @@ public class XsdResourceResolver implements LSResourceResolver, IXsdResourceReso
     }
 
     private DOMImplementationLS getDOMImplementationLS() {
-        ClassLoader classLoader = ClassLoader.getSystemClassLoader();
+        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         try {
             final DOMImplementationRegistry registry;
             registry = DOMImplementationRegistry.newInstance();

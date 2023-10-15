@@ -1,0 +1,562 @@
+[#common_core_coffee-jpa]
+= coffee-jpa
+
+The purpose of this module is to connect the JPA.
+
+Includes the deltaspike jpa and hibernate hookup.
+It contains the paging helper classes, transaction handling classes, and the ancestor of all *Services, the BaseService class.
+
+== TransactionHelper [[TransactionHelper]]
+
+Contains helper methods with *@Transactional* annotations for *@FunctionalInterfaces* declared in the *FunctionalInterfaces* class.
+
+Thus, it is possible that if the first entry point of a class is not in a transaction, but we want to run a code snippet in a transaction within it, we just need to highlight the desired snippet in a *private* method or in any *@FunctionalInterface* provided by coffee and call the corresponding method of *TransactionHelper*, which will perform the transactional execution.
+
+This avoids the need to highlight the logic to be run in the transaction in a *public* method with *@Transactional* annotation and call the method created inside the class via *CDI.current()* or to do the same by highlighting it in a separate class.
+
+.TransactionHelper usage example
+[source,java]
+----
+import jakarta.enterprise.inject.Model;
+import jakarta.inject.Inject;
+
+import hu.icellmobilsoft.coffee.dto.exception.BaseException;
+import hu.icellmobilsoft.coffee.dto.exception.InvalidParameterException;
+import hu.icellmobilsoft.coffee.jpa.helper.TransactionHelper;
+
+@Model
+public class TransactionHelperExample {
+
+    @Inject
+    private InvoiceService invoiceService;
+
+    @Inject
+    private TransactionHelper transactionHelper;
+
+    public void example(Invoice invoice) throws BaseException {
+        if (invoice == null) {
+            throw new InvalidParameterException("invoice is NULL!");
+        }
+
+        // operations outside the transaction
+        // ...
+
+        // BaseExceptionFunction running in transaction
+        transactionHelper.executeWithTransaction(invoiceService::save, invoice);
+
+        // in-transaction BaseExceptionRunner (e.g.: for void method)
+        transactionHelper.executeWithTransaction(() -> saveInvoice(invoice));
+
+        // operations outside the transaction
+        // ...
+    }
+
+    private void saveInvoice(Invoice invoice) throws BaseException {
+        invoiceService.save(invoice);
+    }
+}
+----
+
+== BatchService [[BatchService]]
+
+*BatchService* is used to perform bulk database operations (insert, update, delete) in a group. +
+It mainly contains batch operations based on *PreparedStatement*, in which SQL compilation is performed with the support of *Hibernate*.
+
+=== Type support
+
+*BatchService* supports operations on the following types with certainty:
+
+[%header,cols=2]
+|===
+| Support type
+| Java types
+
+| link:#NullValue[Null] treated as value
+| All types evaluated as null by hibernate.
+
+| link:#CustomType[CustomType] treated as type
+| All enum types.
+
+| link:#ManyToOneType[ManyToOneType] treated as type
+| All types annotated with @ManyToOne.
+
+| link:#ConvertedBasicType[ConvertedBasicType] treated as type
+| All types with a converter.
+
+.6+| link:#BasicType[BasicType] treated as a type
+| boolean, Boolean
+| char, Character
+| java.sql.Date, java.sql.Time, java.sql.Timestamp
+| java.util.Date, java.util.Calendar
+| LocalDate, LocalTime, LocalDateTime, OffsetTime, OffsetDateTime, ZonedDateTime, Instant
+| Blob, byte[], Byte[]
+
+.5+| Managed by JDBC driver
+| byte, short, int, long, float, double
+| byte, short, integer, long, float, double
+| BigInteger, BigDecimal
+| String
+| All other types not in the list.
+|===
+
+NOTE: For special types it is recommended to use a custom converter.
+
+IMPORTANT: Types not listed here are handled by the specific *JDBC* driver.
+
+IMPORTANT: Type support has been tested on *postgresql* and *oracle* databases to ensure correct operation.
+For all other databases, type coverage is in theory mostly guaranteed, but anomalies may occur.
+
+=== Null value handling [[NullValue]]
+
+*BatchService* starts type handling with a null scan.
+If the value of any type returned by hibernate is null, BatchService sets the value as *SqlTypes.NULL* JDBC type using the *PreparedStatement.setNull()* method.
+
+NOTE: *JDBC drivers* also use this method.
+
+=== CustomType handling [[CustomType]]
+
+*Hibernate* wraps enum types in a *CustomerType* type as *EnumType*. +
+*BatchService* handles the resolution of *EnumType*s as follows:
+
+[%header,cols=2]
+|===
+| Java code
+| value inserted by BatchService
+
+a|
+[source,java]
+----
+@Column(name = "ENUM_DEFAULT")
+private EnumType enumDefault;
+----
+| The order associated with the given enum value, the value is inserted according to the *ordinal()* method.
+
+a|
+[source,java]
+----
+@Column(name = "ENUM_ORDINAL")
+@Enumerated(value = EnumType.ORDINAL)
+private EnumType enumOrdinal;
+----
+| The order associated with the given enum value, the value is inserted according to the *ordinal()* method.
+
+a|
+[source,java]
+----
+@Column(name = "ENUM_STRING")
+@Enumerated(value = EnumType.STRING)
+private EnumType enumString;
+----
+| The name associated with the given non-value, the value is inserted according to the *name()* method.
+|===
+
+The insertion of values in the table is done using the *PreparedStatement.setObject()* method, so type handling is left to the *JDBC driver*.
+
+The *BatchService* currently only handles *EnumType* separately for *CustomType*s. +
+All other *CustomType* types are handled by the *JDBC driver* used!
+
+=== ManyToOneType handling [[ManyToOneType]]
+
+Within an entity, fields that use the *@ManyToOne* (jakarta.persistence.ManyToOne) annotation are treated by hibernate as *ManyToOneType*. +
+These *ManyToOneType* types are handled by *BatchService* as follows:
+
+[%header,cols="55%,45%"]
+|===
+| Java code
+| value inserted by BatchService
+
+a|
+[source,java]
+----
+@ManyToOne(fetch = FetchType.LAZY)
+@JoinColumn(name = "MANY_TO_ONE_SAMPLE_ENTITY")
+private SampleEntity manyToOneSampleEntity;
+----
+| The *BatchService* takes the unique identifier of the given entity and injects it using *EntityHelper.getLazyId()*.
+|===
+
+=== ConvertedBasicType handling [[ConvertedBasicType]]
+
+Fields within an entity that have a converter, i.e. have the *@Convert* (jakarta.persistence.Convert) annotation placed on them, are treated by hibernate as *ConvertedBasicType*.
+
+.For example:
+[source,java]
+----
+@Convert(converter = YearMonthAttributeConverter.class)
+@Column(name = "YEAR_MONTH")
+private YearMonth yearMonth;
+----
+
+For this type, *Hibernate* contains the *JDBC* type and all additional settings for the converted value, but the conversion must be done manually.
+Thus, the *BatchService* calls the passed converter, and then passes it on to the link:#BasicType[BasicType] management process with the value obtained during the conversion and the *ConvertedBasicType* (BasicType) type set appropriately by hibernate.
+
+=== BasicType handling [[BasicType]]
+
+The *BasicType* type combines the java and jdbc types, so for each java type it contains the corresponding jdbc type.
+The separations are thus done according to the jdbc type code stored in the jdbc type.
+
+=== Date type BasicType handling [[DateBasicType]]
+
+*SqlTypes.DATE* *BasicType* types with a jdbc type code *SqlTypes.DATE* are handled by *BatchService* as follows:
+
+[%header,cols=2]
+|===
+| Java code
+| value inserted by BatchService
+
+a|
+[source,java]
+----
+@Column(name = "DATE")
+private java.sql.Date date;
+----
+| Can be set directly, without conversion, using the *PreparedStatement.setDate()* method.
+
+a|
+[source,java]
+----
+@Column(name = "LOCAL_DATE")
+private LocalDate localDate;
+----
+| Converted to *java.sql.Date* type, then set using *PreparedStatement.setDate()* method.
+
+a|
+[source,java]
+----
+@Temporal(TemporalType.DATE)
+@Column(name = "DATE_TEMPORAL_DATE")
+private java.util.Date dateTemporalDate;
+----
+| Converted to *java.sql.Date* type, then set using *PreparedStatement.setDate()* method.
+
+a|
+[source,java]
+----
+@Temporal(TemporalType.DATE)
+@Column(name = "CALENDAR_TEMPORAL_DATE")
+private Calendar calendarTemporalDate;
+----
+| Converted to *java.sql.Date* type, then set using *PreparedStatement.setDate()* method.
+
+|===
+
+IMPORTANT: Types not in the table are set by the *JDBC driver*.
+
+=== Time type BasicType handling [[TimeBasicType]]
+
+The *SqlTypes.TIME* and *SqlTypes.TIME_WITH_TIMEZONE* jdbc type code *BasicType* types are handled by *BatchService* as follows:
+
+[%header,cols=2]
+|===
+| Java code
+| value inserted by BatchService
+
+a|
+[source,java]
+----
+@Column(name = "TIME")
+private Time time;
+----
+| Can be set directly, without conversion, using the *PreparedStatement.setTime()* method.
+
+a|
+[source,java]
+----
+@Column(name = "LOCAL_TIME")
+private LocalTime localTime;
+----
+| Converted to *java.sql.Time* type, then set using *PreparedStatement.setTime()* method.
+
+a|
+[source,java]
+----
+@Column(name = "OFFSET_TIME")
+private OffsetTime offsetTime;
+----
+| The system returned by *ZoneId.systemDefault()* is converted to a time zone, then converted to *java.sql.Time* and set using the *PreparedStatement.setTime()* method.
+
+a|
+[source,java]
+----
+@Temporal(TemporalType.TIME)
+@Column(name = "DATE_TEMPORAL_TIME")
+private java.util.Date dateTemporalTime;
+----
+| Converted to *java.sql.Time* type, then set using *PreparedStatement.setTime()* method.
+
+a|
+[source,java]
+----
+@Temporal(TemporalType.TIME)
+@Column(name = "CALENDAR_TEMPORAL_TIME")
+private Calendar calendarTemporalTime;
+----
+| Converted to *java.sql.Time* type, then set using *PreparedStatement.setTime()* method.
+
+|===
+
+For the types listed in the table, if *hibernate.jdbc.time_zone* is set in *persistence.xml*, then the time zone is also passed to the *PreparedStatement.setTime()* method, so that the *JDBC driver* can perform the appropriate time offset according to the time zone.
+
+IMPORTANT: It is up to the *JDBC driver* to set the types not listed in the table.
+
+=== Timestamp type BasicType handling [[TimestampBasicType]]
+
+The *SqlTypes.TIMESTAMP*, *SqlTypes.TIMESTAMP_UTC* and *SqlTypes.TIMESTAMP_WITH_TIMEZONE* jdbc type code *BasicType* types are handled by *BatchService* as follows:
+
+[%header,cols=2]
+|===
+| Java code
+| value inserted by BatchService
+
+a|
+[source,java]
+----
+@Column(name = "TIMESTAMP_DEFAULT")
+private Timestamp timestampDefault;
+----
+| Can be set directly, without conversion, using the *PreparedStatement.setTimestamp()* method.
+
+a|
+[source,java]
+----
+@Column(name = "LOCAL_DATE_TIME")
+private LocalDateTime localDateTime;
+----
+| Converted to *java.sql.Timestamp* type, then set using *PreparedStatement.setTimestamp()* method.
+
+a|
+[source,java]
+----
+@Column(name = "OFFSET_DATE_TIME")
+private OffsetDateTime offsetDateTime;
+----
+| The system returned by *ZoneId.systemDefault()* is converted to a time zone, then converted to *java.sql.Timestamp* type, and set using *PreparedStatement.setTimestamp()* method.
+
+a|
+[source,java]
+----
+@Column(name = "ZONED_DATE_TIME")
+private ZonedDateTime zonedDateTime;
+----
+| The system returned by *ZoneId.systemDefault()* is converted to a time zone, then converted to *java.sql.Timestamp* type and set using *PreparedStatement.setTimestamp()* method.
+
+a|
+[source,java]
+----
+@Column(name = "INSTANT")
+private Instant instant;
+----
+| The system time zone returned by *ZoneId.systemDefault()* is converted to *java.sql.Timestamp* and then set using *PreparedStatement.setTimestamp()*.
+
+a|
+[source,java]
+----
+@Column(name = "DATE_DEFAULT")
+private java.util.Date dateDefault;
+----
+| Converted to *java.sql.Timestamp* type, then set using *PreparedStatement.setTimestamp()* method.
+
+a|
+[source,java]
+----
+@Temporal(TemporalType.TIMESTAMP)
+@Column(name = "DATE_TEMPORAL_TS")
+private java.util.Date dateTemporalTS;
+----
+| Converted to *java.sql.Timestamp* type, then set using *PreparedStatement.setTimestamp()* method.
+
+a|
+[source,java]
+----
+@Column(name = "CALENDAR_DEFAULT")
+private Calendar calendarDefault;
+----
+| Converted to *java.sql.Timestamp* type, then set using *PreparedStatement.setTimestamp()* method.
+
+a|
+[source,java]
+----
+@Temporal(TemporalType.TIMESTAMP)
+@Column(name = "CALENDAR_TEMPORAL_TS")
+private Calendar calendarTemporalTS;
+----
+| Converted to *java.sql.Timestamp* type, then set using *PreparedStatement.setTimestamp()* method.
+|===
+
+For the types listed in the table, if *hibernate.jdbc.time_zone* is set in *persistence.xml*, then the time zone is also passed to the *PreparedStatement.setTimestamp()* method, so that the *JDBC driver* can perform the appropriate time offset according to the time zone.
+
+IMPORTANT: It is up to the *JDBC driver* to set the types not listed in the table.
+
+=== Boolean type BasicType handling [[BooleanBasicType]]
+
+*BasicType* types with *SqlTypes.BOOLEAN* jdbc type code are handled by *BatchService* as follows:
+
+[%header,cols=2]
+|===
+| Java code
+| value inserted by BatchService
+
+a|
+[source,java]
+----
+@Column(name = "BOOLEAN_PRIMITIVE")
+private boolean booleanPrimitive;
+----
+| Can be set directly, without conversion, using the *PreparedStatement.setBoolean()* method.
+
+a|
+[source,java]
+----
+@Column(name = "BOOLEAN_WRAPPER")
+private Boolean booleanWrapper;
+----
+| Can be set directly, without transformation, using the *PreparedStatement.setBoolean()* method.
+
+|===
+
+IMPORTANT: For types not listed in the table, it is up to the *JDBC driver* to set them.
+
+=== Char type BasicType handling [[CharBasicType]]
+
+*BasicType* types with *SqlTypes.BOOLEAN* jdbc type code are handled by *BatchService* as follows:
+
+[%header,cols=2]
+|===
+| Java Code
+| value inserted by BatchService
+
+a|
+[source,java]
+----
+@Column(name = "CHAR_PRIMITIVE")
+private char charPrimitive;
+----
+| Converted to *String* type, then set using *PreparedStatement.setString()* method.
+
+a|
+[source,java]
+----
+@Column(name = "CHAR_WRAPPER")
+private Character charWrapper;
+----
+| Converted to *String* type, then set using *PreparedStatement.setString()* method.
+
+|===
+
+IMPORTANT: Types not listed in the table are set by the *JDBC driver*.
+
+=== Data type BasicType handling [[DataBasicType]]
+
+The *SqlTypes.BLOB*, *SqlTypes.VARBINARY* and *SqlTypes.LONGVARBINARY* jdbc type code *BasicType* types are handled by *BatchService* as follows:
+
+[%header,cols=2]
+|===
+| Java code
+| value inserted by BatchService
+
+a|
+[source,java]
+----
+@Lob
+@Column(name = "DEFAULT_BLOB")
+private Blob defaultBlob;
+----
+| Converted to *InputStream* type, then set using *PreparedStatement.setBinaryStream()* method.
+
+a|
+[source,java]
+----
+@Column(name = "PRIMITIVE_BYTE_ARRAY")
+private byte[] primitiveByteArray;
+----
+| Can be set directly, without conversion, using the *PreparedStatement.setBytes()* method.
+
+a|
+[source,java]
+----
+@Column(name = "WRAPPER_BYTE_ARRAY")
+private Byte[] wrapperByteArray;
+----
+| Converted to primitive *byte[]* type, then set using *PreparedStatement.setBytes()* method.
+
+a|
+[source,java]
+----
+@Lob
+@Column(name = "LOB_PRIMITIVE_BYTE_ARRAY")
+private byte[] lobPrimitiveByteArray;
+----
+| Can be set directly, without conversion, using the *PreparedStatement.setBytes()* method.
+
+a|
+[source,java]
+----
+@Lob
+@Column(name = "LOB_WRAPPER_BYTE_ARRAY")
+private Byte[] lobWrapperByteArray;
+----
+| Converted to primitive *byte[]* type, then set using *PreparedStatement.setBytes()* method.
+
+|===
+
+IMPORTANT: The *JDBC driver* is responsible for setting types not included in the table.
+
+== microprofile-health support
+
+The *DatabaseHealth* can check if the database is reachable.
+The *DatabasePoolHealth* can check how loaded the connection pool used for operations to the database is.
+
+.Startup example
+[source,java]
+----
+@ApplicationScoped
+public class DatabaseHealthCheck {
+
+    @Inject
+    private DatabaseHealth databaseHealth;
+
+    public HealthCheckResponse checkDatabaseConnection() {
+        DatabaseHealthResourceConfig config = new DatabaseHealthResourceConfig();
+        config.setBuilderName("oracle");
+        config.setDatasourceUrl("jdbc:postgresql://service-postgredb:5432/service_db?currentSchema=service");
+        config.setDsName(DatabaseHealthConstant.Database.DEFAULT_DATASOURCE_NAME);
+        try {
+            return databaseHealth.checkDatabaseConnection(config);
+        }catch (BaseException e) {
+            // need to be careful with exceptions, because the probe check will fail if we don't handle the exception correctly
+            return HealthCheckResponse.builder().name("oracle").up().build();
+        }
+    }
+    
+    @Produces
+    @Startup
+    public HealthCheck produceDataBaseCheck() {
+        return this::checkDatabaseConnection;
+    }
+}
+----
+
+.Readiness example
+[source,java]
+----
+@ApplicationScoped
+public class DatabaseHealthCheck {
+
+    @Inject
+    private DatabaseHealth databaseHealth;
+
+    public HealthCheckResponse checkDatabasePoolUsage() {
+        try {
+            return databasePoolHealth.checkDatabasePoolUsage("oracle");
+        }catch (BaseException e) {
+            return HealthCheckResponse.builder().name("oracle").up().build();
+        }
+    }
+    
+    @Produces
+    @Readiness
+    public HealthCheck produceDataBasePoolCheck() {
+        return this::checkDatabasePoolUsage;
+    }
+}
+----

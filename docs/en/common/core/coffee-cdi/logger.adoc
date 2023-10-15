@@ -1,0 +1,60 @@
+[#common_core_coffee-cdi_logger]
+= logger
+
+Coffee uses its own logging system, for several reasons:
+
+* wraps the actual logging system (currently it is java util log)
+* collects all the logs that are logged at the request level,
+logs all logging that is logged at the logging level, including logging that is not written to the console (or elsewhere) because logging is set to a higher level
+(for example, if the root logger is set to INFO level, then the TRACE, DEBUG level log will not be output anywhere).
+We are able to log these logs in case of an error to help the debugging process
+* other information can be put into the log request level container
+* check which level of log level is the highest logged
+
+Each class has its own logger, loggers are not inheritable, not transferable. The CDI + jboss logger provides the basis for using it:
+
+.sample use
+[source,java]
+----
+// <1>
+@Inject
+@ThisLogger
+private hu.icellmobilsoft.coffee.cdi.logger.AppLogger log;
+  
+  
+// <2>
+@Inject
+private hu.icellmobilsoft.coffee.se.logging.Logger log;
+
+// <3>
+import hu.icellmobilsoft.coffee.cdi.logger.LogProducer;
+
+public static String blabla() {
+    LogProducer.getStaticDefaultLogger(BlaBla.class).trace("class blabla");
+    LogProducer.getStaticDefaultLogger("BlaBla").trace("class name blabla");
+    return "blabla";
+}
+
+// <4>
+import hu.icellmobilsoft.coffee.se.logging.Logger;
+
+public static String blabla() {
+    Logger.getLogger(BlaBla.class).trace("class blabla");
+    Logger.getLogger("BlaBla").trace("class name blabla");
+    return "blabla";
+}
+----
+<1> where we work with the class in @RequestScope (or higher scope) (90% of the cases)
+<2> where there is no RequestScope
+<3> where inject is not used, e.g. in static methods
+<4> in JavaSE environments e.g. cliens jars
+
+If a parameter is included in the logging, it should be placed between "[parameter]" characters EXCEPT.
+
+.parameter logging pattern
+[source,java]
+----
+log.trace("Generated id: [{0}]", id);
+----
+
+The purpose of this is to be able to immediately identify the variable value when looking at the log, and also if it has a value of "" (empty String) or null.

@@ -1,0 +1,49 @@
+// hu_icellmobilsoft_coffee_dto_document_document.proto at 0:0
+syntax = "proto3";
+package hu.icellmobilsoft.coffee.dto.document.document;
+
+import "hu/icellmobilsoft/coffee/dto/common/common/hu_icellmobilsoft_coffee_dto_common_common.proto";
+import "hu/icellmobilsoft/coffee/dto/common/commonservice/hu_icellmobilsoft_coffee_dto_common_commonservice.proto";
+import "google/protobuf/timestamp.proto";
+
+option java_multiple_files = false;
+option java_outer_classname = "XsdProtoWrapper";
+
+message TemplateFullType {
+  string template_key = 1;
+  string language = 2;
+  string type = 3;
+  google.protobuf.Timestamp date = 4;
+  repeated hu.icellmobilsoft.coffee.dto.common.common.KeyValueBasicType parameter = 5;
+  string template_data_id = 11;
+  string file_name = 12;
+  string subject = 13;
+  bytes data = 14;
+}
+message TemplateRequestGeneratedTypePlaceholder {
+  hu.icellmobilsoft.coffee.dto.common.commonservice.ContextType context = 1;
+  TemplateType template = 21;
+}
+message TemplateRequestType {
+  hu.icellmobilsoft.coffee.dto.common.commonservice.ContextType context = 1;
+  TemplateType template = 21;
+}
+message TemplateResponseGeneratedTypePlaceholder {
+  hu.icellmobilsoft.coffee.dto.common.commonservice.ContextType context = 1;
+  hu.icellmobilsoft.coffee.dto.common.commonservice.FunctionCodeType func_code = 2;
+  string message = 3;
+  TemplateFullType template = 31;
+}
+message TemplateResponseType {
+  hu.icellmobilsoft.coffee.dto.common.commonservice.ContextType context = 1;
+  hu.icellmobilsoft.coffee.dto.common.commonservice.FunctionCodeType func_code = 2;
+  string message = 3;
+  TemplateFullType template = 31;
+}
+message TemplateType {
+  string template_key = 1;
+  string language = 2;
+  string type = 3;
+  google.protobuf.Timestamp date = 4;
+  repeated hu.icellmobilsoft.coffee.dto.common.common.KeyValueBasicType parameter = 5;
+}

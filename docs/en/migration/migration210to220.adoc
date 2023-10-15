@@ -1,0 +1,46 @@
+= v2.1.0 → v2.2.0
+
+coff:ee v2.1.0 -> v2.2.0 migration description, news, changes
+
+== What's new
+
+=== coffee-tool
+
+* JsonUtil is able to deserialize generic types as well. 
+
+==== Migration
+
+Changes are backwards compatible doesnt need any migration.
+
+=== coffee-jpa
+
+** microprofile-health support
+
+==== Migration
+
+Changes are backwards compatible doesnt need any migration.
+
+=== coffee-module-redis
+
+** microprofile-health support
+** Jedis connection metrics support
+
+==== Migration
+
+Changes are backwards compatible doesnt need any migration.
+
+=== coffee-module-etcd
+
+** microprofile-health support
+
+==== Migration
+
+Changes are backwards compatible doesnt need any migration.
+
+=== coffee-module-base
+
+** The ClassFieldsAndMethodsCache caused a ConcurrentModificationException error under high load.
+
+==== Migration
+
+Changes are backwards compatible doesnt need any migration.

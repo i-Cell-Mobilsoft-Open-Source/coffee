@@ -31,8 +31,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-import hu.icellmobilsoft.coffee.tool.properties.PropertyReader;
-
 /**
  * @author mark.petrenyi
  */
@@ -51,7 +49,7 @@ class PropertyReaderTest {
 
     @BeforeAll
     static void setUpBeforeClass() {
-        URL resourceURL = PropertyReaderTest.class.getClassLoader().getResource(PROPERTY_READER_TEST_PROPERTIES);
+        URL resourceURL = Thread.currentThread().getContextClassLoader().getResource(PROPERTY_READER_TEST_PROPERTIES);
         if (resourceURL == null) {
             fail(String.format("Resource:[%s] is not found!", PROPERTY_READER_TEST_PROPERTIES));
         }

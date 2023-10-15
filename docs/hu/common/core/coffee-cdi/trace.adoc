@@ -1,0 +1,45 @@
+[#common_core_coffee-cdi_trace]
+= Trace
+
+A `hu.icellmobilsoft.coffee.cdi.trace.annotation` csomagban található annotációk lehetővé teszik hogy a coff::ee moduljai trace információt szolgáltassanak. Az annotációk azt a célt szolgálják hogy a coff::ee moduljai képesek legyenek becsatlakozni egy meglévő trace flow-ba vagy új flow tudjanak indítani.
+
+
+* Trace használat
+
+** A `@Traced` annotáció lehetővé teszi hogy metódus trace-elhetővé váljon.
+
+*** Tags - összeköti a coff:ee modulok span adatait a mp-opentracing io.opentracing.tag.Tags értékeivel
+
+**** component - modul azonosító ami a trace része, pl redis-stream
+
+**** kind - span-ek típusát adhatja meg, pl consumer
+
+**** dbType - adatbázis típusa, pl redis
+
+
+.minta IOpenTraceHandler
+[source,java]
+----
+...
+@Inject
+private IOpenTraceHandler traceHandler;
+...
+
+public Object execute(CdiQueryInvocationContext context) {
+//create jpa query ...
+Traced traced = new Traced.Literal(Tags.Database.COMPONENT, Tags.Database.KIND, Tags.Database.DB_TYPE);
+String operation = context.getRepositoryClass() + "." + method.getName();
+return traceHandler.runWithTrace(() -> context.executeQuery(jpaQuery), traced, operation);
+}
+----
+
+.minta @Traced
+[source,java]
+----
+@Traced(component = Tags.Redis.Stream.COMPONENT, kind = Tags.Redis.Stream.KIND, dbType = Tags.Redis.DB_TYPE)
+@Override
+public void onStream(StreamEntry streamEntry) throws BaseException {
+...
+}
+
+----

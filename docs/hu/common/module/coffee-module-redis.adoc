@@ -1,0 +1,215 @@
+[#common_module_coffee-module-redis]
+= coffee-module-redis
+
+Modul célja Redis online key-value kezelése.
+
+A "redis.clients:jedis" java driver alapon működő modul nemcsak a Redisből való lekérdezéseket és mentéseket szolgálja ki, de tud nyújtani egy Redisben mentett cache kezelést is, ami a CDI interceptor alapjain működik.
+
+NOTE: a jelenlegi jedis 4.2.3 verzióval Redis kompatibilitás 2.8.x-ig visszamenőleg van
+
+== RedisConnection
+
+Bevezetésre került a `@RedisConnection` qualifier.
+Ennek használatával nincs szükség Redis kapcsolatonként külön definiálni/implementálni a Redis konfigurációt, JedisPool-t, Jedis-t, RedisService -t; CDI-on keresztül mindegyik legyártásra kerül és injectelhetó.
+Konfiguráció yaml-ben:
+
+[source,yaml]
+----
+coffee:
+    redis:
+        auth: #<1>
+            host: sample-sandbox.icellmobilsoft.hu #default: localhost
+            port: 6380 #default: 6380
+            password: pass1234 #default: null
+            database: 1 #default: 0
+            pool:
+                default: #<2>
+                    maxtotal: 128 #default: 64
+                    maxidle: 32 #default: 16
+                custom: #<2>
+                    maxtotal: 12 #default: 64
+                    maxidle: 3 #default: 16
+            timeout: 5000 #default: 5000
+----
+<1> A redis kapcsolat egyedi azonosítója (configKey). Minden mező opcionális.
+<2> A redis kapcsolaton belül pool egyedi azonosítója (poolConfigKey). Minden mező opcionális.
+
+A fenti konfig-hoz tartozó RedisManager használata:
+
+[source,java]
+----
+@Inject
+@RedisConnection(configKey = "auth")
+private RedisManager authRedisManager;
+
+@Inject
+@RedisConnection(configKey = "auth", poolConfigKey = "custom")
+private RedisManager authRedisManagerCustomPool;
+----
+Az első esetben a "default" pool beállításokat fogja használni,
+a második esetben a "custom" pool beállításokat.
+
+== RedisManager
+
+Bevezetésre került a `RedisManager` osztály és hozzá tartozó `RedisManagerProducer`. A producer legyártja a RedisManager-t a hívott configKey értékkel, ezzel elérhetővé válik a Jedis kikérése a JedisPool-ból, akkor amikor a redis-en valamilyen műveletet szeretnénk végezni.
+RedisManager feladata hogy összefogja a Jedis funkciók használatát, ami közös logolást, hibakezelést, connection használatot kezel.
+A definiált metódusok Jedis funkciókat várnak amiket lefuttatnak, ez megtehető az initConnection() és closeConnection() használatával, vagy a runWithConnection metódusokon keresztül. Ez a megközelítés lehetővé teszi hogy a Redis kapcsolatok addig legyenek használva amíg szükségesek, így sok erőforrást megspórol a használata.
+
+Példa több redis művelet használatára. Ez jellemzően set/get kombinálva az expire művelettel. Ilyen esetben nem kérünk a pool-ból feleslegesen Jedis példányt és ha végeztünk be is zárjuk.
+
+[source,java]
+----
+@Inject
+@RedisConnection(configKey = "auth")
+private RedisManager redisManager;
+
+try (RedisManagerConnection connection = redisManager.initConnection()) { #<1>
+    redisManager.run(Jedis::set, "set", "key", "value");
+    redisManager.run(Jedis::expire, "expire", "key", 300);
+}
+
+----
+<1> Jedis példány inicializálása amin a műveleteket végezzük, try-with-resource használatával automatán lezárhatjuk
+
+Példa egy művelet végrehajtására.
+
+[source,java]
+----
+@Inject
+@RedisConnection(configKey = "auth")
+private RedisManager redisManager;
+
+redisManager.runWithConnection(Jedis::set, "set", "key", "value"); #<1>
+
+----
+
+<1> Művelet végrehajtása, keretrendszer kezeli a kapcsolat nyitását és zárását.
+
+== Redis műveletek
+
+=== hscan
+
+Végigiterál a kiválasztott redis db-ben lévő objektumon kulcs alapján. A művelet közben változhat az adat, nem blokkol (ez az előny az SMEMBERS művelettel szemben).
+Arra nincs garancia hogy minden elemet visszaad, a redisben tárolt objektumok méretétől függ.
+Ha meghaladja a limitet akkor a default COUNT értéke 10 lesz, ennél több elemet nem fog visszaadni egy kérésben.
+Lehetőség van paraméterezni a COUNT értékét, ha meghaladnánk a méret korlátot.
+Bővebb leírás a korlátokról: https://redis.io/commands/scan
+
+[source,java]
+----
+redisManager.runWithConnection(Jedis::hscan, "hscan", "key", 10, 100);
+----
+
+=== rpush
+
+A kulcs-ként megadott listába pakolja az értéket
+és beállítja a lista lejárati értékét másodpercben.
+Válaszban a listában lévő tételek mennyisége.
+Bővebb leírás: https://redis.io/commands/rpush + https://redis.io/commands/expire
+
+[source,java]
+----
+redisManager.runWithConnection(Jedis::rpush, "rpush", "key", "element", 100);
+----
+
+=== lpop/rpop
+
+(coffee v1.4+)
+A kulcs-ként megadott listából kiszedi és válaszolja az első (lpop) vagy utolsó (rpop) értéket a sorból.
+Ha már üres a lista a Redis automatán törli azt.
+Ha nem létező listából (közben kiürült és a Redis törölte) kérjük az adatot a rendszer `Optional.empty()`-t fog adni.
+Bővebb leírás a korlátokról: https://redis.io/commands/lpop
+
+[source,java]
+----
+redisManager.runWithConnection(Jedis::lpop, "lpop", "key"); <1>
+redisManager.runWithConnection(Jedis::rpop, "rpop", "key"); <1>
+----
+<1> Ha nem talál értéket akkor `Optional.empty()`
+
+=== lmove
+
+A pop+push kombinációja egyben és beállítja a lista lejárati értékét másodpercben.
+Valójában átpakolja a lista elemet másik listába.
+Ha nem létezik a lista létrehozza,
+ha a forrás és cél lista ugyan az,
+akkor képes a lista elejéről a végére pakolni a elemet, vagy ahogy szeretnénk.
+Válaszban a tétel lessz.
+Bővebb leírás: https://redis.io/commands/lmove + https://redis.io/commands/expire
+
+[source,java]
+----
+// sourceListKey elejéről a destinationListKey lista végére
+redisManager.runWithConnection(Jedis::lmove, "lmove", "sourceListKey", "destinationListKey", ListDirection.LEFT, ListDirection.RIGHT);
+// végéről az elejére
+redisManager.runWithConnection(Jedis::lmove, "lmove", "sourceListKey", "sourceListKey", ListDirection.RIGHT, ListDirection.LEFT);
+----
+
+=== removeValueFromList
+
+A megadott listából törli az összes paraméterrel egyező tételt.
+Bővebb leírás: https://redis.io/commands/lrem
+
+[source,java]
+----
+redisManager.runWithConnection(Jedis::lrem, "removeValueFromList", listKey, 0, "removeValue");
+----
+
+== microprofile-health támogatás
+
+A *RedisHealth* ellenőrizni tudja hogy elérhető-e a redis server.
+
+.Startup használati példa
+[source,java]
+----
+@ApplicationScoped
+public class RedisHealthCheck {
+
+    @Inject
+    private RedisHealth databaseHealth;
+
+    public HealthCheckResponse check(String redisConfig) {
+        ManagedRedisConfig managedRedisConfig = ...
+        try {
+            return redisHealth.checkConnection(managedRedisConfig, "redis");
+        } catch (BaseException e) {
+            return HealthCheckResponse.builder().name("redis").up().build();
+        }
+    }
+    
+    @Produces
+    @Startup
+    public HealthCheck produceRedisCheck() {
+        return this::check;
+    }
+}
+----
+
+== microprofile-metrics támogatás
+
+A *JedisConnectionProducer* metrikát szolgáltat a Jedis pool használatáról.
+
+.metrics minta
+[source,java]
+----
+# HELP application_coffee_jedis_pool_active Active connection number
+# TYPE application_coffee_jedis_pool_active gauge
+application_coffee_jedis_pool_active{configKey="redisConfig",poolConfigKey="default"} 10.0
+# HELP application_coffee_jedis_pool_idle Idle connection number
+# TYPE application_coffee_jedis_pool_idle gauge
+application_coffee_jedis_pool_idle{configKey="redisConfig",poolConfigKey="default"} 5.0
+----
+
+A metrikák felülírhatóak @Alternative vagy @Specializes segítségével.
+.metrics felülírás minta
+[source,java]
+----
+@ApplicationScoped
+@Alternative
+public class CustomJedisMetricsHandler extends JedisMetricsHandler {
+  public void addMetric(String configKey, String poolConfigKey, JedisPool jedisPool) throws BaseException {
+  ...
+  }
+}
+----
+

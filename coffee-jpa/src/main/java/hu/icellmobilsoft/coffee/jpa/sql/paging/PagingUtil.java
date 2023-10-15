@@ -26,6 +26,9 @@ import java.util.List;
 import jakarta.persistence.Query;
 import jakarta.persistence.TypedQuery;
 
+import hu.icellmobilsoft.coffee.dto.exception.BaseException;
+import hu.icellmobilsoft.coffee.dto.exception.InvalidParameterException;
+
 /**
  * <p>
  * PagingUtil class.
@@ -38,6 +41,12 @@ public final class PagingUtil {
 
     /** Constant <code>DEFAULT_ROWS=6</code> */
     public static final long DEFAULT_ROWS = 6;
+
+    /** Constant <code>DEFAULT_PAGE_MAX_VALUE=21_474_836</code> coming from common.xsd#PageType */
+    public static final long DEFAULT_PAGE_MAX_VALUE = 21_474_836;
+
+    /** Constant <code>DEFAULT_ROWS_MAX_VALUE=100</code> coming from common.xsd#RowsType */
+    public static final long DEFAULT_ROWS_MAX_VALUE = 100;
 
     private PagingUtil() {
     }
@@ -56,8 +65,12 @@ public final class PagingUtil {
      * @param <T>
      *            entity
      * @return Paging result.
+     * @throws BaseException
+     *             on error
      */
-    public static <T> PagingResult<T> getPagingResult(final TypedQuery<T> query, final Long count, long page, long rows) {
+    public static <T> PagingResult<T> getPagingResult(final TypedQuery<T> query, final Long count, long page, long rows) throws BaseException {
+        validatePage(page);
+        validateRows(rows);
         return getPagingResultAndSetQueryDetails(query, count, page, rows, new QueryMetaData());
     }
 
@@ -114,7 +127,7 @@ public final class PagingUtil {
                 // Updated for result
                 currentPage = 1;
             } else {
-                result.setResults(new ArrayList<T>());
+                result.setResults(new ArrayList<>());
             }
 
             setDetails(details, currentPage, maxCount, maxPage, resultCount, result);
@@ -143,8 +156,12 @@ public final class PagingUtil {
      * @param <T>
      *            Entity.
      * @return Paging result.
+     * @throws BaseException
+     *             on error
      */
-    public static <T> PagingResult<T> getPagingResult(final Query query, final Query countQuery, long page, long rows) {
+    public static <T> PagingResult<T> getPagingResult(final Query query, final Query countQuery, long page, long rows) throws BaseException {
+        validatePage(page);
+        validateRows(rows);
         return getPagingResultAndSetQueryDetails(query, countQuery, page, rows, new QueryMetaData());
     }
 
@@ -164,14 +181,17 @@ public final class PagingUtil {
      * @param <T>
      *            Entity.
      * @return Paging result.
+     * @throws BaseException
+     *             on error
      */
     @SuppressWarnings("unchecked")
     public static <T> PagingResult<T> getPagingResultAndSetQueryDetails(final Query query, final Query countQuery, long page, long rows,
-            QueryMetaData details) {
+            QueryMetaData details) throws BaseException {
         if (query == null || details == null) {
             return null;
         }
-
+        validatePage(page);
+        validateRows(rows);
         long currentPage = getCurrentPage(page);
         final long currentRows = getCurrentRows(rows);
 
@@ -195,7 +215,7 @@ public final class PagingUtil {
                 result.setResults(resultList);
                 resultCount = resultList.size();
             } else {
-                result.setResults(new ArrayList<T>());
+                result.setResults(new ArrayList<>());
             }
 
             setDetails(details, currentPage, maxCount, maxPage, resultCount, result);
@@ -221,8 +241,12 @@ public final class PagingUtil {
      * @param rows
      *            Row counter.
      * @return Query metadata.
+     * @throws BaseException
+     *             on error
      */
-    public static QueryMetaData createDetails(final long maxCount, final long resultCount, final long page, final long rows) {
+    public static QueryMetaData createDetails(final long maxCount, final long resultCount, final long page, final long rows) throws BaseException {
+        validatePage(page);
+        validateRows(rows);
         long currentPage = PagingUtil.getCurrentPage(page);
         final long currentRows = PagingUtil.getCurrentRows(rows);
         long maxPage = PagingUtil.getPageCount(maxCount, currentRows);
@@ -245,7 +269,7 @@ public final class PagingUtil {
      * @return Page count.
      */
     public static long getPageCount(long sum, long rows) {
-        return (rows == 0) ? 0L : (long) Math.ceil((double) sum / (double) rows);
+        return (rows <= 0) ? 0L : (long) Math.ceil((double) sum / (double) rows);
     }
 
     private static long getCurrentPage(final long page) {
@@ -265,4 +289,15 @@ public final class PagingUtil {
         result.setDetails(details);
     }
 
+    private static void validatePage(long page) throws BaseException {
+        if (page > DEFAULT_PAGE_MAX_VALUE || page < 1) {
+            throw new InvalidParameterException("Invalid 'page' value!");
+        }
+    }
+
+    private static void validateRows(long rows) throws BaseException {
+        if (rows > DEFAULT_ROWS_MAX_VALUE || rows < 1) {
+            throw new InvalidParameterException("Invalid 'rows' value!");
+        }
+    }
 }

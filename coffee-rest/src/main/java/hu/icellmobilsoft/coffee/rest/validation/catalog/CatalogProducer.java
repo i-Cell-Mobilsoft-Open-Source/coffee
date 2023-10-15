@@ -70,7 +70,7 @@ public class CatalogProducer {
         String path = xmlCatalogPath
                 .orElseThrow(() -> new TechnicalException(MessageFormat.format("The config of [{0}] not found!", IConfigKey.CATALOG_XML_PATH)));
         try {
-            URI catalogUri = CatalogProducer.class.getClassLoader().getResource(path).toURI();
+            URI catalogUri = Thread.currentThread().getContextClassLoader().getResource(path).toURI();
 
             return CatalogManager.catalog(CatalogFeatures.defaults(), catalogUri);
         } catch (Exception e) {

@@ -1,0 +1,148 @@
+[#common_module_coffee-module-localization]
+= coffee-module-localization
+
+== Localization
+Localization functionality in a backend system is useful from several perspectives, for example error codes,
+enum translations or even language-agnostic generation of documents.
+For this purpose, deltaspike
+http://deltaspike.apache.org/documentation/core.html#Messagesandi18n[Messages and i18n]
+which is still being enhanced with newer CDI features.
+
+It has three components:
+
+* language detection (LocaleResolver)
+* language files
+* language localization manager (LocalizedMessage)
+
+=== Language (LocaleResolver)
+By default, deltaspike includes a built-in language resolver,
+which returns the running JVM locale,
+of course this is not appropriate for a system,
+so you have to use CDI to create `@Alternative` like this:
+
+.ProjectLocaleResolver
+[source,java]
+----
+import java.util.Locale;
+
+import javax.annotation.Priority;
+import javax.enterprise.context.Dependent;
+import javax.enterprise.inject.Alternative;
+import javax.inject.Inject;
+import javax.interceptor.Interceptor;
+
+import org.apache.commons.lang3.StringUtils;
+import org.apache.deltaspike.core.impl.message.DefaultLocaleResolver;
+
+import hu.icellmobilsoft.coffee.cdi.logger.AppLogger;
+import hu.icellmobilsoft.coffee.cdi.logger.ThisLogger;
+import hu.icellmobilsoft.project.common.rest.header.ProjectHeader;
+
+@Dependent
+@Alternative
+@Priority(Interceptor.Priority.APPLICATION + 10)
+public class ProjectLocaleResolver extends DefaultLocaleResolver {
+
+    private static final long serialVersionUID = 1L;
+
+    public static final String DEFAULT_LANGUAGE = "hu";
+
+    @Inject
+    private ProjectHeader header;
+
+    @Inject
+    @ThisLogger
+    private AppLogger log;
+
+    @Override
+    public Locale getLocale() {
+        if (header != null) {
+            log.debug("header language: [{0}]", header.getLanguage());
+            String language = header.getLanguage();
+            if (StringUtils.isNotBlank(language)) {
+                return new Locale(language);
+            }
+        }
+        return new Locale(DEFAULT_LANGUAGE);
+    }
+}
+----
+In this example, we request the language from a CDI `ProjectHeader` managed class,
+which is loaded from, for example, the REST HTTP header data.
+
+Of course, you still need to activate this `@Alternative` in the `beans.xml` file.
+
+=== Language files
+The language files work on the normal Java supported renderer,
+so the
+https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/ResourceBundle.html[ResourceBundle.html]
+according to.
+In short, if there is a dictionary file then the file name + postfix array gives the language resolution.
+
+The system supports the ResourceBundle name "*i18n.messages*" by default, example file:
+
+.src/main/resources/i18n/messages_hu.properties
+[source,properties]
+----
+pattern.date.full = yyyy-MM-dd HH:mm:ss
+pattern.date = yyyy-MM-dd
+pattern.time = HH:mm:ss
+pattern.date.time = yyyy-MM-dd HH:mm
+
+hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType.GENERIC_EXCEPTION = Nem várt hiba történt!
+----
+From the file you can see that it collects content valid for the "hu" locale.
+
+The set of dictionary files can be freely extended with the `*coffee.config.resource.bundles*` configuration key,
+where you can list more/other bundles:
+
+.project-defaults.yml
+[source,yaml]
+----
+coffee:
+    config:
+        resource:
+            bundles: i18n.messages,i18n.validations <1>
+----
+<1> must be specified without space and quotes
+
+It can be seen that there are 2 groups of bundles of dictionaries, which can be for example
+
+* src/main/resources/i18n/messages.properties
+* src/main/resources/i18n/messages_en.properties
+* src/main/resources/i18n/messages_hu.properties
+* src/main/resources/i18n/validations.properties
+* src/main/resources/i18n/validations_en.properties
+* src/main/resources/i18n/validations_hu.properties
+
+=== Localization Manager (LocalizedMessage)
+The type-safe solution of deltaspike can be fully used,
+but it is mostly not suitable for projects,
+there you mainly need to answer the localized message based on dynamic keys (e.g. error codes).
+
+For this purpose the `LocalizedMessage` class was created.
+It contains a pairwise dictionary resolution for enums and classes, for example,
+freely extensible, even modifiable with @Alternative.
+Some samples of usage:
+
+[source,java]
+----
+import hu.icellmobilsoft.coffee.module.localization.LocalizedMessage;
+
+...
+    @Inject
+    private LocalizedMessage localizedMessage;
+...
+    protected String createDateTimePattern() {
+        return StringUtils.defaultString(localizedMessage.message("{pattern.date.full}"), "yyyy.MM.dd HH:mm:ss");
+    }
+
+    protected String localizeEnum(Enum<?> enumValue) {
+        return localizedMessage.message(enumValue);
+    }
+
+    protected String getMessage(String faultType) {
+        return localizedMessage.message(GeneralExceptionMapper.class, faultType);
+    }
+...
+----

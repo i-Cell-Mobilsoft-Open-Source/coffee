@@ -1,0 +1,45 @@
+= v2.1.0 → v2.2.0
+
+coff:ee v2.1.0 -> v2.2.0 migrációs leírás, újdonságok, változások leírása
+
+=== coffee-tool
+
+** JsonUtil használatával is lehetséges a generikus típusok deszerializációja.
+
+==== Átállás
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+=== coffee-jpa
+
+** microprofile-health támogatást kapott
+
+==== Átállás
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+=== coffee-module-redis
+
+** microprofile-health támogatást kapott
+** Jedis kapcsolati metrikát szolgáltat
+
+==== Átállás
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+=== coffee-module-etcd
+
+** microprofile-health támogatást kapott
+
+==== Átállás
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+=== coffee-module-base
+
+** ClassFieldsAndMethodsCache ConcurrentModificationException hibát okozott nagy terhelés alatt.
+
+==== Átállás
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+

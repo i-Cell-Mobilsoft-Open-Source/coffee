@@ -20,8 +20,6 @@
 package hu.icellmobilsoft.coffee.module.mp.opentracing.extension;
 
 import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 
 import jakarta.annotation.Priority;
@@ -34,11 +32,11 @@ import org.apache.commons.lang3.StringUtils;
 
 import hu.icellmobilsoft.coffee.cdi.trace.annotation.Traced;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
+import io.grpc.Context;
 import io.opentracing.Scope;
 import io.opentracing.Span;
 import io.opentracing.Tracer;
 import io.opentracing.Tracer.SpanBuilder;
-import io.opentracing.tag.Tags;
 
 /**
  * Default interceptor for {@link Traced} binding
@@ -57,6 +55,11 @@ public class OpenTraceInterceptor {
     private OpenTraceResolver openTraceResolver;
 
     /**
+     * Context propagation key
+     */
+    public static Context.Key<Span> OPEN_TRACE_GRPC_CONTEXT_KEY = Context.key("openTraceContextKey");
+
+    /**
      * Intercept and handle span creation with called method name
      * 
      * @param ctx
@@ -67,7 +70,7 @@ public class OpenTraceInterceptor {
      */
     @AroundInvoke
     public Object wrap(InvocationContext ctx) throws Exception {
-        if(ctx == null) {
+        if (ctx == null) {
             LOGGER.debug("ctx is null, skip OpenTraceInterceptor");
         }
         Tracer tracer = openTraceResolver.resolveTracer();
@@ -88,7 +91,7 @@ public class OpenTraceInterceptor {
         try {
             return ctx.proceed();
         } catch (Exception e) {
-            logException(span, e);
+            OpenTraceUtil.tagException(span, e);
             throw e;
         } finally {
             span.finish();
@@ -105,6 +108,12 @@ public class OpenTraceInterceptor {
         Traced methodTraced = method.getAnnotation(Traced.class);
         String operationName = ctx.getTarget().getClass().getSuperclass().getCanonicalName();
 
+        // gRPC propagated span
+        Span span = OPEN_TRACE_GRPC_CONTEXT_KEY.get(Context.current());
+        if (span != null) {
+            tracer.activateSpan(span);
+        }
+
         // in case of jedis component, extract operation name from method, and check if there is an active span
         if (checkJedisComponent(methodTraced.component())) {
             // jedis operation needs active span to join
@@ -117,7 +126,7 @@ public class OpenTraceInterceptor {
                 operationName = String.valueOf(ctx.getParameters()[1]);
             }
         }
-        return Optional.of(createSpanBuilder(tracer, methodTraced, operationName));
+        return Optional.of(OpenTraceUtil.createSpanBuilder(tracer, methodTraced, operationName));
 
     }
 
@@ -125,23 +134,8 @@ public class OpenTraceInterceptor {
         return tracer.activeSpan() != null;
     }
 
-    private SpanBuilder createSpanBuilder(Tracer tracer, Traced traced, String operationName) {
-        SpanBuilder spanBuilder = tracer.buildSpan(operationName);
-        spanBuilder.withTag(Tags.SPAN_KIND.getKey(), traced.kind());
-        spanBuilder.withTag(Tags.COMPONENT.getKey(), traced.component());
-        spanBuilder.withTag(Tags.DB_TYPE.getKey(), traced.dbType());
-        return spanBuilder;
-    }
-
     private boolean checkJedisComponent(String component) {
         return StringUtils.equals(component, hu.icellmobilsoft.coffee.cdi.trace.constants.Tags.Redis.Jedis.COMPONENT);
     }
 
-    private void logException(Span span, Exception e) {
-        Map<String, Object> errorLogs = new HashMap<>(2);
-        errorLogs.put("event", Tags.ERROR.getKey());
-        errorLogs.put("error.object", e);
-        span.log(errorLogs);
-        Tags.ERROR.set(span, true);
-    }
 }

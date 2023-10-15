@@ -1,0 +1,213 @@
+[#common_module_coffee-module-redis]
+= coffee-module-redis
+
+The purpose of this module is to manage the online key-value of Redis.
+
+The "redis.clients:jedis" java driver based module not only serves queries and saves from Redis, but can also provide a cache management based on the CDI interceptor saved in Redis.
+
+NOTE: with the current jedis version 4.2.3, Redis compatibility is backwards to 2.8.x
+
+== RedisConnection
+
+The `@RedisConnection` qualifier has been introduced.
+Using this, there is no need to define/implement Redis configuration, JedisPool, Jedis, RedisService separately per Redis connection; they are all built and injected via CDI.
+Configuration in yaml:
+
+[source,yaml]
+----
+coffee:
+    redis:
+        auth: #<1>
+            host: sample-sandbox.icellmobilsoft.hu #default: localhost
+            port: 6380 #default: 6380
+            password: pass1234 #default: null
+            database: 1 #default: 0
+            pool:
+                default: #<2>
+                    maxtotal: 128 #default: 64
+                    maxidle: 32 #default: 16
+                custom: #<2>
+                    maxtotal: 12 #default: 64
+                    maxidle: 3 #default: 16
+            timeout: 5000 #default: 5000
+----
+<1> Unique identifier of the redis connection (configKey). All fields are optional.
+<2> Unique identifier of the pool within the redis connection (poolConfigKey). All fields are optional.
+
+Use the RedisManager associated with the above config:
+
+[source,java]
+----
+@Inject
+@RedisConnection(configKey = "auth")
+private RedisManager authRedisManager;
+
+@Inject
+@RedisConnection(configKey = "auth", poolConfigKey = "custom")
+private RedisManager authRedisManagerCustomPool;
+----
+The first case will use the "default" pool settings,
+in the second case, the "custom" pool settings.
+
+== RedisManager
+
+The class `RedisManager` and its associated `RedisManagerProducer` are introduced. The producer will produce the RedisManager with the called configKey value, making it available to retrieve Jedis from the JedisPool when we want to perform some action on redis.
+RedisManager's job is to federate the use of Jedis functions, which handles common logging, error handling, connection usage.
+The defined methods expect Jedis functions to be run, this can be done using initConnection() and closeConnection(), or through the runWithConnection methods. This approach allows Redis connections to be used as long as they are needed, saving a lot of resources.
+
+Example of using multiple redis operations. This is typically set/get combined with expire. In such a case, no Jedis instance is requested from the pool unnecessarily and when done, it is closed.
+
+[source,java]
+----
+@Inject
+@RedisConnection(configKey = "auth")
+private RedisManager redisManager;
+
+try (RedisManagerConnection connection = redisManager.initConnection()) { #<1>
+    redisManager.run(Jedis::set, "set", "key", "value");
+    redisManager.run(Jedis::expire, "expire", "key", 300);
+}
+
+----
+<1> Initialize the Jedis instance on which the operations are performed, use try-with-resource to automatically close it
+
+Example of performing an operation.
+
+[source,java]
+----
+@Inject
+@RedisConnection(configKey = "auth")
+private RedisManager redisManager;
+
+redisManager.runWithConnection(Jedis::set, "set", "key", "value"); #<1>
+
+----
+
+<1> Perform operation, framework handles opening and closing connection.
+
+== Redis operations
+
+=== hscan
+
+It iterates through the object in the selected redis db by key. Data may change during the operation, it does not block (this is an advantage over the SMEMBERS operation).
+There is no guarantee that all items will be returned, it depends on the size of the objects stored in the redis.
+If it exceeds the limit the default COUNT will be 10, it will not return more elements in a request.
+It is possible to parameterize the COUNT value if the size limit is exceeded.
+For more information about limits: https://redis.io/commands/scan
+
+[source,java]
+----
+redisManager.runWithConnection(Jedis::hscan, "hscan", "key", 10, 100);
+----
+
+=== rpush
+
+Packs the value into the list specified as the key
+and sets the expiry value of the list in seconds.
+In response, the amount of items in the list.
+More information: https://redis.io/commands/rpush + https://redis.io/commands/expire
+
+[source,java]
+----
+redisManager.runWithConnection(Jedis::rpush, "rpush", "key", "element", 100);
+----
+
+=== lpop/rpop
+
+(coffee v1.4+)
+Given a list of keys, retrieves and returns the first (lpop) or last (rpop) value from the list.
+If the list is empty, Redis automatically deletes it.
+If we ask for the data from a non-existing list (empty in the meantime and deleted by Redis) the system will return `Optional.empty()`.
+For more information about the limits: https://redis.io/commands/lpop
+
+[source,java]
+----
+redisManager.runWithConnection(Jedis::lpop, "lpop", "key"); <1>
+redisManager.runWithConnection(Jedis::rpop, "rpop", "key"); <1>
+----
+<1> If no value is found then `Optional.empty()`
+
+=== lmove
+
+Combination of pop+push in one and sets the expiration value of the list in seconds.
+In effect, it moves the list item to another list.
+If the list does not exist it creates it,
+if the source and destination lists are the same,
+it can wrap the item from the beginning of the list to the end, or however you want.
+In response, the item will be.
+For more information: https://redis.io/commands/lmove + https://redis.io/commands/expire
+
+[source,java]
+----
+// from the beginning of the sourceListKey to the end of the destinationListKey
+redisManager.runWithConnection(Jedis::lmove, "lmove", "sourceListKey", "destinationListKey", ListDirection.LEFT, ListDirection.RIGHT);
+// from the end to the beginning
+redisManager.runWithConnection(Jedis::lmove, "lmove", "sourceListKey", "sourceListKey", ListDirection.RIGHT, ListDirection.LEFT);
+----
+
+=== removeValueFromList
+
+Removes all items matching the parameter from the given list.
+For more information see: https://redis.io/commands/lrem
+
+[source,java]
+----
+redisManager.runWithConnection(Jedis::lrem, "removeValueFromList", listKey, 0, "removeValue");
+----
+
+== microprofile-health support
+
+The *RedisHealth* can check if the Redis server is reachable.
+
+.Startup example
+[source,java]
+----
+@ApplicationScoped
+public class RedisHealthCheck {
+
+    @Inject
+    private RedisHealth databaseHealth;
+
+    public HealthCheckResponse check(String redisConfig) {
+        ManagedRedisConfig managedRedisConfig = ...
+        try {
+            return redisHealth.checkConnection(managedRedisConfig, "redis");
+        } catch (BaseException e) {
+            return HealthCheckResponse.builder().name("redis").up().build();
+        }
+    }
+    
+    @Produces
+    @Startup
+    public HealthCheck produceRedisCheck() {
+        return this::check;
+    }
+}
+----
+== microprofile-metrics support
+
+The JedisConnectionProducer provides metrics about the usage of the Jedis pool.
+
+.metrics example
+[source,java]
+----
+# HELP application_coffee_jedis_pool_active Active connection number
+# TYPE application_coffee_jedis_pool_active gauge
+application_coffee_jedis_pool_active{configKey="redisConfig",poolConfigKey="default"} 10.0
+# HELP application_coffee_jedis_pool_idle Idle connection number
+# TYPE application_coffee_jedis_pool_idle gauge
+application_coffee_jedis_pool_idle{configKey="redisConfig",poolConfigKey="default"} 5.0
+----
+
+The metrics can be overridden using the @Alternative or @Specializes annotations.
+.metrics override example
+[source,java]
+----
+@ApplicationScoped
+@Alternative
+public class CustomJedisMetricsHandler extends JedisMetricsHandler {
+  public void addMetric(String configKey, String poolConfigKey, JedisPool jedisPool) throws BaseException {
+  ...
+  }
+}
+----

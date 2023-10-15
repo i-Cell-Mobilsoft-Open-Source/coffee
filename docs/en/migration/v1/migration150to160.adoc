@@ -1,0 +1,45 @@
+= v1.5.0 → v1.6.0
+
+coff:ee v1.5.0 -> v1.6.0 migration description, new features, changes
+
+== Changes
+
+* Bump Jedis 3.3.0 -> 3.6.0 - Native java 8 and Redis 6.2 support
+* Bump apache httpcore 4.4.5 -> 4.4.13 - https://archive.apache.org/dist/httpcomponents/httpcore/RELEASE_NOTES-4.4.x.txt
+* Bump apache httpclient 4.5.4 -> 4.5.13 - https://archive.apache.org/dist/httpcomponents/httpclient/RELEASE_NOTES-4.5.x.txt
+* Release dependent scope objects created with `CDI#select`
+
+=== coffee-module-redis
+Redis 6.2 upgrade brought a change to change the timeout from int to long.
+This has also been implemented in the system,
+but since java handles the int->long type,
+there is presumably no project code conflict.
+
+Introduced functions:
+
+* *lmove* - (Redis 6.2) one step POP + PUSH to another list
+* *removeValueFromList* (*lrem*) - delete list item by value
+
+==== Migration
+Changes do not result in migration work, backwards compatible.
+
+=== coffee-module-redisstream
+* Renamed configuration key from `stream.maxlen` -> to `producer.maxlen`.
+* The renamed `producer.maxlen` key had a default value of 1.000.000,
+which has been removed, so if no configuration key is specified,
+an infinite number of keys remain in the stream (within Redis limits).
+* The `producer.ttl` key has been introduced,
+which has a role in publishing a new message to the stream.
+All older messages on the stream older than `producer.ttl` (millisec) will be deleted.
+
+==== Migration
+The renaming of the `stream.maxlen` key in the configurations must be rewritten.
+
+=== coffee-rest
+* RestClients return the error returned by the called module wrapped in `hu.icellmobilsoft.coffee.dto.exception.RestClientResponseException`, so for example the previously returned `hu.icellmobilsoft.coffee.dto.exception.BONotFoundException` is wrapped in the RestClientResponseException cause.
+* The `hu.icellmobilsoft.coffee.rest.exception.DefaultExceptionMessageTranslator` recursively loads all cause values into `hu.icellmobilsoft.coffee.dto.common.commonservice.BaseExceptionResultType`.
+* The value of the element "service" in the BaseExceptionResultType can be specified in the parameter "coffee.app.name", by default "java:app/AppName" is used.
+
+==== Migration
+* For error handling, a RestClientResponseException should be expected.
+* The configuration parameter "coffee.app.name" can be set for the modules to be run, but is optional, "java:app/AppName" is the default.

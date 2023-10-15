@@ -19,9 +19,13 @@
  */
 package hu.icellmobilsoft.coffee.module.redis.config;
 
+import static org.mockito.Mockito.mock;
+
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 
+import org.eclipse.microprofile.metrics.MetricRegistry;
+import org.jboss.weld.junit.MockBean;
 import org.jboss.weld.junit5.EnableWeld;
 import org.jboss.weld.junit5.WeldInitiator;
 import org.jboss.weld.junit5.WeldJunit5Extension;
@@ -65,11 +69,14 @@ class JedisPoolTest {
     private JedisPool ymlCustom1PoolJedisPool;
 
     @WeldSetup
-    public WeldInitiator weld = WeldInitiator.from(WeldInitiator.createWeld()
-            // beans.xml scan
-            .enableDiscovery())
+    public WeldInitiator weld = WeldInitiator.from(
+            WeldInitiator.createWeld()
+                    // beans.xml scan
+                    .enableDiscovery())
+            .addBeans(MockBean.of(mock(MetricRegistry.class), MetricRegistry.class))
             // start request scope + build
-            .activate(RequestScoped.class).build();
+            .activate(RequestScoped.class)
+            .build();
 
     @Test
     @DisplayName("default pool test")

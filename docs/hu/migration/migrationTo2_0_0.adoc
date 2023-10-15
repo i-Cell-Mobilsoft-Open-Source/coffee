@@ -1,0 +1,217 @@
+= v2.0.0
+
+A főverzió ugrás a coff:ee v1.13.x verzióból indult ki,
+későbbi funkciók már eltérhetnek a V1 és V2 verzióban. 
+
+coff:ee v1.13.x -> v2.0.0 migrációs leírás, újdonságok, változások leírása
+
+== Változások
+
+=== Általános
+A verzió célja a Jakarta EE 10 implemetálása,
+ami az egész projekten java import javax.* -> jakarta.* változást követi le.
+
+Mivel szinte minden dependency frissült,
+így egyenként felsorolni őket felesleges.
+Legtöbbször kozmetikai verzióváltások, vagy a EE10 implementációk.
+
+A beans.xml fájloknak frissültek a tartalmai:
+
+.beans.xml
+[source,xml]
+----
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="https://jakarta.ee/xml/ns/jakartaee"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="
+      https://jakarta.ee/xml/ns/jakartaee 
+      https://jakarta.ee/xml/ns/jakartaee/beans_4_0.xsd">
+</beans>
+----
+
+Jandex-maven-plugin bekötése minden modulon.
+Több modult érintően egységesítésre került a classLoader használata, mindehova a Thread.currentThread().getContextClassLoader() került, kivéve a coffee-deltaspike modulban!
+
+==== BOM verzió emelések:
+Fontosabb változás volt: 
+
+* org.jboss.resteasy.resteasy-jaxrs 3.6.2.Final -> org.jboss.resteasy.resteasy-core 6.2.1.Final - a resteasy dependency bontáson esett végig,
+ezt figyelmbe kell venni a projekteken
+* org.hibernate.hibernate-core 5.4.24.Final -> 6.1.5.Final
+* org.apache.activemq.activemq-client 5.15.13 -> org.apache.activemq.artemis-jakarta-client 2.27.0 - ez nagy ugrás driverben,
+sok változást végeztek el benne.
+A projekteken nagy figyelemmel kell átvezetni a változásokat.
+
+
+=== coffee-dto
+* A jakarta átálás a `/coffee-dto-gen/src/main/resources/xsd/hu/icellmobilsoft/coffee/dto/bindings.xjb`
+fájlban a fejléc módosítását követeli:
+
+[source,xml]
+----
+<jaxb:bindings version="3.0"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:jaxb="https://jakarta.ee/xml/ns/jaxb"
+    xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc"
+    xmlns:annox="http://annox.dev.java.net"
+    jaxb:extensionBindingPrefixes="xjc annox">
+...
+</jaxb:bindings>
+----
+
+IMPORTANT:: A JAXB 4.0 specifikációban az jaxb xml schema verziója, maradt `3.0`!
+https://jakarta.ee/specifications/xml-binding/4.0/[Jakarta XML Binding 4.0]
+
+XSD -> DTO generálásra egy forkolt jaxb4 maven plugint használ a projekt:
+https://github.com/phax/maven-jaxb2-plugin/tree/v016[phax/maven-jaxb2-plugin#v016].
+A plugin a korábban használt jaxb2 plugin fork-ja, elegendő a dependency csere
+`com.helger.maven:jaxb40-maven-plugin:0.16.0`-ra.
+
+WARNING:: A `org.jvnet.jaxb2_commons:jaxb2-basics-annotate` pluginból jelenleg nem érhető el jaxb3 vagy jaxb4 verzió,
+coffee-ban a korábbi működik a 4.0-s pluginnal, de projekten vagy a későbbiekben esetleg okozhat gondot.
+
+=== coffee-deltaspike
+Létrejött a coffee-deltaspike alprojekt, ami azt a célt szolgálja,
+hogy pótolja azokat a funkcionalitásokat melyeket a deltaspike dependency kidobása
+után nincs mivel pótolni.
+Ez lehet akár végleges megoldás is, idővel kiderül.
+
+.coffee-deltaspike-message
+Tartalmazza a nyelvesítésért felelő osztályokat,
+1:1 megfelel az eddig használt megoldáshoz - class név szinten.
+A nyelvesítés egy "lite" másolata az eredetinek
+(https://deltaspike.apache.org/documentation/core.html#Messagesandi18n),
+@MessageBundle és @MessageTemplate nélkül.
+A MessageContext és a Locale resolver teljesen az eredeti szerint működik.
+`DefaultMessageResolver` és a `DefaultMessageContext` több szálon összeakadnak,
+`DefaultMessageResolve`-en keresztül javítva lett.
+
+.coffee-deltaspike-data
+Helyettesíti az eredeti
+https://deltaspike.apache.org/documentation/data.html[deltaspike-data-module]
+funkcionalitást, leszámítva pár dolgot:
+
+* Deactivating Repositories
+* Transactions
+* Multiple entityManager
+* Auditing
+
+Változások az eredeti deltaspike kódjához képest:
+
+* EntityRepositoryHandler kapott egy @Dependent annotációt,
+egyenlőre nem tudni miért nem volt rajta.
+Hasonló célú CriteriaSupportHandler-en rajta volt eredetileg is,
+nélküle a `DelegateQueryBuilder.lookup` (111. sor) nem találta meg
+a megfelelő kiszolgáló osztályt a `EntityRepository` interfészhez.
+* Megszűnt az asm függőség, helyette dinamikus proxy-kon keresztül valósulnak meg a repository hívások.
+* Új extension `hu.icellmobilsoft.coffee.deltaspike.data.extension.RepositoryExtension` ami kezeli a repository interfaceket és hozzájuk tartozó proxykat.
+Az extension feladata hogy a létrejött proxy hívásokat a központi QueryHandler osztályba csatornázza be.
+* `QueryHandler` az új proxy-k miatt az interface keresés részben megváltozott.
+Ez azért szükséges hogy a feldolgozott repository metaadatok felhasználhatóak legyenek, 
+így nem szükséges a deltaspike core logikáját átírni.
+
+.Átállás
+Az implementáló projekteken az esetleges deltaspike message és data dependency-t
+le kell cserélni a `coffee-deltaspike-message` illetve `coffee-deltaspike-data` dependencyre.
+Az eddig használt `org.apache.deltaspike.jpa.api.transaction.Transactional`
+annotációt a `hu.icellmobilsoft.coffee.jpa.annotation.Transactional` veszi át,
+mindenhol le kell cserélni.
+
+=== coffee-rest
+
+.Project stage kezelés
+Deltaspike core kidobása után a `org.apache.deltaspike.core.api.projectstage.ProjectStage`
+megszünt és a `hu.icellmobilsoft.coffee.rest.projectstage.ProjectStage` vette át a helyét.
+Minden configban keresi a megfelelő kulcsokat.
+
+.Átállás
+Lecserélni `org.apache.deltaspike.core.api.projectstage.ProjectStage` -> 
+`hu.icellmobilsoft.coffee.rest.projectstage.ProjectStage` osztályra.
+
+=== coffee-model-base
+A deltaspike data függőség meg lett szüntetve.
+A korábbi deltaspike data CurrentUser helyett létre lett hozva a
+`hu.icellmobilsoft.coffee.model.base.annotation.CurrentUser` annotáció. Az AuditProvider, TimestampsProvider osztályok a korábbi deltaspike data
+PrePersistAuditListener és PreUpdateAuditListener interfészek implementálása helyett metódusai a jakarta-s PrePersist és PreUpdate annotációkkal
+lettek ellátva. Az AbstractEntity-ről lekerült a deltaspike-os AuditEntityListener, helyette az AbstractAuditEntity osztályok megkapták a következő
+annotációt: @EntityListeners({ TimestampsProvider.class, AuditProvider.class }).
+
+.Átállás
+A deltaspike data `org.apache.deltaspike.data.api.audit.CurrentUser` -> `hu.icellmobilsoft.coffee.model.base.annotation.CurrentUser` annotáció módosítása.
+
+=== coffee-jpa
+
+* Kidobásra került a `deltaspike-jpa-module`, már nem kell. +
+* A BatchService lekövette a hibernate 6 által hozott újdonságokat, a teljes típus átalakítást. +
+Maga a BatchService típuskezelése újra lett gondolva és szeparáltan kezeli a problémásabb típusokat. +
+Bővebben lásd: link:#BatchService[BatchService].
+
+.Átállás
+* Mivel a hibernate 6-nál újragondolták a típuskezelést és ezt a BatchService-nél a coffee is meglépte,
+így kiemelten figyelni kell a projekteken minden típus az entityben az elvárt szerint működik.
+Ha valamilyen metódusok felül vannak írva, meg kell nézni először,
+hogy a felülírások nélkül működik-e.
+Ez azért fontos, mert maga a hibernate 6 típusváltozásai és az újragondolt BatchService típuskezelés
+sok újdonságot hozott és magas típuslekezeléssel rendelkezik.
+Amennyiben mégis szükséges a projekteken bármilyen okból felülírás,
+azokat valószínűleg aktualizálni kell.
+
+=== coffee-module-artemis
+A driver _jakarta EE 10_ és abban történt _Jakarta Messaging 3.1_ változások miatt nagyon megváltozott:
+https://blogs.apache.org/activemq/entry/activemq-artemis-embraces-jakarta-ee[ActiveMQ Artemis embraces Jakarta EE].
+
+.Átállás
+Kiemelten tesztelni kell a *JmsHandler.createTextMessage*
+és *JmsUtil.newJmsException* funkciókat,
+ott kifejezetten érintett volt a változás,
+megváltozott az eredeti koncepció a delay üzenetekkel. 
+
+=== coffee-module-notification
+Sajnos az Apache commons-email függőségből még nem készült jakarta kompatibilis release,
+így a `coffee-module-notification` modul kikerül a coffee modulok kozül.
+Következő issue kezeli: https://issues.apache.org/jira/browse/EMAIL-203[EMAIL-203] vagy
+https://github.com/apache/commons-email/pull/133[commons-email Gihub PR] pull request.
+
+.Átállás
+coffee-module-notification modul megszünt.
+
+=== coffee-module-mp-opentracing
+Optimalizálásra került modul, ezért feleslegessé vált pár osztály (pl. `OpenTraceExtension`).
+A `@hu.icellmobilsoft.coffee.cdi.trace.annotation.Traced` annotáció helyettesít minden funkciót,
+amivel továbbra is trace flow-ba helyezhetőek a coffee egyes moduljai.
+
+.Átállás
+A korábbi `@Traceable` annotációt le kell cserélni `@hu.icellmobilsoft.coffee.cdi.trace.annotation.Traced`
+annotációra.
+
+=== junit tesztek
+Paraméterezett junit tesztek `@ParameterizedTest` annotációval ellátva
+(pl. `hu.icellmobilsoft.coffee.rest.projectstage.ProjectStageProducerTest`)
+kaptak `@ExplicitParamInjection` annotációt.
+Ez nélkül nem működik a CDI kezelt paraméter injecion.
+
+=== coffee-module-csv
+
+A CsvUtil csv generálás során lecserélésre került a line separator: ICSVWriter.DEFAULT_LINE_END (\n) -> System.lineSeparator().
+Így az operációs rendszertől függő line separator kerül felhasználásra.
+
+.Átállás
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+=== coffee-se-logging
+
+JbossMDCAdpater-ben loggolásnál hibás volt a paraméter megadás, ami javítva lett.
+
+.Átállás
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+
+== coffee-module-etcd
+
+* A `hu.icellmobilsoft.coffee.module.etcd.util.EtcdClientBuilderUtil`-ba bevezetésre került a CONNECT_TIMEOUT_MILLIS paraméter, 
+ez megakadályozza a felfutásnál előforduló timeout hibákat, amik a lekérdezés és az etcd szerverhez való timeout paraméter eltérése okozott.
+
+==== Átállás
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+

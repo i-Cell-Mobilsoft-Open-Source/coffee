@@ -1,0 +1,85 @@
+[#common_core_coffee-se_coffee-se-logging]
+= coffee-se-logging
+
+Module for logging- and MDC-related JakartaEE components without any dependencies.
+
+== Logging
+Contains a basic logging system using `java.util.logging.Logger`.
+
+.sample usage in SE environment
+[source,java]
+----
+import en.icellmobilsoft.coffee.se.logging.Logger;
+
+private Logger log = Logger.getLogger(LogSample.class);
+
+public String logMessage() {
+    log.trace("sample log message");
+    return "something";
+}
+----
+
+For more description and usage via CDI, see <<common_core_coffee-cdi_logger, coffee-cdi/logger>>.
+
+[#common_core_coffee-se_coffee-se-logging_MDC]
+== MDC
+The module contains its own framework for MDC (Mapped Diagnostic Context) management.
+This is because there may be different MDC solutions on specific projects (e.g. jboss, slf4j, logback...).
+It is used via the static methods of the `hu.icellmobilsoft.coffee.se.logging.mdc.MDC` class.
+
+Inside the MDC class, it tries to search for an MDC solution available on the classpath and delegate requests to the found class.
+Currently the `org.jboss.logging.MDC` and `org.slf4j.MDC` implementations are supported,
+but can be extended to the project level using the service loader module.
+
+=== MDC extension
+To use unsupported MDC implementations at the Coffee level, the `MDCAdapter` and `MDCAdapterProvider`
+interfaces and then load the implemented `MDCAdapterProvider` using the service loader mechanism.
+
+==== Example of `CustomMDC` connection:
+. Implement `MDCAdapter` for `CustomMDC`:
++
+.com.project.CustomMDCAdapter
+[source,java]
+----
+public class CustomMDCAdapter implements MDCAdapter {
+
+    @Override
+    public String get(String key){
+        //The adapter delegates its calls to our CustomMdc
+        return CustomMDC.get(key);
+    }
+}
+----
+. Implement `MDCAdapterProvider` to build `CustomMDCAdapter`:
++
+.com.project.CustomMDCAdapterProvider
+[source,java]
+----
+public class CustomMDCAdapterProvider implements MDCAdapterProvider {
+
+    @Override
+    public MDCAdapter getAdapter() throws Exception;{
+        return new CustomMDCAdapter();
+    }
+}
+----
+. Bind `CustomMDCAdapterProvider` via service loader:
++
+.META-INF/services/en.icellmobilsoft.coffee.se.logging.mdc.MDCAdapterProvider
+[source,text]
+----
+com.project.CustomMDCAdapterProvider
+----
+
+=== MDC order
+
+Try to list the available MDC implementations in the following order.
+The MDC used inside will be the first one working:
+
+. ServiceLoader extensions
+. `org.jboss.logging.MDC`
+. `org.slf4j.MDC` .
+. `CoffeeMDCAdapter` .
+** coff:ee implementation, fallback only
+** values are stored in `ThreadLocal`
+** must be handled separately if you want it to be logged.

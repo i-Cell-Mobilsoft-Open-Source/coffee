@@ -21,18 +21,19 @@ package hu.icellmobilsoft.coffee.model.base;
 
 import java.util.Date;
 
+import hu.icellmobilsoft.coffee.model.base.annotation.CreatedBy;
+import hu.icellmobilsoft.coffee.model.base.annotation.ModifiedBy;
+import hu.icellmobilsoft.coffee.model.base.audit.AuditProvider;
+import hu.icellmobilsoft.coffee.model.base.javatime.annotation.CreatedOn;
+import hu.icellmobilsoft.coffee.model.base.javatime.annotation.ModifiedOn;
+import hu.icellmobilsoft.coffee.model.base.javatime.listener.TimestampsProvider;
 import jakarta.enterprise.inject.Vetoed;
 import jakarta.persistence.Column;
+import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import jakarta.validation.constraints.NotNull;
-
-import org.apache.deltaspike.data.api.audit.CreatedOn;
-import org.apache.deltaspike.data.api.audit.ModifiedOn;
-
-import hu.icellmobilsoft.coffee.model.base.annotation.CreatedBy;
-import hu.icellmobilsoft.coffee.model.base.annotation.ModifiedBy;
 
 /**
  * Base class for audited entities.
@@ -42,6 +43,7 @@ import hu.icellmobilsoft.coffee.model.base.annotation.ModifiedBy;
  */
 @Vetoed
 @MappedSuperclass
+@EntityListeners({ TimestampsProvider.class, AuditProvider.class })
 public abstract class AbstractAuditEntity<T> extends AbstractEntity implements IAuditEntity<Date, T> {
 
     private static final long serialVersionUID = 1L;

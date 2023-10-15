@@ -21,6 +21,11 @@ package hu.icellmobilsoft.coffee.module.document.repository;
 
 import java.util.Date;
 
+import org.apache.deltaspike.data.api.EntityRepository;
+import org.apache.deltaspike.data.api.Query;
+import org.apache.deltaspike.data.api.QueryParam;
+import org.apache.deltaspike.data.api.Repository;
+
 import hu.icellmobilsoft.coffee.module.document.model.TemplateData;
 import hu.icellmobilsoft.coffee.module.document.model.enums.TemplateDataType;
 
@@ -30,10 +35,8 @@ import hu.icellmobilsoft.coffee.module.document.model.enums.TemplateDataType;
  * @author imre.scheffer
  * @since 1.0.0
  */
-// EE8 + deltaspike: @Repository
-public interface TemplateDataRepository
-// EE8 + deltaspike: extends EntityRepository<TemplateData, String>
-{
+@Repository
+public interface TemplateDataRepository extends EntityRepository<TemplateData, String> {
 
     /**
      * Finds {@link TemplateData} by template key, data type and language and validity date.
@@ -48,11 +51,10 @@ public interface TemplateDataRepository
      *            searching date
      * @return entity
      */
-// EE8 + deltaspike:     @Query("SELECT td FROM TemplateData td WHERE td.templateKey = :templateKey AND td.dataType = :dataType AND td.language = :language "
-//            + "AND ((:date BETWEEN td.validFrom AND td.validTo) OR (:date >= td.validFrom AND td.validTo IS NULL))")
-//    TemplateData find(@QueryParam("templateKey") String templateKey, @QueryParam("dataType") TemplateDataType dataType,
-//            @QueryParam("language") String language, @QueryParam("date") Date date);
-    TemplateData find(String templateKey, TemplateDataType dataType, String language, Date date);
+    @Query("SELECT td FROM TemplateData td WHERE td.templateKey = :templateKey AND td.dataType = :dataType AND td.language = :language "
+            + "AND ((:date BETWEEN td.validFrom AND td.validTo) OR (:date >= td.validFrom AND td.validTo IS NULL))")
+    TemplateData find(@QueryParam("templateKey") String templateKey, @QueryParam("dataType") TemplateDataType dataType,
+            @QueryParam("language") String language, @QueryParam("date") Date date);
 
     /**
      * Find Entity by PK

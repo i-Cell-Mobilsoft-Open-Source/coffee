@@ -1,0 +1,74 @@
+[#common_coffee-model]
+= Coffee model
+
+A model module can have several submodules containing database tables for a specific purpose.
+
+== coffee-model-base
+The purpose of this module is to define the base table structure.
+
+Each table must contain common ID, AUDIT and VERSION columns.
+It provides ancestor classes, id generator and audit field loader for these.
+It includes the inclusion of deltaspike DATA to facilitate the criteria API,
+and maven also instantiates SingularAttribute classes on these ancestors.
+
+=== ID generation
+The purpose of ID generation is to work with unique and non-sequential ID values (strings) under all circumstances.footnote:[Why do we use string type for IDs and not int? *For security reasons*, IDs should be non-consecutive, otherwise they can be easily guessed, *for portability reasons* during a db migration, IDs with int type can easily get mixed up with existing data, *in terms of extensibility* we have more room for manoeuvre, *in terms of quantity* we are not limited, *in terms of information carried* the amount of data is not known by the system, *in terms of synchronisation* string is less expensive because using a sequence can stall the process (e.g. Oracle RAC) until all nodes respond.] For generation, we use the `EntityIdGenerator.java` class, this is used by default with annotation on the entity java class, but if needed it can be called directly with the generate() method. Operationally, the generate method will generate a new ID for the entity if the ID value is not already set (null), otherwise it will use the existing ID.
+
+The algorithm will generate an ID of up to 16 lengths [0-9a-zA-Z] using random characters, taking into account the nanosecond part of the current time, e.g. '2ZJMG008YRR4E5NW'
+
+Example code for an identifier used on the `AbstractIdentifiedEntity.java` class:
+[source,java]
+----
+@Id
+@Column(name = "X__ID", length = 30)
+@GenericGenerator(name = "entity-id-generator", strategy = "hu.icellmobilsoft.coffee.model.base.generator.EntityIdGenerator")
+@GeneratedValue(generator = "entity-id-generator", strategy = GenerationType.IDENTITY)
+private String id;
+----
+
+Example code for an Entity where an identifier is required:
+[source,java]
+----
+@Entity
+@Table(name = "SIMPLE_TABLE")
+public class SimpleEntity extends AbstractIdentifiedEntity {
+
+}
+----
+
+=== Audit columns
+The audit columns are used to track all table-level movements, e.g. insertion or modification of a new record.
+The columns used for this purpose are separated.
+Items tracking insertions are stored in columns X$$__$$INSDATE and X$$__$$INSUSER and the value of these fields is only stored in case of an insert, not in case of an update.
+The elements used for modification are stored in columns X$$__$$MODDATE and X$$__$$MODUSER.
+These are predefined in the `AbstractAuditEntity.java` class and are automatically loaded using the appropriate annotation (e.g. `@CreatedOn`, `@ModifiedOn`)
+
+Example code for an Entity where audit elements are required:
+[source,java]
+----
+@Entity
+@Table(name = "SIMPLE_TABLE")
+public class SimpleEntity extends AbstractAuditEntity {
+
+}
+----
+
+=== Version column
+The version column is a strictly technical element defined in the `AbstractEntity.java` class. It is used by Hibernate via @Version annotation, ensuring that during a merge operation the entity can remain intact using optimistic lock concurrency control.
+
+NOTE: It is recommended to extend each entity class with the `AbstractIdentifiedAuditEntity.java` class so that it will already contain the ID, AUDIT and VERSION columns
+[source,java]
+----
+@Entity
+@Table(name = "SIMPLE_TABLE")
+public class SimpleEntity extends AbstractIdentifiedAuditEntity {
+
+}
+----
+
+== coffee-model-security
+The purpose of this module is to provide a generic privilege management and collection of related entities.
+
+Based on the logic of the different entitlement systems in previous projects, the following have been collected
+entity classes of the basic tables. A project is free to use them independently,
+therefore there is no relationship between entities, so as not to limit the possible combinations.

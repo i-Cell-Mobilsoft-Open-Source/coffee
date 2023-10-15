@@ -165,6 +165,7 @@ public class ApiResponseUtil {
                                 + "\n\t * **resultCode** = *NOT_ALLOWED_EXCEPTION*" //
                                 + "\n\t * **resultCode** = *ILLEGAL_ARGUMENT_EXCEPTION*" //
                                 + "\n\t * **resultCode** = *GENERIC_EXCEPTION*" //
+                                + "\n\t * **resultCode** = *OPTIMISTIC_LOCK_EXCEPTION*" //
                                 + "\n\t * **resultCode** = *unique see in rest endpoint description*"));
     }
 
