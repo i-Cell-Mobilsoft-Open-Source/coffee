@@ -418,7 +418,7 @@ IMPORTANT: Fontos kiemelni, hogyha nincs megadva, vagy ha nem található a conf
 
 Configurációk az Microprofile Config segítségével megadhatók több helyről is, de csak a fent leírt sorrend szerint az elsőt fogja figyelembe venni.
 
-Jelenleg a projektben egyenlőre ha nem Production a ProjectStage értéke, akkor hibáknál tágabb választ ad vissza rendszer.
+Jelenleg a projektben egyelőre ha nem Production a ProjectStage értéke, akkor hibáknál tágabb választ ad vissza rendszer.
 
 Ennek használata a következő képpen működik:
 

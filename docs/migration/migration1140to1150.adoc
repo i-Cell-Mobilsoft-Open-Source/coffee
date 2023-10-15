@@ -1,0 +1,36 @@
+= v1.14.0 → v1.15.0
+
+coff:ee v1.14.0 -> v1.15.0 migrációs leírás, újdonságok, változások leírása
+
+=== coffee-tool
+
+** JsonUtil használatával is lehetséges a generikus típusok deszerializációja.
+
+==== Átállás
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+
+=== coffee-jpa
+
+** microprofile-health támogatást kapott
+
+==== Átállás
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+=== coffee-module-redis
+
+** microprofile-health támogatást kapott
+
+==== Átállás
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+=== coffee-module-etcd
+
+** microprofile-health támogatást kapott
+
+==== Átállás
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.

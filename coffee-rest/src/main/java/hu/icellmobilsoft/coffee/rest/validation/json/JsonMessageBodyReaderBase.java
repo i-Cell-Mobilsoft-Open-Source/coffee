@@ -23,6 +23,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.text.MessageFormat;
 
 import javax.inject.Inject;
@@ -31,7 +33,11 @@ import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.ext.MessageBodyReader;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.http.HttpHeaders;
+import org.apache.http.ParseException;
+import org.apache.http.entity.ContentType;
 
+import hu.icellmobilsoft.coffee.cdi.logger.LogProducer;
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
@@ -73,7 +79,7 @@ public abstract class JsonMessageBodyReaderBase<T> implements MessageBodyReader<
     /**
      * {@inheritDoc}
      *
-     * Xsd validálásra kerülhet-e?
+     * should it be validated by XSD?
      */
     @Override
     public boolean isReadable(Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType) {
@@ -83,7 +89,7 @@ public abstract class JsonMessageBodyReaderBase<T> implements MessageBodyReader<
     /**
      * {@inheritDoc}
      *
-     * Ha van ValidateXML annotáció, akkor azt használja
+     * use {@link ValidateXML} if it exists
      */
     @Override
     public T readFrom(Class<T> type, Type genericType, Annotation[] annotations, MediaType mediaType, MultivaluedMap<String, String> httpHeaders,
@@ -91,7 +97,7 @@ public abstract class JsonMessageBodyReaderBase<T> implements MessageBodyReader<
         try {
             ValidateXML[] validates = XmlMessageBodyReaderBase.getValidateIfPresent(annotations);
 
-            T obj = deserializeJson(type, entityStream);
+            T obj = deserializeJson(type, getCharsetOrUTF8(httpHeaders), entityStream);
             String requestVersion = readRequestVersion(obj);
             String schemaPath = jaxbTool.getXsdPath(validates, requestVersion);
             jaxbTool.marshalXML(obj, schemaPath);
@@ -99,6 +105,26 @@ public abstract class JsonMessageBodyReaderBase<T> implements MessageBodyReader<
         } catch (BaseException e) {
             throw new BaseProcessingExceptionWrapper(e);
         }
+    }
+
+    /**
+     * Get the charset from the HTTP {@value HttpHeaders#CONTENT_TYPE} header or return UTF-8 in case of any issue
+     * 
+     * @param httpHeaders
+     *            the read-only HTTP headers associated with HTTP entity.
+     * @return the charset or UTF-8 if its unknown
+     */
+    private Charset getCharsetOrUTF8(MultivaluedMap<String, String> httpHeaders) {
+        try {
+            ContentType contentType = ContentType.parse(httpHeaders.getFirst(HttpHeaders.CONTENT_TYPE));
+            if (contentType.getCharset() != null) {
+                return contentType.getCharset();
+            }
+            LogProducer.logToAppLogger(log -> log.trace("Content-Type charset is not set - returning UTF-8 by default"), getClass());
+        } catch (ParseException | IllegalArgumentException e) {
+            LogProducer.logToAppLogger(log -> log.warn("Unknown charset in Content-Type! Returning UTF-8 by default", e), getClass());
+        }
+        return StandardCharsets.UTF_8;
     }
 
     /**
@@ -114,8 +140,10 @@ public abstract class JsonMessageBodyReaderBase<T> implements MessageBodyReader<
         try {
             return jsonRequestVersionReader.readFromJSON(object);
         } catch (TechnicalException e) {
-            throw new XsdProcessingException(CoffeeFaultType.INVALID_INPUT,
-                    MessageFormat.format("Error in reading object [class: {0}]: [{1}]", object.getClass(), e.getLocalizedMessage()), e);
+            throw new XsdProcessingException(
+                    CoffeeFaultType.INVALID_INPUT,
+                    MessageFormat.format("Error in reading object [class: {0}]: [{1}]", object.getClass(), e.getLocalizedMessage()),
+                    e);
         }
     }
 
@@ -124,15 +152,17 @@ public abstract class JsonMessageBodyReaderBase<T> implements MessageBodyReader<
      * 
      * @param type
      *            type to deserialize into
+     * @param charset
+     *            the character set of the json
      * @param entityStream
      *            input stream of entity
      * @return deserialized object
      * @throws XsdProcessingException
      *             if the json can not be deserialized
      */
-    protected T deserializeJson(Class<T> type, InputStream entityStream) throws XsdProcessingException {
+    protected T deserializeJson(Class<T> type, Charset charset, InputStream entityStream) throws XsdProcessingException {
         try {
-            return JsonUtil.toObjectGson(new InputStreamReader(entityStream), type);
+            return JsonUtil.toObjectGson(new InputStreamReader(entityStream, charset), type);
         } catch (Exception e) {
             throw new XsdProcessingException(CoffeeFaultType.INVALID_INPUT, e.getMessage(), e);
         }

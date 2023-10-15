@@ -21,11 +21,10 @@ package hu.icellmobilsoft.coffee.rest.exception;
 
 import java.util.Collection;
 
+import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
-
-import org.apache.deltaspike.core.util.CollectionUtils;
 
 import hu.icellmobilsoft.coffee.cdi.logger.AppLogger;
 import hu.icellmobilsoft.coffee.cdi.logger.ThisLogger;
@@ -40,8 +39,10 @@ import hu.icellmobilsoft.coffee.dto.exception.BONotFoundException;
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.dto.exception.BusinessException;
 import hu.icellmobilsoft.coffee.dto.exception.DtoConversionException;
+import hu.icellmobilsoft.coffee.dto.exception.OptimisticLockException;
 import hu.icellmobilsoft.coffee.dto.exception.ServiceUnavailableException;
 import hu.icellmobilsoft.coffee.dto.exception.XMLValidationError;
+import hu.icellmobilsoft.coffee.rest.exception.enums.HttpStatus;
 import hu.icellmobilsoft.coffee.rest.validation.xml.exception.XsdProcessingException;
 
 /**
@@ -50,6 +51,7 @@ import hu.icellmobilsoft.coffee.rest.validation.xml.exception.XsdProcessingExcep
  * @author balazs.joo
  * @since 1.8.0
  */
+@Dependent
 public class DefaultBaseExceptionMapper implements ExceptionMapper<BaseException> {
 
     @Inject
@@ -88,7 +90,9 @@ public class DefaultBaseExceptionMapper implements ExceptionMapper<BaseException
             XsdProcessingException xsdProcessingException = (XsdProcessingException) e;
             return createValidationErrorResponse(e, xsdProcessingException.getErrors());
         } else if (e instanceof BusinessException) {
-            return createResponse(e, Response.Status.INTERNAL_SERVER_ERROR, new BusinessFault());
+            return createResponse(e, HttpStatus.UNPROCESSABLE_ENTITY.getStatusCode(), new BusinessFault());
+        } else if (e instanceof OptimisticLockException) {
+            return createResponse(e, HttpStatus.OPTIMISTIC_LOCK.getStatusCode(), new TechnicalFault());
         } else {
             // BaseException/TechnicalException
             return createResponse(e, Response.Status.INTERNAL_SERVER_ERROR, new TechnicalFault());
@@ -142,7 +146,7 @@ public class DefaultBaseExceptionMapper implements ExceptionMapper<BaseException
     }
 
     private void addValidationErrors(InvalidRequestFault dto, Collection<XMLValidationError> errors) {
-        if (CollectionUtils.isEmpty(errors)) {
+        if (errors == null || errors.isEmpty()) {
             return;
         }
         for (XMLValidationError error : errors) {

@@ -296,6 +296,7 @@
 	<xsd:simpleType name="PageType">
 		<xsd:restriction base="xsd:int">
 			<xsd:minInclusive value="1" />
+			<xsd:maxInclusive value="21474836" />
 			<xsd:fractionDigits value="0" />
 		</xsd:restriction>
 	</xsd:simpleType>

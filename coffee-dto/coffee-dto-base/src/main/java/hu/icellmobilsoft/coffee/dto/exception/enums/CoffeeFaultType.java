@@ -22,7 +22,7 @@ package hu.icellmobilsoft.coffee.dto.exception.enums;
 import hu.icellmobilsoft.coffee.dto.error.IFaultType;
 
 /**
- * Coffee Framework container for Exceptions type
+ * Coffee jakartaEE solution set container for Exceptions type
  *
  * @author imre.scheffer
  * @since 1.0.0
@@ -213,4 +213,8 @@ public enum CoffeeFaultType implements IFaultType<CoffeeFaultType> {
      * Rest client exception
      */
     REST_CLIENT_EXCEPTION,
+    /**
+     * Optimistic lock exception
+     */
+    OPTIMISTIC_LOCK_EXCEPTION,
 }

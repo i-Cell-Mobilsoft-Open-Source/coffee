@@ -1,0 +1,96 @@
+= v1.13.0 → v1.14.0
+
+coff:ee v1.13.0 -> v1.14.0 migrációs leírás, újdonságok, változások leírása
+
+== Újdonságok
+
+Bevezetésre került a https://grpc.io/[gRPC] támogatása.
+Ennek köszönhetően létrejött egy új subprojekt gyűjtő `coffee-grpc` néven.
+
+=== coffee-grpc
+Következő funkció támogatások kerültek a rendszerbe:
+
+* coffee-grpc-api - Általános gRPC kezelés Coff:ee API (annotációk, verzió, ...)
+* coffee-grpc-base - protobuf és gRPC stub általános gyűjtője
+* coffee-grpc-protoc - proto -> class generálás támogatása
+* coffee-dto/coffee-dto-xsd2proto - Generált proto fájlok ami a `coffee-dto-xsd` XSD fájlokból vannak generálva.
+* coffee-dto/coffee-dto-stub-gen - Generált osztályok a Coff:ee proto fajlokból
+* coffee-grpc-server-extension - CDI gRPC szerver implementáció támogatása
+* coffee-grpc-client-extension - CDI gRPC client implementáció támogatása
+* coffee-grpc-metrics-api - Coffee metrika API (annotációk...)
+* coffee-grpc-metrics-impl - gRPC https://github.com/eclipse/microprofile-metrics[microprofile-metrics] implementáció
+* coffee-grpc-traces-api - Coffee tracing API (annotációk...)
+* coffee-grpc-opentracing-impl - gRPC https://github.com/eclipse/microprofile-opentracing[microprofile-opentracing] implementáció
+
+== Változások
+
+* Bump com.google.guava:guava https://github.com/google/guava/releases/tag/v30.1.1[30.1.1-jre]
+-> https://github.com/google/guava/releases/tag/v32.1.1[32.1.1-jre]
+(https://github.com/advisories/GHSA-7g45-4rm6-3mm3[CVE-2023-2976])
+
+=== coffee-jpa
+
+* A `BaseService` `repositoryFailed` metódusa `java.lang.IllegalArgumentException: can't parse argument number: explicit` hibát eredményezett olyan `org.hibernate.QueryException` esetén melynek üzenetében kapcsos zárójel is szerepelt (pld. `fetched association was not present in the select list [FromElement{explicit,not a collection join`). A `MessageFormat.format` úgy érzékelte, hogy ott egy paraméter placeholder van és megpróbált értéket behelyettesíteni a helyére.
+A hiba úgy került kezelésre, hogy egy új param placeholder került az üzenetbe `params.length` helyi értékkel, valamint az Exception `getLocalizedMessage` értéke hozzá lett fűzve az eredeti paraméter tömbhöz.
+* Deltaspike tranzakció kezelése helyett javax `@javax.transaction.Transactional` használatát, rollback paraméter testreszabásával.
+* Lehetséges integer-overflow hiba javítása a PagingUtil.getPagingResult* metódusokban. XSD szinten történt egy addícionális megkötés, valamint néhány belső vizsgálat került hozzáadásra.
+
+==== Átállás
+
+A PagingUtil metódusok innentől kezdve dobhatnak BaseExceptiont, amit a hívó alkalmazásban esetleg le kell kezelni.
+
+A többi változtatás nem eredményez átállási munkálatokat, visszafelé kompatibilis.
+
+=== coffee-module-notification-action
+
+* Az email és push esetén az adatbázis mentés a deltaspike-os tranzakció kezelés helyett a coffee-ban testreszabott `hu.icellmobilsoft.coffee.jpa.annotation.Transactional` annotációt kapta.
+
+==== Átállás
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+=== coffee-module-etcd
+
+* A `hu.icellmobilsoft.coffee.module.etcd.util.EtcdClientBuilderUtil`-ba bevezetésre került a CONNECT_TIMEOUT_MILLIS paraméter, 
+ez megakadályozza a felfutásnál előforduló timeout hibákat, amik a lekérdezés és az etcd szerverhez való timeout paraméter eltérése okozott.
+* Bump io.etcd:jetcd-core 0.6.1 -> 0.7.5
+
+==== Átállás
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+=== coffee-module-mp-restclient
+
+** A `DefaultBaseExceptionResponseExceptionMapper` beállítja a HTTP státusz kódot a `RestClientResponseException`-ben 
+
+==== Átállás
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+=== coffee-rest
+
+* Bevezetésre került az `OptimisticLockException`, alapértelmezetten `CoffeeFaultType.OPTIMISTIC_LOCK_EXCEPTION` hibakóddal.
+* Átalakításra került a `DefaultBaseExceptionMapper` osztályban a hibakezelés:
+* Üzleti hiba - BusinessException esetén 422 státuszkódot adunk az eddigi 500 státuszkód helyett.
+* Technikai hiba - OptimisticLockException esetén 409 státuszkódot adunk az eddigi 500 státuszkód helyett.
+* A `JsonMessageBodyReaderReaderBase` a JSON-kérés deserializálásakor a HTTP `Content-Type` fejlécben szereplő charset attribútumot használja. A fejléc helyes használata: `Content-Type: application/json; charset=utf-8`. Ha a charset nincs megadva, a deserializálás alapértelmezés szerint UTF-8-at használ!
+
+==== Átállás
+
+* Az eddigi exception státuszkód kezelés megtartásához a projekteken saját ExceptionMapper létrehozása szükséges.
+
+=== coffee-tool
+
+** NPE javítás az AnnotationUtil.getAnnotation(Class<?> clazz, Class<A> annotationClass) metódusban. 
+
+==== Átállás
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+=== BatchService
+
+* Már a natív insert/update metódusok is (batchMergeNative, batchInsertNative, batchUpdateNative) figyelembe veszik az insertable és updateable flag-eket.
+
+==== Átállás
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.

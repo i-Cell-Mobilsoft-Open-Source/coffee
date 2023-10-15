@@ -19,6 +19,7 @@
  */
 package hu.icellmobilsoft.coffee.rest.exception;
 
+import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 import javax.xml.bind.JAXBException;
 
@@ -38,6 +39,7 @@ import hu.icellmobilsoft.coffee.se.logging.Logger;
  * @author imre.scheffer
  * @since 1.0.0
  */
+@Dependent
 public class DefaultExceptionMessageTranslator implements IExceptionMessageTranslator {
 
     @Inject

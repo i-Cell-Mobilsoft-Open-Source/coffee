@@ -9,11 +9,11 @@
 
 	<groupId>hu.icellmobilsoft.coffee</groupId>
 	<artifactId>coffee</artifactId>
-	<version>1.14.0-SNAPSHOT</version>
+	<version>1.15.0-SNAPSHOT</version>
 
 	<packaging>pom</packaging>
 
-	<description>Java Enterprise based framework</description>
+	<description>JakartaEE solution set</description>
 	<url>https://github.com/i-Cell-Mobilsoft-Open-Source/coffee</url>
 	<inceptionYear>2020</inceptionYear>
 
@@ -217,6 +217,7 @@
 		<module>coffee-system</module>
 		<module>coffee-module</module>
 		<module>coffee-se</module>
+		<module>coffee-grpc</module>
 	</modules>
 
 	<distributionManagement>

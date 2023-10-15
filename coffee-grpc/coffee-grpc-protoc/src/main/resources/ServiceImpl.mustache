@@ -1,0 +1,68 @@
+{{#packageName}}
+    package {{packageName}};
+{{/packageName}}
+
+import hu.icellmobilsoft.coffee.grpc.api.service.IGrpcService;
+import hu.icellmobilsoft.coffee.grpc.base.exception.GrpcRuntimeExceptionWrapper;
+
+@javax.annotation.Generated(
+value = "by {{classPrefix}} Coffee Grpc generator",
+comments = "Source: {{protoName}}")
+public class {{delegatorImplName}} extends {{implBaseName}} {
+
+    private {{serviceName}} delegate;
+
+    public {{delegatorImplName}}({{serviceName}} delegate) {
+        this.delegate = delegate;
+    }
+
+{{#unaryUnaryMethods}}
+    {{{methodHeader}}}
+    @Override
+    public void {{methodName}}({{inputType}} request, io.grpc.stub.StreamObserver<{{outputType}}> responseObserver){
+        try {
+            delegate.{{methodName}}(request, responseObserver);
+        } catch (Throwable e) {
+            throw new GrpcRuntimeExceptionWrapper(e);
+        }
+    }
+
+{{/unaryUnaryMethods}}
+
+{{#unaryManyMethods}}
+    {{{methodHeader}}}
+    @Override
+    public void {{methodName}}({{inputType}} request, io.grpc.stub.StreamObserver<{{outputType}}> responseObserver){
+        try {
+            delegate.{{methodName}}(request, responseObserver);
+        } catch (Throwable e) {
+            throw new GrpcRuntimeExceptionWrapper(e);
+        }
+    }
+{{/unaryManyMethods}}
+
+{{#manyUnaryMethods}}
+    {{{methodHeader}}}
+    @Override
+    public io.grpc.stub.StreamObserver<{{inputType}}> {{methodName}}(io.grpc.stub.StreamObserver<{{outputType}}> responseObserver){
+        try {
+            return delegate.{{methodName}}(responseObserver);
+        } catch (Throwable e) {
+            throw new GrpcRuntimeExceptionWrapper(e);
+        }
+    }
+{{/manyUnaryMethods}}
+
+{{#manyManyMethods}}
+    {{{methodHeader}}}
+    @Override
+    public io.grpc.stub.StreamObserver<{{inputType}}> {{methodName}}(io.grpc.stub.StreamObserver<{{outputType}}> responseObserver){
+        try {
+            return delegate.{{methodName}}(responseObserver);
+        } catch (Throwable e) {
+            throw new GrpcRuntimeExceptionWrapper(e);
+        }
+    }
+{{/manyManyMethods}}
+
+}
