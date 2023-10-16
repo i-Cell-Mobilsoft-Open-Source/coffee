@@ -38,9 +38,9 @@ public class AbstractEntityTest {
         AbstractEntity entity = new DefaultImplAbstractEntity();
 
         // when
+        String actualToStringValue = entity.toString();
 
         // then
-        String actualToStringValue = entity.toString();
         Assertions.assertTrue(actualToStringValue.contains("blobColumn=Blob"));
         Assertions.assertTrue(actualToStringValue.contains("byteArrayColumn=byte[]"));
         Assertions.assertTrue(actualToStringValue.contains("clobColumn=Clob"));
