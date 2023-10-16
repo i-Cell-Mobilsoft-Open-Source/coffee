@@ -24,8 +24,6 @@ import java.util.Collection;
 import java.util.Objects;
 import java.util.Optional;
 
-import jakarta.enterprise.inject.Vetoed;
-
 import org.apache.commons.lang3.StringUtils;
 
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
@@ -36,7 +34,6 @@ import hu.icellmobilsoft.coffee.dto.exception.InvalidParameterException;
  *
  * @author attila.kiss
  */
-@Vetoed
 public class ParamValidatorUtil {
 
     private ParamValidatorUtil() {
