@@ -38,6 +38,13 @@ import hu.icellmobilsoft.coffee.module.configdoc.writer.IDocWriter;
  */
 public class DynamicAsciiDocWriter implements IDocWriter<DynamicDocData> {
 
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public DynamicAsciiDocWriter() {
+        super();
+    }
+
     @Override
     public void write(List<DynamicDocData> dataList, Writer writer) throws IOException {
         for (DynamicDocData docHeader : dataList) {

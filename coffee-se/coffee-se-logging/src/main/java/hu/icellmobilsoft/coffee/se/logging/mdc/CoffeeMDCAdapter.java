@@ -32,6 +32,13 @@ public class CoffeeMDCAdapter implements MDCAdapter {
 
     private final ThreadLocal<Map<String, String>> mdcMap = new ThreadLocal<>();
 
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public CoffeeMDCAdapter() {
+        super();
+    }
+
     /** {@inheritDoc} */
     @Override
     public void put(String key, String val) {

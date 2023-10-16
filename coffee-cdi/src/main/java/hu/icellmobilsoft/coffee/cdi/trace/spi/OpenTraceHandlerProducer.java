@@ -38,6 +38,13 @@ import hu.icellmobilsoft.coffee.cdi.trace.annotation.Traced;
 public class OpenTraceHandlerProducer {
 
     /**
+     * Default constructor, constructs a new object.
+     */
+    public OpenTraceHandlerProducer() {
+        super();
+    }
+
+    /**
      * Producer method to supply the provided tracing implementation
      * 
      * @return IOpenTraceHandler implementation

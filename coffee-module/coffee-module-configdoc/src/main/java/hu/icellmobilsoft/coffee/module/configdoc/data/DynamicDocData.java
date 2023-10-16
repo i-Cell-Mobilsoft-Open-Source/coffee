@@ -37,6 +37,13 @@ import hu.icellmobilsoft.coffee.module.configdoc.DynamicConfigDocs;
 public class DynamicDocData {
 
     /**
+     * Default constructor, constructs a new object.
+     */
+    public DynamicDocData() {
+        super();
+    }
+
+    /**
      * DynamicDocData comparator. compares by title and template variables
      */
     public static Comparator<DynamicDocData> COMPARATOR = Comparator.comparing(DynamicDocData::getTitle)

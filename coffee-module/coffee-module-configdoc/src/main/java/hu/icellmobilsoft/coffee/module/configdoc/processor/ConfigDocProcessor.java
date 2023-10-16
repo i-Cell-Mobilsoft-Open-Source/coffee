@@ -56,6 +56,13 @@ import hu.icellmobilsoft.coffee.module.configdoc.writer.impl.AsciiDocWriter;
 @AutoService(Processor.class)
 public class ConfigDocProcessor extends AbstractProcessor {
 
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public ConfigDocProcessor() {
+        super();
+    }
+
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
         ConfigDocConfig config;

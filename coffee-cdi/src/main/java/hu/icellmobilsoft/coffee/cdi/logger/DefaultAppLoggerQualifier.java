@@ -31,4 +31,11 @@ public class DefaultAppLoggerQualifier extends
 		AnnotationLiteral<DefaultAppLogger> implements DefaultAppLogger {
 
 	private static final long serialVersionUID = 1L;
+
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public DefaultAppLoggerQualifier() {
+        super();
+    }
 }

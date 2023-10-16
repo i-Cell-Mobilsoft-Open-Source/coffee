@@ -90,6 +90,13 @@ public @interface Version {
 
         private static final long serialVersionUID = 1L;
 
+        /**
+         * Default constructor, constructs a new object.
+         */
+        public Literal() {
+            super();
+        }
+
         @Nonbinding
         @Override
         public Range[] include() {
