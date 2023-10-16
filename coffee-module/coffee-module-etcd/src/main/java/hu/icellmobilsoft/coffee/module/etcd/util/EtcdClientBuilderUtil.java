@@ -48,11 +48,6 @@ public class EtcdClientBuilderUtil {
     private static final Logger logger = Logger.getLogger(EtcdClientBuilderUtil.class);
 
     /**
-     * Timeout param to establish connection with the etcd server, this timeout needs to be the base timeout param when getting value from the server.
-     */
-    public static final long CONNECT_TIMEOUT_MILLIS = 500;
-
-    /**
      *
      * Create {@link ClientBuilder} with urls with came from parameter
      *

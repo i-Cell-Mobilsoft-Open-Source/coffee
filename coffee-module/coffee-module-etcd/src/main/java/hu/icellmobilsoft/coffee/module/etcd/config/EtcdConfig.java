@@ -80,6 +80,11 @@ public interface EtcdConfig {
     String WAIT_FOR_READY = "coffee.etcd.default.wait.for.ready";
 
     /**
+     * Timeout param to establish connection with the etcd server, this timeout needs to be the base timeout param when getting value from the server.
+     */
+    long CONNECT_TIMEOUT_MILLIS = 500;
+
+    /**
      * ETCD configuration url, example: "http://localhost1:2379,http://localhost2:2379"
      *
      * @return ETCD url
