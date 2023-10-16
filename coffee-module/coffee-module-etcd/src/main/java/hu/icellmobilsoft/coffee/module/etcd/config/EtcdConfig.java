@@ -99,7 +99,7 @@ public interface EtcdConfig {
     long getConnectionTimeout();
 
     /**
-     * Returns The delay between retries
+     * Returns the delay between retries
      *
      * @return the retry delay
      */
