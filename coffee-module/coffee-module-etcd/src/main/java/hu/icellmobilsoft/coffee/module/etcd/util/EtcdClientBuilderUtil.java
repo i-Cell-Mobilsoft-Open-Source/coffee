@@ -51,8 +51,8 @@ public class EtcdClientBuilderUtil {
      *
      * Create {@link ClientBuilder} with urls with came from parameter
      *
-     * @param {@link
-     *            EtcdConfig} ETCD configuration values
+     * @param etcdConfig
+     *            {@link EtcdConfig} ETCD configuration values
      * @return {@link ClientBuilder} instance
      * @throws BaseException
      *             if exception occurs at create {@link ClientBuilder}
