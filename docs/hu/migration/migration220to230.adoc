@@ -2,10 +2,18 @@
 
 coff:ee v2.2.0 -> v2.3.0 migrációs leírás, újdonságok, változások leírása
 
+=== coffee-model-base
+
+** `AbstractEntity.toString()` fgv-e `java.sql.Blob` és `java.sql.Clob` típusok esetén a mező értéke helyett a mező típusát használja fel.
+Korábban a mező értékével dolgozott ilyen esetekben is, így pl logozás esetén felolvasta a stream-et.
+
+==== Átállás
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
 === coffee-tool
 
 ** Új `ParamValidatorUtil` segédosztály publikus függvények paramétereinek egységes validációjára.
-
 ==== Átállás
 
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
