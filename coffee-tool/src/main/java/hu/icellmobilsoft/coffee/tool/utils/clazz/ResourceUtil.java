@@ -19,21 +19,25 @@
  */
 package hu.icellmobilsoft.coffee.tool.utils.clazz;
 
-import jakarta.enterprise.inject.Vetoed;
-
 /**
  * Resource utils
  *
  * @author robert.kaplar
  * @since 1.0.0
  */
-@Vetoed
 public class ResourceUtil {
 
     private static final String POSTFIX_JAR = ".jar";
     private static final String POSTFIX_WAR = ".war";
 
     private static final String PATH_SEPARATOR = "/";
+
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public ResourceUtil() {
+        super();
+    }
 
     /**
      * Determine which JAR or WAR file a class is from

@@ -19,8 +19,6 @@
  */
 package hu.icellmobilsoft.coffee.tool.utils.annotation;
 
-import jakarta.enterprise.inject.Vetoed;
-
 import org.apache.commons.lang3.StringUtils;
 
 import hu.icellmobilsoft.coffee.cdi.annotation.Range;
@@ -32,8 +30,14 @@ import hu.icellmobilsoft.coffee.tool.version.ComparableVersion;
  * @author imre.scheffer
  * @since 1.0.0
  */
-@Vetoed
 public class RangeUtil {
+
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public RangeUtil() {
+        super();
+    }
 
     /**
      * Érték keresés a Range annotációban

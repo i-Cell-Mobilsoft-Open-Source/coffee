@@ -22,8 +22,6 @@ package hu.icellmobilsoft.coffee.tool.context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
-import jakarta.enterprise.inject.Vetoed;
-
 import org.apache.commons.lang3.StringUtils;
 
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
@@ -37,8 +35,14 @@ import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
  * @author imre.scheffer
  * @since 1.0.0
  */
-@Vetoed
 public class ContextUtil {
+
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public ContextUtil() {
+        super();
+    }
 
     /**
      * Retrieves named object.

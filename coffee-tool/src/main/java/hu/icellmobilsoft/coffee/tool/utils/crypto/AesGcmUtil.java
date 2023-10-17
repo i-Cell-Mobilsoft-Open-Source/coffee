@@ -27,8 +27,6 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.GCMParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
-import jakarta.enterprise.inject.Vetoed;
-
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.dto.exception.InvalidParameterException;
 import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
@@ -40,7 +38,6 @@ import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
  * @author mark.petrenyi
  * @since 1.1.0
  */
-@Vetoed
 public class AesGcmUtil {
 
     /**
@@ -57,6 +54,13 @@ public class AesGcmUtil {
 
     private static final String AES = "AES";
     private static final String CIPHER_AES_GCM_NOPADDING = "AES/GCM/NoPadding";
+
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public AesGcmUtil() {
+        super();
+    }
 
     /**
      * Generates a secure random 256 bit length key

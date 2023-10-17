@@ -21,8 +21,6 @@ package hu.icellmobilsoft.coffee.tool.version;
 
 import java.security.InvalidParameterException;
 
-import jakarta.enterprise.inject.Vetoed;
-
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -31,8 +29,14 @@ import org.apache.commons.lang3.StringUtils;
  * @author arnold.bucher
  * @since 1.0.0
  */
-@Vetoed
 public class JavaVersionUtil {
+
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public JavaVersionUtil() {
+        super();
+    }
 
     /**
      * Returns the {@link JavaVersion} of current system.

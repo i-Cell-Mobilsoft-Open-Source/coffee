@@ -47,6 +47,13 @@ public class XMLGregorianCalendarConverter implements JsonSerializer<XMLGregoria
 
     private static Logger LOGGER = Logger.getLogger(XMLGregorianCalendarConverter.class);
 
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public XMLGregorianCalendarConverter() {
+        super();
+    }
+
     /** {@inheritDoc} */
     @Override
     public JsonElement serialize(XMLGregorianCalendar calendar, Type type, JsonSerializationContext jsonSerializationContext) {

@@ -46,6 +46,13 @@ public class LocalDateConverter implements JsonSerializer<LocalDate>, JsonDeseri
 
     private static Logger LOGGER = Logger.getLogger(LocalDateConverter.class);
 
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public LocalDateConverter() {
+        super();
+    }
+
     /** {@inheritDoc} */
     @Override
     public LocalDate deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {

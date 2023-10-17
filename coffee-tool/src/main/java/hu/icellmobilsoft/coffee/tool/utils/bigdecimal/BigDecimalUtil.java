@@ -24,21 +24,25 @@ import java.util.Collection;
 
 import javax.xml.datatype.DatatypeConstants;
 
-import jakarta.enterprise.inject.Vetoed;
-
 /**
  * Helper class to handle BigDecimal retain precision of it's double value
  *
  * @author robert.kaplar
  * @since 1.0.0
  */
-@Vetoed
 public class BigDecimalUtil {
 
     /**
      * Value 0.01
      */
     public static final BigDecimal PERCENTAGE_1 = new BigDecimal("0.01");
+
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public BigDecimalUtil() {
+        super();
+    }
 
     /**
      * Check that the array contains the specific value.

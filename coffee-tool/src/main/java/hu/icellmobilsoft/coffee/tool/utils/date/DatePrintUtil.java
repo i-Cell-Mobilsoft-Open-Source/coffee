@@ -25,8 +25,6 @@ import java.time.temporal.TemporalAccessor;
 import java.util.Calendar;
 import java.util.Date;
 
-import jakarta.enterprise.inject.Vetoed;
-
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -35,8 +33,14 @@ import org.apache.commons.lang3.StringUtils;
  * @author imre.scheffer
  * @since 1.0.0
  */
-@Vetoed
 public class DatePrintUtil {
+
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public DatePrintUtil() {
+        super();
+    }
 
     /**
      * TemporalAccessor (LocalDate) to String. Output format is '2011-12-03'.

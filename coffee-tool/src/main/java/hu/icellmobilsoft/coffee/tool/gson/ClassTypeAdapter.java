@@ -37,6 +37,13 @@ import com.google.gson.JsonSerializer;
  */
 public class ClassTypeAdapter implements JsonSerializer<Class<?>>, JsonDeserializer<Class<?>> {
 
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public ClassTypeAdapter() {
+        super();
+    }
+
     /** {@inheritDoc} */
     @Override
     public JsonElement serialize(Class<?> src, Type typeOfSrc, JsonSerializationContext context) {
