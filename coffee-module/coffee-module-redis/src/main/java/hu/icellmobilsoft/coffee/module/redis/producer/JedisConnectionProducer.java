@@ -59,6 +59,13 @@ public class JedisConnectionProducer {
     private JedisMetricsHandler jedisMetricsHandler;
 
     /**
+     * Default constructor, constructs a new object.
+     */
+    public JedisConnectionProducer() {
+        super();
+    }
+
+    /**
      * Creates or returns {@link Jedis} resource for the given configKey.
      * 
      * @param injectionPoint

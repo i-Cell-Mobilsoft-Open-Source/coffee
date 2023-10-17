@@ -54,6 +54,13 @@ public class RedisManagerProducer {
     private Logger log;
 
     /**
+     * Default constructor, constructs a new object.
+     */
+    public RedisManagerProducer() {
+        super();
+    }
+
+    /**
      * Produces {@link RedisManager} with the redis connection configKey.
      *
      * @param injectionPoint

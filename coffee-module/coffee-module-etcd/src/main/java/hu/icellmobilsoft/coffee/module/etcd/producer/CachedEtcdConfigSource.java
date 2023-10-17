@@ -41,6 +41,13 @@ public class CachedEtcdConfigSource extends DefaultEtcdConfigSource {
     private static final Set<String> PROPERTY_NAME_CACHE = Collections.synchronizedSet(new HashSet<>());
 
     /**
+     * Default constructor, constructs a new object.
+     */
+    public CachedEtcdConfigSource() {
+        super();
+    }
+
+    /**
      * Visszaadja a config-source-okon elérhető kulcsokat, az első hívás eredményét cacheli, minden továbbit a cache-ből szolgál ki
      * 
      * <br>

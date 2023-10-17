@@ -61,6 +61,13 @@ public class JedisPoolProducer {
     private Map<String, JedisPool> jedisPoolInstances = new HashMap<>();
 
     /**
+     * Default constructor, constructs a new object.
+     */
+    public JedisPoolProducer() {
+        super();
+    }
+
+    /**
      * Creates or gets {@link JedisPool} for the given configKey
      *
      * @param injectionPoint

@@ -46,6 +46,9 @@ import io.etcd.jetcd.kv.PutResponse;
 
 /**
  * https://github.com/coreos/jetcd
+ * 
+ * @param <T>
+ *            ETCD value type
  *
  * @author imre.scheffer
  * @since 1.0.0
@@ -59,6 +62,13 @@ public class BaseEtcdService<T> {
 
     @Inject
     private EtcdRepository etcdRepository;
+
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public BaseEtcdService() {
+        super();
+    }
 
     /**
      * Returns value from ETCD.

@@ -20,7 +20,6 @@
 package hu.icellmobilsoft.coffee.module.activemq.util;
 
 import jakarta.ejb.EJBException;
-import jakarta.enterprise.inject.Vetoed;
 import jakarta.jms.Connection;
 import jakarta.jms.JMSException;
 import jakarta.jms.Message;
@@ -37,10 +36,16 @@ import hu.icellmobilsoft.coffee.se.logging.Logger;
  * @author imre.scheffer
  * @since 1.0.0
  */
-@Vetoed
 public class JmsUtil {
 
     private static Logger LOGGER = Logger.getLogger(JmsUtil.class);
+
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public JmsUtil() {
+        super();
+    }
 
     /**
      * Returns id of given {@link Message}.

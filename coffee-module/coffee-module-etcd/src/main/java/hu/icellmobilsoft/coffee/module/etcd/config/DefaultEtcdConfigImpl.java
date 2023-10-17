@@ -47,6 +47,13 @@ public class DefaultEtcdConfigImpl implements EtcdConfig {
         return StringUtils.split(url, ",");
     }
 
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public DefaultEtcdConfigImpl() {
+        super();
+    }
+
     /** {@inheritDoc} */
     @Override
     public long getConnectionTimeout() {

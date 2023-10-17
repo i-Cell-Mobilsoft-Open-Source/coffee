@@ -42,6 +42,13 @@ import hu.icellmobilsoft.coffee.tool.utils.annotation.AnnotationUtil;
 public class RedisConfigProducer {
 
     /**
+     * Default constructor, constructs a new object.
+     */
+    public RedisConfigProducer() {
+        super();
+    }
+
+    /**
      * Creates {@link ManagedRedisConfig} for the injected config key
      *
      * @param injectionPoint

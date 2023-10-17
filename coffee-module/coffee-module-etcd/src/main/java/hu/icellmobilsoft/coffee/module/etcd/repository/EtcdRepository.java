@@ -21,8 +21,6 @@ package hu.icellmobilsoft.coffee.module.etcd.repository;
 
 import java.util.concurrent.CompletableFuture;
 
-import jakarta.enterprise.inject.Vetoed;
-
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
@@ -40,10 +38,16 @@ import io.etcd.jetcd.options.GetOption;
  * @author imre.scheffer
  * @since 1.0.0
  */
-@Vetoed
 public class EtcdRepository {
 
     private Client etcdClient;
+
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public EtcdRepository() {
+        super();
+    }
 
     /**
      * ETCD repository initialization

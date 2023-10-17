@@ -46,6 +46,13 @@ public class ConfigEtcdHandler {
     private ConfigEtcdService configEtcdService;
 
     /**
+     * Default constructor, constructs a new object.
+     */
+    public ConfigEtcdHandler() {
+        super();
+    }
+
+    /**
      * Returns value of given key in ETCD.
      *
      * @param key
