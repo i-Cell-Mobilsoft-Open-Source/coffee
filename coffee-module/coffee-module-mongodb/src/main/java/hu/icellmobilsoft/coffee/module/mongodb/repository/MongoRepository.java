@@ -31,6 +31,9 @@ import com.mongodb.client.MongoCollection;
 
 /**
  * MongoRepository class.
+ * 
+ * @param <T>
+ *            Type of mongo entity, dto
  *
  * @author imre.scheffer
  * @since 1.0.0
@@ -44,6 +47,13 @@ public class MongoRepository<T> implements Serializable {
      * Wrapped mongo collection
      */
     private MongoCollection<T> mongoCollection;
+
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public MongoRepository() {
+        super();
+    }
 
     /**
      * Finds first document in the collection matching given query filter.

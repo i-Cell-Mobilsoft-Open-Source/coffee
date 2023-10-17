@@ -21,8 +21,6 @@ package hu.icellmobilsoft.coffee.module.mongodb.extension;
 
 import java.lang.reflect.Type;
 
-import jakarta.enterprise.inject.Vetoed;
-
 import hu.icellmobilsoft.coffee.module.mongodb.service.MongoService;
 
 /**
@@ -33,8 +31,14 @@ import hu.icellmobilsoft.coffee.module.mongodb.service.MongoService;
  * @since 1.1.0
  *
  */
-@Vetoed
 public class MongoExtensionUtil {
+
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public MongoExtensionUtil() {
+        super();
+    }
 
     /**
      * get mongoService generic type

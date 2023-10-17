@@ -37,6 +37,13 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 @Dependent
 public class MongoDbConfigImpl implements MongoDbConfig {
 
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public MongoDbConfigImpl() {
+        super();
+    }
+
     @SuppressWarnings("cdi-ambiguous-dependency")
     @Inject
     @ConfigProperty(name = "mongodb.uri", defaultValue = "mongodb://user:password@localhost:27017/database?ssl=false")

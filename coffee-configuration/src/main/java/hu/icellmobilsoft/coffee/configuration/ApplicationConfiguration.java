@@ -65,6 +65,13 @@ public class ApplicationConfiguration {
     @Inject
     private ConfigurationHelper configurationHelper;
 
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public ApplicationConfiguration() {
+        super();
+    }
+
     private LoadingCache<CompositeCacheLoaderKey, Optional<?>> cache = CacheBuilder.newBuilder()
             .expireAfterWrite(CACHE_TIME_MINUTES, TimeUnit.MINUTES).build(new CacheLoader<CompositeCacheLoaderKey, Optional<?>>() {
                 @SuppressWarnings("unchecked")

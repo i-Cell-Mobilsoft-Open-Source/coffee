@@ -51,6 +51,13 @@ public abstract class BaseLocalizedBundleResolver {
     private LocaleResolver localeResolver;
 
     /**
+     * Default constructor, constructs a new object.
+     */
+    public BaseLocalizedBundleResolver() {
+        super();
+    }
+
+    /**
      * for properties like this:<br>
      * <code>
      * hello=Hello, %s is %d

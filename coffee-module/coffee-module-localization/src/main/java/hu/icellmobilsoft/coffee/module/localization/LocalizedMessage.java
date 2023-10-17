@@ -48,6 +48,13 @@ public class LocalizedMessage extends BaseLocalizedBundleResolver {
     /** Constant <code>BUNDLED_SOURCES</code> */
     public static final String[] BUNDLED_SOURCES = { "i18n.common-messages" };
 
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public LocalizedMessage() {
+        super();
+    }
+
     /** {@inheritDoc} */
     @Override
     protected String[] getSources() {

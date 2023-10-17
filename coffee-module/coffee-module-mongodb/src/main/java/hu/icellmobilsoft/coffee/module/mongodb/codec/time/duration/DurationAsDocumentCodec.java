@@ -65,6 +65,13 @@ public final class DurationAsDocumentCodec implements Codec<Duration> {
         FIELD_DECODERS = Collections.unmodifiableMap(fd);
     }
 
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public DurationAsDocumentCodec() {
+        super();
+    }
+
     /** {@inheritDoc} */
     @Override
     public void encode(BsonWriter writer, Duration value, EncoderContext encoderContext) {

@@ -45,6 +45,13 @@ public class MongoServiceImpl extends MongoService<BasicDBObject> {
 
     private MongoCollection<BasicDBObject> mongoCollection;
 
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public MongoServiceImpl() {
+        super();
+    }
+
     /** {@inheritDoc} */
     @Override
     protected MongoCollection<BasicDBObject> getMongoCollection() throws BaseException {

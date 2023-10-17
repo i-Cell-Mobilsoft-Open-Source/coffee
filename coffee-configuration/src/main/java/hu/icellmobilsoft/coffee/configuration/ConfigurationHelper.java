@@ -36,6 +36,13 @@ import org.eclipse.microprofile.config.ConfigProvider;
 public class ConfigurationHelper {
 
     /**
+     * Default constructor, constructs a new object.
+     */
+    public ConfigurationHelper() {
+        super();
+    }
+
+    /**
      * Get String type, @RequestScope cached value from config sources
      *
      * @param key

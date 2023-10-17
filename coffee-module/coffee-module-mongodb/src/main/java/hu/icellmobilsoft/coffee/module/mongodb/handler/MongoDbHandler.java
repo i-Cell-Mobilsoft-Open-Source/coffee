@@ -59,6 +59,13 @@ public class MongoDbHandler {
     private MongoServiceImpl mongoService;
 
     /**
+     * Default constructor, constructs a new object.
+     */
+    public MongoDbHandler() {
+        super();
+    }
+
+    /**
      * Setter for the field {@code mongoDbConfig}.
      *
      * @param mongoDbConfig

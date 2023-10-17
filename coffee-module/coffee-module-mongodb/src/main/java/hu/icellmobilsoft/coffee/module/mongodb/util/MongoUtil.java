@@ -19,8 +19,6 @@
  */
 package hu.icellmobilsoft.coffee.module.mongodb.util;
 
-import jakarta.enterprise.inject.Vetoed;
-
 import com.mongodb.BasicDBObject;
 
 /**
@@ -29,8 +27,14 @@ import com.mongodb.BasicDBObject;
  * @author karoly.tamas
  * @since 1.0.0
  */
-@Vetoed
 public class MongoUtil {
+
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public MongoUtil() {
+        super();
+    }
 
     /**
      * Converts JSON {@link String} to {@link BasicDBObject}.

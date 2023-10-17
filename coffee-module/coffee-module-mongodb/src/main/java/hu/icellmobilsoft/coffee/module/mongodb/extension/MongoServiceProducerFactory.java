@@ -45,6 +45,13 @@ import hu.icellmobilsoft.coffee.module.mongodb.service.MongoService;
 public class MongoServiceProducerFactory {
 
     /**
+     * Default constructor, constructs a new object.
+     */
+    public MongoServiceProducerFactory() {
+        super();
+    }
+
+    /**
      * Producer template method for generating mongoService producer. No @Produces annotation, its just a template!
      * 
      * @param <T>

@@ -54,6 +54,13 @@ public class MongoExtension implements jakarta.enterprise.inject.spi.Extension {
     private final List<Type> mongoServiceTypes = new ArrayList<>();
 
     /**
+     * Default constructor, constructs a new object.
+     */
+    public MongoExtension() {
+        super();
+    }
+
+    /**
      * Creates CDI producer beans for the found mongo service implementations
      * 
      * @param abd

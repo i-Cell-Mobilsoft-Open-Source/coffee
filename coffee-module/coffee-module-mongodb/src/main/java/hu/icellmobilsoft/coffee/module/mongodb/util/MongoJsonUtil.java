@@ -29,8 +29,6 @@ import java.util.List;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 
-import jakarta.enterprise.inject.Vetoed;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.bson.conversions.Bson;
@@ -60,12 +58,18 @@ import hu.icellmobilsoft.coffee.tool.utils.date.DateXmlUtil;
  * @author imre.scheffer
  * @since 1.0.0
  */
-@Vetoed
 public class MongoJsonUtil {
 
     private static Logger LOGGER = Logger.getLogger(MongoJsonUtil.class);
 
     private static final String DATE_PROPERTY = "$date";
+
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public MongoJsonUtil() {
+        super();
+    }
 
     /**
      * Converts DTO object to JSON string without throwing exception.
@@ -191,8 +195,17 @@ public class MongoJsonUtil {
         }
     }
 
-    /** {@inheritDoc} */
+    /**
+     * Mongo specific {@code XMLGregorianCalendar} de/serializer
+     */
     public static class XMLGregorianCalendarConverter implements JsonSerializer<XMLGregorianCalendar>, JsonDeserializer<XMLGregorianCalendar> {
+
+        /**
+         * Default constructor, constructs a new object.
+         */
+        public XMLGregorianCalendarConverter() {
+            super();
+        }
 
         /** {@inheritDoc} */
         public JsonElement serialize(XMLGregorianCalendar calendar, Type type, JsonSerializationContext jsonSerializationContext) {
