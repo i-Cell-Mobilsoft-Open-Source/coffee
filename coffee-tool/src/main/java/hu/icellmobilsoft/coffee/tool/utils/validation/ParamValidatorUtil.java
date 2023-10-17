@@ -81,6 +81,8 @@ public class ParamValidatorUtil {
     /**
      * Ensures that the specified parameter cannot be an empty {@link Optional}.
      *
+     * @param <T>
+     *            the type of the parameter
      * @param object
      *            the parameter
      * @param paramName
@@ -97,6 +99,8 @@ public class ParamValidatorUtil {
     /**
      * Ensures that the specified parameter cannot be an empty {@link Collection}.
      *
+     * @param <T>
+     *            the type of the {@link Collection} parameter
      * @param object
      *            the parameter
      * @param paramName
