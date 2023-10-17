@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -30,9 +30,10 @@ import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.dto.exception.InvalidParameterException;
 
 /**
- * Paraméter validáló utility.
+ * Utility for function parameter validation.
  *
  * @author attila.kiss
+ * @since 2.3.0
  */
 public class ParamValidatorUtil {
 
@@ -40,17 +41,17 @@ public class ParamValidatorUtil {
     }
 
     /**
-     * Biztosítja, hogy a megadott paraméter ne lehessen <code>null</code>.
+     * Ensures that the specified parameter cannot be <code>null</code>.
      *
      * @param <T>
-     *            a paraméter típusa
+     *            the type of the parameter
      * @param object
-     *            a paraméter
+     *            the parameter
      * @param paramName
-     *            a paraméter neve
-     * @return a nem null paraméter
+     *            the name of the parameter
+     * @return the not <code>null</code> parameter
      * @throws BaseException
-     *             ha a paraméter <code>null</code>
+     *             if the parameter is <code>null</code>
      */
     public static <T> T requireNonNull(T object, String paramName) throws BaseException {
         if (Objects.isNull(object)) {
@@ -60,15 +61,15 @@ public class ParamValidatorUtil {
     }
 
     /**
-     * Biztosítja, hogy a megadott paraméter ne lehessen blank {@link String}.
+     * Ensures that the specified parameter cannot be blank {@link String}.
      *
      * @param object
-     *            a paraméter
+     *            the parameter
      * @param paramName
-     *            a paraméter neve
-     * @return a nem blank paraméter
+     *            the name of the parameter
+     * @return the non blank parameter
      * @throws BaseException
-     *             ha a paraméter blank
+     *             if the parameter is blank
      */
     public static String requireNonBlank(String object, String paramName) throws BaseException {
         if (StringUtils.isBlank(object)) {
@@ -78,15 +79,15 @@ public class ParamValidatorUtil {
     }
 
     /**
-     * Biztosítja, hogy a megadott paraméter ne lehessen üres {@link Optional}.
+     * Ensures that the specified parameter cannot be an empty {@link Optional}.
      *
      * @param object
-     *            a paraméter
+     *            the parameter
      * @param paramName
-     *            a paraméter neve
-     * @return a nem üres {@link Optional} paraméter értéke
+     *            the name of the parameter
+     * @return the value of the non-empty {@link Optional}
      * @throws BaseException
-     *             ha a paraméter üres vagy <code>null</code>
+     *             if the parameter is <code>null</code> or empty
      */
     public static <T> T requireNonEmpty(Optional<T> object, String paramName) throws BaseException {
         requireNonNull(object, paramName);
@@ -94,15 +95,15 @@ public class ParamValidatorUtil {
     }
 
     /**
-     * Biztosítja, hogy a megadott paraméter ne lehessen üres {@link Collection}.
+     * Ensures that the specified parameter cannot be an empty {@link Collection}.
      *
      * @param object
-     *            a paraméter
+     *            the parameter
      * @param paramName
-     *            a paraméter neve
-     * @return a nem üres paraméter
+     *            the name of the parameter
+     * @return the non-empty {@link Collection}
      * @throws BaseException
-     *             ha a paraméter üres vagy <code>null</code>
+     *             if the parameter is <code>null</code> or empty
      */
     public static <T> Collection<T> requireNonEmpty(Collection<T> object, String paramName) throws BaseException {
         requireNonNull(object, paramName);

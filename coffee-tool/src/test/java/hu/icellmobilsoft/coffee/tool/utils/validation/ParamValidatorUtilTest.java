@@ -34,6 +34,7 @@ import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 
 /**
  * @author attila.kiss
+ * @since 2.3.0
  */
 class ParamValidatorUtilTest {
 
