@@ -62,6 +62,9 @@ import hu.icellmobilsoft.coffee.tool.gson.JsonUtil;
  * </pre>
  *
  * <br>
+ * 
+ * @param <T>
+ *            message body type
  *
  * @see XmlMessageBodyReaderBase
  * @author m.petrenyi
@@ -75,6 +78,13 @@ public abstract class JsonMessageBodyReaderBase<T> implements MessageBodyReader<
 
     @Inject
     private IJsonRequestVersionReader jsonRequestVersionReader;
+
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public JsonMessageBodyReaderBase() {
+        super();
+    }
 
     /**
      * {@inheritDoc}
@@ -139,10 +149,8 @@ public abstract class JsonMessageBodyReaderBase<T> implements MessageBodyReader<
         try {
             return jsonRequestVersionReader.readFromJSON(object);
         } catch (TechnicalException e) {
-            throw new XsdProcessingException(
-                    CoffeeFaultType.INVALID_INPUT,
-                    MessageFormat.format("Error in reading object [class: {0}]: [{1}]", object.getClass(), e.getLocalizedMessage()),
-                    e);
+            throw new XsdProcessingException(CoffeeFaultType.INVALID_INPUT,
+                    MessageFormat.format("Error in reading object [class: {0}]: [{1}]", object.getClass(), e.getLocalizedMessage()), e);
         }
     }
 

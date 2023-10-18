@@ -79,6 +79,13 @@ public class ProjectStageProducer {
     private ProjectStage projectStage;
 
     /**
+     * Default constructor, constructs a new object.
+     */
+    public ProjectStageProducer() {
+        super();
+    }
+
+    /**
      * We can only produce @Dependent scopes since an enum is final.
      * 
      * @return current ProjectStage

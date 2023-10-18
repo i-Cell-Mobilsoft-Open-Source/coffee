@@ -24,7 +24,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import jakarta.enterprise.inject.Vetoed;
 import jakarta.ws.rs.core.Cookie;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.MultivaluedMap;
@@ -35,7 +34,6 @@ import jakarta.ws.rs.core.MultivaluedMap;
  * @author imre.scheffer
  * @since 1.0.0
  */
-@Vetoed
 public class RequestData {
 
     private Map<String, Cookie> cookies;
@@ -55,6 +53,13 @@ public class RequestData {
     private Map<String, List<String>> queryParameters;
 
     private byte[] body;
+
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public RequestData() {
+        super();
+    }
 
     /**
      * Getter for the field <code>cookies</code>.

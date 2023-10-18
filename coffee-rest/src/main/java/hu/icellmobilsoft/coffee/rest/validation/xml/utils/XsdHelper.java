@@ -60,6 +60,13 @@ public class XsdHelper implements IXsdHelper {
     private AppLogger log;
 
     /**
+     * Default constructor, constructs a new object.
+     */
+    public XsdHelper() {
+        super();
+    }
+
+    /**
      * {@inheritDoc}
      *
      * Létrehoz egy osztályhoz egy JAXBContext-et, cache-eli a választ.

@@ -55,6 +55,13 @@ public class PublicCatalogResolver implements LSResourceResolver, IXsdResourceRe
     private AppLogger log;
 
     /**
+     * Default constructor, constructs a new object.
+     */
+    public PublicCatalogResolver() {
+        super();
+    }
+
+    /**
      * Allow the application to resolve external resources.
      * 
      * @param publicId

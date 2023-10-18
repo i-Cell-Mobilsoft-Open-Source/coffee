@@ -78,6 +78,13 @@ public class BaseApacheHttpClient {
     public final static String APPLICATION_JSON = "application/json";
 
     /**
+     * Default constructor, constructs a new object.
+     */
+    public BaseApacheHttpClient() {
+        super();
+    }
+
+    /**
      * Method called before everything else.
      * 
      * @param request

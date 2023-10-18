@@ -49,6 +49,13 @@ import hu.icellmobilsoft.coffee.tool.utils.marshalling.MarshallingUtil;
 @Produces(MediaType.APPLICATION_OCTET_STREAM)
 public class OctetStreamBaseResultTypeXmlMessageBodyWriter implements MessageBodyWriter<BaseResultType> {
 
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public OctetStreamBaseResultTypeXmlMessageBodyWriter() {
+        super();
+    }
+
     @Override
     public boolean isWriteable(Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType) {
         return BaseResultType.class.isAssignableFrom(type);

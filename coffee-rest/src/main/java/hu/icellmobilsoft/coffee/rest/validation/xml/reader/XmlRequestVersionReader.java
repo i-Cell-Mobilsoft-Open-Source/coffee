@@ -62,6 +62,13 @@ public class XmlRequestVersionReader implements IXmlRequestVersionReader {
     private static final String STREAM_EXCEPTION = "Premature end of file";
 
     /**
+     * Default constructor, constructs a new object.
+     */
+    public XmlRequestVersionReader() {
+        super();
+    }
+
+    /**
      * {@inheritDoc}
      *
      * header.requestVersion valaszt adja vissza. Mas parameterek kiolvasara is alkalmas, de jelenleg nincs ra szukseg

@@ -46,6 +46,13 @@ public abstract class AbstractBaseAction {
     private AppLogger log;
 
     /**
+     * Default constructor, constructs a new object.
+     */
+    public AbstractBaseAction() {
+        super();
+    }
+
+    /**
      * Creates a new {@link ContextType} for responses.
      *
      * @return {@code ContextType} object

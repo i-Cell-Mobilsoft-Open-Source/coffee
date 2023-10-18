@@ -39,6 +39,13 @@ import hu.icellmobilsoft.coffee.rest.log.annotation.enumeration.LogSpecifierTarg
 public class RestLoggerUtil {
 
     /**
+     * Default constructor, constructs a new object.
+     */
+    public RestLoggerUtil() {
+        super();
+    }
+
+    /**
      * Returns max target entity log size for requestContext.
      *
      * @param requestContext

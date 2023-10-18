@@ -24,8 +24,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import jakarta.enterprise.inject.Vetoed;
-
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.microprofile.openapi.OASFilter;
 import org.eclipse.microprofile.openapi.models.OpenAPI;
@@ -44,8 +42,14 @@ import hu.icellmobilsoft.coffee.rest.filter.util.ApiResponseUtil;
  * @author speter555
  * @since 1.11.0
  */
-@Vetoed
 public class OpenAPIFilter implements OASFilter {
+
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public OpenAPIFilter() {
+        super();
+    }
 
     /**
      * Az mp-openapi a pattern-nel rendelkező, de nem String típusu objektumokat (pl.dátum típusok) object type-nak veszi, így nem generálja le a

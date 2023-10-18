@@ -37,6 +37,13 @@ public class BaseAppContainer {
     private BaseRequestContainer baseRequestContainer;
 
     /**
+     * Default constructor, constructs a new object.
+     */
+    public BaseAppContainer() {
+        super();
+    }
+
+    /**
      * Getter for the field <code>baseRequestContainer</code>.
      * 
      * @return {@code BaseRequestContainer}

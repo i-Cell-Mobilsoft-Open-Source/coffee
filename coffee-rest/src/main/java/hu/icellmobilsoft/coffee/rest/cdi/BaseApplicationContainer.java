@@ -46,6 +46,13 @@ public class BaseApplicationContainer {
     private Map<String, Object> objectMap;
 
     /**
+     * Default constructor, constructs a new object.
+     */
+    public BaseApplicationContainer() {
+        super();
+    }
+
+    /**
      * Object map
      *
      * @return object map

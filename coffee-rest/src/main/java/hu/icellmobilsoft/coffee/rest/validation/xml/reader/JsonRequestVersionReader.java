@@ -40,6 +40,13 @@ import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 @Dependent
 public class JsonRequestVersionReader implements IJsonRequestVersionReader {
 
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public JsonRequestVersionReader() {
+        super();
+    }
+
     /** {@inheritDoc} */
     @Override
     public <T> String readFromJSON(T dto) throws TechnicalException {
