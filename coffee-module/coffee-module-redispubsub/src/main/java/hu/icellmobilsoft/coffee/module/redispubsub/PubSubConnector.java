@@ -125,6 +125,13 @@ public class PubSubConnector implements IncomingConnectorFactory, OutgoingConnec
     private final List<PubSubSource> publishers = new CopyOnWriteArrayList<>();
 
     /**
+     * Default constructor, constructs a new object.
+     */
+    public PubSubConnector() {
+        super();
+    }
+
+    /**
      * Initialize executor service.
      *
      * @throws NamingException

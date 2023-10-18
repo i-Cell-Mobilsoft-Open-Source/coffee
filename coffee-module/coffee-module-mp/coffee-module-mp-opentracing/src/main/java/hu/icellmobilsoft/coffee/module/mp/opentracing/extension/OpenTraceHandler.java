@@ -45,6 +45,13 @@ public class OpenTraceHandler implements IOpenTraceHandler {
     @Inject
     private OpenTraceResolver openTraceResolver;
 
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public OpenTraceHandler() {
+        super();
+    }
+
     @Override
     public <T> T runWithTrace(Supplier<T> function, Traced traced, String operation) {
         Tracer tracer = openTraceResolver.resolveTracer();

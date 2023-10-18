@@ -53,6 +53,13 @@ public class OpenTraceErrorResponseFilter implements ContainerResponseFilter {
     private Tracer configuredTracer;
 
     /**
+     * Default constructor, constructs a new object.
+     */
+    public OpenTraceErrorResponseFilter() {
+        super();
+    }
+
+    /**
      * {@inheritDoc}
      * <p>
      * Add error tag if http status &gt;= 500

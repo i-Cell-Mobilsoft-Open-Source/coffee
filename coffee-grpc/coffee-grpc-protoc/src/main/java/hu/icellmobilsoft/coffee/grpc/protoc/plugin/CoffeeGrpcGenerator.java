@@ -57,6 +57,13 @@ public class CoffeeGrpcGenerator extends Generator {
     private static final int METHOD_NUMBER_OF_PATHS = 4;
     // public static final String CLASS_PREFIX = "Mutiny";
 
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public CoffeeGrpcGenerator() {
+        super();
+    }
+
     private String getServiceJavaDocPrefix() {
         return "    ";
     }

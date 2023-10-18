@@ -19,7 +19,6 @@
  */
 package hu.icellmobilsoft.coffee.model.security;
 
-import jakarta.enterprise.inject.Vetoed;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
@@ -33,12 +32,18 @@ import hu.icellmobilsoft.coffee.model.base.AbstractIdentifiedAuditEntity;
  *
  * @since 1.0.0
  */
-@Vetoed
 @Entity
 @Table(name = "security_user_security_role")
 public class SecurityUserSecurityRole extends AbstractIdentifiedAuditEntity {
 
     private static final long serialVersionUID = 1L;
+
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public SecurityUserSecurityRole() {
+        super();
+    }
 
     /**
      * security role FK

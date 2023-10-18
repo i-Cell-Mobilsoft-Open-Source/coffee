@@ -76,6 +76,13 @@ public class ExceptionHandler {
     private static final ExceptionHandler exceptionHandler = new ExceptionHandler();
 
     /**
+     * Default constructor, constructs a new object.
+     */
+    public ExceptionHandler() {
+        super();
+    }
+
+    /**
      * Get exception handler instance
      * 
      * @return {@link ExceptionHandler}
