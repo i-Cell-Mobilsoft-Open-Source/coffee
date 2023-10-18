@@ -10,3 +10,10 @@ Korábban a mező értékével dolgozott ilyen esetekben is, így pl logozás es
 ==== Átállás
 
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+=== coffee-tool
+
+** Új `ParamValidatorUtil` segédosztály publikus függvények paramétereinek egységes validációjára.
+==== Átállás
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
