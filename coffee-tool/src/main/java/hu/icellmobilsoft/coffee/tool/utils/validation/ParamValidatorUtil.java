@@ -33,7 +33,7 @@ import hu.icellmobilsoft.coffee.dto.exception.InvalidParameterException;
  * Utility for function parameter validation.
  *
  * @author attila.kiss
- * @since 2.3.0
+ * @since 1.15.0
  */
 public class ParamValidatorUtil {
 
