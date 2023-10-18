@@ -108,6 +108,13 @@ public class BatchService {
     private TimeZone dbTimeZone;
 
     /**
+     * Default constructor, constructs a new object.
+     */
+    public BatchService() {
+        super();
+    }
+
+    /**
      * input validalas.
      * 
      * @param entities

@@ -77,6 +77,13 @@ public class RepositoryExtension implements Extension {
     private final ArrayList<Class<?>> repositoryClasses = new ArrayList<Class<?>>();
 
     /**
+     * Default constructor, constructs a new object.
+     */
+    public RepositoryExtension() {
+        super();
+    }
+
+    /**
      * Collect repository classes by {@link Repository} stereotype
      * 
      * @param <X>

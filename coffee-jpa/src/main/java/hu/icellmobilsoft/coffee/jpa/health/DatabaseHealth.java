@@ -58,6 +58,13 @@ public class DatabaseHealth {
     private ExecutorService executor;
 
     /**
+     * Default constructor, constructs a new object.
+     */
+    public DatabaseHealth() {
+        super();
+    }
+
+    /**
      * init executor
      */
     @PostConstruct

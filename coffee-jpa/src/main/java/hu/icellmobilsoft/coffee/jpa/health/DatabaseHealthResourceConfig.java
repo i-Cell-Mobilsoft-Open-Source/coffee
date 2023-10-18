@@ -35,6 +35,13 @@ public class DatabaseHealthResourceConfig {
     private Long connectTimeoutSec;
 
     /**
+     * Default constructor, constructs a new object.
+     */
+    public DatabaseHealthResourceConfig() {
+        super();
+    }
+
+    /**
      * Gets the the health check builder name e.g. "postgres"
      * 
      * @return health check builder name

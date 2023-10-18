@@ -33,19 +33,26 @@ import java.util.List;
  */
 public class PagingResult<T> {
 
-	private List<T> results;
-	private QueryMetaData metaData;
+    private List<T> results;
+    private QueryMetaData metaData;
 
-	/**
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public PagingResult() {
+        super();
+    }
+
+    /**
      * <p>
      * Getter for the field <code>results</code>.
      * </p>
      *
      * @return paging result list
      */
-	public List<T> getResults() {
-		return results;
-	}
+    public List<T> getResults() {
+        return results;
+    }
 
     /**
      * <p>
@@ -55,9 +62,9 @@ public class PagingResult<T> {
      * @param results
      *            paging result list
      */
-	public void setResults(List<T> results) {
-		this.results = results;
-	}
+    public void setResults(List<T> results) {
+        this.results = results;
+    }
 
     /**
      * <p>
@@ -66,9 +73,9 @@ public class PagingResult<T> {
      * 
      * @return query metadata
      */
-	public QueryMetaData getDetails() {
-		return metaData;
-	}
+    public QueryMetaData getDetails() {
+        return metaData;
+    }
 
     /**
      * <p>
@@ -78,7 +85,7 @@ public class PagingResult<T> {
      * @param metaData
      *            query metadata
      */
-	public void setDetails(QueryMetaData metaData) {
-		this.metaData = metaData;
-	}
+    public void setDetails(QueryMetaData metaData) {
+        this.metaData = metaData;
+    }
 }

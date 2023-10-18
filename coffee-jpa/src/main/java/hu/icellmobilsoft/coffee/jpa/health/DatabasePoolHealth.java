@@ -56,6 +56,13 @@ public class DatabasePoolHealth {
     private MetricRegistry vendorRegistry;
 
     /**
+     * Default constructor, constructs a new object.
+     */
+    public DatabasePoolHealth() {
+        super();
+    }
+
+    /**
      * Checking the database connection pool usage
      * 
      * @param builderName
