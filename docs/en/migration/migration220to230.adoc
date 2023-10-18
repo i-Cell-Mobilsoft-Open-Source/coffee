@@ -11,6 +11,14 @@ It used the value of the field in such cases, for e.g. it read the stream in cas
 
 Changes are backwards compatible doesnt need any migration.
 
+=== coffee-tool
+
+** New `ParamValidatorUtil` helper class for uniform validation of parameters of public functions.
+
+==== Migration
+
+Changes are backwards compatible doesnt need any migration.
+
 === coffee-module-etcd
 
 ** The configuration parameters for establishing the ETCD connection used in EtcdClientBuilder have been extracted as microprofile-config parameters.

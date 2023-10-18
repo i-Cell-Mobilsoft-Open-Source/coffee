@@ -11,6 +11,13 @@ Korábban a mező értékével dolgozott ilyen esetekben is, így pl logozás es
 
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
 
+=== coffee-tool
+
+** Új `ParamValidatorUtil` segédosztály publikus függvények paramétereinek egységes validációjára.
+==== Átállás
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
 === coffee-module-etcd
 
 ** Az EtcdClientBuilder-ben használt ETCD kapcsolat kiépítésére szolgáló konfigurációs paraméterek kivezetésre kerültek microprofile-config paraméterként.
