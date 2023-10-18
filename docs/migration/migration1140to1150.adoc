@@ -5,6 +5,7 @@ coff:ee v1.14.0 -> v1.15.0 migrációs leírás, újdonságok, változások leí
 === coffee-tool
 
 ** JsonUtil használatával is lehetséges a generikus típusok deszerializációja.
+** Új `ParamValidatorUtil` segédosztály publikus függvények paramétereinek egységes validációjára.
 
 ==== Átállás
 
