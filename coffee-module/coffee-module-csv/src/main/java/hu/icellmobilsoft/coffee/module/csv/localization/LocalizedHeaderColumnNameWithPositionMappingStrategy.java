@@ -26,6 +26,8 @@ import jakarta.inject.Inject;
 
 import com.opencsv.bean.AbstractBeanField;
 import com.opencsv.bean.BeanField;
+import com.opencsv.bean.HeaderColumnNameMappingStrategy;
+import com.opencsv.bean.HeaderColumnNameMappingStrategyBuilder;
 import com.opencsv.exceptions.CsvBadConverterException;
 
 import hu.icellmobilsoft.coffee.module.csv.strategy.HeaderColumnNameWithPositionMappingStrategy;
@@ -48,6 +50,25 @@ public class LocalizedHeaderColumnNameWithPositionMappingStrategy<T> extends Hea
     private LocalizedMessage localizedMessage;
 
     private String language;
+
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public LocalizedHeaderColumnNameWithPositionMappingStrategy() {
+        super();
+    }
+
+    /**
+     * Constructor to allow setting options for header name mapping. Not considered stable. As new options are introduced for the mapping strategy,
+     * they will be introduced here. You are encouraged to use {@link HeaderColumnNameMappingStrategyBuilder}.
+     * 
+     * @param forceCorrectRecordLength
+     *            If set, every record will be shortened or lengthened to match the number of headers
+     * @see HeaderColumnNameMappingStrategy
+     */
+    public LocalizedHeaderColumnNameWithPositionMappingStrategy(boolean forceCorrectRecordLength) {
+        super(forceCorrectRecordLength);
+    }
 
     @Override
     protected String getFieldName(Field field) {

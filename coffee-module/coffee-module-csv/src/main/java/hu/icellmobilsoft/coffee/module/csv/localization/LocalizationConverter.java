@@ -19,11 +19,12 @@
  */
 package hu.icellmobilsoft.coffee.module.csv.localization;
 
+import java.lang.reflect.Field;
 import java.text.MessageFormat;
-
-import jakarta.enterprise.inject.Vetoed;
+import java.util.Locale;
 
 import com.opencsv.bean.AbstractBeanField;
+import com.opencsv.bean.CsvConverter;
 import com.opencsv.exceptions.CsvConstraintViolationException;
 import com.opencsv.exceptions.CsvDataTypeMismatchException;
 import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
@@ -42,10 +43,36 @@ import hu.icellmobilsoft.coffee.module.localization.LocalizedMessage;
  * @author martin.nagy
  * @since 1.8.0
  */
-@Vetoed
 public class LocalizationConverter<T, I> extends AbstractBeanField<T, I> {
     private LocalizedMessage localizedMessage;
     private String language;
+
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public LocalizationConverter() {
+        super();
+    }
+
+    /**
+     * Parametrized constructor from parent
+     * 
+     * @param type
+     *            The type of the class in which this field is found. This is the type as instantiated by opencsv, and not necessarily the type in
+     *            which the field is declared in the case of inheritance.
+     * @param field
+     *            A {@link java.lang.reflect.Field} object.
+     * @param required
+     *            Whether or not this field is required in input
+     * @param errorLocale
+     *            The errorLocale to use for error messages.
+     * @param converter
+     *            The converter to be used to perform the actual data conversion
+     * @see AbstractBeanField
+     */
+    public LocalizationConverter(Class<?> type, Field field, boolean required, Locale errorLocale, CsvConverter converter) {
+        super(type, field, required, errorLocale, converter);
+    }
 
     @Override
     protected Object convert(String value) throws CsvDataTypeMismatchException, CsvConstraintViolationException {

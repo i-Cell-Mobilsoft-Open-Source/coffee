@@ -57,6 +57,13 @@ public class RawAction {
     private TemplateDataService templateDataService;
 
     /**
+     * Default constructor, constructs a new object.
+     */
+    public RawAction() {
+        super();
+    }
+
+    /**
      * Returns raw template data from DB.
      *
      * @param templateDataId

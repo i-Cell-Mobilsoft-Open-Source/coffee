@@ -19,8 +19,6 @@
  */
 package hu.icellmobilsoft.coffee.module.mp.restclient.exception;
 
-import jakarta.enterprise.inject.Vetoed;
-
 import org.apache.commons.lang3.EnumUtils;
 
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
@@ -32,8 +30,14 @@ import hu.icellmobilsoft.coffee.se.logging.Logger;
  * @author adam.magyari
  * @since 1.2.0
  */
-@Vetoed
 public class FaultTypeParser {
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public FaultTypeParser() {
+        super();
+    }
+
     /**
      * Parse fault type String into an implementation of {@link hu.icellmobilsoft.coffee.dto.error.IFaultType}. If none match returns
      * {@link CoffeeFaultType#OPERATION_FAILED}.
