@@ -24,8 +24,6 @@ import java.lang.management.ManagementFactory;
 import java.util.Date;
 import java.util.Random;
 
-import jakarta.enterprise.inject.Vetoed;
-
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.HibernateException;
 import org.hibernate.engine.spi.SharedSessionContractImplementor;
@@ -39,8 +37,14 @@ import hu.icellmobilsoft.coffee.model.base.IIdentifiedEntity;
  * @author imre.scheffer
  * @since 1.0.0
  */
-@Vetoed
 public class EntityIdGenerator implements IdentifierGenerator {
+
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public EntityIdGenerator() {
+        super();
+    }
 
     /** {@inheritDoc} */
     @Override

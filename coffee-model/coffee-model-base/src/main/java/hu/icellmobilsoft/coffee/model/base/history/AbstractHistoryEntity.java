@@ -19,7 +19,6 @@
  */
 package hu.icellmobilsoft.coffee.model.base.history;
 
-import jakarta.enterprise.inject.Vetoed;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.EnumType;
@@ -37,11 +36,17 @@ import hu.icellmobilsoft.coffee.model.base.history.enums.State;
  * @author imre.scheffer
  * @since 1.0.0
  */
-@Vetoed
 @MappedSuperclass
 public abstract class AbstractHistoryEntity extends AbstractAuditEntity<String> {
 
     private static final long serialVersionUID = 1L;
+
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public AbstractHistoryEntity() {
+        super();
+    }
 
     /**
      * State of the entity

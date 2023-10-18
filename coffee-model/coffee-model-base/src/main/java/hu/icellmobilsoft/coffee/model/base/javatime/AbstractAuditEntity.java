@@ -22,6 +22,11 @@ package hu.icellmobilsoft.coffee.model.base.javatime;
 import java.io.Serializable;
 import java.time.OffsetDateTime;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.EntityListeners;
+import jakarta.persistence.MappedSuperclass;
+import jakarta.validation.constraints.NotNull;
+
 import hu.icellmobilsoft.coffee.model.base.AbstractEntity;
 import hu.icellmobilsoft.coffee.model.base.IAuditEntity;
 import hu.icellmobilsoft.coffee.model.base.annotation.CreatedBy;
@@ -30,24 +35,27 @@ import hu.icellmobilsoft.coffee.model.base.audit.AuditProvider;
 import hu.icellmobilsoft.coffee.model.base.javatime.annotation.CreatedOn;
 import hu.icellmobilsoft.coffee.model.base.javatime.annotation.ModifiedOn;
 import hu.icellmobilsoft.coffee.model.base.javatime.listener.TimestampsProvider;
-import jakarta.enterprise.inject.Vetoed;
-import jakarta.persistence.Column;
-import jakarta.persistence.EntityListeners;
-import jakarta.persistence.MappedSuperclass;
-import jakarta.validation.constraints.NotNull;
 
 /**
  * Base class for audited (X__INSDATE, X__MODDATE, X__INSUSER, X__MODUSER) entities.
  *
+ * @param <T>
+ *            The type of the creator and modifier user
  * @author imre.scheffer
  * @since 1.0.0
  */
-@Vetoed
 @MappedSuperclass
 @EntityListeners({ TimestampsProvider.class, AuditProvider.class })
 public abstract class AbstractAuditEntity<T extends Serializable> extends AbstractEntity implements IAuditEntity<OffsetDateTime, T> {
 
     private static final long serialVersionUID = 1L;
+
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public AbstractAuditEntity() {
+        super();
+    }
 
     /**
      * Creation date of the entity

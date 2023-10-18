@@ -91,6 +91,13 @@ public class RedisStreamConsumerExecutor implements IRedisStreamConsumerExecutor
 
     private Bean<? super IRedisStreamBaseConsumer> consumerBean;
 
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public RedisStreamConsumerExecutor() {
+        super();
+    }
+
     @Override
     public void init(String redisConfigKey, String group, Bean<? super IRedisStreamBaseConsumer> consumerBean) {
         this.redisConfigKey = redisConfigKey;

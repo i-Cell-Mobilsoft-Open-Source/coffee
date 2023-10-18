@@ -57,6 +57,13 @@ public class ConsumerStarterExtension implements Extension {
     private ManagedExecutorService managedExecutorService;
 
     /**
+     * Default constructor, constructs a new object.
+     */
+    public ConsumerStarterExtension() {
+        super();
+    }
+
+    /**
      * After deployment validation
      * 
      * @param adv

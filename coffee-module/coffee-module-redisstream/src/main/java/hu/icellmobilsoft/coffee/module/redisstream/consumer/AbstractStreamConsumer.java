@@ -34,6 +34,13 @@ import redis.clients.jedis.resps.StreamEntry;
 public abstract class AbstractStreamConsumer extends BaseStreamConsumer implements IRedisStreamConsumer {
 
     /**
+     * Default constructor, constructs a new object.
+     */
+    public AbstractStreamConsumer() {
+        super();
+    }
+
+    /**
      * {@inheritDoc}
      * 
      * <br>

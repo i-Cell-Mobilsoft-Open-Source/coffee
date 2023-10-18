@@ -41,6 +41,13 @@ import hu.icellmobilsoft.coffee.tool.utils.annotation.AnnotationUtil;
 public class RedisStreamPublisherProducer {
 
     /**
+     * Default constructor, constructs a new object.
+     */
+    public RedisStreamPublisherProducer() {
+        super();
+    }
+
+    /**
      * Producer for initializing RedisStreamHandler
      * 
      * @param injectionPoint

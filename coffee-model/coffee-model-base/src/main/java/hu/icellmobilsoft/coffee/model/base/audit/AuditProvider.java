@@ -25,6 +25,13 @@ import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Set;
 
+import jakarta.enterprise.context.Dependent;
+import jakarta.enterprise.inject.spi.Bean;
+import jakarta.enterprise.inject.spi.BeanManager;
+import jakarta.inject.Inject;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
+
 import org.apache.commons.lang3.tuple.Pair;
 
 import hu.icellmobilsoft.coffee.model.base.AbstractProvider;
@@ -32,12 +39,6 @@ import hu.icellmobilsoft.coffee.model.base.annotation.CreatedBy;
 import hu.icellmobilsoft.coffee.model.base.annotation.CurrentUser;
 import hu.icellmobilsoft.coffee.model.base.annotation.ModifiedBy;
 import hu.icellmobilsoft.coffee.model.base.exception.ProviderException;
-import jakarta.enterprise.context.Dependent;
-import jakarta.enterprise.inject.spi.Bean;
-import jakarta.enterprise.inject.spi.BeanManager;
-import jakarta.inject.Inject;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.PreUpdate;
 
 /**
  * Persist entity @CreatedBy property before persist with the value provided by @CurrentUser
@@ -53,6 +54,13 @@ public class AuditProvider extends AbstractProvider {
 
     @Inject
     private BeanManager manager;
+
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public AuditProvider() {
+        super();
+    }
 
     /**
      * Persist entity @CreatedBy (@ModifiedBy) property before persist with the value provided by @CurrentUser

@@ -21,13 +21,6 @@ package hu.icellmobilsoft.coffee.model.base;
 
 import java.util.Date;
 
-import hu.icellmobilsoft.coffee.model.base.annotation.CreatedBy;
-import hu.icellmobilsoft.coffee.model.base.annotation.ModifiedBy;
-import hu.icellmobilsoft.coffee.model.base.audit.AuditProvider;
-import hu.icellmobilsoft.coffee.model.base.javatime.annotation.CreatedOn;
-import hu.icellmobilsoft.coffee.model.base.javatime.annotation.ModifiedOn;
-import hu.icellmobilsoft.coffee.model.base.javatime.listener.TimestampsProvider;
-import jakarta.enterprise.inject.Vetoed;
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;
@@ -35,18 +28,34 @@ import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import jakarta.validation.constraints.NotNull;
 
+import hu.icellmobilsoft.coffee.model.base.annotation.CreatedBy;
+import hu.icellmobilsoft.coffee.model.base.annotation.ModifiedBy;
+import hu.icellmobilsoft.coffee.model.base.audit.AuditProvider;
+import hu.icellmobilsoft.coffee.model.base.javatime.annotation.CreatedOn;
+import hu.icellmobilsoft.coffee.model.base.javatime.annotation.ModifiedOn;
+import hu.icellmobilsoft.coffee.model.base.javatime.listener.TimestampsProvider;
+
 /**
  * Base class for audited entities.
+ * 
+ * @param <T>
+ *            The type of the creator and modifier user
  *
  * @author imre.scheffer
  * @since 1.0.0
  */
-@Vetoed
 @MappedSuperclass
 @EntityListeners({ TimestampsProvider.class, AuditProvider.class })
 public abstract class AbstractAuditEntity<T> extends AbstractEntity implements IAuditEntity<Date, T> {
 
     private static final long serialVersionUID = 1L;
+
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public AbstractAuditEntity() {
+        super();
+    }
 
     /**
      * Creation date of the entity

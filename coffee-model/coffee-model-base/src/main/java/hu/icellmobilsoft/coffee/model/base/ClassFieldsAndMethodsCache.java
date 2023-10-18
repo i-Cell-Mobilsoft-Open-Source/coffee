@@ -33,6 +33,11 @@ import org.apache.commons.lang3.tuple.Pair;
 /**
  * Cache for fields and methods of entity classes used in {@link AbstractProvider}
  *
+ * @param <K>
+ *            the type of keys maintained by this map
+ * @param <V>
+ *            the type of mapped values
+ *
  * @author zsolt.vasi
  * @since 2.0.0
  */
