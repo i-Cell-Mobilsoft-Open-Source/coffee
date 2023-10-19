@@ -17,3 +17,11 @@ A változtatások nem eredményeznek átállási munkálatokat, visszafelé komp
 ==== Átállás
 
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+=== coffee-module-etcd
+
+** Az EtcdClientBuilder-ben használt ETCD kapcsolat kiépítésére szolgáló konfigurációs paraméterek kivezetésre kerültek microprofile-config paraméterként.
+
+==== Átállás
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.

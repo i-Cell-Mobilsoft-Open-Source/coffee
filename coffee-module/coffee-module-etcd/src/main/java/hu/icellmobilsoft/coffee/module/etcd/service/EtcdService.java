@@ -35,8 +35,8 @@ import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.dto.exception.InvalidParameterException;
 import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
+import hu.icellmobilsoft.coffee.module.etcd.config.EtcdConfig;
 import hu.icellmobilsoft.coffee.module.etcd.repository.EtcdRepository;
-import hu.icellmobilsoft.coffee.module.etcd.util.EtcdClientBuilderUtil;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
 import hu.icellmobilsoft.coffee.tool.utils.string.StringHelper;
 import hu.icellmobilsoft.coffee.tool.utils.string.StringUtil;
@@ -54,6 +54,8 @@ import io.etcd.jetcd.kv.PutResponse;
  */
 @Vetoed
 public class EtcdService {
+
+    private static final String KEY_IS_BLANK_MSG = "key is blank!";
 
     private static Logger log = Logger.getLogger(EtcdService.class);
 
@@ -108,13 +110,13 @@ public class EtcdService {
      */
     public Optional<String> get(String key) throws BaseException {
         if (StringUtils.isBlank(key)) {
-            throw new InvalidParameterException("key is blank!");
+            throw new InvalidParameterException(KEY_IS_BLANK_MSG);
         }
         checkInit();
 
         try {
             ByteSequence bsKey = ByteSequence.from(key, StandardCharsets.UTF_8);
-            GetResponse response = etcdRepository.get(bsKey).get(EtcdClientBuilderUtil.CONNECT_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS);
+            GetResponse response = etcdRepository.get(bsKey).get(EtcdConfig.CONNECT_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS);
             if (response.getCount() < 1) {
                 throw new BONotFoundException(MessageFormat.format("Etcd data not found for key [{0}], response: [{1}]", key, response));
             }
@@ -122,8 +124,11 @@ public class EtcdService {
 
             if (log.isTraceEnabled()) {
                 String responseStr = replaceSensitiveDataInResponseString(response);
-                log.trace("etcd: getting key [{0}], value [{1}], response: [{2}]", key,
-                        value.isPresent() ? StringHelper.maskPropertyValue(key, value.get()) : "null", responseStr);
+                log.trace(
+                        "etcd: getting key [{0}], value [{1}], response: [{2}]",
+                        key,
+                        value.isPresent() ? StringHelper.maskPropertyValue(key, value.get()) : "null",
+                        responseStr);
             }
             return value;
         } catch (BaseException e) {
@@ -136,7 +141,7 @@ public class EtcdService {
 
     /**
      * Converts the passed nullable byte sequence to {@code Optional<String>}
-     * 
+     *
      * @param byteSequence
      *            the object to convert
      * @return the result of the conversion
@@ -147,7 +152,7 @@ public class EtcdService {
 
     /**
      * Set value to ETCD. This call {@link EtcdRepository#put(ByteSequence, ByteSequence)}
-     * 
+     *
      * @param key
      *            ETCD key
      * @param value
@@ -157,7 +162,7 @@ public class EtcdService {
      */
     public void set(String key, String value) throws BaseException {
         if (StringUtils.isBlank(key)) {
-            throw new InvalidParameterException("key is blank!");
+            throw new InvalidParameterException(KEY_IS_BLANK_MSG);
         }
         checkInit();
 
@@ -172,15 +177,15 @@ public class EtcdService {
         } catch (BaseException e) {
             throw e;
         } catch (Exception e) {
-            String msg = MessageFormat.format("Communication exception on Set [{0}] key with [{1}] value: [{2}]", key, value,
-                    e.getLocalizedMessage());
+            String msg = MessageFormat
+                    .format("Communication exception on Set [{0}] key with [{1}] value: [{2}]", key, value, e.getLocalizedMessage());
             throw new TechnicalException(CoffeeFaultType.REPOSITORY_FAILED, msg, e);
         }
     }
 
     /**
      * Get value map from ETCD. This call {@link EtcdRepository#getList(ByteSequence, ByteSequence)}
-     * 
+     *
      * @param startKeyStr
      *            search starting key
      * @param endKeyStr
@@ -207,7 +212,10 @@ public class EtcdService {
                 String stringKey = response.getKvs().get(i).getKey().toString(StandardCharsets.UTF_8);
                 Optional<String> value = toOptional(response.getKvs().get(i).getValue());
                 if (log.isTraceEnabled()) {
-                    log.trace("etcd: [{0}]. key: [{1}], value: [{2}]", i, stringKey,
+                    log.trace(
+                            "etcd: [{0}]. key: [{1}], value: [{2}]",
+                            i,
+                            stringKey,
                             value.isPresent() ? StringHelper.maskPropertyValue(stringKey, value.get()) : "null");
                 }
                 etcdDataList.put(stringKey, value);
@@ -218,7 +226,10 @@ public class EtcdService {
             }
             return etcdDataList;
         } catch (Exception e) {
-            String msg = MessageFormat.format("Communication exception on Get list by [{0}] startKey and [{1}] endKey: [{2}]", startKeyStr, endKeyStr,
+            String msg = MessageFormat.format(
+                    "Communication exception on Get list by [{0}] startKey and [{1}] endKey: [{2}]",
+                    startKeyStr,
+                    endKeyStr,
                     e.getLocalizedMessage());
             throw new TechnicalException(CoffeeFaultType.REPOSITORY_FAILED, msg, e);
         }
@@ -236,7 +247,7 @@ public class EtcdService {
      */
     public void delete(String key) throws BaseException {
         if (StringUtils.isBlank(key)) {
-            throw new InvalidParameterException("key is blank!");
+            throw new InvalidParameterException(KEY_IS_BLANK_MSG);
         }
         checkInit();
 

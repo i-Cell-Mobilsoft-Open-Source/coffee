@@ -19,3 +19,10 @@ Changes are backwards compatible doesnt need any migration.
 
 Changes are backwards compatible doesnt need any migration.
 
+=== coffee-module-etcd
+
+** The configuration parameters for establishing the ETCD connection used in EtcdClientBuilder have been extracted as microprofile-config parameters.
+
+==== Migration
+
+Changes are backwards compatible doesnt need any migration.

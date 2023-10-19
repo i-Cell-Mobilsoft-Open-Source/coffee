@@ -19,10 +19,12 @@
  */
 package hu.icellmobilsoft.coffee.module.etcd.config;
 
+import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 
 import jakarta.enterprise.context.Dependent;
 
+import org.apache.commons.lang3.EnumUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.microprofile.config.Config;
 import org.eclipse.microprofile.config.spi.ConfigProviderResolver;
@@ -38,27 +40,82 @@ import hu.icellmobilsoft.coffee.tool.utils.config.ConfigUtil;
 @Dependent
 public class DefaultEtcdConfigImpl implements EtcdConfig {
 
-    /**
-     * Configurationa key for ETCD URL
-     */
-    public static final String URL_KEY = "coffee.etcd.default.url";
-
     /** {@inheritDoc} */
     @Override
     public String[] getUrl() {
-        String url = "";
-        Optional<String> optUrl = ConfigUtil.getInstance().defaultConfig().getOptionalValue(URL_KEY, String.class);
-        if (optUrl.isEmpty()) {
+        String url = getValue(URL_KEY, "http://localhost:2379", String.class);
+        return StringUtils.split(url, ",");
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public long getConnectionTimeout() {
+        return getValue(CONNECTION_TIMEOUT_KEY, 500L, Long.class);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public long getRetryDelay() {
+        return getValue(RETRY_DELAY, 500L, Long.class);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public long getRetryMaxDelay() {
+        return getValue(RETRY_MAX_DELAY, 2500L, Long.class);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public long getKeepaliveTime() {
+        return getValue(KEEPALIVE_TIME, 30L, Long.class);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public long getKeepaliveTimeout() {
+        return getValue(KEEPALIVE_TIMEOUT, 10L, Long.class);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public boolean isKeepaliveWithoutCalls() {
+        return getValue(KEEPALIVE_WITHOUT_CALLS, Boolean.TRUE, Boolean.class);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public ChronoUnit getRetryChronoUnit() {
+        String chronoUnit = getValue(RETRY_CHRONO_UNIT, "MILLIS", String.class);
+        return EnumUtils.getEnum(ChronoUnit.class, chronoUnit, ChronoUnit.MILLIS);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public long getRetryMaxDuration() {
+        return getValue(RETRY_MAX_DURATION, 10L, Long.class);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public boolean isWaitForReady() {
+        return getValue(WAIT_FOR_READY, Boolean.TRUE, Boolean.class);
+    }
+
+    private static <T> T getValue(String key, T defaultValue, Class<T> type) {
+        T value;
+        Optional<T> optValue = ConfigUtil.getInstance().defaultConfig().getOptionalValue(key, type);
+        if (optValue.isEmpty()) {
             Config config = ConfigProviderResolver.instance()
                     .getBuilder()
                     .forClassLoader(DefaultEtcdConfigImpl.class.getClassLoader())
                     .addDefaultSources()
                     .build();
-            url = config.getOptionalValue(URL_KEY, String.class).orElse("http://localhost:2379");
+            value = config.getOptionalValue(key, type).orElse(defaultValue);
         } else {
-            url = optUrl.get();
+            value = optValue.get();
         }
-        return StringUtils.split(url, ",");
+        return value;
     }
 
 }
