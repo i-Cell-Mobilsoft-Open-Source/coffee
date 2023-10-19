@@ -47,6 +47,13 @@ import io.grpc.ServerInterceptor;
 public class ErrorHandlerInterceptor implements ServerInterceptor {
 
     /**
+     * Default constructor, constructs a new object.
+     */
+    public ErrorHandlerInterceptor() {
+        super();
+    }
+
+    /**
      * Intercepts incoming requests and handles any exceptions thrown during the request handling process.
      *
      * <p>

@@ -35,6 +35,13 @@ import hu.icellmobilsoft.coffee.model.base.javatime.AbstractAuditEntity;
  */
 public abstract class DtoAuditConverter<E extends AbstractAuditEntity<String>, D extends AbstractAuditDtoType> extends DtoConverter<E, D> {
 
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public DtoAuditConverter() {
+        super();
+    }
+
     /** {@inheritDoc} */
     @Override
     public void convert(D destinationDto, E sourceEntity) throws BaseException {

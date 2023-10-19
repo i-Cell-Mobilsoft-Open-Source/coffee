@@ -36,6 +36,13 @@ import hu.icellmobilsoft.coffee.model.base.AbstractEntity;
  */
 public abstract class DtoConverter<E extends AbstractEntity, D extends AbstractDtoType> implements Converter<E, D> {
 
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public DtoConverter() {
+        super();
+    }
+
     /** {@inheritDoc} */
     @Override
     public void convert(D destinationDto, E sourceEntity) throws BaseException {

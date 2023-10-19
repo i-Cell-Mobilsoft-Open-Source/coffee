@@ -48,6 +48,13 @@ public class GrpcStarter {
     private ManagedExecutorService executorService;
 
     /**
+     * Default constructor, constructs a new object.
+     */
+    public GrpcStarter() {
+        super();
+    }
+
+    /**
      * Start gRPC server in unmanaged mode
      * 
      * @param init

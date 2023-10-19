@@ -39,6 +39,13 @@ import hu.icellmobilsoft.coffee.tool.utils.annotation.AnnotationUtil;
 public class GrpcServerConfigProducer {
 
     /**
+     * Default constructor, constructs a new object.
+     */
+    public GrpcServerConfigProducer() {
+        super();
+    }
+
+    /**
      * Creates {@link GrpcServerConfig} for the injected config key
      *
      * @param injectionPoint

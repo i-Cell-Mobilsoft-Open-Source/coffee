@@ -66,6 +66,13 @@ public class GrpcClientConfig implements IGrpcClientConfig {
 
     private String configKey;
 
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public GrpcClientConfig() {
+        super();
+    }
+
     @Override
     public String getHost() {
         return config.getOptionalValue(joinKey(HOST), String.class).orElse("localhost");
