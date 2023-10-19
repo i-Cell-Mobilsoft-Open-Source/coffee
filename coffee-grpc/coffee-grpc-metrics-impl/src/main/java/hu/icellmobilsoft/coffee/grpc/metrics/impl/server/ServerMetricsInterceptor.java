@@ -54,6 +54,13 @@ public class ServerMetricsInterceptor extends AbstractMetricsInterceptor impleme
      */
     public static final String METADATA_NAME_TIMER = "coffee_grpc_server_processing_duration_seconds";
 
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public ServerMetricsInterceptor() {
+        super();
+    }
+
     @Override
     public <ReqT, RespT> ServerCall.Listener<ReqT> interceptCall(ServerCall<ReqT, RespT> call, Metadata requestMetadata,
             ServerCallHandler<ReqT, RespT> next) {
