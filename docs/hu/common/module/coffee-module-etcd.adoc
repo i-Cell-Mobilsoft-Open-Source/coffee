@@ -21,6 +21,17 @@ Az ETCD konfigurációk használatba vételéhez az coffee-module-etcd modult h�
 Ez szolgáltatja majd a konfigurációkezeléshez szükséges segédosztályokat,
 valamint tartalmaz egy `EtcdConfig` implementációt, ami azt határozza meg,
 hogy a konfigurációban felvett `coffee.etcd.default.url` property lesz az ETCD elérhetősége.
+Az alábbi property-k segítségével további opcionális konfigurációk lehetségesek az ETCD kapcsolat kiépítésére:
+
+- `coffee.etcd.default.connection.timeout.millis`:  kapcsolat időtúllépés milliszekundumban
+- `coffee.etcd.default.retry.delay`: újrapróbálkozás késleltetése
+- `coffee.etcd.default.retry.max.delay`: újrapróbálkozás legnagyobb késleltetése
+- `coffee.etcd.default.keepalive.time.seconds`: keepalive idő másodpercekben
+- `coffee.etcd.default.keepalive.timeout.seconds`: keepalive időtúllépés másodpercekben
+- `coffee.etcd.default.keepalive.without.calls`: keepalive hívások nélkül (igaz/hamis)
+- `coffee.etcd.default.retry.chrono.unit`: újrapróbálkozási időszak egysége
+- `coffee.etcd.default.retry.max.duration.seconds`: újrapróbálkozási maximális időtartama másodpercben
+- `coffee.etcd.default.wait.for.ready`: gRPC várakozás engedélyezése a kész szemantikára (igaz/hamis)
 
 Backend oldalon több mód is van a konfigurációk kezelésére.
 Ezek jellemzően egymást támogatják, egymást egészítik ki.

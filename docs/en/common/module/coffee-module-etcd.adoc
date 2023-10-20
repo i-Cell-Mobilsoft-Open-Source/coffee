@@ -21,6 +21,17 @@ To deploy ETCD configurations, the coffee-module-etcd module is pulled in as a d
 This will provide the auxiliary classes needed for configuration management,
 and contains an `EtcdConfig` implementation to define it,
 that the `coffee.etcd.default.url` property included in the configuration will be the ETCD's reachability.
+With the help of the following properties, additional optional configurations are possible for establishing the ETCD connection:
+
+- `coffee.etcd.default.connection.timeout.millis`: connection timeout in milliseconds
+- `coffee.etcd.default.retry.delay`: retry delay
+- `coffee.etcd.default.retry.max.delay`: maximum retry delay
+- `coffee.etcd.default.keepalive.time.seconds`: keepalive time in seconds
+- `coffee.etcd.default.keepalive.timeout.seconds`: keepalive timeout in seconds
+- `coffee.etcd.default.keepalive.without.calls`: keepalive without calls (true/false)
+- `coffee.etcd.default.retry.chrono.unit`: retry period unit
+- `coffee.etcd.default.retry.max.duration.seconds`: maximum retry duration in seconds
+- `coffee.etcd.default.wait.for.ready`: enable gRPC wait for ready semantics (true/false)
 
 On the backend side, there are several ways to manage configurations.
 These typically support and complement each other.

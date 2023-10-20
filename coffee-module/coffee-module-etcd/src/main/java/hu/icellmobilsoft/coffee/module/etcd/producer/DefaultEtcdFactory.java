@@ -44,7 +44,7 @@ import io.etcd.jetcd.Client;
 @ApplicationScoped
 public class DefaultEtcdFactory {
 
-    private static Logger LOGGER = Logger.getLogger(DefaultEtcdFactory.class);
+    private static Logger log = Logger.getLogger(DefaultEtcdFactory.class);
 
     @Inject
     private DefaultEtcdConfigImpl defaultEtcdConfigImpl;
@@ -59,9 +59,9 @@ public class DefaultEtcdFactory {
     public Client createEtcdClient() {
         Client etcdClient = null;
         try {
-            etcdClient = EtcdClientBuilderUtil.getClientBuilder(defaultEtcdConfigImpl.getUrl()).build();
+            etcdClient = EtcdClientBuilderUtil.getClientBuilder(defaultEtcdConfigImpl).build();
         } catch (BaseException e) {
-            LOGGER.error("Problems trying to get the Etcd connection.", e);
+            log.error("Problems trying to get the Etcd connection.", e);
         }
         return etcdClient;
     }
@@ -75,9 +75,9 @@ public class DefaultEtcdFactory {
     public void closeEtcdClient(@Disposes Client etcdClient) {
         try {
             etcdClient.close();
-            LOGGER.trace("etcdClient closed successfully");
+            log.trace("etcdClient closed successfully");
         } catch (Exception e) {
-            LOGGER.error("Error in closing etcd client: " + e.getLocalizedMessage(), e);
+            log.error("Error in closing etcd client: " + e.getLocalizedMessage(), e);
         }
     }
 
