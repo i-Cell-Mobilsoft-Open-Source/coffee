@@ -2,6 +2,15 @@
 
 coff:ee v2.2.0 -> v2.3.0 migration description, news, changes
 
+* Java 21 support - Coffee runs on Java 21 and is now supported with CI.
+* Bump parent pom 1.2.0 -> 1.4.0 - maven plugin versions updated
+* The project assumes that `beans.xml` is set to the default `bean-discovery-mode="annotated"`.
+Therefore, we have removed all "@Vetoed" comments from previously managed classes.
+* The Javadoc was updated with the introduction of "default constructors",
+which was published at: https://bugs.openjdk.org/browse/JDK-8071961[java 16]
+and https://bugs.openjdk.org/browse/JDK-8249634[java 18]
+with new functions.
+
 === coffee-model-base
 
 ** The `AbstractEntity.toString()` function uses the type of the column instead of the value in case of `java.sql.Blob` and `java.sql.Clob`.
