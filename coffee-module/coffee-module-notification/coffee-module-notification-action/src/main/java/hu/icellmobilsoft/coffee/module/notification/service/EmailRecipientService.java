@@ -21,11 +21,9 @@ package hu.icellmobilsoft.coffee.module.notification.service;
 
 import java.io.Serializable;
 
-import javax.enterprise.context.Dependent;
-import javax.inject.Inject;
+import jakarta.enterprise.context.Dependent;
+import jakarta.inject.Inject;
 
-import hu.icellmobilsoft.coffee.cdi.logger.AppLogger;
-import hu.icellmobilsoft.coffee.cdi.logger.ThisLogger;
 import hu.icellmobilsoft.coffee.jpa.service.BaseService;
 import hu.icellmobilsoft.coffee.module.notification.model.EmailRecipient;
 import hu.icellmobilsoft.coffee.module.notification.repository.EmailRecipientRepository;
@@ -46,5 +44,12 @@ public class EmailRecipientService extends BaseService<EmailRecipient> implement
      */
     @Inject
     private EmailRecipientRepository emailRecipientRepository;
+
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public EmailRecipientService() {
+        super();
+    }
 
 }

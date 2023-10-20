@@ -25,8 +25,6 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
 
-import jakarta.enterprise.inject.Vetoed;
-
 import org.eclipse.microprofile.reactive.messaging.Message;
 import org.reactivestreams.Publisher;
 import org.reactivestreams.Subscriber;
@@ -40,7 +38,6 @@ import hu.icellmobilsoft.coffee.se.logging.Logger;
  * @author mark.petrenyi
  * @since 1.13.0
  */
-@Vetoed
 public class PubSubSource implements Publisher<Message<?>>, AutoCloseable {
 
     private final PubSubConnectorIncomingConfiguration config;

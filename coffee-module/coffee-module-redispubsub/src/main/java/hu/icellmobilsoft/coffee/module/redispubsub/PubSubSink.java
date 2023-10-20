@@ -25,7 +25,6 @@ import java.util.Map;
 import java.util.Optional;
 
 import jakarta.enterprise.inject.Instance;
-import jakarta.enterprise.inject.Vetoed;
 import jakarta.enterprise.inject.spi.CDI;
 
 import org.eclipse.microprofile.reactive.messaging.Message;
@@ -46,7 +45,6 @@ import redis.clients.jedis.Jedis;
  * @author mark.petrenyi
  * @since 1.13.0
  */
-@Vetoed
 public class PubSubSink {
     private final PubSubConnectorOutgoingConfiguration outConfig;
     private final Logger log = Logger.getLogger(PubSubSink.class);

@@ -65,6 +65,13 @@ public abstract class AbstractEmailPlainTextAction implements Serializable {
     private EmailDataBase emailDataBase;
 
     /**
+     * Default constructor, constructs a new object.
+     */
+    public AbstractEmailPlainTextAction() {
+        super();
+    }
+
+    /**
      * Sends given {@link EmailPlainTextType} and saves it to the database.
      *
      * @param emailType

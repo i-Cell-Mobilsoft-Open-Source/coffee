@@ -31,8 +31,6 @@ import java.util.Date;
 import javax.xml.datatype.Duration;
 import javax.xml.datatype.XMLGregorianCalendar;
 
-import jakarta.enterprise.inject.Vetoed;
-
 import org.apache.commons.lang3.StringUtils;
 
 import com.google.gson.Gson;
@@ -49,7 +47,6 @@ import hu.icellmobilsoft.coffee.se.logging.Logger;
  * @author imre.scheffer
  * @since 1.0.0
  */
-@Vetoed
 public class JsonUtil {
 
     private static final Logger LOGGER = Logger.getLogger(JsonUtil.class);

@@ -23,7 +23,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-import jakarta.enterprise.inject.Vetoed;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
@@ -36,7 +35,6 @@ import org.eclipse.microprofile.openapi.models.responses.APIResponse;
  * @since 1.11.0
  * @author speter555
  */
-@Vetoed
 public class ApiResponseUtil {
 
     private static Map<Integer, APIResponse> apiResponseByStatusCodeMap;
@@ -45,7 +43,11 @@ public class ApiResponseUtil {
     private static final String TECHNICALFAULTTYPE_REF = "#/components/schemas/TechnicalFault";
     private static final String BONOTFOUNDTYPE_REF = "#/components/schemas/BONotFound";
 
-    private ApiResponseUtil() {
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public ApiResponseUtil() {
+        super();
     }
 
     /**

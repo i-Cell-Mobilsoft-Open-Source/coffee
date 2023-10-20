@@ -75,6 +75,13 @@ public class EmailDataBase extends EmailBase {
     @Inject
     private EmailHelper emailHelper;
 
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public EmailDataBase() {
+        super();
+    }
+
     /** {@inheritDoc} */
     @Override
     public String send() throws BaseException {

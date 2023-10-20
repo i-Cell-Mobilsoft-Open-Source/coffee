@@ -23,8 +23,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import jakarta.enterprise.inject.Vetoed;
-
 /**
  * Copy original output stream to byte[] object. Usage:<br>
  *
@@ -48,7 +46,6 @@ import jakarta.enterprise.inject.Vetoed;
  * @author imre.scheffer
  * @since 1.0.0
  */
-@Vetoed
 public class OutputStreamCopier extends OutputStream {
 
     private OutputStream outputStream;

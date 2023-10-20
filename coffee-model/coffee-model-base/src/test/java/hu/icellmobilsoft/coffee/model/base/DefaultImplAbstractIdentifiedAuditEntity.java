@@ -19,7 +19,6 @@
  */
 package hu.icellmobilsoft.coffee.model.base;
 
-import jakarta.enterprise.inject.Vetoed;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 
@@ -28,7 +27,6 @@ import jakarta.persistence.Table;
  *
  * @author arnold.bucher
  */
-@Vetoed
 @Entity
 @Table(name = "dummy")
 public class DefaultImplAbstractIdentifiedAuditEntity extends AbstractIdentifiedAuditEntity {

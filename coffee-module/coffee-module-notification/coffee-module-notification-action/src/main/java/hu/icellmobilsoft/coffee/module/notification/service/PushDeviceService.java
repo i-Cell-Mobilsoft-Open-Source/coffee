@@ -21,11 +21,9 @@ package hu.icellmobilsoft.coffee.module.notification.service;
 
 import java.io.Serializable;
 
-import javax.enterprise.context.Dependent;
-import javax.inject.Inject;
+import jakarta.enterprise.context.Dependent;
+import jakarta.inject.Inject;
 
-import hu.icellmobilsoft.coffee.cdi.logger.AppLogger;
-import hu.icellmobilsoft.coffee.cdi.logger.ThisLogger;
 import hu.icellmobilsoft.coffee.jpa.service.BaseService;
 import hu.icellmobilsoft.coffee.module.notification.model.PushDevice;
 import hu.icellmobilsoft.coffee.module.notification.repository.PushDeviceRepository;
@@ -46,5 +44,12 @@ public class PushDeviceService extends BaseService<PushDevice> implements Serial
      */
     @Inject
     private PushDeviceRepository pushDeviceRepository;
+
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public PushDeviceService() {
+        super();
+    }
 
 }
