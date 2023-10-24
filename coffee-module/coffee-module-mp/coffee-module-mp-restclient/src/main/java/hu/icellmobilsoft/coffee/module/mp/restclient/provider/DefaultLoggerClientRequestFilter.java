@@ -57,6 +57,9 @@ import hu.icellmobilsoft.coffee.tool.utils.string.StringHelper;
 public class DefaultLoggerClientRequestFilter implements ClientRequestFilter, WriterInterceptor {
 
     @Inject
+    private DefaultRestClientLogContainer logContainer;
+
+    @Inject
     private RequestResponseLogger requestResponseLogger;
 
     /** {@inheritDoc} */
@@ -69,7 +72,7 @@ public class DefaultLoggerClientRequestFilter implements ClientRequestFilter, Wr
         msg.append(">> ").append(getClass().getName()).append(" request ->\n");
         msg.append(logUrl(requestContext));
         msg.append(logHeader(requestContext));
-        LogProducer.logToAppLogger((AppLogger appLogger) -> appLogger.info(msg.toString()), DefaultLoggerClientRequestFilter.class);
+        logContainer.setLogBuilder(msg);
     }
 
     /** {@inheritDoc} */
@@ -97,7 +100,11 @@ public class DefaultLoggerClientRequestFilter implements ClientRequestFilter, Wr
         String requestText = new String(entityCopy, StandardCharsets.UTF_8);
         String requestEntity = requestResponseLogger
                 .printEntity(requestText, maxResponseEntityLogSize, RequestResponseLogger.REQUEST_PREFIX, true, mediaType);
-        LogProducer.logToAppLogger((AppLogger appLogger) -> appLogger.info(requestEntity.toString()), DefaultLoggerClientRequestFilter.class);
+
+        // summarize from ClientRequestFilter with entityStream content
+        StringBuilder logBuilder = logContainer.getLogBuilder();
+        logBuilder.append(requestEntity.toString());
+        LogProducer.logToAppLogger((AppLogger appLogger) -> appLogger.info(logBuilder.toString()), DefaultLoggerClientRequestFilter.class);
     }
 
     /**
