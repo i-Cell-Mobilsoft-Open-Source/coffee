@@ -5,6 +5,7 @@ coff:ee v1.14.0 -> v1.15.0 migrációs leírás, újdonságok, változások leí
 === coffee-tool
 
 ** JsonUtil használatával is lehetséges a generikus típusok deszerializációja.
+** Új `ParamValidatorUtil` segédosztály publikus függvények paramétereinek egységes validációjára.
 
 ==== Átállás
 
@@ -30,6 +31,15 @@ A változtatások nem eredményeznek átállási munkálatokat, visszafelé komp
 === coffee-module-etcd
 
 ** microprofile-health támogatást kapott
+
+==== Átállás
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+=== coffee-model-base
+
+** `AbstractEntity.toString()` fgv-e `java.sql.Blob` és `java.sql.Clob` típusok esetén a mező értéke helyett a mező típusát használja fel.
+Korábban a mező értékével dolgozott ilyen esetekben is, így pl logozás esetén felolvasta a stream-et.
 
 ==== Átállás
 

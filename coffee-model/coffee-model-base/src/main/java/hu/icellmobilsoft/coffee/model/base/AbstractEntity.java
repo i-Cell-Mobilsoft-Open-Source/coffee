@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -21,6 +21,8 @@ package hu.icellmobilsoft.coffee.model.base;
 
 import java.beans.PropertyDescriptor;
 import java.io.Serializable;
+import java.sql.Blob;
+import java.sql.Clob;
 
 import javax.enterprise.inject.Vetoed;
 import javax.persistence.Column;
@@ -66,19 +68,21 @@ public abstract class AbstractEntity implements IVersionable, Serializable {
 
     /**
      * Getter for the field {@code version}.
-     * 
+     *
      * @return version
      */
+    @Override
     public long getVersion() {
         return version;
     }
 
     /**
      * Setter for the field {@code version}.
-     * 
+     *
      * @param version
      *            version
      */
+    @Override
     public void setVersion(long version) {
         if (internalVersion == null || this.version != version) {
             internalVersion = this.version;
@@ -106,19 +110,24 @@ public abstract class AbstractEntity implements IVersionable, Serializable {
     /**
      * toString.
      */
+    @Override
     public String toString() {
         ToStringBuilder s = new ToStringBuilder(this);
         for (PropertyDescriptor property : PropertyUtils.getPropertyDescriptors(this)) {
-            if (ClassUtils.isAssignable(property.getPropertyType(), AbstractEntity.class)) {
+
+            String name = property.getName();
+            Class<?> propertyType = property.getPropertyType();
+
+            if (ClassUtils.isAssignable(propertyType, AbstractEntity.class)) {
                 // dependency kapcsolatokon ne menjen vegig, ne lazy-zzon
-                s.append(property.getName(), property.getPropertyType());
-            } else if (property.getPropertyType() == byte[].class) {
-                s.append(property.getName(), property.getPropertyType().getSimpleName());
+                s.append(name, propertyType.getSimpleName());
+            } else if (propertyType == byte[].class || propertyType == Blob.class || propertyType == Clob.class) {
+                s.append(name, propertyType.getSimpleName());
             } else {
                 try {
-                    s.append(property.getName(), property.getReadMethod().invoke(this));
+                    s.append(name, property.getReadMethod().invoke(this));
                 } catch (Exception e) {
-                    Logger.getLogger(getClass()).warn("Error in toString for property [{0}]: [{1}]", property.getName(), e.getLocalizedMessage());
+                    Logger.getLogger(getClass()).warn("Error in toString for property [{0}]: [{1}]", name, e.getLocalizedMessage());
                 }
             }
         }
