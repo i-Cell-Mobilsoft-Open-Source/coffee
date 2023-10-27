@@ -20,11 +20,12 @@
 package hu.icellmobilsoft.coffee.module.etcd.util;
 
 import java.time.Duration;
-import java.time.temporal.ChronoUnit;
 
 import jakarta.enterprise.inject.Vetoed;
 
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
+import hu.icellmobilsoft.coffee.dto.exception.InvalidParameterException;
+import hu.icellmobilsoft.coffee.module.etcd.config.EtcdConfig;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
 import io.etcd.jetcd.Client;
 import io.etcd.jetcd.ClientBuilder;
@@ -47,45 +48,42 @@ public class EtcdClientBuilderUtil {
     private static final Logger logger = Logger.getLogger(EtcdClientBuilderUtil.class);
 
     /**
-     * Timeout param to establish connection with the etcd server, this timeout needs to be the base timeout param when getting value from the server.
-     */
-    public static final long CONNECT_TIMEOUT_MILLIS = 500;
-
-    /**
      *
      * Create {@link ClientBuilder} with urls with came from parameter
      *
-     * @param urls
-     *            etcd service urls
+     * @param etcdConfig
+     *            {@link EtcdConfig} ETCD configuration values
      * @return {@link ClientBuilder} instance
      * @throws BaseException
      *             if exception occurs at create {@link ClientBuilder}
      */
-    public static ClientBuilder getClientBuilder(String[] urls) throws BaseException {
-        ClientBuilder etcdClientBuilder = null;
+    public static ClientBuilder getClientBuilder(EtcdConfig etcdConfig) throws BaseException {
+        if (etcdConfig == null) {
+            throw new InvalidParameterException("etcdConfig is mandatory!");
+        }
+        ClientBuilder etcdClientBuilder;
         try {
             etcdClientBuilder = Client.builder()
                     // endpoints
-                    .endpoints(urls)
-                    // Connect timeout
-                    .connectTimeout(Duration.ofMillis(CONNECT_TIMEOUT_MILLIS)) // default null
-                    // retryDelay
-                    .retryDelay(500) // default 500
-                    // retryMaxDelay
-                    .retryMaxDelay(2500) // default 2500
-                    // keepaliveTime
-                    .keepaliveTime(Duration.ofSeconds(30L)) // default 30 sec
-                    // keepaliveTimeout
-                    .keepaliveTimeout(Duration.ofSeconds(10L)) // default 10 sec
-                    // keepaliveWithoutCalls
-                    .keepaliveWithoutCalls(true) // default true
-                    // retryChronoUnit
-                    .retryChronoUnit(ChronoUnit.MILLIS) // default ChronoUnit.MILLIS
-                    // retryMaxDuration
-                    .retryMaxDuration(Duration.ofSeconds(10)) // default null
-                    // waitForReady
-                    .waitForReady(true) // default true
-            ;
+                    .endpoints(etcdConfig.getUrl())
+                    // Connect timeout, default 500
+                    .connectTimeout(Duration.ofMillis(etcdConfig.getConnectionTimeout()))
+                    // retryDelay, default 500
+                    .retryDelay(etcdConfig.getRetryDelay())
+                    // retryMaxDelay, default 2500
+                    .retryMaxDelay(etcdConfig.getRetryMaxDelay())
+                    // keepaliveTime, default 30 sec
+                    .keepaliveTime(Duration.ofSeconds(etcdConfig.getKeepaliveTime()))
+                    // keepaliveTimeout, default 10 sec
+                    .keepaliveTimeout(Duration.ofSeconds(etcdConfig.getKeepaliveTimeout()))
+                    // keepaliveWithoutCalls, default true
+                    .keepaliveWithoutCalls(etcdConfig.isKeepaliveWithoutCalls())
+                    // retryChronoUnit, default ChronoUnit.MILLIS
+                    .retryChronoUnit(etcdConfig.getRetryChronoUnit())
+                    // retryMaxDuration, default 10 sec
+                    .retryMaxDuration(Duration.ofSeconds(etcdConfig.getRetryMaxDuration()))
+                    // waitForReady, default true
+                    .waitForReady(etcdConfig.isWaitForReady());
         } catch (Exception e) {
             logger.error("Problems trying to get the Etcd client builder.", e);
             throw new BaseException("Problems trying to get the Etcd client builder.", e);

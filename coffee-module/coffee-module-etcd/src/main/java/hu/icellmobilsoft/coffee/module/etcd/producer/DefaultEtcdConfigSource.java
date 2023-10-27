@@ -86,9 +86,9 @@ public class DefaultEtcdConfigSource implements ConfigSource {
         return configEtcdService;
     }
 
-    private static ConfigEtcdService createConfigEtcdService() throws BaseException{
+    private static ConfigEtcdService createConfigEtcdService() throws BaseException {
         EtcdConfig config = new DefaultEtcdConfigImpl();
-        Client etcdClient = EtcdClientBuilderUtil.getClientBuilder(config.getUrl()).build();
+        Client etcdClient = EtcdClientBuilderUtil.getClientBuilder(config).build();
 
         EtcdRepository etcdRepository = new EtcdRepository();
         etcdRepository.init(etcdClient);
@@ -107,11 +107,15 @@ public class DefaultEtcdConfigSource implements ConfigSource {
         try {
             return readValue(propertyName).orElse(null);
         } catch (BaseException e) {
-            log.error(MessageFormat.format("Error in getting value from ETCD by propertyName [{0}]: [{1}]", propertyName, e.getLocalizedMessage()),
+            log.error(
+                    MessageFormat.format("Error in getting value from ETCD by propertyName [{0}]: [{1}]", propertyName, e.getLocalizedMessage()),
                     e);
         } catch (Exception e) {
-            log.debug(MessageFormat.format("CDI is not initialized, property [{0}] is unresolvable from ETCD: [{1}]", propertyName,
-                    e.getLocalizedMessage()));
+            log.debug(
+                    MessageFormat.format(
+                            "CDI is not initialized, property [{0}] is unresolvable from ETCD: [{1}]",
+                            propertyName,
+                            e.getLocalizedMessage()));
         }
         return null;
     }
