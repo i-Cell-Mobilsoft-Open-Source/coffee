@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>hu.icellmobilsoft.pom</groupId>
 		<artifactId>parent-oss-pom</artifactId>
-		<version>1.4.0-SNAPSHOT</version>
+		<version>1.4.0</version>
 	</parent>
 
 	<groupId>hu.icellmobilsoft.coffee</groupId>
@@ -19,10 +19,6 @@
 
 	<properties>
 		<project.scm.id>icell-github-server</project.scm.id>
-		<jacoco.ut.execution.data.file>${project.build.directory}/coverage-reports/jacoco-ut.exec</jacoco.ut.execution.data.file>
-		<jacoco.it.execution.data.file>${project.build.directory}/coverage-reports/jacoco-it.exec</jacoco.it.execution.data.file>
-		<surefire.reportsDir>${project.build.directory}/surefire-reports</surefire.reportsDir>
-		<failsafe.reportsDir>${project.build.directory}/failsafe-reports</failsafe.reportsDir>
 		<sonar.junit.reportPaths>${surefire.reportsDir}, ${failsafe.reportsDir}</sonar.junit.reportPaths>
 		<sonar.jacoco.reportPaths>${jacoco.ut.execution.data.file}, ${jacoco.it.execution.data.file}</sonar.jacoco.reportPaths>
 	</properties>
@@ -76,65 +72,12 @@
 						<releaseProfiles>release</releaseProfiles>
 					</configuration>
 				</plugin>
-
-				<plugin>
-					<groupId>org.jacoco</groupId>
-					<artifactId>jacoco-maven-plugin</artifactId>
-					<version>0.8.11</version>
-					<executions>
-						<execution>
-							<id>pre-unit-test</id>
-							<goals>
-								<goal>prepare-agent</goal>
-							</goals>
-							<configuration>
-								<destFile>${jacoco.ut.execution.data.file}</destFile>
-								<propertyName>surefireArgLine</propertyName>
-							</configuration>
-						</execution>
-						<execution>
-							<id>post-unit-test</id>
-							<phase>test</phase>
-							<goals>
-								<goal>report</goal>
-							</goals>
-							<configuration>
-								<dataFile>${jacoco.ut.execution.data.file}</dataFile>
-								<outputDirectory>${project.reporting.outputDirectory}/jacoco-ut</outputDirectory>
-							</configuration>
-						</execution>
-						<execution>
-							<id>pre-integration-test</id>
-							<phase>pre-integration-test</phase>
-							<goals>
-								<goal>prepare-agent</goal>
-							</goals>
-							<configuration>
-								<destFile>${jacoco.it.execution.data.file}</destFile>
-								<propertyName>failsafeArgLine</propertyName>
-							</configuration>
-						</execution>
-						<execution>
-							<id>post-integration-test</id>
-							<phase>post-integration-test</phase>
-							<goals>
-								<goal>report</goal>
-							</goals>
-							<configuration>
-								<dataFile>${jacoco.it.execution.data.file}</dataFile>
-								<outputDirectory>${project.reporting.outputDirectory}/jacoco-it</outputDirectory>
-							</configuration>
-						</execution>
-					</executions>
-				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-surefire-plugin</artifactId>
 					<version>3.1.2</version>
 					<configuration>
-						<reportsDirectory>${surefire.reportsDir}</reportsDirectory>
 						<excludedGroups>weld,it,integration</excludedGroups>
-						<argLine>${surefireArgLine}</argLine>
 					</configuration>
 				</plugin>
 				<plugin>
@@ -151,7 +94,6 @@
 						</execution>
 					</executions>
 					<configuration>
-						<reportsDirectory>${failsafe.reportsDir}</reportsDirectory>
 						<includes>
 							<include>**/Test*.java</include>
 							<include>**/*Test.java</include>
@@ -159,7 +101,6 @@
 							<include>**/*TestCase.java</include>
 						</includes>
 						<groups>weld,it,integration</groups>
-						<argLine>${failsafeArgLine}</argLine>
 					</configuration>
 				</plugin>
 				<plugin>
