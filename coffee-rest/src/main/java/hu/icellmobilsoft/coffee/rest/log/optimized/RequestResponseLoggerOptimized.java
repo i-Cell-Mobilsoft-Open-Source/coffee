@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * 
  *      http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,12 +17,9 @@
  * limitations under the License.
  * #L%
  */
-package hu.icellmobilsoft.coffee.rest.log;
+package hu.icellmobilsoft.coffee.rest.log.optimized;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Collections;
@@ -30,7 +27,6 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
@@ -41,7 +37,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.ext.WriterInterceptorContext;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import hu.icellmobilsoft.coffee.cdi.logger.AppLogger;
@@ -57,10 +52,11 @@ import hu.icellmobilsoft.coffee.tool.utils.string.StringHelper;
  * Request - Response logger class
  *
  * @author imre.scheffer
+ * @author mate.biro
  * @since 1.0.0
  */
 @Dependent
-public class RequestResponseLogger {
+public class RequestResponseLoggerOptimized {
 
     /** Constant <code>NOTIFICATION_PREFIX="* "</code> */
     public static final String NOTIFICATION_PREFIX = "* ";
@@ -69,8 +65,8 @@ public class RequestResponseLogger {
     /** Constant <code>RESPONSE_PREFIX="&lt; "</code> */
     public static final String RESPONSE_PREFIX = "< ";
 
-    /** Constant <code>BYTECODE_MAX_LOG=5000</code> */
-    public static final int BYTECODE_MAX_LOG = 5000;
+    /** Constant <code>ENTITY_MAX_LOG=5000</code> */
+    public static final int ENTITY_MAX_LOG = 5000;
 
     /** Constant <code>SKIP_MEDIATYPE_SUBTYPE_PDF="pdf"</code> */
     public static final String SKIP_MEDIATYPE_SUBTYPE_PDF = "pdf";
@@ -209,7 +205,10 @@ public class RequestResponseLogger {
             return null;
         }
         UriInfo uriInfo = requestContext.getUriInfo();
-        return printRequestLine(requestContext.getMethod(), uriInfo.getAbsolutePath().toASCIIString(), uriInfo.getPathParameters(),
+        return printRequestLine(
+                requestContext.getMethod(),
+                uriInfo.getAbsolutePath().toASCIIString(),
+                uriInfo.getPathParameters(),
                 uriInfo.getQueryParameters());
     }
 
@@ -265,66 +264,41 @@ public class RequestResponseLogger {
     }
 
     /**
-     * Prints http entity from {@link ContainerRequestContext}.
+     * Returns the maximum request entity log size
      *
      * @param requestContext
      *            context
-     * @return HTTP entity or null if invalid parameter or exception when reading the entity
+     * 
+     * @return the maximum log size of the entity
      */
-    public String printRequestEntity(ContainerRequestContext requestContext) {
-        if (requestContext == null) {
-            return null;
+    protected int getMaxRequestEntityLogSize(ContainerRequestContext requestContext) {
+        // ha octet-stream vagy multipart és nincs LogSpecifier annotáció, akkor korlátozunk
+        if (RestLoggerUtil.isLogSizeLimited(requestContext, MediaType.APPLICATION_OCTET_STREAM_TYPE, MediaType.MULTIPART_FORM_DATA_TYPE)
+                && !RestLoggerUtil.isLogSpecifierPresent(requestContext)) {
+            return RequestResponseLoggerOptimized.ENTITY_MAX_LOG;
         }
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        InputStream in = requestContext.getEntityStream();
-        try {
-            IOUtils.copy(in, out);
 
-            byte[] requestEntity = out.toByteArray();
-            int maxRequestEntityLogSize = RestLoggerUtil.getMaxEntityLogSize(requestContext, LogSpecifierTarget.REQUEST);
-            if (maxRequestEntityLogSize != LogSpecifier.NO_LOG &&
-                    // byte-code betoltesi fajlokat ne loggoljuk ki egeszben
-                    Objects.equals(requestContext.getMediaType(), MediaType.APPLICATION_OCTET_STREAM_TYPE)) {
-                maxRequestEntityLogSize = RequestResponseLogger.BYTECODE_MAX_LOG;
-
-            }
-            // vissza irjuk a kiolvasott streamet
-            requestContext.setEntityStream(new ByteArrayInputStream(requestEntity));
-
-            return printRequestEntity(requestEntity, maxRequestEntityLogSize);
-        } catch (IOException e) {
-            log.error("Error in logging request entity: " + e.getLocalizedMessage(), e);
-            return null;
-        }
+        // különben annotációban meghatározott maxEntityLogSize (ha nincs annotáció, akkor unlimit)
+        return RestLoggerUtil.getMaxEntityLogSize(requestContext, LogSpecifierTarget.REQUEST);
     }
 
     /**
-     * Prints http entity from {@link HttpServletRequest}.
+     * Returns the maximum response entity log size
      *
-     * @param servletRequest
-     *            request
-     * @return HTTP entity or null if invalid parameter or exception when reading the entity
+     * @param context
+     *            {@link WriterInterceptorContext}
+     *
+     * @return the maximum log size of the entity
      */
-    public String printRequestEntity(HttpServletRequest servletRequest) {
-        if (servletRequest == null) {
-            return null;
+    protected int getMaxResponseEntityLogSize(WriterInterceptorContext context) {
+        // ha octet-stream vagy multipart és nincs LogSpecifier annotáció, akkor korlátozunk
+        if (RestLoggerUtil.isLogSizeLimited(context, MediaType.APPLICATION_OCTET_STREAM_TYPE, MediaType.MULTIPART_FORM_DATA_TYPE)
+                && !RestLoggerUtil.isLogSpecifierPresent(context)) {
+            return RequestResponseLoggerOptimized.ENTITY_MAX_LOG;
         }
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        try {
-            InputStream in = servletRequest.getInputStream();
-            IOUtils.copy(in, out);
 
-            byte[] requestEntity = out.toByteArray();
-            // byte-code betoltesi fajlokat ne loggoljuk ki egeszben
-            boolean logLimit = Objects.equals(servletRequest.getContentType(), MediaType.APPLICATION_OCTET_STREAM);
-
-            return printRequestEntity(requestEntity, logLimit ? RequestResponseLogger.BYTECODE_MAX_LOG : null);
-        } catch (IllegalStateException e) {
-            log.info("Inputstream is already readed from servletRequest: " + e.getLocalizedMessage(), e);
-        } catch (IOException e) {
-            log.error("Error in logging request entity: " + e.getLocalizedMessage(), e);
-        }
-        return null;
+        // különben annotációban meghatározott maxEntityLogSize (ha nincs annotáció, akkor unlimit)
+        return RestLoggerUtil.getMaxEntityLogSize(context, LogSpecifierTarget.RESPONSE);
     }
 
     /**
@@ -362,8 +336,11 @@ public class RequestResponseLogger {
         if (requestContext == null || responseContext == null) {
             return null;
         }
-        return printResponseLine(requestContext.getUriInfo().getAbsolutePath().toASCIIString(), responseContext.getStatus(),
-                String.valueOf(responseContext.getStatusInfo()), String.valueOf(responseContext.getMediaType()));
+        return printResponseLine(
+                requestContext.getUriInfo().getAbsolutePath().toASCIIString(),
+                responseContext.getStatus(),
+                String.valueOf(responseContext.getStatusInfo()),
+                String.valueOf(responseContext.getMediaType()));
     }
 
     /**
@@ -397,7 +374,7 @@ public class RequestResponseLogger {
      * @return entity in string
      */
     protected String printResponseEntity(Object entity, Integer maxLogSize, MediaType mediaType) {
-        return printEntity(entity, maxLogSize, RequestResponseLogger.RESPONSE_PREFIX, false, mediaType);
+        return printEntity(entity, maxLogSize, RequestResponseLoggerOptimized.RESPONSE_PREFIX, false, mediaType);
     }
 
     /**
@@ -478,12 +455,15 @@ public class RequestResponseLogger {
         }
         MediaType mediaType = writerInterceptorContext.getMediaType();
         if (skipLoggingForPathOrMediaType(fullPath, mediaType)) {
-            sb.append(RequestResponseLogger.RESPONSE_PREFIX)
+            sb.append(RequestResponseLoggerOptimized.RESPONSE_PREFIX)
                     .append("Response outputstream logging disabled, because MediaType: [" + mediaType + "]\n");
         } else {
             String responseText = new String(entityCopy, StandardCharsets.UTF_8);
-            sb.append(printResponseEntity(responseText, RestLoggerUtil.getMaxEntityLogSize(writerInterceptorContext, LogSpecifierTarget.RESPONSE),
-                    mediaType));
+            sb.append(
+                    printResponseEntity(
+                            responseText,
+                            RestLoggerUtil.getMaxEntityLogSize(writerInterceptorContext, LogSpecifierTarget.RESPONSE),
+                            mediaType));
         }
         return sb.toString();
     }

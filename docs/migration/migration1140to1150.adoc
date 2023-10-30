@@ -44,3 +44,10 @@ Korábban a mező értékével dolgozott ilyen esetekben is, így pl logozás es
 ==== Átállás
 
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+=== coffee-rest
+* *RequestResponseLogger memoria tuning*: A `BaseRestLogger` osztály alapján létrejött egy optimalizált változat: `hu.icellmobilsoft.coffee.rest.log.optimized.BaseRestLoggerOptimized`. Segítségével az alkalmazások kevesebb memóriát használnak fel a request és response body log-olás során. Emellett létrehozásra került a `hu.icellmobilsoft.coffee.rest.log.optimized.RequestResponseLoggerOptimized` osztály is, ahol a request és response entity logolások hossza meghatározásra kerül miszerint, ha a request vagy response entity `application/octet-stream` vagy `multipart/form-data` és nem szerepel a REST interface-en LogSpecifier annotáció, akkor korlátozzuk a log méretet. Valamint a `BYTECODE_MAX_LOG` konstans átvevezésre került `ENTITY_MAX_LOG`-ra.
+
+==== Átállás
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.

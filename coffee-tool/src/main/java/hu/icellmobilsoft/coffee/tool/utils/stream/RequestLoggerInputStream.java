@@ -21,31 +21,29 @@ package hu.icellmobilsoft.coffee.tool.utils.stream;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 
 import javax.enterprise.inject.Vetoed;
+import javax.inject.Inject;
 
-import hu.icellmobilsoft.coffee.cdi.logger.AppLogger;
 import hu.icellmobilsoft.coffee.tool.utils.string.StringHelper;
 
 /**
  * Custom {@link InputStream} for logging request with entity
  *
  * @author mate.biro
- * @since 1.14.0
+ * @since 1.15.0
  */
 @Vetoed
 @SuppressWarnings("InputStreamSlowMultibyteRead")
 public class RequestLoggerInputStream extends InputStream {
 
+    @Inject
+    private LoggingPublisher loggingPublisher;
+
     private final InputStream inputStream;
     private final String requestPrefix;
     private final StringBuilder entity = new StringBuilder();
     private final StringBuilder message;
-    private final BiConsumer<Consumer<AppLogger>, Class<?>> logger;
-    private final Consumer<AppLogger> loggerConsumer;
-    private final Class<?> clazz;
     private int logReadLimit;
     private boolean firstReadCycle = true;
 
@@ -60,22 +58,12 @@ public class RequestLoggerInputStream extends InputStream {
      *            request log prefix
      * @param message
      *            log message
-     * @param logger
-     *            the function handling {@link AppLogger}
-     * @param loggerConsumer
-     *            the function doing the logging
-     * @param clazz
-     *            class for logging
      */
-    public RequestLoggerInputStream(InputStream inputStream, int logReadLimit, String requestPrefix, StringBuilder message,
-            BiConsumer<Consumer<AppLogger>, Class<?>> logger, Consumer<AppLogger> loggerConsumer, Class<?> clazz) {
+    public RequestLoggerInputStream(InputStream inputStream, int logReadLimit, String requestPrefix, StringBuilder message) {
         this.inputStream = inputStream;
         this.logReadLimit = logReadLimit;
         this.requestPrefix = requestPrefix;
         this.message = message;
-        this.logger = logger;
-        this.loggerConsumer = loggerConsumer;
-        this.clazz = clazz;
     }
 
     /**
@@ -112,7 +100,10 @@ public class RequestLoggerInputStream extends InputStream {
         }
         String maskedEntity = getMaskedEntity(entity.toString(), requestPrefix);
         message.append(maskedEntity);
-        logger.accept(loggerConsumer, clazz);
+
+        LoggingEvent event = new LoggingEvent(message.toString());
+        loggingPublisher.publish(event);
+
         firstReadCycle = false;
     }
 
