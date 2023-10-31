@@ -35,6 +35,12 @@ public class LoggingPublisher {
     @Inject
     private Event<LoggingEvent> loggingEvent;
 
+    /**
+     * Publisher method for the logging event
+     *
+     * @param event
+     *            containing the message to be logged
+     */
     public void publish(LoggingEvent event) {
         loggingEvent.fireAsync(event);
     }

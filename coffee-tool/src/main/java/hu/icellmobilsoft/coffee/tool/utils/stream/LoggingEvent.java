@@ -32,10 +32,21 @@ public class LoggingEvent {
 
     private String message;
 
+    /**
+     * Constructor
+     *
+     * @param message
+     *            message to be logged
+     */
     public LoggingEvent(String message) {
         this.message = message;
     }
 
+    /**
+     * Getter
+     * 
+     * @return the message
+     */
     public String getMessage() {
         return message;
     }

@@ -39,6 +39,12 @@ public class LoggingObserver {
     @ThisLogger
     private AppLogger log;
 
+    /**
+     * Observer method that logs the message
+     *
+     * @param event
+     *            containing the message to be logged
+     */
     public void observe(@ObservesAsync LoggingEvent event) {
         log.info(event.getMessage());
     }
