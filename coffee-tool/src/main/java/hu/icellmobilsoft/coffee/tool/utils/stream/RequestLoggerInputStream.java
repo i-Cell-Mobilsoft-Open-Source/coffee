@@ -23,7 +23,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import javax.enterprise.inject.Vetoed;
-import javax.inject.Inject;
+import javax.enterprise.inject.spi.CDI;
 
 import hu.icellmobilsoft.coffee.tool.utils.string.StringHelper;
 
@@ -36,9 +36,6 @@ import hu.icellmobilsoft.coffee.tool.utils.string.StringHelper;
 @Vetoed
 @SuppressWarnings("InputStreamSlowMultibyteRead")
 public class RequestLoggerInputStream extends InputStream {
-
-    @Inject
-    private LoggingPublisher loggingPublisher;
 
     private final InputStream inputStream;
     private final String requestPrefix;
@@ -102,6 +99,7 @@ public class RequestLoggerInputStream extends InputStream {
         message.append(maskedEntity);
 
         LoggingEvent event = new LoggingEvent(message.toString());
+        LoggingPublisher loggingPublisher = CDI.current().select(LoggingPublisher.class).get();
         loggingPublisher.publish(event);
 
         firstReadCycle = false;
