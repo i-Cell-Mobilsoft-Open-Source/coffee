@@ -53,7 +53,7 @@ public class ResponseEntityCollectorOutputStream extends OutputStream {
     /**
      * {@inheritDoc}
      *
-     * <br/>
+     * <br>
      * Extra functionality: It appends the response entity data written to the original {@link OutputStream} to an internal {@link StringBuilder}
      * until the given limit has been reached.
      */

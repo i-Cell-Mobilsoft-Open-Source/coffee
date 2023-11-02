@@ -66,7 +66,7 @@ public class RequestLoggerInputStream extends InputStream {
     /**
      * {@inheritDoc}
      *
-     * <br/>
+     * <br>
      * Extra functionality: On read the request entity data is appended from the original {@link InputStream} to an internal {@link StringBuilder}
      * until a given limit is reached (or until the end of stream if log limit exceeds the length of the stream). Then publishes an event to log the
      * given request message with the appended request entity.
