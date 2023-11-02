@@ -53,7 +53,7 @@ import hu.icellmobilsoft.coffee.tool.utils.string.StringHelper;
  *
  * @author imre.scheffer
  * @author mate.biro
- * @since 1.0.0
+ * @since 1.15.0
  */
 @Dependent
 public class RequestResponseLoggerOptimized {

@@ -55,7 +55,7 @@ import hu.icellmobilsoft.coffee.tool.utils.string.RandomUtil;
  *
  * @author ischeffer
  * @author mate.biro
- * @since 1.0.0
+ * @since 1.15.0
  */
 public abstract class BaseRestLoggerOptimized implements ContainerRequestFilter, WriterInterceptor {
 
