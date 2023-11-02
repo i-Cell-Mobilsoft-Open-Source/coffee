@@ -367,14 +367,12 @@ public class RequestResponseLoggerOptimized {
      *
      * @param entity
      *            entity to log
-     * @param maxLogSize
-     *            max size of log if relevant
      * @param mediaType
      *            media type of entity if relevant
      * @return entity in string
      */
-    protected String printResponseEntity(Object entity, Integer maxLogSize, MediaType mediaType) {
-        return printEntity(entity, maxLogSize, RequestResponseLoggerOptimized.RESPONSE_PREFIX, false, mediaType);
+    protected String printResponseEntity(Object entity, MediaType mediaType) {
+        return printEntity(entity, RequestResponseLoggerOptimized.RESPONSE_PREFIX, false, mediaType);
     }
 
     /**
@@ -382,8 +380,6 @@ public class RequestResponseLoggerOptimized {
      *
      * @param entity
      *            entity to log
-     * @param maxLogSize
-     *            max size of log
      * @param prefix
      *            log prefix
      * @param maskingNeeded
@@ -392,12 +388,12 @@ public class RequestResponseLoggerOptimized {
      *            media type of entity if relevant
      * @return entity in string
      */
-    public String printEntity(Object entity, Integer maxLogSize, String prefix, boolean maskingNeeded, MediaType mediaType) {
+    public String printEntity(Object entity, String prefix, boolean maskingNeeded, MediaType mediaType) {
         if (entity == null) {
             return null;
         }
         StringBuffer sb = new StringBuffer();
-        String entityText = null;
+        String entityText;
         if (entity instanceof String) {
             entityText = (String) entity;
         } else if (mediaType != null && MediaType.APPLICATION_JSON_TYPE.getSubtype().equals(mediaType.getSubtype())) {
@@ -408,10 +404,7 @@ public class RequestResponseLoggerOptimized {
         } else {
             entityText = entity.toString();
         }
-        int maxSize = maxLogSize == null ? LogSpecifier.UNLIMIT : maxLogSize.intValue();
-        if (maxSize > LogSpecifier.UNLIMIT && entityText != null && entityText.length() > maxSize) {
-            entityText = StringUtils.substring(entityText, 0, maxSize);
-        }
+
         if (maskingNeeded) {
             entityText = StringHelper.maskValueInXmlJson(entityText);
         }
@@ -459,11 +452,7 @@ public class RequestResponseLoggerOptimized {
                     .append("Response outputstream logging disabled, because MediaType: [" + mediaType + "]\n");
         } else {
             String responseText = new String(entityCopy, StandardCharsets.UTF_8);
-            sb.append(
-                    printResponseEntity(
-                            responseText,
-                            RestLoggerUtil.getMaxEntityLogSize(writerInterceptorContext, LogSpecifierTarget.RESPONSE),
-                            mediaType));
+            sb.append(printResponseEntity(responseText, mediaType));
         }
         return sb.toString();
     }

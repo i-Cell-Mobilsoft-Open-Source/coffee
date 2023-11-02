@@ -4,6 +4,7 @@ Modul célja a REST kommunikáció és a kezelése.
 
 Tartalmazza az apache http klienst, különböző REST loggereket és filtereket. Továbbá a nyelvesítés, REST aktivátor és Response util osztály is itt található.
 
+[#common_core_coffee-rest_BaseRestLogger]
 == BaseRestLogger
 Az osztály célja, hogy loggolja az alkalmazásba érkező HTTP request-response kéréseket.
 Aktiválása kézzel történik, projekt szinten a következő minta alapján:
@@ -85,6 +86,11 @@ amennyiben a projekten szükséges, úgy a regex felülírható ha valamelyik *a
 < Content-Type: [text/xml;charset=UTF-8]
 < entity: [{"transactionId":"2G7XOSYJ6VUEJJ09","header":{"requestId":"RID314802331803","timestamp":"2019-02-01T15:31:32.432Z","requestVersion":"1.1","headerVersion":"1.0"},"result":{"funcCode":"OK"},"software":{"softwareId":"123456789123456789","softwareName":"string","softwareOperation":"LOCAL_SOFTWARE","softwareMainVersion":"string","softwareDevName":"string","softwareDevContact":"string","softwareCountryCode":"HU","softwareDescription":"string"}]
 ----
+
+[#common_core_coffee-rest_BaseRestLoggerOptimized]
+== BaseRestLoggerOptimized
+Az osztály hasonlóan működik mint a <<common_core_coffee-rest_BaseRestLogger,BaseRestLogger>> annyi eltéréssel, hogy kevesebb memóriát használ fel azáltal,
+hogy a request és response entity-ket nem a stream-ek másolásával szerzi meg a logolás számára, hanem az entity steam olvasása és írása közben gyűjti azokat.
 
 [#common_core_coffee-rest_LogSpecifier]
 == LogSpecifier

@@ -100,9 +100,9 @@ public abstract class BaseRestLoggerOptimized implements ContainerRequestFilter,
             return;
         }
 
-        var message = new StringBuilder();
-        appendRequestLine(message, requestContext);
-        appendRequestHeaders(message, requestContext);
+        var logMessage = new StringBuilder();
+        appendRequestLine(logMessage, requestContext);
+        appendRequestHeaders(logMessage, requestContext);
 
         int maxRequestEntityLogSize = requestResponseLogger.getMaxRequestEntityLogSize(requestContext);
 
@@ -110,7 +110,7 @@ public abstract class BaseRestLoggerOptimized implements ContainerRequestFilter,
                 requestContext.getEntityStream(),
                 maxRequestEntityLogSize,
                 RequestResponseLogger.REQUEST_PREFIX,
-                message);
+                logMessage);
 
         // a saját InputStream-et állítjuk be a context-be, ami majd az entity stream olvasáskor log-olja a request-et
         requestContext.setEntityStream(requestLoggerInputStream);
@@ -136,11 +136,11 @@ public abstract class BaseRestLoggerOptimized implements ContainerRequestFilter,
             printResponseLine(message, context);
             printResponseHeaders(message, context);
 
-            OutputStream originalStream = context.getOutputStream();
+            OutputStream originalResponseStream = context.getOutputStream();
             byte[] entity = new byte[0];
             int maxResponseEntityLogSize = requestResponseLogger.getMaxResponseEntityLogSize(context);
             if (maxResponseEntityLogSize != LogSpecifier.NO_LOG) {
-                var responseEntityCollectorOutputStream = new ResponseEntityCollectorOutputStream(originalStream, maxResponseEntityLogSize);
+                var responseEntityCollectorOutputStream = new ResponseEntityCollectorOutputStream(originalResponseStream, maxResponseEntityLogSize);
                 // a saját OutputStream-et állítjuk be a context-be, ami majd az entity stream-be írásakor gyűjti azt a log-olás számára
                 context.setOutputStream(responseEntityCollectorOutputStream);
                 context.proceed();
