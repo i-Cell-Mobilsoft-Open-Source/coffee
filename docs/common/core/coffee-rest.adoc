@@ -90,7 +90,7 @@ amennyiben a projekten szükséges, úgy a regex felülírható ha valamelyik *a
 [#common_core_coffee-rest_BaseRestLoggerOptimized]
 == BaseRestLoggerOptimized
 Az osztály hasonlóan működik mint a <<common_core_coffee-rest_BaseRestLogger,BaseRestLogger>> annyi eltéréssel, hogy kevesebb memóriát használ fel azáltal,
-hogy a request és response entity-ket nem a stream-ek másolásával szerzi meg a logolás számára, hanem az entity steam olvasása és írása közben gyűjti azokat.
+hogy a request és response entity-ket nem a stream-ek másolásával szerzi meg a logolás számára, hanem az entity stream olvasása és írása közben gyűjti azokat.
 
 [#common_core_coffee-rest_LogSpecifier]
 == LogSpecifier
