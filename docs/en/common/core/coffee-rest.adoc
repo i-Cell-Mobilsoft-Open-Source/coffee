@@ -252,7 +252,7 @@ Activating `PublicCatalogResolver` is done in the classic CDI way:
     xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://www.oracle.com/webfolder/technetwork/jsc/xml/ns/javaee/beans_1_1.xsd"
     version="1.1" bean-discovery-mode="all">
 
-    <alternatives>.
+    <alternatives>
         <class>hu.icellmobilsoft.coffee.rest.validation.catalog.PublicCatalogResolver</class>
     </alternatives>
 </beans>
