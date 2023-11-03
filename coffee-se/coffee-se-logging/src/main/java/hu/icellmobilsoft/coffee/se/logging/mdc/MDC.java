@@ -44,6 +44,13 @@ public final class MDC {
     private static final MDCAdapter adapter = MDCAdapters.findAdapter();
 
     /**
+     * Default constructor, constructs a new object.
+     */
+    public MDC() {
+        super();
+    }
+
+    /**
      * Puts value into underlying MDC implementation.
      *
      * @param key

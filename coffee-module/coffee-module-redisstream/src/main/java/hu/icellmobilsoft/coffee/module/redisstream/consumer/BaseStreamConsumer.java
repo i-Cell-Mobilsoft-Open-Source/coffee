@@ -52,6 +52,13 @@ public class BaseStreamConsumer {
     private BaseApplicationContainer baseApplicationContainer;
 
     /**
+     * Default constructor, constructs a new object.
+     */
+    public BaseStreamConsumer() {
+        super();
+    }
+
+    /**
      * Logging MDC handling, setting variables
      * 
      * @param streamEntry

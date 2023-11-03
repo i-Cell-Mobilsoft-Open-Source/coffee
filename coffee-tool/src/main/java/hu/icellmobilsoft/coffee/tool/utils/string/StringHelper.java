@@ -45,6 +45,13 @@ public class StringHelper {
     private static Config config = ConfigProviderResolver.instance().getBuilder().addDefaultSources().build();
 
     /**
+     * Default constructor, constructs a new object.
+     */
+    public StringHelper() {
+        super();
+    }
+
+    /**
      * Masks value, if key ignore-case matches a pattern.
      *
      * The pattern can be set with {@value IConfigKey#LOG_SENSITIVE_KEY_PATTERN} using microprofile-config's default config sources:

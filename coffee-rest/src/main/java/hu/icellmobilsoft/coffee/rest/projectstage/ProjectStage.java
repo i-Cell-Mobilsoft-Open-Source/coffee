@@ -19,8 +19,6 @@
  */
 package hu.icellmobilsoft.coffee.rest.projectstage;
 
-import jakarta.enterprise.inject.Vetoed;
-
 /**
  * ProjectStage , default is Production
  *
@@ -28,7 +26,6 @@ import jakarta.enterprise.inject.Vetoed;
  * @since 1.13.0
  * 
  */
-@Vetoed
 public class ProjectStage {
 
     /** the enum of the ProjectStage */

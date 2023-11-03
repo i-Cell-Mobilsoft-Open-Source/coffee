@@ -21,15 +21,12 @@ package hu.icellmobilsoft.coffee.module.notification.action.email;
 
 import java.util.Arrays;
 
-import jakarta.enterprise.inject.Vetoed;
-
 /**
  * Encapsulates a byte array with a name.
  *
  * @author imre.scheffer
  * @since 1.0.0
  */
-@Vetoed
 public class AttachmentBean {
 
     private String name;

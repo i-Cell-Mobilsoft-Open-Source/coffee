@@ -55,6 +55,13 @@ public class AppLoggerImpl implements AppLogger {
     @Inject
     private LogContainer logContainer;
 
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public AppLoggerImpl() {
+        super();
+    }
+
     @Override
     public void setLogger(Logger logger) {
         this.logger = logger;

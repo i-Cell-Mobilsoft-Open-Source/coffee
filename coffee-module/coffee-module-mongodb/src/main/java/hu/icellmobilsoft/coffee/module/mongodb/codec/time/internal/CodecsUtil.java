@@ -26,8 +26,6 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import jakarta.enterprise.inject.Vetoed;
-
 import org.bson.BsonInvalidOperationException;
 import org.bson.BsonReader;
 import org.bson.BsonType;
@@ -43,10 +41,13 @@ import org.bson.codecs.DecoderContext;
  * @author balazs.joo
  * @since 1.0.0
  */
-@Vetoed
 public final class CodecsUtil {
 
+    /**
+     * Default constructor, constructs a new object.
+     */
     private CodecsUtil() {
+        super();
     }
 
     /**

@@ -19,12 +19,11 @@
  */
 package hu.icellmobilsoft.coffee.module.notification.model;
 
-import javax.enterprise.inject.Vetoed;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 import hu.icellmobilsoft.coffee.model.base.AbstractIdentifiedAuditEntity;
 
@@ -34,12 +33,18 @@ import hu.icellmobilsoft.coffee.model.base.AbstractIdentifiedAuditEntity;
  * @author imre.scheffer
  * @since 1.0.0
  */
-@Vetoed
 @Entity
 @Table(name = "recipient")
 public class Recipient extends AbstractIdentifiedAuditEntity {
 
     private static final long serialVersionUID = 1L;
+
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public Recipient() {
+        super();
+    }
 
     /**
      * Recipient

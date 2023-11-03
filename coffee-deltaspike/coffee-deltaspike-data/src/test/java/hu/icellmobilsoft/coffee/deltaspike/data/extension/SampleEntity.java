@@ -21,7 +21,6 @@ package hu.icellmobilsoft.coffee.deltaspike.data.extension;
 
 import java.time.LocalDateTime;
 
-import jakarta.enterprise.inject.Vetoed;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -35,7 +34,6 @@ import jakarta.validation.constraints.Size;
  * @author czenczl
  * @since 2.0.0
  */
-@Vetoed
 @Entity
 @Table(name = "SAMPLE")
 public class SampleEntity {

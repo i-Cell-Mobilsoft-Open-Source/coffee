@@ -31,4 +31,11 @@ import jakarta.ws.rs.core.Application;
 @ApplicationPath("")
 public class JAXActivator extends Application {
 
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public JAXActivator() {
+        super();
+    }
+
 }

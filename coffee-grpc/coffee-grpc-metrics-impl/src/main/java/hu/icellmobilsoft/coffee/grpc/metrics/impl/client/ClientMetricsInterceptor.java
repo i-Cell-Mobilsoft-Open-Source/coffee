@@ -55,6 +55,13 @@ public class ClientMetricsInterceptor extends AbstractMetricsInterceptor impleme
      */
     public static final String METADATA_NAME_TIMER = "coffee_grpc_client_processing_duration_seconds";
 
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public ClientMetricsInterceptor() {
+        super();
+    }
+
     @Override
     public <ReqT, RespT> ClientCall<ReqT, RespT> interceptCall(MethodDescriptor<ReqT, RespT> method, CallOptions callOptions, Channel next) {
         MetricsBundle metricBundle = createMetricBundle(method);

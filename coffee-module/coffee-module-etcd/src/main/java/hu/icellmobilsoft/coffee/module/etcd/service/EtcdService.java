@@ -26,8 +26,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
-import jakarta.enterprise.inject.Vetoed;
-
 import org.apache.commons.lang3.StringUtils;
 
 import hu.icellmobilsoft.coffee.dto.exception.BONotFoundException;
@@ -52,7 +50,6 @@ import io.etcd.jetcd.kv.PutResponse;
  * @author imre.scheffer
  * @since 1.3.0
  */
-@Vetoed
 public class EtcdService {
 
     private static final String KEY_IS_BLANK_MSG = "key is blank!";
@@ -74,6 +71,13 @@ public class EtcdService {
     public static final String EMPTY_VALUE = "";
 
     private EtcdRepository etcdRepository;
+
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public EtcdService() {
+        super();
+    }
 
     /**
      * ETCD service initialization

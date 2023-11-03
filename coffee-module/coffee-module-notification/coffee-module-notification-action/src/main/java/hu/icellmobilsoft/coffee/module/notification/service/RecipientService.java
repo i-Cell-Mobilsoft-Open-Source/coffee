@@ -21,9 +21,9 @@ package hu.icellmobilsoft.coffee.module.notification.service;
 
 import java.io.Serializable;
 
-import javax.enterprise.context.Dependent;
-import javax.inject.Inject;
-import javax.persistence.NoResultException;
+import jakarta.enterprise.context.Dependent;
+import jakarta.inject.Inject;
+import jakarta.persistence.NoResultException;
 
 import hu.icellmobilsoft.coffee.cdi.logger.AppLogger;
 import hu.icellmobilsoft.coffee.cdi.logger.ThisLogger;
@@ -58,6 +58,13 @@ public class RecipientService extends BaseService<Recipient> implements Serializ
      */
     @Inject
     private RecipientRepository recipientRepository;
+
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public RecipientService() {
+        super();
+    }
 
     /**
      * Find {@link Recipient} by recipient.

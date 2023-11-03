@@ -49,6 +49,13 @@ public class MavenURLHandler extends URLStreamHandler {
 
     private static final String SEPARATOR = "!";
 
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public MavenURLHandler() {
+        super();
+    }
+
     /** {@inheritDoc} */
     @Override
     protected URLConnection openConnection(URL url) throws IOException {

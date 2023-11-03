@@ -21,7 +21,6 @@ package hu.icellmobilsoft.coffee.jpa.util;
 
 import java.util.function.Supplier;
 
-import jakarta.enterprise.inject.Vetoed;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 
@@ -48,8 +47,14 @@ import hu.icellmobilsoft.coffee.se.logging.Logger;
  * @author tamas.cserhati
  * @since 1.0.0
  */
-@Vetoed
 public class JpaUtil {
+
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public JpaUtil() {
+        super();
+    }
 
     /**
      * Get native SQL from created Query, exception is logged only.
@@ -132,10 +137,7 @@ public class JpaUtil {
                 }
             };
             SelectQueryPlan plan = cacheKey != null
-                    ? ((QueryImplementor<?>) query).getSession()
-                            .getFactory()
-                            .getQueryEngine()
-                            .getInterpretationCache()
+                    ? ((QueryImplementor<?>) query).getSession().getFactory().getQueryEngine().getInterpretationCache()
                             .resolveSelectQueryPlan(cacheKey, buildSelectQueryPlan)
                     : (SelectQueryPlan<?>) buildSelectQueryPlan.get();
             if (plan instanceof ConcreteSqmSelectQueryPlan) {
@@ -144,14 +146,9 @@ public class JpaUtil {
                 if (cacheableSqmInterpretation == null) {
                     DomainQueryExecutionContext domainQueryExecutionContext = DomainQueryExecutionContext.class.cast(querySqm);
                     cacheableSqmInterpretation = ReflectionUtils.invokeStaticMethod(
-                            ReflectionUtils.getMethod(
-                                    ConcreteSqmSelectQueryPlan.class,
-                                    "buildCacheableSqmInterpretation",
-                                    SqmSelectStatement.class,
-                                    DomainParameterXref.class,
-                                    DomainQueryExecutionContext.class),
-                            Object.class,
-                            ReflectionUtils.getFieldValueOrNull(selectQueryPlan, "sqm", SqmSelectStatement.class),
+                            ReflectionUtils.getMethod(ConcreteSqmSelectQueryPlan.class, "buildCacheableSqmInterpretation", SqmSelectStatement.class,
+                                    DomainParameterXref.class, DomainQueryExecutionContext.class),
+                            Object.class, ReflectionUtils.getFieldValueOrNull(selectQueryPlan, "sqm", SqmSelectStatement.class),
                             ReflectionUtils.getFieldValueOrNull(selectQueryPlan, "domainParameterXref", DomainParameterXref.class),
                             domainQueryExecutionContext);
                 }

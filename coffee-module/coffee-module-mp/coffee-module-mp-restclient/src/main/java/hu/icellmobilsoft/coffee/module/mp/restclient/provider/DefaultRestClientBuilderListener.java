@@ -42,6 +42,13 @@ import org.eclipse.microprofile.rest.client.spi.RestClientBuilderListener;
  */
 public class DefaultRestClientBuilderListener implements RestClientBuilderListener {
 
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public DefaultRestClientBuilderListener() {
+        super();
+    }
+
     /** {@inheritDoc} */
     @Override
     public void onNewBuilder(RestClientBuilder builder) {

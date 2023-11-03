@@ -30,6 +30,13 @@ import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 public class FunctionalInterfaces {
 
     /**
+     * Default constructor, constructs a new object.
+     */
+    public FunctionalInterfaces() {
+        super();
+    }
+
+    /**
      * This and the following ones are for a smart wrapping of all action calls inside the REST implementations
      * 
      * @param <R>

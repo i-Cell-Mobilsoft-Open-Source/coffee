@@ -19,7 +19,6 @@
  */
 package hu.icellmobilsoft.coffee.module.mp.restclient.util;
 
-import jakarta.enterprise.inject.Vetoed;
 import jakarta.ws.rs.ProcessingException;
 import jakarta.ws.rs.WebApplicationException;
 
@@ -36,8 +35,14 @@ import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
  * @author imre.scheffer
  * @since 1.0.0
  */
-@Vetoed
 public class MPRestClientUtil {
+
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public MPRestClientUtil() {
+        super();
+    }
 
     /**
      * Altalanos REST Client exception konverter coffee projekt szinture

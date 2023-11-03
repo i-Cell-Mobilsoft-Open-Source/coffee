@@ -48,6 +48,13 @@ import io.opentracing.tag.Tags;
 @Dependent
 public class OpenTraceClientInterceptor extends AbstractOpenTraceInterceptor implements ClientInterceptor, ITracesInterceptor {
 
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public OpenTraceClientInterceptor() {
+        super();
+    }
+
     @Override
     public <ReqT, RespT> ClientCall<ReqT, RespT> interceptCall(MethodDescriptor<ReqT, RespT> method, CallOptions callOptions, Channel next) {
         OpenTraceResolver openTraceResolver = CDI.current().select(OpenTraceResolver.class).get();

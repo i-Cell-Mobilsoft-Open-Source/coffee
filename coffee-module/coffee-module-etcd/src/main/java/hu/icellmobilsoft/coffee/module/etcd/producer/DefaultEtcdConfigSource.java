@@ -52,6 +52,13 @@ public class DefaultEtcdConfigSource implements ConfigSource {
 
     private static ConfigEtcdService configEtcdService;
 
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public DefaultEtcdConfigSource() {
+        super();
+    }
+
     /** {@inheritDoc} */
     @Override
     public int getOrdinal() {

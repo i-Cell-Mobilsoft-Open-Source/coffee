@@ -61,6 +61,13 @@ public class DefaultTOtpVerifierImpl implements TOtpVerifier {
     private static final String LOG_MESSAGE_INVALID_PASSWORD = "Invalid password has been given [{0}]";
     private static final String EXCEPTION_MESSAGE_INVALID_PASSWORD = "OTP authentication failed, invalid password";
 
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public DefaultTOtpVerifierImpl() {
+        super();
+    }
+
     /** {@inheritDoc} */
     @Override
     public void verify(byte[] secretKey, String verifiedOtp, long utcTimestamp, TOtpAlgorithm hashAlgorithm) throws BaseException {

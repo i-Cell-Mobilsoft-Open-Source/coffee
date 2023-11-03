@@ -49,5 +49,12 @@ public @interface OpenTraceHandlerQualifier {
 
         private static final long serialVersionUID = 1L;
 
+        /**
+         * Default constructor, constructs a new object.
+         */
+        public Literal() {
+            super();
+        }
+
     }
 }

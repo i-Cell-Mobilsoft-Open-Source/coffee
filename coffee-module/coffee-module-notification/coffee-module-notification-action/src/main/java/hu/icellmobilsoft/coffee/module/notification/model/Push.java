@@ -22,13 +22,12 @@ package hu.icellmobilsoft.coffee.module.notification.model;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.enterprise.inject.Vetoed;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.Transient;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 import hu.icellmobilsoft.coffee.model.base.AbstractIdentifiedAuditEntity;
 
@@ -38,12 +37,18 @@ import hu.icellmobilsoft.coffee.model.base.AbstractIdentifiedAuditEntity;
  * @author karoly.tamas
  * @since 1.0.0
  */
-@Vetoed
 @Entity
 @Table(name = "push")
 public class Push extends AbstractIdentifiedAuditEntity {
 
     private static final long serialVersionUID = 1L;
+
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public Push() {
+        super();
+    }
 
     /**
      * Push message subject

@@ -27,7 +27,6 @@ import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 
-import jakarta.enterprise.inject.Vetoed;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBElement;
 import jakarta.xml.bind.JAXBException;
@@ -44,7 +43,6 @@ import hu.icellmobilsoft.coffee.se.logging.Logger;
  * @author karcsi
  * @since 1.0.0
  */
-@Vetoed
 public class MarshallingUtil {
 
     private static Logger LOGGER = Logger.getLogger(MarshallingUtil.class);
@@ -52,6 +50,13 @@ public class MarshallingUtil {
     private static final String WARN_CANNOT_CONVERT = "Cannot convert [{0}] object to xml: [{1}]";
 
     private static Map<String, JAXBContext> jaxbContextCache = new ConcurrentHashMap<>();
+
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public MarshallingUtil() {
+        super();
+    }
 
     /**
      * Marshals an object to a {@code String} xml.

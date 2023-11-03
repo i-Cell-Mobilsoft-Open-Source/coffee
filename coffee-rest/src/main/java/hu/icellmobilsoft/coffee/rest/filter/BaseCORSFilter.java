@@ -31,6 +31,13 @@ import org.jboss.resteasy.plugins.interceptors.CorsFilter;
  */
 public class BaseCORSFilter implements Feature {
 
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public BaseCORSFilter() {
+        super();
+    }
+
     /** {@inheritDoc} */
     @Override
     public boolean configure(FeatureContext context) {

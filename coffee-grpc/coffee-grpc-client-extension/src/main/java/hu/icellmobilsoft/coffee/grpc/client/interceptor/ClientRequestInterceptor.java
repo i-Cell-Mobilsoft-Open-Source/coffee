@@ -39,6 +39,13 @@ public class ClientRequestInterceptor implements ClientInterceptor {
 
     private static final Logger LOGGER = DefaultLogger.getLogger(ClientRequestInterceptor.class);
 
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public ClientRequestInterceptor() {
+        super();
+    }
+
     @Override
     public <ReqT, RespT> ClientCall<ReqT, RespT> interceptCall(MethodDescriptor<ReqT, RespT> method, CallOptions callOptions, Channel next) {
 

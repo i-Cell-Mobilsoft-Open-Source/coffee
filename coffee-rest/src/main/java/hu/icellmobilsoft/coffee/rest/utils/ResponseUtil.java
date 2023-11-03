@@ -19,7 +19,6 @@
  */
 package hu.icellmobilsoft.coffee.rest.utils;
 
-import jakarta.enterprise.inject.Vetoed;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.ResponseBuilder;
@@ -35,7 +34,6 @@ import com.google.common.net.HttpHeaders;
  * @author imre.scheffer
  * @since 1.0.0
  */
-@Vetoed
 public class ResponseUtil {
 
     /** Constant <code>MEDIATYPE_APPLICATION_ZIP="application/zip"</code> */

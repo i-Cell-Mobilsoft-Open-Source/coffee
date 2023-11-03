@@ -27,8 +27,6 @@ import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
 
-import jakarta.enterprise.inject.Vetoed;
-
 import org.apache.commons.lang3.StringUtils;
 
 import hu.icellmobilsoft.coffee.dto.exception.BONotFoundException;
@@ -44,12 +42,18 @@ import hu.icellmobilsoft.coffee.se.logging.Logger;
  * @since 1.0.0
  * @author imre.scheffer
  */
-@Vetoed
 public class ConfigEtcdService {
 
     private Logger log;
 
     private EtcdService etcdService;
+
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public ConfigEtcdService() {
+        super();
+    }
 
     /**
      * ETCD service initialization

@@ -27,6 +27,11 @@ import io.grpc.Metadata;
 /**
  * gRPC client call that will collect metrics using microprofile-metrics api
  * 
+ * @param <ReqT>
+ *            request type
+ * @param <RespT>
+ *            response type
+ * 
  * @author czenczl
  * @since 2.1.0
  *

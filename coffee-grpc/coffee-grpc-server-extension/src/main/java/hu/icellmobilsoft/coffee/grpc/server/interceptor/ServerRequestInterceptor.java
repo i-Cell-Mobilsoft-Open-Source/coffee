@@ -46,6 +46,13 @@ public class ServerRequestInterceptor implements ServerInterceptor {
 
     private static final Logger LOGGER = DefaultLogger.getLogger(ServerRequestInterceptor.class);
 
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public ServerRequestInterceptor() {
+        super();
+    }
+
     @Override
     public <ReqT, RespT> Listener<ReqT> interceptCall(ServerCall<ReqT, RespT> serverCall, Metadata headers, ServerCallHandler<ReqT, RespT> next) {
 

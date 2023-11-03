@@ -55,6 +55,13 @@ public class JmsHandler {
     private MessageProducer producer;
 
     /**
+     * Default constructor, constructs a new object.
+     */
+    public JmsHandler() {
+        super();
+    }
+
+    /**
      * Clears all fields then sets the field {@code connectionFactory}.
      * 
      * @param connectionFactory

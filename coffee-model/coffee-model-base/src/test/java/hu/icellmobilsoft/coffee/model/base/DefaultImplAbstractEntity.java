@@ -22,7 +22,6 @@ package hu.icellmobilsoft.coffee.model.base;
 import java.sql.Blob;
 import java.sql.Clob;
 
-import jakarta.enterprise.inject.Vetoed;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Lob;
@@ -33,7 +32,6 @@ import jakarta.persistence.Table;
  *
  * @author attila.kiss
  */
-@Vetoed
 @Entity
 @Table(name = "dummy")
 public class DefaultImplAbstractEntity extends AbstractEntity {

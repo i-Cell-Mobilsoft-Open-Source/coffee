@@ -19,8 +19,6 @@
  */
 package hu.icellmobilsoft.coffee.module.mongodb.handler;
 
-import jakarta.enterprise.inject.Vetoed;
-
 import org.apache.commons.lang3.StringUtils;
 import org.bson.codecs.configuration.CodecRegistries;
 import org.bson.codecs.pojo.PojoCodecProvider;
@@ -43,8 +41,14 @@ import hu.icellmobilsoft.coffee.module.mongodb.codec.time.xmlgregoriancalendar.X
  * @author imre.scheffer
  * @since 1.0.0
  */
-@Vetoed
 public class MongoDbUtil {
+
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public MongoDbUtil() {
+        super();
+    }
 
     /**
      * Returns mongoDb client. Optimally this should be called internally by this class only.

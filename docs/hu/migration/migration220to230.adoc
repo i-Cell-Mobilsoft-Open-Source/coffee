@@ -2,6 +2,15 @@
 
 coff:ee v2.2.0 -> v2.3.0 migrációs leírás, újdonságok, változások leírása
 
+* Java 21 támogatás - Coffee fordul java 21 verzióval és a CI része is ezentúl fogja támogatni.
+* Parent pom frissítése 1.2.0 -> 1.4.0 - maven plugin verziók frissültek
+* A projekt azzal számol hogy a `beans.xml` alapértelmezett `bean-discovery-mode="annotated"` módra van állítva.
+Ezért minden `@Vetoed` annotáció lekerült a régebben kezelt osztályokról.
+* Javadoc frissítés történt a "default konsturktorok" bevezetésével,
+amit a https://bugs.openjdk.org/browse/JDK-8071961[java 16]
+illetve https://bugs.openjdk.org/browse/JDK-8249634[java 18]
+új funkciói követeltek. 
+
 === coffee-model-base
 
 ** `AbstractEntity.toString()` fgv-e `java.sql.Blob` és `java.sql.Clob` típusok esetén a mező értéke helyett a mező típusát használja fel.
@@ -14,6 +23,7 @@ A változtatások nem eredményeznek átállási munkálatokat, visszafelé komp
 === coffee-tool
 
 ** Új `ParamValidatorUtil` segédosztály publikus függvények paramétereinek egységes validációjára.
+
 ==== Átállás
 
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.

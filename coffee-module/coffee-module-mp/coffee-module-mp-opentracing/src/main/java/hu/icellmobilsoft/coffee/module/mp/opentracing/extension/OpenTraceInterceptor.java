@@ -60,6 +60,13 @@ public class OpenTraceInterceptor {
     public static Context.Key<Span> OPEN_TRACE_GRPC_CONTEXT_KEY = Context.key("openTraceContextKey");
 
     /**
+     * Default constructor, constructs a new object.
+     */
+    public OpenTraceInterceptor() {
+        super();
+    }
+
+    /**
      * Intercept and handle span creation with called method name
      * 
      * @param ctx

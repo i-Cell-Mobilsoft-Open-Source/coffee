@@ -42,6 +42,13 @@ public class OpenTraceResolver {
     private volatile Tracer tracer = null;
 
     /**
+     * Default constructor, constructs a new object.
+     */
+    public OpenTraceResolver() {
+        super();
+    }
+
+    /**
      * uses volatile read and synchronized block to avoid possible duplicate creation of Tracer in multi-threaded env
      * 
      * @return {@link Tracer} Tracer implementation

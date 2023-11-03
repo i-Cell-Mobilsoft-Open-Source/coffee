@@ -35,6 +35,13 @@ public class MDCAdapters {
     private static final Logger LOGGER = DefaultLogger.getLogger(MDCAdapters.class);
 
     /**
+     * Default constructor, constructs a new object.
+     */
+    public MDCAdapters() {
+        super();
+    }
+
+    /**
      * Finds available MDC Adapter. First tried via service loader, if not found one of the deafult adapters is returned tried in the following order:
      * <ul>
      * <li>{@link JbossMDCAdapter} - for using {@code org.jboss.logging.MDC}</li>

@@ -28,8 +28,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
-import jakarta.enterprise.inject.Vetoed;
-
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ArrayUtils;
 
@@ -68,8 +66,14 @@ import hu.icellmobilsoft.coffee.tool.gson.JsonUtil;
  * @author robert.kaplar
  * @since 1.0.0
  */
-@Vetoed
 public class GZIPUtil {
+
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public GZIPUtil() {
+        super();
+    }
 
     /**
      * Compress the source byte array content

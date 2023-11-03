@@ -58,6 +58,13 @@ public class TemplateDataService extends BaseService<TemplateData> {
     private TemplateDataRepository templateDataRepository;
 
     /**
+     * Default constructor, constructs a new object.
+     */
+    public TemplateDataService() {
+        super();
+    }
+
+    /**
      * Finds {@link TemplateData} by template key, data type and language and validity date.
      *
      * @param templateKey

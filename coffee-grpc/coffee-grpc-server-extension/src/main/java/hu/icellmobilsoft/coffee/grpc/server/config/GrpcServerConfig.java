@@ -134,6 +134,13 @@ public class GrpcServerConfig implements IGrpcServerConfig {
 
     private String configKey;
 
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public GrpcServerConfig() {
+        super();
+    }
+
     @Override
     public Integer getPort() throws BaseException {
         return config.getOptionalValue(joinKey(PORT), Integer.class).orElse(8199);

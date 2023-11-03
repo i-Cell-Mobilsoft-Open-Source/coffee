@@ -37,6 +37,13 @@ import com.google.gson.JsonSerializer;
  */
 public class ByteArrayConverter implements JsonSerializer<byte[]>, JsonDeserializer<byte[]> {
 
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public ByteArrayConverter() {
+        super();
+    }
+
     /** {@inheritDoc} */
     @Override
     public byte[] deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) {

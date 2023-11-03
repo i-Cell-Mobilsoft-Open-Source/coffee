@@ -124,6 +124,13 @@ public class MongoConfigHelper {
     private Config config;
 
     /**
+     * Default constructor, constructs a new object.
+     */
+    public MongoConfigHelper() {
+        super();
+    }
+
+    /**
      * MongoDb full URI, example: "mongodb://user:password@localhost:27017/samplet?ssl=false"
      *
      * @return uri MongoDatabase uri

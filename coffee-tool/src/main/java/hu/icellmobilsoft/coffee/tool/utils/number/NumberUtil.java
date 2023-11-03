@@ -19,19 +19,23 @@
  */
 package hu.icellmobilsoft.coffee.tool.utils.number;
 
-import jakarta.enterprise.inject.Vetoed;
-
 /**
  * Util for number types.
  *
  * @author karoly.tamas
  * @since 1.0.0
  */
-@Vetoed
 public class NumberUtil {
 
     private static final int DEFAUT_INT_VALUE = 0;
     private static final double DEFAUT_DOUBLE_VALUE = 0d;
+
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public NumberUtil() {
+        super();
+    }
 
     /**
      * Converts {@link Number} to {@code int}.

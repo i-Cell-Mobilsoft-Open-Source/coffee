@@ -40,6 +40,13 @@ public class MongoClientContainer {
     private final Map<String, MongoClient> clientMap = new HashMap<>();
 
     /**
+     * Default constructor, constructs a new object.
+     */
+    public MongoClientContainer() {
+        super();
+    }
+
+    /**
      * Returns the client map
      * 
      * @return the client map

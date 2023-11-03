@@ -30,8 +30,6 @@ import java.util.Properties;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
-import jakarta.enterprise.inject.Vetoed;
-
 import org.apache.commons.lang3.StringUtils;
 
 import com.google.common.cache.CacheBuilder;
@@ -45,7 +43,6 @@ import hu.icellmobilsoft.coffee.se.logging.Logger;
  *
  * @since 1.0.0
  */
-@Vetoed
 public class PropertyReader {
 
     private static Logger LOGGER = Logger.getLogger(PropertyReader.class);

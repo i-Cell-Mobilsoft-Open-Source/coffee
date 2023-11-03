@@ -42,6 +42,13 @@ public class MetricsBundle {
     private LocalDateTime startTime;
 
     /**
+     * Default constructor, constructs a new object.
+     */
+    public MetricsBundle() {
+        super();
+    }
+
+    /**
      * Gets counter that counts requests.
      * 
      * @return counter for request metric

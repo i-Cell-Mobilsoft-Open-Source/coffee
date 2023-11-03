@@ -70,6 +70,13 @@ public class RedisStreamPublisher {
     private String streamGroup;
 
     /**
+     * Default constructor, constructs a new object.
+     */
+    public RedisStreamPublisher() {
+        super();
+    }
+
+    /**
      * Initialization
      * 
      * @param redisManager

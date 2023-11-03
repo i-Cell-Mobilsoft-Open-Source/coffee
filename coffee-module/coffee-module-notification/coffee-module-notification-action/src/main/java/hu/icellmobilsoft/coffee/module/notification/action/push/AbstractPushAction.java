@@ -25,8 +25,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.enterprise.context.Dependent;
-import javax.inject.Inject;
+import jakarta.enterprise.context.Dependent;
+import jakarta.inject.Inject;
 
 import hu.icellmobilsoft.coffee.cdi.logger.AppLogger;
 import hu.icellmobilsoft.coffee.cdi.logger.ThisLogger;
@@ -65,6 +65,13 @@ public abstract class AbstractPushAction implements Serializable {
      */
     @Inject
     private PushHelper pushHelper;
+
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public AbstractPushAction() {
+        super();
+    }
 
     /**
      * Sends given {@link PushType}.
@@ -196,8 +203,8 @@ public abstract class AbstractPushAction implements Serializable {
      * @throws PushServerException
      *             if exception occurs on the server
      */
-    public abstract String sendAndroidPush(String channel, List<KeyValueBasicType> payloads, TemplateFullType templateFullType, Integer expireInSecond)
-            throws PushClientException, PushServerException;
+    public abstract String sendAndroidPush(String channel, List<KeyValueBasicType> payloads, TemplateFullType templateFullType,
+            Integer expireInSecond) throws PushClientException, PushServerException;
 
     /**
      * Sends push to IOS with given parameters.

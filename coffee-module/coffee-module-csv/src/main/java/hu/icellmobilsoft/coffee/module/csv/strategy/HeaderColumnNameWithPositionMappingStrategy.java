@@ -25,8 +25,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import jakarta.enterprise.inject.Vetoed;
-
 import org.apache.commons.collections4.ListValuedMap;
 import org.apache.commons.lang3.StringUtils;
 
@@ -37,6 +35,7 @@ import com.opencsv.bean.CsvBindByPosition;
 import com.opencsv.bean.CsvBindByPositions;
 import com.opencsv.bean.CsvConverter;
 import com.opencsv.bean.HeaderColumnNameMappingStrategy;
+import com.opencsv.bean.HeaderColumnNameMappingStrategyBuilder;
 import com.opencsv.exceptions.CsvBadConverterException;
 
 import hu.icellmobilsoft.coffee.module.csv.annotation.CsvBindByNamePosition;
@@ -51,13 +50,31 @@ import hu.icellmobilsoft.coffee.module.csv.annotation.CsvCustomBindByNamePositio
  * @author martin.nagy
  * @since 1.0.0
  */
-@Vetoed
 public class HeaderColumnNameWithPositionMappingStrategy<T> extends HeaderColumnNameMappingStrategy<T> {
 
     /**
      * Stores the index of the field by the name of the field
      */
     protected Map<String, Integer> fieldIndexByName;
+
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public HeaderColumnNameWithPositionMappingStrategy() {
+        super();
+    }
+
+    /**
+     * Constructor to allow setting options for header name mapping. Not considered stable. As new options are introduced for the mapping strategy,
+     * they will be introduced here. You are encouraged to use {@link HeaderColumnNameMappingStrategyBuilder}.
+     * 
+     * @param forceCorrectRecordLength
+     *            If set, every record will be shortened or lengthened to match the number of headers
+     * @see HeaderColumnNameMappingStrategy
+     */
+    public HeaderColumnNameWithPositionMappingStrategy(boolean forceCorrectRecordLength) {
+        super(forceCorrectRecordLength);
+    }
 
     @Override
     protected void loadFieldMap() throws CsvBadConverterException {

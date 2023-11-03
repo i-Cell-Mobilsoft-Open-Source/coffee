@@ -61,6 +61,13 @@ public class DefaultBaseExceptionMapper implements ExceptionMapper<BaseException
     @Inject
     private IExceptionMessageTranslator exceptionMessageTranslator;
 
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public DefaultBaseExceptionMapper() {
+        super();
+    }
+
     /** {@inheritDoc} */
     @Override
     public final Response toResponse(BaseException e) {

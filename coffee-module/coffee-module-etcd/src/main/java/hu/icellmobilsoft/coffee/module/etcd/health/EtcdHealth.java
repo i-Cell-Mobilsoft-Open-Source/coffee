@@ -52,6 +52,13 @@ public class EtcdHealth {
     private DefaultEtcdConfigImpl etcdConfig;
 
     /**
+     * Default constructor, constructs a new object.
+     */
+    public EtcdHealth() {
+        super();
+    }
+
+    /**
      * Checking whether the etcd is reachable
      * 
      * @param builderName

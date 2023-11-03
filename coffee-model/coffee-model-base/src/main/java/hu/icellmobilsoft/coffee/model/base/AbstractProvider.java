@@ -38,6 +38,13 @@ public abstract class AbstractProvider {
     private static ClassFieldsAndMethodsCache classFieldsAndMethodsCache = new ClassFieldsAndMethodsCache();
 
     /**
+     * Default constructor, constructs a new object.
+     */
+    public AbstractProvider() {
+        super();
+    }
+
+    /**
      * Returns the field from the specified list associated with the specified getter method based on its name
      *
      * @param method

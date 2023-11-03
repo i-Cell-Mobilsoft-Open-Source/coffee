@@ -24,7 +24,6 @@ import java.util.Collection;
 import java.util.List;
 
 import jakarta.enterprise.inject.Instance;
-import jakarta.enterprise.inject.Vetoed;
 import jakarta.enterprise.inject.spi.CDI;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Id;
@@ -46,11 +45,17 @@ import hu.icellmobilsoft.coffee.tool.common.FunctionalInterfaces.BaseExceptionFu
  * @author imre.scheffer
  * @since 1.0.0
  */
-@Vetoed
 public class EntityHelper {
 
     /** Constant <code>MAX_PARAMETER_COUNT=1000</code> */
     public static final int MAX_PARAMETER_COUNT = 1000;
+
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public EntityHelper() {
+        super();
+    }
 
     /**
      * Can get Lazy loaded Entitys id, else org.hibernate.LazyInitializationException: could not initialize proxy - no Session will be thrown

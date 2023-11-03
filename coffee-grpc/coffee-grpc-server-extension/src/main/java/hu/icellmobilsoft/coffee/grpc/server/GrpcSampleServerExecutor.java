@@ -37,6 +37,13 @@ public class GrpcSampleServerExecutor implements IGrpcServerExecutor {
     @Inject
     private GrpcServerManager grpcServerManager;
 
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public GrpcSampleServerExecutor() {
+        super();
+    }
+
     @Override
     public void run() {
 

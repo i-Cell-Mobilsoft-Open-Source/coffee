@@ -19,7 +19,6 @@
  */
 package hu.icellmobilsoft.coffee.model.base;
 
-import jakarta.enterprise.inject.Vetoed;
 import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -33,11 +32,17 @@ import org.hibernate.annotations.GenericGenerator;
  *
  * @since 1.0.0
  */
-@Vetoed
 @MappedSuperclass
 public abstract class AbstractIdentifiedEntity extends AbstractEntity {
 
     private static final long serialVersionUID = 1L;
+
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public AbstractIdentifiedEntity() {
+        super();
+    }
 
     /**
      * Identity field of the entity

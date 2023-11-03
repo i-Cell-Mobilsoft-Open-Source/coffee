@@ -33,15 +33,16 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import jakarta.enterprise.context.Dependent;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
+
 import org.apache.commons.lang3.tuple.Pair;
 
 import hu.icellmobilsoft.coffee.model.base.AbstractProvider;
 import hu.icellmobilsoft.coffee.model.base.exception.ProviderException;
 import hu.icellmobilsoft.coffee.model.base.javatime.annotation.CreatedOn;
 import hu.icellmobilsoft.coffee.model.base.javatime.annotation.ModifiedOn;
-import jakarta.enterprise.context.Dependent;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.PreUpdate;
 
 /**
  * Set java 8 timestamps on marked properties.
@@ -53,6 +54,13 @@ import jakarta.persistence.PreUpdate;
  */
 @Dependent
 public class TimestampsProvider extends AbstractProvider {
+
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public TimestampsProvider() {
+        super();
+    }
 
     /**
      * Persist entity @CreatedOn property before persist with the System current time value

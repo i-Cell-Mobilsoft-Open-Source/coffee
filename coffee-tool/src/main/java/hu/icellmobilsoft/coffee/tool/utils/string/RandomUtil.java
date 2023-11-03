@@ -24,8 +24,6 @@ import java.util.Date;
 import java.util.Random;
 import java.util.UUID;
 
-import jakarta.enterprise.inject.Vetoed;
-
 import org.apache.commons.lang3.StringUtils;
 
 import hu.icellmobilsoft.coffee.se.logging.Logger;
@@ -36,7 +34,6 @@ import hu.icellmobilsoft.coffee.se.logging.Logger;
  * @author imre.scheffer
  * @since 1.0.0
  */
-@Vetoed
 public class RandomUtil {
 
     private static Logger LOGGER = Logger.getLogger(RandomUtil.class);
@@ -97,6 +94,13 @@ public class RandomUtil {
     }
 
     private static final Random RANDOM = new Random();
+
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public RandomUtil() {
+        super();
+    }
 
     /**
      * Generates fix 16 length id.

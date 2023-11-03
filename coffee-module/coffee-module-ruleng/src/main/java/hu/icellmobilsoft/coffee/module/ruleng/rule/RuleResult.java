@@ -19,18 +19,22 @@
  */
 package hu.icellmobilsoft.coffee.module.ruleng.rule;
 
-import jakarta.enterprise.inject.Vetoed;
-
 /**
  * Általános kiértékelés eredménye (valid és invalid esetén is)
  *
  * @author imre.scheffer
  * @since 1.0.0
  */
-@Vetoed
 public class RuleResult {
 
     private Long index;
+
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public RuleResult() {
+        super();
+    }
 
     /**
      * Getter for the field {@code description}. When evaluating in a list, {@code index} connects the evaluation with the result data.

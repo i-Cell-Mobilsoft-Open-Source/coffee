@@ -19,11 +19,11 @@
  */
 package hu.icellmobilsoft.coffee.model.base;
 
-import hu.icellmobilsoft.coffee.model.base.annotation.ModifiedBy;
-import jakarta.enterprise.inject.Vetoed;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
+
+import hu.icellmobilsoft.coffee.model.base.annotation.ModifiedBy;
 
 /**
  * Implementation of AbstractIdentifiedAuditEntity with ModifiedBy onCreate = true
@@ -31,7 +31,6 @@ import jakarta.persistence.Table;
  * @author zsolt.vasi
  * @since 2.0.0
  */
-@Vetoed
 @Entity
 @Table(name = "dummy")
 public class ModifiedByOnCreateImplAbstractIdentifiedAuditEntity extends AbstractIdentifiedAuditEntity {

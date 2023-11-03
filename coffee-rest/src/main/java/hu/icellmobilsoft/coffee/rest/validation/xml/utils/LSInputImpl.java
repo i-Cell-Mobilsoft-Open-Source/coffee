@@ -22,8 +22,6 @@ package hu.icellmobilsoft.coffee.rest.validation.xml.utils;
 import java.io.InputStream;
 import java.io.Reader;
 
-import jakarta.enterprise.inject.Vetoed;
-
 import org.w3c.dom.ls.LSInput;
 
 /**
@@ -33,7 +31,6 @@ import org.w3c.dom.ls.LSInput;
  * @author ferenc.lutischan
  * @since 1.0.0
  */
-@Vetoed
 public class LSInputImpl implements LSInput {
     private Reader characterStream;
     private InputStream byteStream;
@@ -43,6 +40,13 @@ public class LSInputImpl implements LSInput {
     private String baseURI;
     private String encoding;
     private boolean certifiedText;
+
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public LSInputImpl() {
+        super();
+    }
 
     /** {@inheritDoc} */
     @Override

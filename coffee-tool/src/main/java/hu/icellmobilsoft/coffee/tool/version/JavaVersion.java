@@ -33,6 +33,13 @@ public class JavaVersion {
     private Integer patchUpdate;
 
     /**
+     * Default constructor, constructs a new object.
+     */
+    public JavaVersion() {
+        super();
+    }
+
+    /**
      * Getter for the field <code>major</code>.
      *
      * @return {@code major}

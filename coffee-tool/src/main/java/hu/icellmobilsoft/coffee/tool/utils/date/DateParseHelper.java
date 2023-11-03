@@ -30,8 +30,6 @@ import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
-import jakarta.enterprise.inject.Vetoed;
-
 import org.apache.commons.lang3.StringUtils;
 
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
@@ -42,8 +40,14 @@ import hu.icellmobilsoft.coffee.dto.exception.BaseException;
  * @author mark.petrenyi
  * @since 1.0.0
  */
-@Vetoed
 public class DateParseHelper {
+
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public DateParseHelper() {
+        super();
+    }
 
     /**
      * String to {@code OffsetDateTime}

@@ -21,8 +21,6 @@ package hu.icellmobilsoft.coffee.module.etcd.util;
 
 import java.time.Duration;
 
-import jakarta.enterprise.inject.Vetoed;
-
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.dto.exception.InvalidParameterException;
 import hu.icellmobilsoft.coffee.module.etcd.config.EtcdConfig;
@@ -36,7 +34,6 @@ import io.etcd.jetcd.ClientBuilder;
  * @author speter555
  * @since 1.13.0
  */
-@Vetoed
 public class EtcdClientBuilderUtil {
 
     /**

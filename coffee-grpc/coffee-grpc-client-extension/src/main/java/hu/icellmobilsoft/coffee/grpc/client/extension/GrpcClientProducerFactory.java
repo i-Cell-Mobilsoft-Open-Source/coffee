@@ -48,6 +48,13 @@ import io.grpc.stub.AbstractBlockingStub;
 public class GrpcClientProducerFactory {
 
     /**
+     * Default constructor, constructs a new object.
+     */
+    public GrpcClientProducerFactory() {
+        super();
+    }
+
+    /**
      * Producer template bean
      * 
      * @param injectionPoint

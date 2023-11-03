@@ -85,6 +85,13 @@ public class DefaultGeneralExceptionMapper implements ExceptionMapper<Exception>
     @Inject
     private IExceptionMessageTranslator exceptionMessageTranslator;
 
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public DefaultGeneralExceptionMapper() {
+        super();
+    }
+
     /** {@inheritDoc} */
     @Override
     public Response toResponse(Exception e) {

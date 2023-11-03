@@ -24,7 +24,6 @@ import java.io.Serializable;
 import java.sql.Blob;
 import java.sql.Clob;
 
-import jakarta.enterprise.inject.Vetoed;
 import jakarta.persistence.Column;
 import jakarta.persistence.MappedSuperclass;
 import jakarta.persistence.Transient;
@@ -43,11 +42,17 @@ import hu.icellmobilsoft.coffee.se.logging.Logger;
  * @author imre.scheffer
  * @since 1.0.0
  */
-@Vetoed
 @MappedSuperclass
 public abstract class AbstractEntity implements IVersionable, Serializable {
 
     private static final long serialVersionUID = 1L;
+
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public AbstractEntity() {
+        super();
+    }
 
     /**
      * The version of the entity for optimistic lock checking

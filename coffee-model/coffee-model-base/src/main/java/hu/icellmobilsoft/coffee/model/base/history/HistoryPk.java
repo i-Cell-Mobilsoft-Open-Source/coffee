@@ -41,6 +41,13 @@ public class HistoryPk implements Serializable {
     private static final long serialVersionUID = 1L;
 
     /**
+     * Default constructor, constructs a new object.
+     */
+    public HistoryPk() {
+        super();
+    }
+
+    /**
      * Elő rekord id
      */
     @Column(name = "X__ID", nullable = false, length = 30)

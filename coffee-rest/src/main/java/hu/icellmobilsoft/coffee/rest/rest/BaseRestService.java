@@ -47,6 +47,13 @@ public abstract class BaseRestService {
     private AppLogger log;
 
     /**
+     * Default constructor, constructs a new object.
+     */
+    public BaseRestService() {
+        super();
+    }
+
+    /**
      * Returns {@link BaseException} from given {@link Exception}. If the given {@code Exception} is not a {@code BaseException} instance, then
      * creates and returns a {@link TechnicalException}.
      *

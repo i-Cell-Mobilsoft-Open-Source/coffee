@@ -63,6 +63,13 @@ public class DefaultTOtpConfigImpl implements TOtpConfig {
     @ConfigProperty(name = TOtpConfigKey.VERIFY_ADDITIONAL_WINDOWS_COUNT, defaultValue = "0")
     private Provider<Integer> verifyAdditionalWindowsCount;
 
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public DefaultTOtpConfigImpl() {
+        super();
+    }
+
     /** {@inheritDoc} */
     @Override
     public Integer getTimestep() {

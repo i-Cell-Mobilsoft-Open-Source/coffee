@@ -40,6 +40,13 @@ import hu.icellmobilsoft.coffee.tool.utils.date.DateXmlUtil;
  */
 public class DurationConverter implements JsonSerializer<Duration>, JsonDeserializer<Duration> {
 
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public DurationConverter() {
+        super();
+    }
+
     /** {@inheritDoc} */
     @Override
     public JsonElement serialize(Duration duration, Type type, JsonSerializationContext jsonSerializationContext) {

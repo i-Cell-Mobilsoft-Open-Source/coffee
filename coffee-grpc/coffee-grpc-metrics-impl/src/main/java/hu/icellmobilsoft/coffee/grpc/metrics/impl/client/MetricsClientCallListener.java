@@ -31,6 +31,9 @@ import io.grpc.Status;
 /**
  * gRPC client listener that will collect metrics using microprofile-metrics api
  * 
+ * @param <ReqT>
+ *            request type
+ * 
  * @author czenczl
  * @since 2.1.0
  *

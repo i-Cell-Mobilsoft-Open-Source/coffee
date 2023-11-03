@@ -39,6 +39,13 @@ import io.opentracing.tag.Tags;
 public abstract class AbstractOpenTraceInterceptor {
 
     /**
+     * Default constructor, constructs a new object.
+     */
+    public AbstractOpenTraceInterceptor() {
+        super();
+    }
+
+    /**
      * Creates new span builder for opentracing
      * 
      * @param methodDescriptor

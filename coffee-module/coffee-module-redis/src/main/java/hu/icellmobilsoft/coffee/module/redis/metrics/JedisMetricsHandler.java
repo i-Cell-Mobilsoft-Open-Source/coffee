@@ -46,6 +46,13 @@ public class JedisMetricsHandler implements IJedisMetricsHandler {
     private MetricRegistry metricRegistry;
 
     /**
+     * Default constructor, constructs a new object.
+     */
+    public JedisMetricsHandler() {
+        super();
+    }
+
+    /**
      * Provides metrics for the specified connection pool.
      * 
      * @param configKey
