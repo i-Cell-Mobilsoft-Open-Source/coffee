@@ -157,7 +157,7 @@ public abstract class BaseRestLogger implements ContainerRequestFilter, WriterIn
      * <code>MDC.put(LogConstants.LOG_SESSION_ID, ertek)</code> részben.<br>
      * <br>
      * Folyamat azonosítás, Graylog loggolásban van nagy értelme
-     *
+     * 
      * @return session key
      */
     public abstract String sessionKey();
@@ -195,7 +195,7 @@ public abstract class BaseRestLogger implements ContainerRequestFilter, WriterIn
 
     /**
      * Prints http entity from {@link ContainerRequestContext} and appends given {@link StringBuffer} with the print result.
-     *
+     * 
      * @param b
      *            request message
      * @param requestContext
@@ -208,7 +208,7 @@ public abstract class BaseRestLogger implements ContainerRequestFilter, WriterIn
 
     /**
      * Prints response URL line and appends given {@link StringBuffer} with the print result.
-     *
+     * 
      * @param b
      *            response message
      * @param context
@@ -226,7 +226,7 @@ public abstract class BaseRestLogger implements ContainerRequestFilter, WriterIn
 
     /**
      * Prints response header values and appends given {@link StringBuffer} with the print result.
-     *
+     * 
      * @param b
      *            response message
      * @param context
@@ -239,7 +239,7 @@ public abstract class BaseRestLogger implements ContainerRequestFilter, WriterIn
 
     /**
      * Prints response from {@link WriterInterceptorContext} and appends given {@link StringBuffer} with the print result.
-     *
+     * 
      * @param b
      *            response message
      * @param context
