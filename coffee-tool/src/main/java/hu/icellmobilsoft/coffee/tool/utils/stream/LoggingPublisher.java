@@ -42,6 +42,6 @@ public class LoggingPublisher {
      *            containing the message to be logged
      */
     public void publish(LoggingEvent event) {
-        loggingEvent.fireAsync(event);
+        loggingEvent.fire(event);
     }
 }

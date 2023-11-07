@@ -20,7 +20,7 @@
 package hu.icellmobilsoft.coffee.tool.utils.stream;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.event.ObservesAsync;
+import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 
 import hu.icellmobilsoft.coffee.cdi.logger.AppLogger;
@@ -45,7 +45,7 @@ public class LoggingObserver {
      * @param event
      *            containing the message to be logged
      */
-    public void observe(@ObservesAsync LoggingEvent event) {
+    public void observe(@Observes LoggingEvent event) {
         log.info(event.getMessage());
     }
 }
