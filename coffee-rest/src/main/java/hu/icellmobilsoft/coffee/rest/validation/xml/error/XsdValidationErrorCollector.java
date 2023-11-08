@@ -44,6 +44,13 @@ public class XsdValidationErrorCollector implements IXsdValidationErrorCollector
     private static final Logger log = Logger.getLogger(XsdValidationErrorCollector.class);
     private List<XMLValidationError> errors;
 
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public XsdValidationErrorCollector() {
+        super();
+    }
+
     /** {@inheritDoc} */
     @Override
     public boolean handleEvent(ValidationEvent event) {

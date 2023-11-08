@@ -19,8 +19,6 @@
  */
 package hu.icellmobilsoft.coffee.tool.utils.config;
 
-import jakarta.enterprise.inject.Vetoed;
-
 import org.eclipse.microprofile.config.Config;
 import org.eclipse.microprofile.config.spi.ConfigProviderResolver;
 
@@ -31,7 +29,6 @@ import org.eclipse.microprofile.config.spi.ConfigProviderResolver;
  * @author speter555
  * @since 1.2.0
  */
-@Vetoed
 public class ConfigUtil {
 
     /**

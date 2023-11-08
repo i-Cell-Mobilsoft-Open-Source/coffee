@@ -56,6 +56,9 @@ import hu.icellmobilsoft.coffee.rest.validation.xml.exception.BaseProcessingExce
  * <br>
  *
  * Majd megannotálni a végpontot<br>
+ * 
+ * @param <T>
+ *            message body type
  *
  * @see ValidateXMLs
  * @see ValidateXML
@@ -68,6 +71,13 @@ public abstract class XmlMessageBodyReaderBase<T> implements MessageBodyReader<T
 
     @Inject
     private JaxbTool jaxbTool;
+
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public XmlMessageBodyReaderBase() {
+        super();
+    }
 
     /**
      * {@inheritDoc}

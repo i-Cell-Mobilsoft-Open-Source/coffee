@@ -46,6 +46,13 @@ public class OffsetTimeConverter implements JsonSerializer<OffsetTime>, JsonDese
 
     private static Logger LOGGER = Logger.getLogger(OffsetTimeConverter.class);
 
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public OffsetTimeConverter() {
+        super();
+    }
+
     /** {@inheritDoc} */
     @Override
     public OffsetTime deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {

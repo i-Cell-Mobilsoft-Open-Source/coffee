@@ -50,6 +50,13 @@ public class DefaultEtcdFactory {
     private DefaultEtcdConfigImpl defaultEtcdConfigImpl;
 
     /**
+     * Default constructor, constructs a new object.
+     */
+    public DefaultEtcdFactory() {
+        super();
+    }
+
+    /**
      * Producer for ETCD client
      * 
      * @return ETCD client

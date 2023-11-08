@@ -46,6 +46,13 @@ import hu.icellmobilsoft.coffee.tool.common.FunctionalInterfaces.BaseExceptionSu
 public class TransactionHelper {
 
     /**
+     * Default constructor, constructs a new object.
+     */
+    public TransactionHelper() {
+        super();
+    }
+
+    /**
      * Execute the given {@link BaseExceptionSupplier} inside a {@link Transactional} block.
      *
      * @param baseExceptionSupplier

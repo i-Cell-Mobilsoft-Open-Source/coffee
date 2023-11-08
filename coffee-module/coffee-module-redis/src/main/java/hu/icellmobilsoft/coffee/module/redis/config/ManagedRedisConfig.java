@@ -120,6 +120,13 @@ public class ManagedRedisConfig implements RedisConfig {
     private String poolConfigKey;
 
     /**
+     * Default constructor, constructs a new object.
+     */
+    public ManagedRedisConfig() {
+        super();
+    }
+
+    /**
      * {@inheritDoc}
      *
      * The host where the selected redis is available.

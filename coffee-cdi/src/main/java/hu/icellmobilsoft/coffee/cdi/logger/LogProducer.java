@@ -43,6 +43,13 @@ import hu.icellmobilsoft.coffee.se.logging.Logger;
 @Dependent
 public class LogProducer {
 
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public LogProducer() {
+        super();
+    }
+
     @Inject
     @DefaultAppLogger
     private AppLogger appLogger;

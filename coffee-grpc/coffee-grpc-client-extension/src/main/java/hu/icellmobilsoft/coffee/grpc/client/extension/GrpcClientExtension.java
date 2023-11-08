@@ -56,6 +56,13 @@ public class GrpcClientExtension implements Extension {
     private Map<Type, Annotation> grpcClientMap = new HashMap<>();
 
     /**
+     * Default constructor, constructs a new object.
+     */
+    public GrpcClientExtension() {
+        super();
+    }
+
+    /**
      * Creates CDI producer beans for gRPC clients
      * 
      * @param abd

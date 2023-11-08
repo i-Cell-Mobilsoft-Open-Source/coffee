@@ -58,6 +58,13 @@ public class LogSpecifiersAnnotationProcessor extends AbstractProcessor {
 
     private Messager messager;
 
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public LogSpecifiersAnnotationProcessor() {
+        super();
+    }
+
     /** {@inheritDoc} */
     @Override
     public synchronized void init(ProcessingEnvironment processingEnv) {

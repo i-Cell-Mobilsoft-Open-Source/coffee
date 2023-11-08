@@ -60,6 +60,13 @@ public class DefaultTOtpGeneratorImpl implements TOtpGenerator {
 
     private static final int[] DIGITS_POWER = { 1, 10, 100, 1000, 10000, 100000, 1000000, 10000000, 100000000, 1000000000 };
 
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public DefaultTOtpGeneratorImpl() {
+        super();
+    }
+
     /** {@inheritDoc} */
     @Override
     public String generatePassword(byte[] secretKey, long currentUTCTimestamp, int otpLength, TOtpAlgorithm hashAlgorithm) throws BaseException {

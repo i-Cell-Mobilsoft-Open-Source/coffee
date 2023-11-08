@@ -45,6 +45,13 @@ public class AppLoggerNoContainerImpl implements AppLogger {
     private static final long serialVersionUID = 1L;
 
     /**
+     * Default constructor, constructs a new object.
+     */
+    public AppLoggerNoContainerImpl() {
+        super();
+    }
+
+    /**
      * The wrapped logger instance
      */
     private Logger logger;

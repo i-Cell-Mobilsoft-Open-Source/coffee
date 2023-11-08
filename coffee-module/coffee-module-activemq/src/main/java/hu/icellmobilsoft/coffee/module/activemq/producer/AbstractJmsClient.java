@@ -67,6 +67,13 @@ public abstract class AbstractJmsClient implements Serializable {
     private JmsHandler jmsHandler;
 
     /**
+     * Default constructor, constructs a new object.
+     */
+    public AbstractJmsClient() {
+        super();
+    }
+
+    /**
      * Getter for the JMS {@link ConnectionFactory}.
      *
      * @return {@code ConnectionFactory}.

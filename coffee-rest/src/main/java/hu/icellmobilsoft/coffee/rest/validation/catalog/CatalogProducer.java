@@ -58,6 +58,13 @@ public class CatalogProducer {
     private ApplicationConfiguration applicationConfiguration;
 
     /**
+     * Default constructor, constructs a new object.
+     */
+    public CatalogProducer() {
+        super();
+    }
+
+    /**
      * Producer for {@code @Inject {@link Catalog}} feature
      *
      * @return {@code Catalog} object

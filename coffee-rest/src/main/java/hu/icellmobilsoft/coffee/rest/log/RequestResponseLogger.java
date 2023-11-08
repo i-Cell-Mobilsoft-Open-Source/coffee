@@ -88,6 +88,13 @@ public class RequestResponseLogger {
     private AppLogger log;
 
     /**
+     * Default constructor, constructs a new object.
+     */
+    public RequestResponseLogger() {
+        super();
+    }
+
+    /**
      * Prints request headers to {@link String}. Masks password.
      *
      * @param headerValues

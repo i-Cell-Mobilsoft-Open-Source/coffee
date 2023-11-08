@@ -35,6 +35,13 @@ public abstract class AbstractMongoEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 
     /**
+     * Default constructor, constructs a new object.
+     */
+    public AbstractMongoEntity() {
+        super();
+    }
+
+    /**
      * Identifier of the mongo object
      */
     @BsonId

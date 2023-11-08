@@ -63,6 +63,13 @@ public class TemplateAction {
     private TemplateParameterService templateParameterService;
 
     /**
+     * Default constructor, constructs a new object.
+     */
+    public TemplateAction() {
+        super();
+    }
+
+    /**
      * Returns {@link TemplateFullType} by given {@link TemplateType}.
      * 
      * @param templateType

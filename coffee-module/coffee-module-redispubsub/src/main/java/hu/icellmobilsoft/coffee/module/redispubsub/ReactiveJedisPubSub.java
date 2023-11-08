@@ -21,8 +21,6 @@ package hu.icellmobilsoft.coffee.module.redispubsub;
 
 import java.util.Map;
 
-import jakarta.enterprise.inject.Vetoed;
-
 import org.eclipse.microprofile.reactive.messaging.Message;
 import org.reactivestreams.Subscriber;
 
@@ -42,7 +40,6 @@ import redis.clients.jedis.JedisPubSub;
  * @author mark.petrenyi
  * @since 1.13.0
  */
-@Vetoed
 public class ReactiveJedisPubSub extends JedisPubSub implements AutoCloseable {
 
     private static final Logger LOG = Logger.getLogger(ReactiveJedisPubSub.class);

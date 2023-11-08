@@ -33,8 +33,6 @@ import javax.xml.datatype.DatatypeConstants;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 
-import jakarta.enterprise.inject.Vetoed;
-
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -43,10 +41,16 @@ import org.apache.commons.lang3.StringUtils;
  * @author imre.scheffer
  * @since 1.0.0
  */
-@Vetoed
 public class DateXmlUtil {
 
     private static DatatypeFactory datatypeFactory;
+
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public DateXmlUtil() {
+        super();
+    }
 
     /**
      * Converts {@link Calendar} to {@link XMLGregorianCalendar}

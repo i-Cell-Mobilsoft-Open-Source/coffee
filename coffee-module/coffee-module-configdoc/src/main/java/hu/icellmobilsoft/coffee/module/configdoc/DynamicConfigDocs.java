@@ -71,6 +71,13 @@ public @interface DynamicConfigDocs {
      */
     final class NoTemplate {
 
+        /**
+         * Default constructor, constructs a new object.
+         */
+        public NoTemplate() {
+            super();
+        }
+
     }
 
 }

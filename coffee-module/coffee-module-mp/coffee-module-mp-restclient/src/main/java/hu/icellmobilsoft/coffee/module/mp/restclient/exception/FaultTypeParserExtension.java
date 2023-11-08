@@ -51,6 +51,13 @@ public class FaultTypeParserExtension implements Extension {
     private static volatile Map<Class<? extends Enum>, Integer> faultTypePriorityMap = new HashMap<>();
 
     /**
+     * Default constructor, constructs a new object.
+     */
+    public FaultTypeParserExtension() {
+        super();
+    }
+
+    /**
      * Process annotated type.
      *
      * @param <T>

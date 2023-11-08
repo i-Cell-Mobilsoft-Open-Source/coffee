@@ -46,6 +46,13 @@ public abstract class AbstractMetricsInterceptor {
     private static final String TAG_STATUS = "status";
 
     /**
+     * Default constructor, constructs a new object.
+     */
+    public AbstractMetricsInterceptor() {
+        super();
+    }
+
+    /**
      * Create metric bundle for the interceptors, metric based on mp-metrics
      * 
      * @param methodDescriptor

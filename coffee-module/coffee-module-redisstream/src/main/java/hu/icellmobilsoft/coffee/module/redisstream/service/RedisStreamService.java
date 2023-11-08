@@ -78,6 +78,13 @@ public class RedisStreamService {
     private String group;
 
     /**
+     * Default constructor, constructs a new object.
+     */
+    public RedisStreamService() {
+        super();
+    }
+
+    /**
      * Stream key, calculated by {@link #group}
      * 
      * @return Stream key

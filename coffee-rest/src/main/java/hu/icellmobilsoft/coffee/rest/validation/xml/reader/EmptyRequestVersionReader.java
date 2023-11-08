@@ -37,6 +37,13 @@ import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
 public class EmptyRequestVersionReader implements IXmlRequestVersionReader, IJsonRequestVersionReader {
 
     /**
+     * Default constructor, constructs a new object.
+     */
+    public EmptyRequestVersionReader() {
+        super();
+    }
+
+    /**
      * {@inheritDoc}
      *
      * Null-t ad vissza, amit a hívó kód lekezel

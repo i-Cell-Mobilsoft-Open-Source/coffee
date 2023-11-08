@@ -87,6 +87,13 @@ public class GrpcServerManager {
     private Server server;
 
     /**
+     * Default constructor, constructs a new object.
+     */
+    public GrpcServerManager() {
+        super();
+    }
+
+    /**
      * Server initialization, port bind, adding services to the server, defining interceptors
      * 
      * @throws BaseException

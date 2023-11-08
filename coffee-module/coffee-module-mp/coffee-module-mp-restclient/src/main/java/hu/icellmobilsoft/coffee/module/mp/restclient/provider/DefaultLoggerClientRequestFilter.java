@@ -54,6 +54,13 @@ public class DefaultLoggerClientRequestFilter implements ClientRequestFilter {
     @Inject
     private RequestResponseLogger requestResponseLogger;
 
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public DefaultLoggerClientRequestFilter() {
+        super();
+    }
+
     /** {@inheritDoc} */
     @Override
     public void filter(ClientRequestContext requestContext) throws IOException {

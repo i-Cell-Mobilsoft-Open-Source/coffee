@@ -19,8 +19,6 @@
  */
 package hu.icellmobilsoft.coffee.tool.utils.string;
 
-import jakarta.enterprise.inject.Vetoed;
-
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.CharUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -31,8 +29,14 @@ import org.apache.commons.lang3.StringUtils;
  * @author imre.scheffer
  * @since 1.0.0
  */
-@Vetoed
 public class PasswordUtil {
+
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public PasswordUtil() {
+        super();
+    }
 
     /**
      * Encodes given {@code String} to create password.
@@ -42,7 +46,7 @@ public class PasswordUtil {
      * @return encoded password
      */
     public static String encodeString(String string) {
-        if (StringUtils.isBlank(string)){
+        if (StringUtils.isBlank(string)) {
             return null;
         }
 

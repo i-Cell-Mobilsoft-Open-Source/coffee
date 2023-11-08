@@ -101,6 +101,13 @@ public class StreamGroupConfig implements IStreamGroupConfig {
 
     private String configKey;
 
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public StreamGroupConfig() {
+        super();
+    }
+
     @Override
     public Optional<Long> getProducerMaxLen() {
         return config.getOptionalValue(joinKey(PRODUCER_MAXLEN), Long.class);

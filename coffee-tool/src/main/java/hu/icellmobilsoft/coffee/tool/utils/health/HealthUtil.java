@@ -31,6 +31,13 @@ import hu.icellmobilsoft.coffee.cdi.health.constants.HealthConstant;
 public class HealthUtil {
 
     /**
+     * Default constructor, constructs a new object.
+     */
+    public HealthUtil() {
+        super();
+    }
+
+    /**
      * Gets the node id from the running wildfly server
      * 
      * @param nodeId

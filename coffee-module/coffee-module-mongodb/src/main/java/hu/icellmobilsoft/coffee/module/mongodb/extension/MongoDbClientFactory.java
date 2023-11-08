@@ -73,6 +73,13 @@ public class MongoDbClientFactory {
     private CodecRegistry mongoCodecRegistry;
 
     /**
+     * Default constructor, constructs a new object.
+     */
+    public MongoDbClientFactory() {
+        super();
+    }
+
+    /**
      * Producer method for creating MongoDbClient instance
      * 
      * @param injectionPoint

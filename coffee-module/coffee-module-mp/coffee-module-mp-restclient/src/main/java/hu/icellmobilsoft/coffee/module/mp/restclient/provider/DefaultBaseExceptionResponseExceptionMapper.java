@@ -52,6 +52,13 @@ public class DefaultBaseExceptionResponseExceptionMapper implements ResponseExce
      */
     public static final int HTTP_STATUS_I_AM_A_TEAPOT = 418;
 
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public DefaultBaseExceptionResponseExceptionMapper() {
+        super();
+    }
+
     @Override
     public BaseException toThrowable(Response response) {
         int responseStatus = response.getStatus();

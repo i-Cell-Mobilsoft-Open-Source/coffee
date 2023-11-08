@@ -23,15 +23,15 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-import javax.enterprise.context.Dependent;
-import javax.inject.Inject;
+import jakarta.enterprise.context.Dependent;
+import jakarta.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.deltaspike.jpa.api.transaction.Transactional;
 
 import hu.icellmobilsoft.coffee.dto.common.common.KeyValueBasicType;
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.dto.notification.notification.DeviceType;
+import hu.icellmobilsoft.coffee.jpa.annotation.Transactional;
 import hu.icellmobilsoft.coffee.module.notification.model.Push;
 import hu.icellmobilsoft.coffee.module.notification.model.PushDevice;
 import hu.icellmobilsoft.coffee.module.notification.service.PushDeviceService;
@@ -61,6 +61,13 @@ public class PushHelper implements Serializable {
      */
     @Inject
     private PushDeviceService pushDeviceService;
+
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public PushHelper() {
+        super();
+    }
 
     /**
      * Inserts {@link Push} with given parameters and corresponding {@link PushDevice} list into DB.

@@ -48,6 +48,13 @@ public class MongoDbClient {
     private MongoService<BasicDBObject> mongoService;
 
     /**
+     * Default constructor, constructs a new object.
+     */
+    public MongoDbClient() {
+        super();
+    }
+
+    /**
      * init MongoRepository collection
      * 
      * @param collection

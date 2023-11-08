@@ -41,6 +41,13 @@ import hu.icellmobilsoft.coffee.se.logging.mdc.MDC;
 @Dependent
 public class DefaultSettingClientRequestFilter implements ClientRequestFilter {
 
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public DefaultSettingClientRequestFilter() {
+        super();
+    }
+
     /** {@inheritDoc} */
     @Override
     public void filter(ClientRequestContext requestContext) throws IOException {

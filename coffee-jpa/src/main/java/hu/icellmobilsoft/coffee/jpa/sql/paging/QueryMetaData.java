@@ -51,13 +51,15 @@ import jakarta.xml.bind.annotation.XmlType;
  * @since 1.0.0
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "QueryMetaData", propOrder = {
-    "totalRows",
-    "maxPage",
-    "rows",
-    "page"
-})
+@XmlType(name = "QueryMetaData", propOrder = { "totalRows", "maxPage", "rows", "page" })
 public class QueryMetaData {
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public QueryMetaData() {
+        super();
+    }
+
     /**
      * Total number of rows
      */

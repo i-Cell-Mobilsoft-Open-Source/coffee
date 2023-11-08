@@ -65,6 +65,13 @@ public abstract class AbstractEmailTemplateAction implements Serializable {
     private EmailDataBase emailDataBase;
 
     /**
+     * Default constructor, constructs a new object.
+     */
+    public AbstractEmailTemplateAction() {
+        super();
+    }
+
+    /**
      * Sends given {@link EmailTemplateType} and saves it to the database.
      *
      * @param emailType

@@ -37,6 +37,13 @@ import hu.icellmobilsoft.coffee.model.base.AbstractIdentifiedAuditEntity;
 public class CommonIdListTypeConverter {
 
     /**
+     * Default constructor, constructs a new object.
+     */
+    public CommonIdListTypeConverter() {
+        super();
+    }
+
+    /**
      * Convert entity list to XML specific ID list type
      *
      * @param <T>

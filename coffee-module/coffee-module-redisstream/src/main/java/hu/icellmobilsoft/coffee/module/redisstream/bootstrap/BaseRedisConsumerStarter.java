@@ -99,6 +99,13 @@ public class BaseRedisConsumerStarter {
     private BeanManager beanManager;
 
     /**
+     * Default constructor, constructs a new object.
+     */
+    public BaseRedisConsumerStarter() {
+        super();
+    }
+
+    /**
      * Start Redis consumers in separate long running managed threads
      */
     public void start() {

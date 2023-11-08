@@ -64,6 +64,13 @@ public class RedisManager {
     private Jedis jedis;
 
     /**
+     * Default constructor, constructs a new object.
+     */
+    public RedisManager() {
+        super();
+    }
+
+    /**
      * Adds log entry for method enter if trace is enabled.
      *
      * @param functionName

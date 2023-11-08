@@ -21,8 +21,6 @@ package hu.icellmobilsoft.coffee.tool.utils.string;
 
 import java.util.regex.Pattern;
 
-import jakarta.enterprise.inject.Vetoed;
-
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
@@ -33,7 +31,6 @@ import com.google.common.cache.LoadingCache;
  * @author jozsef.kelemen
  * @since 1.3.0
  */
-@Vetoed
 public class RegexPatternCache {
 
     private static final int DEFAULT_CACHE_SIZE = 10_000;

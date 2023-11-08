@@ -92,6 +92,13 @@ public abstract class AbstractEvaluator<INPUT, RULERESULT extends RuleResult> im
     private String currentVersion;
 
     /**
+     * Default constructor, constructs a new object.
+     */
+    public AbstractEvaluator() {
+        super();
+    }
+
+    /**
      * Qualifier which the Rules are annotated with. Eg.:
      *
      * <pre>

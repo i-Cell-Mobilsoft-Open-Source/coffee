@@ -26,8 +26,6 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import jakarta.enterprise.inject.Vetoed;
-
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -40,11 +38,17 @@ import hu.icellmobilsoft.coffee.se.logging.Logger;
  * @author czenczl
  * @since 1.0.0
  */
-@Vetoed
 public class StringUtil {
 
     private static Logger LOGGER = Logger.getLogger(StringUtil.class);
     private static RegexPatternCache patternCache = new RegexPatternCache();
+
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public StringUtil() {
+        super();
+    }
 
     /**
      * Transforms input {@link String} to upper-case. Transforms "ß" to "ẞ".

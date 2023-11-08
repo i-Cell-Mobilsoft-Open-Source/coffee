@@ -21,7 +21,6 @@ package hu.icellmobilsoft.coffee.model.security;
 
 import java.util.Date;
 
-import jakarta.enterprise.inject.Vetoed;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -41,12 +40,18 @@ import hu.icellmobilsoft.coffee.model.security.enums.UserStatus;
  * @author imre.scheffer
  * @since 1.0.0
  */
-@Vetoed
 @Entity
 @Table(name = "security_user")
 public class SecurityUser extends AbstractIdentifiedAuditEntity {
 
     private static final long serialVersionUID = 1L;
+
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public SecurityUser() {
+        super();
+    }
 
     /**
      * user login name

@@ -51,6 +51,13 @@ import io.opentracing.tag.Tags;
 @Dependent
 public class OpenTraceServerInterceptor extends AbstractOpenTraceInterceptor implements ServerInterceptor, ITracesInterceptor {
 
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public OpenTraceServerInterceptor() {
+        super();
+    }
+
     @Override
     public <ReqT, RespT> Listener<ReqT> interceptCall(ServerCall<ReqT, RespT> call, Metadata requestMetadata, ServerCallHandler<ReqT, RespT> next) {
 

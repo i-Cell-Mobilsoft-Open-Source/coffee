@@ -39,6 +39,13 @@ import hu.icellmobilsoft.coffee.tool.utils.date.DateXmlUtil;
  */
 public class XMLGregorianCalendarCodec implements Codec<XMLGregorianCalendar> {
 
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public XMLGregorianCalendarCodec() {
+        super();
+    }
+
     /** {@inheritDoc} */
     @Override
     public void encode(BsonWriter writer, XMLGregorianCalendar value, EncoderContext encoderContext) {

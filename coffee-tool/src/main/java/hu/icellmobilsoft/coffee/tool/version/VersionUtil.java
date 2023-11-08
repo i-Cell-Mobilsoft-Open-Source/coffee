@@ -19,8 +19,6 @@
  */
 package hu.icellmobilsoft.coffee.tool.version;
 
-import jakarta.enterprise.inject.Vetoed;
-
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -29,8 +27,14 @@ import org.apache.commons.lang3.StringUtils;
  * @author czenczl
  * @since 1.0.0
  */
-@Vetoed
 public class VersionUtil {
+
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public VersionUtil() {
+        super();
+    }
 
     /**
      * Compares {@code version1} and {@code version2} as {@link ComparableVersion}s. Returns whether {@code version1} is equal or above

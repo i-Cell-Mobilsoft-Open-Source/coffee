@@ -21,11 +21,6 @@ package hu.icellmobilsoft.coffee.model.base;
 
 import java.util.Date;
 
-import hu.icellmobilsoft.coffee.model.base.annotation.CreatedBy;
-import hu.icellmobilsoft.coffee.model.base.annotation.ModifiedBy;
-import hu.icellmobilsoft.coffee.model.base.javatime.annotation.CreatedOn;
-import hu.icellmobilsoft.coffee.model.base.javatime.annotation.ModifiedOn;
-import jakarta.enterprise.inject.Vetoed;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
@@ -33,13 +28,17 @@ import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import jakarta.validation.constraints.NotNull;
 
+import hu.icellmobilsoft.coffee.model.base.annotation.CreatedBy;
+import hu.icellmobilsoft.coffee.model.base.annotation.ModifiedBy;
+import hu.icellmobilsoft.coffee.model.base.javatime.annotation.CreatedOn;
+import hu.icellmobilsoft.coffee.model.base.javatime.annotation.ModifiedOn;
+
 /**
  * Getter annotated test entity
  *
  * @author zsolt.vasi
  * @since 2.0.0
  */
-@Vetoed
 @Entity
 @Table(name = "dummy")
 public class GetterAnnotatedEntity extends AbstractIdentifiedEntity {

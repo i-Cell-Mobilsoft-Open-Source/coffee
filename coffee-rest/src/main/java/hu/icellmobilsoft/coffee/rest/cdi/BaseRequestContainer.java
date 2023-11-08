@@ -47,6 +47,13 @@ public class BaseRequestContainer implements Serializable {
     private Map<String, Object> objectMap;
 
     /**
+     * Default constructor, constructs a new object.
+     */
+    public BaseRequestContainer() {
+        super();
+    }
+
+    /**
      * Getter for the field <code>objectMap</code>.
      * 
      * @return object map

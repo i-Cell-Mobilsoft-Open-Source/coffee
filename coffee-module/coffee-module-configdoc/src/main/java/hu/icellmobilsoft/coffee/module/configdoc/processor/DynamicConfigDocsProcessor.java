@@ -69,6 +69,13 @@ public class DynamicConfigDocsProcessor extends AbstractProcessor {
     private Set<DynamicDocData> docHeaders = new HashSet<>();
     private Map<String, String> templateMap = new HashMap<>();
 
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public DynamicConfigDocsProcessor() {
+        super();
+    }
+
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
         // @DynamicConfigDocs annotációk feldolgozása

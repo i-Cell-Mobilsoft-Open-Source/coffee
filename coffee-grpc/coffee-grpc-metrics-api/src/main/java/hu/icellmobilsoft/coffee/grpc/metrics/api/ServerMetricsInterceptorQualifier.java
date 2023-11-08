@@ -49,5 +49,12 @@ public @interface ServerMetricsInterceptorQualifier {
 
         private static final long serialVersionUID = 1L;
 
+        /**
+         * Default constructor, constructs a new object.
+         */
+        public Literal() {
+            super();
+        }
+
     }
 }

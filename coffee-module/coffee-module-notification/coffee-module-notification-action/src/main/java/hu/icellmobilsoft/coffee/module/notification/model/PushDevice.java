@@ -21,15 +21,14 @@ package hu.icellmobilsoft.coffee.module.notification.model;
 
 import java.util.Date;
 
-import javax.enterprise.inject.Vetoed;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.validation.constraints.Size;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
+import jakarta.validation.constraints.Size;
 
 import hu.icellmobilsoft.coffee.model.base.AbstractIdentifiedAuditEntity;
 import hu.icellmobilsoft.coffee.module.notification.model.enums.DeviceType;
@@ -40,12 +39,18 @@ import hu.icellmobilsoft.coffee.module.notification.model.enums.DeviceType;
  * @author karoly.tamas
  * @since 1.0.0
  */
-@Vetoed
 @Entity
 @Table(name = "push_device")
 public class PushDevice extends AbstractIdentifiedAuditEntity {
 
     private static final long serialVersionUID = 1L;
+
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public PushDevice() {
+        super();
+    }
 
     /**
      * Push message id

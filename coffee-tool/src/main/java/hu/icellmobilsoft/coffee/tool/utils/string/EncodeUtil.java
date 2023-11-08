@@ -26,8 +26,6 @@ import java.text.MessageFormat;
 import java.util.Formatter;
 import java.util.Objects;
 
-import jakarta.enterprise.inject.Vetoed;
-
 import org.apache.commons.lang3.StringUtils;
 
 import hu.icellmobilsoft.coffee.se.logging.Logger;
@@ -38,10 +36,16 @@ import hu.icellmobilsoft.coffee.se.logging.Logger;
  * @author balazs.joo
  * @since 1.0.0
  */
-@Vetoed
 public class EncodeUtil {
 
     private static Logger LOGGER = Logger.getLogger(EncodeUtil.class);
+
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public EncodeUtil() {
+        super();
+    }
 
     /**
      * Encodes input {@link String} with SHA-512.

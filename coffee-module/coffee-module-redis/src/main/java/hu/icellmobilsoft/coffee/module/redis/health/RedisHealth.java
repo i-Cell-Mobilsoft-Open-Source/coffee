@@ -49,6 +49,13 @@ import redis.clients.jedis.JedisPoolConfig;
 public class RedisHealth {
 
     /**
+     * Default constructor, constructs a new object.
+     */
+    public RedisHealth() {
+        super();
+    }
+
+    /**
      * Checking whether the redis is reachable
      * 
      * @param managedRedisConfig

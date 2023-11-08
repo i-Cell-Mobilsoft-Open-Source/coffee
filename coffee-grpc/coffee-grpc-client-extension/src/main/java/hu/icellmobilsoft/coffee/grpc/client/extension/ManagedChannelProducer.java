@@ -66,6 +66,13 @@ public class ManagedChannelProducer {
     private Map<String, ManagedChannel> managedChannelInstances = new HashMap<>();
 
     /**
+     * Default constructor, constructs a new object.
+     */
+    public ManagedChannelProducer() {
+        super();
+    }
+
+    /**
      * produce ManagedChannel
      * 
      * @param injectionPoint

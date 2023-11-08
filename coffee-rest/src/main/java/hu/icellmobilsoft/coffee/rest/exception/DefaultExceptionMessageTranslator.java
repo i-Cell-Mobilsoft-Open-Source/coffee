@@ -54,6 +54,13 @@ public class DefaultExceptionMessageTranslator implements IExceptionMessageTrans
     @Inject
     private ProjectStage projectStage;
 
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public DefaultExceptionMessageTranslator() {
+        super();
+    }
+
     /** {@inheritDoc} */
     @Override
     public void addCommonInfo(BaseExceptionResultType dto, BaseException e) {

@@ -19,16 +19,20 @@
  */
 package hu.icellmobilsoft.coffee.module.redisstream.common;
 
-import jakarta.enterprise.inject.Vetoed;
-
 /**
  * Util class for the common redis stream functions
  * 
  * @author martin.nagy
  * @since 1.10.0
  */
-@Vetoed
 public class RedisStreamUtil {
+
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public RedisStreamUtil() {
+        super();
+    }
 
     /**
      * Returns the redis stream key calculated by the stream group
@@ -39,8 +43,5 @@ public class RedisStreamUtil {
      */
     public static String streamKey(String streamGroup) {
         return streamGroup + "Stream";
-    }
-
-    private RedisStreamUtil() {
     }
 }

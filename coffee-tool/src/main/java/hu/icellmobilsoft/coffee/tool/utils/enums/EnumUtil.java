@@ -19,8 +19,6 @@
  */
 package hu.icellmobilsoft.coffee.tool.utils.enums;
 
-import jakarta.enterprise.inject.Vetoed;
-
 import org.apache.commons.lang3.EnumUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -30,8 +28,14 @@ import org.apache.commons.lang3.StringUtils;
  * @author imre.scheffer
  * @since 1.0.0
  */
-@Vetoed
 public class EnumUtil {
+
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public EnumUtil() {
+        super();
+    }
 
     /**
      * Enum to enum conversion

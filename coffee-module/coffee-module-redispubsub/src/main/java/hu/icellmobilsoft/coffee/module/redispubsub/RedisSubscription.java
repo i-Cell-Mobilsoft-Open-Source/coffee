@@ -23,7 +23,6 @@ import java.io.Closeable;
 import java.util.concurrent.TimeUnit;
 
 import jakarta.enterprise.inject.Instance;
-import jakarta.enterprise.inject.Vetoed;
 import jakarta.enterprise.inject.spi.CDI;
 
 import org.eclipse.microprofile.reactive.messaging.Message;
@@ -40,7 +39,6 @@ import redis.clients.jedis.Jedis;
  * @since 1.13.0
  * @author mark.petrenyi
  */
-@Vetoed
 public class RedisSubscription implements Subscription, Closeable {
 
     private final PubSubConnectorIncomingConfiguration config;

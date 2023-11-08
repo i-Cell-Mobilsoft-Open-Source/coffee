@@ -63,6 +63,13 @@ public class DefaultLoggerClientResponseFilter implements ClientResponseFilter {
     @ThisLogger
     private AppLogger log;
 
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public DefaultLoggerClientResponseFilter() {
+        super();
+    }
+
     @Inject
     private RequestResponseLogger requestResponseLogger;
 

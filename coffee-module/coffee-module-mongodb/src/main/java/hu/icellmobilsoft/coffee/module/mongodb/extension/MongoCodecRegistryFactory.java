@@ -41,6 +41,13 @@ import hu.icellmobilsoft.coffee.module.mongodb.codec.time.xmlgregoriancalendar.X
 public class MongoCodecRegistryFactory {
 
     /**
+     * Default constructor, constructs a new object.
+     */
+    public MongoCodecRegistryFactory() {
+        super();
+    }
+
+    /**
      * produce codecs for mongoDB, pay attention to registration order (first default, then custom, last base pojo)
      *
      * @return CodecRegistry

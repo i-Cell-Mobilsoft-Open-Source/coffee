@@ -43,6 +43,13 @@ public class DateConverter implements JsonSerializer<Date>, JsonDeserializer<Dat
 
     private static Logger LOGGER = Logger.getLogger(DateConverter.class);
 
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public DateConverter() {
+        super();
+    }
+
     /** {@inheritDoc} */
     @Override
     public JsonElement serialize(Date date, Type type, JsonSerializationContext jsonSerializationContext) {

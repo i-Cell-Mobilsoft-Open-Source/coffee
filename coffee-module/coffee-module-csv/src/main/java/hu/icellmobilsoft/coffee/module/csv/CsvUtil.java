@@ -26,7 +26,6 @@ import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
-import jakarta.enterprise.inject.Vetoed;
 import jakarta.enterprise.inject.spi.CDI;
 
 import org.apache.commons.collections4.multimap.ArrayListValuedHashMap;
@@ -60,11 +59,17 @@ import hu.icellmobilsoft.coffee.se.logging.Logger;
  * @author martin.nagy
  * @since 1.0.0
  */
-@Vetoed
 public class CsvUtil {
     private static final Logger LOGGER = Logger.getLogger(CsvUtil.class);
 
     private static final char DEFAULT_SEPARATOR = ';';
+
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public CsvUtil() {
+        super();
+    }
 
     /**
      * Converts bean list to CSV.
@@ -225,8 +230,5 @@ public class CsvUtil {
     private static <T> MappingStrategy<T> initMappingStrategy(MappingStrategy<T> mappingStrategy, Class<T> clazz) {
         mappingStrategy.setType(clazz);
         return mappingStrategy;
-    }
-
-    private CsvUtil() {
     }
 }

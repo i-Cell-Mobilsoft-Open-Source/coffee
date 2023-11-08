@@ -19,15 +19,14 @@
  */
 package hu.icellmobilsoft.coffee.module.notification.model;
 
-import javax.enterprise.inject.Vetoed;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 
 import hu.icellmobilsoft.coffee.model.base.AbstractIdentifiedAuditEntity;
 import hu.icellmobilsoft.coffee.module.notification.model.enums.RecipientType;
@@ -38,12 +37,18 @@ import hu.icellmobilsoft.coffee.module.notification.model.enums.RecipientType;
  * @author imre.scheffer
  * @since 1.0.0
  */
-@Vetoed
 @Entity
 @Table(name = "email_recipient")
 public class EmailRecipient extends AbstractIdentifiedAuditEntity {
 
     private static final long serialVersionUID = 1L;
+
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public EmailRecipient() {
+        super();
+    }
 
     /**
      * Email FK

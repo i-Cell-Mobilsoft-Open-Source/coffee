@@ -39,8 +39,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-import jakarta.enterprise.inject.Vetoed;
-
 import org.apache.commons.lang3.StringUtils;
 
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
@@ -53,13 +51,19 @@ import hu.icellmobilsoft.coffee.se.logging.Logger;
  * @author imre.scheffer
  * @since 1.0.0
  */
-@Vetoed
 public class DateUtil {
 
     private static Logger LOGGER = Logger.getLogger(DateUtil.class);
 
     /** Constant <code>DEFAULT_FULL_PATTERN="yyyy-MM-dd'T'HH:mm:ss.SSSZ"</code> */
     public static final String DEFAULT_FULL_PATTERN = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
+
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public DateUtil() {
+        super();
+    }
 
     /**
      * Creates a new calendar instance from a {@link Date}.

@@ -58,6 +58,13 @@ public class XsdResourceResolver implements LSResourceResolver, IXsdResourceReso
     private String xsdDirPath;
 
     /**
+     * Default constructor, constructs a new object.
+     */
+    public XsdResourceResolver() {
+        super();
+    }
+
+    /**
      * {@inheritDoc}
      *
      * Xsd feloldás

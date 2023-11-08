@@ -53,6 +53,13 @@ public class TemplateParameterService extends BaseService<TemplateParameter> {
     private TemplateParameterRepository templateParameterRepository;
 
     /**
+     * Default constructor, constructs a new object.
+     */
+    public TemplateParameterService() {
+        super();
+    }
+
+    /**
      * Returns all {@link TemplateParameter}s with given template key and language.
      *
      * @param templateKey

@@ -76,6 +76,13 @@ public abstract class BaseRestLogger implements ContainerRequestFilter, WriterIn
     @Context
     private HttpServletResponse httpServletResponse;
 
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public BaseRestLogger() {
+        super();
+    }
+
     /** {@inheritDoc} */
     @Override
     public void filter(ContainerRequestContext requestContext) throws IOException {

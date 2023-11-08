@@ -44,6 +44,13 @@ public class LogContainer {
     private final Map<String, Object> customParam = new HashMap<>();
 
     /**
+     * Default constructor, constructs a new object.
+     */
+    public LogContainer() {
+        super();
+    }
+
+    /**
      * Logs trace log with message.
      *
      * @param msg

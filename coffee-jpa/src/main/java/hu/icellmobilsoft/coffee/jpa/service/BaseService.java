@@ -73,6 +73,13 @@ public class BaseService<T> {
     private AppLogger log;
 
     /**
+     * Default constructor, constructs a new object.
+     */
+    public BaseService() {
+        super();
+    }
+
+    /**
      * Overridable method for default not found fault type.
      *
      * @return ENTITY_NOT_FOUND enum

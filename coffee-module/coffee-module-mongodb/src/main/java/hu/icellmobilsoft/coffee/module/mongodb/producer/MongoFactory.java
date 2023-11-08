@@ -62,6 +62,13 @@ public class MongoFactory {
     private Map<String, MongoClient> mongoClientMap = new HashMap<>();
 
     /**
+     * Default constructor, constructs a new object.
+     */
+    public MongoFactory() {
+        super();
+    }
+
+    /**
      * Producer method for {@link MongoDbHandler}.
      *
      * @param injectionPoint

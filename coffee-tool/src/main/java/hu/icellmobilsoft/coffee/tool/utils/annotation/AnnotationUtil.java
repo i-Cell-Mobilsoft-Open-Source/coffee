@@ -22,7 +22,6 @@ package hu.icellmobilsoft.coffee.tool.utils.annotation;
 import java.lang.annotation.Annotation;
 import java.util.Optional;
 
-import jakarta.enterprise.inject.Vetoed;
 import jakarta.enterprise.inject.spi.InjectionPoint;
 
 /**
@@ -31,8 +30,14 @@ import jakarta.enterprise.inject.spi.InjectionPoint;
  * @author imre.scheffer
  * @since 1.0.0
  */
-@Vetoed
 public class AnnotationUtil {
+
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public AnnotationUtil() {
+        super();
+    }
 
     /**
      * Finds the {@code Annotation} instance of annotationClazz, including proxied class

@@ -42,6 +42,13 @@ public class RequestUtil {
     public static final String ECLIPSE_MICROPROFILE_REST_CLIENT_INVOKED_METHOD_KEY = "org.eclipse.microprofile.rest.client.invokedMethod";
 
     /**
+     * Default constructor, constructs a new object.
+     */
+    public RequestUtil() {
+        super();
+    }
+
+    /**
      * Returns desired {@link Annotation} from given {@link ContainerRequestContext}.
      *
      * @param <A>

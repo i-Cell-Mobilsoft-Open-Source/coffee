@@ -38,6 +38,13 @@ public class MavenURLStreamHandlerProvider extends URLStreamHandlerProvider {
 
     private static String PREFIX = "sun.net.www.protocol";
 
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public MavenURLStreamHandlerProvider() {
+        super();
+    }
+
     /** {@inheritDoc} */
     @Override
     public URLStreamHandler createURLStreamHandler(String protocol) {

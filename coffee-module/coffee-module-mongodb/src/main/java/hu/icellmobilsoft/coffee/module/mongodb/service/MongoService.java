@@ -67,6 +67,13 @@ public class MongoService<T> {
     private MongoRepository<T> mongoRepository;
 
     /**
+     * Default constructor, constructs a new object.
+     */
+    public MongoService() {
+        super();
+    }
+
+    /**
      * Mongo Collection beállítása
      *
      * @param mongoCollection
