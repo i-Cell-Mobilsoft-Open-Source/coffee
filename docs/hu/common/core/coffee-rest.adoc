@@ -98,17 +98,21 @@ Aktiválása kézzel történik, projekt szinten a következő minta alapján:
 [source,java]
 ----
 package hu.icellmobilsoft.project.common.rest.logger;
+
 import javax.inject.Inject;
 import javax.ws.rs.ext.Provider;
 import hu.icellmobilsoft.coffee.cdi.logger.AppLogger;
 import hu.icellmobilsoft.coffee.cdi.logger.ThisLogger;
 import hu.icellmobilsoft.coffee.dto.common.LogConstants;
 import hu.icellmobilsoft.coffee.rest.log.optimized.BaseRestLoggerOptimized;
+
 @Provider // <1>
 public class RestLogger extends BaseRestLoggerOptimized {
+    
     @Inject
     @ThisLogger
     private AppLogger log;
+    
     @Override
     public String sessionKey() { // <2>
         return LogConstants.LOG_SESSION_ID;

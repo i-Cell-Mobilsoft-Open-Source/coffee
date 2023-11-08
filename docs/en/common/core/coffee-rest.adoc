@@ -4,6 +4,7 @@ Module designed for REST communication and management.
 
 It includes the apache http client, various REST loggers and filters. It also contains the language, REST activator and Response util class.
 
+[#common_core_coffee-rest_BaseRestLogger]
 == BaseRestLogger
 This class is used to log HTTP request-response requests to the application.
 It is activated manually at the project level using the following pattern:
@@ -86,6 +87,40 @@ if needed in the project, the regex can be overwritten by specifying the configu
 < entity: [{"transactionId":"2G7XOSYJ6VUEJJ09","header":{"requestId":"RID314802331803","timestamp":"2019-02-01T15:31:32.432Z","requestVersion":"1.1","headerVersion":"1.0"},"result":{"funcCode":"OK"},"software":{"softwareId":"123456789123456789","softwareName":"string","softwareOperation":"LOCAL_SOFTWARE","softwareMainVersion":"string","softwareDevName":"string","softwareDevContact":"string","softwareCountryCode":"HU","softwareDescription":"string"}]
 ----
 
+[#common_core_coffee-rest_BaseRestLoggerOptimized]
+== BaseRestLoggerOptimized
+This class works similarly as the <<common_core_coffee-rest_BaseRestLogger,BaseRestLogger>>. The only difference is that it uses less memory, because it doesn't copy the streams of the request and response entities for logging, but collects the entities while reading and writing them.
+
+It is activated manually at the project level using the following pattern:
+
+.activate in project
+[source,java]
+----
+package hu.icellmobilsoft.project.common.rest.logger;
+
+import javax.inject.Inject;
+import javax.ws.rs.ext.Provider;
+import hu.icellmobilsoft.coffee.cdi.logger.AppLogger;
+import hu.icellmobilsoft.coffee.cdi.logger.ThisLogger;
+import hu.icellmobilsoft.coffee.dto.common.LogConstants;
+import hu.icellmobilsoft.coffee.rest.log.optimized.BaseRestLoggerOptimized;
+
+@Provider // <1>
+public class RestLogger extends BaseRestLoggerOptimized {
+    
+    @Inject
+    @ThisLogger
+    private AppLogger log;
+    
+    @Override
+    public String sessionKey() { // <2>
+        return LogConstants.LOG_SESSION_ID;
+    }
+}
+----
+<1> JAX-RS activator (this is the thing that activates it)
+<2> Session ID key name in HTTP header
+
 [#common_core_coffee-rest_LogSpecifier]
 == LogSpecifier
 REST logging can be customized per endpoint with the `hu.icellmobilsoft.coffee.rest.log.annotation.LogSpecifier` annotation,
@@ -114,6 +149,8 @@ Currently the LogSpecifier is prepared for the following cases:
 * on the endpoint, the size of the logged body can be limited by the `maxEntityLogSize` field of the `LogSpecifier` annotation.
 
 IMPORTANT: if `maxEntityLogSize` is set to a value *other* than `LogSpecifier.NO_LOG`, then only the first 5000 characters of the request will be written for the `application/octet-stream` mediaType received by the REST endpoint.
+
+IMPORTANT: When using the `BaseRestLoggerOptimized` class, if the `LogSpecifier` annotation is not specified, then in the case of `application/octet-stream` és `multipart/form-data` mediaTypes, only the first 5000 characters of the request and response entities are logged.
 
 .LogSpecifier example
 [source,java]
