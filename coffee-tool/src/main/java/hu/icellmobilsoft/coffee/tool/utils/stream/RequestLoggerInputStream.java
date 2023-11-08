@@ -30,7 +30,7 @@ import hu.icellmobilsoft.coffee.tool.utils.string.StringHelper;
  * Custom {@link InputStream} for logging request with entity
  *
  * @author mate.biro
- * @since 1.15.0
+ * @since 2.4.0
  */
 @SuppressWarnings("InputStreamSlowMultibyteRead")
 public class RequestLoggerInputStream extends InputStream {

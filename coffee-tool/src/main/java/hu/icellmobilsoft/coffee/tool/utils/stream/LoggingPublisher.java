@@ -36,6 +36,13 @@ public class LoggingPublisher {
     private Event<LoggingEvent> loggingEvent;
 
     /**
+     * Default constructor, constructs a new object.
+     */
+    public LoggingPublisher() {
+        super();
+    }
+
+    /**
      * Publisher method for the logging event
      *
      * @param event

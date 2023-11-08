@@ -40,6 +40,13 @@ public class LoggingObserver {
     private AppLogger log;
 
     /**
+     * Default constructor, constructs a new object.
+     */
+    public LoggingObserver() {
+        super();
+    }
+
+    /**
      * Observer method that logs the message
      *
      * @param event
