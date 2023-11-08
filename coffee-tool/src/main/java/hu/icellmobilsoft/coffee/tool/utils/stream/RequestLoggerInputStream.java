@@ -21,103 +21,81 @@ package hu.icellmobilsoft.coffee.tool.utils.stream;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 
-import jakarta.enterprise.inject.Vetoed;
+import jakarta.enterprise.inject.spi.CDI;
 
-import hu.icellmobilsoft.coffee.cdi.logger.AppLogger;
 import hu.icellmobilsoft.coffee.tool.utils.string.StringHelper;
 
 /**
  * Custom {@link InputStream} for logging request with entity
  *
  * @author mate.biro
- * @since 1.14.0
+ * @since 1.15.0
  */
-@Vetoed
 @SuppressWarnings("InputStreamSlowMultibyteRead")
 public class RequestLoggerInputStream extends InputStream {
 
     private final InputStream inputStream;
     private final String requestPrefix;
-    private final StringBuilder entity = new StringBuilder();
-    private final StringBuilder message;
-    private final BiConsumer<Consumer<AppLogger>, Class<?>> logger;
-    private final Consumer<AppLogger> loggerConsumer;
-    private final Class<?> clazz;
-    private int logReadLimit;
-    private boolean firstReadCycle = true;
+    private final StringBuilder entityLog = new StringBuilder();
+    private final StringBuilder logMessage;
+    private int logCollectLimit;
+    private boolean isLogged = false;
 
     /**
      * Constructor
      *
-     * @param inputStream
-     *            original inputStream
-     * @param logReadLimit
+     * @param requestEntityStream
+     *            original requestEntityStream
+     * @param logCollectLimit
      *            read limit
      * @param requestPrefix
      *            request log prefix
-     * @param message
+     * @param logMessage
      *            log message
-     * @param logger
-     *            the function handling {@link AppLogger}
-     * @param loggerConsumer
-     *            the function doing the logging
-     * @param clazz
-     *            class for logging
      */
-    public RequestLoggerInputStream(InputStream inputStream, int logReadLimit, String requestPrefix, StringBuilder message,
-            BiConsumer<Consumer<AppLogger>, Class<?>> logger, Consumer<AppLogger> loggerConsumer, Class<?> clazz) {
-        this.inputStream = inputStream;
-        this.logReadLimit = logReadLimit;
+    public RequestLoggerInputStream(InputStream requestEntityStream, int logCollectLimit, String requestPrefix, StringBuilder logMessage) {
+        this.inputStream = requestEntityStream;
+        this.logCollectLimit = logCollectLimit;
         this.requestPrefix = requestPrefix;
-        this.message = message;
-        this.logger = logger;
-        this.loggerConsumer = loggerConsumer;
-        this.clazz = clazz;
+        this.logMessage = logMessage;
     }
 
     /**
      * {@inheritDoc}
      *
-     * Extra functionality: On first read cycle it appends the read request entity data from the original {@link InputStream} to an internal
-     * {@link StringBuilder} until a given limit is reached (or until the end of stream if limit is higher). Then logs the given request message with
-     * the appended request entity.
+     * <br>
+     * Extra functionality: On read the request entity data is appended from the original {@link InputStream} to an internal {@link StringBuilder}
+     * until a given limit is reached (or until the end of stream if log limit exceeds the length of the stream). Then publishes an event to log the
+     * given request message with the appended request entity.
      *
      */
     @Override
     public int read() throws IOException {
         int streamData = inputStream.read();
 
-        buildEntity(streamData);
-        logRequestWithEntity(streamData);
+        if (streamData != -1 && logCollectLimit != 0) {
+            // logoláshoz gyűjtjük a stream tartalmát amíg van, és még nem értük el a limitet
+            entityLog.append((char) streamData);
+            logCollectLimit--;
+        } else if (!isLogged) {
+            // ha a stream végére értünk vagy elértük a limitet és még nem logoltunk,
+            // akkor küldünk egy eventet hogy megtörténjen a logolás
+            String maskedEntityLog = getMaskedEntity(entityLog.toString());
+            logMessage.append(maskedEntityLog);
+
+            LoggingEvent event = new LoggingEvent(logMessage.toString());
+            LoggingPublisher loggingPublisher = CDI.current().select(LoggingPublisher.class).get();
+            loggingPublisher.publish(event);
+
+            isLogged = true;
+        }
 
         return streamData;
     }
 
-    private void buildEntity(int streamData) {
-        // logoláshoz gyűjtjük a stream tartalmát amíg van, és még nem értük el a limitet
-        if (!firstReadCycle || streamData == -1 || logReadLimit == 0) {
-            return;
-        }
-        entity.append((char) streamData);
-        logReadLimit--;
-    }
-
-    private void logRequestWithEntity(int streamData) {
-        // ha a stream végére értünk vagy elértük a limitet, akkor logolunk
-        if (!firstReadCycle || (streamData != -1 && logReadLimit != 0)) {
-            return;
-        }
-        String maskedEntity = getMaskedEntity(entity.toString(), requestPrefix);
-        message.append(maskedEntity);
-        logger.accept(loggerConsumer, clazz);
-        firstReadCycle = false;
-    }
-
-    private String getMaskedEntity(String requestText, String prefix) {
-        String maskedText = StringHelper.maskValueInXmlJson(requestText);
-        return prefix + "entity: [" + maskedText + "]\n";
+    private String getMaskedEntity(String entityLogText) {
+        String maskedText = StringHelper.maskValueInXmlJson(entityLogText);
+        return requestPrefix + "entity: [" + maskedText + "]\n";
     }
 }

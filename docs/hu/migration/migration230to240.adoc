@@ -1,0 +1,12 @@
+= v2.3.0 → v2.4.0
+
+coff:ee v2.3.0 -> v2.4.0 migrációs leírás, újdonságok, változások leírása
+
+=== coffee-rest
+* *RequestResponseLogger memoria tuning*: A `BaseRestLogger` osztály alapján létrejött egy optimalizált változat: <<common_core_coffee-rest_BaseRestLoggerOptimized,BaseRestLoggerOptimized>>. Segítségével az alkalmazások kevesebb memóriát használnak fel a request és response body log-olás során.
+Emellett létrehozásra került a `RequestResponseLoggerOptimized` osztály is, ahol a request és response entity logolások hossza meghatározásra kerül miszerint, ha a request vagy response entity `application/octet-stream` vagy `multipart/form-data` és nem szerepel a REST interface-en LogSpecifier annotáció, akkor korlátozzuk a log méretet.
+Valamint ebben a változatban a `BYTECODE_MAX_LOG` konstans átvevezésre került `ENTITY_MAX_LOG`-ra.
+
+==== Átállás
+
+* `BaseRestLoggerOptimized`-ra átállással célszerű a `BYTECODE_MAX_LOG` helyett áttérni a `ENTITY_MAX_LOG` konstansra, ha használva van, mivel idővel az előbbi kivezetésre kerülhet.

@@ -22,47 +22,46 @@ package hu.icellmobilsoft.coffee.tool.utils.stream;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import jakarta.enterprise.inject.Vetoed;
-
 /**
  * Custom {@link OutputStream} for collecting response entity
  *
  * @author mate.biro
- * @since 1.14.0
+ * @since 2.4.0
  */
-@Vetoed
 public class ResponseEntityCollectorOutputStream extends OutputStream {
 
-    private final OutputStream outputStream;
-    private final StringBuilder entity = new StringBuilder();
-    private int collectLimit;
+    private final OutputStream originalResponseStream;
+    private final StringBuilder entityLog = new StringBuilder();
+    private int logCollectLimit;
 
     /**
      * Constructor
      *
-     * @param outputStream
-     *            original outputStream
-     * @param collectLimit
+     * @param originalResponseStream
+     *            the original intercepted output stream
+     * @param logCollectLimit
      *            collect limit
      */
-    public ResponseEntityCollectorOutputStream(OutputStream outputStream, int collectLimit) {
-        this.outputStream = outputStream;
-        this.collectLimit = collectLimit;
+    public ResponseEntityCollectorOutputStream(OutputStream originalResponseStream, int logCollectLimit) {
+        this.originalResponseStream = originalResponseStream;
+        this.logCollectLimit = logCollectLimit;
     }
 
     /**
      * {@inheritDoc}
      *
+     * <br>
      * Extra functionality: It appends the response entity data written to the original {@link OutputStream} to an internal {@link StringBuilder}
      * until the given limit has been reached.
      */
     @Override
     public void write(int b) throws IOException {
-        if (collectLimit != 0) {
-            entity.append((char) b);
-            collectLimit--;
+        if (logCollectLimit != 0) {
+            // logoláshoz gyűjtjük a stream tartalmát amíg még nem értük el a limitet
+            entityLog.append((char) b);
+            logCollectLimit--;
         }
-        outputStream.write(b);
+        originalResponseStream.write(b);
     }
 
     /**
@@ -71,6 +70,6 @@ public class ResponseEntityCollectorOutputStream extends OutputStream {
      * @return Entity text
      */
     public String getEntityText() {
-        return entity.toString();
+        return entityLog.toString();
     }
 }
