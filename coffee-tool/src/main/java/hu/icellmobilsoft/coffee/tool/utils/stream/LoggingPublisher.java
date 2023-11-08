@@ -19,7 +19,7 @@
  */
 package hu.icellmobilsoft.coffee.tool.utils.stream;
 
-import jakarta.enterprise.context.Dependent;
+import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.event.Event;
 import jakarta.inject.Inject;
 
@@ -29,7 +29,7 @@ import jakarta.inject.Inject;
  * @author mate.biro
  * @since 2.4.0
  */
-@Dependent
+@ApplicationScoped
 public class LoggingPublisher {
 
     @Inject
