@@ -19,7 +19,7 @@
  */
 package hu.icellmobilsoft.coffee.tool.utils.stream;
 
-import javax.enterprise.context.Dependent;
+import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
 
@@ -29,7 +29,7 @@ import javax.inject.Inject;
  * @author mate.biro
  * @since 1.15.0
  */
-@Dependent
+@ApplicationScoped
 public class LoggingPublisher {
 
     @Inject
