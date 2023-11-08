@@ -92,6 +92,38 @@ amennyiben a projekten szükséges, úgy a regex felülírható ha valamelyik *a
 Az osztály hasonlóan működik mint a <<common_core_coffee-rest_BaseRestLogger,BaseRestLogger>> annyi eltéréssel, hogy kevesebb memóriát használ fel azáltal,
 hogy a request és response entity-ket nem a stream-ek másolásával szerzi meg a logolás számára, hanem az entity stream olvasása és írása közben gyűjti azokat.
 
+Aktiválása kézzel történik, projekt szinten a következő minta alapján:
+
+.Projektben aktiválás
+[source,java]
+----
+package hu.icellmobilsoft.project.common.rest.logger;
+
+import javax.inject.Inject;
+import javax.ws.rs.ext.Provider;
+
+import hu.icellmobilsoft.coffee.cdi.logger.AppLogger;
+import hu.icellmobilsoft.coffee.cdi.logger.ThisLogger;
+import hu.icellmobilsoft.coffee.dto.common.LogConstants;
+import hu.icellmobilsoft.coffee.rest.log.optimized.BaseRestLoggerOptimized;
+
+@Provider // <1>
+public class RestLogger extends BaseRestLoggerOptimized {
+
+    @Inject
+    @ThisLogger
+    private AppLogger log;
+
+    @Override
+    public String sessionKey() { // <2>
+        return LogConstants.LOG_SESSION_ID;
+    }
+
+}
+----
+<1> JAX-RS aktivátor (ez a lényeg ami aktiválja)
+<2> HTTP headerben szereplő session azonosító kulcs neve
+
 [#common_core_coffee-rest_LogSpecifier]
 == LogSpecifier
 A REST logolás végpontonként testreszabható a `hu.icellmobilsoft.coffee.rest.log.annotation.LogSpecifier` annotációval,
