@@ -75,6 +75,13 @@ public abstract class BaseRestLoggerOptimized implements ContainerRequestFilter,
     @Context
     private HttpServletResponse httpServletResponse;
 
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public BaseRestLoggerOptimized() {
+        super();
+    }
+
     /** {@inheritDoc} */
     @Override
     public void filter(ContainerRequestContext requestContext) throws IOException {

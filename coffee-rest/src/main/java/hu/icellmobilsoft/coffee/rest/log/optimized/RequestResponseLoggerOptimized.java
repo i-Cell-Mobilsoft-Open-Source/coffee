@@ -84,6 +84,13 @@ public class RequestResponseLoggerOptimized {
     private AppLogger log;
 
     /**
+     * Default constructor, constructs a new object.
+     */
+    public RequestResponseLoggerOptimized() {
+        super();
+    }
+
+    /**
      * Prints request headers to {@link String}. Masks password.
      *
      * @param headerValues
