@@ -47,7 +47,7 @@ A változtatások nem eredményeznek átállási munkálatokat, visszafelé komp
 
 === coffee-rest
 * *RequestResponseLogger memoria tuning*: A `hu.icellmobilsoft.coffee.rest.log.BaseRestLogger` osztály alapján létrejött egy optimalizált változat: <<common_core_coffee-rest_optimized_BaseRestLogger, hu.icellmobilsoft.coffee.rest.log.optimized.BaseRestLogger>>. Segítségével az alkalmazások kevesebb memóriát használnak fel a request és response body log-olás során.
-Emellett létrehozásra került a `RequestResponseLogger` osztály egy újabb változata is (ideiglenesen `@Named("optimized_RequestResponseLogger")` annotációval ellátva, így megmarad a régi implementáció is, ami később kerül kivezetésre), ahol a request és response entity logolások hossza meghatározásra kerül miszerint, ha a request vagy response entity `application/octet-stream` vagy `multipart/form-data` és nem szerepel a REST interface-en LogSpecifier annotáció, akkor korlátozzuk a log méretet.
+Emellett létrehozásra került a `hu.icellmobilsoft.coffee.rest.log.RequestResponseLogger` osztály egy újabb változata is az `hu.icellmobilsoft.coffee.rest.log.optimized.RequestResponseLogger` (ideiglenesen `@Named("optimized_RequestResponseLogger")` annotációval ellátva, így megmarad a régi implementáció is, ami később kerül kivezetésre), ahol a request és response entity logolások hossza meghatározásra kerül miszerint, ha a request vagy response entity `application/octet-stream` vagy `multipart/form-data` és nem szerepel a REST interface-en LogSpecifier annotáció, akkor korlátozzuk a log méretet.
 Valamint ebben a változatban a `BYTECODE_MAX_LOG` konstans átvevezésre került `ENTITY_MAX_LOG`-ra.
 
 ==== Átállás
