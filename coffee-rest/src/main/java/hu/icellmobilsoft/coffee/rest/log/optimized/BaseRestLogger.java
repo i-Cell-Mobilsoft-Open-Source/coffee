@@ -24,6 +24,7 @@ import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 
 import jakarta.inject.Inject;
+import jakarta.inject.Named;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.ws.rs.container.ContainerRequestContext;
 import jakarta.ws.rs.container.ContainerRequestFilter;
@@ -41,7 +42,6 @@ import hu.icellmobilsoft.coffee.cdi.logger.AppLogger;
 import hu.icellmobilsoft.coffee.cdi.logger.ThisLogger;
 import hu.icellmobilsoft.coffee.dto.common.LogConstants;
 import hu.icellmobilsoft.coffee.rest.cdi.BaseApplicationContainer;
-import hu.icellmobilsoft.coffee.rest.log.RequestResponseLogger;
 import hu.icellmobilsoft.coffee.rest.log.annotation.LogSpecifier;
 import hu.icellmobilsoft.coffee.rest.log.annotation.enumeration.LogSpecifierTarget;
 import hu.icellmobilsoft.coffee.rest.utils.RestLoggerUtil;
@@ -57,7 +57,7 @@ import hu.icellmobilsoft.coffee.tool.utils.string.RandomUtil;
  * @author mate.biro
  * @since 2.4.0
  */
-public abstract class BaseRestLoggerOptimized implements ContainerRequestFilter, WriterInterceptor {
+public abstract class BaseRestLogger implements ContainerRequestFilter, WriterInterceptor {
 
     @Inject
     @ThisLogger
@@ -67,7 +67,7 @@ public abstract class BaseRestLoggerOptimized implements ContainerRequestFilter,
     private BaseApplicationContainer baseApplicationContainer;
 
     @Inject
-    private RequestResponseLoggerOptimized requestResponseLogger;
+    private @Named("optimized_RequestResponseLogger") RequestResponseLogger requestResponseLogger;
 
     @Context
     private UriInfo uriInfo;
@@ -78,7 +78,7 @@ public abstract class BaseRestLoggerOptimized implements ContainerRequestFilter,
     /**
      * Default constructor, constructs a new object.
      */
-    public BaseRestLoggerOptimized() {
+    public BaseRestLogger() {
         super();
     }
 
@@ -179,7 +179,7 @@ public abstract class BaseRestLoggerOptimized implements ContainerRequestFilter,
      *            request message
      * @param requestContext
      *            context
-     * @see RequestResponseLoggerOptimized#printRequestHeaders(java.util.Map)
+     * @see RequestResponseLogger#printRequestHeaders(java.util.Map)
      */
     protected void appendRequestHeaders(StringBuilder b, ContainerRequestContext requestContext) {
         MultivaluedMap<String, String> headers = requestContext.getHeaders();
@@ -198,7 +198,7 @@ public abstract class BaseRestLoggerOptimized implements ContainerRequestFilter,
      *            request message
      * @param requestContext
      *            context
-     * @see RequestResponseLoggerOptimized#printRequestLine(ContainerRequestContext)
+     * @see RequestResponseLogger#printRequestLine(ContainerRequestContext)
      */
     protected void appendRequestLine(StringBuilder b, ContainerRequestContext requestContext) {
         b.append(requestResponseLogger.printRequestLine(requestContext));
@@ -211,7 +211,7 @@ public abstract class BaseRestLoggerOptimized implements ContainerRequestFilter,
      *            response message
      * @param context
      *            context
-     * @see RequestResponseLoggerOptimized#printResponseLine(String, int, String, String)
+     * @see RequestResponseLogger#printResponseLine(String, int, String, String)
      */
     protected void printResponseLine(StringBuilder b, WriterInterceptorContext context) {
         String fullPath = uriInfo.getAbsolutePath().toASCIIString();
@@ -229,7 +229,7 @@ public abstract class BaseRestLoggerOptimized implements ContainerRequestFilter,
      *            response message
      * @param context
      *            context
-     * @see RequestResponseLoggerOptimized#printResponseHeaders(java.util.Map)
+     * @see RequestResponseLogger#printResponseHeaders(java.util.Map)
      */
     protected void printResponseHeaders(StringBuilder b, WriterInterceptorContext context) {
         b.append(requestResponseLogger.printResponseHeaders(context.getHeaders()));
@@ -244,7 +244,7 @@ public abstract class BaseRestLoggerOptimized implements ContainerRequestFilter,
      *            context
      * @param entityCopy
      *            entity
-     * @see RequestResponseLoggerOptimized#printResponseEntity(String, WriterInterceptorContext, byte[])
+     * @see RequestResponseLogger#printResponseEntity(String, WriterInterceptorContext, byte[])
      */
     protected void printResponseEntity(StringBuilder b, WriterInterceptorContext context, byte[] entityCopy) {
         b.append(requestResponseLogger.printResponseEntity(uriInfo.getAbsolutePath().toASCIIString(), context, entityCopy));

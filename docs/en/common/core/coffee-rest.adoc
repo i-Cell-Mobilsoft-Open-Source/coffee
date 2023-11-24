@@ -103,7 +103,7 @@ import javax.ws.rs.ext.Provider;
 import hu.icellmobilsoft.coffee.cdi.logger.AppLogger;
 import hu.icellmobilsoft.coffee.cdi.logger.ThisLogger;
 import hu.icellmobilsoft.coffee.dto.common.LogConstants;
-import hu.icellmobilsoft.coffee.rest.log.optimized.BaseRestLoggerOptimized;
+import hu.icellmobilsoft.coffee.rest.log.optimized.BaseRestLogger;
 
 @Provider // <1>
 public class RestLogger extends BaseRestLoggerOptimized {

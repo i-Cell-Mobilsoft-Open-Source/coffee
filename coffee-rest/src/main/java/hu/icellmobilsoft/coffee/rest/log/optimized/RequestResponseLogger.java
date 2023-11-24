@@ -30,6 +30,7 @@ import java.util.Map;
 
 import jakarta.enterprise.context.Dependent;
 import jakarta.inject.Inject;
+import jakarta.inject.Named;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.ws.rs.container.ContainerRequestContext;
 import jakarta.ws.rs.container.ContainerResponseContext;
@@ -56,7 +57,8 @@ import hu.icellmobilsoft.coffee.tool.utils.string.StringHelper;
  * @since 2.4.0
  */
 @Dependent
-public class RequestResponseLoggerOptimized {
+@Named("optimized_RequestResponseLogger")
+public class RequestResponseLogger {
 
     /** Constant <code>NOTIFICATION_PREFIX="* "</code> */
     public static final String NOTIFICATION_PREFIX = "* ";
@@ -86,7 +88,7 @@ public class RequestResponseLoggerOptimized {
     /**
      * Default constructor, constructs a new object.
      */
-    public RequestResponseLoggerOptimized() {
+    public RequestResponseLogger() {
         super();
     }
 
@@ -282,7 +284,7 @@ public class RequestResponseLoggerOptimized {
         // ha octet-stream vagy multipart és nincs LogSpecifier annotáció, akkor korlátozunk
         if (RestLoggerUtil.isLogSizeLimited(requestContext, MediaType.APPLICATION_OCTET_STREAM_TYPE, MediaType.MULTIPART_FORM_DATA_TYPE)
                 && !RestLoggerUtil.isLogSpecifierPresent(requestContext)) {
-            return RequestResponseLoggerOptimized.ENTITY_MAX_LOG;
+            return RequestResponseLogger.ENTITY_MAX_LOG;
         }
 
         // különben annotációban meghatározott maxEntityLogSize (ha nincs annotáció, akkor unlimit)
@@ -301,7 +303,7 @@ public class RequestResponseLoggerOptimized {
         // ha octet-stream vagy multipart és nincs LogSpecifier annotáció, akkor korlátozunk
         if (RestLoggerUtil.isLogSizeLimited(context, MediaType.APPLICATION_OCTET_STREAM_TYPE, MediaType.MULTIPART_FORM_DATA_TYPE)
                 && !RestLoggerUtil.isLogSpecifierPresent(context)) {
-            return RequestResponseLoggerOptimized.ENTITY_MAX_LOG;
+            return RequestResponseLogger.ENTITY_MAX_LOG;
         }
 
         // különben annotációban meghatározott maxEntityLogSize (ha nincs annotáció, akkor unlimit)
@@ -379,7 +381,7 @@ public class RequestResponseLoggerOptimized {
      * @return entity in string
      */
     protected String printResponseEntity(Object entity, MediaType mediaType) {
-        return printEntity(entity, RequestResponseLoggerOptimized.RESPONSE_PREFIX, false, mediaType);
+        return printEntity(entity, RequestResponseLogger.RESPONSE_PREFIX, false, mediaType);
     }
 
     /**
@@ -455,7 +457,7 @@ public class RequestResponseLoggerOptimized {
         }
         MediaType mediaType = writerInterceptorContext.getMediaType();
         if (skipLoggingForPathOrMediaType(fullPath, mediaType)) {
-            sb.append(RequestResponseLoggerOptimized.RESPONSE_PREFIX)
+            sb.append(RequestResponseLogger.RESPONSE_PREFIX)
                     .append("Response outputstream logging disabled, because MediaType: [" + mediaType + "]\n");
         } else {
             String responseText = new String(entityCopy, StandardCharsets.UTF_8);
