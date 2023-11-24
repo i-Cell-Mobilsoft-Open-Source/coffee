@@ -87,8 +87,8 @@ amennyiben a projekten szükséges, úgy a regex felülírható ha valamelyik *a
 < entity: [{"transactionId":"2G7XOSYJ6VUEJJ09","header":{"requestId":"RID314802331803","timestamp":"2019-02-01T15:31:32.432Z","requestVersion":"1.1","headerVersion":"1.0"},"result":{"funcCode":"OK"},"software":{"softwareId":"123456789123456789","softwareName":"string","softwareOperation":"LOCAL_SOFTWARE","softwareMainVersion":"string","softwareDevName":"string","softwareDevContact":"string","softwareCountryCode":"HU","softwareDescription":"string"}]
 ----
 
-[#common_core_coffee-rest_BaseRestLoggerOptimized]
-== BaseRestLoggerOptimized
+[#common_core_coffee-rest_optimized_BaseRestLogger]
+== Optimalizált BaseRestLogger
 Az osztály hasonlóan működik mint a <<common_core_coffee-rest_BaseRestLogger,BaseRestLogger>> annyi eltéréssel, hogy kevesebb memóriát használ fel azáltal,
 hogy a request és response entity-ket nem a stream-ek másolásával szerzi meg a logolás számára, hanem az entity stream olvasása és írása közben gyűjti azokat.
 
@@ -107,7 +107,7 @@ import hu.icellmobilsoft.coffee.dto.common.LogConstants;
 import hu.icellmobilsoft.coffee.rest.log.optimized.BaseRestLogger;
 
 @Provider // <1>
-public class RestLogger extends BaseRestLoggerOptimized {
+public class RestLogger extends BaseRestLogger {
     
     @Inject
     @ThisLogger
@@ -122,6 +122,7 @@ public class RestLogger extends BaseRestLoggerOptimized {
 <1> JAX-RS aktivátor (ez a lényeg ami aktiválja)
 <2> HTTP headerben szereplő session azonosító kulcs neve
 
+Maga a HTTP request-response log összeállításáról az ideiglenes `@Named("optimized_RequestResponseLogger")` annotációval ellátott `hu.icellmobilsoft.coffee.rest.log.optimized.RequestResponseLogger` osztály gondoskodik. A request és response entity logolások hossza itt kerül meghatározásra miszerint, ha a request vagy response entity `application/octet-stream` vagy `multipart/form-data` és nem szerepel a REST interface-en LogSpecifier annotáció, akkor korlátozzuk a log méretet
 
 [#common_core_coffee-rest_LogSpecifier]
 == LogSpecifier
@@ -152,7 +153,7 @@ Jelenleg a LogSpecifier a következő esetekre van felkészítve:
 
 IMPORTANT: ha a `maxEntityLogSize` `LogSpecifier.NO_LOG`-tól *eltérő* értékre van állítva, akkor a REST endpoint-hoz érkező `application/octet-stream` mediaType esetében csak a kérés első 5000 karaktere íródik ki.
 
-IMPORTANT: `BaseRestLoggerOptimized` használata esetén, ha nincsen megadva a `LogSpecifier` annotáció, akkor `application/octet-stream` és `multipart/form-data` mediaType-ok esetében a kérésben és a válaszban lévő entity első 5000 karaktere íródik csak ki.
+IMPORTANT: Az optimalizált `BaseRestLogger` használata esetén, ha nincsen megadva a `LogSpecifier` annotáció, akkor `application/octet-stream` és `multipart/form-data` mediaType-ok esetében a kérésben és a válaszban lévő entity első 5000 karaktere íródik csak ki.
 
 .LogSpecifier példa
 [source,java]
