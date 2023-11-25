@@ -1,0 +1,12 @@
+= v2.3.0 → v2.4.0
+
+coff:ee v2.3.0 -> v2.4.0 migration description, news, changes
+
+=== coffee-rest
+* *RequestResponseLogger memory tuning*: Based on the `hu.icellmobilsoft.coffee.rest.log.BaseRestLogger` class an optimized version was created: <<common_core_coffee-rest_optimized_BaseRestLogger,hu.icellmobilsoft.coffee.rest.log.optimized.BaseRestLogger>>. With its help applications use less memory while logging request and response bodies.
+In addition, the `hu.icellmobilsoft.coffee.rest.log.optimized.RequestResponseLogger` class was created as well (Temporarily with the `@Named("optimized_RequestResponseLogger")` annotation. This way we keep the old implementation which will be removed later), based on the `hu.icellmobilsoft.coffee.rest.log.RequestResponseLogger`, where the request and response entity log limits are determined according to whether the request or response entity is `application/octet-stream` or `multipart/form-data` and the REST interface is not annotated with the LogSpecifier then we limit the log size.
+Also, in this version, the `BYTECODE_MAX_LOG` constant has been renamed to `ENTITY_MAX_LOG`.
+
+==== Migration
+
+* When switching to the optimized `BaseRestLogger`, it is advisable to switch to the `ENTITY_MAX_LOG` constant instead of `BYTECODE_MAX_LOG`, if it is used, as the former may be deleted over time.

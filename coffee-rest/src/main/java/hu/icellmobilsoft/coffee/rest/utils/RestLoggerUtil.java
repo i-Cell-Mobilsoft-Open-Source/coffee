@@ -24,7 +24,10 @@ import java.util.Arrays;
 
 import jakarta.ws.rs.client.ClientRequestContext;
 import jakarta.ws.rs.container.ContainerRequestContext;
+import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.ext.WriterInterceptorContext;
+
+import org.apache.commons.lang3.StringUtils;
 
 import hu.icellmobilsoft.coffee.rest.log.annotation.LogSpecifier;
 import hu.icellmobilsoft.coffee.rest.log.annotation.LogSpecifiers;
@@ -226,4 +229,129 @@ public class RestLoggerUtil {
         return false;
     }
 
+    /**
+     * Returns true if the {@link MediaType} of the request context matches one of the given ones
+     *
+     * @param requestContext
+     *            context
+     * @param mediaTypes
+     *            {@link MediaType}s to compare
+     * @return true if there is a matching {@code MediaType}
+     */
+    public static boolean isLogSizeLimited(ContainerRequestContext requestContext, MediaType... mediaTypes) {
+        if (requestContext == null || mediaTypes == null) {
+            return false;
+        }
+        for (MediaType mediaType : mediaTypes) {
+            if (RestLoggerUtil.isSameMediaTypeWithoutCharset(requestContext.getMediaType(), mediaType)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Returns true if the {@link MediaType} of the request context matches one of the given ones
+     *
+     * @param context
+     *            {@link WriterInterceptorContext}
+     * @param mediaTypes
+     *            {@link MediaType}s to compare
+     * @return true if there is a matching {@code MediaType}
+     */
+    public static boolean isLogSizeLimited(WriterInterceptorContext context, MediaType... mediaTypes) {
+        if (context == null || mediaTypes == null) {
+            return false;
+        }
+        for (MediaType mediaType : mediaTypes) {
+            if (RestLoggerUtil.isSameMediaTypeWithoutCharset(context.getMediaType(), mediaType)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Returns true if {@link MediaType}s are the same irrespective of charset
+     *
+     * @param mediaType1
+     *            {@link MediaType} to compare
+     * @param mediaType2
+     *            {@link MediaType} to compare
+     * @return true if {@code MediaType}s are the same
+     */
+    private static boolean isSameMediaTypeWithoutCharset(MediaType mediaType1, MediaType mediaType2) {
+        if (mediaType1 == null || mediaType2 == null) {
+            return false;
+        }
+
+        String type1 = mediaType1.getType();
+        String subtype1 = mediaType1.getSubtype();
+        String type2 = mediaType2.getType();
+        String subtype2 = mediaType2.getSubtype();
+
+        return (StringUtils.equals(type1, type2) && StringUtils.equals(subtype1, subtype2));
+    }
+
+    /**
+     * Checks if {@link LogSpecifier} annotation is present.
+     *
+     * @param requestContext
+     *            context
+     * @return if {@link LogSpecifier} annotation is present
+     */
+    public static boolean isLogSpecifierPresent(ContainerRequestContext requestContext) {
+        if (requestContext == null) {
+            return false;
+        }
+        LogSpecifiers logSpecifiers = RequestUtil.getAnnotation(requestContext, LogSpecifiers.class);
+        if (logSpecifiers != null) {
+            return isLogSpecifierPresent(logSpecifiers.value());
+        } else {
+            LogSpecifier logSpecifier = RequestUtil.getAnnotation(requestContext, LogSpecifier.class);
+            return isLogSpecifierPresent(logSpecifier);
+        }
+    }
+
+    /**
+     * Checks if {@link LogSpecifier} annotation is present.
+     *
+     * @param context
+     *            {@link WriterInterceptorContext}
+     * @return if {@link LogSpecifier} annotation is present
+     */
+    public static boolean isLogSpecifierPresent(WriterInterceptorContext context) {
+        if (context == null) {
+            return false;
+        }
+        Annotation[] annotations = context.getAnnotations();
+        if (annotations != null) {
+            for (Annotation a : annotations) {
+                if (a instanceof LogSpecifiers) {
+                    return isLogSpecifierPresent(((LogSpecifiers) a).value());
+                } else if (a instanceof LogSpecifier) {
+                    return isLogSpecifierPresent(((LogSpecifier) a));
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Returns if {@link LogSpecifier} is present or not
+     *
+     * @param logSpecifiers
+     *            {@link LogSpecifier}s to check
+     * @return if {@link LogSpecifier} is present
+     */
+    public static boolean isLogSpecifierPresent(LogSpecifier... logSpecifiers) {
+        if (logSpecifiers != null) {
+            for (LogSpecifier logSpecifier : logSpecifiers) {
+                if (logSpecifier != null) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 }
