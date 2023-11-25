@@ -4,6 +4,7 @@ Modul célja a REST kommunikáció és a kezelése.
 
 Tartalmazza az apache http klienst, különböző REST loggereket és filtereket. Továbbá a nyelvesítés, REST aktivátor és Response util osztály is itt található.
 
+[#common_core_coffee-rest_BaseRestLogger]
 == BaseRestLogger
 Az osztály célja, hogy loggolja az alkalmazásba érkező HTTP request-response kéréseket.
 Aktiválása kézzel történik, projekt szinten a következő minta alapján:
@@ -86,6 +87,45 @@ amennyiben a projekten szükséges, úgy a regex felülírható ha valamelyik *a
 < entity: [{"transactionId":"2G7XOSYJ6VUEJJ09","header":{"requestId":"RID314802331803","timestamp":"2019-02-01T15:31:32.432Z","requestVersion":"1.1","headerVersion":"1.0"},"result":{"funcCode":"OK"},"software":{"softwareId":"123456789123456789","softwareName":"string","softwareOperation":"LOCAL_SOFTWARE","softwareMainVersion":"string","softwareDevName":"string","softwareDevContact":"string","softwareCountryCode":"HU","softwareDescription":"string"}]
 ----
 
+[#common_core_coffee-rest_optimized_BaseRestLogger]
+== Optimalizált BaseRestLogger
+Az osztály hasonlóan működik mint a <<common_core_coffee-rest_BaseRestLogger,BaseRestLogger>> annyi eltéréssel, hogy kevesebb memóriát használ fel azáltal,
+hogy a request és response entity-ket nem a stream-ek másolásával szerzi meg a logolás számára, hanem az entity stream olvasása és írása közben gyűjti azokat.
+
+Aktiválása kézzel történik, projekt szinten a következő minta alapján:
+
+.Projektben aktiválás
+[source,java]
+----
+package hu.icellmobilsoft.project.common.rest.logger;
+
+import javax.inject.Inject;
+import javax.ws.rs.ext.Provider;
+
+import hu.icellmobilsoft.coffee.cdi.logger.AppLogger;
+import hu.icellmobilsoft.coffee.cdi.logger.ThisLogger;
+import hu.icellmobilsoft.coffee.dto.common.LogConstants;
+import hu.icellmobilsoft.coffee.rest.log.optimized.BaseRestLogger;
+
+@Provider // <1>
+public class RestLogger extends BaseRestLogger {
+
+    @Inject
+    @ThisLogger
+    private AppLogger log;
+
+    @Override
+    public String sessionKey() { // <2>
+        return LogConstants.LOG_SESSION_ID;
+    }
+
+}
+----
+<1> JAX-RS aktivátor (ez a lényeg ami aktiválja)
+<2> HTTP headerben szereplő session azonosító kulcs neve
+
+Maga a HTTP request-response log összeállításáról az ideiglenes `@Named("optimized_RequestResponseLogger")` annotációval ellátott `hu.icellmobilsoft.coffee.rest.log.optimized.RequestResponseLogger` osztály gondoskodik. A request és response entity logolások hossza itt kerül meghatározásra miszerint, ha a request vagy response entity `application/octet-stream` vagy `multipart/form-data` és nem szerepel a REST interface-en LogSpecifier annotáció, akkor korlátozzuk a log méretet
+
 [#common_core_coffee-rest_LogSpecifier]
 == LogSpecifier
 A REST logolás végpontonként testreszabható a `hu.icellmobilsoft.coffee.rest.log.annotation.LogSpecifier` annotációval,
@@ -115,15 +155,17 @@ Jelenleg a LogSpecifier a következő esetekre van felkészítve:
 
 IMPORTANT: ha a `maxEntityLogSize` `LogSpecifier.NO_LOG`-tól *eltérő* értékre van állítva, akkor a REST endpoint-hoz érkező `application/octet-stream` mediaType esetében csak a kérés első 5000 karaktere íródik ki.
 
+IMPORTANT: Optimalizált `BaseRestLogger` használata esetén, ha nincsen megadva a `LogSpecifier` annotáció, akkor `application/octet-stream` és `multipart/form-data` mediaType-ok esetében a kérésben és a válaszban lévő entity első 5000 karaktere íródik csak ki.
+
 .LogSpecifier példa
 [source,java]
 ----
     @POST
     @Produces({ MediaType.APPLICATION_JSON, MediaType.TEXT_XML, MediaType.APPLICATION_XML })
     @Consumes({ MediaType.APPLICATION_JSON, MediaType.TEXT_XML, MediaType.APPLICATION_XML })
-    @LogSpecifier(target={LogSpecifierTarget.REQUEST, LogSpecifierTarget.CLIENT_REQUEST}, maxEntityLogSize =  100) //<1>
-    @LogSpecifier(target=LogSpecifierTarget.RESPONSE, maxEntityLogSize =  5000) //<2>
-    @LogSpecifier(target=LogSpecifierTarget.CLIENT_RESPONSE, noLog =  true) //<3>
+    @LogSpecifier(target={LogSpecifierTarget.REQUEST, LogSpecifierTarget.CLIENT_REQUEST}, maxEntityLogSize = 100) //<1>
+    @LogSpecifier(target=LogSpecifierTarget.RESPONSE, maxEntityLogSize = 5000) //<2>
+    @LogSpecifier(target=LogSpecifierTarget.CLIENT_RESPONSE, noLog = true) //<3>
     WithoutLogResponse postWithoutLog(WithoutLogRequest withoutLogRequest) throws BaseException;
 ----
 <1> Request entity log méretét 100 byte-ra korlátozza, REST hívások és microprofile client használatánál is
