@@ -74,7 +74,17 @@ public class RequestLoggerInputStream extends InputStream {
      */
     @Override
     public int read() throws IOException {
-        int streamData = inputStream.read();
+        int streamData = -1;
+        try {
+            streamData = inputStream.read();
+        } catch (IOException e) {
+            // hiba keletkezett az olvasasnal, logolni kell
+            prepareAndSendLoggingEvent();
+
+            isLogged = true;
+
+            throw e;
+        }
 
         if (streamData != -1 && logCollectLimit != 0) {
             // logoláshoz gyűjtjük a stream tartalmát amíg van, és még nem értük el a limitet
@@ -83,17 +93,21 @@ public class RequestLoggerInputStream extends InputStream {
         } else if (!isLogged) {
             // ha a stream végére értünk vagy elértük a limitet és még nem logoltunk,
             // akkor küldünk egy eventet hogy megtörténjen a logolás
-            String maskedEntityLog = getMaskedEntity(entityLog.toString());
-            logMessage.append(maskedEntityLog);
-
-            LoggingEvent event = new LoggingEvent(logMessage.toString());
-            LoggingPublisher loggingPublisher = CDI.current().select(LoggingPublisher.class).get();
-            loggingPublisher.publish(event);
+            prepareAndSendLoggingEvent();
 
             isLogged = true;
         }
 
         return streamData;
+    }
+
+    private void prepareAndSendLoggingEvent() {
+        String maskedEntityLog = getMaskedEntity(entityLog.toString());
+        logMessage.append(maskedEntityLog);
+
+        LoggingEvent event = new LoggingEvent(logMessage.toString());
+        LoggingPublisher loggingPublisher = CDI.current().select(LoggingPublisher.class).get();
+        loggingPublisher.publish(event);
     }
 
     private String getMaskedEntity(String entityLogText) {
