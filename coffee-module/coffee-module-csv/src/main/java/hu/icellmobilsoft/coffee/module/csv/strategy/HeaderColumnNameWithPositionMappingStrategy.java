@@ -25,8 +25,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import javax.enterprise.inject.Vetoed;
-
 import org.apache.commons.collections4.ListValuedMap;
 import org.apache.commons.lang3.StringUtils;
 
@@ -51,7 +49,6 @@ import hu.icellmobilsoft.coffee.module.csv.annotation.CsvCustomBindByNamePositio
  * @author martin.nagy
  * @since 1.0.0
  */
-@Vetoed
 public class HeaderColumnNameWithPositionMappingStrategy<T> extends HeaderColumnNameMappingStrategy<T> {
 
     /**
