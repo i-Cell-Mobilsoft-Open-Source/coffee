@@ -24,7 +24,6 @@ import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.security.spec.AlgorithmParameterSpec;
 import java.text.MessageFormat;
-import java.util.logging.Logger;
 
 import javax.crypto.Cipher;
 import javax.crypto.CipherInputStream;
@@ -139,7 +138,6 @@ public class AesCbcCryptoUtil {
             return c.doFinal(dataToEncrypt);
         } catch (Exception e) {
             String msg = MessageFormat.format("Encryption failed: [{0}]", e.getLocalizedMessage());
-            Logger.getLogger(AesCbcCryptoUtil.class.getName()).warning(msg);
             throw new BaseException(CoffeeFaultType.FAILED_TO_CIPHER_DOCUMENT, msg, e);
         }
     }
@@ -155,7 +153,6 @@ public class AesCbcCryptoUtil {
             return new CipherInputStream(streamToEncrypt, c);
         } catch (Exception e) {
             String msg = MessageFormat.format("Encryption failed: [{0}]", e.getLocalizedMessage());
-            Logger.getLogger(AesCbcCryptoUtil.class.getName()).warning(msg);
             throw new BaseException(CoffeeFaultType.FAILED_TO_CIPHER_DOCUMENT, msg, e);
         }
     }
@@ -243,7 +240,6 @@ public class AesCbcCryptoUtil {
             return c.doFinal(encodedData);
         } catch (Exception e) {
             String msg = MessageFormat.format("Decryption failed: [{0}]", e.getLocalizedMessage());
-            Logger.getLogger(AesCbcCryptoUtil.class.getName()).warning(msg);
             throw new BaseException(CoffeeFaultType.FAILED_TO_DECIPHER_DOCUMENT, msg, e);
         }
     }
@@ -259,7 +255,6 @@ public class AesCbcCryptoUtil {
             return new CipherInputStream(encodedData, c);
         } catch (Exception e) {
             String msg = MessageFormat.format("Decryption failed: [{0}]", e.getLocalizedMessage());
-            Logger.getLogger(AesCbcCryptoUtil.class.getName()).warning(msg);
             throw new BaseException(CoffeeFaultType.FAILED_TO_DECIPHER_DOCUMENT, msg, e);
         }
     }
