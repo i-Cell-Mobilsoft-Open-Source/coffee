@@ -217,4 +217,12 @@ public enum CoffeeFaultType implements IFaultType<CoffeeFaultType> {
      * Optimistic lock exception
      */
     OPTIMISTIC_LOCK_EXCEPTION,
+    /**
+     * Document decipher(decoding) failed
+     */
+    FAILED_TO_DECIPHER_DOCUMENT,
+    /**
+     * Document cipher(encoding) failed
+     */
+    FAILED_TO_CIPHER_DOCUMENT,
 }
