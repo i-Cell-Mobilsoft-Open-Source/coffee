@@ -65,7 +65,7 @@ public class SecretKeyUtil {
     /**
      * Default constructor, constructs a new object.
      */
-    public SecretKeyUtil() {
+    private SecretKeyUtil() {
         super();
     }
 

@@ -58,7 +58,7 @@ public class AesCbcCryptoUtil {
     /**
      * Default constructor, constructs a new object.
      */
-    public AesCbcCryptoUtil() {
+    private AesCbcCryptoUtil() {
         super();
     }
 
