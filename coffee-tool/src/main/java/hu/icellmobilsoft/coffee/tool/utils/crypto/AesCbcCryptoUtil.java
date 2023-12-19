@@ -56,6 +56,13 @@ public class AesCbcCryptoUtil {
     private static final String INIT_VECTOR_BLANK_MSG = "Input initVector is blank!";
 
     /**
+     * Default constructor, constructs a new object.
+     */
+    public AesCbcCryptoUtil() {
+        super();
+    }
+
+    /**
      * Encrypt data with parameters, initial vector is default zero
      *
      * @param dataToEncrypt

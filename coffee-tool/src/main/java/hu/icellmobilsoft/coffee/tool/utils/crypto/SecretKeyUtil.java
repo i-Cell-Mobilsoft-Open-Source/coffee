@@ -63,6 +63,13 @@ public class SecretKeyUtil {
     public static final String ALGORITHM_AES = "AES";
 
     /**
+     * Default constructor, constructs a new object.
+     */
+    public SecretKeyUtil() {
+        super();
+    }
+
+    /**
      * Create secret key, where the following values are set:
      * <ul>
      * <li>SALT: { 0 }</li>
