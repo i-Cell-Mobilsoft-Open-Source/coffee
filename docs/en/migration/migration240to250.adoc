@@ -1,0 +1,14 @@
+= v2.4.0 → v2.5.0
+
+coff:ee v2.4.0 -> v2.5.0 migration description, news, changes
+
+=== coffee-tool
+
+* Added tool class for "AES/CBC/PKCS5PADDING" de/cipher
+(`hu.icellmobilsoft.coffee.tool.utils.crypto.AesCbcCryptoUtil`)
+* Added SHA3-512 message digest to `hu.icellmobilsoft.coffee.tool.utils.string.EncodeUtil` class,
+deprecating old `Sha512(String str)`.
+
+==== Migration
+
+Changes are backwards compatible doesnt need any migration.
