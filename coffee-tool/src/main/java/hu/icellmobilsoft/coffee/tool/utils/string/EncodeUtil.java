@@ -30,12 +30,17 @@ import javax.enterprise.inject.Vetoed;
 
 import org.apache.commons.lang3.StringUtils;
 
+import hu.icellmobilsoft.coffee.dto.exception.BaseException;
+import hu.icellmobilsoft.coffee.dto.exception.InvalidParameterException;
+import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
+import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
 
 /**
  * Util class for encoding
  *
  * @author balazs.joo
+ * @author Imre Scheffer
  * @since 1.0.0
  */
 @Vetoed
@@ -44,12 +49,34 @@ public class EncodeUtil {
     private static Logger LOGGER = Logger.getLogger(EncodeUtil.class);
 
     /**
+     * {@value #ALGORITHM_SHA_512} from
+     * <a href="https://docs.oracle.com/en/java/javase/11/docs/specs/security/standard-names.html#messagedigest-algorithms">message digest
+     * algorithms</a>
+     */
+    public static final String ALGORITHM_SHA_512 = "SHA-512";
+    /**
+     * {@value #ALGORITHM_SHA3_512} from
+     * <a href="https://docs.oracle.com/en/java/javase/11/docs/specs/security/standard-names.html#messagedigest-algorithms">message digest
+     * algorithms</a>
+     */
+    public static final String ALGORITHM_SHA3_512 = "SHA3-512";
+
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public EncodeUtil() {
+        super();
+    }
+
+    /**
      * Encodes input {@link String} with SHA-512.
      *
      * @param str
      *            input {@code String}
      * @return encoded {@code String} or null if invalid input or encoding error
+     * @deprecated use {@link #sha_512(String)} instead
      */
+    @Deprecated(forRemoval = true, since = "1.16.0")
     public static String Sha512(String str) {
         if (StringUtils.isBlank(str)) {
             return null;
@@ -57,7 +84,7 @@ public class EncodeUtil {
 
         String sha = null;
         try {
-            MessageDigest crypt = MessageDigest.getInstance("SHA-512");
+            MessageDigest crypt = MessageDigest.getInstance(ALGORITHM_SHA_512);
             crypt.reset();
             crypt.update(str.getBytes(StandardCharsets.UTF_8));
             sha = byteToHex(crypt.digest());
@@ -68,6 +95,75 @@ public class EncodeUtil {
         }
 
         return StringUtils.upperCase(sha);
+    }
+
+    /**
+     * Digest message input {@link String} with SHA-512.
+     *
+     * @param stringInput
+     *            input {@code String}
+     * @return Upper case encoded {@code String} or null if invalid input or encoding error
+     * @throws BaseException
+     *             any exception
+     * @since 1.16.0
+     */
+    public static String sha_512(String stringInput) throws BaseException {
+        if (StringUtils.isBlank(stringInput)) {
+            return null;
+        }
+
+        String sha = messageDigest(stringInput.getBytes(StandardCharsets.UTF_8), ALGORITHM_SHA_512);
+        return StringUtils.upperCase(sha);
+    }
+
+    /**
+     * Digest message input {@link String} with SHA3-512.
+     *
+     * @param stringInput
+     *            input {@code String}
+     * @return Upper case encoded {@code String} or null if invalid input or encoding error
+     * @throws BaseException
+     *             any exception
+     * @since 1.16.0
+     */
+    public static String sha3_512(String stringInput) throws BaseException {
+        if (StringUtils.isBlank(stringInput)) {
+            return null;
+        }
+
+        String sha = messageDigest(stringInput.getBytes(StandardCharsets.UTF_8), ALGORITHM_SHA3_512);
+        return StringUtils.upperCase(sha);
+    }
+
+    /**
+     * Encodes input {@link String} with specified algorithm.
+     *
+     * @param input
+     *            input message to digest
+     * @param algorithm
+     *            one of <a href="https://docs.oracle.com/en/java/javase/11/docs/specs/security/standard-names.html#messagedigest-algorithms">message
+     *            digest algorithms</a>
+     * @return message digest output by algorith
+     * @throws BaseException
+     *             any exception
+     * @since 1.16.0
+     */
+    public static String messageDigest(byte[] input, String algorithm) throws BaseException {
+        if (Objects.isNull(input)) {
+            throw new InvalidParameterException("input is null!");
+        }
+        if (StringUtils.isBlank(algorithm)) {
+            throw new InvalidParameterException("algorithm is null!");
+        }
+
+        try {
+            MessageDigest crypt = MessageDigest.getInstance(algorithm);
+            crypt.reset();
+            crypt.update(input);
+            return byteToHex(crypt.digest());
+        } catch (NoSuchAlgorithmException e) {
+            throw new TechnicalException(CoffeeFaultType.OPERATION_FAILED, MessageFormat.format("Error in get [{0}] from input", algorithm), e);
+        }
     }
 
     /**

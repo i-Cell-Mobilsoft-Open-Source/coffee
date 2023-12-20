@@ -27,7 +27,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import hu.icellmobilsoft.coffee.tool.utils.string.EncodeUtil;
+import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 
 /**
  * @author balazs.joo
@@ -46,6 +46,17 @@ public class EncodeUtilTest {
         Assertions.assertEquals(expected, actual);
     }
 
+    @DisplayName("Testing sha_512()")
+    @ParameterizedTest(name = "Testing sha_512() with input:[{0}]; expected:[{1}]")
+    // given
+    @MethodSource("Sha512Provider")
+    void sha_512(String str, String expected) throws BaseException {
+
+        String actual = EncodeUtil.sha_512(str);
+
+        Assertions.assertEquals(expected, actual);
+    }
+
     @DisplayName("Testing byteToHex()")
     @ParameterizedTest(name = "Testing byteToHex() with input:[{0}]; expected:[{1}]")
     // given
@@ -57,21 +68,41 @@ public class EncodeUtilTest {
         Assertions.assertEquals(expected, actual);
     }
 
+    @DisplayName("Testing Sha3_512()")
+    @ParameterizedTest(name = "Testing Sha3_512() with input:[{0}]; expected:[{1}]")
+    // given
+    @MethodSource("Sha3_512Provider")
+    void Sha3_512(String str, String expected) throws BaseException {
+
+        String actual = EncodeUtil.sha3_512(str);
+
+        Assertions.assertEquals(expected, actual);
+    }
+
     static Stream<Arguments> Sha512Provider() {
         return Stream.of(//
-                Arguments.arguments("vfds32reqcCDACf23rfca", "2AF497FD142FB8312FE6659426B028B04FFABEE7B5627772984E157EE13DF0B9519EC9BFE523E4FC335E33763A0F73A7BA1CB0AB3505AEFCABE4EE90C283FEA0"), //
-                Arguments.arguments("c15611651erd1qwec1612DFEFcvacas", "DCC71079D7396B41F2841A4E00441645E2005D9E41910675F330B304473C64309CF1367C19F84F660FDBB7494E076167FA2725D109D2CAE5F95F23B51A827E3C"), //
-                Arguments.arguments("123r31_...dwq615c5_qEE'D", "EF2D2CECE40BE0B0DE80F3CA7919ACB6CA4271B08F2FFF6FCDBC9ECC54997EB7B53002815D157149CAC2ED5059D9BA91F8467CD98F4DB9B21DA25C745D9EEBCF"), //
-                Arguments.arguments(null, null)//
-        );
+                Arguments.arguments("vfds32reqcCDACf23rfca",
+                        "2AF497FD142FB8312FE6659426B028B04FFABEE7B5627772984E157EE13DF0B9519EC9BFE523E4FC335E33763A0F73A7BA1CB0AB3505AEFCABE4EE90C283FEA0"),
+                Arguments.arguments("c15611651erd1qwec1612DFEFcvacas",
+                        "DCC71079D7396B41F2841A4E00441645E2005D9E41910675F330B304473C64309CF1367C19F84F660FDBB7494E076167FA2725D109D2CAE5F95F23B51A827E3C"),
+                Arguments.arguments("123r31_...dwq615c5_qEE'D",
+                        "EF2D2CECE40BE0B0DE80F3CA7919ACB6CA4271B08F2FFF6FCDBC9ECC54997EB7B53002815D157149CAC2ED5059D9BA91F8467CD98F4DB9B21DA25C745D9EEBCF"),
+                Arguments.arguments(null, null));
     }
 
     static Stream<Arguments> byteToStringProvider() {
         return Stream.of(//
-                Arguments.arguments(new byte[] { 1, 0, 111, -10, 0, 0, 0 }, "01006ff6000000"), //
-                Arguments.arguments(new byte[] { 1, -128, 36, -10, 0, 43, 10, 0, 43, 10 }, "018024f6002b0a002b0a"), //
-                Arguments.arguments(new byte[] { 8, 36, -10, 0, 43, 10, 0 }, "0824f6002b0a00"), //
-                Arguments.arguments(null, null)//
-        );
+                Arguments.arguments(new byte[] { 1, 0, 111, -10, 0, 0, 0 }, "01006ff6000000"),
+                Arguments.arguments(new byte[] { 1, -128, 36, -10, 0, 43, 10, 0, 43, 10 }, "018024f6002b0a002b0a"),
+                Arguments.arguments(new byte[] { 8, 36, -10, 0, 43, 10, 0 }, "0824f6002b0a00"), Arguments.arguments(null, null));
+    }
+
+    static Stream<Arguments> Sha3_512Provider() {
+        return Stream.of(//
+                Arguments.arguments("Test message",
+                        "C65455C9B45F3C066FD8BC7341B655CE2CC7750C2721D5E8A9177B2938DD568A4F173A7D4E107421DC6452ABA5B3785A5229A30D8519C08C3F05BED30C0DD7CA"),
+                Arguments.arguments(";aslkd[q9wue4r,mqen",
+                        "21FA47C54DCC442072C5BEDF64421B5489A135ADEA0EE61BB3C75DD1AA5F4438463F3DF12836B43A73989B5B30C013C74234FB193DCC10669EEB035B540242A8"),
+                Arguments.arguments(null, null));
     }
 }
