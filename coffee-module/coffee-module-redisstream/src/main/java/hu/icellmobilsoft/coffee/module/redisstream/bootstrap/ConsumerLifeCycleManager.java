@@ -61,7 +61,7 @@ public class ConsumerLifeCycleManager {
     private Logger log;
 
     /**
-     * When a context is about to be destroyed, we gracefully wait for the redis consumers to finish processes
+     * When a context is about to be destroyed, we gracefully wait for the redis consumers to finish processes.
      * 
      * @param init
      *            ignored
