@@ -12,3 +12,12 @@ deprecating old `Sha512(String str)`.
 ==== Migration
 
 Changes are backwards compatible doesnt need any migration.
+
+=== coffee-module-redisstream
+
+* The Redis consumers received functionality to assist graceful shutdown
+(`hu.icellmobilsoft.coffee.module.redisstream.bootstrap.ConsumerLifeCycleManager`)
+
+==== Migration
+
+Changes are backwards compatible doesnt need any migration.
