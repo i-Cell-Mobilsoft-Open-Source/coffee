@@ -39,6 +39,12 @@ import hu.icellmobilsoft.coffee.se.logging.Logger;
 public class ConsumerLifeCycleManager {
 
     /**
+     * Default constructor, constructs a new object.
+     */
+    public ConsumerLifeCycleManager() {
+    }
+
+    /**
      * Boolean variable indicating the end condition for consumer loop
      */
     public static boolean ENDLOOP;
