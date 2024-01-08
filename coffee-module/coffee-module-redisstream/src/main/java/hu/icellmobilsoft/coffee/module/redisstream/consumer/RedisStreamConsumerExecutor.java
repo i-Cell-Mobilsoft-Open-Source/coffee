@@ -132,7 +132,7 @@ public class RedisStreamConsumerExecutor implements IRedisStreamConsumerExecutor
                 // if a SIGTERM arrives while the xreadGroup blocking operation is in progress, we do not process the read message completely because
                 // it may run out of time.
                 if (ConsumerLifeCycleManager.ENDLOOP == true) {
-                    log.info("Skipping message processing becaouse of shut down event.");
+                    log.info("Skipping message processing because of shut down event.");
                     continue;
                 }
 

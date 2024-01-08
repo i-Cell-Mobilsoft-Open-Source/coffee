@@ -51,11 +51,11 @@ public class ConsumerLifeCycleManager {
     /**
      * Variable indicating the running consumer count
      */
-    public static AtomicInteger CONSUMER_COUNTER = new AtomicInteger(0);
+    public static final AtomicInteger CONSUMER_COUNTER = new AtomicInteger(0);
     /**
      * Semaphore used for coordinating threads. The initial value of this semaphore is set to 0.
      */
-    public static Semaphore SEMAPHORE = new Semaphore(0);
+    public static final Semaphore SEMAPHORE = new Semaphore(0);
 
     @Inject
     private Logger log;
