@@ -353,3 +353,26 @@ These need to be handled locally on a case by case basis as to what to do with t
 The `hu.icellmobilsoft.coffee.module.redisstream.service.RedisStreamService` class
 contains query and handling methods for this purpose,
 which can be used in the stuck business process.
+
+== Graceful shutdown support
+
+The Redis consumers got stuck during service shutdown and stalled during processing. To support graceful shutdown, the hu.icellmobilsoft.coffee.module.redisstream.bootstrap.ConsumerLifeCycleManager class was created, which waits for the consumers to complete their ongoing operations.
+
+By default, it is enabled, but it can be disabled in the following way:
+
+[source,java]
+----
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.BeforeDestroyed;
+import jakarta.enterprise.event.Observes;
+import jakarta.enterprise.inject.Specializes;
+
+import hu.icellmobilsoft.coffee.module.redisstream.bootstrap.ConsumerLifeCycleManager;
+
+@ApplicationScoped
+@Specializes
+public class ProjectConsumerLifeCycleManager extends ConsumerLifeCycleManager {
+    public void stop(@Observes @BeforeDestroyed(ApplicationScoped.class) Object init) {
+        //
+    }
+}

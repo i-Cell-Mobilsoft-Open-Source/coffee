@@ -353,3 +353,29 @@ Ezeket helyileg esetenként kell kezelni hogy mi történjen velük.
 Az `hu.icellmobilsoft.coffee.module.redisstream.service.RedisStreamService` osztály
 tartalmaz lekérdező és lekezelő metódusokat erre a célra,
 amit fel lehet használni a beragadt üzleti folyamatban.
+
+== Graceful shutdown támogatás
+
+A redis consumerek service leállítás alatt beragadtak és feldolgozás közben megakadtak. Graceful shutdown támogatására létrejött a 
+`hu.icellmobilsoft.coffee.module.redisstream.bootstrap.ConsumerLifeCycleManager` osztály, ami megvárja hogy a consumereket elvégezzék
+a megkezdett műveleteiket.
+
+Alapértelmezett be van kapcsolva, de a következő módon ki lehet kapcsolni:
+
+[source,java]
+----
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.BeforeDestroyed;
+import jakarta.enterprise.event.Observes;
+import jakarta.enterprise.inject.Specializes;
+
+import hu.icellmobilsoft.coffee.module.redisstream.bootstrap.ConsumerLifeCycleManager;
+
+@ApplicationScoped
+@Specializes
+public class ProjectConsumerLifeCycleManager extends ConsumerLifeCycleManager {
+    public void stop(@Observes @BeforeDestroyed(ApplicationScoped.class) Object init) {
+        //
+    }
+}
+

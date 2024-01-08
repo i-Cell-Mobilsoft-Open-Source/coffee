@@ -12,3 +12,12 @@ régi `Sha512(String str)` kivezetésre fog kerülni.
 ==== Migration
 
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+=== coffee-module-redisstream
+
+* Graceful leállítást segítű működést kaptak a redis consumerek
+(`hu.icellmobilsoft.coffee.module.redisstream.bootstrap.ConsumerLifeCycleManager`)
+
+==== Migration
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
