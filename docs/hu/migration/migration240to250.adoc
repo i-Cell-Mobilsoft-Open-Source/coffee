@@ -13,9 +13,10 @@ régi `Sha512(String str)` kivezetésre fog kerülni.
 
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
 
-=== coffee-rest
+=== coffee-module-redisstream
 
-* Ha nincs definiálva a version a validateXMLs annotációban, akkor nem próbálja meg kiolvasni a requestVersion a requestből.
+* Graceful leállítást segítű működést kaptak a redis consumerek
+(`hu.icellmobilsoft.coffee.module.redisstream.bootstrap.ConsumerLifeCycleManager`)
 
 ==== Migration
 
