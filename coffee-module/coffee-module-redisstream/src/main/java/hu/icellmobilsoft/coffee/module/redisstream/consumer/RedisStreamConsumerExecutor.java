@@ -42,6 +42,7 @@ import hu.icellmobilsoft.coffee.module.redis.annotation.RedisConnection;
 import hu.icellmobilsoft.coffee.module.redis.manager.RedisManager;
 import hu.icellmobilsoft.coffee.module.redis.manager.RedisManagerConnection;
 import hu.icellmobilsoft.coffee.module.redisstream.annotation.RedisStreamConsumer;
+import hu.icellmobilsoft.coffee.module.redisstream.bootstrap.ConsumerLifeCycleManager;
 import hu.icellmobilsoft.coffee.module.redisstream.config.IRedisStreamConstant;
 import hu.icellmobilsoft.coffee.module.redisstream.config.StreamGroupConfig;
 import hu.icellmobilsoft.coffee.module.redisstream.service.RedisStreamService;
@@ -87,8 +88,6 @@ public class RedisStreamConsumerExecutor implements IRedisStreamConsumerExecutor
 
     private String redisConfigKey;
 
-    private boolean endLoop;
-
     private Bean<? super IRedisStreamBaseConsumer> consumerBean;
 
     /**
@@ -110,11 +109,12 @@ public class RedisStreamConsumerExecutor implements IRedisStreamConsumerExecutor
      * Vegtelen ciklus inditasa, ami a streamet olvassa
      */
     public void startLoop() {
+        // register consumer as a counter
+        ConsumerLifeCycleManager.CONSUMER_COUNTER.getAndIncrement();
         consumerIdentifier = RandomUtil.generateId();
-        endLoop = false;
         // óvatos futás, ellenőrzi a stream es csoport létezését
         boolean prudentRun = true;
-        while (!endLoop) {
+        while (!ConsumerLifeCycleManager.ENDLOOP) {
             Optional<StreamEntry> streamEntry = Optional.empty();
             Instance<RedisManager> redisManagerInstance = CDI.current().select(RedisManager.class, new RedisConnection.Literal(redisConfigKey));
             RedisManager redisManager = redisManagerInstance.get();
@@ -128,6 +128,13 @@ public class RedisStreamConsumerExecutor implements IRedisStreamConsumerExecutor
                 }
 
                 streamEntry = redisStreamService.consumeOne(consumerIdentifier);
+
+                // if a SIGTERM arrives while the xreadGroup blocking operation is in progress, we do not process the read message completely because
+                // it may run out of time.
+                if (ConsumerLifeCycleManager.ENDLOOP == true) {
+                    log.info("Skipping message processing because of shut down event.");
+                    continue;
+                }
 
                 if (streamEntry.isPresent()) {
                     var entry = streamEntry.get();
@@ -360,19 +367,18 @@ public class RedisStreamConsumerExecutor implements IRedisStreamConsumerExecutor
         return consumerIdentifier;
     }
 
-    /**
-     * Stop endless stream reading
-     */
-    public void stopLoop() {
-        endLoop = true;
-    }
-
     @Override
     public void run() {
         try {
             startLoop();
         } finally {
             CDI.current().destroy(this);
+            // decrement consumer counter because the process loop has been finished
+            // if finish release the lock
+            if (ConsumerLifeCycleManager.CONSUMER_COUNTER.decrementAndGet() == 0) {
+                ConsumerLifeCycleManager.SEMAPHORE.release();
+            }
+
         }
     }
 
