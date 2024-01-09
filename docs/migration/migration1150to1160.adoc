@@ -12,3 +12,11 @@ régi `Sha512(String str)` kivezetésre fog kerülni.
 ==== Migration
 
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+=== coffee-rest
+
+* Ha nincs definiálva a version a validateXMLs annotációban, akkor nem próbálja meg kiolvasni a requestVersion a requestből.
+
+==== Migration
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.

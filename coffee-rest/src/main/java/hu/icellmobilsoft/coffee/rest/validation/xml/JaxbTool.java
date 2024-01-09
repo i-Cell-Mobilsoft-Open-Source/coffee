@@ -23,6 +23,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -88,7 +89,12 @@ public class JaxbTool {
         if (type == null || entityStream == null) {
             throw new InvalidParameterException("type or entityStream is null!");
         }
-        String requestVersion = getRequestVersion(entityStream);
+        String requestVersion = null;
+        if (validateXMLs != null && Arrays.stream(validateXMLs).anyMatch(e -> e.version().include().length > 0)) {
+            // ha van megadva version az annotacioban, akkor megprobaljuk kiszedni a 'requestVersion'-t a requestbol
+            requestVersion = getRequestVersion(entityStream);
+        }
+
         String schemaPath = getXsdPath(validateXMLs, requestVersion);
         // Ha nem kap csak üres schemaPath-ot nem validál, csak objektummá alakít:
         return unmarshalXML(type, entityStream, schemaPath);
