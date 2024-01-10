@@ -32,7 +32,7 @@ Changes are backwards compatible doesnt need any migration.
 
 ==== Migration
 
-Unfortunately `FaultTypeParserExtension` was previously built on an synod that does not exist when `bean-discovery-mode='annotated'` is used and it had issues. 
+Unfortunately `FaultTypeParserExtension` was previously built on a 'feature' that does not work when `bean-discovery-mode='annotated'` is used and it had issues. 
 The previous automatic operation has been removed, instead - if you use your own `FaultType` in your project - you need to add a `ProjectFaultTypeProvider` class that implements the `IFaultTypeProvider` interface and returns the `IFaultType` enum.
 
 .sample

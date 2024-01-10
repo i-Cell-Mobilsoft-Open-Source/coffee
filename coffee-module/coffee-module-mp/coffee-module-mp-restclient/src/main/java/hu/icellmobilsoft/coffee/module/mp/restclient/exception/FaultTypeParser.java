@@ -55,11 +55,17 @@ public class FaultTypeParser {
         Instance<IFaultTypeProvider> faultProviderInstance = CDI.current().select(IFaultTypeProvider.class);
         IFaultTypeProvider provider = null;
         if (faultProviderInstance.isResolvable()) {
-            provider = faultProviderInstance.get();
-            for (Class<? extends Enum> faultTypeClass : provider.faultTypeEnums()) {
-                Enum<?> fault = EnumUtils.getEnum(faultTypeClass, faultTypeString);
-                if (fault != null) {
-                    return fault;
+            try {
+                provider = faultProviderInstance.get();
+                for (Class<? extends Enum> faultTypeClass : provider.faultTypeEnums()) {
+                    Enum<?> fault = EnumUtils.getEnum(faultTypeClass, faultTypeString);
+                    if (fault != null) {
+                        return fault;
+                    }
+                }
+            } finally {
+                if (provider != null) {
+                    faultProviderInstance.destroy(provider);
                 }
             }
         }
@@ -68,7 +74,8 @@ public class FaultTypeParser {
         if (fault != null) {
             return fault;
         }
-        Logger.getLogger(FaultTypeParser.class).warn("FaultType not exists in enum for messages, faultType: [" + faultTypeString + "]");
+        Logger.getLogger(FaultTypeParser.class)
+                .warn("FaultType not exists in enum for messages, faultType: [{0}] -> [{1}]", faultTypeString, CoffeeFaultType.OPERATION_FAILED);
         return CoffeeFaultType.OPERATION_FAILED;
     }
 }
