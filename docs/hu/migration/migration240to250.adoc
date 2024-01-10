@@ -29,3 +29,36 @@ A változtatások nem eredményeznek átállási munkálatokat, visszafelé komp
 ==== Migration
 
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+=== coffee-module-mp-restclient
+
+* FaultTypeParserExtension osztály törlésre került, valamint a FaultTypeParser javításra került.  
+
+==== Migration
+
+Sajnos a `FaultTypeParserExtension` egy olyan együttállásra épült korábban, ami `bean-discovery-mode='annotated'` esetén nem áll fenn, ezért a működésében egy több esetben hiba lépett fel. Erre született egy új megoldás itt:
+Az eddigi automatikus működés megszűnt, helyette - ha saját `FaultType`-ot is használunk a projektünkben - fel kell vennünk egy `ProjectFaultTypeProvider` osztályt, ami implementálja az `IFaultTypeProvider` interfészt és visszaadja az `IFaultType` enumjainkat.
+
+.példa
+[source,java]
+----
+/**
+ * Coffee FaultType provider - provides every FaultType enumeration used in the project
+ * 
+ * @author tamas.cserhati
+ * @since 2.5.0
+ * @see FaultTypeParser
+ */
+@ApplicationScoped
+public class ProjectFaultTypeProvider implements IFaultTypeProvider {
+
+    @Override
+    public Collection<Class<? extends Enum>> faultTypeEnums() {
+        return List.of(CoffeeFaultType.class, FaultType.class);
+    }
+}
+----
+
+A FaultTypeParser a továbbiakban ezt a providert használja, hogy fel tudja oldani az enumokat a szöveges hibakód alapján.
+
+

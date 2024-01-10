@@ -29,3 +29,30 @@ Changes are backwards compatible doesnt need any migration.
 ==== Migration
 
 Changes are backwards compatible doesnt need any migration.
+
+==== Migration
+
+Unfortunately `FaultTypeParserExtension` was previously built on an synod that does not exist when `bean-discovery-mode='annotated'` is used and it had issues. 
+The previous automatic operation has been removed, instead - if you use your own `FaultType` in your project - you need to add a `ProjectFaultTypeProvider` class that implements the `IFaultTypeProvider` interface and returns the `IFaultType` enum.
+
+.sample
+[source,java]
+----
+/**
+ * Coffee FaultType provider - provides every FaultType enumeration used in the project
+ * 
+ * @author tamas.cserhati
+ * @since 2.5.0
+ * @see FaultTypeParser
+ */
+@ApplicationScoped
+public class ProjectFaultTypeProvider implements IFaultTypeProvider {
+
+    @Override
+    public Collection<Class<? extends Enum>> faultTypeEnums() {
+        return List.of(CoffeeFaultType.class, FaultType.class);
+    }
+}
+----
+
+FaultTypeParser is using this provider to resolve enums based on the error code text.
