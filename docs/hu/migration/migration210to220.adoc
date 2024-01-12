@@ -18,6 +18,22 @@ A változtatások nem eredményeznek átállási munkálatokat, visszafelé komp
 
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
 
+=== coffee-rest
+
+** Jsonb configuráció hozzáadása
+
+==== Átállás
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+=== coffee-module-mp-restclient
+
+** Jsonb configuráció hozzáadása
+
+==== Átállás
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
 === coffee-module-redis
 
 ** microprofile-health támogatást kapott
