@@ -8,6 +8,7 @@ coff:ee v2.4.0 -> v2.5.0 migrációs leírás, újdonságok, változások leír�
 (`hu.icellmobilsoft.coffee.tool.utils.crypto.AesCbcCryptoUtil`)
 * Hozzá adva a SHA3-512 kódoló metódus a `hu.icellmobilsoft.coffee.tool.utils.string.EncodeUtil` osztályhoz,
 régi `Sha512(String str)` kivezetésre fog kerülni.
+* MavenURLHandler osztályban aktuális szál alapotú resource lekérést kerül.
 
 ==== Migration
 
