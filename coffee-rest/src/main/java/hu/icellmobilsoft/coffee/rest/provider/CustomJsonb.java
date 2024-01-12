@@ -30,7 +30,7 @@ import hu.icellmobilsoft.coffee.rest.provider.util.JsonbUtil;
  * Custom default JSON-B JAXRS provider. Used in {@code org.jboss.resteasy.plugins.providers.jsonb.AbstractJsonBindingProvider}
  *
  * @author speter555
- * @since 2.2.0
+ * @since 2.5.0
  * @see <a href="https://javaee.github.io/jsonb-spec/users-guide.html">JSON-B spec</a>
  * @see <a href="https://www.adam-bien.com/roller/abien/entry/private_fields_serialization_with_json">Setter/Getter hide</a>
  * @see <a href="https://github.com/eclipse-ee4j/jsonb-api/issues/172">Future configuration option</a>

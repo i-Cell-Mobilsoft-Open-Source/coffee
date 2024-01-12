@@ -30,7 +30,7 @@ import hu.icellmobilsoft.coffee.rest.provider.FieldOnlyVisibilityStrategy;
  * {@link Jsonb} object creator util class.
  *
  * @author speter555
- * @since 2.2.0
+ * @since 2.5.0
  */
 public class JsonbUtil {
 

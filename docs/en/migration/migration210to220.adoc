@@ -20,18 +20,6 @@ Changes are backwards compatible doesnt need any migration.
 
 Changes are backwards compatible doesnt need any migration.
 
-=== coffee-rest
-
-** Add Jsonb configuratation
-
-==== Átállás
-
-Changes are backwards compatible doesnt need any migration.
-
-=== coffee-module-mp-restclient
-
-** Add Jsonb configuratation
-
 ==== Átállás
 
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.

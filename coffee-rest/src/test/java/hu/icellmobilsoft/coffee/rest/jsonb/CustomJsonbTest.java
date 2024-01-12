@@ -45,7 +45,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 /**
  * Customer Jsonb handling
  * @author speter555
- * @since 2.2.0
+ * @since 2.5.0
  */
 @EnableWeld
 @Tag("weld")
