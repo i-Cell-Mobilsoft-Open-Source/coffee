@@ -25,6 +25,15 @@ Changes are backwards compatible doesnt need any migration.
 === coffee-rest
 
 * If version is not defined in the validateXMLs annotation, it won't attempt to read the requestVersion from the request body.
+** Add Jsonb configuratation
+
+==== Migration
+
+Changes are backwards compatible doesnt need any migration.
+
+=== coffee-module-mp-restclient
+
+** Add Jsonb configuratation
 
 ==== Migration
 
