@@ -37,7 +37,7 @@ coff:ee can also be found in the official maven repository as well, it is enough
 <dependencyManagement>
     <dependency>
         <groupId>hu.icellmobilsoft.coffee</groupId>
-        <artifactId>coffee-bom</artifactId>
+        <artifactId>coffee-bom-all</artifactId>
         <version>${version.hu.icellmobilsoft.coffee}</version>
         <type>pom</type>
         <scope>import</scope>
@@ -105,7 +105,7 @@ a projekten elég behúzni a BOM-ot mely minden almodult lekezel:
 <dependencyManagement>
     <dependency>
         <groupId>hu.icellmobilsoft.coffee</groupId>
-        <artifactId>coffee-bom</artifactId>
+        <artifactId>coffee-bom-all</artifactId>
         <version>${version.hu.icellmobilsoft.coffee}</version>
         <type>pom</type>
         <scope>import</scope>
