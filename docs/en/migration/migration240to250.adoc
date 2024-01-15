@@ -8,6 +8,7 @@ coff:ee v2.4.0 -> v2.5.0 migration description, news, changes
 (`hu.icellmobilsoft.coffee.tool.utils.crypto.AesCbcCryptoUtil`)
 * Added SHA3-512 message digest to `hu.icellmobilsoft.coffee.tool.utils.string.EncodeUtil` class,
 deprecating old `Sha512(String str)`.
+* In MavenURLHandler class, fix getting resource over class to current thread-based getting
 
 ==== Migration
 
