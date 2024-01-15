@@ -25,7 +25,22 @@ Changes are backwards compatible doesnt need any migration.
 === coffee-rest
 
 * If version is not defined in the validateXMLs annotation, it won't attempt to read the requestVersion from the request body.
+* The `hu.icellmobilsoft.coffee.rest.validation.xml.annotation.ValidateXML` and `hu.icellmobilsoft.coffee.rest.validation.xml.annotation.ValidateXMLs` annotations are moved to the coffee-dto-base module.
 
 ==== Migration
 
-Changes are backwards compatible doesnt need any migration.
+As a result of the move, if these annotations are also used on the usage project, the imports must be updated:
+
+`hu.icellmobilsoft.coffee.rest.validation.xml.annotation.ValidateXML` -> `hu.icellmobilsoft.coffee.dto.annotation.validation.xml.ValidateXML`
+`hu.icellmobilsoft.coffee.rest.validation.xml.annotation.ValidateXMLs` -> `hu.icellmobilsoft.coffee.dto.annotation.validation.xml.ValidateXMLs`
+
+=== coffee-cdi
+
+* The `hu.icellmobilsoft.coffee.cdi.annotation.Range` and `hu.icellmobilsoft.coffee.cdi.annotation.Version`  annotations are moved to the coffee-dto-base module.
+
+==== Migration
+
+As a result of the move, if these annotations are also used on the usage project, the imports must be updated:
+
+`hu.icellmobilsoft.coffee.cdi.annotation.Range` -> `hu.icellmobilsoft.coffee.dto.annotation.Range`
+`hu.icellmobilsoft.coffee.cdi.annotation.Version` -> `hu.icellmobilsoft.coffee.dto.annotation.Version`

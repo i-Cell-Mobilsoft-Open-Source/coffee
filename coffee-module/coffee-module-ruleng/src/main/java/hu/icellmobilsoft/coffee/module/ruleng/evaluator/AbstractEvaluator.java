@@ -38,8 +38,8 @@ import jakarta.inject.Inject;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
-import hu.icellmobilsoft.coffee.cdi.annotation.Range;
-import hu.icellmobilsoft.coffee.cdi.annotation.Version;
+import hu.icellmobilsoft.coffee.dto.annotation.Range;
+import hu.icellmobilsoft.coffee.dto.annotation.Version;
 import hu.icellmobilsoft.coffee.cdi.logger.AppLogger;
 import hu.icellmobilsoft.coffee.cdi.logger.ThisLogger;
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;

@@ -17,45 +17,43 @@
  * limitations under the License.
  * #L%
  */
-package hu.icellmobilsoft.coffee.rest.validation.xml.annotation;
+package hu.icellmobilsoft.coffee.dto.annotation.validation.xml;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import hu.icellmobilsoft.coffee.dto.annotation.Version;
 import jakarta.enterprise.util.Nonbinding;
 
 /**
  * Ha egy RestService-ben szereplő metódus a request body paraméterét megannotáljuk ezzel az annotációval, akkor a deszerializációt és a validációt a
  * MessageBodyReaderBase megfelelő implementáció végzik
  *
- * Példa a használatra:
- *
- * <pre>
- * ExampleResponse postExampleRequest(@Context HttpHeaders headers, @Context HttpServletRequest servletRequest,
- *         &#64;ValidateXMLs({ @ValidateXML(version = @Version(include = @Range(from = "1.0", to = "1.9")), xsdPath = ""), // Nincs XSD validáció
- *                 &#64;ValidateXML(version = @Version(include = @Range(from = "1.10")), xsdPath = "sample.xsd") }) ExampleRequest exampleRequest)
- *         throws BaseException;
- * </pre>
- *
- * Lehet egy ValidateXML annotáció is önmagában.
- *
- * Teljes használati leírás: /docs/howto/xsd_xml_validation_depend_on_version.adoc
- *
- * @see ValidateXML
+ * @see ValidateXMLs
+ * @see Version
+ * @author attila.nyers
  * @author ferenc.lutischan
  * @since 1.0.0
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.PARAMETER })
-public @interface ValidateXMLs {
+public @interface ValidateXML {
 
     /**
-     * Az egyes xsd validációk verziófüggő felsorolása (azaz Verzió -&gt; xsd összerendelés)
+     * Melyik verziókra aktiválódjon
      *
-     * @return {@code ValidateXML} tömb
+     * @return {@link Version}
      */
     @Nonbinding
-    ValidateXML[] value();
+    Version version() default @Version();
+
+    /**
+     * A Version-höz rendelt xsd fájl elérési útvonallal
+     *
+     * @return path of XSD file
+     */
+    @Nonbinding
+    String xsdPath();
 }
