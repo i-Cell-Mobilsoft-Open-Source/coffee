@@ -21,7 +21,7 @@ package hu.icellmobilsoft.coffee.tool.utils.annotation;
 
 import org.apache.commons.lang3.StringUtils;
 
-import hu.icellmobilsoft.coffee.dto.annotation.Range;
+import hu.icellmobilsoft.coffee.cdi.annotation.Range;
 import hu.icellmobilsoft.coffee.tool.version.ComparableVersion;
 
 /**

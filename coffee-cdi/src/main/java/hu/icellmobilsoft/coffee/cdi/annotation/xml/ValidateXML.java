@@ -17,14 +17,14 @@
  * limitations under the License.
  * #L%
  */
-package hu.icellmobilsoft.coffee.dto.annotation.validation.xml;
+package hu.icellmobilsoft.coffee.cdi.annotation.xml;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import hu.icellmobilsoft.coffee.dto.annotation.Version;
+import hu.icellmobilsoft.coffee.cdi.annotation.Version;
 import jakarta.enterprise.util.Nonbinding;
 
 /**
