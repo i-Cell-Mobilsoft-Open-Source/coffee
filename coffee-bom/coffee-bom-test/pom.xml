@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>hu.icellmobilsoft.coffee</groupId>
+        <artifactId>coffee-bom</artifactId>
+        <version>2.5.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>coffee-bom-test</artifactId>
+    <packaging>pom</packaging>
+
+    <properties>
+        <version.commons-logging>1.2</version.commons-logging>
+        <version.junit.jupiter>5.9.1</version.junit.jupiter>
+        <version.org.jboss.weld.weld-junit5>4.0.0.Final</version.org.jboss.weld.weld-junit5>
+        <version.org.mockito>4.9.0</version.org.mockito>
+        <version.smallrye-config>3.0.0</version.smallrye-config>
+        <version.org.glassfish.jaxb.jaxb-runtime>4.0.1</version.org.glassfish.jaxb.jaxb-runtime>
+        <version.org.hibernate.validator>8.0.0.Final</version.org.hibernate.validator>
+        <version.org.glassfish.expressly.expressly>5.0.0</version.org.glassfish.expressly.expressly>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+
+            <!-- Test scoped dependencies -->
+            <dependency>
+                <groupId>commons-logging</groupId>
+                <artifactId>commons-logging</artifactId>
+                <version>${version.commons-logging}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter</artifactId>
+                <version>${version.junit.jupiter}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.weld</groupId>
+                <artifactId>weld-junit5</artifactId>
+                <version>${version.org.jboss.weld.weld-junit5}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-core</artifactId>
+                <version>${version.org.mockito}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-junit-jupiter</artifactId>
+                <version>${version.org.mockito}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>io.smallrye.config</groupId>
+                <artifactId>smallrye-config</artifactId>
+                <version>${version.smallrye-config}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.glassfish.jaxb</groupId>
+                <artifactId>jaxb-runtime</artifactId>
+                <version>${version.org.glassfish.jaxb.jaxb-runtime}</version>
+                <scope>test</scope>
+            </dependency>
+
+
+            <!-- We use hibernate-validator reference implementation for bean validation
+                on junit test cases -->
+            <dependency>
+                <groupId>org.hibernate.validator</groupId>
+                <artifactId>hibernate-validator</artifactId>
+                <version>${version.org.hibernate.validator}</version>
+                <scope>test</scope>
+            </dependency>
+            <!-- Hibernate Validator also requires an implementation of the Unified
+            Expression Language (JSR 341) for evaluating dynamic expressions in constraint
+            violation messages. -->
+            <dependency>
+                <groupId>org.glassfish.expressly</groupId>
+                <artifactId>expressly</artifactId>
+                <version>${version.org.glassfish.expressly.expressly}</version>
+                <scope>test</scope>
+            </dependency>
+
+
+        </dependencies>
+    </dependencyManagement>
+</project>
