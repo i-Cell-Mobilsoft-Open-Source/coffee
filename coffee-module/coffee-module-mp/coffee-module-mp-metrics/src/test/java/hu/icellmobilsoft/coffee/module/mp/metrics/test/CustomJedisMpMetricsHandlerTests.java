@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package hu.icellmobilsoft.coffee.module.mp.metrics;
+package hu.icellmobilsoft.coffee.module.mp.metrics.test;
 
 import static org.mockito.Mockito.mock;
 
@@ -39,7 +39,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import hu.icellmobilsoft.coffee.cdi.metric.spi.IJedisMetricsHandler;
 
 /**
- * Testing Microprofile Metrics producer CDI resolver
+ * Testing Custom Microprofile Metrics producer CDI resolver
  * 
  * @author Imre Scheffer
  * @since 2.5.0
@@ -47,14 +47,16 @@ import hu.icellmobilsoft.coffee.cdi.metric.spi.IJedisMetricsHandler;
 @EnableWeld
 @Tag("weld")
 @ExtendWith(WeldJunit5Extension.class)
-@DisplayName("JedisMpMetricsHandler producer tests")
-class JedisMpMetricsHandlerTests {
+@DisplayName("CustomJedisMpMetricsHandler producer tests")
+class CustomJedisMpMetricsHandlerTests {
 
     @Inject
     private IJedisMetricsHandler jedisMetricsHandler;
 
     @WeldSetup
     public WeldInitiator weld = WeldInitiator.from(WeldInitiator.createWeld()
+            // alternative
+            .addBeanClass(CustomJedisMpMetricsHandler.class).addAlternative(CustomJedisMpMetricsHandler.class)
             // beans.xml scan
             .enableDiscovery()).addBeans(MockBean.of(mock(MetricRegistry.class), MetricRegistry.class))
             // start request scope + build
@@ -70,7 +72,7 @@ class JedisMpMetricsHandlerTests {
         Assertions.assertInstanceOf(WeldClientProxy.class, jedisMetricsHandler);
         Object instance = ((WeldClientProxy) jedisMetricsHandler).getMetadata().getContextualInstance();
         // must be JedisMpMetricsHandler
-        Assertions.assertInstanceOf(JedisMpMetricsHandler.class, instance);
+        Assertions.assertInstanceOf(CustomJedisMpMetricsHandler.class, instance);
     }
 
 }

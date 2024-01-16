@@ -2,7 +2,7 @@
  * #%L
  * Coffee
  * %%
- * Copyright (C) 2020 - 2022 i-Cell Mobilsoft Zrt.
+ * Copyright (C) 2020 - 2024 i-Cell Mobilsoft Zrt.
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,11 +17,10 @@
  * limitations under the License.
  * #L%
  */
-package hu.icellmobilsoft.coffee.module.redis.config;
+package hu.icellmobilsoft.coffee.module.mp.metrics.test;
 
 import static org.mockito.Mockito.mock;
 
-import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 
 import org.eclipse.microprofile.metrics.MetricRegistry;
@@ -30,56 +29,49 @@ import org.jboss.weld.junit5.EnableWeld;
 import org.jboss.weld.junit5.WeldInitiator;
 import org.jboss.weld.junit5.WeldJunit5Extension;
 import org.jboss.weld.junit5.WeldSetup;
+import org.jboss.weld.proxy.WeldClientProxy;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import hu.icellmobilsoft.coffee.dto.exception.BaseException;
-import hu.icellmobilsoft.coffee.module.redis.annotation.RedisConnection;
-import hu.icellmobilsoft.coffee.module.redis.metrics.JedisMetricsHandler;
-import redis.clients.jedis.JedisPool;
+import hu.icellmobilsoft.coffee.cdi.metric.spi.IJedisMetricsHandler;
+import hu.icellmobilsoft.coffee.module.mp.metrics.JedisMpMetricsHandler;
 
 /**
- * Test for JedisMetricsHandler
+ * Testing Microprofile Metrics producer CDI resolver
  * 
- * @author czenczl
- * @since 2.2.0
- *
+ * @author Imre Scheffer
+ * @since 2.5.0
  */
 @EnableWeld
 @Tag("weld")
 @ExtendWith(WeldJunit5Extension.class)
-@DisplayName("Redis pool config tests")
-class JedisMetricsHandlerTest {
-
-    static final String CONFIG_KEY = "test";
+@DisplayName("JedisMpMetricsHandler producer tests")
+class JedisMpMetricsHandlerTests {
 
     @Inject
-    @RedisConnection(configKey = CONFIG_KEY)
-    private JedisPool jedisPool;
-
-    @Inject
-    private JedisMetricsHandler jedisMetricsHandler;
+    private IJedisMetricsHandler jedisMetricsHandler;
 
     @WeldSetup
-    public WeldInitiator weld = WeldInitiator.from(
-            WeldInitiator.createWeld()
-                    // beans.xml scan
-                    .enableDiscovery())
-            .addBeans(MockBean.of(mock(MetricRegistry.class), MetricRegistry.class))
+    public WeldInitiator weld = WeldInitiator.from(WeldInitiator.createWeld()
+            // beans.xml scan
+            .enableDiscovery()).addBeans(MockBean.of(mock(MetricRegistry.class), MetricRegistry.class))
             // start request scope + build
-            .activate(RequestScoped.class)
             .build();
 
     @Test
-    @DisplayName("jedis metric test")
-    void metricsHandler() {
-        Assertions.assertNotNull(jedisPool);
-        Assertions.assertThrows(BaseException.class, () -> {
-            jedisMetricsHandler.addMetric(null, CONFIG_KEY, jedisPool);
-        });
+    @DisplayName("MP Metrics handler test")
+    void mpMetricsHandler() {
+        Assertions.assertNotNull(jedisMetricsHandler);
+
+        jedisMetricsHandler.addMetric("key1", "key2", () -> 1L, () -> 2);
+
+        Assertions.assertInstanceOf(WeldClientProxy.class, jedisMetricsHandler);
+        Object instance = ((WeldClientProxy) jedisMetricsHandler).getMetadata().getContextualInstance();
+        // must be JedisMpMetricsHandler
+        Assertions.assertInstanceOf(JedisMpMetricsHandler.class, instance);
     }
 
 }
