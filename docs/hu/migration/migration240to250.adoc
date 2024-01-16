@@ -2,6 +2,30 @@
 
 coff:ee v2.4.0 -> v2.5.0 migrációs leírás, újdonságok, változások leírása
 
+=== Global
+
+💥 ***BREAKING CHANGE*** 💥
+```
+Globális változás, hogy a projekteken eddig a coffee-bom volt használva a coffee dependency importálásához. Ez megváltozott coffee-bom-project -re.
+
+Ezután a következő módon kell importálni a projekt elemeit:
+
+<dependencyManagement>
+    <dependency>
+        <groupId>hu.icellmobilsoft.coffee</groupId>
+        <artifactId>coffee-bom-project</artifactId> <1>
+        <version>${version.hu.icellmobilsoft.coffee}</version>
+        <type>pom</type>
+        <scope>import</scope>
+    </dependency>
+</dependencyManagement>
+
+
+Ez azzal is jár, hogy azon transparens dependency-k melyek eddig a coffee-bom miatt a projektekre kerültek, így kikerülnek.
+Emiatt ezeket a dependency-ket a maven jelezni fogja hogy nem találja, így azokat definiálni kell a coffee-t felhasználó projekten.
+```
+<1> - coffee-bom -> coffee-bom-project -re változott
+
 === coffee-tool
 
 * Létrejött új "AES/CBC/PKCS5PADDING" kódoló osztály
