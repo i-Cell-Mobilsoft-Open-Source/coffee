@@ -18,6 +18,37 @@ deprecating old `Sha512(String str)`.
 
 Changes are backwards compatible doesnt need any migration.
 
+=== coffee-module-redis
+
+* The module has been decoupled from its metric implementation,
+allowing free choice between microprofile-metrics and micrometer.
+
+==== Migration
+
+At the dependency level, you need to choose the metric implementation
+that the service should use.
+Otherwise, everything else is backward compatible.
+
+[source,xml]
+----
+<dependency>
+    <groupId>hu.icellmobilsoft.coffee</groupId>
+    <artifactId>coffee-module-redis</artifactId>
+</dependency>
+
+<dependency>
+    <groupId>hu.icellmobilsoft.coffee</groupId>
+    <artifactId>coffee-module-mp-micrometer</artifactId> <1>
+</dependency>
+<!-- or -->
+<dependency>
+    <groupId>hu.icellmobilsoft.coffee</groupId>
+    <artifactId>coffee-module-mp-metrics</artifactId> <2>
+</dependency>
+----
+<1> Micrometer metric implementation
+<1> Microprofile-metrics metric implementation
+
 === coffee-module-redisstream
 
 * The Redis consumers received functionality to assist graceful shutdown

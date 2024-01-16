@@ -19,6 +19,36 @@ régi `Sha512(String str)` kivezetésre fog kerülni.
 
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
 
+=== coffee-module-redis
+
+* A modul függetlenítve volt a metrika implementációjától,
+szabadon választható a microprofile-metrics vagy micrometer között
+
+==== Migration
+
+Dependency szinten kell megválasztani milyen metrika implementáció-t használjon a szervice,
+egyébként minden más visszafelé kompatibilis.
+
+[source,xml]
+----
+<dependency>
+    <groupId>hu.icellmobilsoft.coffee</groupId>
+    <artifactId>coffee-module-redis</artifactId>
+</dependency>
+
+<dependency>
+    <groupId>hu.icellmobilsoft.coffee</groupId>
+    <artifactId>coffee-module-mp-micrometer</artifactId> <1>
+</dependency>
+<!-- vagy -->
+<dependency>
+    <groupId>hu.icellmobilsoft.coffee</groupId>
+    <artifactId>coffee-module-mp-metrics</artifactId> <2>
+</dependency>
+----
+<1> Micrometer metrika implementáció
+<1> Microprofile-metrics metrika implementáció
+
 === coffee-module-redisstream
 
 * Graceful leállítást segítű működést kaptak a redis consumerek

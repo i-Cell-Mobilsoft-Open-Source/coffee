@@ -1,0 +1,11 @@
+[#common_core_coffee-cdi_metrics]
+= Metrics
+
+The internal logic of coffee has a metric implementation that is independent
+and selectable within projects.
+If no metric implementation is selected, then the default
+`Noop*MetricsHandler` is activated in the system.
+
+The choice of implementations can be found in the
+<<common_module_coffee-module-mp-metrics,coffee-module-mp-metrics/micrometer>>
+documentation.
