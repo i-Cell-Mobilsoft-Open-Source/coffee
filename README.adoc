@@ -37,7 +37,7 @@ coff:ee can also be found in the official maven repository as well, it is enough
 <dependencyManagement>
     <dependency>
         <groupId>hu.icellmobilsoft.coffee</groupId>
-        <artifactId>coffee-bom-all</artifactId>
+        <artifactId>coffee-bom-project</artifactId>
         <version>${version.hu.icellmobilsoft.coffee}</version>
         <type>pom</type>
         <scope>import</scope>
