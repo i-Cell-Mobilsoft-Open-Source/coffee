@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package hu.icellmobilsoft.coffee.module.redis.metrics;
+package hu.icellmobilsoft.coffee.cdi.metric.constants;
 
 /**
  * Jedis metric constants
