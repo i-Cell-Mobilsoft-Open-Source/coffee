@@ -43,7 +43,7 @@ import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 import hu.icellmobilsoft.coffee.rest.validation.xml.JaxbTool;
 import hu.icellmobilsoft.coffee.rest.validation.xml.XmlMessageBodyReaderBase;
-import hu.icellmobilsoft.coffee.rest.validation.xml.annotation.ValidateXML;
+import hu.icellmobilsoft.coffee.cdi.annotation.xml.ValidateXML;
 import hu.icellmobilsoft.coffee.rest.validation.xml.exception.BaseProcessingExceptionWrapper;
 import hu.icellmobilsoft.coffee.rest.validation.xml.exception.XsdProcessingException;
 import hu.icellmobilsoft.coffee.rest.validation.xml.reader.IJsonRequestVersionReader;
