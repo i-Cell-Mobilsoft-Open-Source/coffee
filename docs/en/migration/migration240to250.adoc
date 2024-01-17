@@ -30,3 +30,10 @@ Changes are backwards compatible doesnt need any migration.
 ==== Migration
 
 Changes are backwards compatible doesnt need any migration.
+
+=== coffee-module-etcd
+
+* `hu.icellmobilsoft.coffee.module.etcd.service.BaseEtcdService` removed.
+Its full-fledged replacement is the `hu.icellmobilsoft.coffee.module.etcd.service.EtcdService` class,
+which works explicitly with String values.
+* Method `getList()` has been removed from `hu.icellmobilsoft.coffee.module.etcd.service.ConfigEtcdService`. Use the compatible `getAll()` method.

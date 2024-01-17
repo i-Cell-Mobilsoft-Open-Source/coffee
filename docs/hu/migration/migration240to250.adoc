@@ -30,3 +30,10 @@ A változtatások nem eredményeznek átállási munkálatokat, visszafelé komp
 ==== Migration
 
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+=== coffee-module-etcd
+
+* `hu.icellmobilsoft.coffee.module.etcd.service.BaseEtcdService` törölve lett.
+Teljes értékű helyettese a `hu.icellmobilsoft.coffee.module.etcd.service.EtcdService` osztály,
+mely kifejezetten String értékekkel dolgozik.
+* A `getList()` metódus törölve lett innen: `hu.icellmobilsoft.coffee.module.etcd.service.ConfigEtcdService`. Ezentúl a kompatibilis `getAll()` metódust kell hasznáni.
