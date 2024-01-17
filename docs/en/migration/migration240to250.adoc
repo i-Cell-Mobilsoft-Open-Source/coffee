@@ -30,3 +30,17 @@ Changes are backwards compatible doesnt need any migration.
 ==== Migration
 
 Changes are backwards compatible doesnt need any migration.
+
+=== coffee-module-mongodb
+
+* Removed classes and method annotated with `@Deprecated(forRemoval = true, since = "1.1.0")`
+
+==== Átállás
+
+* Instead of `hu.icellmobilsoft.coffee.module.mongodb.annotation.MongoConfiguration` use: `hu.icellmobilsoft.coffee.module.mongodb.extension.MongoClientConfiguration`
+* Instead of `hu.icellmobilsoft.coffee.module.mongodb.config.MongoDbConfig` use: `hu.icellmobilsoft.coffee.module.mongodb.extension.MongoConfigHelper`
+* Instead of `hu.icellmobilsoft.coffee.module.mongodb.config.MongoDbConfigImpl` use: `hu.icellmobilsoft.coffee.module.mongodb.extension.MongoClientConfiguration`
+* Instead of `hu.icellmobilsoft.coffee.module.mongodb.handler.MongoDbHandler` use: `hu.icellmobilsoft.coffee.module.mongodb.extension.MongoDbClient`
+* Instead of `hu.icellmobilsoft.coffee.module.mongodb.producer.MongoFactory` use: `hu.icellmobilsoft.coffee.module.mongodb.extension.MongoDbClientFactory`
+* Instead of `hu.icellmobilsoft.coffee.module.mongodb.service.MongoServiceImpl` use: `hu.icellmobilsoft.coffee.module.mongodb.extension.MongoDbClient`
+* Instead of `hu.icellmobilsoft.coffee.module.mongodb.service.MongoService#getMongoCollection()` use: `hu.icellmobilsoft.coffee.module.mongodb.extension.MongoDbClient#initRepositoryCollection(java.lang.String)`

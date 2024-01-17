@@ -22,7 +22,6 @@ package hu.icellmobilsoft.coffee.module.mongodb.service;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import jakarta.enterprise.context.Dependent;
 import jakarta.inject.Inject;
@@ -335,34 +334,7 @@ public class MongoService<T> {
      *             When cannot get mongo collection name.
      */
     public String getMongoCollectionName() throws BaseException {
-        if (Objects.nonNull(getMongoCollection()) && Objects.nonNull(getMongoCollection().getNamespace())) {
-            return getMongoCollection().getNamespace().getCollectionName();
-        }
-        return null;
-    }
-
-    /**
-     * Mongo Collection kötelező megadása, lekérdezése
-     * 
-     * <pre>
-     * {@code
-     *
-     * &#64;Override protected MongoCollection<T> getMongoCollection() throws BaseException {
-     * return mongoDbHandler.getDatabase().getCollection(MongoConstants.NAME_OF_COLLECTION, Class<T>);
-     * }
-     * }
-     * </pre>
-     * 
-     * @return MongoCollection
-     * @throws BaseException
-     *             unsupported operation
-     * 
-     * @deprecated Use {@link hu.icellmobilsoft.coffee.module.mongodb.extension.MongoDbClient#initRepositoryCollection(java.lang.String)} instead,
-     *             forRemoval = true, since = "1.1.0"
-     */
-    @Deprecated(forRemoval = true, since = "1.1.0")
-    protected MongoCollection<T> getMongoCollection() throws BaseException {
-        throw new UnsupportedOperationException("getMongoCollection() not implemented!");
+        throw new UnsupportedOperationException("getMongoCollectionName() not implemented!");
     }
 
     /**
