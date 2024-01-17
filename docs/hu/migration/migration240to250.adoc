@@ -30,5 +30,5 @@ A változtatások nem eredményeznek átállási munkálatokat, visszafelé komp
 ==== Migration
 
 A változás eredményeképpen, ha felhasználási oldalon is hivatkozva van ezen annotációkra, frissíteni kell az importokat:
-`hu.icellmobilsoft.coffee.rest.validation.xml.annotation.ValidateXML` -> `hu.icellmobilsoft.coffee.dto.annotation.validation.xml.ValidateXML`
-`hu.icellmobilsoft.coffee.rest.validation.xml.annotation.ValidateXMLs` -> `hu.icellmobilsoft.coffee.dto.annotation.validation.xml.ValidateXMLs`
+`hu.icellmobilsoft.coffee.rest.validation.xml.annotation.ValidateXML` -> `hu.icellmobilsoft.coffee.cdi.annotation.xml.ValidateXML`
+`hu.icellmobilsoft.coffee.rest.validation.xml.annotation.ValidateXMLs` -> `hu.icellmobilsoft.coffee.cdi.annotation.xml.ValidateXMLs`

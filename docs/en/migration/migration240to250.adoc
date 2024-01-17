@@ -31,5 +31,5 @@ Changes are backwards compatible doesnt need any migration.
 
 As a result of the move, if these annotations are also used on the usage project, the imports must be updated:
 
-`hu.icellmobilsoft.coffee.rest.validation.xml.annotation.ValidateXML` -> `hu.icellmobilsoft.coffee.dto.annotation.validation.xml.ValidateXML`
-`hu.icellmobilsoft.coffee.rest.validation.xml.annotation.ValidateXMLs` -> `hu.icellmobilsoft.coffee.dto.annotation.validation.xml.ValidateXMLs`
+`hu.icellmobilsoft.coffee.rest.validation.xml.annotation.ValidateXML` -> `hu.icellmobilsoft.coffee.cdi.annotation.xml.ValidateXML`
+`hu.icellmobilsoft.coffee.rest.validation.xml.annotation.ValidateXMLs` -> `hu.icellmobilsoft.coffee.cdi.annotation.xml.ValidateXMLs`
