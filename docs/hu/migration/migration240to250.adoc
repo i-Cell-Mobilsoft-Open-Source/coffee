@@ -30,3 +30,11 @@ A változtatások nem eredményeznek átállási munkálatokat, visszafelé komp
 ==== Migration
 
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+=== coffee-jpa
+
+* `@Dependent` annotáció hozzáadva ehhez az osztályhoz: `hu.icellmobilsoft.coffee.jpa.sql.batch.BatchService`
+
+==== Migration
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
