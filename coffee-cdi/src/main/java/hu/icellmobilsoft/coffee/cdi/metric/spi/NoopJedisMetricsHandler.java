@@ -29,6 +29,13 @@ import java.util.function.Supplier;
  */
 public class NoopJedisMetricsHandler implements IJedisMetricsHandler {
 
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public NoopJedisMetricsHandler() {
+        super();
+    }
+
     @Override
     public void addMetric(String configKey, String poolConfigKey, Supplier<Number> activeConnectionSupplier,
             Supplier<Number> idleConnectionSupplier) {
