@@ -327,17 +327,6 @@ public class MongoService<T> {
     }
 
     /**
-     * Collection név lekérdezése
-     * 
-     * @return String
-     * @throws BaseException
-     *             When cannot get mongo collection name.
-     */
-    public String getMongoCollectionName() throws BaseException {
-        throw new UnsupportedOperationException("getMongoCollectionName() not implemented!");
-    }
-
-    /**
      * BONotFoundException FaultType felülírás lehetőségét nyújtó metódus
      * 
      * @return Enum
