@@ -25,7 +25,7 @@ Changes are backwards compatible doesnt need any migration.
 === coffee-rest
 
 * If version is not defined in the validateXMLs annotation, it won't attempt to read the requestVersion from the request body.
-* The `hu.icellmobilsoft.coffee.rest.validation.xml.annotation.ValidateXML` and `hu.icellmobilsoft.coffee.rest.validation.xml.annotation.ValidateXMLs` annotations are moved to the coffee-dto-base module.
+* The `hu.icellmobilsoft.coffee.rest.validation.xml.annotation.ValidateXML` and `hu.icellmobilsoft.coffee.rest.validation.xml.annotation.ValidateXMLs` annotations are moved to the coffee-cdi module.
 
 ==== Migration
 

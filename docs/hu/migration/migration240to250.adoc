@@ -25,7 +25,7 @@ A változtatások nem eredményeznek átállási munkálatokat, visszafelé komp
 === coffee-rest
 
 * Ha nincs definiálva a version a validateXMLs annotációban, akkor nem próbálja meg kiolvasni a requestVersion a requestből.
-* Átmozgatásra kerültek a `hu.icellmobilsoft.coffee.rest.validation.xml.annotation.ValidateXML` és `hu.icellmobilsoft.coffee.rest.validation.xml.annotation.ValidateXMLs` annotációk a coffee-dto-base modul alá.
+* Átmozgatásra kerültek a `hu.icellmobilsoft.coffee.rest.validation.xml.annotation.ValidateXML` és `hu.icellmobilsoft.coffee.rest.validation.xml.annotation.ValidateXMLs` annotációk a coffee-cdi modul alá.
 
 ==== Migration
 
