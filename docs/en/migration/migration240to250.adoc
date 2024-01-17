@@ -34,7 +34,7 @@ Changes are backwards compatible doesnt need any migration.
 === coffee-module-mongodb
 
 * Removed classes and method annotated with `@Deprecated(forRemoval = true, since = "1.1.0")`
-* Removed unimplemented and unused method: `hu.icellmobilsoft.coffee.module.mongodb.service.MongoService#getMongoCollection()`
+* Removed unimplemented and unused method: `hu.icellmobilsoft.coffee.module.mongodb.service.MongoService#getMongoCollectionName()`
 ==== Migration
 
 * Instead of `hu.icellmobilsoft.coffee.module.mongodb.annotation.MongoConfiguration` use: `hu.icellmobilsoft.coffee.module.mongodb.extension.MongoClientConfiguration`
