@@ -8,6 +8,7 @@ coff:ee v2.4.0 -> v2.5.0 migrációs leírás, újdonságok, változások leír�
 (`hu.icellmobilsoft.coffee.tool.utils.crypto.AesCbcCryptoUtil`)
 * Hozzá adva a SHA3-512 kódoló metódus a `hu.icellmobilsoft.coffee.tool.utils.string.EncodeUtil` osztályhoz,
 régi `Sha512(String str)` kivezetésre fog kerülni.
+* MavenURLHandler osztályban aktuális szál alapotú resource lekérést kerül.
 
 ==== Migration
 
@@ -25,40 +26,10 @@ A változtatások nem eredményeznek átállási munkálatokat, visszafelé komp
 === coffee-rest
 
 * Ha nincs definiálva a version a validateXMLs annotációban, akkor nem próbálja meg kiolvasni a requestVersion a requestből.
+* Átmozgatásra kerültek a `hu.icellmobilsoft.coffee.rest.validation.xml.annotation.ValidateXML` és `hu.icellmobilsoft.coffee.rest.validation.xml.annotation.ValidateXMLs` annotációk a coffee-cdi modul alá.
 
 ==== Migration
 
-A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
-
-=== coffee-module-mp-restclient
-
-* FaultTypeParserExtension osztály törlésre került, valamint a FaultTypeParser javításra került.  
-
-==== Migration
-
-Sajnos a `FaultTypeParserExtension` egy olyan együttállásra épült korábban, ami `bean-discovery-mode='annotated'` esetén nem áll fenn, ezért a működésében egy több esetben hiba lépett fel. Erre született egy új megoldás itt:
-Az eddigi automatikus működés megszűnt, helyette - ha saját `FaultType`-ot is használunk a projektünkben - fel kell vennünk egy `ProjectFaultTypeProvider` osztályt, ami implementálja az `IFaultTypeProvider` interfészt és visszaadja az `IFaultType` enumjainkat.
-
-.példa
-[source,java]
-----
-/**
- * Coffee FaultType provider - provides every FaultType enumeration used in the project
- * 
- * @author tamas.cserhati
- * @since 2.5.0
- * @see FaultTypeParser
- */
-@ApplicationScoped
-public class ProjectFaultTypeProvider implements IFaultTypeProvider {
-
-    @Override
-    public Collection<Class<? extends Enum>> faultTypeEnums() {
-        return List.of(CoffeeFaultType.class, FaultType.class);
-    }
-}
-----
-
-A FaultTypeParser a továbbiakban ezt a providert használja, hogy fel tudja oldani az enumokat a szöveges hibakód alapján.
-
-
+A változás eredményeképpen, ha felhasználási oldalon is hivatkozva van ezen annotációkra, frissíteni kell az importokat:
+`hu.icellmobilsoft.coffee.rest.validation.xml.annotation.ValidateXML` -> `hu.icellmobilsoft.coffee.cdi.annotation.xml.ValidateXML`
+`hu.icellmobilsoft.coffee.rest.validation.xml.annotation.ValidateXMLs` -> `hu.icellmobilsoft.coffee.cdi.annotation.xml.ValidateXMLs`

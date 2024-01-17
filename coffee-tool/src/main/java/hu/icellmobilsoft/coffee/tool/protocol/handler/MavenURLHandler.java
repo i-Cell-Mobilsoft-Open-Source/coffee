@@ -64,7 +64,7 @@ public class MavenURLHandler extends URLStreamHandler {
         if (StringUtils.contains(path, SEPARATOR)) {
             path = StringUtils.substringAfter(path, SEPARATOR);
         }
-        URL classPathUrl = getClass().getResource(path);
+        URL classPathUrl = Thread.currentThread().getContextClassLoader().getResource(path);
 
         // kesobbiekben annyit lehet csinalni hogy a valos classban keressuk
         return classPathUrl.openConnection();

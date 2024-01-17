@@ -10,7 +10,6 @@
 
 	<properties>
 		<version.jakarta.xml.bind.jaxb-api>4.0.0</version.jakarta.xml.bind.jaxb-api>
-
 		<!-- Test dependency versions -->
 		<version.junit.jupiter>5.9.1</version.junit.jupiter>
 		<version.org.mockito>4.9.0</version.org.mockito>
@@ -22,11 +21,27 @@
 			<artifactId>jakarta.xml.bind-api</artifactId>
 			<version>${version.jakarta.xml.bind.jaxb-api}</version>
 		</dependency>
+
 		<dependency>
 			<groupId>hu.icellmobilsoft.coffee</groupId>
-			<artifactId>coffee-se-logging</artifactId>
+			<artifactId>coffee-cdi</artifactId>
 			<version>${project.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.eclipse.microprofile.config</groupId>
+					<artifactId>microprofile-config-api</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>hu.icellmobilsoft.coffee</groupId>
+					<artifactId>coffee-module-configdoc</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.jboss.logging</groupId>
+					<artifactId>jboss-logging</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
+
 		<!-- java 16+: dependency -->
 <!-- kell ez meg?
 		<dependency>

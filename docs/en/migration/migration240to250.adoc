@@ -8,6 +8,7 @@ coff:ee v2.4.0 -> v2.5.0 migration description, news, changes
 (`hu.icellmobilsoft.coffee.tool.utils.crypto.AesCbcCryptoUtil`)
 * Added SHA3-512 message digest to `hu.icellmobilsoft.coffee.tool.utils.string.EncodeUtil` class,
 deprecating old `Sha512(String str)`.
+* In MavenURLHandler class, fix getting resource over class to current thread-based getting
 
 ==== Migration
 
@@ -25,34 +26,11 @@ Changes are backwards compatible doesnt need any migration.
 === coffee-rest
 
 * If version is not defined in the validateXMLs annotation, it won't attempt to read the requestVersion from the request body.
+* The `hu.icellmobilsoft.coffee.rest.validation.xml.annotation.ValidateXML` and `hu.icellmobilsoft.coffee.rest.validation.xml.annotation.ValidateXMLs` annotations are moved to the coffee-cdi module.
 
 ==== Migration
 
-Changes are backwards compatible doesnt need any migration.
+As a result of the move, if these annotations are also used on the usage project, the imports must be updated:
 
-==== Migration
-
-Unfortunately `FaultTypeParserExtension` was previously built on a 'feature' that does not work when `bean-discovery-mode='annotated'` is used and it had issues. 
-The previous automatic operation has been removed, instead - if you use your own `FaultType` in your project - you need to add a `ProjectFaultTypeProvider` class that implements the `IFaultTypeProvider` interface and returns the `IFaultType` enum.
-
-.sample
-[source,java]
-----
-/**
- * Coffee FaultType provider - provides every FaultType enumeration used in the project
- * 
- * @author tamas.cserhati
- * @since 2.5.0
- * @see FaultTypeParser
- */
-@ApplicationScoped
-public class ProjectFaultTypeProvider implements IFaultTypeProvider {
-
-    @Override
-    public Collection<Class<? extends Enum>> faultTypeEnums() {
-        return List.of(CoffeeFaultType.class, FaultType.class);
-    }
-}
-----
-
-FaultTypeParser is using this provider to resolve enums based on the error code text.
+`hu.icellmobilsoft.coffee.rest.validation.xml.annotation.ValidateXML` -> `hu.icellmobilsoft.coffee.cdi.annotation.xml.ValidateXML`
+`hu.icellmobilsoft.coffee.rest.validation.xml.annotation.ValidateXMLs` -> `hu.icellmobilsoft.coffee.cdi.annotation.xml.ValidateXMLs`
