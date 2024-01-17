@@ -33,6 +33,10 @@ A változtatások nem eredményeznek átállási munkálatokat, visszafelé komp
 
 === coffee-module-etcd
 
+* A `@Deprecated(since = "1.3.0", forRemoval = true)` annotációval ellátott oszályok és metódusok törölve lettek.
+
+==== Migration
+
 * `hu.icellmobilsoft.coffee.module.etcd.service.BaseEtcdService` törölve lett.
 Teljes értékű helyettese a `hu.icellmobilsoft.coffee.module.etcd.service.EtcdService` osztály,
 mely kifejezetten String értékekkel dolgozik.
