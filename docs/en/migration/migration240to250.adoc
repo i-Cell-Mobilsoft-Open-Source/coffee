@@ -35,7 +35,7 @@ Changes are backwards compatible doesnt need any migration.
 
 * Removed classes and method annotated with `@Deprecated(forRemoval = true, since = "1.1.0")`
 
-==== Átállás
+==== Migration
 
 * Instead of `hu.icellmobilsoft.coffee.module.mongodb.annotation.MongoConfiguration` use: `hu.icellmobilsoft.coffee.module.mongodb.extension.MongoClientConfiguration`
 * Instead of `hu.icellmobilsoft.coffee.module.mongodb.config.MongoDbConfig` use: `hu.icellmobilsoft.coffee.module.mongodb.extension.MongoConfigHelper`
