@@ -25,7 +25,6 @@
         <version.commons-codec>1.15</version.commons-codec>
         <version.commons-collections>3.2.2</version.commons-collections>
         <version.commons-io>2.11.0</version.commons-io>
-        <version.osgi.annotation>8.1.0</version.osgi.annotation>
         <version.org.jboss.resteasy>6.2.1.Final</version.org.jboss.resteasy>
         <version.org.hibernate>6.1.5.Final</version.org.hibernate>
         <version.org.apache.httpcomponents.httpclient>4.5.13</version.org.apache.httpcomponents.httpclient>
@@ -174,14 +173,6 @@
                 <artifactId>commons-io</artifactId>
                 <version>${version.commons-io}</version>
             </dependency>
-
-<!--            &lt;!&ndash; microprofile-config-api 2.0 bug: https://github.com/eclipse/microprofile-config/issues/716 javitas utan kiszedni &ndash;&gt;-->
-<!--            <dependency>-->
-<!--                <groupId>org.osgi</groupId>-->
-<!--                <artifactId>osgi.annotation</artifactId>-->
-<!--                <version>${version.osgi.annotation}</version>-->
-<!--                <scope>provided</scope>-->
-<!--            </dependency>-->
 
             <!-- Resteasy 4+: resteasy-jaxrs szet van bontva core, core-spi es egyebekre-->
             <dependency>
