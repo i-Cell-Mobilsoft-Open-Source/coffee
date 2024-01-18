@@ -20,6 +20,8 @@
 package hu.icellmobilsoft.coffee.cdi.metric;
 
 /**
+ * Pojo for neutral metric tag definition
+ * 
  * @author Imre Scheffer
  * @since 2.5.0
  */
