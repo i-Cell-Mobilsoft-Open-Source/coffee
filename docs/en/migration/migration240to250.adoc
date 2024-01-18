@@ -8,8 +8,8 @@ coff:ee v2.4.0 -> v2.5.0 migration description, news, changes
 * jandex-maven-plugin - test classes were excluded from indexing
 
 == Metrika függetlenítése
-Több modult érintő fejlesztés, aminek a célja hogy a metrika több fajta implementációval
-tudjon működni.
+Development involving several modules,
+the goal of which is to implement metrics with several types be able to function.
 
 === coffee-jpa & coffee-module-redis
 
