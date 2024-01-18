@@ -19,12 +19,8 @@
  */
 package hu.icellmobilsoft.coffee.module.mp.metrics.test;
 
-import static org.mockito.Mockito.mock;
-
 import jakarta.inject.Inject;
 
-import org.eclipse.microprofile.metrics.MetricRegistry;
-import org.jboss.weld.junit.MockBean;
 import org.jboss.weld.junit5.EnableWeld;
 import org.jboss.weld.junit5.WeldInitiator;
 import org.jboss.weld.junit5.WeldJunit5Extension;
@@ -56,8 +52,10 @@ class JedisMpMetricsHandlerTests {
 
     @WeldSetup
     public WeldInitiator weld = WeldInitiator.from(WeldInitiator.createWeld()
+            // added cdi test classes
+            .addBeanClass(MockMetricRegistryProducer.class)
             // beans.xml scan
-            .enableDiscovery()).addBeans(MockBean.of(mock(MetricRegistry.class), MetricRegistry.class))
+            .enableDiscovery())
             // start request scope + build
             .build();
 

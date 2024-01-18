@@ -43,18 +43,35 @@ public class MetricsHandlerProducer {
     /**
      * Producer method to supply the provided metrics implementation
      * 
-     * @return IOpenTraceHandler implementation
+     * @return IJedisMetricsHandler implementation
      */
     @Produces
     @ApplicationScoped
     public IJedisMetricsHandler produceJedisMetricsHandler() {
-        Instance<IJedisMetricsHandler> openTraceHandler = CDI.current().select(IJedisMetricsHandler.class, new MetricsHandlerQualifier.Literal());
-        if (openTraceHandler.isResolvable()) {
-            return openTraceHandler.get();
+        Instance<IJedisMetricsHandler> metricsHandler = CDI.current().select(IJedisMetricsHandler.class, new MetricsHandlerQualifier.Literal());
+        if (metricsHandler.isResolvable()) {
+            return metricsHandler.get();
         }
 
         // default implementation
         return new NoopJedisMetricsHandler();
+    }
+
+    /**
+     * Producer method to supply the provided metrics implementation
+     * 
+     * @return IMetricsHandler implementation
+     */
+    @Produces
+    @ApplicationScoped
+    public IMetricsHandler produceMetricsHandler() {
+        Instance<IMetricsHandler> metricsHandler = CDI.current().select(IMetricsHandler.class, new MetricsHandlerQualifier.Literal());
+        if (metricsHandler.isResolvable()) {
+            return metricsHandler.get();
+        }
+
+        // default implementation
+        return new NoopMetricsHandler();
     }
 
 }

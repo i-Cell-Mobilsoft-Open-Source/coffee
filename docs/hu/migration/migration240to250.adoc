@@ -2,26 +2,17 @@
 
 coff:ee v2.4.0 -> v2.5.0 migrációs leírás, újdonságok, változások leírása
 
-=== Global
+== Global
 
 * jandex-maven-plugin - indexelésből kikerültek a test osztályok
 
+== Metrika függetlenítése
+Több modult érintő fejlesztés, aminek a célja hogy a metrika több fajta implementációval
+tudjon működni.
 
-=== coffee-tool
+=== coffee-jpa & coffee-module-redis
 
-* Létrejött új "AES/CBC/PKCS5PADDING" kódoló osztály
-(`hu.icellmobilsoft.coffee.tool.utils.crypto.AesCbcCryptoUtil`)
-* Hozzá adva a SHA3-512 kódoló metódus a `hu.icellmobilsoft.coffee.tool.utils.string.EncodeUtil` osztályhoz,
-régi `Sha512(String str)` kivezetésre fog kerülni.
-* MavenURLHandler osztályban aktuális szál alapotú resource lekérést kerül.
-
-==== Migration
-
-A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
-
-=== coffee-module-redis
-
-* A modul függetlenítve volt a metrika implementációjától,
+* A modulok függetlenítve volt a metrika implementációjától,
 szabadon választható a microprofile-metrics vagy micrometer között
 
 ==== Migration
@@ -31,11 +22,6 @@ egyébként minden más visszafelé kompatibilis.
 
 [source,xml]
 ----
-<dependency>
-    <groupId>hu.icellmobilsoft.coffee</groupId>
-    <artifactId>coffee-module-redis</artifactId>
-</dependency>
-
 <dependency>
     <groupId>hu.icellmobilsoft.coffee</groupId>
     <artifactId>coffee-module-mp-micrometer</artifactId> <1>
@@ -48,6 +34,20 @@ egyébként minden más visszafelé kompatibilis.
 ----
 <1> Micrometer metrika implementáció
 <1> Microprofile-metrics metrika implementáció
+
+== Egyéb fejlesztések
+
+=== coffee-tool
+
+* Létrejött új "AES/CBC/PKCS5PADDING" kódoló osztály
+(`hu.icellmobilsoft.coffee.tool.utils.crypto.AesCbcCryptoUtil`)
+* Hozzá adva a SHA3-512 kódoló metódus a `hu.icellmobilsoft.coffee.tool.utils.string.EncodeUtil` osztályhoz,
+régi `Sha512(String str)` kivezetésre fog kerülni.
+* MavenURLHandler osztályban aktuális szál alapotú resource lekérést kerül.
+
+==== Migration
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
 
 === coffee-module-redisstream
 

@@ -26,16 +26,14 @@ import org.apache.commons.lang3.StringUtils;
 import org.eclipse.microprofile.config.Config;
 import org.eclipse.microprofile.health.HealthCheckResponse;
 import org.eclipse.microprofile.health.HealthCheckResponseBuilder;
-import org.eclipse.microprofile.metrics.Gauge;
-import org.eclipse.microprofile.metrics.MetricID;
-import org.eclipse.microprofile.metrics.MetricRegistry;
-import org.eclipse.microprofile.metrics.Tag;
-import org.eclipse.microprofile.metrics.annotation.RegistryType;
 
+import hu.icellmobilsoft.coffee.cdi.config.IConfigKey;
 import hu.icellmobilsoft.coffee.cdi.health.constants.HealthConstant;
+import hu.icellmobilsoft.coffee.cdi.metric.MetricTag;
+import hu.icellmobilsoft.coffee.cdi.metric.spi.IMetricsHandler;
+import hu.icellmobilsoft.coffee.cdi.metric.spi.IMetricsHandler.Implementation;
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.dto.exception.InvalidParameterException;
-import hu.icellmobilsoft.coffee.se.logging.Logger;
 import hu.icellmobilsoft.coffee.tool.utils.health.HealthUtil;
 
 /**
@@ -52,8 +50,7 @@ public class DatabasePoolHealth {
     private Config config;
 
     @Inject
-    @RegistryType(type = MetricRegistry.Type.VENDOR)
-    private MetricRegistry vendorRegistry;
+    private IMetricsHandler metricsHandler;
 
     /**
      * Default constructor, constructs a new object.
@@ -97,8 +94,7 @@ public class DatabasePoolHealth {
 
         // ENV config, default 100, 100 = turned off
         Integer usagePercentTreshold = config
-                .getOptionalValue(DatabaseHealthConstant.Database.Pool.DATASOURCE_POOL_USAGE_TRESHOLD_PERCENT, Integer.class)
-                .orElse(100);
+                .getOptionalValue(DatabaseHealthConstant.Database.Pool.DATASOURCE_POOL_USAGE_TRESHOLD_PERCENT, Integer.class).orElse(100);
 
         Integer maxPoolSize = config.getOptionalValue(DatabaseHealthConstant.Database.Pool.DATASOURCE_MAX_POOL_SIZE, Integer.class).orElse(60);
 
@@ -117,17 +113,18 @@ public class DatabasePoolHealth {
     }
 
     private double poolInUse() {
-        try {
-            MetricID inUseId = new MetricID(
-                    DatabaseHealthConstant.Database.Wildfly.Metric.WILDFLY_DATASOURCES_POOL_IN_USE_COUNT,
-                    new Tag(DatabaseHealthConstant.Database.Wildfly.Metric.DATA_SOURCE_TAG, DatabaseHealthConstant.Database.DEFAULT_DATASOURCE_NAME));
-            Gauge<?> inUseGauge = vendorRegistry.getGauge(inUseId);
-            Double inUse = (Double) inUseGauge.getValue();
-            return inUse;
-        } catch (Exception e) {
-            Logger.getLogger(DatabasePoolHealth.class).error("Exception when trying to get vendor specific pool metric!", e);
-            return 0;
+        Double value = null;
+        String datasourceName = config.getOptionalValue(IConfigKey.DATASOURCE_DEFAULT_NAME, String.class)
+                .orElse(IConfigKey.DATASOURCE_DEFAULT_NAME_VALUE);
+        if (IMetricsHandler.getImplementation() == Implementation.MP_METRIC) {
+            value = metricsHandler.searchGauge(DatabaseHealthConstant.Database.Wildfly.Metric.MPMETRIC_DATASOURCES_POOL_IN_USE_COUNT,
+                    new MetricTag(DatabaseHealthConstant.Database.Wildfly.Metric.MPMETRIC_DATA_SOURCE_TAG, datasourceName));
+        } else {
+            value = metricsHandler.searchGauge(DatabaseHealthConstant.Database.Wildfly.Metric.MICROMETER_DATASOURCES_POOL_IN_USE_COUNT,
+                    new MetricTag("type", DatabaseHealthConstant.Database.Wildfly.Metric.MICROMETER_DATA_SOURCE_TAG),
+                    new MetricTag("name", datasourceName));
         }
+        return value != null ? value : 0;
     }
 
 }
