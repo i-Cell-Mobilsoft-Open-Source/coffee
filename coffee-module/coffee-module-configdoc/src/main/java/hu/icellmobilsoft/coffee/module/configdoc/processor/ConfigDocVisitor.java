@@ -98,7 +98,7 @@ public class ConfigDocVisitor extends ElementKindVisitor9<Void, List<DocData>> {
     private DocData createDataFromJavaDoc(VariableElement element, String key, String source, String defaultValue, String since) {
         String description = getJavaDoc(element);
         if (null == description) {
-            String msg = MessageFormat.format("No java API doc attached to field [{0}] in file this file: [{1}]", element, source);
+            String msg = MessageFormat.format("No java API doc attached to field [{0}] in this file: [{1}]", element, source);
             throw new IllegalArgumentException(msg);
         }
 
