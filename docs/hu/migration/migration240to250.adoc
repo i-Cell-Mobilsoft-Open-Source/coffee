@@ -2,6 +2,11 @@
 
 coff:ee v2.4.0 -> v2.5.0 migrációs leírás, újdonságok, változások leírása
 
+=== Global
+
+* jandex-maven-plugin - indexelésből kikerültek a test osztályok
+
+
 === coffee-tool
 
 * Létrejött új "AES/CBC/PKCS5PADDING" kódoló osztály
