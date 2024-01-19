@@ -33,3 +33,11 @@ A változtatások nem eredményeznek átállási munkálatokat, visszafelé komp
 A változás eredményeképpen, ha felhasználási oldalon is hivatkozva van ezen annotációkra, frissíteni kell az importokat:
 `hu.icellmobilsoft.coffee.rest.validation.xml.annotation.ValidateXML` -> `hu.icellmobilsoft.coffee.cdi.annotation.xml.ValidateXML`
 `hu.icellmobilsoft.coffee.rest.validation.xml.annotation.ValidateXMLs` -> `hu.icellmobilsoft.coffee.cdi.annotation.xml.ValidateXMLs`
+
+=== coffee-module-configdoc
+
+* Ha egy `@ConfigDoc` annotáció előtt nem szerepelt java doc, akkor fordítás során nullpointer keletkezett.
+
+==== Migration
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
