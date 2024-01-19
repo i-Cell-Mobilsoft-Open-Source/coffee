@@ -34,6 +34,17 @@ A változás eredményeképpen, ha felhasználási oldalon is hivatkozva van eze
 `hu.icellmobilsoft.coffee.rest.validation.xml.annotation.ValidateXML` -> `hu.icellmobilsoft.coffee.cdi.annotation.xml.ValidateXML`
 `hu.icellmobilsoft.coffee.rest.validation.xml.annotation.ValidateXMLs` -> `hu.icellmobilsoft.coffee.cdi.annotation.xml.ValidateXMLs`
 
+=== coffee-module-etcd
+
+* A `@Deprecated(since = "1.3.0", forRemoval = true)` annotációval ellátott oszályok és metódusok törölve lettek.
+
+==== Migration
+
+* `hu.icellmobilsoft.coffee.module.etcd.service.BaseEtcdService` törölve lett.
+Teljes értékű helyettese a `hu.icellmobilsoft.coffee.module.etcd.service.EtcdService` osztály,
+mely kifejezetten String értékekkel dolgozik.
+* A `getList()` metódus törölve lett innen: `hu.icellmobilsoft.coffee.module.etcd.service.ConfigEtcdService`. Ezentúl a kompatibilis `getAll()` metódust kell hasznáni.
+
 === coffee-jpa
 
 * `@Dependent` annotáció hozzáadva ehhez az osztályhoz: `hu.icellmobilsoft.coffee.jpa.sql.batch.BatchService`
