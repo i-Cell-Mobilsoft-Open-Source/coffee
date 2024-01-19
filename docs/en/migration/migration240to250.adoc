@@ -2,6 +2,10 @@
 
 coff:ee v2.4.0 -> v2.5.0 migration description, news, changes
 
+=== Global
+
+* jandex-maven-plugin - test classes were excluded from indexing
+
 === coffee-tool
 
 * Added tool class for "AES/CBC/PKCS5PADDING" de/cipher
