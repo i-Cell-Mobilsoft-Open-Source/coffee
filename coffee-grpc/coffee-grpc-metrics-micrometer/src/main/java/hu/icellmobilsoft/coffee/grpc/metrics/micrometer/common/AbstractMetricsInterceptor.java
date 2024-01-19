@@ -17,26 +17,28 @@
  * limitations under the License.
  * #L%
  */
-package hu.icellmobilsoft.coffee.grpc.metrics.impl.common;
+package hu.icellmobilsoft.coffee.grpc.metrics.micrometer.common;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import jakarta.enterprise.inject.spi.CDI;
 
-import org.eclipse.microprofile.metrics.Metadata;
-import org.eclipse.microprofile.metrics.MetricRegistry;
-import org.eclipse.microprofile.metrics.MetricType;
-import org.eclipse.microprofile.metrics.Tag;
-
 import hu.icellmobilsoft.coffee.grpc.metrics.api.constants.IGrpcMetricConstant;
-import hu.icellmobilsoft.coffee.grpc.metrics.impl.bundle.MetricsBundle;
+import hu.icellmobilsoft.coffee.grpc.metrics.micrometer.bundle.MetricsBundle;
 import io.grpc.MethodDescriptor;
+import io.micrometer.core.instrument.Counter;
+import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.core.instrument.Tag;
+import io.micrometer.core.instrument.Timer;
+import io.micrometer.core.instrument.Timer.Builder;
 
 /**
  * Abstract class for metric interceptors to help collect metrics. Handles request/response/duration metrics.
  * 
  * @author czenczl
- * @since 2.1.0
+ * @author Imre Scheffer
+ * @since 2.5.0
  *
  */
 public abstract class AbstractMetricsInterceptor {
@@ -60,27 +62,26 @@ public abstract class AbstractMetricsInterceptor {
         metricBundle.setStartTime(LocalDateTime.now());
 
         // microprofile metric
-        MetricRegistry metricRegistry = CDI.current().select(MetricRegistry.class).get();
+        MeterRegistry meterRegistry = CDI.current().select(MeterRegistry.class).get();
+
+        Tag method = Tag.of(IGrpcMetricConstant.Tag.TAG_METHOD, methodDescriptor.getBareMethodName());
+        Tag methodType = Tag.of(IGrpcMetricConstant.Tag.TAG_METHOD_TYPE, methodDescriptor.getType().name());
+        Tag serviceName = Tag.of(IGrpcMetricConstant.Tag.TAG_SERVICE, methodDescriptor.getServiceName());
+        Iterable<Tag> tags = List.of(method, methodType, serviceName);
 
         // lehetséges hogy cache fog itt kelleni hogy gyorsabb legyen
         // request counter
-        Tag method = new Tag(IGrpcMetricConstant.Tag.TAG_METHOD, methodDescriptor.getBareMethodName());
-        Tag methodType = new Tag(IGrpcMetricConstant.Tag.TAG_METHOD_TYPE, methodDescriptor.getType().name());
-        Tag serviceName = new Tag(IGrpcMetricConstant.Tag.TAG_SERVICE, methodDescriptor.getServiceName());
-        Metadata requestMeta = Metadata.builder().withName(getRequestMetadataName()).withDescription(getRequestMetadataName())
-                .withType(MetricType.COUNTER).build();
-        metricBundle.setRequestCounter(metricRegistry.counter(requestMeta, method, methodType, serviceName));
+        Counter requestCounter = Counter.builder(getRequestMetadataName()).description(getRequestMetadataName()).tags(tags).register(meterRegistry);
+        metricBundle.setRequestCounter(requestCounter);
 
         // response counter
-        Metadata responseMeta = Metadata.builder().withName(getResponseMetadataName()).withDescription(getResponseMetadataName())
-                .withType(MetricType.COUNTER).build();
-        metricBundle.setResponseCounter(metricRegistry.counter(responseMeta, method, methodType, serviceName));
+        Counter responseCounter = Counter.builder(getResponseMetadataName()).description(getResponseMetadataName()).tags(tags)
+                .register(meterRegistry);
+        metricBundle.setResponseCounter(responseCounter);
 
         // timer
-        Metadata timerMeta = Metadata.builder().withName(getTimerMetadataName()).withDescription(getTimerMetadataName()).withType(MetricType.TIMER)
-                .build();
-        metricBundle.setTimerCodeFunction(
-                (code) -> metricRegistry.timer(timerMeta, method, methodType, serviceName, new Tag(IGrpcMetricConstant.Tag.TAG_STATUS, code.name())));
+        Builder timerBuilder = Timer.builder(getTimerMetadataName()).description(getTimerMetadataName()).tags(tags);
+        metricBundle.setTimerCodeFunction((code) -> timerBuilder.tag(IGrpcMetricConstant.Tag.TAG_STATUS, code.name()).register(meterRegistry));
 
         return metricBundle;
 
