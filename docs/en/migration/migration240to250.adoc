@@ -57,3 +57,11 @@ which works explicitly with String values.
 ==== Migration
 
 Changes are backwards compatible doesnt need any migration.
+
+=== coffee-module-mp-restclient
+
+* FaultTypeParserExtension has been modified, it looks for FaultType enums annotated with `@hu.icellmobilsoft.coffee.cdi.annotation.FaultTypeCode`  
+
+==== Migration
+
+If you have a FaultType enum in your project, annotate it with the `@FaultTypeCode` annotation.

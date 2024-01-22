@@ -57,3 +57,11 @@ mely kifejezetten String értékekkel dolgozik.
 ==== Migration
 
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+=== coffee-module-mp-restclient
+
+* FaultTypeParserExtension módosult, ezentúl azokat az enumokat tölti be, melyeken pluszban szerepel a `@hu.icellmobilsoft.coffee.cdi.annotation.FaultTypeCode` annotáció.  
+
+==== Migration
+
+Ha van FaultType enumod a projekteden, add hozzá @`@FaultTypeCode` annotációt.

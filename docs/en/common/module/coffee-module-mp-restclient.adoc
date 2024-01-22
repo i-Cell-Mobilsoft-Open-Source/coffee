@@ -90,7 +90,7 @@ hu.icellmobilsoft.coffee.module.mp.restclient.provider.DefaultRestClientBuilderL
 This is a plain txt file without postfix and extension.
 
 === FaultTypeParserExtension
-Gathers enum classes implementing the `IFaultType` interface.
+Gathers enum classes implementing the `IFaultType` interface and annotated with `@hu.icellmobilsoft.coffee.cdi.annotation.FaultTypeCode`.
 Based on this, `FaultTypeParser` is able to parse the response String faultCode in mp rest client calls to enum and map it to the corresponding exception.
 
 IMPORTANT:: It can only parse enums accessible by the container, this requires that `beans.xml` is present in the implementation module.
