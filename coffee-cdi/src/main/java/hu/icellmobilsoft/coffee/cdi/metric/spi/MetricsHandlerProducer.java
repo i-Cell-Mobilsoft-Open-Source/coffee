@@ -24,6 +24,8 @@ import jakarta.enterprise.inject.Instance;
 import jakarta.enterprise.inject.Produces;
 import jakarta.enterprise.inject.spi.CDI;
 
+import hu.icellmobilsoft.coffee.se.logging.Logger;
+
 /**
  * Produces the underlying metrics implementation if exists, otherwise creates a default implementation without metrics handling
  * 
@@ -50,10 +52,12 @@ public class MetricsHandlerProducer {
     public IJedisMetricsHandler produceJedisMetricsHandler() {
         Instance<IJedisMetricsHandler> metricsHandler = CDI.current().select(IJedisMetricsHandler.class, new MetricsHandlerQualifier.Literal());
         if (metricsHandler.isResolvable()) {
-            return metricsHandler.get();
+            IJedisMetricsHandler handler = metricsHandler.get();
+            Logger.getLogger(getClass()).trace("Found IJedisMetricsHandler implementation, using [{0}]", handler.toString());
+            return handler;
         }
-
         // default implementation
+        Logger.getLogger(getClass()).trace("Not found IJedisMetricsHandler implementation, using NoopJedisMetricsHandler");
         return new NoopJedisMetricsHandler();
     }
 
@@ -67,10 +71,13 @@ public class MetricsHandlerProducer {
     public IMetricsHandler produceMetricsHandler() {
         Instance<IMetricsHandler> metricsHandler = CDI.current().select(IMetricsHandler.class, new MetricsHandlerQualifier.Literal());
         if (metricsHandler.isResolvable()) {
-            return metricsHandler.get();
+            IMetricsHandler handler = metricsHandler.get();
+            Logger.getLogger(getClass()).trace("Found IMetricsHandler implementation, using [{0}]", handler.toString());
+            return handler;
         }
 
         // default implementation
+        Logger.getLogger(getClass()).trace("Not found IMetricsHandler implementation, using NoopMetricsHandler");
         return new NoopMetricsHandler();
     }
 

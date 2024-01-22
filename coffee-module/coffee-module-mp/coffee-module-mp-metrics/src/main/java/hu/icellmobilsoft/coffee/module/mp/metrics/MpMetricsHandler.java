@@ -64,7 +64,7 @@ public class MpMetricsHandler implements IMetricsHandler {
         try {
             MetricID metricID = null;
             Collection<Tag> tags = new ArrayList<>();
-            if (tags != null && metricTags.length > 0) {
+            if (metricTags != null && metricTags.length > 0) {
                 for (MetricTag metricTag : metricTags) {
                     tags.add(new Tag(metricTag.getKey(), metricTag.getValue()));
                 }

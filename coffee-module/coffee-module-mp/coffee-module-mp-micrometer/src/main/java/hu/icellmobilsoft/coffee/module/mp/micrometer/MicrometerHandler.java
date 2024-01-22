@@ -59,7 +59,7 @@ public class MicrometerHandler implements IMetricsHandler {
     public Double searchGauge(String name, MetricTag... metricTags) {
         try {
             Collection<Tag> tags = new ArrayList<>();
-            if (tags != null && metricTags.length > 0) {
+            if (metricTags != null && metricTags.length > 0) {
                 for (MetricTag metricTag : metricTags) {
                     tags.add(Tag.of(metricTag.getKey(), metricTag.getValue()));
                 }
