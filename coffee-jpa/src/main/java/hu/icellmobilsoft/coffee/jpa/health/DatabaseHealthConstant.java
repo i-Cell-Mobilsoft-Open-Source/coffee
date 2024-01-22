@@ -33,11 +33,6 @@ public interface DatabaseHealthConstant {
      */
     interface Database {
         /**
-         * the default datasource name
-         */
-        String DEFAULT_DATASOURCE_NAME = "icellmobilsoftDS";
-
-        /**
          * wildfly specific metric keys
          */
         interface Wildfly {
@@ -53,11 +48,19 @@ public interface DatabaseHealthConstant {
                 /**
                  * wildlfy specific pool in use metric identifier
                  */
-                String WILDFLY_DATASOURCES_POOL_IN_USE_COUNT = "wildfly_datasources_pool_in_use_count";
+                String MPMETRIC_DATASOURCES_POOL_IN_USE_COUNT = "wildfly_datasources_pool_in_use_count";
+                /**
+                 * wildlfy specific pool in use micrometer identifier
+                 */
+                String MICROMETER_DATASOURCES_POOL_IN_USE_COUNT = "datasources.pool.in.use.count";
                 /**
                  * wildlfy specific pool data source metric identifier
                  */
-                String DATA_SOURCE_TAG = "data_source";
+                String MPMETRIC_DATA_SOURCE_TAG = "data_source";
+                /**
+                 * wildlfy specific pool data source micrometer identifier
+                 */
+                String MICROMETER_DATA_SOURCE_TAG = "data-source";
             }
         }
 
