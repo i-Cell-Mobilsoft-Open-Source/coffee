@@ -2,7 +2,7 @@
  * #%L
  * Coffee
  * %%
- * Copyright (C) 2020 - 2022 i-Cell Mobilsoft Zrt.
+ * Copyright (C) 2020 - 2024 i-Cell Mobilsoft Zrt.
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,15 +17,10 @@
  * limitations under the License.
  * #L%
  */
-package hu.icellmobilsoft.coffee.module.redis.config;
+package hu.icellmobilsoft.coffee.module.mp.metrics.test;
 
-import static org.mockito.Mockito.mock;
-
-import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 
-import org.eclipse.microprofile.metrics.MetricRegistry;
-import org.jboss.weld.junit.MockBean;
 import org.jboss.weld.junit5.EnableWeld;
 import org.jboss.weld.junit5.WeldInitiator;
 import org.jboss.weld.junit5.WeldJunit5Extension;
@@ -40,34 +35,34 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import hu.icellmobilsoft.coffee.cdi.metric.spi.IJedisMetricsHandler;
 
 /**
- * Test for CustomJedisMetricsHandler
+ * Testing Custom Microprofile Metrics producer CDI resolver
  * 
- * @author czenczl
- * @since 2.2.0
- *
+ * @author Imre Scheffer
+ * @since 2.5.0
  */
 @EnableWeld
 @Tag("weld")
 @ExtendWith(WeldJunit5Extension.class)
-@DisplayName("Redis pool config tests")
-class CustomMetricsHandlerTest {
-
-    static final String CONFIG_KEY = "test";
+@DisplayName("CustomJedisMpMetricsHandler producer tests")
+class CustomJedisMpMetricsHandlerTests {
 
     @Inject
     private IJedisMetricsHandler jedisMetricsHandler;
 
     @WeldSetup
     public WeldInitiator weld = WeldInitiator.from(WeldInitiator.createWeld()
+            // added cdi test classes
+            .addBeanClass(MockMetricRegistryProducer.class).addBeanClass(CustomJedisMpMetricsHandler.class)
+            // alternative
+            .addAlternative(CustomJedisMpMetricsHandler.class)
             // beans.xml scan
-            .enableDiscovery().addBeanClass(CustomJedisMetricsHandler.class).addAlternative(CustomJedisMetricsHandler.class))
-            .addBeans(MockBean.of(mock(MetricRegistry.class), MetricRegistry.class))
+            .enableDiscovery())
             // start request scope + build
-            .activate(RequestScoped.class).build();
+            .build();
 
     @Test
-    @DisplayName("custom jedis metric test")
-    void metricsHandler() {
+    @DisplayName("MP Metrics handler test")
+    void mpMetricsHandler() {
         Assertions.assertNotNull(jedisMetricsHandler);
 
         jedisMetricsHandler.addMetric("key1", "key2", () -> 1L, () -> 2);
@@ -75,7 +70,7 @@ class CustomMetricsHandlerTest {
         Assertions.assertInstanceOf(WeldClientProxy.class, jedisMetricsHandler);
         Object instance = ((WeldClientProxy) jedisMetricsHandler).getMetadata().getContextualInstance();
         // must be JedisMpMetricsHandler
-        Assertions.assertInstanceOf(CustomJedisMetricsHandler.class, instance);
+        Assertions.assertInstanceOf(CustomJedisMpMetricsHandler.class, instance);
     }
 
 }

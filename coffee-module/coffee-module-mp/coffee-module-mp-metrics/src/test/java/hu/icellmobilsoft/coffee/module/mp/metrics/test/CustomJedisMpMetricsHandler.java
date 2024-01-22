@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package hu.icellmobilsoft.coffee.module.redis.config;
+package hu.icellmobilsoft.coffee.module.mp.metrics.test;
 
 import java.util.function.Supplier;
 
@@ -28,22 +28,21 @@ import hu.icellmobilsoft.coffee.cdi.metric.spi.IJedisMetricsHandler;
 import hu.icellmobilsoft.coffee.cdi.metric.spi.MetricsHandlerQualifier;
 
 /**
+ * Provides metrics for Jedis connection pool
  * 
- * Test for overriding @{JedisMetricsHandler}
- * 
- * @author czenczl
- * @since 2.2.0
+ * @author Imre Scheffer
+ * @since 2.5.0
  *
  */
-@ApplicationScoped
 @Alternative
+@ApplicationScoped
 @MetricsHandlerQualifier
-public class CustomJedisMetricsHandler implements IJedisMetricsHandler {
+public class CustomJedisMpMetricsHandler implements IJedisMetricsHandler {
 
     /**
      * Default constructor, constructs a new object.
      */
-    public CustomJedisMetricsHandler() {
+    public CustomJedisMpMetricsHandler() {
         super();
     }
 

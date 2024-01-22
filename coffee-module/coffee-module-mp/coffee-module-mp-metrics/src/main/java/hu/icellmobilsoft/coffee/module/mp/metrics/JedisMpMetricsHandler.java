@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package hu.icellmobilsoft.coffee.module.redis.metrics;
+package hu.icellmobilsoft.coffee.module.mp.metrics;
 
 import java.util.function.Supplier;
 
@@ -32,10 +32,9 @@ import org.eclipse.microprofile.metrics.Tag;
 import hu.icellmobilsoft.coffee.cdi.metric.constants.JedisMetricsConstants;
 import hu.icellmobilsoft.coffee.cdi.metric.spi.IJedisMetricsHandler;
 import hu.icellmobilsoft.coffee.cdi.metric.spi.MetricsHandlerQualifier;
-import redis.clients.jedis.JedisPool;
 
 /**
- * Provides metrics for {@link JedisPool}
+ * Provides metrics for Jedis connection pool
  * 
  * @author czenczl
  * @since 2.2.0
@@ -43,7 +42,7 @@ import redis.clients.jedis.JedisPool;
  */
 @ApplicationScoped
 @MetricsHandlerQualifier
-public class JedisMetricsHandler implements IJedisMetricsHandler {
+public class JedisMpMetricsHandler implements IJedisMetricsHandler {
 
     @Inject
     private MetricRegistry metricRegistry;
@@ -51,28 +50,23 @@ public class JedisMetricsHandler implements IJedisMetricsHandler {
     /**
      * Default constructor, constructs a new object.
      */
-    public JedisMetricsHandler() {
+    public JedisMpMetricsHandler() {
         super();
     }
 
     @Override
-    public void addMetric(String configKey, String poolConfigKey, Supplier<Number> activeConnectionSupplier, Supplier<Number> idleConnectionSupplier) {
+    public void addMetric(String configKey, String poolConfigKey, Supplier<Number> activeConnectionSupplier,
+            Supplier<Number> idleConnectionSupplier) {
         // config
         Tag configKeyTag = new Tag(JedisMetricsConstants.Tag.COFFEE_JEDIS_CONFIG_KEY, configKey);
         Tag poolConfigKeyTag = new Tag(JedisMetricsConstants.Tag.COFFEE_JEDIS_POOL_CONFIG_KEY, poolConfigKey);
 
-        Metadata metadataActive = Metadata.builder()
-                .withName(JedisMetricsConstants.Gauge.COFFEE_JEDIS_POOL_ACTIVE)
-                .withDescription(JedisMetricsConstants.Description.COFFEE_JEDIS_POOL_ACTIVE_DESCRIPTION)
-                .withType(MetricType.GAUGE)
-                .build();
+        Metadata metadataActive = Metadata.builder().withName(JedisMetricsConstants.Gauge.COFFEE_JEDIS_POOL_ACTIVE)
+                .withDescription(JedisMetricsConstants.Description.COFFEE_JEDIS_POOL_ACTIVE_DESCRIPTION).withType(MetricType.GAUGE).build();
         metricRegistry.gauge(metadataActive, activeConnectionSupplier, configKeyTag, poolConfigKeyTag);
 
-        Metadata metadataIdle = Metadata.builder()
-                .withName(JedisMetricsConstants.Gauge.COFFEE_JEDIS_POOL_IDLE)
-                .withDescription(JedisMetricsConstants.Description.COFFEE_JEDIS_POOL_IDLE_DESCRIPTION)
-                .withType(MetricType.GAUGE)
-                .build();
+        Metadata metadataIdle = Metadata.builder().withName(JedisMetricsConstants.Gauge.COFFEE_JEDIS_POOL_IDLE)
+                .withDescription(JedisMetricsConstants.Description.COFFEE_JEDIS_POOL_IDLE_DESCRIPTION).withType(MetricType.GAUGE).build();
         metricRegistry.gauge(metadataIdle, idleConnectionSupplier, configKeyTag, poolConfigKeyTag);
     }
 }
