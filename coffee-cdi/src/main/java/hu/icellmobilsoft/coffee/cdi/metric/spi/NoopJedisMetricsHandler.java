@@ -2,7 +2,7 @@
  * #%L
  * Coffee
  * %%
- * Copyright (C) 2020 - 2023 i-Cell Mobilsoft Zrt.
+ * Copyright (C) 2020 - 2024 i-Cell Mobilsoft Zrt.
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,33 +17,22 @@
  * limitations under the License.
  * #L%
  */
-package hu.icellmobilsoft.coffee.module.redis.config;
+package hu.icellmobilsoft.coffee.cdi.metric.spi;
 
 import java.util.function.Supplier;
 
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.enterprise.inject.Alternative;
-
-import hu.icellmobilsoft.coffee.cdi.metric.spi.IJedisMetricsHandler;
-import hu.icellmobilsoft.coffee.cdi.metric.spi.MetricsHandlerQualifier;
-
 /**
+ * Empty no operation metrics handler for tests or disabled metric function
  * 
- * Test for overriding @{JedisMetricsHandler}
- * 
- * @author czenczl
- * @since 2.2.0
- *
+ * @author Imre Scheffer
+ * @since 2.5.0
  */
-@ApplicationScoped
-@Alternative
-@MetricsHandlerQualifier
-public class CustomJedisMetricsHandler implements IJedisMetricsHandler {
+public class NoopJedisMetricsHandler implements IJedisMetricsHandler {
 
     /**
      * Default constructor, constructs a new object.
      */
-    public CustomJedisMetricsHandler() {
+    public NoopJedisMetricsHandler() {
         super();
     }
 
@@ -51,4 +40,5 @@ public class CustomJedisMetricsHandler implements IJedisMetricsHandler {
     public void addMetric(String configKey, String poolConfigKey, Supplier<Number> activeConnectionSupplier,
             Supplier<Number> idleConnectionSupplier) {
     }
+
 }

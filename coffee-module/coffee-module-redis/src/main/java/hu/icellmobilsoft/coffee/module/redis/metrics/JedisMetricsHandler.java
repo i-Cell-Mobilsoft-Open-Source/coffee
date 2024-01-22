@@ -19,17 +19,19 @@
  */
 package hu.icellmobilsoft.coffee.module.redis.metrics;
 
+import java.util.function.Supplier;
+
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
-import org.apache.commons.lang3.StringUtils;
 import org.eclipse.microprofile.metrics.Metadata;
 import org.eclipse.microprofile.metrics.MetricRegistry;
 import org.eclipse.microprofile.metrics.MetricType;
 import org.eclipse.microprofile.metrics.Tag;
 
-import hu.icellmobilsoft.coffee.dto.exception.BaseException;
-import hu.icellmobilsoft.coffee.dto.exception.InvalidParameterException;
+import hu.icellmobilsoft.coffee.cdi.metric.constants.JedisMetricsConstants;
+import hu.icellmobilsoft.coffee.cdi.metric.spi.IJedisMetricsHandler;
+import hu.icellmobilsoft.coffee.cdi.metric.spi.MetricsHandlerQualifier;
 import redis.clients.jedis.JedisPool;
 
 /**
@@ -40,6 +42,7 @@ import redis.clients.jedis.JedisPool;
  *
  */
 @ApplicationScoped
+@MetricsHandlerQualifier
 public class JedisMetricsHandler implements IJedisMetricsHandler {
 
     @Inject
@@ -52,29 +55,8 @@ public class JedisMetricsHandler implements IJedisMetricsHandler {
         super();
     }
 
-    /**
-     * Provides metrics for the specified connection pool.
-     * 
-     * @param configKey
-     *            Redis connection config key
-     * @param poolConfigKey
-     *            Redis connection pool config key
-     * @param jedisPool
-     *            {@link JedisPool} handle connection
-     * @throws BaseException
-     *             if wrong config provided
-     */
     @Override
-    public void addMetric(String configKey, String poolConfigKey, JedisPool jedisPool) throws BaseException {
-        if (StringUtils.isBlank(configKey)) {
-            throw new InvalidParameterException("configKey is mandatory!");
-        }
-        if (StringUtils.isBlank(poolConfigKey)) {
-            throw new InvalidParameterException("poolConfigKey is mandatory!");
-        }
-        if (jedisPool == null) {
-            throw new InvalidParameterException("jedisPool is mandatory!");
-        }
+    public void addMetric(String configKey, String poolConfigKey, Supplier<Number> activeConnectionSupplier, Supplier<Number> idleConnectionSupplier) {
         // config
         Tag configKeyTag = new Tag(JedisMetricsConstants.Tag.COFFEE_JEDIS_CONFIG_KEY, configKey);
         Tag poolConfigKeyTag = new Tag(JedisMetricsConstants.Tag.COFFEE_JEDIS_POOL_CONFIG_KEY, poolConfigKey);
@@ -84,13 +66,13 @@ public class JedisMetricsHandler implements IJedisMetricsHandler {
                 .withDescription(JedisMetricsConstants.Description.COFFEE_JEDIS_POOL_ACTIVE_DESCRIPTION)
                 .withType(MetricType.GAUGE)
                 .build();
-        metricRegistry.gauge(metadataActive, jedisPool::getNumActive, configKeyTag, poolConfigKeyTag);
+        metricRegistry.gauge(metadataActive, activeConnectionSupplier, configKeyTag, poolConfigKeyTag);
 
         Metadata metadataIdle = Metadata.builder()
                 .withName(JedisMetricsConstants.Gauge.COFFEE_JEDIS_POOL_IDLE)
                 .withDescription(JedisMetricsConstants.Description.COFFEE_JEDIS_POOL_IDLE_DESCRIPTION)
                 .withType(MetricType.GAUGE)
                 .build();
-        metricRegistry.gauge(metadataIdle, jedisPool::getNumIdle, configKeyTag, poolConfigKeyTag);
+        metricRegistry.gauge(metadataIdle, idleConnectionSupplier, configKeyTag, poolConfigKeyTag);
     }
 }

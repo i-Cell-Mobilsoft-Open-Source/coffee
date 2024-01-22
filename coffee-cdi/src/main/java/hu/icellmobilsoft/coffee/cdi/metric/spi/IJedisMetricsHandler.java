@@ -17,31 +17,31 @@
  * limitations under the License.
  * #L%
  */
-package hu.icellmobilsoft.coffee.module.redis.metrics;
+package hu.icellmobilsoft.coffee.cdi.metric.spi;
 
-import hu.icellmobilsoft.coffee.dto.exception.BaseException;
-import redis.clients.jedis.JedisPool;
+import java.util.function.Supplier;
 
 /**
  * Jedis metric handler interface
  * 
  * @author czenczl
+ * @author Imre Scheffer
  * @since 2.2.0
  *
  */
 public interface IJedisMetricsHandler {
 
     /**
-     * Provides metrics for the specified connection pool.
+     * Provides metrics for the specified Jedis connection pool.
      * 
      * @param configKey
      *            Redis connection config key
      * @param poolConfigKey
      *            Redis connection pool config key
-     * @param jedisPool
-     *            {@link JedisPool} handle connection
-     * @throws BaseException
-     *             if wrong config provided
+     * @param activeConnectionSupplier
+     *            method to return active connection in pool (e.g. jedisPool::getNumActive)
+     * @param idleConnectionSupplier
+     *            method to return idle connection in pool (e.g. jedisPool::getNumIdle)
      */
-    void addMetric(String configKey, String poolConfigKey, JedisPool jedisPool) throws BaseException;
+    void addMetric(String configKey, String poolConfigKey, Supplier<Number> activeConnectionSupplier, Supplier<Number> idleConnectionSupplier);
 }
