@@ -506,6 +506,25 @@ IMPORTANT: A táblázatban nem szereplő típusok beállítását a *JDBC driver
 A *DatabaseHealth* ellenőrizni tudja hogy elérhető-e az adatbázis.
 A *DatabasePoolHealth* ellenőrizni tudja mennyire terhelt az adatbázishoz műveletekhez használt connection pool.
 
+Ez a funkció a metrika adatain alapszik,
+így szükséges hogy valamelyik implementáció aktiválva legyen.
+
+.pom.xml
+[source,xml]
+----
+<dependency>
+    <groupId>hu.icellmobilsoft.coffee</groupId>
+    <artifactId>coffee-module-mp-micrometer</artifactId> <1>
+</dependency>
+<!-- vagy -->
+<dependency>
+    <groupId>hu.icellmobilsoft.coffee</groupId>
+    <artifactId>coffee-module-mp-metrics</artifactId> <2>
+</dependency>
+----
+<1> Micrometer metrika implementáció
+<2> Microprofile-metrics metrika implementáció
+
 .Startup használati példa
 [source,java]
 ----
@@ -515,11 +534,16 @@ public class DatabaseHealthCheck {
     @Inject
     private DatabaseHealth databaseHealth;
 
+    @Inject
+    private Config mpConfig;
+
     public HealthCheckResponse checkDatabaseConnection() {
         DatabaseHealthResourceConfig config = new DatabaseHealthResourceConfig();
         config.setBuilderName("oracle");
         config.setDatasourceUrl("jdbc:postgresql://service-postgredb:5432/service_db?currentSchema=service");
-        config.setDsName(DatabaseHealthConstant.Database.DEFAULT_DATASOURCE_NAME);
+        String datasourceName = mpConfig.getOptionalValue(IConfigKey.DATASOURCE_DEFAULT_NAME, String.class)
+                .orElse(IConfigKey.DATASOURCE_DEFAULT_NAME_VALUE);
+        config.setDsName(datasourceName);
         try {
             return databaseHealth.checkDatabaseConnection(config);
         }catch (BaseException e) {
