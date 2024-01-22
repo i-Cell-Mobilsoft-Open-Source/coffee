@@ -49,3 +49,11 @@ A változás eredményeképpen, ha felhasználási oldalon is hivatkozva van eze
 Teljes értékű helyettese a `hu.icellmobilsoft.coffee.module.etcd.service.EtcdService` osztály,
 mely kifejezetten String értékekkel dolgozik.
 * A `getList()` metódus törölve lett innen: `hu.icellmobilsoft.coffee.module.etcd.service.ConfigEtcdService`. Ezentúl a kompatibilis `getAll()` metódust kell hasznáni.
+
+=== coffee-jpa
+
+* `@Dependent` annotáció hozzáadva ehhez az osztályhoz: `hu.icellmobilsoft.coffee.jpa.sql.batch.BatchService`
+
+==== Migration
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.

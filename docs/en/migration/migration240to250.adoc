@@ -49,3 +49,11 @@ As a result of the move, if these annotations are also used on the usage project
 Its full-fledged replacement is the `hu.icellmobilsoft.coffee.module.etcd.service.EtcdService` class,
 which works explicitly with String values.
 * Method `getList()` has been removed from `hu.icellmobilsoft.coffee.module.etcd.service.ConfigEtcdService`. Use the compatible `getAll()` method.
+
+=== coffee-jpa
+
+* Added `@Dependent` annotation to `hu.icellmobilsoft.coffee.jpa.sql.batch.BatchService`
+
+==== Migration
+
+Changes are backwards compatible doesnt need any migration.
