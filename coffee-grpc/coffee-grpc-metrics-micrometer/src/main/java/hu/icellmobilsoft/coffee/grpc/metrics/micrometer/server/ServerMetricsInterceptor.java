@@ -17,25 +17,26 @@
  * limitations under the License.
  * #L%
  */
-package hu.icellmobilsoft.coffee.grpc.metrics.impl.server;
+package hu.icellmobilsoft.coffee.grpc.metrics.micrometer.server;
 
 import jakarta.enterprise.context.Dependent;
 
 import hu.icellmobilsoft.coffee.grpc.metrics.api.IMetricsInterceptor;
 import hu.icellmobilsoft.coffee.grpc.metrics.api.ServerMetricsInterceptorQualifier;
 import hu.icellmobilsoft.coffee.grpc.metrics.api.constants.IGrpcMetricConstant;
-import hu.icellmobilsoft.coffee.grpc.metrics.impl.bundle.MetricsBundle;
-import hu.icellmobilsoft.coffee.grpc.metrics.impl.common.AbstractMetricsInterceptor;
+import hu.icellmobilsoft.coffee.grpc.metrics.micrometer.bundle.MetricsBundle;
+import hu.icellmobilsoft.coffee.grpc.metrics.micrometer.common.AbstractMetricsInterceptor;
 import io.grpc.Metadata;
 import io.grpc.ServerCall;
 import io.grpc.ServerCallHandler;
 import io.grpc.ServerInterceptor;
 
 /**
- * gRPC server interceptor that will collect metrics using microprofile-metrics api
+ * gRPC server interceptor that will collect metrics using micrometer api
  * 
  * @author czenczl
- * @since 2.1.0
+ * @author Imre Scheffer
+ * @since 2.5.0
  *
  */
 @ServerMetricsInterceptorQualifier
