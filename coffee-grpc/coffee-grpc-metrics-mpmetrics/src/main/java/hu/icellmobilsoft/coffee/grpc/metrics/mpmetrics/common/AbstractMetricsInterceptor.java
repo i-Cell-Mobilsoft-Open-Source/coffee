@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package hu.icellmobilsoft.coffee.grpc.metrics.impl.common;
+package hu.icellmobilsoft.coffee.grpc.metrics.mpmetrics.common;
 
 import java.time.LocalDateTime;
 
@@ -29,7 +29,7 @@ import org.eclipse.microprofile.metrics.MetricType;
 import org.eclipse.microprofile.metrics.Tag;
 
 import hu.icellmobilsoft.coffee.grpc.metrics.api.constants.IGrpcMetricConstant;
-import hu.icellmobilsoft.coffee.grpc.metrics.impl.bundle.MetricsBundle;
+import hu.icellmobilsoft.coffee.grpc.metrics.mpmetrics.bundle.MetricsBundle;
 import io.grpc.MethodDescriptor;
 
 /**

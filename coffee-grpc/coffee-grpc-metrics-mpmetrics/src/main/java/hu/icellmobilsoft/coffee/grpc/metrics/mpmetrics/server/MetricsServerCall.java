@@ -17,9 +17,9 @@
  * limitations under the License.
  * #L%
  */
-package hu.icellmobilsoft.coffee.grpc.metrics.impl.server;
+package hu.icellmobilsoft.coffee.grpc.metrics.mpmetrics.server;
 
-import hu.icellmobilsoft.coffee.grpc.metrics.impl.bundle.MetricsBundle;
+import hu.icellmobilsoft.coffee.grpc.metrics.mpmetrics.bundle.MetricsBundle;
 import io.grpc.ForwardingServerCall;
 import io.grpc.Metadata;
 import io.grpc.MethodDescriptor;

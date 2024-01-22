@@ -17,55 +17,51 @@
  * limitations under the License.
  * #L%
  */
-package hu.icellmobilsoft.coffee.grpc.metrics.impl.client;
+package hu.icellmobilsoft.coffee.grpc.metrics.mpmetrics.client;
 
-import java.time.Duration;
-import java.time.LocalDateTime;
-
-import hu.icellmobilsoft.coffee.grpc.metrics.impl.bundle.MetricsBundle;
-import io.grpc.ClientCall.Listener;
-import io.grpc.ForwardingClientCallListener.SimpleForwardingClientCallListener;
+import hu.icellmobilsoft.coffee.grpc.metrics.mpmetrics.bundle.MetricsBundle;
+import io.grpc.ClientCall;
+import io.grpc.ForwardingClientCall;
 import io.grpc.Metadata;
-import io.grpc.Status;
 
 /**
- * gRPC client listener that will collect metrics using microprofile-metrics api
+ * gRPC client call that will collect metrics using microprofile-metrics api
  * 
  * @param <ReqT>
  *            request type
+ * @param <RespT>
+ *            response type
  * 
  * @author czenczl
  * @since 2.1.0
  *
  */
-public class MetricsClientCallListener<ReqT> extends SimpleForwardingClientCallListener<ReqT> {
+public class MetricsClientCall<ReqT, RespT> extends ForwardingClientCall.SimpleForwardingClientCall<ReqT, RespT> {
 
     private MetricsBundle metricBundle;
 
     /**
-     * Creates a new cleint listener to collect metrics
+     * Creates a new client call to collect metrics
      * 
      * @param delegate
      *            original call
      * @param metricBundle
      *            counter and timer function container
      */
-    public MetricsClientCallListener(Listener<ReqT> delegate, MetricsBundle metricBundle) {
+    public MetricsClientCall(ClientCall<ReqT, RespT> delegate, MetricsBundle metricBundle) {
         super(delegate);
         this.metricBundle = metricBundle;
     }
 
     @Override
-    public void onClose(Status status, Metadata trailers) {
-        metricBundle.getTimerCodeFunction().apply(status.getCode()).update(Duration.between(metricBundle.getStartTime(), LocalDateTime.now()));
-        super.onClose(status, trailers);
+    public void start(Listener<RespT> responseListener, Metadata headers) {
+        super.start(new MetricsClientCallListener<>(responseListener, metricBundle), headers);
     }
 
     @Override
-    public void onMessage(ReqT message) {
-
-        metricBundle.getResponseCounter().inc();
-        super.onMessage(message);
+    public void sendMessage(ReqT message) {
+        metricBundle.getRequestCounter().inc();
+        super.sendMessage(message);
     }
 
 }

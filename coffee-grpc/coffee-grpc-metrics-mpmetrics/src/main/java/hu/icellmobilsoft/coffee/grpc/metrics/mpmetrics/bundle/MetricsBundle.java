@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package hu.icellmobilsoft.coffee.grpc.metrics.impl.bundle;
+package hu.icellmobilsoft.coffee.grpc.metrics.mpmetrics.bundle;
 
 import java.time.LocalDateTime;
 import java.util.function.Function;

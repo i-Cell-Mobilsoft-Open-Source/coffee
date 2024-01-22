@@ -17,13 +17,13 @@
  * limitations under the License.
  * #L%
  */
-package hu.icellmobilsoft.coffee.grpc.metrics.impl.server;
+package hu.icellmobilsoft.coffee.grpc.metrics.mpmetrics.server;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.function.Supplier;
 
-import hu.icellmobilsoft.coffee.grpc.metrics.impl.bundle.MetricsBundle;
+import hu.icellmobilsoft.coffee.grpc.metrics.mpmetrics.bundle.MetricsBundle;
 import io.grpc.ForwardingServerCallListener;
 import io.grpc.ServerCall.Listener;
 import io.grpc.Status;

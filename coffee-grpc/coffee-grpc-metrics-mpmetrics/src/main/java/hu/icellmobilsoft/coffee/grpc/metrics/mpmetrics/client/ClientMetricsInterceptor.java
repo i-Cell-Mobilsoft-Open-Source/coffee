@@ -17,15 +17,15 @@
  * limitations under the License.
  * #L%
  */
-package hu.icellmobilsoft.coffee.grpc.metrics.impl.client;
+package hu.icellmobilsoft.coffee.grpc.metrics.mpmetrics.client;
 
 import jakarta.enterprise.context.Dependent;
 
 import hu.icellmobilsoft.coffee.grpc.metrics.api.ClientMetricsInterceptorQualifier;
 import hu.icellmobilsoft.coffee.grpc.metrics.api.IMetricsInterceptor;
 import hu.icellmobilsoft.coffee.grpc.metrics.api.constants.IGrpcMetricConstant;
-import hu.icellmobilsoft.coffee.grpc.metrics.impl.bundle.MetricsBundle;
-import hu.icellmobilsoft.coffee.grpc.metrics.impl.common.AbstractMetricsInterceptor;
+import hu.icellmobilsoft.coffee.grpc.metrics.mpmetrics.bundle.MetricsBundle;
+import hu.icellmobilsoft.coffee.grpc.metrics.mpmetrics.common.AbstractMetricsInterceptor;
 import io.grpc.CallOptions;
 import io.grpc.Channel;
 import io.grpc.ClientCall;
