@@ -19,6 +19,7 @@
  */
 package hu.icellmobilsoft.coffee.dto.exception.enums;
 
+import hu.icellmobilsoft.coffee.cdi.annotation.FaultTypeCode;
 import hu.icellmobilsoft.coffee.dto.error.IFaultType;
 
 /**
@@ -27,6 +28,7 @@ import hu.icellmobilsoft.coffee.dto.error.IFaultType;
  * @author imre.scheffer
  * @since 1.0.0
  */
+@FaultTypeCode
 public enum CoffeeFaultType implements IFaultType<CoffeeFaultType> {
 
     /**

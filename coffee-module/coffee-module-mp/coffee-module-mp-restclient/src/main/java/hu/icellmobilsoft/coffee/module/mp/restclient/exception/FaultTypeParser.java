@@ -19,13 +19,9 @@
  */
 package hu.icellmobilsoft.coffee.module.mp.restclient.exception;
 
-import jakarta.enterprise.inject.Instance;
-import jakarta.enterprise.inject.spi.CDI;
-
 import org.apache.commons.lang3.EnumUtils;
 
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
-import hu.icellmobilsoft.coffee.dto.fault.provider.spi.IFaultTypeProvider;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
 
 /**
@@ -35,6 +31,7 @@ import hu.icellmobilsoft.coffee.se.logging.Logger;
  * @since 1.2.0
  */
 public class FaultTypeParser {
+
     /**
      * Default constructor, constructs a new object.
      */
@@ -50,32 +47,16 @@ public class FaultTypeParser {
      *            {@link String} to parse.
      * @return {@link hu.icellmobilsoft.coffee.dto.error.IFaultType} parsed from input string.
      */
-    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     public static Enum<?> parseFaultType(String faultTypeString) {
-        Instance<IFaultTypeProvider> faultProviderInstance = CDI.current().select(IFaultTypeProvider.class);
-        IFaultTypeProvider provider = null;
-        if (faultProviderInstance.isResolvable()) {
-            try {
-                provider = faultProviderInstance.get();
-                for (Class<? extends Enum> faultTypeClass : provider.faultTypeEnums()) {
-                    Enum<?> fault = EnumUtils.getEnum(faultTypeClass, faultTypeString);
-                    if (fault != null) {
-                        return fault;
-                    }
-                }
-            } finally {
-                if (provider != null) {
-                    faultProviderInstance.destroy(provider);
-                }
+
+        for (Class<? extends Enum> faultTypeClass : FaultTypeParserExtension.getFaultTypeClasses()) {
+            Enum<?> fault = EnumUtils.getEnum(faultTypeClass, faultTypeString);
+            if (fault != null) {
+                return fault;
             }
         }
-        // default coffee
-        Enum<?> fault = EnumUtils.getEnum(CoffeeFaultType.class, faultTypeString);
-        if (fault != null) {
-            return fault;
-        }
-        Logger.getLogger(FaultTypeParser.class)
-                .warn("FaultType not exists in enum for messages, faultType: [{0}] -> [{1}]", faultTypeString, CoffeeFaultType.OPERATION_FAILED);
+        Logger.getLogger(FaultTypeParser.class).warn("FaultType not exists in enum for messages, faultType: [" + faultTypeString + "]");
         return CoffeeFaultType.OPERATION_FAILED;
     }
 }
