@@ -154,19 +154,6 @@ public class ConfigEtcdService {
     }
 
     /**
-     * Get all key-values pair from ETCD
-     * 
-     * @deprecated use {@link #getAll()} instead
-     * @return all key/values
-     * @throws BaseException
-     *             technical error
-     */
-    @Deprecated(since = "1.3.0", forRemoval = true)
-    public Map<String, String> getList() throws BaseException {
-        return getAll();
-    }
-
-    /**
      * Search/Select all key-values pairs by input starter key. ETCD does not natively support key filtering, only search for the first match. This is
      * limited implementation when the input key is supplemented with the input key endkey
      * <ul>

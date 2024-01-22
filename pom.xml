@@ -130,6 +130,10 @@
 								<fileSets>
 									<fileSet>
 										<directory>${project.build.directory}</directory>
+										<excludes>
+											<exclude>generated-test-sources</exclude>
+											<exclude>test-classes</exclude>
+										</excludes>
 									</fileSet>
 								</fileSets>
 							</configuration>

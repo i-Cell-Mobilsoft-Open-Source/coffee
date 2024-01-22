@@ -2,6 +2,10 @@
 
 coff:ee v2.4.0 -> v2.5.0 migration description, news, changes
 
+=== Global
+
+* jandex-maven-plugin - test classes were excluded from indexing
+
 === coffee-tool
 
 * Added tool class for "AES/CBC/PKCS5PADDING" de/cipher
@@ -34,3 +38,22 @@ As a result of the move, if these annotations are also used on the usage project
 
 `hu.icellmobilsoft.coffee.rest.validation.xml.annotation.ValidateXML` -> `hu.icellmobilsoft.coffee.cdi.annotation.xml.ValidateXML`
 `hu.icellmobilsoft.coffee.rest.validation.xml.annotation.ValidateXMLs` -> `hu.icellmobilsoft.coffee.cdi.annotation.xml.ValidateXMLs`
+
+=== coffee-module-etcd
+
+* Removed classes and methods annotated with `@Deprecated(since = "1.3.0", forRemoval = true)`
+
+==== Migration
+
+* `hu.icellmobilsoft.coffee.module.etcd.service.BaseEtcdService` removed.
+Its full-fledged replacement is the `hu.icellmobilsoft.coffee.module.etcd.service.EtcdService` class,
+which works explicitly with String values.
+* Method `getList()` has been removed from `hu.icellmobilsoft.coffee.module.etcd.service.ConfigEtcdService`. Use the compatible `getAll()` method.
+
+=== coffee-jpa
+
+* Added `@Dependent` annotation to `hu.icellmobilsoft.coffee.jpa.sql.batch.BatchService`
+
+==== Migration
+
+Changes are backwards compatible doesnt need any migration.
