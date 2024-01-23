@@ -506,6 +506,25 @@ IMPORTANT: The *JDBC driver* is responsible for setting types not included in th
 The *DatabaseHealth* can check if the database is reachable.
 The *DatabasePoolHealth* can check how loaded the connection pool used for operations to the database is.
 
+This function is based on metric data,
+so it is necessary that one of the implementations is activated.
+
+.pom.xml
+[source,xml]
+----
+<dependency>
+    <groupId>hu.icellmobilsoft.coffee</groupId>
+    <artifactId>coffee-module-mp-micrometer</artifactId> <1>
+</dependency>
+<!-- or -->
+<dependency>
+    <groupId>hu.icellmobilsoft.coffee</groupId>
+    <artifactId>coffee-module-mp-metrics</artifactId> <2>
+</dependency>
+----
+<1> Micrometer metric implementation
+<2> Microprofile-metrics metric implementation
+
 .Startup example
 [source,java]
 ----
@@ -515,11 +534,16 @@ public class DatabaseHealthCheck {
     @Inject
     private DatabaseHealth databaseHealth;
 
+    @Inject
+    private Config mpConfig;
+
     public HealthCheckResponse checkDatabaseConnection() {
         DatabaseHealthResourceConfig config = new DatabaseHealthResourceConfig();
         config.setBuilderName("oracle");
         config.setDatasourceUrl("jdbc:postgresql://service-postgredb:5432/service_db?currentSchema=service");
-        config.setDsName(DatabaseHealthConstant.Database.DEFAULT_DATASOURCE_NAME);
+        String datasourceName = mpConfig.getOptionalValue(IConfigKey.DATASOURCE_DEFAULT_NAME, String.class)
+                .orElse(IConfigKey.DATASOURCE_DEFAULT_NAME_VALUE);
+        config.setDsName(datasourceName);
         try {
             return databaseHealth.checkDatabaseConnection(config);
         }catch (BaseException e) {

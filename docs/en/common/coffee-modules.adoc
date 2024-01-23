@@ -25,6 +25,8 @@ include::module/coffee-module-ruleng.adoc[leveloffset=+1]
 
 include::module/coffee-module-mp-opentracing.adoc[leveloffset=+1]
 
+include::module/coffee-module-mp-metrics.adoc[leveloffset=+1]
+
 include::module/coffee-module-mp-restclient.adoc[leveloffset=+1]
 
 include::module/coffee-module-totp.adoc[leveloffset=+1]

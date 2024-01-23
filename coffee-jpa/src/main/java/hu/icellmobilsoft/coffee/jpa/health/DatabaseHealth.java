@@ -36,9 +36,11 @@ import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.ApplicationScoped;
 
 import org.apache.commons.lang3.StringUtils;
+import org.eclipse.microprofile.config.ConfigProvider;
 import org.eclipse.microprofile.health.HealthCheckResponse;
 import org.eclipse.microprofile.health.HealthCheckResponseBuilder;
 
+import hu.icellmobilsoft.coffee.cdi.config.IConfigKey;
 import hu.icellmobilsoft.coffee.cdi.health.constants.HealthConstant;
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.dto.exception.InvalidParameterException;
@@ -116,8 +118,9 @@ public class DatabaseHealth {
                 ? DatabaseHealthConstant.Database.Wildfly.DEFAULT_DATASOURCE_PREFIX
                 : dataBaseResourceConfig.getDatasourcePrefix();
 
-        String dsName = StringUtils.isBlank(dataBaseResourceConfig.getDsName()) ? DatabaseHealthConstant.Database.DEFAULT_DATASOURCE_NAME
-                : dataBaseResourceConfig.getDsName();
+        String datasourceName = ConfigProvider.getConfig().getOptionalValue(IConfigKey.DATASOURCE_DEFAULT_NAME, String.class)
+                .orElse(IConfigKey.DATASOURCE_DEFAULT_NAME_VALUE);
+        String dsName = StringUtils.isBlank(dataBaseResourceConfig.getDsName()) ? datasourceName : dataBaseResourceConfig.getDsName();
 
         long connectTimeoutSec = dataBaseResourceConfig.getConnectTimeoutSec() == null ? HealthConstant.Common.DEFAULT_CONNECT_TIMEOUT_SEC
                 : dataBaseResourceConfig.getConnectTimeoutSec();

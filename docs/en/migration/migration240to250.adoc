@@ -2,6 +2,56 @@
 
 coff:ee v2.4.0 -> v2.5.0 migration description, news, changes
 
+
+== Global
+
+* jandex-maven-plugin - test classes were excluded from indexing
+
+== Metric independency
+Development involving several modules,
+the goal of which is to implement metrics with several types be able to function.
+
+=== coffee-jpa & coffee-module-redis
+
+* The modules were independent from the metric implementation,
+you can freely choose between microprofile-metrics or micrometer
+
+==== Migration
+
+At the dependency level, you need to choose the metric implementation
+that the service should use.
+Otherwise, everything else is backward compatible.
+
+[source,xml]
+----
+<dependency>
+    <groupId>hu.icellmobilsoft.coffee</groupId>
+    <artifactId>coffee-module-redis</artifactId>
+</dependency>
+
+<dependency>
+    <groupId>hu.icellmobilsoft.coffee</groupId>
+    <artifactId>coffee-module-mp-micrometer</artifactId> <1>
+</dependency>
+<!-- or -->
+<dependency>
+    <groupId>hu.icellmobilsoft.coffee</groupId>
+    <artifactId>coffee-module-mp-metrics</artifactId> <2>
+</dependency>
+----
+<1> Micrometer metric implementation
+<2> Microprofile-metrics metric implementation
+
+=== coffee-grpc-metrics-impl
+
+Renames coffee-grpc-metrics-impl -> coffee-grpc-metrics-mpmetrics
+
+==== Migration
+
+Without rename changes are backwards compatible doesnt need any migration.
+
+== Other developments
+
 === coffee-tool
 
 * Added tool class for "AES/CBC/PKCS5PADDING" de/cipher
@@ -35,10 +85,38 @@ As a result of the move, if these annotations are also used on the usage project
 `hu.icellmobilsoft.coffee.rest.validation.xml.annotation.ValidateXML` -> `hu.icellmobilsoft.coffee.cdi.annotation.xml.ValidateXML`
 `hu.icellmobilsoft.coffee.rest.validation.xml.annotation.ValidateXMLs` -> `hu.icellmobilsoft.coffee.cdi.annotation.xml.ValidateXMLs`
 
+=== coffee-module-etcd
+
+* Removed classes and methods annotated with `@Deprecated(since = "1.3.0", forRemoval = true)`
+
+==== Migration
+
+* `hu.icellmobilsoft.coffee.module.etcd.service.BaseEtcdService` removed.
+Its full-fledged replacement is the `hu.icellmobilsoft.coffee.module.etcd.service.EtcdService` class,
+which works explicitly with String values.
+* Method `getList()` has been removed from `hu.icellmobilsoft.coffee.module.etcd.service.ConfigEtcdService`. Use the compatible `getAll()` method.
+
+=== coffee-jpa
+
+* Added `@Dependent` annotation to `hu.icellmobilsoft.coffee.jpa.sql.batch.BatchService`
+
+==== Migration
+
+Changes are backwards compatible doesnt need any migration.
+
+=== coffee-module-configdoc
+
+* Nullpointer thrown during compile time when javadoc was missing before annotation `@ConfigDoc`.
+
+==== Migration
+
+Changes are backwards compatible doesnt need any migration.
+
 === coffee-module-mongodb
 
 * Removed classes and method annotated with `@Deprecated(forRemoval = true, since = "1.1.0")`
 * Removed unimplemented and unused method: `hu.icellmobilsoft.coffee.module.mongodb.service.MongoService#getMongoCollectionName()`
+
 ==== Migration
 
 * Instead of `hu.icellmobilsoft.coffee.module.mongodb.annotation.MongoConfiguration` use: `hu.icellmobilsoft.coffee.module.mongodb.extension.MongoClientConfiguration`

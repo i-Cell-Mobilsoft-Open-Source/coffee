@@ -185,6 +185,7 @@ public class RedisHealthCheck {
 }
 ----
 
+[#coffee_module_redis-metrics]
 == microprofile-metrics támogatás
 
 A *JedisConnectionProducer* metrikát szolgáltat a Jedis pool használatáról.
@@ -192,15 +193,16 @@ A *JedisConnectionProducer* metrikát szolgáltat a Jedis pool használatáról.
 .metrics minta
 [source,java]
 ----
-# HELP application_coffee_jedis_pool_active Active connection number
-# TYPE application_coffee_jedis_pool_active gauge
-application_coffee_jedis_pool_active{configKey="redisConfig",poolConfigKey="default"} 10.0
-# HELP application_coffee_jedis_pool_idle Idle connection number
-# TYPE application_coffee_jedis_pool_idle gauge
-application_coffee_jedis_pool_idle{configKey="redisConfig",poolConfigKey="default"} 5.0
+# HELP coffee_jedis_pool_active Active connection number
+# TYPE coffee_jedis_pool_active gauge
+coffee_jedis_pool_active{configKey="redisConfig",poolConfigKey="default"} 10.0
+# HELP coffee_jedis_pool_idle Idle connection number
+# TYPE coffee_jedis_pool_idle gauge
+coffee_jedis_pool_idle{configKey="redisConfig",poolConfigKey="default"} 5.0
 ----
 
 A metrikák felülírhatóak @Alternative vagy @Specializes segítségével.
+
 .metrics felülírás minta
 [source,java]
 ----
