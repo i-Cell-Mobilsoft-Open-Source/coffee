@@ -28,8 +28,9 @@
         <module>coffee-grpc-server-extension</module>
         <module>coffee-grpc-client-extension</module>
         <module>coffee-grpc-metrics-api</module>
-        <module>coffee-grpc-metrics-impl</module>
+        <module>coffee-grpc-metrics-mpmetrics</module>
         <module>coffee-grpc-traces-api</module>
         <module>coffee-grpc-opentracing-impl</module>
+        <module>coffee-grpc-metrics-micrometer</module>
     </modules>
 </project>

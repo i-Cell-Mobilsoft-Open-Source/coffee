@@ -46,7 +46,7 @@ public interface IConfigKey {
      * Coffee app ProjectStage
      */
     String COFFEE_APP_PROJECT_STAGE = COFFEE_CONFIG_APP_PREFIX + ".projectStage";
-    
+
     /**
      * Coffee app name key
      */
@@ -68,4 +68,13 @@ public interface IConfigKey {
      * "[\\w\\s]*?pass[\\w\\s]*?"
      */
     String LOG_SENSITIVE_KEY_PATTERN = COFFEE_CONFIG_PREFIX + ".log.sensitive.key.pattern";
+
+    /**
+     * Rendszerben használt alapértelmezett datasource név kulcsa. Ha nincs megadva akkor {@value #DATASOURCE_DEFAULT_NAME_VALUE}
+     */
+    String DATASOURCE_DEFAULT_NAME = COFFEE_CONFIG_PREFIX + ".datasource.default.name";
+    /**
+     * Alapértelmezett datasource neve
+     */
+    String DATASOURCE_DEFAULT_NAME_VALUE = "icellmobilsoftDS";
 }

@@ -1,0 +1,10 @@
+[#common_core_coffee-cdi_metrics]
+= Metrics
+
+A coffee belső logikája metrika implementáció független és választható a projekteken belül.
+Ha nincs kiválasztva metrika implementáció akkor alapértelmezett
+`Noop*MetricsHandler` aktiválódik a rendszerben.
+
+Implementációk választása a
+<<common_module_coffee-module-mp-metrics,coffee-module-mp-metrics/micrometer>>
+leírásban olvasható.

@@ -1,0 +1,43 @@
+[#common_module_coffee-module-mp-metrics]
+= coffee-module-mp-metrics/micrometer
+
+The purpose of the modules is to support https://github.com/eclipse/microprofile-metrics[microprofile metrics]
+and https://github.com/micrometer-metrics/micrometer[micrometer],
+which includes the following principles:
+
+* Coffee Compatibility - provides the opportunity for Coffee modules
+to provide metric information.
+The interceptor within it is capable of handling Coffee modules and is extensible.
+
+== coffee-core
+Contains a metric-independent `Noop*` implementation that is activated by default
+when no specific metric implementation is plugged in.
+
+== coffee-module-redis
+The module <<coffee_module_redis-metrics,contains metrics>>
+that can be activated based on the metric implementation:
+
+.pom.xml
+[source,xml]
+----
+<dependency>
+    <groupId>hu.icellmobilsoft.coffee</groupId>
+    <artifactId>coffee-module-redis</artifactId>
+</dependency>
+
+<dependency>
+    <groupId>hu.icellmobilsoft.coffee</groupId>
+    <artifactId>coffee-module-mp-micrometer</artifactId> <1>
+</dependency>
+<!-- or -->
+<dependency>
+    <groupId>hu.icellmobilsoft.coffee</groupId>
+    <artifactId>coffee-module-mp-metrics</artifactId> <2>
+</dependency>
+----
+<1> Micrometer metric implementation
+<2> Microprofile-metrics metric implementation
+
+
+
+
