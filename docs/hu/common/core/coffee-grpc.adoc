@@ -141,7 +141,7 @@ Ehhez csak a maven dependency bekötése szükséges:
 </dependency>
 <dependency>
     <groupId>hu.icellmobilsoft.coffee</groupId>
-    <artifactId>coffee-grpc-metrics-impl</artifactId>
+    <artifactId>coffee-grpc-metrics-mpmetrics</artifactId>
 </dependency>
 ----
 
@@ -154,7 +154,7 @@ Ehhez csak a maven dependency bekötése szükséges:
 </dependency>
 <dependency>
     <groupId>hu.icellmobilsoft.coffee</groupId>
-    <artifactId>coffee-grpc-metrics-impl</artifactId>
+    <artifactId>coffee-grpc-metrics-mpmetrics</artifactId>
 </dependency>
 ----
 

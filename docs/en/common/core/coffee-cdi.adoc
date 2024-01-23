@@ -10,3 +10,5 @@ include::coffee-cdi/logger.adoc[leveloffset=+1]
 include::coffee-cdi/config.adoc[leveloffset=+1]
 
 include::coffee-cdi/trace.adoc[leveloffset=+1]
+
+include::coffee-cdi/metrics.adoc[leveloffset=+1]

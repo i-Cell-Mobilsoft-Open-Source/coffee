@@ -2,10 +2,48 @@
 
 coff:ee v2.4.0 -> v2.5.0 migrációs leírás, újdonságok, változások leírása
 
-=== Global
+== Global
 
 * jandex-maven-plugin - indexelésből kikerültek a test osztályok
 
+== Metrika függetlenítése
+Több modult érintő fejlesztés, aminek a célja hogy a metrika több fajta implementációval
+tudjon működni.
+
+=== coffee-jpa & coffee-module-redis
+
+* A modulok függetlenítve volt a metrika implementációjától,
+szabadon választható a microprofile-metrics vagy micrometer között
+
+==== Migration
+
+Dependency szinten kell megválasztani milyen metrika implementáció-t használjon a szervice,
+egyébként minden más visszafelé kompatibilis.
+
+[source,xml]
+----
+<dependency>
+    <groupId>hu.icellmobilsoft.coffee</groupId>
+    <artifactId>coffee-module-mp-micrometer</artifactId> <1>
+</dependency>
+<!-- vagy -->
+<dependency>
+    <groupId>hu.icellmobilsoft.coffee</groupId>
+    <artifactId>coffee-module-mp-metrics</artifactId> <2>
+</dependency>
+----
+<1> Micrometer metrika implementáció
+<2> Microprofile-metrics metrika implementáció
+
+=== coffee-grpc-metrics-impl
+
+Átnevezés coffee-grpc-metrics-impl -> coffee-grpc-metrics-mpmetrics
+
+==== Migration
+
+Név változáson kívül a változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+== Egyéb fejlesztések
 
 === coffee-tool
 
@@ -53,6 +91,14 @@ mely kifejezetten String értékekkel dolgozik.
 === coffee-jpa
 
 * `@Dependent` annotáció hozzáadva ehhez az osztályhoz: `hu.icellmobilsoft.coffee.jpa.sql.batch.BatchService`
+
+==== Migration
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+=== coffee-module-configdoc
+
+* Ha egy `@ConfigDoc` annotáció előtt nem szerepelt java doc, akkor fordítás során nullpointer keletkezett.
 
 ==== Migration
 
