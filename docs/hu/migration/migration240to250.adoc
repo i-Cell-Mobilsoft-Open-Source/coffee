@@ -95,3 +95,11 @@ mely kifejezetten String értékekkel dolgozik.
 ==== Migration
 
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+=== coffee-module-configdoc
+
+* Ha egy `@ConfigDoc` annotáció előtt nem szerepelt java doc, akkor fordítás során nullpointer keletkezett.
+
+==== Migration
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.

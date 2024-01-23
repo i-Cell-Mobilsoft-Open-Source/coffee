@@ -103,3 +103,11 @@ which works explicitly with String values.
 ==== Migration
 
 Changes are backwards compatible doesnt need any migration.
+
+=== coffee-module-configdoc
+
+* Nullpointer thrown during compile time when javadoc was missing before annotation `@ConfigDoc`.
+
+==== Migration
+
+Changes are backwards compatible doesnt need any migration.
