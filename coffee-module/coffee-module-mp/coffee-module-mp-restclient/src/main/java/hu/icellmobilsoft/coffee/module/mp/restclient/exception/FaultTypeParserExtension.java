@@ -73,7 +73,7 @@ public class FaultTypeParserExtension implements Extension {
         AnnotatedType<T> annotatedType = processAnnotatedType.getAnnotatedType();
         Class<T> javaClass = annotatedType.getJavaClass();
         if ((annotatedType.isAnnotationPresent(FaultTypeCode.class) || javaClass.isAnnotationPresent(FaultTypeCode.class))
-                && !InvocationHandler.class.isAssignableFrom(javaClass)) {
+                && !InvocationHandler.class.isAssignableFrom(javaClass) && javaClass.isEnum()) {
             Logger.getLogger(FaultTypeParserExtension.class)
                     .debug("IFaultType implementation found:[{0}], registering as fault type enum", javaClass);
             synchronized (FaultTypeParserExtension.class) {
