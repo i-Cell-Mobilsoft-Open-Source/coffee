@@ -40,12 +40,12 @@ public class FaultTypeParser {
     }
 
     /**
-     * Parse fault type String into an implementation of {@link hu.icellmobilsoft.coffee.dto.error.IFaultType}. If none match returns
+     * Parse fault type String into Enum. If none match returns
      * {@link CoffeeFaultType#OPERATION_FAILED}.
      *
      * @param faultTypeString
      *            {@link String} to parse.
-     * @return {@link hu.icellmobilsoft.coffee.dto.error.IFaultType} parsed from input string.
+     * @return The Enum value parsed from input string.
      */
     @SuppressWarnings({ "rawtypes", "unchecked" })
     public static Enum<?> parseFaultType(String faultTypeString) {

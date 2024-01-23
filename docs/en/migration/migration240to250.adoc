@@ -60,8 +60,9 @@ Changes are backwards compatible doesnt need any migration.
 
 === coffee-module-mp-restclient
 
-* FaultTypeParserExtension has been modified, it looks for FaultType enums annotated with `@hu.icellmobilsoft.coffee.cdi.annotation.FaultTypeCode`  
+* FaultTypeParserExtension has been modified, it looks for FaultType enums annotated with `@hu.icellmobilsoft.coffee.cdi.annotation.FaultTypeCode`.
+* IFaultType interface marked as deprecated. (Use the `@FaultTypeCode` instead)  
 
 ==== Migration
 
-If you have a FaultType enum in your project, annotate it with the `@FaultTypeCode` annotation.
+If you have a FaultType enum in your project, annotate it with the `@FaultTypeCode` annotation and remove the `IFaultType` interface. `beans.xml` must be existed in the META-INF directory!

@@ -29,7 +29,7 @@ import jakarta.enterprise.context.NormalScope;
 import jakarta.inject.Qualifier;
 
 /**
- * FaultType annotation for managing faultcodes in CDI.
+ * FaultType annotation for managing faultcodes in CDI. Important! beans.xml must be presented in the resources/META-INF
  *
  * @author tamas.cserhati
  * @since 2.5.0
