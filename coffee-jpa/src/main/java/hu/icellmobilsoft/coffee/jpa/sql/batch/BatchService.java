@@ -46,6 +46,7 @@ import java.util.Map;
 import java.util.TimeZone;
 import java.util.stream.Collectors;
 
+import jakarta.enterprise.context.Dependent;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 
@@ -90,6 +91,7 @@ import hu.icellmobilsoft.coffee.tool.utils.string.RandomUtil;
  * @author csaba.balogh
  * @since 1.0.0
  */
+@Dependent
 public class BatchService {
 
     /** Constant <code>BATCH_SIZE=100</code> */
