@@ -30,9 +30,10 @@
         <version.org.apache.httpcomponents.httpclient>4.5.13</version.org.apache.httpcomponents.httpclient>
         <version.org.apache.httpcomponents.httpcore>4.4.15</version.org.apache.httpcomponents.httpcore>
 
-
         <version.io.etcd.jetcd-core>0.7.5</version.io.etcd.jetcd-core>
         <version.io.grpc.version>1.51.0</version.io.grpc.version>
+
+        <version.io.micrometer>1.9.13</version.io.micrometer>
     </properties>
 
 
@@ -261,6 +262,13 @@
                     </exclusion>
                 </exclusions>
                 <version>${version.io.etcd.jetcd-core}</version>
+            </dependency>
+
+            <!-- micrometer -->
+            <dependency>
+                <groupId>io.micrometer</groupId>
+                <artifactId>micrometer-core</artifactId>
+                <version>${version.io.micrometer}</version>
             </dependency>
 
         </dependencies>
