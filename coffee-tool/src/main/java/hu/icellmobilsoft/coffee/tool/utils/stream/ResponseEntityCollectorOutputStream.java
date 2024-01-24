@@ -31,6 +31,7 @@ import java.io.OutputStream;
  */
 public class ResponseEntityCollectorOutputStream extends OutputStream {
 
+    private static final int DEFAULT_INITIAL_BYTE_ARRAY_SIZE = 1024;
     private final OutputStream originalResponseStream;
     private final ByteArrayOutputStream entityLog;
     private int logCollectLimit;
@@ -46,7 +47,7 @@ public class ResponseEntityCollectorOutputStream extends OutputStream {
     public ResponseEntityCollectorOutputStream(OutputStream originalResponseStream, int logCollectLimit) {
         this.originalResponseStream = originalResponseStream;
         this.logCollectLimit = logCollectLimit;
-        entityLog = new ByteArrayOutputStream(logCollectLimit);
+        entityLog = new ByteArrayOutputStream(logCollectLimit > 0 ? logCollectLimit : DEFAULT_INITIAL_BYTE_ARRAY_SIZE);
     }
 
     /**
@@ -67,11 +68,12 @@ public class ResponseEntityCollectorOutputStream extends OutputStream {
     }
 
     /**
-     * Returns the entity in {@link String} format.
+     * Returns the entity as byte array
      *
-     * @return Entity text
+     * @return Entity byte array
      */
     public byte[] getEntity() {
         return entityLog.toByteArray();
     }
 }
+
