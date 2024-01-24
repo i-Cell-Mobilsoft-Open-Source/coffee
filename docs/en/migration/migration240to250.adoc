@@ -15,6 +15,8 @@ the goal of which is to implement metrics with several types be able to function
 
 * The modules were independent from the metric implementation,
 you can freely choose between microprofile-metrics or micrometer
+* moved `hu.icellmobilsoft.coffee.jpa.health.DatabaseHealthConstant.DEFAULT_DATASOURCE_NAME` ->
+`hu.icellmobilsoft.coffee.cdi.config.IConfigKey.DATASOURCE_DEFAULT_NAME_VALUE`
 
 ==== Migration
 

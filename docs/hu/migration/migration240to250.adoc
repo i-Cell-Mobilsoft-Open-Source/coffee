@@ -14,6 +14,8 @@ tudjon működni.
 
 * A modulok függetlenítve volt a metrika implementációjától,
 szabadon választható a microprofile-metrics vagy micrometer között
+* átmozgatva `hu.icellmobilsoft.coffee.jpa.health.DatabaseHealthConstant.DEFAULT_DATASOURCE_NAME` ->
+`hu.icellmobilsoft.coffee.cdi.config.IConfigKey.DATASOURCE_DEFAULT_NAME_VALUE`
 
 ==== Migration
 
