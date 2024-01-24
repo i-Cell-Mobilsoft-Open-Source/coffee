@@ -136,11 +136,35 @@ public class ManagedChannelProducer {
         }
 
         // tracing
-        Instance<ITracesInterceptor> instanceTracing = CDI.current().select(ITracesInterceptor.class, new ClientTracesInterceptorQualifier.Literal());
-        if (instanceTracing.isResolvable()) {
-            channelBuilder.intercept((ClientInterceptor) instanceTracing.get());
-        } else {
-            log.warn("Could not find Tracing interceptor implementation for gRPC client.");
+        // add telemetry interceptor
+        boolean telemetryTracing = addTelemetryClientInterceptor(channelBuilder); // 1
+        if (!telemetryTracing) {
+            log.warn("Telemetry client interceptor for gRPC not found, trying to resolve opentracing client interceptor...");
+            // add opentracing legacy interceptor
+            if (!addOpenTracingClientInterceptor(channelBuilder)) {
+                log.warn("Cant find any client tracing interceptor implementation for gRPC.");
+            }
         }
     }
+
+    private boolean addOpenTracingClientInterceptor(ManagedChannelBuilder<?> channelBuilder) {
+        Instance<ITracesInterceptor> instance = CDI.current().select(ITracesInterceptor.class, new ClientTracesInterceptorQualifier.Literal());
+        if (instance.isResolvable()) {
+            channelBuilder.intercept((ClientInterceptor) instance.get());
+            log.info("Opentracing client interceptor implementation for gRPC server activated.");
+            return true;
+        }
+        return false;
+    }
+
+    private boolean addTelemetryClientInterceptor(ManagedChannelBuilder<?> channelBuilder) {
+        Instance<ClientInterceptor> instance = CDI.current().select(ClientInterceptor.class, new ClientTracesInterceptorQualifier.Literal());
+        if (instance.isResolvable()) {
+            channelBuilder.intercept((ClientInterceptor) instance.get());
+            log.info("Telemetry client interceptor implementation for gRPC server activated.");
+            return true;
+        }
+        return false;
+    }
+
 }

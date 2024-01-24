@@ -31,13 +31,13 @@ import jakarta.inject.Qualifier;
  * Qualifier for dynamic Tracing integration between coffee modules
  * 
  * @author czenczl
- * @since 2.1.0
+ * @since 2.5.0
  *
  */
 @Qualifier
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER, ElementType.TYPE })
-public @interface OpenTraceHandlerQualifier {
+public @interface TraceHandlerQualifier {
 
     /**
      * Literal for injection
@@ -45,7 +45,7 @@ public @interface OpenTraceHandlerQualifier {
      * @author czenczl
      * @since 2.1.0
      */
-    public static final class Literal extends AnnotationLiteral<OpenTraceHandlerQualifier> implements OpenTraceHandlerQualifier {
+    public static final class Literal extends AnnotationLiteral<TraceHandlerQualifier> implements TraceHandlerQualifier {
 
         private static final long serialVersionUID = 1L;
 

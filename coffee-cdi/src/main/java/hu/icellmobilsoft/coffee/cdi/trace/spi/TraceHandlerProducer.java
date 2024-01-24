@@ -32,15 +32,15 @@ import hu.icellmobilsoft.coffee.cdi.trace.annotation.Traced;
  * Produces the underlying tracing implementation if exists, otherwise creates a default implementation without trace handling
  * 
  * @author czenczl
- * @since 2.1.0
+ * @since 2.5.0
  */
 @ApplicationScoped
-public class OpenTraceHandlerProducer {
+public class TraceHandlerProducer {
 
     /**
      * Default constructor, constructs a new object.
      */
-    public OpenTraceHandlerProducer() {
+    public TraceHandlerProducer() {
         super();
     }
 
@@ -51,14 +51,14 @@ public class OpenTraceHandlerProducer {
      */
     @Produces
     @ApplicationScoped
-    public IOpenTraceHandler produceOpenTraceHandler() {
-        Instance<IOpenTraceHandler> openTraceHandler = CDI.current().select(IOpenTraceHandler.class, new OpenTraceHandlerQualifier.Literal());
+    public ITraceHandler produceTraceHandler() {
+        Instance<ITraceHandler> openTraceHandler = CDI.current().select(ITraceHandler.class, new TraceHandlerQualifier.Literal());
         if (openTraceHandler.isResolvable()) {
-            return (IOpenTraceHandler) openTraceHandler.get();
+            return (ITraceHandler) openTraceHandler.get();
         }
 
         // default implementation
-        IOpenTraceHandler noTraceHandler = new IOpenTraceHandler() {
+        ITraceHandler noTraceHandler = new ITraceHandler() {
             @Override
             public <T> T runWithTrace(Supplier<T> function, Traced traced, String operation) {
                 return function.get();

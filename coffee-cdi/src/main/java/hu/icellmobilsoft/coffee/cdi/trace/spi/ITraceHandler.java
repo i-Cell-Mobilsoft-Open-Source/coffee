@@ -24,12 +24,12 @@ import java.util.function.Supplier;
 import hu.icellmobilsoft.coffee.cdi.trace.annotation.Traced;
 
 /**
- * Marker type to handle dynamic opentracing implementation
+ * Marker type to handle dynamic tracing implementation
  * 
  * @author czenczl
- * @since 2.1.0
+ * @since 2.5.0
  */
-public interface IOpenTraceHandler {
+public interface ITraceHandler {
 
     /**
      * Wrapping function in trace context

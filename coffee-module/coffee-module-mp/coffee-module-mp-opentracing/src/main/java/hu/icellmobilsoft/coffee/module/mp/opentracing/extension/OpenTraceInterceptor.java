@@ -142,7 +142,7 @@ public class OpenTraceInterceptor {
     }
 
     private boolean checkJedisComponent(String component) {
-        return StringUtils.equals(component, hu.icellmobilsoft.coffee.cdi.trace.constants.Tags.Redis.Jedis.COMPONENT);
+        return StringUtils.equals(component, hu.icellmobilsoft.coffee.cdi.trace.constants.SpanAttribute.Redis.Jedis.COMPONENT);
     }
 
 }

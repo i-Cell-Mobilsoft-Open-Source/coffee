@@ -21,7 +21,7 @@ package hu.icellmobilsoft.coffee.grpc.opentracing.impl.common;
 
 import java.util.StringJoiner;
 
-import hu.icellmobilsoft.coffee.cdi.trace.constants.Tags.Grpc;
+import hu.icellmobilsoft.coffee.cdi.trace.constants.SpanAttribute.Grpc;
 import io.grpc.MethodDescriptor;
 import io.opentracing.Tracer;
 import io.opentracing.Tracer.SpanBuilder;
