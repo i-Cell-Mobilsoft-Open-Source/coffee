@@ -19,6 +19,7 @@
  */
 package hu.icellmobilsoft.coffee.tool.utils.stream;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
@@ -31,7 +32,7 @@ import java.io.OutputStream;
 public class ResponseEntityCollectorOutputStream extends OutputStream {
 
     private final OutputStream originalResponseStream;
-    private final StringBuilder entityLog = new StringBuilder();
+    private final ByteArrayOutputStream entityLog;
     private int logCollectLimit;
 
     /**
@@ -45,6 +46,7 @@ public class ResponseEntityCollectorOutputStream extends OutputStream {
     public ResponseEntityCollectorOutputStream(OutputStream originalResponseStream, int logCollectLimit) {
         this.originalResponseStream = originalResponseStream;
         this.logCollectLimit = logCollectLimit;
+        entityLog = new ByteArrayOutputStream(logCollectLimit);
     }
 
     /**
@@ -58,7 +60,7 @@ public class ResponseEntityCollectorOutputStream extends OutputStream {
     public void write(int b) throws IOException {
         if (logCollectLimit != 0) {
             // logoláshoz gyűjtjük a stream tartalmát amíg még nem értük el a limitet
-            entityLog.append((char) b);
+            entityLog.write(b);
             logCollectLimit--;
         }
         originalResponseStream.write(b);
@@ -69,7 +71,7 @@ public class ResponseEntityCollectorOutputStream extends OutputStream {
      *
      * @return Entity text
      */
-    public String getEntityText() {
-        return entityLog.toString();
+    public byte[] getEntity() {
+        return entityLog.toByteArray();
     }
 }

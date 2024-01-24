@@ -59,6 +59,7 @@ Without rename changes are backwards compatible doesnt need any migration.
 * Added SHA3-512 message digest to `hu.icellmobilsoft.coffee.tool.utils.string.EncodeUtil` class,
 deprecating old `Sha512(String str)`.
 * In MavenURLHandler class, fix getting resource over class to current thread-based getting
+* The `ResponseEntityCollectorOutputStream` has been modified. Previously, it stored characters represented by multiple bytes (e.g., UTF-8 Hungarian accented characters) by casting them to char, which could result in incorrect text. From now on, we store them as bytes. It is the responsibility of the caller to use the appropriate character encoding when converting these bytes into text.
 
 ==== Migration
 

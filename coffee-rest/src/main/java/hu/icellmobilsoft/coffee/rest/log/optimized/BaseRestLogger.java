@@ -151,7 +151,7 @@ public abstract class BaseRestLogger implements ContainerRequestFilter, WriterIn
                 // a saját OutputStream-et állítjuk be a context-be, ami majd az entity stream-be írásakor gyűjti azt a log-olás számára
                 context.setOutputStream(responseEntityCollectorOutputStream);
                 context.proceed();
-                entity = responseEntityCollectorOutputStream.getEntityText().getBytes(StandardCharsets.UTF_8);
+                entity = responseEntityCollectorOutputStream.getEntity();
             } else {
                 context.proceed();
             }
