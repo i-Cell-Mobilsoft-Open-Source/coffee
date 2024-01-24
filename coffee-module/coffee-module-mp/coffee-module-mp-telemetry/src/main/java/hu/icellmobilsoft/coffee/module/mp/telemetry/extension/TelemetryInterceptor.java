@@ -74,7 +74,7 @@ public class TelemetryInterceptor {
     @AroundInvoke
     public Object wrap(InvocationContext ctx) throws Exception {
         if (ctx == null) {
-            LOGGER.debug("ctx is null, skip OpenTraceInterceptor");
+            LOGGER.debug("ctx is null, skip TelemetryInterceptor");
         }
 
         Traced traced = getTracedAnnotation(ctx);
