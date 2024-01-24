@@ -19,6 +19,7 @@
  */
 package hu.icellmobilsoft.coffee.module.mp.restclient.exception;
 
+import java.lang.reflect.InvocationHandler;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -33,12 +34,12 @@ import jakarta.enterprise.inject.spi.AnnotatedType;
 import jakarta.enterprise.inject.spi.Extension;
 import jakarta.enterprise.inject.spi.ProcessAnnotatedType;
 
+import hu.icellmobilsoft.coffee.cdi.annotation.FaultTypeCode;
 import hu.icellmobilsoft.coffee.dto.error.IFaultType;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
 
 /**
- * Extension for processing IFaultType implementations. In order to discover an implementation beans.xml must be present in the implementation's
- * module.
+ * Extension for processing FaultType enums. In order to discover an implementation beans.xml must be present in the implementation's module.
  *
  * @author mark.petrenyi
  * @since 1.3.0
@@ -47,7 +48,9 @@ public class FaultTypeParserExtension implements Extension {
 
     private static final int DEFAULT_FAULT_TYPE_PRIORITY = 500;
 
+    @SuppressWarnings("rawtypes")
     private static List<Class<? extends Enum>> faultTypeClasses = new ArrayList<>();
+    @SuppressWarnings("rawtypes")
     private static volatile Map<Class<? extends Enum>, Integer> faultTypePriorityMap = new HashMap<>();
 
     /**
@@ -65,12 +68,14 @@ public class FaultTypeParserExtension implements Extension {
      * @param processAnnotatedType
      *            the process annotated type
      */
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     <T> void processAnnotatedType(@Observes ProcessAnnotatedType<T> processAnnotatedType) {
         AnnotatedType<T> annotatedType = processAnnotatedType.getAnnotatedType();
         Class<T> javaClass = annotatedType.getJavaClass();
-        if (IFaultType.class.isAssignableFrom(javaClass) && javaClass.isEnum()) {
-            Logger.getLogger(FaultTypeParserExtension.class).debug("IFaultType implementation found:[{0}], registering as fault type enum",
-                    javaClass);
+        if ((annotatedType.isAnnotationPresent(FaultTypeCode.class) || javaClass.isAnnotationPresent(FaultTypeCode.class))
+                && !InvocationHandler.class.isAssignableFrom(javaClass) && javaClass.isEnum()) {
+            Logger.getLogger(FaultTypeParserExtension.class)
+                    .debug("IFaultType implementation found:[{0}], registering as fault type enum", javaClass);
             synchronized (FaultTypeParserExtension.class) {
                 faultTypePriorityMap.put((Class<? extends Enum>) javaClass, getPriority(annotatedType));
             }
@@ -83,10 +88,14 @@ public class FaultTypeParserExtension implements Extension {
      * @param afterTypeDiscovery
      *            the after type discovery
      */
+    @SuppressWarnings("rawtypes")
     void afterTypeDiscovery(@Observes AfterTypeDiscovery afterTypeDiscovery) {
         synchronized (FaultTypeParserExtension.class) {
-            List<Class<? extends Enum>> sortedFaultTypes = faultTypePriorityMap.entrySet().stream().sorted(Map.Entry.comparingByValue())
-                    .map(Map.Entry::getKey).collect(Collectors.toList());
+            List<Class<? extends Enum>> sortedFaultTypes = faultTypePriorityMap.entrySet()
+                    .stream()
+                    .sorted(Map.Entry.comparingByValue())
+                    .map(Map.Entry::getKey)
+                    .collect(Collectors.toList());
             faultTypeClasses.addAll(sortedFaultTypes);
         }
     }
@@ -105,6 +114,7 @@ public class FaultTypeParserExtension implements Extension {
      *
      * @return the fault type classes
      */
+    @SuppressWarnings("rawtypes")
     public static Collection<Class<? extends Enum>> getFaultTypeClasses() {
         return List.copyOf(faultTypeClasses);
     }

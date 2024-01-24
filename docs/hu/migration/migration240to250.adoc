@@ -125,3 +125,12 @@ A változtatások nem eredményeznek átállási munkálatokat, visszafelé komp
 ==== Migration
 
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+=== coffee-module-mp-restclient
+
+* FaultTypeParserExtension módosult, ezentúl azokat az enumokat tölti be, melyeken pluszban szerepel a `@hu.icellmobilsoft.coffee.cdi.annotation.FaultTypeCode` annotáció.
+* Az IFaultType interfész deprecated-dé vált.
+
+==== Migration
+
+Ha van FaultType enumod a projekteden, add hozzá @`@FaultTypeCode` annotációt és töröld az `IFaultType` interfészt. A beans.xml fájlnak ott kell lennie a META-INF könyvtárban!

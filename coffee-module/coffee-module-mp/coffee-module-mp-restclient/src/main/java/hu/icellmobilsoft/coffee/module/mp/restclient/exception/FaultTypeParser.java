@@ -31,30 +31,32 @@ import hu.icellmobilsoft.coffee.se.logging.Logger;
  * @since 1.2.0
  */
 public class FaultTypeParser {
+
     /**
      * Default constructor, constructs a new object.
      */
-    public FaultTypeParser() {
+    private FaultTypeParser() {
         super();
     }
 
     /**
-     * Parse fault type String into an implementation of {@link hu.icellmobilsoft.coffee.dto.error.IFaultType}. If none match returns
+     * Parse fault type String into Enum. If none match returns
      * {@link CoffeeFaultType#OPERATION_FAILED}.
      *
      * @param faultTypeString
      *            {@link String} to parse.
-     * @return {@link hu.icellmobilsoft.coffee.dto.error.IFaultType} parsed from input string.
+     * @return The Enum value parsed from input string.
      */
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     public static Enum<?> parseFaultType(String faultTypeString) {
+
         for (Class<? extends Enum> faultTypeClass : FaultTypeParserExtension.getFaultTypeClasses()) {
             Enum<?> fault = EnumUtils.getEnum(faultTypeClass, faultTypeString);
             if (fault != null) {
                 return fault;
             }
         }
-        Logger.getLogger(FaultTypeParser.class)
-                .warn("FaultType not exists in enum for messages, faultType: [" + faultTypeString + "]");
+        Logger.getLogger(FaultTypeParser.class).warn("FaultType not exists in enum for messages, faultType: [" + faultTypeString + "]");
         return CoffeeFaultType.OPERATION_FAILED;
     }
 }

@@ -19,7 +19,7 @@
  */
 package hu.icellmobilsoft.coffee.dto.exception.enums;
 
-import hu.icellmobilsoft.coffee.dto.error.IFaultType;
+import hu.icellmobilsoft.coffee.cdi.annotation.FaultTypeCode;
 
 /**
  * Coffee jakartaEE solution set container for Exceptions type
@@ -27,7 +27,8 @@ import hu.icellmobilsoft.coffee.dto.error.IFaultType;
  * @author imre.scheffer
  * @since 1.0.0
  */
-public enum CoffeeFaultType implements IFaultType<CoffeeFaultType> {
+@FaultTypeCode
+public enum CoffeeFaultType {
 
     /**
      * Generic, not defined exception
