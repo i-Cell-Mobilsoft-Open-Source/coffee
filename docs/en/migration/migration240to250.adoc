@@ -121,15 +121,14 @@ Changes are backwards compatible doesnt need any migration.
 
 If you have a FaultType enum in your project, annotate it with the `@FaultTypeCode` annotation and remove the `IFaultType` interface. `beans.xml` must be existed in the META-INF directory!
 
-== Trace függetlenítése
-Több modult érintő fejlesztés, aminek a célja hogy a tracing több fajta implementációval
-tudjon működni.
+== Trace detachment
+Development involving multiple modules with the aim of enabling tracing to work with various implementations.
 
 === coffee-cdi
 
 * Renaming hu.icellmobilsoft.coffee.cdi.trace.constants.Tags to hu.icellmobilsoft.coffee.cdi.trace.constants.SpanAttribute
 * Received basic OpenTelemetry standard constants.
-* The @Traced annotation provides metrics with the default INTERNAL kind type if not specified when using the annotation.
+* The @Traced annotation provides trace with the default INTERNAL kind type if not specified when using the annotation.
 * Renaming hu.icellmobilsoft.coffee.cdi.trace.spi.IOpenTraceHandler to hu.icellmobilsoft.coffee.cdi.trace.spi.ITraceHandler
 
 ==== Migration
@@ -162,3 +161,11 @@ You should inject `ITraceHandler` instead of `IOpenTraceHandler`.
 ==== Migration
 
 * Use the dependency coffee-grpc-tracing-opentracing instead of coffee-grpc-opentracing-impl
+
+=== coffee-grpc-traces-api
+
+* `ITracesInterceptor` has been discontinued for simpler interceptor search.
+
+==== Migration
+
+* When creating a custom interceptor, use the built-in `io.grpc.ServerInterceptor` instead of `ITracesInterceptor`.

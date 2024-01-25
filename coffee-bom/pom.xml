@@ -385,7 +385,7 @@
 			</dependency>
 			<dependency>
 				<groupId>hu.icellmobilsoft.coffee</groupId>
-				<artifactId>coffee-grpc-traces-telemetry</artifactId>
+				<artifactId>coffee-grpc-traces-mptelemetry</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>

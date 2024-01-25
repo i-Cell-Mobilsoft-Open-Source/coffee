@@ -52,7 +52,6 @@ import hu.icellmobilsoft.coffee.grpc.server.config.IGrpcServerConfig;
 import hu.icellmobilsoft.coffee.grpc.server.interceptor.ErrorHandlerInterceptor;
 import hu.icellmobilsoft.coffee.grpc.server.interceptor.ServerRequestInterceptor;
 import hu.icellmobilsoft.coffee.grpc.server.interceptor.ServerResponseInterceptor;
-import hu.icellmobilsoft.coffee.grpc.traces.api.ITracesInterceptor;
 import hu.icellmobilsoft.coffee.grpc.traces.api.ServerTracesInterceptorQualifier;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
 import io.grpc.BindableService;
@@ -230,37 +229,12 @@ public class GrpcServerManager {
             log.warn("Could not find Metric interceptor implementation for gRPC server.");
         }
 
-        // tracing
-        // add telemetry interceptor
-        boolean telemetryTracing = addTelemetryServerInterceptor(serverBuilder); // 1
-        if (!telemetryTracing) {
-            log.warn("Telemetry server interceptor for gRPC not found, trying to resolve opentracing server interceptor...");
-            // add opentracing legacy interceptor
-            if (!addOpenTracingServerInterceptor(serverBuilder)) {
-                log.warn("Cant find any server tracing interceptor implementation for gRPC.");
-            }
+        Instance<ServerInterceptor> instanceTracing = CDI.current().select(ServerInterceptor.class, new ServerTracesInterceptorQualifier.Literal());
+        if (instanceTracing.isResolvable()) {
+            serverBuilder.intercept((ServerInterceptor) instanceTracing.get()); // 1
+        } else {
+            log.warn("Could not find tracing interceptor implementation for gRPC server.");
         }
-
-    }
-
-    private boolean addOpenTracingServerInterceptor(ServerBuilder<?> serverBuilder) {
-        Instance<ITracesInterceptor> instance = CDI.current().select(ITracesInterceptor.class, new ServerTracesInterceptorQualifier.Literal());
-        if (instance.isResolvable()) {
-            serverBuilder.intercept((ServerInterceptor) instance.get());
-            log.info("Opentracing server interceptor implementation for gRPC server activated.");
-            return true;
-        }
-        return false;
-    }
-
-    private boolean addTelemetryServerInterceptor(ServerBuilder<?> serverBuilder) {
-        Instance<ServerInterceptor> instance = CDI.current().select(ServerInterceptor.class, new ServerTracesInterceptorQualifier.Literal());
-        if (instance.isResolvable()) {
-            serverBuilder.intercept((ServerInterceptor) instance.get());
-            log.info("Telemetry server interceptor implementation for gRPC server activated.");
-            return true;
-        }
-        return false;
     }
 
     /**

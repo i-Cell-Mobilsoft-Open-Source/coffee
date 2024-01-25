@@ -40,7 +40,6 @@ import hu.icellmobilsoft.coffee.grpc.client.interceptor.ClientResponseIntercepto
 import hu.icellmobilsoft.coffee.grpc.metrics.api.ClientMetricsInterceptorQualifier;
 import hu.icellmobilsoft.coffee.grpc.metrics.api.IMetricsInterceptor;
 import hu.icellmobilsoft.coffee.grpc.traces.api.ClientTracesInterceptorQualifier;
-import hu.icellmobilsoft.coffee.grpc.traces.api.ITracesInterceptor;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
 import hu.icellmobilsoft.coffee.tool.utils.annotation.AnnotationUtil;
 import io.grpc.ClientInterceptor;
@@ -136,35 +135,11 @@ public class ManagedChannelProducer {
         }
 
         // tracing
-        // add telemetry interceptor
-        boolean telemetryTracing = addTelemetryClientInterceptor(channelBuilder); // 1
-        if (!telemetryTracing) {
-            log.warn("Telemetry client interceptor for gRPC not found, trying to resolve opentracing client interceptor...");
-            // add opentracing legacy interceptor
-            if (!addOpenTracingClientInterceptor(channelBuilder)) {
-                log.warn("Cant find any client tracing interceptor implementation for gRPC.");
-            }
+        Instance<ClientInterceptor> instanceTracing = CDI.current().select(ClientInterceptor.class, new ClientTracesInterceptorQualifier.Literal());
+        if (instanceTracing.isResolvable()) {
+            channelBuilder.intercept((ClientInterceptor) instanceTracing.get());
+        } else {
+            log.warn("Could not find Tracing interceptor implementation for gRPC client.");
         }
     }
-
-    private boolean addOpenTracingClientInterceptor(ManagedChannelBuilder<?> channelBuilder) {
-        Instance<ITracesInterceptor> instance = CDI.current().select(ITracesInterceptor.class, new ClientTracesInterceptorQualifier.Literal());
-        if (instance.isResolvable()) {
-            channelBuilder.intercept((ClientInterceptor) instance.get());
-            log.info("Opentracing client interceptor implementation for gRPC server activated.");
-            return true;
-        }
-        return false;
-    }
-
-    private boolean addTelemetryClientInterceptor(ManagedChannelBuilder<?> channelBuilder) {
-        Instance<ClientInterceptor> instance = CDI.current().select(ClientInterceptor.class, new ClientTracesInterceptorQualifier.Literal());
-        if (instance.isResolvable()) {
-            channelBuilder.intercept((ClientInterceptor) instance.get());
-            log.info("Telemetry client interceptor implementation for gRPC server activated.");
-            return true;
-        }
-        return false;
-    }
-
 }

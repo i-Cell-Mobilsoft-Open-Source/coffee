@@ -121,7 +121,7 @@ tudjon működni.
 
 * Átnevezés hu.icellmobilsoft.coffee.cdi.trace.constants.Tags -> hu.icellmobilsoft.coffee.cdi.trace.constants.SpanAttribute
 * Alap opentelemetry standard constansokat kapott.
-* `@Traced` annotáció default `INTERNAL` kind típussal szolgáltat metrikát amennyiben nem kerül megadásra az annotáció használatánál.
+* `@Traced` annotáció default `INTERNAL` kind típussal szolgáltat trace-t amennyiben nem kerül megadásra az annotáció használatánál.
 * Átnevezés hu.icellmobilsoft.coffee.cdi.trace.spi.IOpenTraceHandler -> hu.icellmobilsoft.coffee.cdi.trace.spi.ITraceHandler
 
 ==== Migration
@@ -155,3 +155,11 @@ Az `IOpenTraceHandler` inject helyett `ITraceHandler`-t kell injectálni.
 ==== Migration
 
 * dependency coffee-grpc-opentracing-impl helyett coffee-grpc-tracing-opentracing
+
+=== coffee-grpc-traces-api
+
+* ITracesInterceptor megszűnt, egyszerűbb interceptor keresés érdekében.
+
+==== Migration
+
+* Saját interceptor készítésekor használjuk a beépített `io.grpc.ServerInterceptor` az `ITracesInterceptor` helyett.

@@ -28,7 +28,6 @@
 			<groupId>io.opentelemetry</groupId>
 			<artifactId>opentelemetry-api</artifactId>
 			<version>${version.io.opentelemetry}</version>
-			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>io.grpc</groupId>

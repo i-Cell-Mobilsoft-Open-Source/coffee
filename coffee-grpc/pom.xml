@@ -32,6 +32,6 @@
         <module>coffee-grpc-metrics-micrometer</module>
         <module>coffee-grpc-traces-api</module>
         <module>coffee-grpc-traces-mpopentracing</module>
-        <module>coffee-grpc-traces-telemetry</module>
+        <module>coffee-grpc-traces-mptelemetry</module>
     </modules>
 </project>

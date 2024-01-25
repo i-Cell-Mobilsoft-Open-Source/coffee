@@ -38,7 +38,7 @@ A `ConfigEtcdHandler` lett annotálva, az ebben lévő metódushívások adnak t
 === coffee-grpc-traces-mpopentracing
 Az `OpenTraceInterceptor` kezeli a gRPC-n keresztül jövő trace adatokat, összeköti a többi művelettel amik a trace részei. (redis, consumerek, rest).
 
-=== coffee-grpc-traces-telemetry
+=== coffee-grpc-traces-mptelemetry
 A `GrpcServerTelemetryProducer` aktiválja a megfelelő Server és Client oldali instrumentáló interceptorokat.
 
 === coffee-deltaspike-data trace

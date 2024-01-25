@@ -24,7 +24,6 @@ import jakarta.enterprise.inject.spi.CDI;
 
 import hu.icellmobilsoft.coffee.grpc.opentracing.impl.common.AbstractOpenTraceInterceptor;
 import hu.icellmobilsoft.coffee.grpc.traces.api.ClientTracesInterceptorQualifier;
-import hu.icellmobilsoft.coffee.grpc.traces.api.ITracesInterceptor;
 import hu.icellmobilsoft.coffee.module.mp.opentracing.extension.OpenTraceResolver;
 import io.grpc.CallOptions;
 import io.grpc.Channel;
@@ -46,7 +45,7 @@ import io.opentracing.tag.Tags;
  */
 @ClientTracesInterceptorQualifier
 @Dependent
-public class OpenTraceClientInterceptor extends AbstractOpenTraceInterceptor implements ClientInterceptor, ITracesInterceptor {
+public class OpenTraceClientInterceptor extends AbstractOpenTraceInterceptor implements ClientInterceptor {
 
     /**
      * Default constructor, constructs a new object.
