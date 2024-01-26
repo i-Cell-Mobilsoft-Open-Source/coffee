@@ -309,6 +309,11 @@
 			</dependency>
 			<dependency>
 				<groupId>hu.icellmobilsoft.coffee</groupId>
+				<artifactId>coffee-module-mp-telemetry</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>hu.icellmobilsoft.coffee</groupId>
 				<artifactId>coffee-module-totp</artifactId>
 				<version>${project.version}</version>
 			</dependency>
@@ -375,7 +380,12 @@
 			</dependency>
 			<dependency>
 				<groupId>hu.icellmobilsoft.coffee</groupId>
-				<artifactId>coffee-grpc-opentracing-impl</artifactId>
+				<artifactId>coffee-grpc-traces-mpopentracing</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>hu.icellmobilsoft.coffee</groupId>
+				<artifactId>coffee-grpc-traces-mptelemetry</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>

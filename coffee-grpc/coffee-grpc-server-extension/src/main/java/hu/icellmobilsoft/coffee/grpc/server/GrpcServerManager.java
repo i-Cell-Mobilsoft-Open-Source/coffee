@@ -52,7 +52,6 @@ import hu.icellmobilsoft.coffee.grpc.server.config.IGrpcServerConfig;
 import hu.icellmobilsoft.coffee.grpc.server.interceptor.ErrorHandlerInterceptor;
 import hu.icellmobilsoft.coffee.grpc.server.interceptor.ServerRequestInterceptor;
 import hu.icellmobilsoft.coffee.grpc.server.interceptor.ServerResponseInterceptor;
-import hu.icellmobilsoft.coffee.grpc.traces.api.ITracesInterceptor;
 import hu.icellmobilsoft.coffee.grpc.traces.api.ServerTracesInterceptorQualifier;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
 import io.grpc.BindableService;
@@ -230,11 +229,11 @@ public class GrpcServerManager {
             log.warn("Could not find Metric interceptor implementation for gRPC server.");
         }
 
-        Instance<ITracesInterceptor> instanceTracing = CDI.current().select(ITracesInterceptor.class, new ServerTracesInterceptorQualifier.Literal());
+        Instance<ServerInterceptor> instanceTracing = CDI.current().select(ServerInterceptor.class, new ServerTracesInterceptorQualifier.Literal());
         if (instanceTracing.isResolvable()) {
             serverBuilder.intercept((ServerInterceptor) instanceTracing.get()); // 1
         } else {
-            log.warn("Could not find Opentracing interceptor implementation for gRPC server.");
+            log.warn("Could not find tracing interceptor implementation for gRPC server.");
         }
     }
 

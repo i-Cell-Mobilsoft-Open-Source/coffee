@@ -14,6 +14,8 @@ tudjon működni.
 
 * A modulok függetlenítve volt a metrika implementációjától,
 szabadon választható a microprofile-metrics vagy micrometer között
+* átmozgatva `hu.icellmobilsoft.coffee.jpa.health.DatabaseHealthConstant.DEFAULT_DATASOURCE_NAME` ->
+`hu.icellmobilsoft.coffee.cdi.config.IConfigKey.DATASOURCE_DEFAULT_NAME_VALUE`
 
 ==== Migration
 
@@ -52,6 +54,7 @@ Név változáson kívül a változtatások nem eredményeznek átállási munk�
 * Hozzá adva a SHA3-512 kódoló metódus a `hu.icellmobilsoft.coffee.tool.utils.string.EncodeUtil` osztályhoz,
 régi `Sha512(String str)` kivezetésre fog kerülni.
 * MavenURLHandler osztályban aktuális szál alapotú resource lekérést kerül.
+* A `ResponseEntityCollectorOutputStream` módosításra került, a több byte-on ábrázolt karaktereket (pl. UTF-8 magyar ékezetes karakterek) eddig karakterre castolva tárolta, ami hibás szöveget eredményezhetett. Továbbiakban byte-ként tároljuk, ennek szöveggé alakításakor a hívó fél felelőssége a megfelelő karakter kódolás használata.
 
 ==== Migration
 
@@ -112,6 +115,57 @@ A változtatások nem eredményeznek átállási munkálatokat, visszafelé komp
 ==== Migration
 
 Ha van FaultType enumod a projekteden, add hozzá @`@FaultTypeCode` annotációt és töröld az `IFaultType` interfészt. A beans.xml fájlnak ott kell lennie a META-INF könyvtárban!
+
+== Trace függetlenítése
+Több modult érintő fejlesztés, aminek a célja hogy a tracing több fajta implementációval
+tudjon működni.
+
+=== coffee-cdi
+
+* Átnevezés hu.icellmobilsoft.coffee.cdi.trace.constants.Tags -> hu.icellmobilsoft.coffee.cdi.trace.constants.SpanAttribute
+* Alap opentelemetry standard constansokat kapott.
+* `@Traced` annotáció default `INTERNAL` kind típussal szolgáltat trace-t amennyiben nem kerül megadásra az annotáció használatánál.
+* Átnevezés hu.icellmobilsoft.coffee.cdi.trace.spi.IOpenTraceHandler -> hu.icellmobilsoft.coffee.cdi.trace.spi.ITraceHandler
+
+==== Migration
+
+Dependency szinten kell megválasztani milyen tracing implementáció-t használjon a szervice,
+egyébként minden más visszafelé kompatibilis.
+
+[source,xml]
+----
+<dependency>
+    <groupId>hu.icellmobilsoft.coffee</groupId>
+    <artifactId>coffee-module-mp-opentracing</artifactId> <1>
+</dependency>
+<!-- vagy -->
+<dependency>
+    <groupId>hu.icellmobilsoft.coffee</groupId>
+    <artifactId>coffee-module-mp-telemetry</artifactId> <2>
+</dependency>
+----
+<1> microprofile-opentracing implementáció
+<2> microprofile-telemetry implementáció
+
+Amennyiben a `hu.icellmobilsoft.coffee.cdi.trace.constants.Tags` értékek voltak használva, helyette a `hu.icellmobilsoft.coffee.cdi.trace.constants.SpanAttribute` osztályban találhatók meg a konstansok.
+
+Az `IOpenTraceHandler` inject helyett `ITraceHandler`-t kell injectálni.
+
+=== coffee-grpc-opentracing-impl
+
+* Átnevezés coffee-grpc-opentracing-impl -> coffee-grpc-traces-mpopentracing
+
+==== Migration
+
+* dependency coffee-grpc-opentracing-impl helyett coffee-grpc-tracing-opentracing
+
+=== coffee-grpc-traces-api
+
+* ITracesInterceptor megszűnt, egyszerűbb interceptor keresés érdekében.
+
+==== Migration
+
+* Saját interceptor készítésekor használjuk a beépített `io.grpc.ServerInterceptor` az `ITracesInterceptor` helyett.
 
 === coffee-module-mongodb
 

@@ -20,7 +20,7 @@
 package hu.icellmobilsoft.coffee.module.redisstream.consumer;
 
 import hu.icellmobilsoft.coffee.cdi.trace.annotation.Traced;
-import hu.icellmobilsoft.coffee.cdi.trace.constants.Tags;
+import hu.icellmobilsoft.coffee.cdi.trace.constants.SpanAttribute;
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.module.redisstream.config.IRedisStreamConstant;
 import redis.clients.jedis.resps.StreamEntry;
@@ -50,7 +50,7 @@ public abstract class AbstractStreamConsumer extends BaseStreamConsumer implemen
      * If opentrace extension is active, the method will be traced by opentracing implementation
      * 
      */
-    @Traced(component = Tags.Redis.Stream.COMPONENT, kind = Tags.Redis.Stream.KIND, dbType = Tags.Redis.DB_TYPE)
+    @Traced(component = SpanAttribute.Redis.Stream.COMPONENT, kind = SpanAttribute.Redis.Stream.KIND, dbType = SpanAttribute.Redis.DB_TYPE)
     @Override
     public void onStream(StreamEntry streamEntry) throws BaseException {
         handleMDC(streamEntry);
