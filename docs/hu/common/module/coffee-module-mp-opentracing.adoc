@@ -1,7 +1,7 @@
 [#common_module_coffee-module-mp-opentracing]
-= coffee-module-mp-opentracing
+= coffee-module-mp-opentracing/telemetry
 
-A modul célja a microprofile opentracing támogatása mely tartalmazza a következő alapelveket:
+A modulok célja a microprofile opentracing és telemetry támogatása mely tartalmazza a következő alapelveket:
 
 * Coffee kompatibilitás - lehetőséget biztosít hogy a coffee moduljai trace információkat szolgáltassanak. A benne lévő interceptor a coff:ee moduljait képes kezelni, továbbfejleszthető saját tagek bevezetésével, amik a coffee-cdi modulban találhatóak.
 * Metrika és logolást egészíti ki a teljes observability érdekében.
@@ -12,31 +12,37 @@ Alapja a https://github.com/eclipse/microprofile-opentracing  valamint a
 https://github.com/opentracing-contrib/java-interceptors  projekt.
 Az `org.eclipse.microprofile.opentracing.Traced` annotáció helyett saját bindingot használunk, mivel így teljesen le tudjuk választani a moduljaink trace-elhetőségét.
 
+== microprofile-telemetry
+Alapja a https://github.com/eclipse/microprofile-telemetry projekt.
+Központi eleme a `TelemetryInterceptor` ami automatikusan kezeli a trace adat szolgáltatást.
+
 == Core
 Az extension-ben található bindingok szolgálnak arra hogy a modulok különböző technológiáit trace-elhetővé tegye.
 
-
-=== OpenTraceInterceptor
+=== OpenTraceInterceptor/TelemetryInterceptor
 Az interceptor azokat a metódusokat kezeli amik `hu.icellmobilsoft.coffee.cdi.trace.annotation.Traced`.
-Ezt használja fel az `OpenTraceInterceptor`. Ezzel a megoldással később könnyen lehet cserélni/módosítani a trace interceptor működését.
-Automatikusan kezeli a rest, redis, redis-stream, etcd, gRPC trace flow kezelését.
+Ezt használja fel az `OpenTraceInterceptor`/`TelemetryInterceptor`. Ezzel a megoldással később könnyen lehet cserélni/módosítani a trace interceptor működését.
+Automatikusan kezeli a rest, redis, redis-stream, etcd, repository, gRPC trace flow kezelését.
 
 === coffee-module-redis trace
-Az `OpenTraceInterceptor` a `@Traced` annotációban kitöltött span értékekkel dolgozik. Ha az annotációban található `@Traced.component` értéke 'Jedis'
+Az `OpenTraceInterceptor`/`TelemetryInterceptor` a `@Traced` annotációban kitöltött span értékekkel dolgozik. Ha az annotációban található `@Traced.component` értéke 'Jedis'
 akkor az interceptor a functionName paramétert fogja alapul venni amiből meghatározza a span nevét, egyébként az annotált metódus osztaly neve lesz felhasználva. Ez az érték dönti el hogy a Jedis client művelet egy meglévő trace folyamba csatlakozzon be, ne kezdjen magától uj trace folyamatot. Ez a működés a `RedisManager`-en keresztül lett megvalósítva.
 
 === coffee-module-redisstream trace
 Annotálva lett az `AbstractStreamConsumer.onStream` metódus valamint az `AbstractStreamPipeConsumer.onStream` metódus.
-A `@Traced` annotáción keresztül megadott Tag értékekkel indít új trace folyamatot. Magába foglalja automatikusan az innen kimenő Rest hívásokat, és Jedis műveleteket. A span operáció neve az annotált metódust tartalmazó class neve lesz.
+A `@Traced` annotáción keresztül megadott SpanAttribute értékekkel indít új trace folyamatot. Magába foglalja automatikusan az innen kimenő Rest hívásokat, és Jedis műveleteket. A span operáció neve az annotált metódust tartalmazó class neve lesz.
 
 === coffee-module-etcd trace
 A `ConfigEtcdHandler` lett annotálva, az ebben lévő metódushívások adnak trace adatot.
 
-=== coffee-grpc-opentracing-impl trace
+=== coffee-grpc-traces-mpopentracing
 Az `OpenTraceInterceptor` kezeli a gRPC-n keresztül jövő trace adatokat, összeköti a többi művelettel amik a trace részei. (redis, consumerek, rest).
 
+=== coffee-grpc-traces-mptelemetry
+A `GrpcServerTelemetryProducer` aktiválja a megfelelő Server és Client oldali instrumentáló interceptorokat.
+
 === coffee-deltaspike-data trace
-Az `OpenTraceHandler` kezeli a repository rétegben lévő adatbázis műveletek trace flowba csatornázását.
+Az `OpenTraceHandler`/`TelemetryHandler` kezeli a repository rétegben lévő adatbázis műveletek trace flowba csatornázását.
 
 === OpenTraceErrorResponseFilter
 Azok a rest operációk amik HTTP500, vagy magasabb hibakódot adnak, nem látszanak a trace-ben hibásnak.
@@ -76,12 +82,16 @@ thorntail:
 </dependency>
 ----
 === Wildfly alapú projekt konfig
-Default a Jaeger trace implementációt használja.
-https://docs.wildfly.org/20/wildscribe/subsystem/microprofile-opentracing-smallrye/jaeger-tracer/index.html
-.pom.xml
+Verziótól függően a Jaeger trace implementációt vagy az OTEL trace propagációt tudja kezelni.
+https://docs.wildfly.org/30/Admin_Guide.html#configuration-8
 ----
 <dependency>
     <groupId>hu.icellmobilsoft.coffee</groupId>
     <artifactId>coffee-module-mp-opentracing</artifactId>
+</dependency>
+<!-- vagy -->
+<dependency>
+    <groupId>hu.icellmobilsoft.coffee</groupId>
+    <artifactId>coffee-module-mp-telemetry</artifactId>
 </dependency>
 ----

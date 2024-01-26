@@ -12,6 +12,7 @@
 	<modules>
 		<module>coffee-module-mp-restclient</module>
 		<module>coffee-module-mp-opentracing</module>
+		<module>coffee-module-mp-telemetry</module>
 		<module>coffee-module-mp-metrics</module>
 		<module>coffee-module-mp-micrometer</module>
 	</modules>

@@ -89,6 +89,140 @@ coffee:
 <1> if `true`, then `coffee.grpc.server.threadpool.default` is ignored.
 
 
+== gRPC client (coffee-grpc-client-extension)
+It includes support for implementing a gRPC client.
+This includes:
+
+* Configuration management
+* Request logging
+* Response logging
+
+.gRPC client configuration
+[source,yaml]
+----
+coffee:
+  grpc:
+    client:
+      _configKey_:
+        host: localhost # default localhost
+        port: 8199 # default 8199
+----
+
+.CDI inject DummyServiceGrpc usage
+----
+@Inject
+@GrpcClient(configKey = "_configKey_") //<1>
+private DummyServiceGrpc.DummyServiceBlockingStub dummyGrpcService; //<2>
+
+...
+DummyResponse helloResponse = dummyGrpcService.getDummy(dummyRequest); //<3>
+...
+----
+<1> Configuration key for connection parameters (e.g., server host and port)
+<2> Generated service Stub
+<3> gRPC service call
+
+== gRPC Metrics
+The gRPC server and client can optionally activate interceptors to provide metric data.
+For this, only the inclusion of the Maven dependency is required:
+
+.enable gRPC server https://github.com/eclipse/microprofile-metrics[microprofile-metrics] implementation
+[source,xml]
+----
+<dependency>
+    <groupId>hu.icellmobilsoft.coffee</groupId>
+    <artifactId>coffee-grpc-server-extension</artifactId>
+</dependency>
+<dependency>
+    <groupId>hu.icellmobilsoft.coffee</groupId>
+    <artifactId>coffee-grpc-metrics-mpmetrics</artifactId>
+</dependency>
+----
+
+.enable gRPC client https://github.com/eclipse/microprofile-metrics[microprofile-metrics] implementation
+[source,xml]
+----
+<dependency>
+    <groupId>hu.icellmobilsoft.coffee</groupId>
+    <artifactId>coffee-grpc-client-extension</artifactId>
+</dependency>
+<dependency>
+    <groupId>hu.icellmobilsoft.coffee</groupId>
+    <artifactId>coffee-grpc-metrics-mpmetrics</artifactId>
+</dependency>
+----
+
+If the metric module is not included at the dependency level, the server/client operation remains unchanged, only metric data is not provided.
+
+Provided metrics: 
+
+* gRPC server
+** Received request counter
+** Responded response counter
+** Request-response processing per second
+* gRPC Client
+** Sent request counter
+** Responded response counter
+** Request-response processing per second
+
+== gRPC Tracing
+The gRPC server and client can optionally activate interceptors to provide tracing data.
+For this, only the inclusion of the Maven dependency is required:
+
+.enable gRPC server https://github.com/eclipse/microprofile-opentracing[microprofile-opentracing] implementation
+[source,xml]
+----
+<dependency>
+    <groupId>hu.icellmobilsoft.coffee</groupId>
+    <artifactId>coffee-grpc-server-extension</artifactId>
+</dependency>
+<dependency>
+    <groupId>hu.icellmobilsoft.coffee</groupId>
+    <artifactId>coffee-grpc-tracing-opentracing</artifactId>
+</dependency>
+----
+
+.enable gRPC server https://github.com/eclipse/microprofile-telemetry implementation
+[source,xml]
+----
+<dependency>
+    <groupId>hu.icellmobilsoft.coffee</groupId>
+    <artifactId>coffee-grpc-server-extension</artifactId>
+</dependency>
+<dependency>
+    <groupId>hu.icellmobilsoft.coffee</groupId>
+    <artifactId>coffee-grpc-tracing-telemetry</artifactId>
+</dependency>
+----
+
+.enable gRPC client https://github.com/eclipse/microprofile-opentracing[microprofile-opentracing] implementation
+[source,xml]
+----
+<dependency>
+    <groupId>hu.icellmobilsoft.coffee</groupId>
+    <artifactId>coffee-grpc-client-extension</artifactId>
+</dependency>
+<dependency>
+    <groupId>hu.icellmobilsoft.coffee</groupId>
+    <artifactId>coffee-grpc-tracing-opentracing</artifactId>
+</dependency>
+----
+
+.enable gRPC client https://github.com/eclipse/microprofile-telemetry implementation
+[source,xml]
+----
+<dependency>
+    <groupId>hu.icellmobilsoft.coffee</groupId>
+    <artifactId>coffee-grpc-client-extension</artifactId>
+</dependency>
+<dependency>
+    <groupId>hu.icellmobilsoft.coffee</groupId>
+    <artifactId>coffee-grpc-tracing-telemetry</artifactId>
+</dependency>
+----
+
+If the tracing module is not included at the dependency level, the server/client operation remains unchanged, only tracing data is not provided.
+
 == coffee-dto/coffee-dto-xsd2proto
 A collector of generated schema2proto for general XSD descriptors (`coffee-dto-xsd` module) and other manually created proto files. This package serves to use Coff:ee proto files, so projects don't need to generate them again.
 

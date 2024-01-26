@@ -122,3 +122,52 @@ Changes are backwards compatible doesnt need any migration.
 ==== Migration
 
 If you have a FaultType enum in your project, annotate it with the `@FaultTypeCode` annotation and remove the `IFaultType` interface. `beans.xml` must be existed in the META-INF directory!
+
+== Trace detachment
+Development involving multiple modules with the aim of enabling tracing to work with various implementations.
+
+=== coffee-cdi
+
+* Renaming hu.icellmobilsoft.coffee.cdi.trace.constants.Tags to hu.icellmobilsoft.coffee.cdi.trace.constants.SpanAttribute
+* Received basic OpenTelemetry standard constants.
+* The @Traced annotation provides trace with the default INTERNAL kind type if not specified when using the annotation.
+* Renaming hu.icellmobilsoft.coffee.cdi.trace.spi.IOpenTraceHandler to hu.icellmobilsoft.coffee.cdi.trace.spi.ITraceHandler
+
+==== Migration
+
+At the dependency level, you need to choose which tracing implementation the service should use; otherwise, everything else is backward compatible.
+
+[source,xml]
+----
+<dependency>
+    <groupId>hu.icellmobilsoft.coffee</groupId>
+    <artifactId>coffee-module-mp-opentracing</artifactId> <1>
+</dependency>
+<!-- or -->
+<dependency>
+    <groupId>hu.icellmobilsoft.coffee</groupId>
+    <artifactId>coffee-module-mp-telemetry</artifactId> <2>
+</dependency>
+----
+<1> microprofile-opentracing implementation
+<2> microprofile-telemetry implementation
+
+If the values of `hu.icellmobilsoft.coffee.cdi.trace.constants.Tags` were used, you can find the constants in the `hu.icellmobilsoft.coffee.cdi.trace.constants.SpanAttribute` class instead.
+
+You should inject `ITraceHandler` instead of `IOpenTraceHandler`.
+
+=== coffee-grpc-opentracing-impl
+
+* Rename coffee-grpc-opentracing-impl to coffee-grpc-traces-mpopentracing
+
+==== Migration
+
+* Use the dependency coffee-grpc-tracing-opentracing instead of coffee-grpc-opentracing-impl
+
+=== coffee-grpc-traces-api
+
+* `ITracesInterceptor` has been discontinued for simpler interceptor search.
+
+==== Migration
+
+* When creating a custom interceptor, use the built-in `io.grpc.ServerInterceptor` instead of `ITracesInterceptor`.

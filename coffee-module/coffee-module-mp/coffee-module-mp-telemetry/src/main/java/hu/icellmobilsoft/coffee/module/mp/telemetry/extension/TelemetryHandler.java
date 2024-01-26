@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package hu.icellmobilsoft.coffee.module.mp.opentracing.extension;
+package hu.icellmobilsoft.coffee.module.mp.telemetry.extension;
 
 import java.util.function.Supplier;
 
@@ -27,45 +27,42 @@ import jakarta.inject.Inject;
 import hu.icellmobilsoft.coffee.cdi.trace.annotation.Traced;
 import hu.icellmobilsoft.coffee.cdi.trace.spi.ITraceHandler;
 import hu.icellmobilsoft.coffee.cdi.trace.spi.TraceHandlerQualifier;
-import io.opentracing.Scope;
-import io.opentracing.Span;
-import io.opentracing.Tracer;
-import io.opentracing.Tracer.SpanBuilder;
+import io.opentelemetry.api.trace.Span;
+import io.opentelemetry.api.trace.SpanBuilder;
+import io.opentelemetry.api.trace.Tracer;
 
 /**
- * Provides opentracing functions for {@code Traced} annotation, where interceptor cannot be used or when working with dynamic proxies
+ * Provides telemetry functions for {@code Traced} annotation, where interceptor cannot be used or when working with dynamic proxies
  * 
  * @author czenczl
- * @since 2.1.0
+ * @since 2.5.0
  */
 @ApplicationScoped
 @TraceHandlerQualifier
-public class OpenTraceHandler implements ITraceHandler {
+public class TelemetryHandler implements ITraceHandler {
 
     @Inject
-    private OpenTraceResolver openTraceResolver;
+    private Tracer tracer;
 
     /**
      * Default constructor, constructs a new object.
      */
-    public OpenTraceHandler() {
+    public TelemetryHandler() {
         super();
     }
 
     @Override
     public <T> T runWithTrace(Supplier<T> function, Traced traced, String operation) {
-        Tracer tracer = openTraceResolver.resolveTracer();
-        SpanBuilder spanBuilder = OpenTraceUtil.createSpanBuilder(tracer, traced, operation);
-        Span span = spanBuilder.start();
-        Scope scope = tracer.activateSpan(span);
+        SpanBuilder spanBuilder = TelemetryUtil.createSpanBuilder(tracer, traced, operation);
+        Span span = spanBuilder.startSpan();
+        TelemetryUtil.fillSpan(span, traced);
         try {
             return function.get();
         } catch (Exception e) {
-            OpenTraceUtil.tagException(span, e);
+            TelemetryUtil.recordException(span, e);
             throw e;
         } finally {
-            span.finish();
-            scope.close();
+            span.end();
         }
     }
 
