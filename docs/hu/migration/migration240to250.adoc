@@ -109,7 +109,7 @@ A változtatások nem eredményeznek átállási munkálatokat, visszafelé komp
 
 === coffee-module-mp-restclient
 
-* FaultTypeParserExtension módosult, ezentúl azokat az enumokat tölti be, melyeken pluszban szerepel a `@hu.icellmobilsoft.coffee.cdi.annotation.FaultTypeCode` annotáció.  
+* FaultTypeParserExtension módosult, ezentúl azokat az enumokat tölti be, melyeken pluszban szerepel a `@hu.icellmobilsoft.coffee.cdi.annotation.FaultTypeCode` annotáció.
 * Az IFaultType interfész deprecated-dé vált.
 
 ==== Migration
@@ -166,3 +166,18 @@ Az `IOpenTraceHandler` inject helyett `ITraceHandler`-t kell injectálni.
 ==== Migration
 
 * Saját interceptor készítésekor használjuk a beépített `io.grpc.ServerInterceptor` az `ITracesInterceptor` helyett.
+
+=== coffee-module-mongodb
+
+* A `@Deprecated(forRemoval = true, since = "1.1.0")` annotációval ellátott oszályok és metódusok törlése.
+* Az implementálatlan, használaton kívüli metódus törlése: `hu.icellmobilsoft.coffee.module.mongodb.service.MongoService#getMongoCollectionName()`
+
+==== Migration
+
+* A `hu.icellmobilsoft.coffee.module.mongodb.annotation.MongoConfiguration` osztály helyett ezt az osztályt kell használni: `hu.icellmobilsoft.coffee.module.mongodb.extension.MongoClientConfiguration`
+* A `hu.icellmobilsoft.coffee.module.mongodb.config.MongoDbConfig` osztály helyett ezt az osztályt kell használni: `hu.icellmobilsoft.coffee.module.mongodb.extension.MongoConfigHelper`
+* A `hu.icellmobilsoft.coffee.module.mongodb.config.MongoDbConfigImpl` osztály helyett ezt az osztályt kell használni: `hu.icellmobilsoft.coffee.module.mongodb.extension.MongoClientConfiguration`
+* A `hu.icellmobilsoft.coffee.module.mongodb.handler.MongoDbHandler` osztály helyett ezt az osztályt kell használni: `hu.icellmobilsoft.coffee.module.mongodb.extension.MongoDbClient`
+* A `hu.icellmobilsoft.coffee.module.mongodb.producer.MongoFactory` osztály helyett ezt az osztályt kell használni: `hu.icellmobilsoft.coffee.module.mongodb.extension.MongoDbClientFactory`
+* A `hu.icellmobilsoft.coffee.module.mongodb.service.MongoServiceImpl` osztály helyett ezt az osztályt kell használni: `hu.icellmobilsoft.coffee.module.mongodb.extension.MongoDbClient`
+* A `hu.icellmobilsoft.coffee.module.mongodb.service.MongoService#getMongoCollection()`  metódus helyett ezt kell használni: `hu.icellmobilsoft.coffee.module.mongodb.extension.MongoDbClient#initRepositoryCollection(java.lang.String)`

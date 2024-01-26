@@ -118,7 +118,7 @@ Changes are backwards compatible doesnt need any migration.
 === coffee-module-mp-restclient
 
 * FaultTypeParserExtension has been modified, it looks for FaultType enums annotated with `@hu.icellmobilsoft.coffee.cdi.annotation.FaultTypeCode`.
-* IFaultType interface marked as deprecated. (Use the `@FaultTypeCode` instead)  
+* IFaultType interface marked as deprecated. (Use the `@FaultTypeCode` instead)
 
 ==== Migration
 
@@ -172,3 +172,18 @@ You should inject `ITraceHandler` instead of `IOpenTraceHandler`.
 ==== Migration
 
 * When creating a custom interceptor, use the built-in `io.grpc.ServerInterceptor` instead of `ITracesInterceptor`.
+
+=== coffee-module-mongodb
+
+* Removed classes and method annotated with `@Deprecated(forRemoval = true, since = "1.1.0")`
+* Removed unimplemented and unused method: `hu.icellmobilsoft.coffee.module.mongodb.service.MongoService#getMongoCollectionName()`
+
+==== Migration
+
+* Instead of `hu.icellmobilsoft.coffee.module.mongodb.annotation.MongoConfiguration` use: `hu.icellmobilsoft.coffee.module.mongodb.extension.MongoClientConfiguration`
+* Instead of `hu.icellmobilsoft.coffee.module.mongodb.config.MongoDbConfig` use: `hu.icellmobilsoft.coffee.module.mongodb.extension.MongoConfigHelper`
+* Instead of `hu.icellmobilsoft.coffee.module.mongodb.config.MongoDbConfigImpl` use: `hu.icellmobilsoft.coffee.module.mongodb.extension.MongoClientConfiguration`
+* Instead of `hu.icellmobilsoft.coffee.module.mongodb.handler.MongoDbHandler` use: `hu.icellmobilsoft.coffee.module.mongodb.extension.MongoDbClient`
+* Instead of `hu.icellmobilsoft.coffee.module.mongodb.producer.MongoFactory` use: `hu.icellmobilsoft.coffee.module.mongodb.extension.MongoDbClientFactory`
+* Instead of `hu.icellmobilsoft.coffee.module.mongodb.service.MongoServiceImpl` use: `hu.icellmobilsoft.coffee.module.mongodb.extension.MongoDbClient`
+* Instead of `hu.icellmobilsoft.coffee.module.mongodb.service.MongoService#getMongoCollection()` use: `hu.icellmobilsoft.coffee.module.mongodb.extension.MongoDbClient#initRepositoryCollection(java.lang.String)`
