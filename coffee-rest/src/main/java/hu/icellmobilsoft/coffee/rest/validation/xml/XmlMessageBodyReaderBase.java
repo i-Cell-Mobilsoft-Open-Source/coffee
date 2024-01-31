@@ -36,6 +36,7 @@ import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.cdi.annotation.xml.ValidateXML;
 import hu.icellmobilsoft.coffee.cdi.annotation.xml.ValidateXMLs;
 import hu.icellmobilsoft.coffee.rest.validation.xml.exception.BaseProcessingExceptionWrapper;
+import hu.icellmobilsoft.coffee.rest.validation.xml.reader.IRequestVersionReader;
 
 /**
  * JSON és XML payload-ból deszerializáló és validáló MessageBodyReader implementációk őse. Csak akkor fut le, ha a REST service metódus request body
@@ -71,6 +72,9 @@ public abstract class XmlMessageBodyReaderBase<T> implements MessageBodyReader<T
 
     @Inject
     private JaxbTool jaxbTool;
+    
+    @Inject
+    private IRequestVersionReader requestVersionReader;
 
     /**
      * Default constructor, constructs a new object.
@@ -99,8 +103,8 @@ public abstract class XmlMessageBodyReaderBase<T> implements MessageBodyReader<T
             InputStream entityStream) {
         try {
             ValidateXML[] validates = getValidateIfPresent(annotations);
-
-            return jaxbTool.unmarshalXML(type, entityStream, validates);
+            String requestVersion = requestVersionReader.readVersion(entityStream);
+            return jaxbTool.unmarshalXML(type, entityStream, requestVersion, validates);
         } catch (BaseException e) {
             throw new BaseProcessingExceptionWrapper(e);
         }

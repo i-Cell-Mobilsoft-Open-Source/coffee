@@ -29,8 +29,8 @@ import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 
 /**
- * JSON ismeretlen obejtbol kiszedjuk a requestVersion erteket.<br>
- * Jelen esetben a "context/requestVersion" logika van keresve, persze ez nem fele meg mindenkinek, akkor CDI-el felul kell irni. Ez egy mintanak is
+ * JSON ismeretlen objectbol kiszedjuk a requestVersion erteket.<br>
+ * Jelen esetben a "context/requestVersion" logika van keresve, persze ez nem felel meg mindenkinek, akkor CDI-el felul kell irni. Ez egy mintanak is
  * szolgal
  *
  * @author imre.scheffer

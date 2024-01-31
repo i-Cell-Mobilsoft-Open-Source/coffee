@@ -35,7 +35,7 @@ import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
 
 /**
- * A requestVersion értékének kiolvasását végzi XML stream-ból
+ * A requestVersion értékének kiolvasását végzi XML stream-ból, próbáljuk meg nem használni, helyette headerben vagy url-ben kérjük átadni a requestversiont.
  *
  * Példa a megkövetelt xml struktúrára:
  *

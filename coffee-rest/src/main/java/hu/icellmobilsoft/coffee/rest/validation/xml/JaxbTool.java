@@ -91,7 +91,9 @@ public class JaxbTool {
      * @return A eredményobjektum
      * @throws BaseException
      *             érvénytelen bemenet esetén, vagy ha nem lehet feldolgozni a bemeneti adatot
+     * @deprecated use {@link #unmarshalXML(String, InputStream, String, ValidateXML[])}
      */
+    @Deprecated(since = "2.6.0", forRemoval = true)
     public <T> T unmarshalXML(Class<T> type, InputStream entityStream, ValidateXML[] validateXMLs) throws BaseException {
         if (type == null || entityStream == null) {
             throw new InvalidParameterException("type or entityStream is null!");
@@ -114,6 +116,30 @@ public class JaxbTool {
      *            Visszatérő típus
      * @param type
      *            Milyen típusba illeszkedik a bejövő adat
+     * @param entityStream
+     *            A feldolgozandó bemeneti folyam
+     * @param requestVersion
+     *            A korábban megállapított requestVersion, ami alapján a validálás megvalósítható
+     * @param validateXMLs
+     *            Az XSD validációhoz kapcsolódó annotációk
+     * @return A eredményobjektum
+     * @throws BaseException
+     *             érvénytelen bemenet esetén, vagy ha nem lehet feldolgozni a bemeneti adatot
+     * 
+     */
+    public <T> T unmarshalXML(Class<T> type, InputStream entityStream, String requestVersion, ValidateXML[] validateXMLs) throws BaseException {
+        String schemaPath = getXsdPath(validateXMLs, requestVersion);
+        // Ha nem kap csak üres schemaPath-ot nem validál, csak objektummá alakít:
+        return unmarshalXML(type, entityStream, schemaPath);
+    }
+
+    /**
+     * Deszerializálja az objektumot, és validálja a megadott XSD séma alapján
+     *
+     * @param <T>
+     *            Visszatérő típus
+     * @param type
+     *            Milyen típusba illeszkedik a bejövő adat
      * @param binary
      *            A feldolgozandó bemeneti bináris
      * @param validateXMLs
@@ -121,13 +147,40 @@ public class JaxbTool {
      * @return A eredményobjektum
      * @throws BaseException
      *             érvénytelen bemenet esetén, vagy ha nem lehet feldolgozni a bemeneti adatot
+     * @deprecated use {@link #unmarshalXML(String, byte[], String, ValidateXML[])}
      */
+    @Deprecated(since = "2.6.0", forRemoval = true)
     public <T> T unmarshalXML(Class<T> type, byte[] binary, ValidateXML[] validateXMLs) throws BaseException {
         if (Objects.isNull(type) || ArrayUtils.isEmpty(binary)) {
             throw new InvalidParameterException(ERR_MSG_TYPE_OR_BINARY_IS_NULL_OR_EMPTY);
         }
         ByteArrayInputStream inputStream = new ByteArrayInputStream(binary);
         return unmarshalXML(type, inputStream, validateXMLs);
+    }
+
+    /**
+     * Deszerializálja az objektumot, és validálja a megadott XSD séma alapján
+     *
+     * @param <T>
+     *            Visszatérő típus
+     * @param type
+     *            Milyen típusba illeszkedik a bejövő adat
+     * @param binary
+     *            A feldolgozandó bemeneti bináris
+     * @param requestVersion
+     *            A korábban megállapított requestVersion, ami alapján a validálás megvalósítható
+     * @param validateXMLs
+     *            Az XSD validációhoz kapcsolódó annotációk
+     * @return A eredményobjektum
+     * @throws BaseException
+     *             érvénytelen bemenet esetén, vagy ha nem lehet feldolgozni a bemeneti adatot
+     */
+    public <T> T unmarshalXML(Class<T> type, byte[] binary, String requestVersion, ValidateXML[] validateXMLs) throws BaseException {
+        if (Objects.isNull(type) || ArrayUtils.isEmpty(binary)) {
+            throw new InvalidParameterException(ERR_MSG_TYPE_OR_BINARY_IS_NULL_OR_EMPTY);
+        }
+        ByteArrayInputStream inputStream = new ByteArrayInputStream(binary);
+        return unmarshalXML(type, inputStream, requestVersion, validateXMLs);
     }
 
     /**
