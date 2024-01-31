@@ -50,7 +50,7 @@ import hu.icellmobilsoft.coffee.se.logging.Logger;
  * &lt;/xml&gt;
  * </pre>
  *
- * @see IXmlRequestVersionReader
+ * @see IRequestVersionReader
  * @author imre.scheffer
  * @author ferenc.lutischan
  * @since 1.0.0

@@ -24,8 +24,7 @@ import jakarta.enterprise.inject.Default;
 /**
  * Default Dummy implementáció, ami a requestVersion értékét nem kezeli.
  *
- * @see IXmlRequestVersionReader
- * @see IJsonRequestVersionReader
+ * @see IRequestVersionReader
  * @author robert.kaplar
  * @since 1.0.0
  */

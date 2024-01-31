@@ -26,7 +26,7 @@ import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
 /**
  * Interfész a requestVersion értékének kiolvasásához
  *
- * @see RequestVersionReader
+ * @see EmptyRequestVersionReader
  * @author tamas.cserhati
  * @since 2.6.0
  */

@@ -48,7 +48,7 @@ public class JsonRequestVersionReaderTest {
         JsonRequestVersionReader reader = new JsonRequestVersionReader();
 
         // When
-        String requestVersion = reader.readFromJSON(jsonDto);
+        String requestVersion = reader.readVersion(jsonDto);
         // Then
         assertEquals("1.1", requestVersion);
     }

@@ -44,7 +44,7 @@ public class RequestVersionReaderTest {
         // Given
         InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream("reqversion.xml");
         // When
-        String requestVersion = requestVersionReader.readFromXML(is);
+        String requestVersion = requestVersionReader.readVersion(is);
         // Then
         assertEquals("1.9", requestVersion);
     }
@@ -56,7 +56,7 @@ public class RequestVersionReaderTest {
         InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream("reqversion_not_exists.xml");
         // When
         TechnicalException te = assertThrows(TechnicalException.class, () -> {
-            requestVersionReader.readFromXML(is);
+            requestVersionReader.readVersion(is);
         });
         // Then
         assertTrue(te.getMessage().contains("Error in read inputstream"));
@@ -68,7 +68,7 @@ public class RequestVersionReaderTest {
         // Given
         InputStream is = null;
         // When
-        String requestVersion = requestVersionReader.readFromXML(is);
+        String requestVersion = requestVersionReader.readVersion(is);
         // Then
         assertEquals(null, requestVersion);
     }
