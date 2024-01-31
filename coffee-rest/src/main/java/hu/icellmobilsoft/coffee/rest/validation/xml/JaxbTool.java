@@ -20,10 +20,8 @@
 package hu.icellmobilsoft.coffee.rest.validation.xml;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -43,14 +41,12 @@ import org.apache.commons.lang3.StringUtils;
 import org.w3c.dom.ls.LSResourceResolver;
 import org.xml.sax.SAXException;
 
+import hu.icellmobilsoft.coffee.cdi.annotation.xml.ValidateXML;
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.dto.exception.InvalidParameterException;
-import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
-import hu.icellmobilsoft.coffee.cdi.annotation.xml.ValidateXML;
 import hu.icellmobilsoft.coffee.rest.validation.xml.error.IXsdValidationErrorCollector;
 import hu.icellmobilsoft.coffee.rest.validation.xml.exception.XsdProcessingException;
-import hu.icellmobilsoft.coffee.rest.validation.xml.reader.IXmlRequestVersionReader;
 import hu.icellmobilsoft.coffee.rest.validation.xml.utils.IXsdHelper;
 import hu.icellmobilsoft.coffee.rest.validation.xml.utils.IXsdResourceResolver;
 import hu.icellmobilsoft.coffee.tool.utils.annotation.RangeUtil;
@@ -86,38 +82,6 @@ public class JaxbTool {
      *            Milyen típusba illeszkedik a bejövő adat
      * @param entityStream
      *            A feldolgozandó bemeneti folyam
-     * @param validateXMLs
-     *            Az XSD validációhoz kapcsolódó annotációk
-     * @return A eredményobjektum
-     * @throws BaseException
-     *             érvénytelen bemenet esetén, vagy ha nem lehet feldolgozni a bemeneti adatot
-     * @deprecated use {@link #unmarshalXML(String, InputStream, String, ValidateXML[])}
-     */
-    @Deprecated(since = "2.6.0", forRemoval = true)
-    public <T> T unmarshalXML(Class<T> type, InputStream entityStream, ValidateXML[] validateXMLs) throws BaseException {
-        if (type == null || entityStream == null) {
-            throw new InvalidParameterException("type or entityStream is null!");
-        }
-        String requestVersion = null;
-        if (validateXMLs != null && Arrays.stream(validateXMLs).anyMatch(e -> e.version().include().length > 0)) {
-            // ha van megadva version az annotacioban, akkor megprobaljuk kiszedni a 'requestVersion'-t a requestbol
-            requestVersion = getRequestVersion(entityStream);
-        }
-
-        String schemaPath = getXsdPath(validateXMLs, requestVersion);
-        // Ha nem kap csak üres schemaPath-ot nem validál, csak objektummá alakít:
-        return unmarshalXML(type, entityStream, schemaPath);
-    }
-
-    /**
-     * Deszerializálja az objektumot, és validálja a megadott XSD séma alapján
-     *
-     * @param <T>
-     *            Visszatérő típus
-     * @param type
-     *            Milyen típusba illeszkedik a bejövő adat
-     * @param entityStream
-     *            A feldolgozandó bemeneti folyam
      * @param requestVersion
      *            A korábban megállapított requestVersion, ami alapján a validálás megvalósítható
      * @param validateXMLs
@@ -131,31 +95,6 @@ public class JaxbTool {
         String schemaPath = getXsdPath(validateXMLs, requestVersion);
         // Ha nem kap csak üres schemaPath-ot nem validál, csak objektummá alakít:
         return unmarshalXML(type, entityStream, schemaPath);
-    }
-
-    /**
-     * Deszerializálja az objektumot, és validálja a megadott XSD séma alapján
-     *
-     * @param <T>
-     *            Visszatérő típus
-     * @param type
-     *            Milyen típusba illeszkedik a bejövő adat
-     * @param binary
-     *            A feldolgozandó bemeneti bináris
-     * @param validateXMLs
-     *            Az XSD validációhoz kapcsolódó annotációk
-     * @return A eredményobjektum
-     * @throws BaseException
-     *             érvénytelen bemenet esetén, vagy ha nem lehet feldolgozni a bemeneti adatot
-     * @deprecated use {@link #unmarshalXML(String, byte[], String, ValidateXML[])}
-     */
-    @Deprecated(since = "2.6.0", forRemoval = true)
-    public <T> T unmarshalXML(Class<T> type, byte[] binary, ValidateXML[] validateXMLs) throws BaseException {
-        if (Objects.isNull(type) || ArrayUtils.isEmpty(binary)) {
-            throw new InvalidParameterException(ERR_MSG_TYPE_OR_BINARY_IS_NULL_OR_EMPTY);
-        }
-        ByteArrayInputStream inputStream = new ByteArrayInputStream(binary);
-        return unmarshalXML(type, inputStream, validateXMLs);
     }
 
     /**
@@ -401,30 +340,6 @@ public class JaxbTool {
         resourceResolver.setXsdDirPath(schemaPath);
 
         return resourceResolver;
-    }
-
-    /**
-     * Vissza adja request version-t. Nem érdemes felülírni, helyette a CDI lehetőségeit kell használni, mégpedig implementálni a
-     * IXmlRequestVersionReader osztályt és alternative-ként aktiválni
-     *
-     * @param entityStream
-     *            http REST entity
-     * @return request version
-     * @throws BaseException
-     *             if invalid input or cannot read request version
-     */
-    public String getRequestVersion(InputStream entityStream) throws BaseException {
-        if (entityStream == null) {
-            throw new InvalidParameterException("entityStream is null!");
-        }
-        try {
-            entityStream.mark(0);
-            String requestVersion = createCDIInstance(IXmlRequestVersionReader.class).readFromXML(entityStream);
-            entityStream.reset();
-            return requestVersion;
-        } catch (IOException | TechnicalException e) {
-            throw new XsdProcessingException(CoffeeFaultType.INVALID_INPUT, "Error reading XML requestVersion", e);
-        }
     }
 
     /**

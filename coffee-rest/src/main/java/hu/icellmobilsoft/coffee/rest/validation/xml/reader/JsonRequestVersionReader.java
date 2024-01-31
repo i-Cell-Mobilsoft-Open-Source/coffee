@@ -38,7 +38,7 @@ import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
  */
 @Alternative
 @Dependent
-public class JsonRequestVersionReader implements IJsonRequestVersionReader {
+public class JsonRequestVersionReader implements IRequestVersionReader {
 
     /**
      * Default constructor, constructs a new object.
@@ -49,7 +49,7 @@ public class JsonRequestVersionReader implements IJsonRequestVersionReader {
 
     /** {@inheritDoc} */
     @Override
-    public <T> String readFromJSON(T dto) throws TechnicalException {
+    public <T> String readVersion(T dto) throws TechnicalException {
         try {
             // ha ismerjuk a pontos strukturankat, akkor siman castolni is lehet es egyszeruen kiszedni
             Method contextMethod = dto.getClass().getMethod("getContext");
@@ -60,8 +60,10 @@ public class JsonRequestVersionReader implements IJsonRequestVersionReader {
 
             return String.valueOf(versionValue);
         } catch (ReflectiveOperationException e) {
-            throw new TechnicalException(CoffeeFaultType.INVALID_INPUT,
-                    MessageFormat.format("Error in getting requestVersion from DTO: [{0}] ", e.getLocalizedMessage()), e);
+            throw new TechnicalException(
+                    CoffeeFaultType.INVALID_INPUT,
+                    MessageFormat.format("Error in getting requestVersion from DTO: [{0}] ", e.getLocalizedMessage()),
+                    e);
         }
     }
 }

@@ -35,13 +35,29 @@ public interface IRequestVersionReader {
     /**
      * Verziószámot állapítja meg egy általános HTTP request alapján. Lehet az HTTP entity, header, akármi...
      *
-     * @param is
-     *            HTTP entity in raw stream format
-     * @return request version
+     * @param inputStream
+     *            HTTP entity in raw stream format, if its possible read version from header or uri
+     * @return the request version
+     * @throws TechnicalException
+     *             on error
+     */
+    default String readVersion(InputStream inputStream) throws TechnicalException {
+        return null;
+    }
+    
+    /**
+     * Determines version number value from a DTO.
+     *
+     * @param <T>
+     *            T object
+     * @param dto
+     *            HTTP entity converted to DTO
+     * @return request number
      * @throws TechnicalException
      *             exception
      */
-    default String readVersion(InputStream is) throws TechnicalException {
+    default <T> String readVersion(T dto) throws TechnicalException {
         return null;
     }
+
 }

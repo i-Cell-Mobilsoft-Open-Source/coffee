@@ -57,7 +57,7 @@ import hu.icellmobilsoft.coffee.se.logging.Logger;
  */
 @Alternative
 @Dependent
-public class XmlRequestVersionReader implements IXmlRequestVersionReader {
+public class XmlRequestVersionReader implements IRequestVersionReader {
 
     private static final String STREAM_EXCEPTION = "Premature end of file";
 
@@ -74,7 +74,7 @@ public class XmlRequestVersionReader implements IXmlRequestVersionReader {
      * header.requestVersion valaszt adja vissza. Mas parameterek kiolvasara is alkalmas, de jelenleg nincs ra szukseg
      */
     @Override
-    public String readFromXML(InputStream is) throws TechnicalException {
+    public String readVersion(InputStream is) throws TechnicalException {
         if (is == null) {
             return null;
         }
