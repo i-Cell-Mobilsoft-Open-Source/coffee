@@ -27,8 +27,8 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
-import org.eclipse.microprofile.config.spi.ConfigSource;
 
+import hu.icellmobilsoft.coffee.cdi.configsource.ConfigurableConfigSource;
 import hu.icellmobilsoft.coffee.dto.exception.BONotFoundException;
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.module.etcd.config.DefaultEtcdConfigImpl;
@@ -46,7 +46,7 @@ import io.etcd.jetcd.Client;
  * @author imre.scheffer
  * @since 1.0.0
  */
-public class DefaultEtcdConfigSource implements ConfigSource {
+public class DefaultEtcdConfigSource extends ConfigurableConfigSource {
 
     private static Logger log = Logger.getLogger(DefaultEtcdConfigSource.class);
 
@@ -65,9 +65,8 @@ public class DefaultEtcdConfigSource implements ConfigSource {
         return 150;
     }
 
-    /** {@inheritDoc} */
     @Override
-    public Map<String, String> getProperties() {
+    protected Map<String, String> getPropertiesIfEnabled() {
         try {
             return getConfigEtcdService().getAll();
         } catch (Exception e) {
@@ -111,18 +110,17 @@ public class DefaultEtcdConfigSource implements ConfigSource {
     /** {@inheritDoc} */
     @Override
     public String getValue(String propertyName) {
+        if (!isEnabled()) {
+            return null;
+        }
         try {
             return readValue(propertyName).orElse(null);
         } catch (BaseException e) {
-            log.error(
-                    MessageFormat.format("Error in getting value from ETCD by propertyName [{0}]: [{1}]", propertyName, e.getLocalizedMessage()),
+            log.error(MessageFormat.format("Error in getting value from ETCD by propertyName [{0}]: [{1}]", propertyName, e.getLocalizedMessage()),
                     e);
         } catch (Exception e) {
-            log.debug(
-                    MessageFormat.format(
-                            "CDI is not initialized, property [{0}] is unresolvable from ETCD: [{1}]",
-                            propertyName,
-                            e.getLocalizedMessage()));
+            log.debug(MessageFormat.format("CDI is not initialized, property [{0}] is unresolvable from ETCD: [{1}]", propertyName,
+                    e.getLocalizedMessage()));
         }
         return null;
     }
