@@ -20,6 +20,7 @@
 package hu.icellmobilsoft.coffee.rest.xmlvalidation.reader;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -30,6 +31,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 
 import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
+import hu.icellmobilsoft.coffee.rest.validation.xml.reader.EmptyRequestVersionReader;
 import hu.icellmobilsoft.coffee.rest.validation.xml.reader.XmlRequestVersionReader;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -37,6 +39,7 @@ import hu.icellmobilsoft.coffee.rest.validation.xml.reader.XmlRequestVersionRead
 public class RequestVersionReaderTest {
 
     private XmlRequestVersionReader requestVersionReader = new XmlRequestVersionReader();
+    private EmptyRequestVersionReader emptyVersionReader = new EmptyRequestVersionReader();
 
     @Test
     @DisplayName("Testing read existing requestVersion from xml")
@@ -72,4 +75,38 @@ public class RequestVersionReaderTest {
         // Then
         assertEquals(null, requestVersion);
     }
+
+    @Test
+    @DisplayName("Testing read existing requestVersion from xml")
+    void readEmptyFromXML() throws TechnicalException {
+        // Given
+        InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream("reqversion.xml");
+        // When
+        String requestVersion = emptyVersionReader.readVersion(is);
+        // Then
+        assertNull(requestVersion);
+    }
+
+    @Test
+    @DisplayName("Testing not existing requestVersion in xml")
+    void readEmptyXmlWithNotExistingRequestVersion() throws TechnicalException {
+        // Given
+        InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream("reqversion_not_exists.xml");
+        // When
+        String requestVersion = emptyVersionReader.readVersion(is);
+        // Then
+        assertNull(requestVersion);
+    }
+
+    @Test
+    @DisplayName("Testing when inputStream is null")
+    void readEmptyWhenInputStreamIsNull() throws TechnicalException {
+        // Given
+        InputStream is = null;
+        // When
+        String requestVersion = emptyVersionReader.readVersion(is);
+        // Then
+        assertNull(requestVersion);
+    }
+
 }
