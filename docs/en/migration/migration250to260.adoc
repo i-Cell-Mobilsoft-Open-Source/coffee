@@ -1,0 +1,12 @@
+= v2.5.0 → v2.6.0
+
+coff:ee v2.5.0 -> v2.6.0 migration description, news, changes
+
+== coffee-rest
+
+* fix javax.annotation.processing.Processor file (rename back to javax.annotation.processing.Processor, because it hasn't changed to javax)
+
+== Coffee Quarkus Extensions
+
+A new module called Coffee Quarkus extension has been created, which adds other elements needed for Quarkus to some of the coffee modules.
+First element is coffee-module-mp-restclient-extension

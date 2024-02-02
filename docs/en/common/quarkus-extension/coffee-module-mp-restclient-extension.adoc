@@ -1,0 +1,22 @@
+[#common_coffee-quarkus-extensions-module-mp-restclient]
+= coffee-module-mp-restclient-extension
+
+The purpose of this module is that if coffee-module-mp-rest-client is used in quarkus, it replaces the elements in it that are not supported by quarkus.
+
+Quarkus does not support Extensions as FaultyType enum classes are bundled together in the module, so this needs to be resolved in Quarkus Extension.
+
+NOTE: currently Quarkus version 3.2.x is used in extensions.
+
+To use the module, you should not use coffee-module-mp-rest-client in the dependencies, but use the extension that contains the module.
+
+.pom.xml
+[source, xml]
+----
+    <dependency>.
+        <groupId>hu.icellmobilsoft.coffee</groupId>
+        <artifactId>coffee-module-mp-restclient-extension</artifactId>
+        <version>${version.hu.icellmobilsoft.coffee}</version>
+        <type>pom</type>
+        <scope>import</scope>
+    </dependency>
+----
