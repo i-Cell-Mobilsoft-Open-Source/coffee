@@ -32,7 +32,7 @@ import hu.icellmobilsoft.coffee.module.etcd.handler.ConfigEtcdHandler;
 import hu.icellmobilsoft.coffee.tool.utils.string.RandomUtil;
 
 /**
- * RuntimeEtcdConfigSource tests
+ * FilteredEtcdConfigSource tests
  * 
  * @author Imre Scheffer
  * @since 2.6.0
@@ -44,7 +44,7 @@ public class FilteredEtcdConfigSourceTest extends BaseEtcdTest {
     static final String TEST_KEY_PROTECTED = "protected.TEST_KEY_" + RandomUtil.generateId();
     static final String TEST_KEY_PRIVATE = "private.TEST_KEY_" + RandomUtil.generateId();
     static final String TEST_KEY_FALSE = "publicTEST_KEY_" + RandomUtil.generateId();
-    static final String TEST_VALUE = "TEST_VALUE_" + RandomUtil.generateId();
+    static final String TEST_VALUE_POSTFIX = "_VALUE";
 
     @Inject
     private ConfigEtcdHandler configEtcdHandler;
@@ -69,16 +69,16 @@ public class FilteredEtcdConfigSourceTest extends BaseEtcdTest {
     @DisplayName("existing include pattern key")
     public void existIncludeKey() throws BaseException {
         assertAllEtcdConfigSource();
-        configEtcdHandler.putValue(TEST_KEY_PUBLIC, TEST_VALUE);
-        configEtcdHandler.putValue(TEST_KEY_PROTECTED, TEST_VALUE);
-        configEtcdHandler.putValue(TEST_KEY_FALSE, TEST_VALUE);
+        configEtcdHandler.putValue(TEST_KEY_PUBLIC, TEST_KEY_PUBLIC + TEST_VALUE_POSTFIX);
+        configEtcdHandler.putValue(TEST_KEY_PROTECTED, TEST_KEY_PROTECTED + TEST_VALUE_POSTFIX);
+        configEtcdHandler.putValue(TEST_KEY_FALSE, TEST_KEY_FALSE + TEST_VALUE_POSTFIX);
 
         String valuePublic = ConfigProvider.getConfig().getOptionalValue(TEST_KEY_PUBLIC, String.class).orElse(NO_VALUE);
         String valueProtected = ConfigProvider.getConfig().getOptionalValue(TEST_KEY_PROTECTED, String.class).orElse(NO_VALUE);
         String valueFalse = ConfigProvider.getConfig().getOptionalValue(TEST_KEY_FALSE, String.class).orElse(NO_VALUE);
 
-        Assertions.assertEquals(TEST_VALUE, valuePublic);
-        Assertions.assertEquals(TEST_VALUE, valueProtected);
+        Assertions.assertEquals(TEST_KEY_PUBLIC + TEST_VALUE_POSTFIX, valuePublic);
+        Assertions.assertEquals(TEST_KEY_PROTECTED + TEST_VALUE_POSTFIX, valueProtected);
         Assertions.assertEquals(NO_VALUE, valueFalse);
     }
 
@@ -86,7 +86,7 @@ public class FilteredEtcdConfigSourceTest extends BaseEtcdTest {
     @DisplayName("existing exclude pattern key")
     public void existExcludeKey() throws BaseException {
         assertAllEtcdConfigSource();
-        configEtcdHandler.putValue(TEST_KEY_PRIVATE, TEST_VALUE);
+        configEtcdHandler.putValue(TEST_KEY_PRIVATE, TEST_KEY_PRIVATE + TEST_VALUE_POSTFIX);
 
         String valuePrivate = ConfigProvider.getConfig().getOptionalValue(TEST_KEY_PRIVATE, String.class).orElse(NO_VALUE);
 

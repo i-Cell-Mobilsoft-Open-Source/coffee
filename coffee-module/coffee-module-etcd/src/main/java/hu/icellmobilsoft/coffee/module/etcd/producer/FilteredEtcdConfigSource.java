@@ -53,12 +53,10 @@ public class FilteredEtcdConfigSource extends DefaultEtcdConfigSource {
     public FilteredEtcdConfigSource() {
         super();
         Optional<String> includePatternValue = getConfig().getOptionalValue(CONFIG_PATTERN_INCLUDE, String.class);
-        System.out.println(includePatternValue);
         if (includePatternValue.isPresent()) {
             includePattern = Pattern.compile(includePatternValue.get());
         }
         Optional<String> excludePatternValue = getConfig().getOptionalValue(CONFIG_PATTERN_EXCLUDE, String.class);
-        System.out.println(excludePatternValue);
         if (excludePatternValue.isPresent()) {
             excludePattern = Pattern.compile(excludePatternValue.get());
         }
@@ -70,7 +68,7 @@ public class FilteredEtcdConfigSource extends DefaultEtcdConfigSource {
         System.out.println(matchPatterns(propertyName));
         System.out.println(toString());
         if (!matchPatterns(propertyName)) {
-            return null;
+            return Optional.empty();
         }
         return super.readValue(propertyName);
     }
