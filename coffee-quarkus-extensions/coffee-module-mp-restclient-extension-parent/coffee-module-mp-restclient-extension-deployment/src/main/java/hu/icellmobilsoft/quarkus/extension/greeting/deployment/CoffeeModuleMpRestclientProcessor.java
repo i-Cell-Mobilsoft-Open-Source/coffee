@@ -50,10 +50,10 @@ import io.quarkus.deployment.builditem.FeatureBuildItem;
  * @author speter555
  * @since 2.6.0
  */
-class GreetingExtensionProcessor {
+class CoffeeModuleMpRestclientProcessor {
 
-    private static final Logger log = Logger.getLogger(GreetingExtensionProcessor.class);
-    private static final String FEATURE = "faulttyclasses-extension";
+    private static final Logger log = Logger.getLogger(CoffeeModuleMpRestclientProcessor.class);
+    private static final String FEATURE = "coffee-module-mp-restclient-extension";
 
     private static final int DEFAULT_FAULT_TYPE_PRIORITY = 500;
 
@@ -76,7 +76,7 @@ class GreetingExtensionProcessor {
      */
     @BuildStep
     @SuppressWarnings("unchecked")
-    FaultTypeClassesBuildItem faultTypeClasses(CombinedIndexBuildItem combinedIndex) {
+    FaultTypeClassesBuildItem buildFaultTypeClassesBuildItem(CombinedIndexBuildItem combinedIndex) {
 
         @SuppressWarnings("rawtypes")
         List<Class<? extends Enum>> faultTypeClasses;
@@ -122,7 +122,7 @@ class GreetingExtensionProcessor {
      */
     @BuildStep
     @Record(STATIC_INIT)
-    void setup(FaultTypeClassesRecorder recorder, FaultTypeClassesBuildItem faultTypeClassesBuildItem,
+    void createBeanForFaultTypeClasses(FaultTypeClassesRecorder recorder, FaultTypeClassesBuildItem faultTypeClassesBuildItem,
             BuildProducer<SyntheticBeanBuildItem> syntheticBeanBuildItemBuildProducer) {
 
         // Create an ApplicationScoped bean for FaultTypeClasses with create with recorder
