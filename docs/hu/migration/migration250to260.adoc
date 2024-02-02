@@ -1,0 +1,32 @@
+= v2.5.0 → v2.6.0
+
+coff:ee v2.5.0 -> v2.6.0 migrációs leírás, újdonságok, változások leírása
+
+== Változások
+
+=== Általános
+
+* Bump hibernate-core https://github.com/hibernate/hibernate-orm/releases/tag/6.1.5[6.1.5.Final] -> https://github.com/hibernate/hibernate-orm/releases/tag/6.2.13[6.2.13.Final]
+
+=== coffee-jpa
+
+==== BatchService
+
+* Hibernate 6.2.x változások alapján frissítésre kerültek az `Insert`, `Update` és `Delete` SQL utasítások összeállítása.
+* A Hibernate 6.2.x verziótól deprecated lett az EnumType, mivel máshogy dolgozzák fel az enum értékeket, így a `BatchService`-ben lévő EnumType lekezelése törlésre került.
+* A Hibernate 6.2.x verziótól a Byte[] és Character[] típusok feldolgozása megváltozott, ami kihatással van a `BatchService` működésére is.
+Bővebben: https://github.com/hibernate/hibernate-orm/blob/6.2/migration-guide.adoc#bytecharacter-mapping-changes[hibernate 6.2 migration guide]
+
+==== Migration
+
+* A Byte[] típusok eddig kezelve voltak, viszont a hibernate változások miatt a következők egyike szükséges:
+** Byte[] lecserélése byte[]-ra
+** A régi működéshez szükséges engedélyezni a `persistence.xml`-ben a legacy array feldolgozást a következő property-vel: `<property name="hibernate.type.wrapper_array_handling" value="legacy"/>`
+
+==== JpaUtil
+
+** A Hibernate 6.2.x verziótól átnevezték a `JdbcSelect` osztályt `JdbcOperationQuerySelect` osztályra, illetve a belőle használt `getSql()` metódust `getSqlString()` metódusra, így ezt lekövettük a `JpaUtil` osztályban.
+
+==== Migration
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
