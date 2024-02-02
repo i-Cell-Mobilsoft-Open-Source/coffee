@@ -135,6 +135,9 @@ public class FaultTypeParserExtension implements Extension {
         try {
             faultTypeClassesElement = instance.get();
             faultTypeClassesList.addAll(faultTypeClassesElement.getFaultTypeClasses());
+        } catch (Exception e) {
+            // NOTE: can throw the instance.get method an org.jboss.weld.exceptions.UnsatisfiedResolutionException , that this bean is not alive, but
+            // it is not a problem!
         } finally {
             if (faultTypeClassesElement != null) {
                 instance.destroy(faultTypeClassesElement);
