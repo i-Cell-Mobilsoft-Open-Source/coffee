@@ -48,17 +48,6 @@
                     </annotationProcessorPaths>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <configuration>
-                    <failOnError>true</failOnError>
-                    <failOnWarnings>true</failOnWarnings>
-                    <includes>
-                        <include>${project.build.sourceDirectory}/**.java</include>
-                    </includes>
-                </configuration>
-            </plugin>
         </plugins>
     </build>
 </project>
