@@ -64,4 +64,9 @@ public class RuntimeEtcdConfigSource extends DefaultEtcdConfigSource {
     public static void setActive(boolean active) {
         RuntimeEtcdConfigSource.active = active;
     }
+
+    @Override
+    public String getName() {
+        return this.getClass().getSimpleName();
+    }
 }

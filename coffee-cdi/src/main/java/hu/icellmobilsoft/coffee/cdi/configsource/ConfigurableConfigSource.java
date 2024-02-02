@@ -83,7 +83,7 @@ public abstract class ConfigurableConfigSource implements ConfigSource {
      */
     protected boolean isEnabled() {
         Config cnf = getConfig();
-        return cnf.getOptionalValue(getInstanceEnableKey(), Boolean.class)
+        return cnf.getOptionalValue(getConfigSourceNameKey(), Boolean.class)
                 .orElse(cnf.getOptionalValue(getClassEnableKey(), Boolean.class).orElse(true));
     }
 
@@ -91,7 +91,7 @@ public abstract class ConfigurableConfigSource implements ConfigSource {
         return getClass().getName() + CONFIG_ENABLED;
     }
 
-    private String getInstanceEnableKey() {
+    private String getConfigSourceNameKey() {
         return getName() + CONFIG_ENABLED;
     }
 

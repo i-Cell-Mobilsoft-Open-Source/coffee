@@ -59,7 +59,6 @@ public class DefaultEtcdConfigSource extends ConfigurableConfigSource {
         super();
     }
 
-    /** {@inheritDoc} */
     @Override
     public int getOrdinal() {
         return 150;
@@ -107,7 +106,6 @@ public class DefaultEtcdConfigSource extends ConfigurableConfigSource {
         return local;
     }
 
-    /** {@inheritDoc} */
     @Override
     public String getValue(String propertyName) {
         if (!isEnabled()) {
@@ -160,7 +158,6 @@ public class DefaultEtcdConfigSource extends ConfigurableConfigSource {
         return Optional.empty();
     }
 
-    /** {@inheritDoc} */
     @Override
     public String getName() {
         String urls = null;

@@ -71,4 +71,9 @@ public class CachedEtcdConfigSource extends DefaultEtcdConfigSource {
     protected Optional<String> readValue(String propertyName) throws BaseException {
         return EtcdConfigSourceCache.instance().getValue(propertyName);
     }
+
+    @Override
+    public String getName() {
+        return this.getClass().getSimpleName();
+    }
 }

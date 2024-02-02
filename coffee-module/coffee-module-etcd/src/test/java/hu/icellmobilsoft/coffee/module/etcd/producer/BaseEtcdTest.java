@@ -78,6 +78,10 @@ public class BaseEtcdTest {
 
     @BeforeAll
     static void defaultBeforeAll() {
+        System.setProperty("hu.icellmobilsoft.coffee.module.etcd.producer.DefaultEtcdConfigSource.enabled", "false");
+        System.setProperty("hu.icellmobilsoft.coffee.module.etcd.producer.CachedEtcdConfigSource.enabled", "false");
+        System.setProperty("hu.icellmobilsoft.coffee.module.etcd.producer.RuntimeEtcdConfigSource.enabled", "false");
+        System.setProperty("hu.icellmobilsoft.coffee.module.etcd.producer.FilteredEtcdConfigSource.enabled", "false");
     }
 
     @AfterAll

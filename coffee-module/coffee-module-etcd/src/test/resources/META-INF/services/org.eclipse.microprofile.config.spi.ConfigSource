@@ -1,3 +1,4 @@
 hu.icellmobilsoft.coffee.module.etcd.producer.DefaultEtcdConfigSource
 hu.icellmobilsoft.coffee.module.etcd.producer.CachedEtcdConfigSource
 hu.icellmobilsoft.coffee.module.etcd.producer.RuntimeEtcdConfigSource
+hu.icellmobilsoft.coffee.module.etcd.producer.FilteredEtcdConfigSource

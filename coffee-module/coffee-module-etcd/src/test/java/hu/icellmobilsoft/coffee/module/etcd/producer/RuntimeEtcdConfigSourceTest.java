@@ -54,9 +54,7 @@ public class RuntimeEtcdConfigSourceTest extends BaseEtcdTest {
     @BeforeAll
     static void beforeAll() {
         defaultBeforeAll();
-        System.setProperty("hu.icellmobilsoft.coffee.module.etcd.producer.DefaultEtcdConfigSource.enabled", "false");
-        System.setProperty("hu.icellmobilsoft.coffee.module.etcd.producer.CachedEtcdConfigSource.enabled", "false");
-        System.setProperty("hu.icellmobilsoft.coffee.module.etcd.producer.RuntimeEtcdConfigSource.enabled", "true");
+        System.setProperty("RuntimeEtcdConfigSource.enabled", "true");
     }
 
     @Test

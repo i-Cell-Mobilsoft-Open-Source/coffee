@@ -50,8 +50,6 @@ public class DefaultEtcdConfigSourceTest extends BaseEtcdTest {
     static void beforeAll() {
         defaultBeforeAll();
         System.setProperty("hu.icellmobilsoft.coffee.module.etcd.producer.DefaultEtcdConfigSource.enabled", "true");
-        System.setProperty("hu.icellmobilsoft.coffee.module.etcd.producer.CachedEtcdConfigSource.enabled", "false");
-        System.setProperty("hu.icellmobilsoft.coffee.module.etcd.producer.RuntimeEtcdConfigSource.enabled", "false");
     }
 
     @Test

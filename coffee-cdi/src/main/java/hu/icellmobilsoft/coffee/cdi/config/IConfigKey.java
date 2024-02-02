@@ -43,6 +43,12 @@ public interface IConfigKey {
     String COFFEE_CONFIG_APP_PREFIX = "coffee.app";
 
     /**
+     * Coffee Microprofile config source konfigurációk prefix-e
+     */
+    @ConfigDoc(exclude = true)
+    String COFFEE_CONFIG_SOURCE_PREFIX = "coffee.configSource";
+
+    /**
      * Coffee app ProjectStage
      */
     String COFFEE_APP_PROJECT_STAGE = COFFEE_CONFIG_APP_PREFIX + ".projectStage";
