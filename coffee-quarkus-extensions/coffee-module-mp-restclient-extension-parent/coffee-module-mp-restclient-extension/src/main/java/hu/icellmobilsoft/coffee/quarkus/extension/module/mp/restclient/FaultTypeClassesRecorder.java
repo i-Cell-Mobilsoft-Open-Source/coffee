@@ -35,6 +35,14 @@ import io.quarkus.runtime.annotations.Recorder;
 @Recorder
 public class FaultTypeClassesRecorder {
 
+
+    /**
+     * Default constructor
+     */
+    public FaultTypeClassesRecorder() {
+        // Default constructor for java 21
+    }
+
     /**
      * Function for SyntheticCreationalContext of FaultTypeClasses interface
      * 
