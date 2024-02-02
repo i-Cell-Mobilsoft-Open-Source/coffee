@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package hu.icellmobilsoft.quarkus.extension.greeting.runtime;
+package hu.icellmobilsoft.coffee.quarkus.extension.module.mp.restclient;
 
 import java.util.List;
 import java.util.function.Function;

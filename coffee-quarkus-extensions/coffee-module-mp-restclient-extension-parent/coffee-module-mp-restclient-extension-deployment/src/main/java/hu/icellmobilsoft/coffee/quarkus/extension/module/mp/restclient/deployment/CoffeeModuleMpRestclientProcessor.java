@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package hu.icellmobilsoft.quarkus.extension.greeting.deployment;
+package hu.icellmobilsoft.coffee.quarkus.extension.module.mp.restclient.deployment;
 
 import static io.quarkus.deployment.annotations.ExecutionTime.STATIC_INIT;
 
@@ -36,7 +36,7 @@ import org.jboss.logging.Logger;
 
 import hu.icellmobilsoft.coffee.cdi.annotation.FaultTypeCode;
 import hu.icellmobilsoft.coffee.module.mp.restclient.exception.FaultTypeClasses;
-import hu.icellmobilsoft.quarkus.extension.greeting.runtime.FaultTypeClassesRecorder;
+import hu.icellmobilsoft.coffee.quarkus.extension.module.mp.restclient.FaultTypeClassesRecorder;
 import io.quarkus.arc.deployment.SyntheticBeanBuildItem;
 import io.quarkus.deployment.annotations.BuildProducer;
 import io.quarkus.deployment.annotations.BuildStep;
