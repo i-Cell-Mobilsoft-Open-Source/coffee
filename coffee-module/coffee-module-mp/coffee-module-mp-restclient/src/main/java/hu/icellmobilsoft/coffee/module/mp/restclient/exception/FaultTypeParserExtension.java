@@ -29,10 +29,8 @@ import java.util.stream.Collectors;
 
 import jakarta.annotation.Priority;
 import jakarta.enterprise.event.Observes;
-import jakarta.enterprise.inject.Instance;
 import jakarta.enterprise.inject.spi.AfterTypeDiscovery;
 import jakarta.enterprise.inject.spi.AnnotatedType;
-import jakarta.enterprise.inject.spi.CDI;
 import jakarta.enterprise.inject.spi.Extension;
 import jakarta.enterprise.inject.spi.ProcessAnnotatedType;
 
@@ -50,9 +48,9 @@ public class FaultTypeParserExtension implements Extension {
     private static final int DEFAULT_FAULT_TYPE_PRIORITY = 500;
 
     @SuppressWarnings("rawtypes")
-    private static final List<Class<? extends Enum>> faultTypeClasses = new ArrayList<>();
+    private static List<Class<? extends Enum>> faultTypeClasses = new ArrayList<>();
     @SuppressWarnings("rawtypes")
-    private static final Map<Class<? extends Enum>, Integer> faultTypePriorityMap = new HashMap<>();
+    private static volatile Map<Class<? extends Enum>, Integer> faultTypePriorityMap = new HashMap<>();
 
     /**
      * Default constructor, constructs a new object.
@@ -111,38 +109,13 @@ public class FaultTypeParserExtension implements Extension {
     }
 
     /**
-     * Get enums with annotated of {@link FaultTypeCode}
+     * Get enums with FaultTypeCode annotations
      *
      * @return the fault type classes
      */
-    @SuppressWarnings({ "rawtypes", "unchecked" })
-    public static synchronized Collection<Class<? extends Enum>> getFaultTypeClasses() {
-        List<Class<? extends Enum>> faulTypeClassesList = new ArrayList(faultTypeClasses);
-        addInjectedFaultTYpeClasses(faulTypeClassesList);
-        return faulTypeClassesList;
-    }
-
-    /**
-     * This method adds another option to add FaultType classes to the list
-     * 
-     * @param faultTypeClassesList
-     *            the fault type classes
-     */
-    @SuppressWarnings({ "rawtypes" })
-    private static void addInjectedFaultTYpeClasses(List<Class<? extends Enum>> faultTypeClassesList) {
-        Instance<FaultTypeClasses> instance = CDI.current().select(FaultTypeClasses.class);
-        FaultTypeClasses faultTypeClassesElement = null;
-        try {
-            faultTypeClassesElement = instance.get();
-            faultTypeClassesList.addAll(faultTypeClassesElement.getFaultTypeClasses());
-        } catch (Exception e) {
-            // NOTE: can throw the instance.get method an org.jboss.weld.exceptions.UnsatisfiedResolutionException , that this bean is not alive, but
-            // it is not a problem!
-        } finally {
-            if (faultTypeClassesElement != null) {
-                instance.destroy(faultTypeClassesElement);
-            }
-        }
+    @SuppressWarnings("rawtypes")
+    public static Collection<Class<? extends Enum>> getFaultTypeClasses() {
+        return List.copyOf(faultTypeClasses);
     }
 
 }
