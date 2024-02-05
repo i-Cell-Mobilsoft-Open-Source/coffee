@@ -29,15 +29,13 @@ import java.time.YearMonth;
 import java.util.Calendar;
 import java.util.TimeZone;
 
-import org.hibernate.metamodel.model.convert.spi.BasicValueConverter;
 import org.hibernate.proxy.HibernateProxy;
 import org.hibernate.proxy.LazyInitializer;
 import org.hibernate.type.BasicType;
 import org.hibernate.type.ConvertedBasicType;
-import org.hibernate.type.CustomType;
-import org.hibernate.type.EnumType;
 import org.hibernate.type.ManyToOneType;
 import org.hibernate.type.SqlTypes;
+import org.hibernate.type.descriptor.converter.spi.BasicValueConverter;
 import org.hibernate.type.descriptor.jdbc.VarcharJdbcType;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.MethodOrderer;
@@ -58,7 +56,6 @@ import org.mockito.exceptions.base.MockitoException;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import hu.icellmobilsoft.coffee.cdi.logger.AppLogger;
-import hu.icellmobilsoft.coffee.dto.common.commonservice.FunctionCodeType;
 import hu.icellmobilsoft.coffee.jpa.sql.batch.constants.TestBasicTypes;
 import hu.icellmobilsoft.coffee.jpa.sql.batch.provider.BinaryArgumentsProvider;
 import hu.icellmobilsoft.coffee.jpa.sql.batch.provider.DateArgumentsProvider;
@@ -250,40 +247,6 @@ class BatchServiceTest {
 
     @Test
     @Order(12)
-    void setPsObjectCustomEnumTypeTest() throws SQLException {
-        // given
-        CustomType<?> customTypeMock = Mockito.mock(CustomType.class);
-        EnumType<?> enumTypeMock = Mockito.mock(EnumType.class);
-
-        Mockito.doReturn(enumTypeMock).when(customTypeMock).getUserType();
-        Mockito.doReturn(false).when(enumTypeMock).isOrdinal();
-
-        // when
-        batchService.setPsObject(preparedStatement, 0, customTypeMock, FunctionCodeType.OK);
-
-        // then
-        Mockito.verify(preparedStatement).setObject(0, FunctionCodeType.OK.name());
-    }
-
-    @Test
-    @Order(13)
-    void setPsObjectCustomEnumTypeOrdinalTest() throws SQLException {
-        // given
-        CustomType<?> customTypeMock = Mockito.mock(CustomType.class);
-        EnumType<?> enumTypeMock = Mockito.mock(EnumType.class);
-
-        Mockito.doReturn(enumTypeMock).when(customTypeMock).getUserType();
-        Mockito.doReturn(true).when(enumTypeMock).isOrdinal();
-
-        // when
-        batchService.setPsObject(preparedStatement, 0, customTypeMock, FunctionCodeType.OK);
-
-        // then
-        Mockito.verify(preparedStatement).setObject(0, FunctionCodeType.OK.ordinal());
-    }
-
-    @Test
-    @Order(14)
     void setPsObjectManyToOneType() throws SQLException {
         // given
         String entityId = RandomUtil.generateId();
@@ -304,7 +267,7 @@ class BatchServiceTest {
     }
 
     @Test
-    @Order(15)
+    @Order(13)
     @SuppressWarnings("unchecked")
     void setPsObjectConvertedBasicTypeTest() throws SQLException {
         // given

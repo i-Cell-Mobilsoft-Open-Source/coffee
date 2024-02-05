@@ -13,6 +13,6 @@ include::migration.adoc[]
 
 == HOWTO
 
-include::howto/xsd-xml-validation-depend-on-version.adoc[leveloffset=+1]
+include::howto/xsd-xml-validation-depend-on-version.adoc[leveloffset=+2]
 
-include::howto/xsd-catalog.adoc[leveloffset=+1]
+include::howto/xsd-catalog.adoc[leveloffset=+2]
