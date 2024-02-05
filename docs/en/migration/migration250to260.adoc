@@ -21,7 +21,7 @@ You then need to import the project elements as follows:
     </dependency>
 </dependencyManagement>
 
-This also means that the transparent dependencies that were previously put on projects from coffee-bom, are now removed.
+This also means that the transitive dependencies that were previously put on projects from coffee-bom, are now removed.
 Because of this, these dependencies will be reported as not found by maven, so they will need to be defined in the project using coffee.
 ```
 <1> - coffee-bom -> changed to coffee-bom-project

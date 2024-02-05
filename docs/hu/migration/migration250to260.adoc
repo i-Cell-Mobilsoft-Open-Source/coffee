@@ -21,7 +21,7 @@ Ezután a következő módon kell importálni a projekt elemeit:
 </dependencyManagement>
 
 
-Ez azzal is jár, hogy azon transparens dependency-k melyek eddig a coffee-bom miatt a projektekre kerültek, így kikerülnek.
+Ez azzal is jár, hogy azon transitive dependency-k melyek eddig a coffee-bom miatt a projektekre kerültek, így kikerülnek.
 Emiatt ezeket a dependency-ket a maven jelezni fogja hogy nem találja, így azokat definiálni kell a coffee-t felhasználó projekten.
 ```
 <1> - coffee-bom -> coffee-bom-project -re változott
