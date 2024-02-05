@@ -26,7 +26,7 @@
         <version.commons-collections>3.2.2</version.commons-collections>
         <version.commons-io>2.11.0</version.commons-io>
         <version.org.jboss.resteasy>6.2.1.Final</version.org.jboss.resteasy>
-        <version.org.hibernate>6.1.5.Final</version.org.hibernate>
+        <version.org.hibernate>6.2.13.Final</version.org.hibernate>
         <version.org.apache.httpcomponents.httpclient>4.5.13</version.org.apache.httpcomponents.httpclient>
         <version.org.apache.httpcomponents.httpcore>4.4.15</version.org.apache.httpcomponents.httpcore>
 
