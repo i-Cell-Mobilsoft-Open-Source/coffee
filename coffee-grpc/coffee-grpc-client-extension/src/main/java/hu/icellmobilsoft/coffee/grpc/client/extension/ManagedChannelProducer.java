@@ -40,7 +40,6 @@ import hu.icellmobilsoft.coffee.grpc.client.interceptor.ClientResponseIntercepto
 import hu.icellmobilsoft.coffee.grpc.metrics.api.ClientMetricsInterceptorQualifier;
 import hu.icellmobilsoft.coffee.grpc.metrics.api.IMetricsInterceptor;
 import hu.icellmobilsoft.coffee.grpc.traces.api.ClientTracesInterceptorQualifier;
-import hu.icellmobilsoft.coffee.grpc.traces.api.ITracesInterceptor;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
 import hu.icellmobilsoft.coffee.tool.utils.annotation.AnnotationUtil;
 import io.grpc.ClientInterceptor;
@@ -136,7 +135,7 @@ public class ManagedChannelProducer {
         }
 
         // tracing
-        Instance<ITracesInterceptor> instanceTracing = CDI.current().select(ITracesInterceptor.class, new ClientTracesInterceptorQualifier.Literal());
+        Instance<ClientInterceptor> instanceTracing = CDI.current().select(ClientInterceptor.class, new ClientTracesInterceptorQualifier.Literal());
         if (instanceTracing.isResolvable()) {
             channelBuilder.intercept((ClientInterceptor) instanceTracing.get());
         } else {
