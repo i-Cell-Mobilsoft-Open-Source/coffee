@@ -20,7 +20,6 @@
 package hu.icellmobilsoft.coffee.module.etcd.producer;
 
 import java.text.MessageFormat;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
@@ -157,9 +156,6 @@ public class DefaultEtcdConfigSource extends ConfigurableConfigSource {
 
     @Override
     public String getName() {
-        String urls = null;
-        EtcdConfig config = new DefaultEtcdConfigImpl();
-        urls = Arrays.toString(config.getUrl());
-        return MessageFormat.format("{0} class on urls: [{1}]", DefaultEtcdConfigSource.class.getSimpleName(), urls);
+        return this.getClass().getSimpleName();
     }
 }
