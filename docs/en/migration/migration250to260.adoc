@@ -51,3 +51,13 @@ See more: https://github.com/hibernate/hibernate-orm/blob/6.2/migration-guide.ad
 ==== Migration
 
 Changes are backwards compatible doesn't need any migration.
+
+=== coffee-rest
+
+==== Jsonb Config
+
+Added the definition of the Jsonb configuration.
+
+==== Migration
+
+The changes do not result in migration work, backwards default values are set for correct usage.

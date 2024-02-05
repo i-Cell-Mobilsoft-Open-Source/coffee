@@ -19,20 +19,46 @@
  */
 package hu.icellmobilsoft.coffee.rest.provider.util;
 
+import java.text.MessageFormat;
 
 import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbBuilder;
 import jakarta.json.bind.JsonbConfig;
+import jakarta.json.bind.config.BinaryDataStrategy;
+import jakarta.json.bind.config.PropertyVisibilityStrategy;
+
+import org.eclipse.microprofile.config.Config;
 
 import hu.icellmobilsoft.coffee.rest.provider.FieldOnlyVisibilityStrategy;
+import hu.icellmobilsoft.coffee.se.logging.Logger;
+import hu.icellmobilsoft.coffee.tool.utils.config.ConfigUtil;
 
 /**
  * {@link Jsonb} object creator util class.
- *
+ * <code>
+ * coffee:
+ *   jsonb:
+ *     config:
+ *       propertyvisibilitystrategyclass: "hu.icellmobilsoft.coffee.rest.provider.FieldOnlyVisibilityStrategy"
+ *       binarydatastrategy: "BASE_64"
+ * </code>
  * @author speter555
  * @since 2.5.0
  */
 public class JsonbUtil {
+
+    /**
+     * Config delimiter
+     */
+    private static final String KEY_DELIMITER = ".";
+
+    private static final String PROPERTYVISIBILITYSTRATEGYCLASS_POSTFIX = "propertyvisibilitystrategyclass";
+
+    private static final String BINARY_DATA_STRATEGY_POSTFIX = "binarydatastrategy";
+    /**
+     * Prefix for all configs
+     */
+    public static final String JSONB_CONFIG_PREFIX = "coffee.jsonb.config";
 
     /**
      * Create {@link Jsonb} instance with {@link FieldOnlyVisibilityStrategy} property visibility strategy.
@@ -40,9 +66,43 @@ public class JsonbUtil {
      * @return configured {@link Jsonb} instance
      */
     public static Jsonb getContext() {
-        JsonbConfig config = new JsonbConfig()
+        Config config = ConfigUtil.getInstance().defaultConfig();
+        JsonbConfig jsonbConfig = new JsonbConfig()
                 // property visibility strategy setting
-                .withPropertyVisibilityStrategy(new FieldOnlyVisibilityStrategy());
-        return JsonbBuilder.newBuilder().withConfig(config).build();
+                .withPropertyVisibilityStrategy(getPropertyVisibilityStrategyClass(config))
+                .withBinaryDataStrategy(getBinaryDataStrategy(config));
+        return JsonbBuilder.newBuilder().withConfig(jsonbConfig).build();
+    }
+
+    protected static PropertyVisibilityStrategy getPropertyVisibilityStrategyClass(Config config) {
+        String className = config.getOptionalValue(joinKey(PROPERTYVISIBILITYSTRATEGYCLASS_POSTFIX), String.class)
+                .orElse("hu.icellmobilsoft.coffee.rest.provider.FieldOnlyVisibilityStrategy");
+        try {
+            return (PropertyVisibilityStrategy) Class.forName(className).getConstructor().newInstance();
+        } catch (Exception e) {
+            Logger.getLogger(JsonbUtil.class)
+                    .warn(
+                            MessageFormat.format(
+                                    "The PropertyVisibilityStrategy class in the [{0}] config with value [{1}] has a problem ",
+                                    joinKey(PROPERTYVISIBILITYSTRATEGYCLASS_POSTFIX),
+                                    className),
+                            e);
+            return new FieldOnlyVisibilityStrategy();
+        }
+    }
+
+    protected static String getBinaryDataStrategy(Config config) {
+        return config.getOptionalValue(joinKey(BINARY_DATA_STRATEGY_POSTFIX), String.class).orElse(BinaryDataStrategy.BASE_64);
+    }
+
+    protected static String joinKey(String key) {
+        return String.join(KEY_DELIMITER, JSONB_CONFIG_PREFIX, key);
+    }
+
+    /**
+     * Private constructor
+     */
+    private JsonbUtil() {
+        super();
     }
 }
