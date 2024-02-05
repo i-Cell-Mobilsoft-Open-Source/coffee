@@ -1,0 +1,27 @@
+= v2.5.0 → v2.6.0
+
+coff:ee v2.5.0 -> v2.6.0 migration description, news, changes
+
+
+== Global
+
+💥 ***BREAKING CHANGE*** 💥
+```
+Global change that coffee-bom was used to import coffee dependency on projects. This has been changed to coffee-bom-project.
+
+You then need to import the project elements as follows:
+
+<dependencyManagement>
+    <dependency>
+        <groupId>hu.icellmobilsoft.coffee</groupId>
+        <artifactId>coffee-bom-project</artifactId> <1>
+        <version>${version.hu.icellmobilsoft.coffee}</version>
+        <type>pom</type>
+        <scope>import</scope>
+    </dependency>
+</dependencyManagement>
+
+This also means that the transparent dependencies that were previously put on projects from coffee-bom, are now removed.
+Because of this, these dependencies will be reported as not found by maven, so they will need to be defined in the project using coffee.
+```
+<1> - coffee-bom -> changed to coffee-bom-project
