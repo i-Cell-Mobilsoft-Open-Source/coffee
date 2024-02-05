@@ -77,6 +77,20 @@ public abstract class ConfigurableConfigSource implements ConfigSource {
     }
 
     /**
+     * Called to return the value in this config source when it is enabled
+     * 
+     * @param propertyName
+     *            the property name
+     * @return the value in this config source
+     */
+    abstract protected String getValueIfEnabled(String propertyName);
+
+    @Override
+    public String getValue(String propertyName) {
+        return isEnabled() ? getValueIfEnabled(propertyName) : null;
+    }
+
+    /**
      * Is config source enabled in default sources.
      * 
      * @return by configuration, default true

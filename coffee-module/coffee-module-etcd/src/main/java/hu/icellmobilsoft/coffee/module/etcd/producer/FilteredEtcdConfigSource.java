@@ -64,9 +64,6 @@ public class FilteredEtcdConfigSource extends DefaultEtcdConfigSource {
 
     @Override
     protected Optional<String> readValue(String propertyName) throws BaseException {
-        System.out.println(propertyName);
-        System.out.println(matchPatterns(propertyName));
-        System.out.println(toString());
         if (!matchPatterns(propertyName)) {
             return Optional.empty();
         }

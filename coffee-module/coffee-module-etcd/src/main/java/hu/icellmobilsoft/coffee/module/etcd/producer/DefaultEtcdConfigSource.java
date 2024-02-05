@@ -107,10 +107,7 @@ public class DefaultEtcdConfigSource extends ConfigurableConfigSource {
     }
 
     @Override
-    public String getValue(String propertyName) {
-        if (!isEnabled()) {
-            return null;
-        }
+    public String getValueIfEnabled(String propertyName) {
         try {
             return readValue(propertyName).orElse(null);
         } catch (BaseException e) {

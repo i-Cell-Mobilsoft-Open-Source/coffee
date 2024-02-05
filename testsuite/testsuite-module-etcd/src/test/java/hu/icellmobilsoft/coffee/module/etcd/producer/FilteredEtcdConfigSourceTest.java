@@ -19,9 +19,14 @@
  */
 package hu.icellmobilsoft.coffee.module.etcd.producer;
 
+import java.text.MessageFormat;
+import java.util.Iterator;
+
 import jakarta.inject.Inject;
 
 import org.eclipse.microprofile.config.ConfigProvider;
+import org.eclipse.microprofile.config.spi.ConfigSource;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -53,6 +58,13 @@ public class FilteredEtcdConfigSourceTest extends BaseEtcdTest {
     public static void beforeAll() {
         defaultBeforeAll();
         System.setProperty("FilteredEtcdConfigSource.enabled", "true");
+    }
+
+    @AfterAll
+    public static void afterAll() {
+        defaultBeforeAll();
+        // The concurrency test must be disabled
+        System.setProperty("FilteredEtcdConfigSource.enabled", "false");
     }
 
     @Test
@@ -88,8 +100,17 @@ public class FilteredEtcdConfigSourceTest extends BaseEtcdTest {
         assertAllEtcdConfigSource();
         configEtcdHandler.putValue(TEST_KEY_PRIVATE, TEST_KEY_PRIVATE + TEST_VALUE_POSTFIX);
 
+        Iterator<ConfigSource> it = ConfigProvider.getConfig().getConfigSources().iterator();
+        it.forEachRemaining(cs -> assertConfigSource(cs, TEST_KEY_PRIVATE));
         String valuePrivate = ConfigProvider.getConfig().getOptionalValue(TEST_KEY_PRIVATE, String.class).orElse(NO_VALUE);
 
         Assertions.assertEquals(NO_VALUE, valuePrivate);
+    }
+
+    private void assertConfigSource(ConfigSource cs, String key) {
+        if (cs.getClass() != getClass()) {
+            String value = cs.getValue(key);
+            Assertions.assertNull(value, MessageFormat.format("Value from [{0}] must be null", cs.getClass().getName()));
+        }
     }
 }

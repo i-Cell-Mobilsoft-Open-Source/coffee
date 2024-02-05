@@ -22,6 +22,7 @@ package hu.icellmobilsoft.coffee.module.etcd.producer;
 import jakarta.inject.Inject;
 
 import org.eclipse.microprofile.config.ConfigProvider;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -55,6 +56,13 @@ public class RuntimeEtcdConfigSourceTest extends BaseEtcdTest {
     static void beforeAll() {
         defaultBeforeAll();
         System.setProperty("RuntimeEtcdConfigSource.enabled", "true");
+    }
+
+    @AfterAll
+    static void afterAll() {
+        defaultAfterAll();
+        // The concurrency test must be disabled
+        System.setProperty("RuntimeEtcdConfigSource.enabled", "false");
     }
 
     @Test
