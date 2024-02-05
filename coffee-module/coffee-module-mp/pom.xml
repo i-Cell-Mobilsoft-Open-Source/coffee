@@ -3,7 +3,7 @@
 	<parent>
 		<groupId>hu.icellmobilsoft.coffee</groupId>
 		<artifactId>coffee-module</artifactId>
-		<version>2.5.0-SNAPSHOT</version>
+		<version>2.6.0-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>coffee-module-mp</artifactId>
@@ -12,6 +12,9 @@
 	<modules>
 		<module>coffee-module-mp-restclient</module>
 		<module>coffee-module-mp-opentracing</module>
+		<module>coffee-module-mp-telemetry</module>
+		<module>coffee-module-mp-metrics</module>
+		<module>coffee-module-mp-micrometer</module>
 	</modules>
 
 	<dependencyManagement>

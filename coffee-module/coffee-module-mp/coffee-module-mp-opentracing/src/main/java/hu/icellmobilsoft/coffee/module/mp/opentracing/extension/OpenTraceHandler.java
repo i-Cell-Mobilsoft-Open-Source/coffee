@@ -25,8 +25,8 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
 import hu.icellmobilsoft.coffee.cdi.trace.annotation.Traced;
-import hu.icellmobilsoft.coffee.cdi.trace.spi.IOpenTraceHandler;
-import hu.icellmobilsoft.coffee.cdi.trace.spi.OpenTraceHandlerQualifier;
+import hu.icellmobilsoft.coffee.cdi.trace.spi.ITraceHandler;
+import hu.icellmobilsoft.coffee.cdi.trace.spi.TraceHandlerQualifier;
 import io.opentracing.Scope;
 import io.opentracing.Span;
 import io.opentracing.Tracer;
@@ -39,8 +39,8 @@ import io.opentracing.Tracer.SpanBuilder;
  * @since 2.1.0
  */
 @ApplicationScoped
-@OpenTraceHandlerQualifier
-public class OpenTraceHandler implements IOpenTraceHandler {
+@TraceHandlerQualifier
+public class OpenTraceHandler implements ITraceHandler {
 
     @Inject
     private OpenTraceResolver openTraceResolver;

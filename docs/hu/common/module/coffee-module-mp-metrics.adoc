@@ -1,0 +1,39 @@
+[#common_module_coffee-module-mp-metrics]
+= coffee-module-mp-metrics/micrometer
+
+A modulok célja a https://github.com/eclipse/microprofile-metrics[microprofile metrics]
+és https://github.com/micrometer-metrics/micrometer[micrometer]
+támogatása mely tartalmazza a következő alapelveket:
+
+* Coffee kompatibilitás - lehetőséget biztosít hogy a coffee moduljai metrika
+információkat szolgáltassanak. A benne lévő interceptor a coff:ee moduljait képes kezelni,
+továbbfejleszthető.
+
+== coffee-core
+Tartalamaz metrika független `Noop*` implementációt ami alapértelmezetten aktív ha nincs
+bekötve konkrét metrika implementáció.
+
+== coffee-module-redis
+A modul <<coffee_module_redis-metrics,tartalmaz metrikákat>>
+melyeket metrika implementáció alapján lehet aktiválni:
+
+.pom.xml
+[source,xml]
+----
+<dependency>
+    <groupId>hu.icellmobilsoft.coffee</groupId>
+    <artifactId>coffee-module-redis</artifactId>
+</dependency>
+
+<dependency>
+    <groupId>hu.icellmobilsoft.coffee</groupId>
+    <artifactId>coffee-module-mp-micrometer</artifactId> <1>
+</dependency>
+<!-- vagy -->
+<dependency>
+    <groupId>hu.icellmobilsoft.coffee</groupId>
+    <artifactId>coffee-module-mp-metrics</artifactId> <2>
+</dependency>
+----
+<1> Micrometer metrika implementáció
+<2> Microprofile-metrics metrika implementáció

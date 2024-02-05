@@ -2,12 +2,66 @@
 
 coff:ee v2.4.0 -> v2.5.0 migration description, news, changes
 
+
+== Global
+
+* jandex-maven-plugin - test classes were excluded from indexing
+
+== Metric independency
+Development involving several modules,
+the goal of which is to implement metrics with several types be able to function.
+
+=== coffee-jpa & coffee-module-redis
+
+* The modules were independent from the metric implementation,
+you can freely choose between microprofile-metrics or micrometer
+* moved `hu.icellmobilsoft.coffee.jpa.health.DatabaseHealthConstant.DEFAULT_DATASOURCE_NAME` ->
+`hu.icellmobilsoft.coffee.cdi.config.IConfigKey.DATASOURCE_DEFAULT_NAME_VALUE`
+
+==== Migration
+
+At the dependency level, you need to choose the metric implementation
+that the service should use.
+Otherwise, everything else is backward compatible.
+
+[source,xml]
+----
+<dependency>
+    <groupId>hu.icellmobilsoft.coffee</groupId>
+    <artifactId>coffee-module-redis</artifactId>
+</dependency>
+
+<dependency>
+    <groupId>hu.icellmobilsoft.coffee</groupId>
+    <artifactId>coffee-module-mp-micrometer</artifactId> <1>
+</dependency>
+<!-- or -->
+<dependency>
+    <groupId>hu.icellmobilsoft.coffee</groupId>
+    <artifactId>coffee-module-mp-metrics</artifactId> <2>
+</dependency>
+----
+<1> Micrometer metric implementation
+<2> Microprofile-metrics metric implementation
+
+=== coffee-grpc-metrics-impl
+
+Renames coffee-grpc-metrics-impl -> coffee-grpc-metrics-mpmetrics
+
+==== Migration
+
+Without rename changes are backwards compatible doesnt need any migration.
+
+== Other developments
+
 === coffee-tool
 
 * Added tool class for "AES/CBC/PKCS5PADDING" de/cipher
 (`hu.icellmobilsoft.coffee.tool.utils.crypto.AesCbcCryptoUtil`)
 * Added SHA3-512 message digest to `hu.icellmobilsoft.coffee.tool.utils.string.EncodeUtil` class,
 deprecating old `Sha512(String str)`.
+* In MavenURLHandler class, fix getting resource over class to current thread-based getting
+* The `ResponseEntityCollectorOutputStream` has been modified. Previously, it stored characters represented by multiple bytes (e.g., UTF-8 Hungarian accented characters) by casting them to char, which could result in incorrect text. From now on, we store them as bytes. It is the responsibility of the caller to use the appropriate character encoding when converting these bytes into text.
 
 ==== Migration
 
@@ -25,7 +79,37 @@ Changes are backwards compatible doesnt need any migration.
 === coffee-rest
 
 * If version is not defined in the validateXMLs annotation, it won't attempt to read the requestVersion from the request body.
-** Add Jsonb configuratation
+* The `hu.icellmobilsoft.coffee.rest.validation.xml.annotation.ValidateXML` and `hu.icellmobilsoft.coffee.rest.validation.xml.annotation.ValidateXMLs` annotations are moved to the coffee-cdi module.
+
+==== Migration
+
+As a result of the move, if these annotations are also used on the usage project, the imports must be updated:
+
+`hu.icellmobilsoft.coffee.rest.validation.xml.annotation.ValidateXML` -> `hu.icellmobilsoft.coffee.cdi.annotation.xml.ValidateXML`
+`hu.icellmobilsoft.coffee.rest.validation.xml.annotation.ValidateXMLs` -> `hu.icellmobilsoft.coffee.cdi.annotation.xml.ValidateXMLs`
+
+=== coffee-module-etcd
+
+* Removed classes and methods annotated with `@Deprecated(since = "1.3.0", forRemoval = true)`
+
+==== Migration
+
+* `hu.icellmobilsoft.coffee.module.etcd.service.BaseEtcdService` removed.
+Its full-fledged replacement is the `hu.icellmobilsoft.coffee.module.etcd.service.EtcdService` class,
+which works explicitly with String values.
+* Method `getList()` has been removed from `hu.icellmobilsoft.coffee.module.etcd.service.ConfigEtcdService`. Use the compatible `getAll()` method.
+
+=== coffee-jpa
+
+* Added `@Dependent` annotation to `hu.icellmobilsoft.coffee.jpa.sql.batch.BatchService`
+
+==== Migration
+
+Changes are backwards compatible doesnt need any migration.
+
+=== coffee-module-configdoc
+
+* Nullpointer thrown during compile time when javadoc was missing before annotation `@ConfigDoc`.
 
 ==== Migration
 
@@ -33,8 +117,73 @@ Changes are backwards compatible doesnt need any migration.
 
 === coffee-module-mp-restclient
 
-** Add Jsonb configuratation
+* FaultTypeParserExtension has been modified, it looks for FaultType enums annotated with `@hu.icellmobilsoft.coffee.cdi.annotation.FaultTypeCode`.
+* IFaultType interface marked as deprecated. (Use the `@FaultTypeCode` instead)
 
 ==== Migration
 
-Changes are backwards compatible doesnt need any migration.
+If you have a FaultType enum in your project, annotate it with the `@FaultTypeCode` annotation and remove the `IFaultType` interface. `beans.xml` must be existed in the META-INF directory!
+
+== Trace detachment
+Development involving multiple modules with the aim of enabling tracing to work with various implementations.
+
+=== coffee-cdi
+
+* Renaming hu.icellmobilsoft.coffee.cdi.trace.constants.Tags to hu.icellmobilsoft.coffee.cdi.trace.constants.SpanAttribute
+* Received basic OpenTelemetry standard constants.
+* The @Traced annotation provides trace with the default INTERNAL kind type if not specified when using the annotation.
+* Renaming hu.icellmobilsoft.coffee.cdi.trace.spi.IOpenTraceHandler to hu.icellmobilsoft.coffee.cdi.trace.spi.ITraceHandler
+
+==== Migration
+
+At the dependency level, you need to choose which tracing implementation the service should use; otherwise, everything else is backward compatible.
+
+[source,xml]
+----
+<dependency>
+    <groupId>hu.icellmobilsoft.coffee</groupId>
+    <artifactId>coffee-module-mp-opentracing</artifactId> <1>
+</dependency>
+<!-- or -->
+<dependency>
+    <groupId>hu.icellmobilsoft.coffee</groupId>
+    <artifactId>coffee-module-mp-telemetry</artifactId> <2>
+</dependency>
+----
+<1> microprofile-opentracing implementation
+<2> microprofile-telemetry implementation
+
+If the values of `hu.icellmobilsoft.coffee.cdi.trace.constants.Tags` were used, you can find the constants in the `hu.icellmobilsoft.coffee.cdi.trace.constants.SpanAttribute` class instead.
+
+You should inject `ITraceHandler` instead of `IOpenTraceHandler`.
+
+=== coffee-grpc-opentracing-impl
+
+* Rename coffee-grpc-opentracing-impl to coffee-grpc-traces-mpopentracing
+
+==== Migration
+
+* Use the dependency coffee-grpc-tracing-opentracing instead of coffee-grpc-opentracing-impl
+
+=== coffee-grpc-traces-api
+
+* `ITracesInterceptor` has been discontinued for simpler interceptor search.
+
+==== Migration
+
+* When creating a custom interceptor, use the built-in `io.grpc.ServerInterceptor` instead of `ITracesInterceptor`.
+
+=== coffee-module-mongodb
+
+* Removed classes and method annotated with `@Deprecated(forRemoval = true, since = "1.1.0")`
+* Removed unimplemented and unused method: `hu.icellmobilsoft.coffee.module.mongodb.service.MongoService#getMongoCollectionName()`
+
+==== Migration
+
+* Instead of `hu.icellmobilsoft.coffee.module.mongodb.annotation.MongoConfiguration` use: `hu.icellmobilsoft.coffee.module.mongodb.extension.MongoClientConfiguration`
+* Instead of `hu.icellmobilsoft.coffee.module.mongodb.config.MongoDbConfig` use: `hu.icellmobilsoft.coffee.module.mongodb.extension.MongoConfigHelper`
+* Instead of `hu.icellmobilsoft.coffee.module.mongodb.config.MongoDbConfigImpl` use: `hu.icellmobilsoft.coffee.module.mongodb.extension.MongoClientConfiguration`
+* Instead of `hu.icellmobilsoft.coffee.module.mongodb.handler.MongoDbHandler` use: `hu.icellmobilsoft.coffee.module.mongodb.extension.MongoDbClient`
+* Instead of `hu.icellmobilsoft.coffee.module.mongodb.producer.MongoFactory` use: `hu.icellmobilsoft.coffee.module.mongodb.extension.MongoDbClientFactory`
+* Instead of `hu.icellmobilsoft.coffee.module.mongodb.service.MongoServiceImpl` use: `hu.icellmobilsoft.coffee.module.mongodb.extension.MongoDbClient`
+* Instead of `hu.icellmobilsoft.coffee.module.mongodb.service.MongoService#getMongoCollection()` use: `hu.icellmobilsoft.coffee.module.mongodb.extension.MongoDbClient#initRepositoryCollection(java.lang.String)`

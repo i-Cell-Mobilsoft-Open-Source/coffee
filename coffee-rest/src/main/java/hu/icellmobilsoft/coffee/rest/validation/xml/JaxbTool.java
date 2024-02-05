@@ -47,7 +47,7 @@ import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.dto.exception.InvalidParameterException;
 import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
-import hu.icellmobilsoft.coffee.rest.validation.xml.annotation.ValidateXML;
+import hu.icellmobilsoft.coffee.cdi.annotation.xml.ValidateXML;
 import hu.icellmobilsoft.coffee.rest.validation.xml.error.IXsdValidationErrorCollector;
 import hu.icellmobilsoft.coffee.rest.validation.xml.exception.XsdProcessingException;
 import hu.icellmobilsoft.coffee.rest.validation.xml.reader.IXmlRequestVersionReader;

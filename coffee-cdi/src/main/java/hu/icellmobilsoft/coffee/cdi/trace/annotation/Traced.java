@@ -30,6 +30,8 @@ import jakarta.enterprise.util.AnnotationLiteral;
 import jakarta.enterprise.util.Nonbinding;
 import jakarta.interceptor.InterceptorBinding;
 
+import hu.icellmobilsoft.coffee.cdi.trace.constants.SpanAttribute;
+
 /**
  * InterceptorBinding to trace methods
  * <p>
@@ -44,7 +46,7 @@ import jakarta.interceptor.InterceptorBinding;
 public @interface Traced {
 
     /**
-     * Trace tag component, represents io.opentracing.tag.Tags.COMPONENT <br>
+     * Trace span attribute component, represents io.opentracing.tag.Tags.COMPONENT or span attribute <br>
      * low-cardinality identifier of the module, library, or package that is instrumented.
      * 
      * @return component
@@ -53,16 +55,16 @@ public @interface Traced {
     String component() default "";
 
     /**
-     * Trace tag kind, represents io.opentracing.tag.Tags.SPAN_KIND <br>
-     * hints at the relationship between spans, e.g. client/server.
+     * Trace span attribute kind, represents io.opentracing.tag.Tags.SPAN_KIND or span attribute <br>
+     * hints at the relationship between spans, e.g. CLIENT/SERVER.
      * 
      * @return kind
      */
     @Nonbinding
-    String kind() default "";
+    String kind() default SpanAttribute.INTERNAL;
 
     /**
-     * Trace tag dbType, represents io.opentracing.tag.Tags.DB_TYPE <br>
+     * Trace span attribute dbType, represents io.opentracing.tag.Tags.DB_TYPE or span attribute <br>
      * 
      * DB_TYPE indicates the type of Database, e.g. "redis"
      * 
@@ -105,7 +107,7 @@ public @interface Traced {
          * @param component
          *            trace component, e.g. jetcd, jedis, database
          * @param kind
-         *            trace kind, e.g. client, server
+         *            trace kind, e.g. CLIENT, SERVER
          * @param dbType
          *            trace dbType, e.g. relational, etcd, redis
          */

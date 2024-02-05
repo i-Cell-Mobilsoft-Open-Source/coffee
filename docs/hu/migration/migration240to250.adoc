@@ -2,12 +2,59 @@
 
 coff:ee v2.4.0 -> v2.5.0 migrációs leírás, újdonságok, változások leírása
 
+== Global
+
+* jandex-maven-plugin - indexelésből kikerültek a test osztályok
+
+== Metrika függetlenítése
+Több modult érintő fejlesztés, aminek a célja hogy a metrika több fajta implementációval
+tudjon működni.
+
+=== coffee-jpa & coffee-module-redis
+
+* A modulok függetlenítve volt a metrika implementációjától,
+szabadon választható a microprofile-metrics vagy micrometer között
+* átmozgatva `hu.icellmobilsoft.coffee.jpa.health.DatabaseHealthConstant.DEFAULT_DATASOURCE_NAME` ->
+`hu.icellmobilsoft.coffee.cdi.config.IConfigKey.DATASOURCE_DEFAULT_NAME_VALUE`
+
+==== Migration
+
+Dependency szinten kell megválasztani milyen metrika implementáció-t használjon a szervice,
+egyébként minden más visszafelé kompatibilis.
+
+[source,xml]
+----
+<dependency>
+    <groupId>hu.icellmobilsoft.coffee</groupId>
+    <artifactId>coffee-module-mp-micrometer</artifactId> <1>
+</dependency>
+<!-- vagy -->
+<dependency>
+    <groupId>hu.icellmobilsoft.coffee</groupId>
+    <artifactId>coffee-module-mp-metrics</artifactId> <2>
+</dependency>
+----
+<1> Micrometer metrika implementáció
+<2> Microprofile-metrics metrika implementáció
+
+=== coffee-grpc-metrics-impl
+
+Átnevezés coffee-grpc-metrics-impl -> coffee-grpc-metrics-mpmetrics
+
+==== Migration
+
+Név változáson kívül a változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+== Egyéb fejlesztések
+
 === coffee-tool
 
 * Létrejött új "AES/CBC/PKCS5PADDING" kódoló osztály
 (`hu.icellmobilsoft.coffee.tool.utils.crypto.AesCbcCryptoUtil`)
 * Hozzá adva a SHA3-512 kódoló metódus a `hu.icellmobilsoft.coffee.tool.utils.string.EncodeUtil` osztályhoz,
 régi `Sha512(String str)` kivezetésre fog kerülni.
+* MavenURLHandler osztályban aktuális szál alapotú resource lekérést kerül.
+* A `ResponseEntityCollectorOutputStream` módosításra került, a több byte-on ábrázolt karaktereket (pl. UTF-8 magyar ékezetes karakterek) eddig karakterre castolva tárolta, ami hibás szöveget eredményezhetett. Továbbiakban byte-ként tároljuk, ennek szöveggé alakításakor a hívó fél felelőssége a megfelelő karakter kódolás használata.
 
 ==== Migration
 
@@ -25,7 +72,36 @@ A változtatások nem eredményeznek átállási munkálatokat, visszafelé komp
 === coffee-rest
 
 * Ha nincs definiálva a version a validateXMLs annotációban, akkor nem próbálja meg kiolvasni a requestVersion a requestből.
-** Jsonb configuráció hozzáadása
+* Átmozgatásra kerültek a `hu.icellmobilsoft.coffee.rest.validation.xml.annotation.ValidateXML` és `hu.icellmobilsoft.coffee.rest.validation.xml.annotation.ValidateXMLs` annotációk a coffee-cdi modul alá.
+
+==== Migration
+
+A változás eredményeképpen, ha felhasználási oldalon is hivatkozva van ezen annotációkra, frissíteni kell az importokat:
+`hu.icellmobilsoft.coffee.rest.validation.xml.annotation.ValidateXML` -> `hu.icellmobilsoft.coffee.cdi.annotation.xml.ValidateXML`
+`hu.icellmobilsoft.coffee.rest.validation.xml.annotation.ValidateXMLs` -> `hu.icellmobilsoft.coffee.cdi.annotation.xml.ValidateXMLs`
+
+=== coffee-module-etcd
+
+* A `@Deprecated(since = "1.3.0", forRemoval = true)` annotációval ellátott oszályok és metódusok törölve lettek.
+
+==== Migration
+
+* `hu.icellmobilsoft.coffee.module.etcd.service.BaseEtcdService` törölve lett.
+Teljes értékű helyettese a `hu.icellmobilsoft.coffee.module.etcd.service.EtcdService` osztály,
+mely kifejezetten String értékekkel dolgozik.
+* A `getList()` metódus törölve lett innen: `hu.icellmobilsoft.coffee.module.etcd.service.ConfigEtcdService`. Ezentúl a kompatibilis `getAll()` metódust kell hasznáni.
+
+=== coffee-jpa
+
+* `@Dependent` annotáció hozzáadva ehhez az osztályhoz: `hu.icellmobilsoft.coffee.jpa.sql.batch.BatchService`
+
+==== Migration
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+=== coffee-module-configdoc
+
+* Ha egy `@ConfigDoc` annotáció előtt nem szerepelt java doc, akkor fordítás során nullpointer keletkezett.
 
 ==== Migration
 
@@ -33,8 +109,75 @@ A változtatások nem eredményeznek átállási munkálatokat, visszafelé komp
 
 === coffee-module-mp-restclient
 
-** Jsonb configuráció hozzáadása
+* FaultTypeParserExtension módosult, ezentúl azokat az enumokat tölti be, melyeken pluszban szerepel a `@hu.icellmobilsoft.coffee.cdi.annotation.FaultTypeCode` annotáció.
+* Az IFaultType interfész deprecated-dé vált.
 
-==== Átállás
+==== Migration
 
-A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+Ha van FaultType enumod a projekteden, add hozzá @`@FaultTypeCode` annotációt és töröld az `IFaultType` interfészt. A beans.xml fájlnak ott kell lennie a META-INF könyvtárban!
+
+== Trace függetlenítése
+Több modult érintő fejlesztés, aminek a célja hogy a tracing több fajta implementációval
+tudjon működni.
+
+=== coffee-cdi
+
+* Átnevezés hu.icellmobilsoft.coffee.cdi.trace.constants.Tags -> hu.icellmobilsoft.coffee.cdi.trace.constants.SpanAttribute
+* Alap opentelemetry standard constansokat kapott.
+* `@Traced` annotáció default `INTERNAL` kind típussal szolgáltat trace-t amennyiben nem kerül megadásra az annotáció használatánál.
+* Átnevezés hu.icellmobilsoft.coffee.cdi.trace.spi.IOpenTraceHandler -> hu.icellmobilsoft.coffee.cdi.trace.spi.ITraceHandler
+
+==== Migration
+
+Dependency szinten kell megválasztani milyen tracing implementáció-t használjon a szervice,
+egyébként minden más visszafelé kompatibilis.
+
+[source,xml]
+----
+<dependency>
+    <groupId>hu.icellmobilsoft.coffee</groupId>
+    <artifactId>coffee-module-mp-opentracing</artifactId> <1>
+</dependency>
+<!-- vagy -->
+<dependency>
+    <groupId>hu.icellmobilsoft.coffee</groupId>
+    <artifactId>coffee-module-mp-telemetry</artifactId> <2>
+</dependency>
+----
+<1> microprofile-opentracing implementáció
+<2> microprofile-telemetry implementáció
+
+Amennyiben a `hu.icellmobilsoft.coffee.cdi.trace.constants.Tags` értékek voltak használva, helyette a `hu.icellmobilsoft.coffee.cdi.trace.constants.SpanAttribute` osztályban találhatók meg a konstansok.
+
+Az `IOpenTraceHandler` inject helyett `ITraceHandler`-t kell injectálni.
+
+=== coffee-grpc-opentracing-impl
+
+* Átnevezés coffee-grpc-opentracing-impl -> coffee-grpc-traces-mpopentracing
+
+==== Migration
+
+* dependency coffee-grpc-opentracing-impl helyett coffee-grpc-tracing-opentracing
+
+=== coffee-grpc-traces-api
+
+* ITracesInterceptor megszűnt, egyszerűbb interceptor keresés érdekében.
+
+==== Migration
+
+* Saját interceptor készítésekor használjuk a beépített `io.grpc.ServerInterceptor` az `ITracesInterceptor` helyett.
+
+=== coffee-module-mongodb
+
+* A `@Deprecated(forRemoval = true, since = "1.1.0")` annotációval ellátott oszályok és metódusok törlése.
+* Az implementálatlan, használaton kívüli metódus törlése: `hu.icellmobilsoft.coffee.module.mongodb.service.MongoService#getMongoCollectionName()`
+
+==== Migration
+
+* A `hu.icellmobilsoft.coffee.module.mongodb.annotation.MongoConfiguration` osztály helyett ezt az osztályt kell használni: `hu.icellmobilsoft.coffee.module.mongodb.extension.MongoClientConfiguration`
+* A `hu.icellmobilsoft.coffee.module.mongodb.config.MongoDbConfig` osztály helyett ezt az osztályt kell használni: `hu.icellmobilsoft.coffee.module.mongodb.extension.MongoConfigHelper`
+* A `hu.icellmobilsoft.coffee.module.mongodb.config.MongoDbConfigImpl` osztály helyett ezt az osztályt kell használni: `hu.icellmobilsoft.coffee.module.mongodb.extension.MongoClientConfiguration`
+* A `hu.icellmobilsoft.coffee.module.mongodb.handler.MongoDbHandler` osztály helyett ezt az osztályt kell használni: `hu.icellmobilsoft.coffee.module.mongodb.extension.MongoDbClient`
+* A `hu.icellmobilsoft.coffee.module.mongodb.producer.MongoFactory` osztály helyett ezt az osztályt kell használni: `hu.icellmobilsoft.coffee.module.mongodb.extension.MongoDbClientFactory`
+* A `hu.icellmobilsoft.coffee.module.mongodb.service.MongoServiceImpl` osztály helyett ezt az osztályt kell használni: `hu.icellmobilsoft.coffee.module.mongodb.extension.MongoDbClient`
+* A `hu.icellmobilsoft.coffee.module.mongodb.service.MongoService#getMongoCollection()`  metódus helyett ezt kell használni: `hu.icellmobilsoft.coffee.module.mongodb.extension.MongoDbClient#initRepositoryCollection(java.lang.String)`

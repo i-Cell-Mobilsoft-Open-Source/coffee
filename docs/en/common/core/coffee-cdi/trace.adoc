@@ -3,17 +3,15 @@
 
 The annotations in the `hu.icellmobilsoft.coffee.cdi.trace.annotation` package allow the modules of coff::ee to provide trace information. The annotations are used to allow coff::ee modules to plug into an existing trace flow or to start a new flow.
 
+The internal logic of coffee trace implementation is independent and selectable within the projects.
+If no trace implementation is selected, then by default, no trace propagation occurs in the system.
 
 * Trace usage
 
 ** The `@Traced` annotation allows a method to become traceable.
-
-*** Tags - links the span data of coff:ee modules to the values of mp-opentracing io.opentracing.tag.Tags
-
+*** SpanAttribute - links the span data of coff:ee modules to the values of mp-opentracing or by mp-telemetry
 **** component - module identifier that is part of the trace, e.g. redis-stream
-
-**** kind - specify type of span, e.g. consumer
-
+**** kind - specify type of span, e.g. CONSUMER (default INTERNAL)
 **** dbType - database type, e.g. redis
 
 
@@ -22,12 +20,12 @@ The annotations in the `hu.icellmobilsoft.coffee.cdi.trace.annotation` package a
 ----
 ...
 @Inject
-private IOpenTraceHandler traceHandler;
+private ITraceHandler traceHandler;
 ...
 
 public Object execute(CdiQueryInvocationContext context) {
 //create jpa query ...
-Traced traced = new Traced.Literal(Tags.Database.COMPONENT, Tags.Database.KIND, Tags.Database.DB_TYPE);
+Traced traced = new Traced.Literal(SpanAttribute.Database.COMPONENT, SpanAttribute.Database.KIND, SpanAttribute.Database.DB_TYPE);
 String operation = context.getRepositoryClass() + "." + method.getName();
 return traceHandler.runWithTrace(() -> context.executeQuery(jpaQuery), traced, operation);
 }
@@ -36,7 +34,7 @@ return traceHandler.runWithTrace(() -> context.executeQuery(jpaQuery), traced, o
 .sample @Traced
 [source,java]
 ----
-@Traced(component = Tags.Redis.Stream.COMPONENT, kind = Tags.Redis.Stream.KIND, dbType = Tags.Redis.DB_TYPE)
+@Traced(component = SpanAttribute.Redis.Stream.COMPONENT, kind = SpanAttribute.Redis.Stream.KIND, dbType = SpanAttribute.Redis.DB_TYPE)
 @Override
 public void onStream(StreamEntry streamEntry) throws BaseException {
 ...

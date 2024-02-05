@@ -19,6 +19,8 @@
  */
 package hu.icellmobilsoft.coffee.dto.error;
 
+import hu.icellmobilsoft.coffee.cdi.annotation.FaultTypeCode;
+
 /**
  * Generic interface to mark the fault code enums and the generic error categories.
  *
@@ -26,7 +28,10 @@ package hu.icellmobilsoft.coffee.dto.error;
  *            the fault code enumeration
  * @author imre.scheffer
  * @since 1.0.0
+ * @deprecated use the {@link FaultTypeCode} annotation
+ * 
  */
+@Deprecated(since = "2.5.0", forRemoval = true)
 public interface IFaultType<E extends Enum<E>> {
 
     /**

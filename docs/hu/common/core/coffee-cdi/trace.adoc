@@ -1,33 +1,32 @@
 [#common_core_coffee-cdi_trace]
 = Trace
 
-A `hu.icellmobilsoft.coffee.cdi.trace.annotation` csomagban található annotációk lehetővé teszik hogy a coff::ee moduljai trace információt szolgáltassanak. Az annotációk azt a célt szolgálják hogy a coff::ee moduljai képesek legyenek becsatlakozni egy meglévő trace flow-ba vagy új flow tudjanak indítani.
+A `hu.icellmobilsoft.coffee.cdi.trace.annotation` csomagban található annotációk lehetővé teszik hogy a coff::ee moduljai trace információt szolgáltassanak. Az annotációk azt a célt szolgálják hogy a coff::ee moduljai képesek legyenek becsatlakozni egy meglévő trace flow-ba vagy új flow-t tudjanak indítani.
+
+A coffee belső logikája trace implementáció független és választható a projekteken belül.
+Ha nincs kiválasztva trace implementáció akkor alapértelmezett nem történik trace propagáció a rendszerben.
 
 
 * Trace használat
 
 ** A `@Traced` annotáció lehetővé teszi hogy metódus trace-elhetővé váljon.
-
-*** Tags - összeköti a coff:ee modulok span adatait a mp-opentracing io.opentracing.tag.Tags értékeivel
-
+*** SpanAttribute - összeköti a coff:ee modulok span adatait az mp-opentracing vagy mp-telemetry modulon keresztül
 **** component - modul azonosító ami a trace része, pl redis-stream
-
-**** kind - span-ek típusát adhatja meg, pl consumer
-
+**** kind - span-ek típusát adhatja meg, pl CONSUMER (default INTERNAL)
 **** dbType - adatbázis típusa, pl redis
 
 
-.minta IOpenTraceHandler
+.minta ITraceHandler
 [source,java]
 ----
 ...
 @Inject
-private IOpenTraceHandler traceHandler;
+private ITraceHandler traceHandler;
 ...
 
 public Object execute(CdiQueryInvocationContext context) {
 //create jpa query ...
-Traced traced = new Traced.Literal(Tags.Database.COMPONENT, Tags.Database.KIND, Tags.Database.DB_TYPE);
+Traced traced = new Traced.Literal(SpanAttribute.Database.COMPONENT, SpanAttribute.Database.KIND, SpanAttribute.Database.DB_TYPE);
 String operation = context.getRepositoryClass() + "." + method.getName();
 return traceHandler.runWithTrace(() -> context.executeQuery(jpaQuery), traced, operation);
 }
@@ -36,10 +35,11 @@ return traceHandler.runWithTrace(() -> context.executeQuery(jpaQuery), traced, o
 .minta @Traced
 [source,java]
 ----
-@Traced(component = Tags.Redis.Stream.COMPONENT, kind = Tags.Redis.Stream.KIND, dbType = Tags.Redis.DB_TYPE)
+@Traced(component = SpanAttribute.Redis.Stream.COMPONENT, kind = SpanAttribute.Redis.Stream.KIND, dbType = SpanAttribute.Redis.DB_TYPE)
 @Override
 public void onStream(StreamEntry streamEntry) throws BaseException {
 ...
 }
 
 ----
+

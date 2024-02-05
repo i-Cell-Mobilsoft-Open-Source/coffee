@@ -7,13 +7,13 @@ Each company develops its own solution set, which tries to bring projects togeth
 
 This solution set is suitable to serve both SOA and Microservice architecture. Its architecture is modular and can be overwritten at project level for almost everything. The framework is based on the following systems, which are crucial for the whole operation:
 
-* Jakarta EE 8+
+* Jakarta EE 10+
 * Java 11+
-* CDI 2.0+
+* CDI 4.0+
 * Jboss logging
 * gson
 * guava
 * commons-lang3
 * apache http
 * resteasy
-* microprofile.io 1.3+
+* microprofile.io 6.0+

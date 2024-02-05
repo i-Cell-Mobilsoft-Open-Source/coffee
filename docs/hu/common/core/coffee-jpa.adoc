@@ -75,6 +75,9 @@ A *BatchService* a következő típusokkal kapcsolatos műveleteket támogatja b
 | Minden típus, amit a hibernate null-ként értékel ki.
 
 | link:#CustomType[CustomType] típusként kezelt
+| Jelenleg nincs konkrét típus, kiterjesztés miatt van használva.
+
+| link:#Enums[Enum] típusként kezelt
 | Minden enum típus.
 
 | link:#ManyToOneType[ManyToOneType] típusként kezelt
@@ -115,8 +118,12 @@ NOTE: A *JDBC driver*-ek is ezt a módszert alkalmazzák.
 
 === CustomType kezelése [[CustomType]]
 
-A *Hibernate* az enum típusokat egy *CustomerType* típusba csomagolja be, mint *EnumType*. +
-A *BatchService* az *EnumType*-ok feloldását a következőképpen oldja meg:
+A *BatchService* jelenleg egyetlen egy *CustomType*-t sem kezel közvetlenül, viszont lehetőséget biztosít a kiterjesztésre.
+Alapértelmezetten minden *CustomType* típus kezelését a használt *JDBC driver*-re bízzuk rá!
+
+=== Enum típusok kezelése [[Enums]]
+
+A *BatchService* az *Enum* típusok feloldását a következőképpen oldja meg:
 
 [%header,cols=2]
 |===
@@ -149,11 +156,6 @@ private EnumType enumString;
 ----
 | Az adott nem értékhez tartozó név, a *name()* metódus szerinti érték kerül beszúrásra.
 |===
-
-A táblázatban szereplő értékek beszúrása a *PreparedStatement.setObject()* metódusa használatával történik, így a típuskezelés az adott *JDBC driver*-re van bízva.
-
-A *BatchService* jelenleg a *CustomType*-ok esetén csak az *EnumType*-ot kezeli külön. +
-Minden más *CustomType* típus kezelését a használt *JDBC driver*-re bízzuk rá!
 
 === ManyToOneType kezelése [[ManyToOneType]]
 
@@ -477,7 +479,15 @@ a|
 @Column(name = "WRAPPER_BYTE_ARRAY")
 private Byte[] wrapperByteArray;
 ----
-| Átkonvertálódik primitív *byte[]* típusra, majd a *PreparedStatement.setBytes()* metódusa használatával kerül beállításra.
+a| Ha a legacy array handling engedélyezve van:
+
+* Átkonvertálódik primitív *byte[]* típusra, majd a *PreparedStatement.setBytes()* metódusa használatával kerül beállításra.
+
+Ha nincs engedélyezve a legacy array handling:
+
+* A használt *JDBC driver*-re bízzuk a feloldást.
+
+IMPORTANT: Amennyiben lehetséges, byte[] használata ajánlott helyette.
 
 a|
 [source,java]
@@ -495,16 +505,49 @@ a|
 @Column(name = "LOB_WRAPPER_BYTE_ARRAY")
 private Byte[] lobWrapperByteArray;
 ----
-| Átkonvertálódik primitív *byte[]* típusra, majd a *PreparedStatement.setBytes()* metódusa használatával kerül beállításra.
+a| Ha a legacy array handling engedélyezve van:
+
+* Átkonvertálódik primitív *byte[]* típusra, majd a *PreparedStatement.setBytes()* metódusa használatával kerül beállításra.
+
+Ha nincs engedélyezve a legacy array handling:
+
+* A használt *JDBC driver*-re bízzuk a feloldást.
+
+IMPORTANT: Amennyiben lehetséges, byte[] használata ajánlott helyette.
 
 |===
 
 IMPORTANT: A táblázatban nem szereplő típusok beállítását a *JDBC driver*-re bízzuk.
 
+[NOTE]
+====
+A legacy array handling engedélyezéséhez a `persistence.xml` bővítése szükséges a következővel: `<property name="hibernate.type.wrapper_array_handling" value="legacy"/>`. +
+Bővebben: https://github.com/hibernate/hibernate-orm/blob/6.2/migration-guide.adoc#bytecharacter-mapping-changes[hibernate 6.2 migration guide]
+====
+
 == microprofile-health támogatás
 
 A *DatabaseHealth* ellenőrizni tudja hogy elérhető-e az adatbázis.
 A *DatabasePoolHealth* ellenőrizni tudja mennyire terhelt az adatbázishoz műveletekhez használt connection pool.
+
+Ez a funkció a metrika adatain alapszik,
+így szükséges hogy valamelyik implementáció aktiválva legyen.
+
+.pom.xml
+[source,xml]
+----
+<dependency>
+    <groupId>hu.icellmobilsoft.coffee</groupId>
+    <artifactId>coffee-module-mp-micrometer</artifactId> <1>
+</dependency>
+<!-- vagy -->
+<dependency>
+    <groupId>hu.icellmobilsoft.coffee</groupId>
+    <artifactId>coffee-module-mp-metrics</artifactId> <2>
+</dependency>
+----
+<1> Micrometer metrika implementáció
+<2> Microprofile-metrics metrika implementáció
 
 .Startup használati példa
 [source,java]
@@ -515,11 +558,16 @@ public class DatabaseHealthCheck {
     @Inject
     private DatabaseHealth databaseHealth;
 
+    @Inject
+    private Config mpConfig;
+
     public HealthCheckResponse checkDatabaseConnection() {
         DatabaseHealthResourceConfig config = new DatabaseHealthResourceConfig();
         config.setBuilderName("oracle");
         config.setDatasourceUrl("jdbc:postgresql://service-postgredb:5432/service_db?currentSchema=service");
-        config.setDsName(DatabaseHealthConstant.Database.DEFAULT_DATASOURCE_NAME);
+        String datasourceName = mpConfig.getOptionalValue(IConfigKey.DATASOURCE_DEFAULT_NAME, String.class)
+                .orElse(IConfigKey.DATASOURCE_DEFAULT_NAME_VALUE);
+        config.setDsName(datasourceName);
         try {
             return databaseHealth.checkDatabaseConnection(config);
         }catch (BaseException e) {
