@@ -20,10 +20,6 @@ Changes are backwards compatible doesnt need any migration.
 
 Changes are backwards compatible doesnt need any migration.
 
-==== Átállás
-
-A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
-
 === coffee-module-redis
 
 ** microprofile-health support
