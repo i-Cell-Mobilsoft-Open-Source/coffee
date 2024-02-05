@@ -74,7 +74,7 @@ public class JsonbUtil {
         return JsonbBuilder.newBuilder().withConfig(jsonbConfig).build();
     }
 
-    protected static PropertyVisibilityStrategy getPropertyVisibilityStrategyClass(Config config) {
+    private static PropertyVisibilityStrategy getPropertyVisibilityStrategyClass(Config config) {
         String className = config.getOptionalValue(joinKey(PROPERTYVISIBILITYSTRATEGYCLASS_POSTFIX), String.class)
                 .orElse("hu.icellmobilsoft.coffee.rest.provider.FieldOnlyVisibilityStrategy");
         try {
@@ -91,11 +91,11 @@ public class JsonbUtil {
         }
     }
 
-    protected static String getBinaryDataStrategy(Config config) {
+    private static String getBinaryDataStrategy(Config config) {
         return config.getOptionalValue(joinKey(BINARY_DATA_STRATEGY_POSTFIX), String.class).orElse(BinaryDataStrategy.BASE_64);
     }
 
-    protected static String joinKey(String key) {
+    private static String joinKey(String key) {
         return String.join(KEY_DELIMITER, JSONB_CONFIG_PREFIX, key);
     }
 
