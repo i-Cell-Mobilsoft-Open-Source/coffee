@@ -19,8 +19,7 @@
  */
 package hu.icellmobilsoft.coffee.module.mp.restclient.provider;
 
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
+import jakarta.enterprise.inject.spi.CDI;
 import jakarta.json.bind.Jsonb;
 import jakarta.ws.rs.ext.ContextResolver;
 
@@ -33,11 +32,7 @@ import jakarta.ws.rs.ext.ContextResolver;
  *      "https://download.eclipse.org/microprofile/microprofile-rest-client-2.0/microprofile-rest-client-spec-2.0.html#_json_p_and_json_b_providers">MP
  *      Rest client 2.0 spec JSON-B provider</a>
  */
-@ApplicationScoped
 public class JsonbMPRestClientSettings implements ContextResolver<Jsonb> {
-
-    @Inject
-    private Jsonb jsonb;
 
     /**
      * Default constructor
@@ -48,6 +43,7 @@ public class JsonbMPRestClientSettings implements ContextResolver<Jsonb> {
 
     @Override
     public Jsonb getContext(Class<?> type) {
-        return jsonb;
+        return CDI.current().select(Jsonb.class).get();
     }
+
 }
