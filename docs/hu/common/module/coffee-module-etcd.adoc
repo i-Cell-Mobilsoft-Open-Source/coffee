@@ -11,7 +11,7 @@ Működése a hivatalos
 <dependency>
     <groupId>io.etcd</groupId>
     <artifactId>jetcd-core</artifactId>
-    <version>0.5.0</version>
+    <version>0.7.5</version>
 </dependency>
 ----
 driveren alapszik, kiterjesztve céges használati modell lehetőségekkel. Pontosabb leírás külön oldalon található
@@ -49,8 +49,45 @@ azt is hogyha az ETCD nem tartalmazza,
 így csökkenthetjük a rengeteg ismétlődő lekérdezést.
 A Cache egy thread safe singleton,
 lehetőség van üríteni a `EtcdConfigSourceCache.instance().clear()` hívással.
+* `hu.icellmobilsoft.coffee.module.etcd.producer.RuntimeEtcdConfigSource` -
+Futás közben aktiválható a szükség szerint (pl. AfterBeanDiscovery) a következő módon
++
+[source,java]
+----
+RuntimeEtcdConfigSource.setActive(true);
+----
 
-Aktiválása a következő fájban történik:
+* `hu.icellmobilsoft.coffee.module.etcd.producer.FilteredEtcdConfigSource` -
+Konfigurációs regex pattern paraméterek szerint dönthető el hogy keresse-e a kulcsot ETCD-ben
++
+[source,yaml]
+----
+coffee:
+  configSource:
+    FilteredEtcdConfigSource:
+      pattern:
+        include: ^(public|private)\\.
+        exclude: ^private\\.
+----
+A példa a következő logikával működik:
+
+. `exclude` - feldolgozási sorrend elején van,
+így ezt fogja kiérékelni az `include` előtt.
+Nem kötelező.
+Ha nincs megadva nem aktiválódik a szűrés, átenged minden kulcsot.
+Ha a keresett kulcs megfelel a patternek akkor nem fogja keresni az ETCD-ben.
+. `include` - nem kötelező.
+Ha nincs megadva nem aktiválódik a szűrés, átenged minden kulcsot.
+Csak akkor fogja keresni a kulcsot az ETCD-ben ha a keresett kulcs megfelel a patternek.
+. Minták
+.. "private.sample.key1" - a kulcsot nem fogja az ETCD-ben keresni,
+mert az `exclude` pattern kiszűri.
+.. "public.sample.key2" - a kulcsot fogja az ETCD-ben keresni,
+mert az `exclude` pattern átengedi és a `include` pattern is megfelő.
+.. "org.sample.key3" - a kulcsot nem fogja az ETCD-ben keresni,
+mert az `exclude` pattern átengedi de a `include` pattern kiszűri.
+
+Minta aktiválás az egyedi ConfigSource-oknak:
 
 .src/main/resources/META-INF/services/org.eclipse.microprofile.config.spi.ConfigSource
 [source,java]
@@ -58,7 +95,7 @@ Aktiválása a következő fájban történik:
 hu.icellmobilsoft.coffee.module.etcd.producer.CachedEtcdConfigSource
 ----
 
-Ennek a ConfigSource-nak 150 értékre van állítva a prioritása.
+A ConfigSource-oknak 150 értékre van állítva a prioritása.
 
 Lehetőség van String, Integer, Boolean, Long, Float ás Double típusú konfigurációk injectelésére. Az ETCD-ben mindenképp String tárolódik, az érték kiolvasása után történik meg a parsolás a kívánt típusra. A mechanizmus a háttérben a ConfigEtcdHandler-t használja az értékek kiolvasására.
 Lásd: link:#common_core_coffee-configuration[configuration modul]
@@ -133,21 +170,6 @@ Map<String, String> publicConfigMap = configEtcdService.searchList("public."); /
 
 Nem létező konfiguráció elkérése, törlése esetén BONotFoundException-t dob a service.
 Mivel ezt a mechanizmust használja minden felsorolt lehetőség, így ez mindegyikre igaz.
-
-== Namespace-ek, konfiguráció elnevezési konvenciók
-A konfiguráció kezelő nem támogat külön namespace-ket, minden, az etcd-ben tárolt információhoz hozzáférünk.
-
-Minden konfiguráció kulcsa egy láthatósági prefix-szel kezdődik.
-A következő konvenciók alapján kezelik ezeket:
-
-[options="header",cols="1,1"]
-|===
-|Prefix   |Leírás   
-//-------------
-|`private.`   |Csak a backend számára elérhető konfiguráció   
-|`protected.` |A backend és a frontend számára is elérhető konfiguráció, a frontend csak olvashat   
-|`public.`    |A backend és a frontend számára is elérhető konfiguráció, a frontend is módosíthatja az értékét   
-|===
 
 == Konfigurációk kezelés Command Line Tool segítségével
 Töltsük le és csomagoljuk ki a rendszerünknek megfelelő ETCD csomagot: https://github.com/coreos/etcd/releases/
