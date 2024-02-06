@@ -35,13 +35,15 @@ import hu.icellmobilsoft.coffee.tool.utils.config.ConfigUtil;
 
 /**
  * {@link Jsonb} object creator util class.
- * <code>
+ * 
+ * <pre>
  * coffee:
  *   jsonb:
  *     config:
  *       propertyvisibilitystrategyclass: "hu.icellmobilsoft.coffee.rest.provider.FieldOnlyVisibilityStrategy"
  *       binarydatastrategy: "BASE_64"
- * </code>
+ * </pre>
+ * 
  * @author speter555
  * @since 2.5.0
  */
