@@ -35,12 +35,12 @@ import hu.icellmobilsoft.coffee.rest.provider.util.JsonbUtil;
  * @see <a href="https://github.com/eclipse-ee4j/jsonb-api/issues/172">Future configuration option</a>
  */
 @Provider
-public class CustomJsonb implements ContextResolver<Jsonb> {
+public class JsonbContextResolverProvider implements ContextResolver<Jsonb> {
 
     /**
      * Default constructor
      */
-    public CustomJsonb() {
+    public JsonbContextResolverProvider() {
         super();
     }
 

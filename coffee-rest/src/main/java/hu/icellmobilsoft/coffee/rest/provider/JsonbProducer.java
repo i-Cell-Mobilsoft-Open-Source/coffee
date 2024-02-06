@@ -2,7 +2,7 @@
  * #%L
  * Coffee
  * %%
- * Copyright (C) 2020 - 2023 i-Cell Mobilsoft Zrt.
+ * Copyright (C) 2020 - 2024 i-Cell Mobilsoft Zrt.
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,35 +17,38 @@
  * limitations under the License.
  * #L%
  */
-package hu.icellmobilsoft.coffee.module.mp.restclient.provider;
+package hu.icellmobilsoft.coffee.rest.provider;
 
-import jakarta.enterprise.context.Dependent;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.inject.Produces;
 import jakarta.json.bind.Jsonb;
-import jakarta.ws.rs.ext.ContextResolver;
 
 import hu.icellmobilsoft.coffee.rest.provider.util.JsonbUtil;
 
 /**
- * Custom default JSON-B JAXRS provider. For MP-rest client
- *
+ * Jsonb producer class
+ * 
  * @author speter555
- * @since 2.5.0
- * @see <a href=
- *      "https://download.eclipse.org/microprofile/microprofile-rest-client-2.0/microprofile-rest-client-spec-2.0.html#_json_p_and_json_b_providers">MP
- *      Rest client 2.0 spec JSON-B provider</a>
+ * @since 2.6.0
  */
-@Dependent
-public class CustomJsonbContextResolver implements ContextResolver<Jsonb> {
+@ApplicationScoped
+public class JsonbProducer {
 
     /**
      * Default constructor
      */
-    public CustomJsonbContextResolver() {
+    public JsonbProducer() {
         super();
     }
 
-    @Override
-    public Jsonb getContext(Class<?> type) {
+    /**
+     * Jsonb producer
+     * 
+     * @return Jsonb instance
+     */
+    @Produces
+    @ApplicationScoped
+    public Jsonb getJsonb() {
         return JsonbUtil.getContext();
     }
 }

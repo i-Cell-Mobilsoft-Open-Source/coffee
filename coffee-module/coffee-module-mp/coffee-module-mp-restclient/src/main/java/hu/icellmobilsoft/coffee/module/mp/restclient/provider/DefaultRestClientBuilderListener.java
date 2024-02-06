@@ -59,7 +59,7 @@ public class DefaultRestClientBuilderListener implements RestClientBuilderListen
         builder.register(cdi.select(DefaultLoggerClientResponseFilter.class).get());
         // settings
         builder.register(cdi.select(DefaultSettingClientRequestFilter.class).get());
-        builder.register(cdi.select(CustomJsonbContextResolver.class).get());
+        builder.register(cdi.select(JsonbMPRestClientSettings.class).get());
         // exception
         builder.register(DefaultBaseExceptionResponseExceptionMapper.class);
         // timeout
