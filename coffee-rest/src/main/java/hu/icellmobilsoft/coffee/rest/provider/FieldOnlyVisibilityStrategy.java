@@ -29,7 +29,7 @@ import jakarta.json.bind.config.PropertyVisibilityStrategy;
  * <a href="https://www.adam-bien.com/roller/abien/entry/private_fields_serialization_with_json">private_fields_serialization_with_json</a>
  *
  * @author speter555
- * @since 2.5.0
+ * @since 2.6.0
  *
  */
 public class FieldOnlyVisibilityStrategy implements PropertyVisibilityStrategy {

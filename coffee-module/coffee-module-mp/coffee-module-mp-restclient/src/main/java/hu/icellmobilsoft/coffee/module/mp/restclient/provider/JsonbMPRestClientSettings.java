@@ -27,7 +27,7 @@ import jakarta.ws.rs.ext.ContextResolver;
  * Custom default JSON-B JAXRS provider. For MP-rest client
  *
  * @author speter555
- * @since 2.5.0
+ * @since 2.6.0
  * @see <a href=
  *      "https://download.eclipse.org/microprofile/microprofile-rest-client-2.0/microprofile-rest-client-spec-2.0.html#_json_p_and_json_b_providers">MP
  *      Rest client 2.0 spec JSON-B provider</a>

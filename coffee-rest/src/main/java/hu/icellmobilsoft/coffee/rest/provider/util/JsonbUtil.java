@@ -40,12 +40,12 @@ import hu.icellmobilsoft.coffee.tool.utils.config.ConfigUtil;
  * coffee:
  *   jsonb:
  *     config:
- *       propertyvisibilitystrategyclass: "hu.icellmobilsoft.coffee.rest.provider.FieldOnlyVisibilityStrategy"
- *       binarydatastrategy: "BASE_64"
+ *       {@value JsonbUtil#PROPERTY_VISIBILITY_STRATEGY_CLASS_POSTFIX}: "hu.icellmobilsoft.coffee.rest.provider.FieldOnlyVisibilityStrategy"
+ *       {@value JsonbUtil#BINARY_DATA_STRATEGY_POSTFIX}: "BASE_64"
  * </pre>
  * 
  * @author speter555
- * @since 2.5.0
+ * @since 2.6.0
  */
 public class JsonbUtil {
 
@@ -54,9 +54,9 @@ public class JsonbUtil {
      */
     private static final String KEY_DELIMITER = ".";
 
-    private static final String PROPERTYVISIBILITYSTRATEGYCLASS_POSTFIX = "propertyvisibilitystrategyclass";
+    private static final String PROPERTY_VISIBILITY_STRATEGY_CLASS_POSTFIX = "propertyVisibilityStrategyClass";
 
-    private static final String BINARY_DATA_STRATEGY_POSTFIX = "binarydatastrategy";
+    private static final String BINARY_DATA_STRATEGY_POSTFIX = "binaryDataStrategy";
     /**
      * Prefix for all configs
      */
@@ -77,7 +77,7 @@ public class JsonbUtil {
     }
 
     private static PropertyVisibilityStrategy getPropertyVisibilityStrategyClass(Config config) {
-        String className = config.getOptionalValue(joinKey(PROPERTYVISIBILITYSTRATEGYCLASS_POSTFIX), String.class)
+        String className = config.getOptionalValue(joinKey(PROPERTY_VISIBILITY_STRATEGY_CLASS_POSTFIX), String.class)
                 .orElse("hu.icellmobilsoft.coffee.rest.provider.FieldOnlyVisibilityStrategy");
         try {
             return (PropertyVisibilityStrategy) Class.forName(className).getConstructor().newInstance();
@@ -86,7 +86,7 @@ public class JsonbUtil {
                     .warn(
                             MessageFormat.format(
                                     "The PropertyVisibilityStrategy class in the [{0}] config with value [{1}] has a problem ",
-                                    joinKey(PROPERTYVISIBILITYSTRATEGYCLASS_POSTFIX),
+                                    joinKey(PROPERTY_VISIBILITY_STRATEGY_CLASS_POSTFIX),
                                     className),
                             e);
             return new FieldOnlyVisibilityStrategy();
