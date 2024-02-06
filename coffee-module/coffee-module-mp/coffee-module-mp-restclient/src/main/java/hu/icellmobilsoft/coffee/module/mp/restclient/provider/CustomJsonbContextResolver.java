@@ -19,7 +19,6 @@
  */
 package hu.icellmobilsoft.coffee.module.mp.restclient.provider;
 
-
 import jakarta.enterprise.context.Dependent;
 import jakarta.json.bind.Jsonb;
 import jakarta.ws.rs.ext.ContextResolver;
@@ -37,6 +36,13 @@ import hu.icellmobilsoft.coffee.rest.provider.util.JsonbUtil;
  */
 @Dependent
 public class CustomJsonbContextResolver implements ContextResolver<Jsonb> {
+
+    /**
+     * Default constructor
+     */
+    public CustomJsonbContextResolver() {
+        super();
+    }
 
     @Override
     public Jsonb getContext(Class<?> type) {

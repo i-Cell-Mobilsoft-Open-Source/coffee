@@ -24,7 +24,6 @@ import java.lang.reflect.Method;
 
 import jakarta.json.bind.config.PropertyVisibilityStrategy;
 
-
 /**
  * The default JSON-B output mapping has all public methods, include setter and getter. This configuration avoids this. Based on
  * <a href="https://www.adam-bien.com/roller/abien/entry/private_fields_serialization_with_json">private_fields_serialization_with_json</a>
@@ -34,6 +33,13 @@ import jakarta.json.bind.config.PropertyVisibilityStrategy;
  *
  */
 public class FieldOnlyVisibilityStrategy implements PropertyVisibilityStrategy {
+
+    /**
+     * Default constructor s
+     */
+    public FieldOnlyVisibilityStrategy() {
+        super();
+    }
 
     @Override
     public boolean isVisible(Field field) {

@@ -19,7 +19,6 @@
  */
 package hu.icellmobilsoft.coffee.rest.provider;
 
-
 import jakarta.json.bind.Jsonb;
 import jakarta.ws.rs.ext.ContextResolver;
 import jakarta.ws.rs.ext.Provider;
@@ -37,6 +36,13 @@ import hu.icellmobilsoft.coffee.rest.provider.util.JsonbUtil;
  */
 @Provider
 public class CustomJsonb implements ContextResolver<Jsonb> {
+
+    /**
+     * Default constructor
+     */
+    public CustomJsonb() {
+        super();
+    }
 
     @Override
     public Jsonb getContext(Class<?> type) {
