@@ -61,3 +61,13 @@ Added the definition of the Jsonb configuration.
 ==== Migration
 
 The changes do not result in migration work, backwards default values are set for correct usage.
+
+=== coffee-module-mp-restclient
+
+==== Jsonb Config
+
+Added the definition of the Jsonb configuration.
+
+==== Migration
+
+The changes do not result in migration work, backwards default values are set for correct usage.
