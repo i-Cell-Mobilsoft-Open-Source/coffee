@@ -51,3 +51,11 @@ See more: https://github.com/hibernate/hibernate-orm/blob/6.2/migration-guide.ad
 ==== Migration
 
 Changes are backwards compatible doesn't need any migration.
+
+==== coffee-module-csv
+
+Added new methods for changing the csv format. For example csv separator, escape char.
+
+==== Migration
+
+Changes are backwards compatible doesn't need any migration.

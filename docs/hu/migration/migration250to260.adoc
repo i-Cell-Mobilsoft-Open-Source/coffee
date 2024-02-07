@@ -52,3 +52,11 @@ Bővebben: https://github.com/hibernate/hibernate-orm/blob/6.2/migration-guide.a
 ==== Migration
 
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+==== coffee-module-csv
+
+Új metódusokkal, lehetőség van a csv format állítására. Milyen csv szeparátor, escape char stb legyen használva.
+
+==== Migration
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
