@@ -72,7 +72,7 @@ coffee:
 A példa a következő logikával működik:
 
 . `exclude` - feldolgozási sorrend elején van,
-így ezt fogja kiérékelni az `include` előtt.
+így ezt fogja kiértékelni az `include` előtt.
 Nem kötelező.
 Ha nincs megadva nem aktiválódik a szűrés, átenged minden kulcsot.
 Ha a keresett kulcs megfelel a patternek akkor nem fogja keresni az ETCD-ben.
