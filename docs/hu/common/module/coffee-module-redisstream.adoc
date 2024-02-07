@@ -142,10 +142,6 @@ Ezek a beállítások az alkalmazás szerverek szerint változnak, például:
 ** használat https://docs.wildfly.org/21/Developer_Guide.html#managed-executor-service 
 ** konfiguráció https://docs.wildfly.org/21/Admin_Guide.html#managed-executor-services
 
-* Thorntail 2.7:
-
-** konfiguráció https://docs.thorntail.io/2.7.0.Final/#_ee
-
 .MDC
 A rendszer MDC szinten "retryCounter" néven loggolja hogy,
 hányadik iterációban tart az újra próbálkozás

@@ -110,18 +110,6 @@ A felolvasott implementációk sorrendezhetőek a `@Priority` annotációval, az
 </dependency>
 ----
 
-Ez mellett kellhet aktiválni az alkalmazás szerver kiterjesztését is,
-ami például a thorntail serverben a következő:
-
-.Thorntail alkalmazás szerver aktiválás
-[source,xml]
-----
-<dependency>
-    <groupId>io.thorntail</groupId>
-    <artifactId>microprofile-restclient</artifactId>
-</dependency>
-----
-
 == Használati példák
 IMPORTANT: Maga a komplett használat részletes leírása a
 https://github.com/eclipse/microprofile-rest-client[microprofile-rest-client]
