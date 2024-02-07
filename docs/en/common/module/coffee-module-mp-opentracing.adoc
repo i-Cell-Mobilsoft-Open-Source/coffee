@@ -38,37 +38,6 @@ This filter should handle it, but it is currently exception based, which will no
 https://github.com/opentracing-contrib/java-jaxrs/blob/master/opentracing-jaxrs2/src/main/java/io/opentracing/contrib/jaxrs2/server/SpanFinishingFilter.java
 The filter is supposed to handle this case.
 
-
-=== Thorntail based project config
-Default uses the Jaeger trace implementation.
-https://docs.thorntail.io/2.5.0.Final/#_jaeger
-
-
-.project-defaults.yml
-[source,yaml]
-----
-thorntail:
-    jaeger:
-        service-name: ${service.name}
-        sampler-type: const #4 supported types: 'const', 'probabilistic', 'ratelimiting' and 'remote'.
-        sampler-parameter: 1 #For 'Constant' sampler, 0 means no traces and 1 means all traces.
-        remote-reporter-http-endpoint: 'http://jaeger-collector.istio-system:14268/api/traces'
-----
-.pom.xml
-----
-<dependency>.
-    <groupId>hu.icellmobilsoft.coffee</groupId>
-    <artifactId>coffee-module-mp-opentracing</artifactId>
-</dependency>
-<dependency>.
-    <groupId>io.thorntail</groupId>
-    <artifactId>microprofile-opentracing</artifactId>
-</dependency>
-<dependency>
-    <groupId>io.thorntail</groupId>
-    <artifactId>jaeger</artifactId>
-</dependency>
-----
 === Wildfly based project config
 Default is using the Jaeger trace implementation.
 https://docs.wildfly.org/20/wildscribe/subsystem/microprofile-opentracing-smallrye/jaeger-tracer/index.html

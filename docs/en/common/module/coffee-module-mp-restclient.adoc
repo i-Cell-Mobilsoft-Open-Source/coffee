@@ -110,18 +110,6 @@ The read implementations can be ordered by the `@Priority` annotation, the defau
 </dependency>
 ----
 
-You may also need to activate the application server extension,
-which for example in thorntail server is:
-
-.thorntail application server activation
-[source,xml]
-----
-<dependency>
-    <groupId>io.thorntail</groupId>
-    <artifactId>microprofile-restclient</artifactId>
-</dependency>
-----
-
 == Usage examples
 IMPORTANT: For a complete detailed description of the usage itself, see
 https://github.com/eclipse/microprofile-rest-client[microprofile-rest-client]

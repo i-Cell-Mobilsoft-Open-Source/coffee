@@ -142,10 +142,6 @@ These settings vary by application server, e.g:
 ** use https://docs.wildfly.org/21/Developer_Guide.html#managed-executor-service 
 ** configuration https://docs.wildfly.org/21/Admin_Guide.html#managed-executor-services
 
-* Thorntail 2.7:
-
-** configuration https://docs.thorntail.io/2.7.0.Final/#_ee
-
 .MDC
 The system logs at MDC level as "retryCounter",
 the number of iterations of the retry
