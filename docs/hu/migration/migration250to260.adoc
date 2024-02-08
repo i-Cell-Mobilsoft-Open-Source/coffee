@@ -65,3 +65,24 @@ A változtatások nem eredményeznek átállási munkálatokat, visszafelé komp
 ==== Migration
 
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+=== coffee-rest
+
+==== Jsonb Config
+
+Bekerült a Jsonb kongigurációjának a definiálása.
+
+==== Migration
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé default értékek állítódnak be a helyes használhathoz.
+
+=== coffee-module-mp-restclient
+
+==== Jsonb Config
+
+Bekerült a Jsonb kongigurációjának a definiálása.
+
+==== Migration
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé default értékek állítódnak be a helyes használhathoz.
+
