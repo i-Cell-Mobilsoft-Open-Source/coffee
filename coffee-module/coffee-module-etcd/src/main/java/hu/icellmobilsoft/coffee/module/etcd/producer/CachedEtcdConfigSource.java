@@ -55,6 +55,10 @@ public class CachedEtcdConfigSource extends DefaultEtcdConfigSource {
      */
     @Override
     public Set<String> getPropertyNames() {
+        if (!isEnabled()) {
+            // not enabled, dont create cache
+            Collections.emptyMap();
+        }
         Set<String> propertyNames = new HashSet<>();
         if (PROPERTY_NAME_CACHE.isEmpty()) {
             PROPERTY_NAME_CACHE.addAll(super.getPropertyNames());
@@ -66,5 +70,10 @@ public class CachedEtcdConfigSource extends DefaultEtcdConfigSource {
     @Override
     protected Optional<String> readValue(String propertyName) throws BaseException {
         return EtcdConfigSourceCache.instance().getValue(propertyName);
+    }
+
+    @Override
+    public String getName() {
+        return this.getClass().getSimpleName();
     }
 }

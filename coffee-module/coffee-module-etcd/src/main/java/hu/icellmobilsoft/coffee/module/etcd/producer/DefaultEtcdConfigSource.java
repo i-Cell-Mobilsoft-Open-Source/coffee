@@ -20,15 +20,14 @@
 package hu.icellmobilsoft.coffee.module.etcd.producer;
 
 import java.text.MessageFormat;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
-import org.eclipse.microprofile.config.spi.ConfigSource;
 
+import hu.icellmobilsoft.coffee.cdi.configsource.ConfigurableConfigSource;
 import hu.icellmobilsoft.coffee.dto.exception.BONotFoundException;
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.module.etcd.config.DefaultEtcdConfigImpl;
@@ -46,7 +45,7 @@ import io.etcd.jetcd.Client;
  * @author imre.scheffer
  * @since 1.0.0
  */
-public class DefaultEtcdConfigSource implements ConfigSource {
+public class DefaultEtcdConfigSource extends ConfigurableConfigSource {
 
     private static Logger log = Logger.getLogger(DefaultEtcdConfigSource.class);
 
@@ -59,15 +58,13 @@ public class DefaultEtcdConfigSource implements ConfigSource {
         super();
     }
 
-    /** {@inheritDoc} */
     @Override
     public int getOrdinal() {
         return 150;
     }
 
-    /** {@inheritDoc} */
     @Override
-    public Map<String, String> getProperties() {
+    protected Map<String, String> getPropertiesIfEnabled() {
         try {
             return getConfigEtcdService().getAll();
         } catch (Exception e) {
@@ -108,21 +105,16 @@ public class DefaultEtcdConfigSource implements ConfigSource {
         return local;
     }
 
-    /** {@inheritDoc} */
     @Override
-    public String getValue(String propertyName) {
+    public String getValueIfEnabled(String propertyName) {
         try {
             return readValue(propertyName).orElse(null);
         } catch (BaseException e) {
-            log.error(
-                    MessageFormat.format("Error in getting value from ETCD by propertyName [{0}]: [{1}]", propertyName, e.getLocalizedMessage()),
+            log.error(MessageFormat.format("Error in getting value from ETCD by propertyName [{0}]: [{1}]", propertyName, e.getLocalizedMessage()),
                     e);
         } catch (Exception e) {
-            log.debug(
-                    MessageFormat.format(
-                            "CDI is not initialized, property [{0}] is unresolvable from ETCD: [{1}]",
-                            propertyName,
-                            e.getLocalizedMessage()));
+            log.debug(MessageFormat.format("CDI is not initialized, property [{0}] is unresolvable from ETCD: [{1}]", propertyName,
+                    e.getLocalizedMessage()));
         }
         return null;
     }
@@ -162,12 +154,8 @@ public class DefaultEtcdConfigSource implements ConfigSource {
         return Optional.empty();
     }
 
-    /** {@inheritDoc} */
     @Override
     public String getName() {
-        String urls = null;
-        EtcdConfig config = new DefaultEtcdConfigImpl();
-        urls = Arrays.toString(config.getUrl());
-        return MessageFormat.format("{0} class on urls: [{1}]", DefaultEtcdConfigSource.class.getSimpleName(), urls);
+        return this.getClass().getSimpleName();
     }
 }

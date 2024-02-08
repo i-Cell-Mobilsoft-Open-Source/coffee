@@ -1,0 +1,13 @@
+= Integration tests for coffee
+
+.Run tests
+[source,bash]
+----
+# compile coffee + running testsuite
+mvn -B clean install -P check-javadoc,testsuite
+
+# OR
+
+cd coffee/testsuite
+mvn -B clean verify
+----
