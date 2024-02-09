@@ -24,7 +24,7 @@
         <dependencies>
             <dependency>
                 <groupId>hu.icellmobilsoft.coffee</groupId>
-                <artifactId>coffee-bom</artifactId>
+                <artifactId>coffee-bom-project</artifactId>
                 <version>${project.version}</version>
                 <scope>import</scope>
                 <type>pom</type>
