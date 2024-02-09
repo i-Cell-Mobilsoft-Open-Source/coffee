@@ -11,7 +11,7 @@ Functioning of the official
 <dependency>
     <groupId>io.etcd</groupId>
     <artifactId>jetcd-core</artifactId>
-    <version>0.5.0</version>
+    <version>0.7.5</version>
 </dependency>
 ----
 based driver, extended with enterprise usage model options. More precise description on separate page
@@ -49,8 +49,42 @@ even if the ETCD does not contain it,
 so we can reduce a lot of repetitive queries.
 Cache is a thread safe singleton,
 it is possible to clear it by calling `EtcdConfigSourceCache.instance().clear()`.
+* `hu.icellmobilsoft.coffee.module.etcd.producer.RuntimeEtcdConfigSource` -
+Can be activated during runtime as needed (e.g., AfterBeanDiscovery) as follows
++
+[source,java]
+----
+RuntimeEtcdConfigSource.setActive(true);
+----
 
-It is activated in the following file:
+* `hu.icellmobilsoft.coffee.module.etcd.producer.FilteredEtcdConfigSource` -
+Decides whether to search for the key in ETCD based on configuration regex pattern parameters
++
+[source,yaml]
+----
+coffee:
+  configSource:
+    FilteredEtcdConfigSource:
+      pattern:
+        include: ^(public|private)\\.
+        exclude: ^private\\.
+----
+The example works with the following logic:
+
+. `exclude` - is at the beginning of the processing order,
+so it will be evaluated before `include`.
+Optional.
+If not specified, filtering will not be activated, allowing all keys to pass through.
+If the searched key matches the pattern, it will not search in ETCD.
+. `include` - optional.
+If not specified, filtering will not be activated, allowing all keys to pass through.
+It will search for the key in ETCD only if the searched key matches the pattern.
+. Patterns
+.. "private.sample.key1" - it will not search for the key in ETCD because the `exclude` pattern filters it out.
+.. "public.sample.key2" - it will search for the key in ETCD because the `exclude` pattern allows it and the `include` pattern matches.
+.. "org.sample.key3" - it will not search for the key in ETCD because the `exclude` pattern allows it but the `include` pattern filters it out.
+
+Example ConfigSource activation:
 
 .src/main/resources/META-INF/services/org.eclipse.microprofile.config.spi.ConfigSource
 [source,java]
@@ -58,7 +92,7 @@ It is activated in the following file:
 hu.icellmobilsoft.coffee.module.etcd.producer.CachedEtcdConfigSource
 ----
 
-The priority of this ConfigSource is set to 150.
+The priority of ConfigSources is set to 150.
 
 It is possible to inject String, Integer, Boolean, Long, Float and Double configurations. The ETCD always stores String, the parsing to the desired type is done after reading the value. The mechanism uses ConfigEtcdHandler in the background to read the values.
 See link:#common_core_coffee-configuration[configuration module]
