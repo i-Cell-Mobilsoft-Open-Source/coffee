@@ -50,9 +50,9 @@ import io.quarkus.deployment.builditem.FeatureBuildItem;
  * @author speter555
  * @since 2.6.0
  */
-class CoffeeModuleMpRestclientProcessor {
+class MpRestclientProcessor {
 
-    private static final Logger log = Logger.getLogger(CoffeeModuleMpRestclientProcessor.class);
+    private static final Logger log = Logger.getLogger(MpRestclientProcessor.class);
     private static final String FEATURE = "coffee-module-mp-restclient-extension";
 
     private static final int DEFAULT_FAULT_TYPE_PRIORITY = 500;
