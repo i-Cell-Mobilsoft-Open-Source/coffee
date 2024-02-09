@@ -75,6 +75,9 @@ It mainly contains batch operations based on *PreparedStatement*, in which SQL c
 | All types evaluated as null by hibernate.
 
 | link:#CustomType[CustomType] treated as type
+| Currently, there is no specific type, it is used due to the possibility of extending
+
+| link:#Enums[Enum] treated as type
 | All enum types.
 
 | link:#ManyToOneType[ManyToOneType] treated as type
@@ -115,8 +118,12 @@ NOTE: *JDBC drivers* also use this method.
 
 === CustomType handling [[CustomType]]
 
-*Hibernate* wraps enum types in a *CustomerType* type as *EnumType*. +
-*BatchService* handles the resolution of *EnumType*s as follows:
+*BatchService* currently does not handle any *CustomType* directly, but it provides the possibility to extend it.
+By default, all *CustomType* types are handled by the *JDBC driver* used!
+
+=== Enum types handling [[Enums]]
+
+*BatchService* handles the resolution of *Enum* types as follows:
 
 [%header,cols=2]
 |===
@@ -149,11 +156,6 @@ private EnumType enumString;
 ----
 | The name associated with the given non-value, the value is inserted according to the *name()* method.
 |===
-
-The insertion of values in the table is done using the *PreparedStatement.setObject()* method, so type handling is left to the *JDBC driver*.
-
-The *BatchService* currently only handles *EnumType* separately for *CustomType*s. +
-All other *CustomType* types are handled by the *JDBC driver* used!
 
 === ManyToOneType handling [[ManyToOneType]]
 
@@ -477,7 +479,15 @@ a|
 @Column(name = "WRAPPER_BYTE_ARRAY")
 private Byte[] wrapperByteArray;
 ----
-| Converted to primitive *byte[]* type, then set using *PreparedStatement.setBytes()* method.
+a| If the legacy array handling is enabled:
+
+* Converted to primitive *byte[]* type, then set using *PreparedStatement.setBytes()* method.
+
+If the legacy array handling is not enabled:
+
+* We let it be handled by the used `JDBC driver`.
+
+IMPORTANT: If possible, it is recommended to use byte[] instead.
 
 a|
 [source,java]
@@ -495,11 +505,25 @@ a|
 @Column(name = "LOB_WRAPPER_BYTE_ARRAY")
 private Byte[] lobWrapperByteArray;
 ----
-| Converted to primitive *byte[]* type, then set using *PreparedStatement.setBytes()* method.
+a| If the legacy array handling is enabled:
+
+* Converted to primitive *byte[]* type, then set using *PreparedStatement.setBytes()* method.
+
+If the legacy array handling is not enabled:
+
+* We let it be handled by the used `JDBC driver`.
+
+IMPORTANT: If possible, it is recommended to use byte[] instead.
 
 |===
 
 IMPORTANT: The *JDBC driver* is responsible for setting types not included in the table.
+
+[NOTE]
+====
+To enable legacy array handling, `persistence.xml` needs to be extended with the following property: `<property name="hibernate.type.wrapper_array_handling" value="legacy"/>`. +
+See more: https://github.com/hibernate/hibernate-orm/blob/6.2/migration-guide.adoc#bytecharacter-mapping-changes[hibernate 6.2 migration guide]
+====
 
 == microprofile-health support
 

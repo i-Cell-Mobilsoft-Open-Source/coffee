@@ -57,7 +57,6 @@ import org.hibernate.SessionFactory;
 import org.hibernate.StatelessSession;
 import org.hibernate.engine.spi.SessionFactoryImplementor;
 import org.hibernate.engine.spi.SharedSessionContractImplementor;
-import org.hibernate.metamodel.model.convert.spi.BasicValueConverter;
 import org.hibernate.metamodel.spi.MappingMetamodelImplementor;
 import org.hibernate.persister.entity.SingleTableEntityPersister;
 import org.hibernate.sql.Delete;
@@ -66,11 +65,10 @@ import org.hibernate.sql.Update;
 import org.hibernate.type.BasicType;
 import org.hibernate.type.ConvertedBasicType;
 import org.hibernate.type.CustomType;
-import org.hibernate.type.EnumType;
 import org.hibernate.type.ManyToOneType;
 import org.hibernate.type.SqlTypes;
 import org.hibernate.type.Type;
-import org.hibernate.usertype.UserType;
+import org.hibernate.type.descriptor.converter.spi.BasicValueConverter;
 
 import hu.icellmobilsoft.coffee.cdi.logger.AppLogger;
 import hu.icellmobilsoft.coffee.cdi.logger.ThisLogger;
@@ -259,18 +257,18 @@ public class BatchService {
 
             String[] entityFieldNames = getEntityFieldNamesForUpdate(persister);
 
-            Update u = new Update(sfi.getJdbcServices().getDialect());
-            u.setPrimaryKeyColumnNames(persister.getIdentifierColumnNames());
-            u.setTableName(persister.getTableName());
-            u.setVersionColumnName(persister.getVersionColumnName());
+            Update update = new Update(sfi);
+            update.setTableName(persister.getTableName());
+            update.addRestriction(persister.getIdentifierColumnNames());
+            update.addRestriction(persister.getVersionColumnName());
             for (String name : entityFieldNames) {
-                u.addColumns(persister.getPropertyColumnNames(name));
+                update.addAssignments(persister.getPropertyColumnNames(name));
             }
             // where column automatan belekerul
 
             dbTimeZone = sfi.getSessionFactoryOptions().getJdbcTimeZone();
 
-            String sql = u.toStatementString() + StringUtils.defaultString(getSqlPostfix());
+            String sql = update.toStatementString() + StringUtils.defaultString(getSqlPostfix());
 
             log.debug("Running update:\n[{0}]", sql);
 
@@ -379,9 +377,9 @@ public class BatchService {
             SingleTableEntityPersister persister = (SingleTableEntityPersister) metamodel.getEntityDescriptor(clazz);
             String[] entityFieldNames = getEntityFieldNamesForInsert(persister);
 
-            Insert insert = new Insert(sfi.getJdbcServices().getDialect());
+            Insert insert = new Insert(sfi);
             insert.setTableName(persister.getTableName());
-            insert.addColumn(persister.getRootTableKeyColumnNames()[0], "?");
+            insert.addColumn(persister.getRootTableKeyColumnNames()[0]);
             for (String name : entityFieldNames) {
                 insert.addColumns(persister.getPropertyColumnNames(name));
             }
@@ -489,9 +487,9 @@ public class BatchService {
             MappingMetamodelImplementor metamodel = sfi.getMappingMetamodel();
             SingleTableEntityPersister persister = (SingleTableEntityPersister) metamodel.getEntityDescriptor(clazz);
 
-            Delete delete = new Delete();
+            Delete delete = new Delete(sfi);
             delete.setTableName(persister.getTableName());
-            delete.addPrimaryKeyColumn(persister.getRootTableKeyColumnNames()[0], "?");
+            delete.addColumnRestriction(persister.getRootTableKeyColumnNames()[0]);
 
             String sql = delete.toStatementString();
             log.debug("Running delete:\n[{0}]", sql);
@@ -643,7 +641,6 @@ public class BatchService {
         }
 
         if (type instanceof CustomType) {
-            // enum típusok kezelése
             setCustomTypePsObject(ps, parameterIndex, (CustomType<?>) type, value);
         } else if (type instanceof ManyToOneType) {
             E manyToOneEntity = (E) value;
@@ -673,35 +670,9 @@ public class BatchService {
      *             in case of any exception occurs during the process.
      */
     protected void setCustomTypePsObject(PreparedStatement ps, int parameterIndex, CustomType<?> customType, Object value) throws SQLException {
-        UserType<?> userType = customType.getUserType();
-
-        if (userType instanceof EnumType) {
-            setEnumTypePsObject(ps, parameterIndex, (EnumType<?>) userType, (Enum<?>) value);
-            return;
-        }
-
         // Általunk nem kezelt custom type, így rábízzuk a driver-re, hogy próbálja meg feloldani.
         log.debug("Unhandled custom type: [{0}]", customType.getName());
 
-        ps.setObject(parameterIndex, value);
-    }
-
-    /**
-     * Sets a {@link EnumType} object in the prepared statement.
-     * 
-     * @param ps
-     *            the prepared statement.
-     * @param parameterIndex
-     *            index of the parameter in the prepared statement.
-     * @param enumType
-     *            {@link EnumType}.
-     * @param enumValue
-     *            value of the parameter.
-     * @throws SQLException
-     *             in case of any exception occurs during the process.
-     */
-    protected void setEnumTypePsObject(PreparedStatement ps, int parameterIndex, EnumType<?> enumType, Enum<?> enumValue) throws SQLException {
-        Object value = enumType.isOrdinal() ? enumValue.ordinal() : enumValue.name();
         ps.setObject(parameterIndex, value);
     }
 

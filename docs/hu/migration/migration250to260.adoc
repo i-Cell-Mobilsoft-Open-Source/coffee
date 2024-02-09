@@ -2,6 +2,90 @@
 
 coff:ee v2.5.0 -> v2.6.0 migrációs leírás, újdonságok, változások leírása
 
+== Global
+
+=== Coffee BOM
+
+💥 ***BREAKING CHANGE*** 💥
+
+[source]
+----
+Globális változás, hogy a projekteken eddig a coffee-bom volt használva a coffee dependency importálásához. Ez megváltozott coffee-bom-project -re.
+
+Ezután a következő módon kell importálni a projekt elemeit:
+
+<dependencyManagement>
+    <dependency>
+        <groupId>hu.icellmobilsoft.coffee</groupId>
+        <artifactId>coffee-bom-project</artifactId> <1>
+        <version>${version.hu.icellmobilsoft.coffee}</version>
+        <type>pom</type>
+        <scope>import</scope>
+    </dependency>
+</dependencyManagement>
+
+Ez azzal is jár, hogy azon transitive dependency-k melyek eddig a coffee-bom miatt a projektekre kerültek, így kikerülnek.
+Emiatt ezeket a dependency-ket a maven jelezni fogja hogy nem találja, így azokat definiálni kell a coffee-t felhasználó projekten.
+----
+
+<1> - coffee-bom -> coffee-bom-project -re változott
+
+=== Hibernate
+
+* Bump hibernate-core https://github.com/hibernate/hibernate-orm/releases/tag/6.1.5[6.1.5.Final] -> https://github.com/hibernate/hibernate-orm/releases/tag/6.2.13[6.2.13.Final].
+
+==== Migration
+
+* Szükséges átnézni a https://github.com/hibernate/hibernate-orm/blob/6.2/migration-guide.adoc[Hibernate 6.2.x migrációs dokumentációt] és az adott projektet érintő részeket lekövetni.
+* A https://github.com/hibernate/hibernate-orm/blob/6.2/migration-guide.adoc#timezone-and-offset-storage[timezone és offset tárolás] megváltozott `DEFAULT` értékre, ami miatt az időzónák is mentésre kerülnek.
+Mivel eddig nem mentettünk időzónát és a `BatchService` is úgy van elkészítve, hogy ne mentsen, így ez problémát okoz.
+Ahhoz, hogy továbbra se legyenek mentve időzónák, szükséges a projekteken felvenni a `persistence.xml`-ben a következő property-t: `<property name="hibernate.timezone.default_storage" value="NORMALIZE"/>`.
+* A https://github.com/hibernate/hibernate-orm/blob/6.2/migration-guide.adoc#bytecharacter-mapping-changes[Byte[+]+ és Character[+]+ típusok feldolgozása megváltozott].
+A Byte[] típusok eddig kezelve voltak, viszont a hibernate változások miatt a következők egyike szükséges:
+** Byte[] lecserélése byte[]-ra
+** A régi működéshez szükséges engedélyezni a `persistence.xml`-ben a legacy array feldolgozást a következő property-vel: `<property name="hibernate.type.wrapper_array_handling" value="legacy"/>`
+
+== Változások
+
+=== coffee-jpa
+
+==== BatchService
+
+* Hibernate 6.2.x változások alapján frissítésre kerültek az `Insert`, `Update` és `Delete` SQL utasítások összeállítása.
+* A Hibernate 6.2.x verziótól deprecated lett az EnumType, mivel máshogy dolgozzák fel az enum értékeket, így a `BatchService`-ben lévő EnumType lekezelése törlésre került.
+
+==== Migration
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+==== JpaUtil
+
+** A Hibernate 6.2.x verziótól átnevezték a `JdbcSelect` osztályt `JdbcOperationQuerySelect` osztályra, illetve a belőle használt `getSql()` metódust `getSqlString()` metódusra, így ezt lekövettük a `JpaUtil` osztályban.
+
+==== Migration
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+=== coffee-rest
+
+==== Jsonb Config
+
+Bekerült a Jsonb kongigurációjának a definiálása.
+
+==== Migration
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé default értékek állítódnak be a helyes használhathoz.
+
+=== coffee-module-mp-restclient
+
+==== Jsonb Config
+
+Bekerült a Jsonb kongigurációjának a definiálása.
+
+==== Migration
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé default értékek állítódnak be a helyes használhathoz.
+
 == coffee-rest
 
 * fix javax.annotation.processing.Processor fájl (visszanevezése jakarta.annotation.processing.Processor-ra, mert ez nem változott jakarta-ra)

@@ -257,6 +257,12 @@
 			</build>
 		</profile>
 		<profile>
+			<id>testsuite</id>
+			<modules>
+				<module>testsuite</module>
+			</modules>
+		</profile>
+		<profile>
 			<id>release</id>
 			<build>
 				<plugins>
