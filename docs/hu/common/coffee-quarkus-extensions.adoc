@@ -1,0 +1,15 @@
+[#common_coffee-quarkus-extensions]
+= Coffee Quarkus extensions
+
+== Általános
+
+A Quarkus esetén több CDI elemet máshogy kell megoldani.
+
+A legfontosabb cikk ahol össze van szedve, ez mit érint a quarkus oldalán található: https://quarkus.io/guides/writing-extensions[Quarkus.io - WRITING YOUR OWN EXTENSION].
+Benne leírva a filozófia, ami a Quarkus extension-ök mögött van.
+
+Quarkus extension készítés alapok segédlet: https://quarkus.io/guides/building-my-first-extension[Quarkus.io - BUILDING MY FIRST EXTENSION]
+
+Quarkus-hoz konkrétan elkészítésett Extensionök listája: https://quarkus.pro/extensions[Link]
+
+include::quarkus-extension/coffee-module-mp-restclient-extension.adoc[leveloffset=+1]

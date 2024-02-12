@@ -1,0 +1,24 @@
+[#common_coffee-quarkus-extensions-module-mp-restclient]
+= coffee-module-mp-restclient-extension
+
+Modul célja hogyha quarkusban van használva a coffee-module-mp-rest-client, akkor az abban lévő elemeket pótolja, amit a Quarkus nem támogat.
+
+A Quarkus nem támogatja az Extension-öket, ahogy a FaultyType enum osztályok össze vannak szedve a modulban, így ezt Quarkus Extensionben kell megoldani.
+
+NOTE: jelenleg a Quarkus 3.2.x verziója van használva az extensionökben.
+
+A modul használata annyi, hogy a dependency-k közt nem a coffee-module-mp-rest-client-et kell használni, hanem az extensiont ami tartalmazza a modult is.
+
+.pom.xml
+[source, xml]
+----
+    <dependency>
+        <groupId>hu.icellmobilsoft.coffee</groupId>
+        <artifactId>coffee-module-mp-restclient-extension</artifactId>
+        <version>${version.hu.icellmobilsoft.coffee}</version>
+        <type>pom</type>
+        <scope>import</scope>
+    </dependency>
+----
+
+

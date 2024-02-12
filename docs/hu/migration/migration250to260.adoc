@@ -86,6 +86,15 @@ Bekerült a Jsonb kongigurációjának a definiálása.
 
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé default értékek állítódnak be a helyes használhathoz.
 
+== coffee-rest
+
+* fix javax.annotation.processing.Processor fájl (visszanevezése jakarta.annotation.processing.Processor-ra, mert ez nem változott jakarta-ra)
+
+== Coffee Quarkus Extensions
+
+Új modul jött létre Coffee Quarkus extension cím alatt, ami a Quarkushoz szükséges egyéb elemeket adja hozzá a coffee egyes moduljaihoz.
+Első eleme a coffee-module-mp-restclient-extension
+
 ==== coffee-module-csv
 
 Új metódusokkal, lehetőség van a csv format állítására. Milyen csv szeparátor, escape char stb legyen használva.
