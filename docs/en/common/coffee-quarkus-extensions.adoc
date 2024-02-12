@@ -1,0 +1,15 @@
+[#common_coffee-quarkus-extensions]
+= Coffee Quarkus extensions
+
+== General
+
+In the case of Quarkus, several CDI elements need to be handled differently.
+
+The most important article where it is summarized what is involved is on the quarkus page: https://quarkus.io/guides/writing-extensions[Quarkus.io - WRITING YOUR OWN EXTENSION].
+It describes the philosophy behind Quarkus extensions.
+
+Quarkus extension building basics help: https://quarkus.io/guides/building-my-first-extension[Quarkus.io - BUILDING MY FIRST EXTENSION]
+
+List of extensions built specifically for Quarkus: https://quarkus.pro/extensions[Link]
+
+include::quarkus-extension/coffee-module-mp-restclient-extension.adoc[leveloffset=+1]

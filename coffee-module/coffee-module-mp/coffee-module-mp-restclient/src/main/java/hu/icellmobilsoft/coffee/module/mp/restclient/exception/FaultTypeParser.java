@@ -19,6 +19,12 @@
  */
 package hu.icellmobilsoft.coffee.module.mp.restclient.exception;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import jakarta.enterprise.inject.Instance;
+import jakarta.enterprise.inject.spi.CDI;
+
 import org.apache.commons.lang3.EnumUtils;
 
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
@@ -40,17 +46,15 @@ public class FaultTypeParser {
     }
 
     /**
-     * Parse fault type String into Enum. If none match returns
-     * {@link CoffeeFaultType#OPERATION_FAILED}.
+     * Parse fault type String into Enum. If none match returns {@link CoffeeFaultType#OPERATION_FAILED}.
      *
      * @param faultTypeString
      *            {@link String} to parse.
      * @return The Enum value parsed from input string.
      */
     @SuppressWarnings({ "rawtypes", "unchecked" })
-    public static Enum<?> parseFaultType(String faultTypeString) {
-
-        for (Class<? extends Enum> faultTypeClass : FaultTypeParserExtension.getFaultTypeClasses()) {
+    public static Enum parseFaultType(String faultTypeString) {
+        for (Class<? extends Enum> faultTypeClass : getFaultTypeClasses()) {
             Enum<?> fault = EnumUtils.getEnum(faultTypeClass, faultTypeString);
             if (fault != null) {
                 return fault;
@@ -59,4 +63,25 @@ public class FaultTypeParser {
         Logger.getLogger(FaultTypeParser.class).warn("FaultType not exists in enum for messages, faultType: [" + faultTypeString + "]");
         return CoffeeFaultType.OPERATION_FAILED;
     }
+
+    /**
+     * This method adds another option to add FaultType classes to the list
+     *
+     */
+    @SuppressWarnings({ "rawtypes" })
+    private static List<Class<? extends Enum>> getFaultTypeClasses() {
+        List<Class<? extends Enum>> faultTypeClassesList = new ArrayList<>(FaultTypeParserExtension.getFaultTypeClasses());
+
+        Instance<FaultTypeClasses> instance = CDI.current().select(FaultTypeClasses.class);
+        FaultTypeClasses faultTypeClassesElement = null;
+        try {
+            faultTypeClassesElement = instance.get();
+            faultTypeClassesList.addAll(faultTypeClassesElement.getFaultTypeClasses());
+        } catch (Exception e) {
+            // NOTE: can throw the instance.get method an org.jboss.weld.exceptions.UnsatisfiedResolutionException , that this bean is not alive, but
+            // it is not a problem!
+        }
+        return faultTypeClassesList;
+    }
+
 }

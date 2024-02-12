@@ -7,3 +7,5 @@ include::common/coffee-core.adoc[leveloffset=+1]
 include::common/coffee-model.adoc[leveloffset=+1]
 
 include::common/coffee-modules.adoc[leveloffset=+1]
+
+include::common/coffee-quarkus-extensions.adoc[leveloffset=+1]

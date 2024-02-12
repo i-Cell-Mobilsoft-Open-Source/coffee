@@ -192,7 +192,8 @@
 		<module>coffee-system</module>
 		<module>coffee-deltaspike</module>
 		<module>coffee-grpc</module>
-	</modules>
+		<module>coffee-quarkus-extensions</module>
+    </modules>
 
 	<distributionManagement>
 		<snapshotRepository>
@@ -246,7 +247,10 @@
 							<failOnError>true</failOnError>
 							<failOnWarnings>true</failOnWarnings>
 							<excludePackageNames>hu.icellmobilsoft.coffee.dto.*,org.apache.deltaspike.*</excludePackageNames>
-							<sourceFileExcludes>**/*_.java</sourceFileExcludes>
+							<sourceFileExcludes>
+								<sourceFileExclude>**/*_.java</sourceFileExclude>
+								<sourceFileExclude>**/*$$*.java</sourceFileExclude>
+							</sourceFileExcludes>
 						</configuration>
 					</plugin>
 				</plugins>
