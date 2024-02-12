@@ -22,9 +22,6 @@ package hu.icellmobilsoft.coffee.quarkus.extension.module.mp.restclient;
 import java.util.List;
 import java.util.function.Function;
 
-import jakarta.enterprise.inject.Instance;
-import jakarta.enterprise.inject.spi.CDI;
-
 import hu.icellmobilsoft.coffee.module.mp.restclient.exception.FaultTypeClasses;
 import io.quarkus.arc.SyntheticCreationalContext;
 import io.quarkus.runtime.annotations.Recorder;
@@ -68,29 +65,6 @@ public class FaultTypeClassesRecorder {
                 };
             }
         };
-    }
-
-    /**
-     * This method adds another option to add FaultType classes to the list
-     *
-     * @param faultTypeClassesList
-     *            the fault type classes
-     */
-    @SuppressWarnings({ "rawtypes" })
-    private static void addInjectedFaultTYpeClasses(List<Class<? extends Enum>> faultTypeClassesList) {
-        Instance<FaultTypeClasses> instance = CDI.current().select(FaultTypeClasses.class);
-        FaultTypeClasses faultTypeClassesElement = null;
-        try {
-            faultTypeClassesElement = instance.get();
-            faultTypeClassesList.addAll(faultTypeClassesElement.getFaultTypeClasses());
-        } catch (Exception e) {
-            // NOTE: can throw the instance.get method an org.jboss.weld.exceptions.UnsatisfiedResolutionException , that this bean is not alive, but
-            // it is not a problem!
-        } finally {
-            if (faultTypeClassesElement != null) {
-                instance.destroy(faultTypeClassesElement);
-            }
-        }
     }
 
 }

@@ -80,10 +80,6 @@ public class FaultTypeParser {
         } catch (Exception e) {
             // NOTE: can throw the instance.get method an org.jboss.weld.exceptions.UnsatisfiedResolutionException , that this bean is not alive, but
             // it is not a problem!
-        } finally {
-            if (faultTypeClassesElement != null) {
-                instance.destroy(faultTypeClassesElement);
-            }
         }
         return faultTypeClassesList;
     }
