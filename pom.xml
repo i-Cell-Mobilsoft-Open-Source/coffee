@@ -125,17 +125,16 @@
 							<goals>
 								<goal>jandex</goal>
 							</goals>
-							<!-- phase is 'process-classes by default' -->
+							<phase>
+								process-classes
+							</phase>
 							<configuration>
 								<fileSets>
 									<fileSet>
-										<directory>${project.build.directory}</directory>
-										<excludes>
-											<exclude>generated-test-sources</exclude>
-											<exclude>test-classes</exclude>
-										</excludes>
+										<directory>${project.build.directory}/classes</directory>
 									</fileSet>
 								</fileSets>
+								<processDefaultFileSet>false</processDefaultFileSet>
 							</configuration>
 						</execution>
 					</executions>
@@ -195,15 +194,26 @@
 		<module>coffee-quarkus-extensions</module>
     </modules>
 
+<!--	<distributionManagement>-->
+<!--		<snapshotRepository>-->
+<!--			<id>ossrh</id>-->
+<!--			<url>https://oss.sonatype.org/content/repositories/snapshots</url>-->
+<!--		</snapshotRepository>-->
+<!--		<repository>-->
+<!--			<id>ossrh</id>-->
+<!--			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>-->
+<!--		</repository>-->
+<!--	</distributionManagement>-->
+
 	<distributionManagement>
-		<snapshotRepository>
-			<id>ossrh</id>
-			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
-		</snapshotRepository>
 		<repository>
-			<id>ossrh</id>
-			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+			<id>local-release</id>
+			<url>file:../local_repo/release</url>
 		</repository>
+		<snapshotRepository>
+			<id>local-snapshot</id>
+			<url>file:../local_repo/snapshot</url>
+		</snapshotRepository>
 	</distributionManagement>
 
 	<repositories>
