@@ -54,7 +54,7 @@ import jakarta.persistence.LockModeType;
 
 import org.apache.commons.lang3.StringUtils;
 //import org.apache.deltaspike.core.util.AnnotationUtils;
-import org.apache.deltaspike.core.util.ClassUtils;
+import org.apache.deltaspike.core.util.message.ClassUtils;
 
 import org.apache.deltaspike.data.api.Modifying;
 import org.apache.deltaspike.data.api.Query;

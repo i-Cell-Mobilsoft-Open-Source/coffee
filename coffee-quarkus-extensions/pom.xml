@@ -18,6 +18,7 @@
 
     <modules>
         <module>coffee-module-mp-restclient-extension-parent</module>
+        <module>coffee-deltaspike-data-extension-parent</module>
     </modules>
 
     <dependencyManagement>

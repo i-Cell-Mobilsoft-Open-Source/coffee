@@ -35,7 +35,6 @@ import java.lang.annotation.Target;
  */
 @jakarta.transaction.Transactional(rollbackOn = Throwable.class)
 @InterceptorBinding
-@Stereotype
 @Target({ ElementType.TYPE, ElementType.METHOD })
 @Retention(value = RetentionPolicy.RUNTIME)
 public @interface Transactional {

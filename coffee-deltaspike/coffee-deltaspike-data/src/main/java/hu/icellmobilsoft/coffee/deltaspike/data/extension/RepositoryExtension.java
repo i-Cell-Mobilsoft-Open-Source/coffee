@@ -84,6 +84,16 @@ public class RepositoryExtension implements Extension {
     }
 
     /**
+     * Constructor for external
+     * 
+     * @param repositoryClasses
+     *            repository classes
+     */
+    public RepositoryExtension(ArrayList<Class<?>> repositoryClasses) {
+        this.repositoryClasses.addAll(repositoryClasses);
+    }
+
+    /**
      * Collect repository classes by {@link Repository} stereotype
      * 
      * @param <X>
@@ -116,10 +126,12 @@ public class RepositoryExtension implements Extension {
      */
     public void createProxyInstances(@Observes final AfterBeanDiscovery abd, final BeanManager beanManager) {
         repositoryClasses.forEach(type -> {
-            abd.addBean().id("CoffeeRepository#" + type.getName()) //
+            abd.addBean()
+                    .id("CoffeeRepository#" + type.getName()) //
                     .scope(ApplicationScoped.class) //
                     .types(type, Object.class) //
-                    .beanClass(type).qualifiers(Default.Literal.INSTANCE, Any.Literal.INSTANCE) //
+                    .beanClass(type)
+                    .qualifiers(Default.Literal.INSTANCE, Any.Literal.INSTANCE) //
                     .createWith(ctx -> {
                         // inject fázisban amikor az implementáló projekten hasznalva van repository, akkor itt proxy objektumokon keresztül kezeljük
                         // a hivast egy központi InvocationHandler segítségével
@@ -127,7 +139,8 @@ public class RepositoryExtension implements Extension {
                         // ezen a ponton lényegeben megadjuk hogy minden repository interface-ben talalhato metodus keresztul menjen a QueryHandler
                         // osztalyon
                         final InvocationHandler handler = (InvocationHandler) beanManager.getReference(
-                                beanManager.resolve(beanManager.getBeans(QueryHandler.class, new Default.Literal())), QueryHandler.class,
+                                beanManager.resolve(beanManager.getBeans(QueryHandler.class, new Default.Literal())),
+                                QueryHandler.class,
                                 beanManager.createCreationalContext(null));
 
                         return Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), new Class<?>[] { type }, handler);

@@ -45,7 +45,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 
 import jakarta.persistence.NoResultException;
 import jakarta.persistence.Query;
-import org.apache.deltaspike.core.util.ClassUtils;
+import org.apache.deltaspike.core.util.message.ClassUtils;
 
 import org.apache.deltaspike.data.api.Modifying;
 import org.apache.deltaspike.data.api.QueryInvocationException;
