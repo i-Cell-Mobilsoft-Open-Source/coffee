@@ -125,17 +125,13 @@
 							<goals>
 								<goal>jandex</goal>
 							</goals>
-							<!-- phase is 'process-classes by default' -->
 							<configuration>
 								<fileSets>
 									<fileSet>
-										<directory>${project.build.directory}</directory>
-										<excludes>
-											<exclude>generated-test-sources</exclude>
-											<exclude>test-classes</exclude>
-										</excludes>
+										<directory>${project.build.directory}/classes</directory>
 									</fileSet>
 								</fileSets>
+								<processDefaultFileSet>false</processDefaultFileSet>
 							</configuration>
 						</execution>
 					</executions>
