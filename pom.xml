@@ -125,9 +125,6 @@
 							<goals>
 								<goal>jandex</goal>
 							</goals>
-							<phase>
-								process-classes
-							</phase>
 							<configuration>
 								<fileSets>
 									<fileSet>

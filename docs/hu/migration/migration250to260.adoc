@@ -29,6 +29,9 @@ Emiatt ezeket a dependency-ket a maven jelezni fogja hogy nem találja, így azo
 ----
 
 <1> - coffee-bom -> coffee-bom-project -re változott
+--
+
+* Jandex index config fix.
 
 === Hibernate
 
@@ -86,11 +89,11 @@ Bekerült a Jsonb kongigurációjának a definiálása.
 
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé default értékek állítódnak be a helyes használhathoz.
 
-== coffee-rest
+=== coffee-rest
 
 * fix javax.annotation.processing.Processor fájl (visszanevezése jakarta.annotation.processing.Processor-ra, mert ez nem változott jakarta-ra)
 
-== Coffee Quarkus Extensions
+=== Coffee Quarkus Extensions
 
 Új modul jött létre Coffee Quarkus extension cím alatt, ami a Quarkushoz szükséges egyéb elemeket adja hozzá a coffee egyes moduljaihoz.
 Első eleme a coffee-module-mp-restclient-extension
