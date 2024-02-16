@@ -23,21 +23,23 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 
 import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.enterprise.inject.Any;
-import jakarta.enterprise.inject.Default;
+import jakarta.enterprise.inject.Vetoed;
 
 import org.apache.deltaspike.data.api.AbstractEntityRepository;
 import org.apache.deltaspike.data.api.AbstractFullEntityRepository;
 import org.apache.deltaspike.data.api.Repository;
 import org.apache.deltaspike.data.impl.handler.QueryHandler;
 import org.jboss.jandex.AnnotationInstance;
+import org.jboss.jandex.AnnotationTarget;
 import org.jboss.jandex.ClassType;
 import org.jboss.jandex.DotName;
 import org.jboss.logging.Logger;
 
 import hu.icellmobilsoft.coffee.deltaspike.data.extension.RepositoryExtension;
 import hu.icellmobilsoft.coffee.quarkus.extension.deltaspike.data.DeltaspikeDataRecorder;
+import io.quarkus.arc.deployment.AnnotationsTransformerBuildItem;
 import io.quarkus.arc.deployment.SyntheticBeanBuildItem;
+import io.quarkus.arc.processor.AnnotationsTransformer;
 import io.quarkus.deployment.annotations.BuildProducer;
 import io.quarkus.deployment.annotations.BuildStep;
 import io.quarkus.deployment.annotations.ExecutionTime;
@@ -51,7 +53,7 @@ import io.quarkus.deployment.builditem.FeatureBuildItem;
  * @author speter555
  * @since 2.6.0
  */
-public class DeltaspikeDataProcessor {
+class DeltaspikeDataProcessor {
 
     private static final Logger log = Logger.getLogger(DeltaspikeDataProcessor.class);
     private static final String FEATURE = "coffee-deltaspike-data-extension";
@@ -85,7 +87,8 @@ public class DeltaspikeDataProcessor {
         for (AnnotationInstance annotationInstance : combinedIndex.getComputingIndex().getAnnotations(DotName.createSimple(Repository.class))) {
             try {
                 if (annotationInstance.target().hasAnnotation(DotName.createSimple(Repository.class))) {
-                    Class<?> javaClass = Class.forName(annotationInstance.target().asClass().name().toString(), false, Thread.currentThread().getContextClassLoader());
+                    Class<?> javaClass = Class
+                            .forName(annotationInstance.target().asClass().name().toString(), false, Thread.currentThread().getContextClassLoader());
                     if (!removeableClasses.contains(javaClass)) {
                         repositoryClasses.add(javaClass);
                         log.info(MessageFormat.format("Repository annotation detected on [{0}]", javaClass));
@@ -96,6 +99,34 @@ public class DeltaspikeDataProcessor {
             }
         }
         return new DeltaspikeDataBuidItem(repositoryClasses, removeableClasses);
+    }
+
+    /**
+     * Add Vetoed annotation to removeableClasses
+     * 
+     * @param deltaspikeDataBuidItem
+     *            build item which contains Repository-s and removeable repositories
+     * @return annotation transformer build iter which contains the transformation of add Vetoed annotation.
+     */
+    @BuildStep
+    public AnnotationsTransformerBuildItem removeAbstractEntityRepositories(DeltaspikeDataBuidItem deltaspikeDataBuidItem) {
+
+        return new AnnotationsTransformerBuildItem(new AnnotationsTransformer() {
+            @Override
+            public boolean appliesTo(AnnotationTarget.Kind kind) {
+                return kind == org.jboss.jandex.AnnotationTarget.Kind.CLASS;
+            }
+
+            @Override
+            public void transform(AnnotationsTransformer.TransformationContext ctx) {
+                // Remove the MicrometerDecorator that requires the Micrometer API
+                deltaspikeDataBuidItem.getRemoveableClasses().stream().filter(aClass -> !aClass.equals(QueryHandler.class)).forEach(aClass -> {
+                    if (ctx.getTarget().asClass().name().equals(DotName.createSimple(aClass))) {
+                        ctx.transform().add(Vetoed.class).done();
+                    }
+                });
+            }
+        });
     }
 
     /**
@@ -124,9 +155,9 @@ public class DeltaspikeDataProcessor {
                     SyntheticBeanBuildItem.configure(type)
                             .name("CoffeeRepository#" + type.getName())
                             .addType(type)
-//                            .addType(Object.class)
-//                            .addQualifier(Default.class)
-//                            .addQualifier(Any.class)
+                            // .addType(Object.class)
+                            // .addQualifier(Default.class)
+                            // .addQualifier(Any.class)
                             .identifier("CoffeeRepository#" + type.getName())
                             .scope(ApplicationScoped.class)
                             .unremovable()
@@ -134,7 +165,6 @@ public class DeltaspikeDataProcessor {
                             .addInjectionPoint(ClassType.create(DotName.createSimple(QueryHandler.class)))
                             .done());
         }
-
 
     }
 
