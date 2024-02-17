@@ -1,0 +1,98 @@
+= v2.5.0 → v2.6.0
+
+coff:ee v2.5.0 -> v2.6.0 migration description, news, changes
+
+== Global
+
+=== Coffee BOM
+
+💥 ***BREAKING CHANGE*** 💥
+
+[source]
+----
+Global change that coffee-bom was used to import coffee dependency on projects. This has been changed to coffee-bom-project.
+
+You then need to import the project elements as follows:
+
+<dependencyManagement>
+    <dependency>
+        <groupId>hu.icellmobilsoft.coffee</groupId>
+        <artifactId>coffee-bom-project</artifactId> <1>
+        <version>${version.hu.icellmobilsoft.coffee}</version>
+        <type>pom</type>
+        <scope>import</scope>
+    </dependency>
+</dependencyManagement>
+
+This also means that the transitive dependencies that were previously put on projects from coffee-bom, are now removed.
+Because of this, these dependencies will be reported as not found by maven, so they will need to be defined in the project using coffee.
+----
+
+<1> - coffee-bom -> changed to coffee-bom-project
+--
+
+* Jandex index config fix.
+
+=== Hibernate
+
+* Bump hibernate-core https://github.com/hibernate/hibernate-orm/releases/tag/6.1.5[6.1.5.Final] -> https://github.com/hibernate/hibernate-orm/releases/tag/6.2.13[6.2.13.Final]
+
+==== Migration
+
+* It is necessary to read the https://github.com/hibernate/hibernate-orm/blob/6.2/migration-guide.adoc[Hibernate 6.2.x migration documentation] and update the affected parts of the project.
+* The https://github.com/hibernate/hibernate-orm/blob/6.2/migration-guide.adoc#timezone-and-offset-storage[Timezone and offset storage] now default to `DEFAULT`, therefore the time zones are also saved.
+Since we haven't saved the time zone so far and the `BatchService` is also designed not to save, this is causing us problems.
+To ensure that no time zones are saved, it is necessary to include the following property in `persistence.xml`: `<property name="hibernate.timezone.default_storage" value="NORMALIZE"/>`.
+* The https://github.com/hibernate/hibernate-orm/blob/6.2/migration-guide.adoc#bytecharacter-mapping-changes[Byte[+]+ and Character[+]+ types mapping changed].
+The Byte[] types were handled until now, but due to hibernate changes, one of the following is required:
+** Replace Byte[] with byte[]
+** For the old behavior, it is necessary to enable the legacy array processing in the `persistence.xml` with the following property: `<property name="hibernate.type.wrapper_array_handling" value="legacy"/>`
+
+== Changes
+
+=== coffee-jpa
+
+==== BatchService
+
+* Based on the Hibernate 6.2.x changes, the `Insert`, `Update` and `Delete` SQL statements have been updated.
+* Since Hibernate 6.2.x, the EnumType is deprecated, because they are processing enum values differently, so the handling of the EnumType in `BatchService` has been deleted.
+
+==== Migration
+
+Changes are backwards compatible doesn't need any migration.
+
+==== JpaUtil
+
+** Since Hibernate 6.2.x, the `JdbcSelect` class was renamed to `JdbcOperationQuerySelect`, and the `getSql()` method used from it to  `getSqlString()`, so we updated the `JpaUtil` with these changes.
+
+==== Migration
+
+Changes are backwards compatible doesn't need any migration.
+
+=== coffee-rest
+
+==== Jsonb Config
+
+Added the definition of the Jsonb configuration.
+
+==== Migration
+
+The changes do not result in migration work, backwards default values are set for correct usage.
+
+=== coffee-module-mp-restclient
+
+==== Jsonb Config
+
+Added the definition of the Jsonb configuration.
+
+==== Migration
+
+The changes do not result in migration work, backwards default values are set for correct usage.
+=== coffee-rest
+
+* fix javax.annotation.processing.Processor file (rename back to javax.annotation.processing.Processor, because it hasn't changed to javax)
+
+=== Coffee Quarkus Extensions
+
+A new module called Coffee Quarkus extension has been created, which adds other elements needed for Quarkus to some of the coffee modules.
+First element is coffee-module-mp-restclient-extension

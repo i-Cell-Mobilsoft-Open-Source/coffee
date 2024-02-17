@@ -33,7 +33,7 @@ import org.hibernate.query.sqm.internal.DomainParameterXref;
 import org.hibernate.query.sqm.internal.QuerySqmImpl;
 import org.hibernate.query.sqm.internal.SqmInterpretationsKey;
 import org.hibernate.query.sqm.tree.select.SqmSelectStatement;
-import org.hibernate.sql.exec.spi.JdbcSelect;
+import org.hibernate.sql.exec.spi.JdbcOperationQuerySelect;
 
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
@@ -153,9 +153,10 @@ public class JpaUtil {
                             domainQueryExecutionContext);
                 }
                 if (cacheableSqmInterpretation != null) {
-                    JdbcSelect jdbcSelect = ReflectionUtils.getFieldValueOrNull(cacheableSqmInterpretation, "jdbcSelect", JdbcSelect.class);
+                    JdbcOperationQuerySelect jdbcSelect = ReflectionUtils
+                            .getFieldValueOrNull(cacheableSqmInterpretation, "jdbcSelect", JdbcOperationQuerySelect.class);
                     if (jdbcSelect != null) {
-                        return jdbcSelect.getSql();
+                        return jdbcSelect.getSqlString();
                     }
                 }
             } else {

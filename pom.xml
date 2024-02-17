@@ -125,17 +125,13 @@
 							<goals>
 								<goal>jandex</goal>
 							</goals>
-							<!-- phase is 'process-classes by default' -->
 							<configuration>
 								<fileSets>
 									<fileSet>
-										<directory>${project.build.directory}</directory>
-										<excludes>
-											<exclude>generated-test-sources</exclude>
-											<exclude>test-classes</exclude>
-										</excludes>
+										<directory>${project.build.directory}/classes</directory>
 									</fileSet>
 								</fileSets>
+								<processDefaultFileSet>false</processDefaultFileSet>
 							</configuration>
 						</execution>
 					</executions>
@@ -192,7 +188,8 @@
 		<module>coffee-system</module>
 		<module>coffee-deltaspike</module>
 		<module>coffee-grpc</module>
-	</modules>
+		<module>coffee-quarkus-extensions</module>
+    </modules>
 
 	<distributionManagement>
 		<snapshotRepository>
@@ -246,11 +243,20 @@
 							<failOnError>true</failOnError>
 							<failOnWarnings>true</failOnWarnings>
 							<excludePackageNames>hu.icellmobilsoft.coffee.dto.*,org.apache.deltaspike.*</excludePackageNames>
-							<sourceFileExcludes>**/*_.java</sourceFileExcludes>
+							<sourceFileExcludes>
+								<sourceFileExclude>**/*_.java</sourceFileExclude>
+								<sourceFileExclude>**/*$$*.java</sourceFileExclude>
+							</sourceFileExcludes>
 						</configuration>
 					</plugin>
 				</plugins>
 			</build>
+		</profile>
+		<profile>
+			<id>testsuite</id>
+			<modules>
+				<module>testsuite</module>
+			</modules>
 		</profile>
 		<profile>
 			<id>release</id>

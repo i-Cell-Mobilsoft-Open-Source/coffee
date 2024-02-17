@@ -35,7 +35,6 @@ import jakarta.enterprise.inject.spi.Extension;
 import jakarta.enterprise.inject.spi.ProcessAnnotatedType;
 
 import hu.icellmobilsoft.coffee.cdi.annotation.FaultTypeCode;
-import hu.icellmobilsoft.coffee.dto.error.IFaultType;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
 
 /**
@@ -110,7 +109,7 @@ public class FaultTypeParserExtension implements Extension {
     }
 
     /**
-     * Get enums implementing {@link IFaultType}
+     * Get enums with FaultTypeCode annotations
      *
      * @return the fault type classes
      */

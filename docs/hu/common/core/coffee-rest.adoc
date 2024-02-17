@@ -494,3 +494,23 @@ public class MyBean {
 }
 ----
 
+== Jsonb konfiguráció
+
+A Jsonb alapértelmezett implementálója az https://projects.eclipse.org/projects/ee4j.yasson[Eclipse Yasson].
+Ezt lehet kiegszéíteni default configurációk segítéségvel:
+
+
+.project-defaults.yml
+[source,yml]
+----
+coffee:
+  jsonb:
+    config:
+      propertyvisibilitystrategyclass: "hu.icellmobilsoft.coffee.rest.provider.FieldOnlyVisibilityStrategy" <1>
+      binarydatastrategy: "BASE_64" <2>
+----
+
+A fenti configurációban 2 elem állítható be:
+
+<1> jakarta.json.bind.config.PropertyVisibilityStrategy interface-t megvalósító osztály teljes elérése.
+<2> Ez a típus a jakarta.json.bind.config.BinaryDataStrategy enum értékeit veheti fel, hogy miként kezelődjön a bináris adat.

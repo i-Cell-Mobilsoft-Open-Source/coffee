@@ -31,10 +31,5 @@
 			<groupId>io.smallrye.config</groupId>
 			<artifactId>smallrye-config</artifactId>
 		</dependency>
-		<!-- https://github.com/eclipse/microprofile-config/issues/716 javitas utan kiszedni -->
-		<dependency>
-			<groupId>org.osgi</groupId>
-			<artifactId>osgi.annotation</artifactId>
-		</dependency>
 	</dependencies>
 </project>
