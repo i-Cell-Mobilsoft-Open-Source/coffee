@@ -34,6 +34,7 @@ public interface IRequestVersionReader {
 
     /**
      * Verziószámot állapítja meg egy általános HTTP request alapján. Lehet az HTTP entity, header, akármi...
+     * Can read the request version from a general http request. (request body, header...)
      *
      * @param inputStream
      *            HTTP entity in raw stream format, if its possible read version from header or uri

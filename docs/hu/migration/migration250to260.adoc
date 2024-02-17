@@ -32,7 +32,7 @@ Emiatt ezeket a dependency-ket a maven jelezni fogja hogy nem találja, így azo
 --
 
 * Jandex index config fix.
-
+--
 === Hibernate
 
 * Bump hibernate-core https://github.com/hibernate/hibernate-orm/releases/tag/6.1.5[6.1.5.Final] -> https://github.com/hibernate/hibernate-orm/releases/tag/6.2.13[6.2.13.Final].
@@ -71,6 +71,9 @@ A változtatások nem eredményeznek átállási munkálatokat, visszafelé komp
 
 === coffee-rest
 
+* RequestVersionReader has been rewritten. The stream mark and reset could cause an error in some cases.
+
+
 ==== Jsonb Config
 
 Bekerült a Jsonb kongigurációjának a definiálása.
@@ -92,6 +95,11 @@ A változtatások nem eredményeznek átállási munkálatokat, visszafelé defa
 === coffee-rest
 
 * fix javax.annotation.processing.Processor fájl (visszanevezése jakarta.annotation.processing.Processor-ra, mert ez nem változott jakarta-ra)
+* RequestVersionReader újra lett írva, mert a stream `.mark()` and `.reset()` metódus hívása néhány esetben kivételt dobott
+
+==== Migration
+
+* `IXmlRequestVersionReader` és `IJsonRequestVersionReader` megszüntetésre került, heylette a `IRequestVersionReader` interfész `readVersion` metódusa használandó.
 
 === Coffee Quarkus Extensions
 

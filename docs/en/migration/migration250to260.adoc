@@ -23,15 +23,12 @@ You then need to import the project elements as follows:
         <scope>import</scope>
     </dependency>
 </dependencyManagement>
-
-This also means that the transitive dependencies that were previously put on projects from coffee-bom, are now removed.
-Because of this, these dependencies will be reported as not found by maven, so they will need to be defined in the project using coffee.
 ----
-
 <1> - coffee-bom -> changed to coffee-bom-project
 --
 
 * Jandex index config fix.
+--
 
 === Hibernate
 
@@ -88,9 +85,15 @@ Added the definition of the Jsonb configuration.
 ==== Migration
 
 The changes do not result in migration work, backwards default values are set for correct usage.
+
 === coffee-rest
 
 * fix javax.annotation.processing.Processor file (rename back to javax.annotation.processing.Processor, because it hasn't changed to javax)
+* RequestVersionReader has been rewritten. The stream mark and reset could cause an error in some cases.
+
+==== Migration
+
+* `IXmlRequestVersionReader` and `IJsonRequestVersionReader` have been removed, in case you used it update the interface to `IRequestVersionReader`.
 
 === Coffee Quarkus Extensions
 
