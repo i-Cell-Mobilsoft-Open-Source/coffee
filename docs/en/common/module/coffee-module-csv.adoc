@@ -31,7 +31,7 @@ public class TestBean {
 
 The module provides a `@CsvBindByNamePosition` annotation to specify the position and name of a CSV column.
 
-A list of instances of such a class can be converted to CSV with the following call:
+A list of instances of such a class can be converted to CSV with default csv format use the following call:
 [source,java]
 ----
 String csv = CsvUtil.toCsv(beans, TestBean.class);
@@ -45,10 +45,38 @@ The result of the above call:
 "12";"DONE";"false";"2020-01-02";"bar"
 ----
 
-To convert backwards, the following call can be used:
+If you want to change the csv format use the overloaded methods with config:
+[source,java]
+----
+CsvWriterConfig csvWriterConfig = new CsvWriterConfig.Builder()
+                .withQuotechar('\'')
+                .withSeparator(',')
+                .build();
+String csv = CsvUtil.toCsv(beans, TestBean.class, csvWriterConfig);
+----
+
+The result of the above call:
+[source,csv]
+----
+'IDENTIFIER','STATUS','ACTIVE','CREATIONDATE','NAME'
+'11','IN_PROGRESS','true','2021-11-23','foo'
+'12','DONE','false','2020-01-02','bar'
+
+----
+
+To convert backwards, the following call can be used for default csv format:
 [source,java]
 ----
 List<TestBean> beans = CsvUtil.toBean(csv, TestBean.class);
+----
+
+To convert backwards, the following call can be used for custom csv format:
+[source,java]
+----
+CSVParserBuilder csvParserBuilder = new CSVParserBuilder()
+                .withSeparator(',')
+                .withQuoteChar('\'');
+List<TestBean> beans = CsvUtil.toBean(csv, TestBean.class, csvParserBuilder);
 ----
 
 == Disambiguation

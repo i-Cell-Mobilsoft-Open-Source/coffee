@@ -97,3 +97,11 @@ A változtatások nem eredményeznek átállási munkálatokat, visszafelé defa
 
 Új modul jött létre Coffee Quarkus extension cím alatt, ami a Quarkushoz szükséges egyéb elemeket adja hozzá a coffee egyes moduljaihoz.
 Első eleme a coffee-module-mp-restclient-extension
+
+==== coffee-module-csv
+
+Új metódusokkal, lehetőség van a csv format állítására. Milyen csv szeparátor, escape char stb legyen használva.
+
+==== Migration
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
