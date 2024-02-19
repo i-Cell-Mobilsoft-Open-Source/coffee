@@ -114,3 +114,11 @@ Második eleme a coffee-deltaspike-data-extension
 
 * `org.apache.deltaspike.core.util.ClassUtils` -> `org.apache.deltaspike.core.util.message.ClassUtils`
 * `org.apache.deltaspike.core.util.PropertyFileUtils` -> `org.apache.deltaspike.core.util.message.PropertyFileUtils`
+
+=== coffee-module-csv
+
+Új metódusokkal, lehetőség van a csv format állítására. Milyen csv szeparátor, escape char stb legyen használva.
+
+=== Migration
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.

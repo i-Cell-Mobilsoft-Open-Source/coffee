@@ -113,3 +113,11 @@ Second element is coffee-deltaspike-data-extension
 
 * `org.apache.deltaspike.core.util.ClassUtils` -> `org.apache.deltaspike.core.util.message.ClassUtils`
 * `org.apache.deltaspike.core.util.PropertyFileUtils` -> `org.apache.deltaspike.core.util.message.PropertyFileUtils`
+
+==== coffee-module-csv
+
+Added new methods for changing the csv format. For example csv separator, escape char.
+
+==== Migration
+
+Changes are backwards compatible doesn't need any migration.

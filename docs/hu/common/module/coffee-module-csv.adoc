@@ -31,7 +31,7 @@ public class TestBean {
 
 A modul által nyújtott `@CsvBindByNamePosition` annotációval lehet megadni a CSV oszlop pozícióját és nevét.
 
-Egy ilyen osztály példányaiból álló listát az alábbi hívással lehet CSV-re konvertálni:
+Egy ilyen osztály példányaiból álló listát az alábbi hívással lehet CSV-re(default csv formátummal) konvertálni:
 [source,java]
 ----
 String csv = CsvUtil.toCsv(beans, TestBean.class);
@@ -45,10 +45,38 @@ A fenti hívás eredménye:
 "12";"DONE";"false";"2020-01-02";"bar"
 ----
 
-A visszafelé konverzióhoz az alábbi hívás használható:
+Ha nem a default csv formattal szeretnénk a hívást, akkor át kell adni a csvWriterConfig osztályt.
+[source,java]
+----
+CsvWriterConfig csvWriterConfig = new CsvWriterConfig.Builder()
+                .withQuotechar('\'')
+                .withSeparator(',')
+                .build();
+String csv = CsvUtil.toCsv(beans, TestBean.class, csvWriterConfig);
+----
+
+A fenti hívás eredménye:
+[source,csv]
+----
+'IDENTIFIER','STATUS','ACTIVE','CREATIONDATE','NAME'
+'11','IN_PROGRESS','true','2021-11-23','foo'
+'12','DONE','false','2020-01-02','bar'
+
+----
+
+A visszafelé konverzióhoz az alábbi hívás használható(default csv formathoz):
 [source,java]
 ----
 List<TestBean> beans = CsvUtil.toBean(csv, TestBean.class);
+----
+
+A visszafelé konverzióhoz az alábbi hívás használható, ha nem a default csv formátummal szeretnénk:
+[source,java]
+----
+CSVParserBuilder csvParserBuilder = new CSVParserBuilder()
+                .withSeparator(',')
+                .withQuoteChar('\'');
+List<TestBean> beans = CsvUtil.toBean(csv, TestBean.class, csvParserBuilder);
 ----
 
 == Nyelvesítés
