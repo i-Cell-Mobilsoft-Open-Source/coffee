@@ -69,11 +69,6 @@ A változtatások nem eredményeznek átállási munkálatokat, visszafelé komp
 
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
 
-=== coffee-rest
-
-* RequestVersionReader has been rewritten. The stream mark and reset could cause an error in some cases.
-
-
 ==== Jsonb Config
 
 Bekerült a Jsonb kongigurációjának a definiálása.
