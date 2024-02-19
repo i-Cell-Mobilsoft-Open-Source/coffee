@@ -76,7 +76,7 @@ public class DeltaspikeDataRecorder {
         return new Function<SyntheticCreationalContext<RepositoryExtension>, RepositoryExtension>() {
 
             @Override
-            public RepositoryExtension apply(SyntheticCreationalContext<RepositoryExtension> faultTypeClassesSyntheticCreationalContext) {
+            public RepositoryExtension apply(SyntheticCreationalContext<RepositoryExtension> syntheticCreationalContext) {
                 return new RepositoryExtension(repositoryClasses);
             }
         };
