@@ -8,7 +8,7 @@ coff:ee v2.5.0 -> v2.6.0 migration description, news, changes
 
 💥 ***BREAKING CHANGE*** 💥
 
-[source]
+[source,text]
 ----
 Global change that coffee-bom was used to import coffee dependency on projects. This has been changed to coffee-bom-project.
 
@@ -28,8 +28,7 @@ This also means that the transitive dependencies that were previously put on pro
 Because of this, these dependencies will be reported as not found by maven, so they will need to be defined in the project using coffee.
 ----
 
-<1> - coffee-bom -> changed to coffee-bom-project
---
+coffee-bom -> coffee-bom-project -re változott
 
 * Jandex index config fix.
 
@@ -69,6 +68,14 @@ Changes are backwards compatible doesn't need any migration.
 
 Changes are backwards compatible doesn't need any migration.
 
+==== Transactional annotation
+
+In the  `hu.icellmobilsoft.coffee.jpa.annotation.Transactional` annotation the annotation @Stereotype has been removed and in @Target the annotation ElementType.TYPE too.
+
+==== Migration
+
+Changes are backwards compatible doesn't need any migration.
+
 === coffee-rest
 
 ==== Jsonb Config
@@ -96,3 +103,13 @@ The changes do not result in migration work, backwards default values are set fo
 
 A new module called Coffee Quarkus extension has been created, which adds other elements needed for Quarkus to some of the coffee modules.
 First element is coffee-module-mp-restclient-extension
+Second element is coffee-deltaspike-data-extension
+
+=== coffee-deltaspike-message
+
+* Changed the pacakage of `org.apache.deltaspike.core.util` to `org.apache.deltaspike.core.util.message`, since 2 separate modules have the same original package, which is sensitived by Quarkus.
+
+==== Migration
+
+* `org.apache.deltaspike.core.util.ClassUtils` -> `org.apache.deltaspike.core.util.message.ClassUtils`
+* `org.apache.deltaspike.core.util.PropertyFileUtils` -> `org.apache.deltaspike.core.util.message.PropertyFileUtils`
