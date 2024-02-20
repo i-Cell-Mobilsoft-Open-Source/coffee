@@ -46,7 +46,7 @@ import jakarta.inject.Inject;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityManager;
 
-import org.apache.deltaspike.core.util.ClassUtils;
+import org.apache.deltaspike.core.util.message.ClassUtils;
 import org.apache.deltaspike.data.api.Query;
 import org.apache.deltaspike.data.impl.handler.CdiQueryInvocationContext;
 import org.apache.deltaspike.data.impl.param.Parameters;

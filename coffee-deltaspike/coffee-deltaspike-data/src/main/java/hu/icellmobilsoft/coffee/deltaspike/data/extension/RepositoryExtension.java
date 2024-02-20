@@ -84,6 +84,16 @@ public class RepositoryExtension implements Extension {
     }
 
     /**
+     * Constructor for external
+     * 
+     * @param repositoryClasses
+     *            repository classes
+     */
+    public RepositoryExtension(ArrayList<Class<?>> repositoryClasses) {
+        this.repositoryClasses.addAll(repositoryClasses);
+    }
+
+    /**
      * Collect repository classes by {@link Repository} stereotype
      * 
      * @param <X>
@@ -127,8 +137,8 @@ public class RepositoryExtension implements Extension {
                         // ezen a ponton lényegeben megadjuk hogy minden repository interface-ben talalhato metodus keresztul menjen a QueryHandler
                         // osztalyon
                         final InvocationHandler handler = (InvocationHandler) beanManager.getReference(
-                                beanManager.resolve(beanManager.getBeans(QueryHandler.class, new Default.Literal())), QueryHandler.class,
-                                beanManager.createCreationalContext(null));
+                                beanManager.resolve(beanManager.getBeans(QueryHandler.class, new Default.Literal())),
+                                QueryHandler.class, beanManager.createCreationalContext(null));
 
                         return Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), new Class<?>[] { type }, handler);
                     });

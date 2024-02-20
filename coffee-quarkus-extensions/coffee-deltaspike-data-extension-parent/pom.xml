@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>hu.icellmobilsoft.coffee</groupId>
@@ -8,18 +9,17 @@
         <version>2.6.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>coffee-module-mp-restclient-extension-parent</artifactId>
+    <artifactId>coffee-deltaspike-data-extension-parent</artifactId>
 
     <packaging>pom</packaging>
 
-    <name>Coff:ee module mp restclient Extension - Parent</name>
-    <description>Quarkus Extensions - Coff:ee module mp restclient extension</description>
+    <name>Coff:ee deltaspike data Extension - Parent</name>
+    <description>Quarkus Extensions - Coff:ee deltaspike data  extension</description>
 
     <modules>
-        <module>coffee-module-mp-restclient-extension-deployment</module>
-        <module>coffee-module-mp-restclient-extension</module>
+        <module>coffee-deltaspike-data-extension-deployment</module>
+        <module>coffee-deltaspike-data-extension</module>
     </modules>
-
 
     <build>
         <pluginManagement>

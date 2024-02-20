@@ -35,7 +35,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.deltaspike.core.util;
+package org.apache.deltaspike.core.util.message;
 
 import jakarta.enterprise.inject.Typed;
 import java.io.File;

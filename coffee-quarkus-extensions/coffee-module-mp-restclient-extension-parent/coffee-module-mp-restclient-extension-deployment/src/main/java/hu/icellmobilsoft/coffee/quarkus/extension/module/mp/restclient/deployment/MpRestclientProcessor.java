@@ -72,7 +72,7 @@ class MpRestclientProcessor {
      * 
      * @param combinedIndex
      *            combined index build item, which contains all indexes
-     * @return build item which is contains
+     * @return build item which contains FaultTypeCodes
      */
     @BuildStep
     @SuppressWarnings("unchecked")

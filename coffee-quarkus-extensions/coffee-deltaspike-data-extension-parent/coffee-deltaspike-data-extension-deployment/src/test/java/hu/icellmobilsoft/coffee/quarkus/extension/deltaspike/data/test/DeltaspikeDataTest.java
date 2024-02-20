@@ -2,7 +2,7 @@
  * #%L
  * Coffee
  * %%
- * Copyright (C) 2020 - 2023 i-Cell Mobilsoft Zrt.
+ * Copyright (C) 2020 - 2024 i-Cell Mobilsoft Zrt.
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,24 +17,23 @@
  * limitations under the License.
  * #L%
  */
-package hu.icellmobilsoft.coffee.jpa.annotation;
+package hu.icellmobilsoft.coffee.quarkus.extension.deltaspike.data.test;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-
-import jakarta.interceptor.InterceptorBinding;
+import io.quarkus.test.junit.QuarkusTest;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
- * Customized {@link jakarta.transaction.Transactional} annotation with rollbackOn at {@link Throwable}.
+ * Test that Extension can run
  *
+ * @since 2.6.0
  * @author speter555
- * @since 1.14.0
  */
-@jakarta.transaction.Transactional(rollbackOn = Throwable.class)
-@InterceptorBinding
-@Target({ ElementType.METHOD })
-@Retention(value = RetentionPolicy.RUNTIME)
-public @interface Transactional {
+@QuarkusTest
+class DeltaspikeDataTest {
+
+    @Test
+    void testModule() {
+        Assertions.assertTrue(true);
+    }
 }

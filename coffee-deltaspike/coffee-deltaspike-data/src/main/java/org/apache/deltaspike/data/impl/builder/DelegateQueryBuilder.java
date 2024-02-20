@@ -54,7 +54,7 @@ import jakarta.inject.Inject;
 import jakarta.persistence.PersistenceException;
 
 import org.apache.deltaspike.core.api.provider.BeanProvider;
-import org.apache.deltaspike.core.util.ClassUtils;
+import org.apache.deltaspike.core.util.message.ClassUtils;
 import org.apache.deltaspike.data.api.QueryInvocationException;
 import org.apache.deltaspike.data.impl.handler.CdiQueryInvocationContext;
 import org.apache.deltaspike.data.impl.util.bean.BeanDestroyable;

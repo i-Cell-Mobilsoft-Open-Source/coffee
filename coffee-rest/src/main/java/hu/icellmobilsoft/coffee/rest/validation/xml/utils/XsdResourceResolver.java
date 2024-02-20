@@ -27,7 +27,7 @@ import java.util.Enumeration;
 import jakarta.enterprise.inject.Alternative;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.deltaspike.core.util.PropertyFileUtils;
+import org.apache.deltaspike.core.util.message.PropertyFileUtils;
 import org.w3c.dom.DOMImplementationSource;
 import org.w3c.dom.bootstrap.DOMImplementationRegistry;
 import org.w3c.dom.ls.DOMImplementationLS;
