@@ -20,7 +20,11 @@
 package hu.icellmobilsoft.coffee.model.base;
 
 import java.beans.PropertyDescriptor;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.Reader;
 import java.io.Serializable;
+import java.io.Writer;
 import java.sql.Blob;
 import java.sql.Clob;
 
@@ -121,7 +125,9 @@ public abstract class AbstractEntity implements IVersionable, Serializable {
             if (ClassUtils.isAssignable(propertyType, AbstractEntity.class)) {
                 // dependency kapcsolatokon ne menjen vegig, ne lazy-zzon
                 s.append(name, propertyType.getSimpleName());
-            } else if (propertyType == byte[].class || propertyType == Blob.class || propertyType == Clob.class) {
+            } else if (propertyType == byte[].class || propertyType == Blob.class || propertyType == Clob.class || propertyType == InputStream.class
+                    || propertyType == OutputStream.class || propertyType == Reader.class || propertyType == Writer.class) {
+                // nagy adatmennyiseggel ne foglalkozzon, stream-eket ne nyektesse
                 s.append(name, propertyType.getSimpleName());
             } else {
                 try {
