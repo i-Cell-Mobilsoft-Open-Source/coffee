@@ -122,3 +122,12 @@ Második eleme a coffee-deltaspike-data-extension
 === Migration
 
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+=== coffee-model-base
+
+* `AbstractEntity.toString()` fgv-e `java.io.InputStream`, `java.io.OutputStream`, `java.io.Reader` és `java.io.Writer` típusú propertyk esetén annak visszatérési értéke helyett a típusát használja fel.
+Korábban az értékkel dolgozott ilyen esetekben is, így pl logozás esetén felolvasta a stream-et.
+
+==== Átállás
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.

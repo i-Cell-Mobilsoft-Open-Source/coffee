@@ -44,6 +44,7 @@ public class AbstractEntityTest {
         Assertions.assertTrue(actualToStringValue.contains("blobColumn=Blob"));
         Assertions.assertTrue(actualToStringValue.contains("byteArrayColumn=byte[]"));
         Assertions.assertTrue(actualToStringValue.contains("clobColumn=Clob"));
+        Assertions.assertTrue(actualToStringValue.contains("blobStream=InputStream"));
     }
 
 }
