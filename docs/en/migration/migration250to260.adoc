@@ -121,3 +121,12 @@ Added new methods for changing the csv format. For example csv separator, escape
 ==== Migration
 
 Changes are backwards compatible doesn't need any migration.
+
+=== coffee-model-base
+
+* The `AbstractEntity.toString()` function uses the type of the property instead of the value in case of `java.io.InputStream`, `java.io.OutputStream`, `java.io.Reader` and `java.io.Writer`.
+It used the value of the property in such cases, for e.g. it read the stream in case of logging.
+
+==== Migration
+
+Changes are backwards compatible doesn't need any migration.
