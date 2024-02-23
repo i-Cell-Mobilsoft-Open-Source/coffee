@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -55,6 +55,7 @@ import org.apache.deltaspike.data.impl.util.jpa.QueryStringExtractorFactory;
 import hu.icellmobilsoft.coffee.cdi.trace.annotation.Traced;
 import hu.icellmobilsoft.coffee.cdi.trace.constants.SpanAttribute;
 import hu.icellmobilsoft.coffee.cdi.trace.spi.ITraceHandler;
+import hu.icellmobilsoft.coffee.exception.BaseException;
 
 //import static org.apache.deltaspike.core.util.StringUtils.isNotEmpty;
 
@@ -69,7 +70,7 @@ public class AnnotatedQueryBuilder extends QueryBuilder
 
     @Inject
     private ITraceHandler traceHandler;
-    
+
     @Override
     public Object execute(CdiQueryInvocationContext context) {
         Method method = context.getMethod();
@@ -78,7 +79,11 @@ public class AnnotatedQueryBuilder extends QueryBuilder
 
         Traced traced = new Traced.Literal(SpanAttribute.Database.COMPONENT, SpanAttribute.Database.KIND, SpanAttribute.Database.DB_TYPE);
         String operation = context.getRepositoryClass() + "." + method.getName();
-        return traceHandler.runWithTrace(() -> context.executeQuery(jpaQuery), traced, operation);
+        try {
+            return traceHandler.runWithTrace(() -> context.executeQuery(jpaQuery), traced, operation);
+        } catch (BaseException e) {
+            throw new RuntimeException("Failed to execute query", e);
+        }
     }
 
     private jakarta.persistence.Query createJpaQuery(Query query, CdiQueryInvocationContext context)

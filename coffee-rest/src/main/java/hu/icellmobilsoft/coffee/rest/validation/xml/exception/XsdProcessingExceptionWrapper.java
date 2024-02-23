@@ -21,7 +21,7 @@ package hu.icellmobilsoft.coffee.rest.validation.xml.exception;
 
 import jakarta.ws.rs.ProcessingException;
 
-import hu.icellmobilsoft.coffee.dto.exception.BaseExceptionWrapper;
+import hu.icellmobilsoft.coffee.exception.BaseExceptionWrapper;
 
 /**
  * Kivétel osztály, hogy tudjunk céges kivételt dobni a MessageBodyReader/MessageBodyWriter osztályokból.

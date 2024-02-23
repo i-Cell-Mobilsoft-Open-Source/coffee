@@ -32,7 +32,7 @@ import java.time.format.DateTimeParseException;
 
 import org.apache.commons.lang3.StringUtils;
 
-import hu.icellmobilsoft.coffee.dto.exception.BaseException;
+import hu.icellmobilsoft.coffee.exception.BaseException;
 
 /**
  * Helper osztály, java 8 time-ok parsolásához

@@ -19,7 +19,7 @@
  */
 package hu.icellmobilsoft.coffee.system.jpa.converter;
 
-import hu.icellmobilsoft.coffee.dto.exception.BaseException;
+import hu.icellmobilsoft.coffee.exception.BaseException;
 import hu.icellmobilsoft.coffee.model.base.AbstractEntity;
 
 /**

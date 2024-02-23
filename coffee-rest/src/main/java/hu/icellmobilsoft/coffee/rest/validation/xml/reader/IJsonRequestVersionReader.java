@@ -19,7 +19,7 @@
  */
 package hu.icellmobilsoft.coffee.rest.validation.xml.reader;
 
-import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
+import hu.icellmobilsoft.coffee.exception.TechnicalException;
 
 /**
  * Interface for reading the request version value of JSON files.

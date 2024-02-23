@@ -21,7 +21,7 @@ package hu.icellmobilsoft.coffee.module.redisstream.consumer;
 
 import java.util.Map;
 
-import hu.icellmobilsoft.coffee.dto.exception.BaseException;
+import hu.icellmobilsoft.coffee.exception.BaseException;
 import redis.clients.jedis.resps.StreamEntry;
 
 /**

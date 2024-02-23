@@ -17,46 +17,58 @@
  * limitations under the License.
  * #L%
  */
-package hu.icellmobilsoft.coffee.dto.exception;
+package hu.icellmobilsoft.coffee.exception;
 
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
+import hu.icellmobilsoft.coffee.dto.exception.enums.Severity;
 
 /**
- * Amikor az alkalmazas tudatosan ugy van beallitva hogy elutasitsa a feldolgozast
+ *
+ * throw when cant find entity by id
  *
  * @author imre.scheffer
  * @since 1.0.0
  */
-public class ServiceUnavailableException extends BaseException {
+public class BONotFoundException extends BaseException {
 
     private static final long serialVersionUID = 1L;
 
     /**
-     * message + throwable constructor
+     * <p>
+     * Constructor for BONotFoundException.
+     * </p>
      *
+     * @param message
+     *            message
+     */
+    public BONotFoundException(String message) {
+        this(CoffeeFaultType.ENTITY_NOT_FOUND, message, null);
+    }
+
+    /**
+     * Constructor for BONotFoundException.
+     *
+     * @param faultTypeEnum
+     *            faultTypeEnum
+     * @param message
+     *            message
+     */
+    public BONotFoundException(Enum<?> faultTypeEnum, String message) {
+        this(faultTypeEnum, message, null);
+    }
+
+    /**
+     * Constructor for BONotFoundException.
+     *
+     * @param faultTypeEnum
+     *            faultTypeEnum
      * @param message
      *            message
      * @param e
-     *            message
+     *            e
      */
-    public ServiceUnavailableException(String message, Throwable e) {
-        super(CoffeeFaultType.SERVICE_UNAVAILABLE, message, e);
-    }
-
-    /**
-     * message constructor
-     *
-     * @param message
-     *            message
-     */
-    public ServiceUnavailableException(String message) {
-        super(CoffeeFaultType.SERVICE_UNAVAILABLE, message);
-    }
-
-    /**
-     * constructor
-     */
-    public ServiceUnavailableException() {
-        this("The REST endpoint is down by configuration");
+    public BONotFoundException(Enum<?> faultTypeEnum, String message, Throwable e) {
+        super(faultTypeEnum, message, e);
+        setSeverity(Severity.MINOR);
     }
 }

@@ -32,8 +32,8 @@ import hu.icellmobilsoft.coffee.cdi.health.constants.HealthConstant;
 import hu.icellmobilsoft.coffee.cdi.metric.MetricTag;
 import hu.icellmobilsoft.coffee.cdi.metric.spi.IMetricsHandler;
 import hu.icellmobilsoft.coffee.cdi.metric.spi.IMetricsHandler.Implementation;
-import hu.icellmobilsoft.coffee.dto.exception.BaseException;
-import hu.icellmobilsoft.coffee.dto.exception.InvalidParameterException;
+import hu.icellmobilsoft.coffee.exception.BaseException;
+import hu.icellmobilsoft.coffee.exception.InvalidParameterException;
 import hu.icellmobilsoft.coffee.tool.utils.health.HealthUtil;
 
 /**

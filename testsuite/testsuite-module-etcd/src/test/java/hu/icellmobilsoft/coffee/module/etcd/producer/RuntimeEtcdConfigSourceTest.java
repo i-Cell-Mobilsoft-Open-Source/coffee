@@ -31,7 +31,7 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 
-import hu.icellmobilsoft.coffee.dto.exception.BaseException;
+import hu.icellmobilsoft.coffee.exception.BaseException;
 import hu.icellmobilsoft.coffee.module.etcd.handler.ConfigEtcdHandler;
 import hu.icellmobilsoft.coffee.tool.utils.string.RandomUtil;
 

@@ -32,12 +32,11 @@ import org.hibernate.proxy.HibernateProxy;
 import org.hibernate.proxy.LazyInitializer;
 
 import com.google.common.collect.Lists;
-
-import hu.icellmobilsoft.coffee.dto.exception.BaseException;
-import hu.icellmobilsoft.coffee.dto.exception.InvalidParameterException;
-import hu.icellmobilsoft.coffee.tool.common.FunctionalInterfaces.BaseExceptionFunction;
-import hu.icellmobilsoft.coffee.tool.common.FunctionalInterfaces.BaseExceptionFunction2;
-import hu.icellmobilsoft.coffee.tool.common.FunctionalInterfaces.BaseExceptionFunction3;
+import hu.icellmobilsoft.coffee.exception.BaseException;
+import hu.icellmobilsoft.coffee.exception.InvalidParameterException;
+import hu.icellmobilsoft.coffee.util.function.FunctionalInterfaces.BaseExceptionFunction;
+import hu.icellmobilsoft.coffee.util.function.FunctionalInterfaces.BaseExceptionFunction2;
+import hu.icellmobilsoft.coffee.util.function.FunctionalInterfaces.BaseExceptionFunction3;
 
 /**
  * Helper class for entity handling.
@@ -106,11 +105,11 @@ public class EntityHelper {
      * @param ids
      *            a {@link java.util.Collection} object.
      * @param function
-     *            Callable function {@link hu.icellmobilsoft.coffee.tool.common.FunctionalInterfaces.BaseExceptionFunction} object.
+     *            Callable function {@link hu.icellmobilsoft.coffee.util.function.FunctionalInterfaces.BaseExceptionFunction} object.
      * @param <T>
      *            a T object.
      * @return result of id list select, partitioned to {@value #MAX_PARAMETER_COUNT} subselects
-     * @throws hu.icellmobilsoft.coffee.dto.exception.BaseException
+     * @throws hu.icellmobilsoft.coffee.exception.BaseException
      *             if any.
      */
     public static <T> List<T> partitionedQuery(Collection<String> ids, BaseExceptionFunction<List<String>, List<T>> function) throws BaseException {

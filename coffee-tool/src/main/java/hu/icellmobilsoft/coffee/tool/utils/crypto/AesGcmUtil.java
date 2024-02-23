@@ -27,10 +27,10 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.GCMParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
-import hu.icellmobilsoft.coffee.dto.exception.BaseException;
-import hu.icellmobilsoft.coffee.dto.exception.InvalidParameterException;
-import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
+import hu.icellmobilsoft.coffee.exception.BaseException;
+import hu.icellmobilsoft.coffee.exception.InvalidParameterException;
+import hu.icellmobilsoft.coffee.exception.TechnicalException;
 
 /**
  * Util class for AES/GCM/NoPadding encode/decode

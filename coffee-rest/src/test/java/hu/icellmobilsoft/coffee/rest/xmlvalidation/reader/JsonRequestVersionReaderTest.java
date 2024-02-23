@@ -24,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
+import hu.icellmobilsoft.coffee.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.rest.validation.xml.reader.JsonRequestVersionReader;
 import hu.icellmobilsoft.coffee.rest.xmlvalidation.reader.dto.ContextDto;
 import hu.icellmobilsoft.coffee.rest.xmlvalidation.reader.dto.JsonDto;

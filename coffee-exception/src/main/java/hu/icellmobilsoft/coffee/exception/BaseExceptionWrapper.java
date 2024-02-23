@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package hu.icellmobilsoft.coffee.dto.exception;
+package hu.icellmobilsoft.coffee.exception;
 
 /**
  * Nem céges kivételek, amik nem a BaseException-bol öröklődnek, ezen az interfészen keresztül tudnak kapcsolódni a céges kivételkezelő rendszerhez.

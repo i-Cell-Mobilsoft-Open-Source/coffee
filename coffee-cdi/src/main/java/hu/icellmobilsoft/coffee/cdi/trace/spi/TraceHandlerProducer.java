@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,18 +19,19 @@
  */
 package hu.icellmobilsoft.coffee.cdi.trace.spi;
 
-import java.util.function.Supplier;
-
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.Instance;
 import jakarta.enterprise.inject.Produces;
 import jakarta.enterprise.inject.spi.CDI;
 
 import hu.icellmobilsoft.coffee.cdi.trace.annotation.Traced;
+import hu.icellmobilsoft.coffee.exception.BaseException;
+import hu.icellmobilsoft.coffee.util.function.FunctionalInterfaces.BaseExceptionRunner;
+import hu.icellmobilsoft.coffee.util.function.FunctionalInterfaces.BaseExceptionSupplier;
 
 /**
  * Produces the underlying tracing implementation if exists, otherwise creates a default implementation without trace handling
- * 
+ *
  * @author czenczl
  * @since 2.5.0
  */
@@ -46,7 +47,7 @@ public class TraceHandlerProducer {
 
     /**
      * Producer method to supply the provided tracing implementation
-     * 
+     *
      * @return IOpenTraceHandler implementation
      */
     @Produces
@@ -54,19 +55,23 @@ public class TraceHandlerProducer {
     public ITraceHandler produceTraceHandler() {
         Instance<ITraceHandler> openTraceHandler = CDI.current().select(ITraceHandler.class, new TraceHandlerQualifier.Literal());
         if (openTraceHandler.isResolvable()) {
-            return (ITraceHandler) openTraceHandler.get();
+            return openTraceHandler.get();
         }
 
         // default implementation
         ITraceHandler noTraceHandler = new ITraceHandler() {
             @Override
-            public <T> T runWithTrace(Supplier<T> function, Traced traced, String operation) {
+            public <T> T runWithTrace(BaseExceptionSupplier<T> function, Traced traced, String operation) throws BaseException {
                 return function.get();
+            }
+
+            @Override
+            public void runWithTrace(BaseExceptionRunner function, Traced traced, String operation) throws BaseException {
+                function.run();
             }
         };
 
         return noTraceHandler;
-
     }
 
 }

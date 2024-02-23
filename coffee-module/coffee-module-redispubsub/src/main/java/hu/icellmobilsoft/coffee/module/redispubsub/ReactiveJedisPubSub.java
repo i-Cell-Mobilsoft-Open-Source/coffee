@@ -25,7 +25,7 @@ import org.eclipse.microprofile.reactive.messaging.Message;
 import org.reactivestreams.Subscriber;
 
 import hu.icellmobilsoft.coffee.dto.common.LogConstants;
-import hu.icellmobilsoft.coffee.dto.exception.BaseException;
+import hu.icellmobilsoft.coffee.exception.BaseException;
 import hu.icellmobilsoft.coffee.module.redispubsub.bundle.PubSubMessage;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
 import hu.icellmobilsoft.coffee.se.logging.mdc.MDC;

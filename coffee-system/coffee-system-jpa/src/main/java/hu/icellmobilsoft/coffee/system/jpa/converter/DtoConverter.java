@@ -20,8 +20,8 @@
 package hu.icellmobilsoft.coffee.system.jpa.converter;
 
 import hu.icellmobilsoft.coffee.dto.common.common.AbstractDtoType;
-import hu.icellmobilsoft.coffee.dto.exception.BaseException;
-import hu.icellmobilsoft.coffee.dto.exception.DtoConversionException;
+import hu.icellmobilsoft.coffee.exception.BaseException;
+import hu.icellmobilsoft.coffee.exception.DtoConversionException;
 import hu.icellmobilsoft.coffee.model.base.AbstractEntity;
 
 /**

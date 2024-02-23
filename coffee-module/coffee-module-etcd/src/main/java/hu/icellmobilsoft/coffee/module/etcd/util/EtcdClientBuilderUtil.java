@@ -21,8 +21,8 @@ package hu.icellmobilsoft.coffee.module.etcd.util;
 
 import java.time.Duration;
 
-import hu.icellmobilsoft.coffee.dto.exception.BaseException;
-import hu.icellmobilsoft.coffee.dto.exception.InvalidParameterException;
+import hu.icellmobilsoft.coffee.exception.BaseException;
+import hu.icellmobilsoft.coffee.exception.InvalidParameterException;
 import hu.icellmobilsoft.coffee.module.etcd.config.EtcdConfig;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
 import io.etcd.jetcd.Client;

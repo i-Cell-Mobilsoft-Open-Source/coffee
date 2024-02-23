@@ -17,44 +17,45 @@
  * limitations under the License.
  * #L%
  */
-package hu.icellmobilsoft.coffee.dto.exception;
+package hu.icellmobilsoft.coffee.exception;
 
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 
 /**
- * Expected business Exception
+ *
+ * Unexpected technical exception
  *
  * @author imre.scheffer
  * @since 1.0.0
  */
-public class BusinessException extends BaseException {
+public class TechnicalException extends BaseException {
 
     private static final long serialVersionUID = 1L;
 
     /**
-     * Constructor for BusinessException.
+     * Constructor for TechnicalException.
      *
      * @param message
      *            message
      */
-    public BusinessException(String message) {
-        this(CoffeeFaultType.OPERATION_FAILED, message, null);
+    public TechnicalException(String message) {
+        this(CoffeeFaultType.REPOSITORY_FAILED, message, null);
     }
 
     /**
-     * Constructor for BusinessException.
+     * Constructor for TechnicalException.
      *
      * @param faultTypeEnum
      *            faultTypeEnum
      * @param message
      *            message
      */
-    public BusinessException(Enum<?> faultTypeEnum, String message) {
+    public TechnicalException(Enum<?> faultTypeEnum, String message) {
         this(faultTypeEnum, message, null);
     }
 
     /**
-     * Constructor for BusinessException.
+     * Constructor for TechnicalException.
      * 
      * @param faultTypeEnum
      *            faultTypeEnum
@@ -63,8 +64,7 @@ public class BusinessException extends BaseException {
      * @param e
      *            e
      */
-    public BusinessException(Enum<?> faultTypeEnum, String message, Throwable e) {
+    public TechnicalException(Enum<?> faultTypeEnum, String message, Throwable e) {
         super(faultTypeEnum, message, e);
     }
-
 }

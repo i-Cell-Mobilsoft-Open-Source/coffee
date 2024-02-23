@@ -26,7 +26,7 @@ import jakarta.enterprise.inject.Produces;
 import jakarta.enterprise.inject.spi.CDI;
 import jakarta.inject.Inject;
 
-import hu.icellmobilsoft.coffee.dto.exception.BaseException;
+import hu.icellmobilsoft.coffee.exception.BaseException;
 import hu.icellmobilsoft.coffee.module.etcd.config.DefaultEtcdConfigImpl;
 import hu.icellmobilsoft.coffee.module.etcd.repository.EtcdRepository;
 import hu.icellmobilsoft.coffee.module.etcd.service.ConfigEtcdService;

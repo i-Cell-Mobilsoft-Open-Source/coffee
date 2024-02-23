@@ -37,7 +37,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.jboss.weld.context.bound.BoundRequestContext;
 
 import hu.icellmobilsoft.coffee.dto.common.LogConstants;
-import hu.icellmobilsoft.coffee.dto.exception.BaseException;
+import hu.icellmobilsoft.coffee.exception.BaseException;
 import hu.icellmobilsoft.coffee.module.redis.annotation.RedisConnection;
 import hu.icellmobilsoft.coffee.module.redis.manager.RedisManager;
 import hu.icellmobilsoft.coffee.module.redis.manager.RedisManagerConnection;

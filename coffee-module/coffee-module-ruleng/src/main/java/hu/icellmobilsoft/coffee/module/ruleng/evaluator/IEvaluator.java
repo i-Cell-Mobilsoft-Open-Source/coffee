@@ -21,7 +21,7 @@ package hu.icellmobilsoft.coffee.module.ruleng.evaluator;
 
 import java.util.List;
 
-import hu.icellmobilsoft.coffee.dto.exception.BaseException;
+import hu.icellmobilsoft.coffee.exception.BaseException;
 
 /**
  * Base interface for evaluations.

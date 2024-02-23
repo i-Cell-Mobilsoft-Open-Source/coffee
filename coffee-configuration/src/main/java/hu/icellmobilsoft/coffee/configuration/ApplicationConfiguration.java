@@ -32,8 +32,7 @@ import org.apache.commons.lang3.StringUtils;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
-
-import hu.icellmobilsoft.coffee.dto.exception.BONotFoundException;
+import hu.icellmobilsoft.coffee.exception.BONotFoundException;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
 import hu.icellmobilsoft.coffee.tool.utils.string.StringHelper;
 

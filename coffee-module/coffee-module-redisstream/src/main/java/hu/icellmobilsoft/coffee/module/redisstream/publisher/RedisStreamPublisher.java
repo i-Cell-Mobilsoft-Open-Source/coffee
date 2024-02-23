@@ -33,9 +33,9 @@ import jakarta.inject.Inject;
 import org.apache.commons.lang3.StringUtils;
 
 import hu.icellmobilsoft.coffee.dto.common.LogConstants;
-import hu.icellmobilsoft.coffee.dto.exception.BaseException;
-import hu.icellmobilsoft.coffee.dto.exception.InvalidParameterException;
-import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
+import hu.icellmobilsoft.coffee.exception.BaseException;
+import hu.icellmobilsoft.coffee.exception.InvalidParameterException;
+import hu.icellmobilsoft.coffee.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.module.redis.manager.RedisManager;
 import hu.icellmobilsoft.coffee.module.redis.manager.RedisManagerConnection;
 import hu.icellmobilsoft.coffee.module.redisstream.common.RedisStreamUtil;

@@ -31,8 +31,8 @@ import javax.crypto.spec.IvParameterSpec;
 
 import org.apache.commons.lang3.StringUtils;
 
-import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
+import hu.icellmobilsoft.coffee.exception.BaseException;
 
 /**
  * AES/CBC/PKCS5PADDING coding

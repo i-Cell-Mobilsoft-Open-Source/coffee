@@ -30,17 +30,17 @@ import org.apache.commons.lang3.StringUtils;
 
 import hu.icellmobilsoft.coffee.cdi.trace.annotation.Traced;
 import hu.icellmobilsoft.coffee.cdi.trace.constants.SpanAttribute;
-import hu.icellmobilsoft.coffee.dto.exception.BaseException;
-import hu.icellmobilsoft.coffee.dto.exception.InvalidParameterException;
-import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
+import hu.icellmobilsoft.coffee.exception.BaseException;
+import hu.icellmobilsoft.coffee.exception.InvalidParameterException;
+import hu.icellmobilsoft.coffee.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.module.redis.annotation.RedisConnection;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
-import hu.icellmobilsoft.coffee.tool.common.FunctionalInterfaces.BaseExceptionFunction;
-import hu.icellmobilsoft.coffee.tool.common.FunctionalInterfaces.BaseExceptionFunction2;
-import hu.icellmobilsoft.coffee.tool.common.FunctionalInterfaces.BaseExceptionFunction3;
-import hu.icellmobilsoft.coffee.tool.common.FunctionalInterfaces.BaseExceptionFunction4;
-import hu.icellmobilsoft.coffee.tool.common.FunctionalInterfaces.BaseExceptionFunction5;
+import hu.icellmobilsoft.coffee.util.function.FunctionalInterfaces.BaseExceptionFunction;
+import hu.icellmobilsoft.coffee.util.function.FunctionalInterfaces.BaseExceptionFunction2;
+import hu.icellmobilsoft.coffee.util.function.FunctionalInterfaces.BaseExceptionFunction3;
+import hu.icellmobilsoft.coffee.util.function.FunctionalInterfaces.BaseExceptionFunction4;
+import hu.icellmobilsoft.coffee.util.function.FunctionalInterfaces.BaseExceptionFunction5;
 import redis.clients.jedis.Jedis;
 
 /**

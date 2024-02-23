@@ -29,7 +29,7 @@ import jakarta.xml.bind.ValidationEvent;
 
 import org.apache.commons.lang3.StringUtils;
 
-import hu.icellmobilsoft.coffee.dto.exception.XMLValidationError;
+import hu.icellmobilsoft.coffee.exception.XMLValidationError;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
 
 /**

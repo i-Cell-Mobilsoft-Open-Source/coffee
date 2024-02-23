@@ -19,7 +19,7 @@
  */
 package hu.icellmobilsoft.coffee.module.ruleng.rule;
 
-import hu.icellmobilsoft.coffee.dto.exception.BaseException;
+import hu.icellmobilsoft.coffee.exception.BaseException;
 
 /**
  * Kiértékelést sértő hiba

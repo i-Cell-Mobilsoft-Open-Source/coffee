@@ -43,10 +43,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.w3c.dom.ls.LSResourceResolver;
 import org.xml.sax.SAXException;
 
-import hu.icellmobilsoft.coffee.dto.exception.BaseException;
-import hu.icellmobilsoft.coffee.dto.exception.InvalidParameterException;
-import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
+import hu.icellmobilsoft.coffee.exception.BaseException;
+import hu.icellmobilsoft.coffee.exception.InvalidParameterException;
+import hu.icellmobilsoft.coffee.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.cdi.annotation.xml.ValidateXML;
 import hu.icellmobilsoft.coffee.rest.validation.xml.error.IXsdValidationErrorCollector;
 import hu.icellmobilsoft.coffee.rest.validation.xml.exception.XsdProcessingException;

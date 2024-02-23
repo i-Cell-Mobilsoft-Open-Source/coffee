@@ -19,7 +19,7 @@
  */
 package hu.icellmobilsoft.coffee.module.totp;
 
-import hu.icellmobilsoft.coffee.dto.exception.BaseException;
+import hu.icellmobilsoft.coffee.exception.BaseException;
 import hu.icellmobilsoft.coffee.module.totp.enums.TOtpAlgorithm;
 
 /**

@@ -38,9 +38,9 @@ import org.apache.http.ParseException;
 import org.apache.http.entity.ContentType;
 
 import hu.icellmobilsoft.coffee.cdi.logger.LogProducer;
-import hu.icellmobilsoft.coffee.dto.exception.BaseException;
-import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
+import hu.icellmobilsoft.coffee.exception.BaseException;
+import hu.icellmobilsoft.coffee.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.rest.validation.xml.JaxbTool;
 import hu.icellmobilsoft.coffee.rest.validation.xml.XmlMessageBodyReaderBase;
 import hu.icellmobilsoft.coffee.cdi.annotation.xml.ValidateXML;

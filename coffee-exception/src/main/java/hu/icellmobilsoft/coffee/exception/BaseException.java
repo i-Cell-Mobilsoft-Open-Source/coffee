@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package hu.icellmobilsoft.coffee.dto.exception;
+package hu.icellmobilsoft.coffee.exception;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -38,15 +38,27 @@ public class BaseException extends Exception {
 
     private static final long serialVersionUID = 1L;
 
+    /**
+     * The fault type of the exception.
+     *
+     * @see CoffeeFaultType
+     * @see hu.icellmobilsoft.coffee.dto.exception.annotation.FaultTypeCode
+     */
     private Enum<?> faultType = CoffeeFaultType.OPERATION_FAILED;
 
+    /**
+     * The severity of the exception.
+     */
     private Severity severity = Severity.CRITICAL;
 
+    /**
+     * The parameters of the exception message.
+     */
     private List<Serializable> messageParameters;
 
     /**
      * Constructor for BaseException.
-     * 
+     *
      * @param message
      *            message
      */
@@ -56,7 +68,7 @@ public class BaseException extends Exception {
 
     /**
      * Constructor for BaseException.
-     * 
+     *
      * @param message
      *            message
      * @param e
@@ -94,7 +106,7 @@ public class BaseException extends Exception {
 
     /**
      * Constructor for BaseException.
-     * 
+     *
      * @param faultTypeEnum
      *            faultTypeEnum
      * @param message
@@ -124,7 +136,7 @@ public class BaseException extends Exception {
 
     /**
      * getFaultTypeEnum.
-     * 
+     *
      * @return faultType
      */
     public Enum<?> getFaultTypeEnum() {
@@ -133,7 +145,7 @@ public class BaseException extends Exception {
 
     /**
      * Setter for the field <code>faultType</code>.
-     * 
+     *
      * @param faultTypeEnum
      *            faultTypeEnum
      */
@@ -145,7 +157,7 @@ public class BaseException extends Exception {
 
     /**
      * Getter for the field <code>severity</code>.
-     * 
+     *
      * @return severity
      */
     public Severity getSeverity() {
@@ -154,7 +166,7 @@ public class BaseException extends Exception {
 
     /**
      * Setter for the field <code>severity</code>.
-     * 
+     *
      * @param severity
      *            severity
      */
@@ -164,7 +176,7 @@ public class BaseException extends Exception {
 
     /**
      * Getter for the field <code>messageParameters</code>.
-     * 
+     *
      * @return messageParameters
      */
     public List<Serializable> getMessageParameters() {
@@ -176,7 +188,7 @@ public class BaseException extends Exception {
 
     /**
      * Setter for the field <code>messageParameters</code>.
-     * 
+     *
      * @param messageParameters
      *            messageParameters
      */

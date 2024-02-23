@@ -21,7 +21,7 @@ package hu.icellmobilsoft.coffee.module.redisstream.config;
 
 import java.util.Optional;
 
-import hu.icellmobilsoft.coffee.dto.exception.BaseException;
+import hu.icellmobilsoft.coffee.exception.BaseException;
 import hu.icellmobilsoft.coffee.module.redisstream.annotation.RedisStreamConsumer;
 
 /**

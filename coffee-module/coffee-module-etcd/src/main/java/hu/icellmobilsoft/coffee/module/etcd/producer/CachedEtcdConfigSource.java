@@ -24,7 +24,7 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
-import hu.icellmobilsoft.coffee.dto.exception.BaseException;
+import hu.icellmobilsoft.coffee.exception.BaseException;
 
 /**
  * Cache optimized ETCD Config source

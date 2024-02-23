@@ -30,8 +30,8 @@ import javax.xml.stream.XMLStreamReader;
 import jakarta.enterprise.context.Dependent;
 import jakarta.enterprise.inject.Alternative;
 
-import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
+import hu.icellmobilsoft.coffee.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
 
 /**

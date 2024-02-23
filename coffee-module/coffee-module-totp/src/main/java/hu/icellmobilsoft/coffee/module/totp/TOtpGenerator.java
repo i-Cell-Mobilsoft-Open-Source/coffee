@@ -21,7 +21,7 @@ package hu.icellmobilsoft.coffee.module.totp;
 
 import java.security.SecureRandom;
 
-import hu.icellmobilsoft.coffee.dto.exception.BaseException;
+import hu.icellmobilsoft.coffee.exception.BaseException;
 import hu.icellmobilsoft.coffee.module.totp.enums.TOtpAlgorithm;
 
 /**

@@ -23,7 +23,7 @@ import java.util.Optional;
 import java.util.regex.Pattern;
 
 import hu.icellmobilsoft.coffee.cdi.config.IConfigKey;
-import hu.icellmobilsoft.coffee.dto.exception.BaseException;
+import hu.icellmobilsoft.coffee.exception.BaseException;
 
 /**
  * Runtime activable ETCD Config source

@@ -17,9 +17,9 @@
  * limitations under the License.
  * #L%
  */
-package hu.icellmobilsoft.coffee.tool.common;
+package hu.icellmobilsoft.coffee.util.function;
 
-import hu.icellmobilsoft.coffee.dto.exception.BaseException;
+import hu.icellmobilsoft.coffee.exception.BaseException;
 
 /**
  * Common class for @FunctionalInterface classes

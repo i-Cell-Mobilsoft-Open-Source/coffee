@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package hu.icellmobilsoft.coffee.dto.exception;
+package hu.icellmobilsoft.coffee.exception;
 
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 

@@ -30,7 +30,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 
 import hu.icellmobilsoft.coffee.dto.common.LogConstants;
-import hu.icellmobilsoft.coffee.dto.exception.BaseException;
+import hu.icellmobilsoft.coffee.exception.BaseException;
 import hu.icellmobilsoft.coffee.module.redisstream.config.IRedisStreamConstant;
 import hu.icellmobilsoft.coffee.rest.cdi.BaseApplicationContainer;
 import hu.icellmobilsoft.coffee.se.logging.Logger;

@@ -22,7 +22,7 @@ package hu.icellmobilsoft.coffee.rest.exception;
 import jakarta.xml.bind.JAXBException;
 
 import hu.icellmobilsoft.coffee.dto.common.commonservice.BaseExceptionResultType;
-import hu.icellmobilsoft.coffee.dto.exception.BaseException;
+import hu.icellmobilsoft.coffee.exception.BaseException;
 
 /**
  * Exception translator for exception throwing

@@ -23,7 +23,7 @@ import java.util.List;
 
 import jakarta.xml.bind.ValidationEventHandler;
 
-import hu.icellmobilsoft.coffee.dto.exception.XMLValidationError;
+import hu.icellmobilsoft.coffee.exception.XMLValidationError;
 
 /**
  * ValidationEventHandler interfészt terjeszti ki<br>

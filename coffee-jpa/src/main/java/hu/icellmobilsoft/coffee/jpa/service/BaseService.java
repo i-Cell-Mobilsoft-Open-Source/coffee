@@ -39,17 +39,17 @@ import org.apache.commons.lang3.StringUtils;
 import hu.icellmobilsoft.coffee.cdi.logger.AppLogger;
 import hu.icellmobilsoft.coffee.cdi.logger.ThisLogger;
 import hu.icellmobilsoft.coffee.cdi.util.ProxyUtils;
-import hu.icellmobilsoft.coffee.dto.exception.BONotFoundException;
-import hu.icellmobilsoft.coffee.dto.exception.BaseException;
-import hu.icellmobilsoft.coffee.dto.exception.InvalidParameterException;
-import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
-import hu.icellmobilsoft.coffee.tool.common.FunctionalInterfaces.BaseExceptionFunction;
-import hu.icellmobilsoft.coffee.tool.common.FunctionalInterfaces.BaseExceptionFunction2;
-import hu.icellmobilsoft.coffee.tool.common.FunctionalInterfaces.BaseExceptionFunction3;
-import hu.icellmobilsoft.coffee.tool.common.FunctionalInterfaces.BaseExceptionFunction4;
-import hu.icellmobilsoft.coffee.tool.common.FunctionalInterfaces.BaseExceptionFunction5;
-import hu.icellmobilsoft.coffee.tool.common.FunctionalInterfaces.BaseExceptionSupplier;
+import hu.icellmobilsoft.coffee.exception.BONotFoundException;
+import hu.icellmobilsoft.coffee.exception.BaseException;
+import hu.icellmobilsoft.coffee.exception.InvalidParameterException;
+import hu.icellmobilsoft.coffee.exception.TechnicalException;
+import hu.icellmobilsoft.coffee.util.function.FunctionalInterfaces.BaseExceptionFunction;
+import hu.icellmobilsoft.coffee.util.function.FunctionalInterfaces.BaseExceptionFunction2;
+import hu.icellmobilsoft.coffee.util.function.FunctionalInterfaces.BaseExceptionFunction3;
+import hu.icellmobilsoft.coffee.util.function.FunctionalInterfaces.BaseExceptionFunction4;
+import hu.icellmobilsoft.coffee.util.function.FunctionalInterfaces.BaseExceptionFunction5;
+import hu.icellmobilsoft.coffee.util.function.FunctionalInterfaces.BaseExceptionSupplier;
 
 /**
  * <p>
@@ -209,7 +209,7 @@ public class BaseService<T> {
         } catch (OptimisticLockException e) {
             String msg = MessageFormat.format("Optimistic Lock Error in saving [{0}]: [{1}]", entityName, e.getLocalizedMessage());
             log.error(msg, e);
-            throw new hu.icellmobilsoft.coffee.dto.exception.OptimisticLockException(CoffeeFaultType.OPTIMISTIC_LOCK_EXCEPTION, msg, e);
+            throw new hu.icellmobilsoft.coffee.exception.OptimisticLockException(CoffeeFaultType.OPTIMISTIC_LOCK_EXCEPTION, msg, e);
         } catch (Exception e) {
             String msg = MessageFormat.format("Error in saving [{0}]: [{1}]", entityName, e.getLocalizedMessage());
             log.error(msg, e);
@@ -270,7 +270,7 @@ public class BaseService<T> {
         } catch (OptimisticLockException e) {
             String msg = MessageFormat.format("Optimistic Lock Error in deleting [{0}]: [{1}]", entityName, e.getLocalizedMessage());
             log.error(msg, e);
-            throw new hu.icellmobilsoft.coffee.dto.exception.OptimisticLockException(CoffeeFaultType.OPTIMISTIC_LOCK_EXCEPTION, msg, e);
+            throw new hu.icellmobilsoft.coffee.exception.OptimisticLockException(CoffeeFaultType.OPTIMISTIC_LOCK_EXCEPTION, msg, e);
         } catch (Exception e) {
             String msg = MessageFormat.format("Error in deleting [{0}]: [{1}]", entityName, e.getLocalizedMessage());
             log.error(msg, e);

@@ -23,7 +23,7 @@ import java.io.InputStream;
 
 import jakarta.enterprise.context.Dependent;
 
-import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
+import hu.icellmobilsoft.coffee.exception.TechnicalException;
 
 /**
  * Dummy implementáció, ami a requestVersion értékét nem kezeli.

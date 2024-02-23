@@ -32,7 +32,7 @@ import jakarta.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
 
-import hu.icellmobilsoft.coffee.dto.exception.BaseException;
+import hu.icellmobilsoft.coffee.exception.BaseException;
 import hu.icellmobilsoft.coffee.module.redis.annotation.RedisConnection;
 import hu.icellmobilsoft.coffee.module.redis.config.RedisConfig;
 import hu.icellmobilsoft.coffee.module.redis.manager.RedisManager;

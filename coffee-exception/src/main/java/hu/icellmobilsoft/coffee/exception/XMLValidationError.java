@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package hu.icellmobilsoft.coffee.dto.exception;
+package hu.icellmobilsoft.coffee.exception;
 
 import java.io.Serializable;
 
@@ -31,15 +31,31 @@ public class XMLValidationError implements Serializable {
 
     private static final long serialVersionUID = -2523167059288742454L;
 
+    /**
+     * lineNumber
+     */
     private int lineNumber;
 
+    /**
+     * columnNumber
+     */
     private int columnNumber;
 
+    /**
+     * error
+     */
     private String error;
 
     /**
+     * Constructor.
+     */
+    public XMLValidationError() {
+        super();
+    }
+
+    /**
      * Getter for the field <code>error</code>.
-     * 
+     *
      * @return error
      */
     public String getError() {
@@ -59,7 +75,7 @@ public class XMLValidationError implements Serializable {
     /**
      * Return the line number if available
      *
-     * {@link javax.xml.bind.ValidationEventLocator#getLineNumber()}
+     * {@code javax.xml.bind.ValidationEventLocator#getLineNumber()}
      *
      * @return the line number or -1 if unavailable
      */
@@ -79,8 +95,8 @@ public class XMLValidationError implements Serializable {
 
     /**
      * Return the column number if available
-     * 
-     * {@link javax.xml.bind.ValidationEventLocator#getColumnNumber()}
+     *
+     * {@code javax.xml.bind.ValidationEventLocator#getColumnNumber()}
      *
      * @return the column number or -1 if unavailable
      */
@@ -90,7 +106,7 @@ public class XMLValidationError implements Serializable {
 
     /**
      * Setter for the field <code>columnNumber</code>.
-     * 
+     *
      * @param columnNumber
      *            columnNumber
      */

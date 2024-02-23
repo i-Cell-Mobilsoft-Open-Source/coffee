@@ -19,7 +19,7 @@
  */
 package hu.icellmobilsoft.coffee.module.redis.config;
 
-import hu.icellmobilsoft.coffee.dto.exception.BaseException;
+import hu.icellmobilsoft.coffee.exception.BaseException;
 
 /**
  * REDIS configuration values

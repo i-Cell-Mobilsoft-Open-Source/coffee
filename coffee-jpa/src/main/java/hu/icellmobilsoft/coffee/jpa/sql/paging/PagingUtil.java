@@ -26,8 +26,8 @@ import java.util.List;
 import jakarta.persistence.Query;
 import jakarta.persistence.TypedQuery;
 
-import hu.icellmobilsoft.coffee.dto.exception.BaseException;
-import hu.icellmobilsoft.coffee.dto.exception.InvalidParameterException;
+import hu.icellmobilsoft.coffee.exception.BaseException;
+import hu.icellmobilsoft.coffee.exception.InvalidParameterException;
 
 /**
  * <p>

@@ -19,7 +19,7 @@
  */
 package hu.icellmobilsoft.coffee.module.redisstream.consumer;
 
-import hu.icellmobilsoft.coffee.dto.exception.BaseException;
+import hu.icellmobilsoft.coffee.exception.BaseException;
 import redis.clients.jedis.resps.StreamEntry;
 
 /**

@@ -22,7 +22,7 @@ package hu.icellmobilsoft.coffee.module.ruleng.rule;
 import java.util.Collections;
 import java.util.List;
 
-import hu.icellmobilsoft.coffee.dto.exception.BaseException;
+import hu.icellmobilsoft.coffee.exception.BaseException;
 
 /**
  * Általános rule interfész

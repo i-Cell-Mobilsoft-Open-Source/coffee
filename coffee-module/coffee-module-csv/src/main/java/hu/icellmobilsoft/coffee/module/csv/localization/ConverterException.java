@@ -19,8 +19,8 @@
  */
 package hu.icellmobilsoft.coffee.module.csv.localization;
 
-import hu.icellmobilsoft.coffee.dto.exception.BaseException;
-import hu.icellmobilsoft.coffee.dto.exception.BaseExceptionWrapper;
+import hu.icellmobilsoft.coffee.exception.BaseException;
+import hu.icellmobilsoft.coffee.exception.BaseExceptionWrapper;
 
 /**
  * Exception thrown by the {@link LocalizationConverter}

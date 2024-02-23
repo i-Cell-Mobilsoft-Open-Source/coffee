@@ -19,7 +19,7 @@
  */
 package hu.icellmobilsoft.coffee.grpc.server.config;
 
-import hu.icellmobilsoft.coffee.dto.exception.BaseException;
+import hu.icellmobilsoft.coffee.exception.BaseException;
 
 /**
  * gRPC server configuration interface

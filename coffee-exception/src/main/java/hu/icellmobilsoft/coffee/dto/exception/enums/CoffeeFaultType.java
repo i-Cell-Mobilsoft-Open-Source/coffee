@@ -19,7 +19,7 @@
  */
 package hu.icellmobilsoft.coffee.dto.exception.enums;
 
-import hu.icellmobilsoft.coffee.cdi.annotation.FaultTypeCode;
+import hu.icellmobilsoft.coffee.dto.exception.annotation.FaultTypeCode;
 
 /**
  * Coffee jakartaEE solution set container for Exceptions type

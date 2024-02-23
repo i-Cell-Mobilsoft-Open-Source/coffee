@@ -23,17 +23,17 @@ import jakarta.enterprise.context.Dependent;
 
 import java.util.Objects;
 
-import hu.icellmobilsoft.coffee.dto.exception.BaseException;
-import hu.icellmobilsoft.coffee.dto.exception.InvalidParameterException;
+import hu.icellmobilsoft.coffee.exception.BaseException;
+import hu.icellmobilsoft.coffee.exception.InvalidParameterException;
 import hu.icellmobilsoft.coffee.jpa.annotation.Transactional;
-import hu.icellmobilsoft.coffee.tool.common.FunctionalInterfaces.BaseExceptionFunction;
-import hu.icellmobilsoft.coffee.tool.common.FunctionalInterfaces.BaseExceptionFunction2;
-import hu.icellmobilsoft.coffee.tool.common.FunctionalInterfaces.BaseExceptionFunction3;
-import hu.icellmobilsoft.coffee.tool.common.FunctionalInterfaces.BaseExceptionFunction4;
-import hu.icellmobilsoft.coffee.tool.common.FunctionalInterfaces.BaseExceptionFunction5;
-import hu.icellmobilsoft.coffee.tool.common.FunctionalInterfaces.BaseExceptionFunction6;
-import hu.icellmobilsoft.coffee.tool.common.FunctionalInterfaces.BaseExceptionRunner;
-import hu.icellmobilsoft.coffee.tool.common.FunctionalInterfaces.BaseExceptionSupplier;
+import hu.icellmobilsoft.coffee.util.function.FunctionalInterfaces.BaseExceptionFunction;
+import hu.icellmobilsoft.coffee.util.function.FunctionalInterfaces.BaseExceptionFunction2;
+import hu.icellmobilsoft.coffee.util.function.FunctionalInterfaces.BaseExceptionFunction3;
+import hu.icellmobilsoft.coffee.util.function.FunctionalInterfaces.BaseExceptionFunction4;
+import hu.icellmobilsoft.coffee.util.function.FunctionalInterfaces.BaseExceptionFunction5;
+import hu.icellmobilsoft.coffee.util.function.FunctionalInterfaces.BaseExceptionFunction6;
+import hu.icellmobilsoft.coffee.util.function.FunctionalInterfaces.BaseExceptionRunner;
+import hu.icellmobilsoft.coffee.util.function.FunctionalInterfaces.BaseExceptionSupplier;
 
 /**
  * Helper class for managing transactions. <br>

@@ -24,7 +24,7 @@ import jakarta.inject.Inject;
 
 import org.eclipse.microprofile.config.Config;
 
-import hu.icellmobilsoft.coffee.dto.exception.BaseException;
+import hu.icellmobilsoft.coffee.exception.BaseException;
 
 /**
  * gRPC server configuration

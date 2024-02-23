@@ -24,7 +24,7 @@ import java.util.List;
 import jakarta.enterprise.context.Dependent;
 
 import hu.icellmobilsoft.coffee.dto.common.common.CommonIdListType;
-import hu.icellmobilsoft.coffee.dto.exception.BaseException;
+import hu.icellmobilsoft.coffee.exception.BaseException;
 import hu.icellmobilsoft.coffee.model.base.AbstractIdentifiedAuditEntity;
 
 /**

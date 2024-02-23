@@ -27,7 +27,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.w3c.dom.ls.LSInput;
 
-import hu.icellmobilsoft.coffee.dto.exception.BaseException;
+import hu.icellmobilsoft.coffee.exception.BaseException;
 import hu.icellmobilsoft.coffee.rest.validation.xml.utils.XsdResourceResolver;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)

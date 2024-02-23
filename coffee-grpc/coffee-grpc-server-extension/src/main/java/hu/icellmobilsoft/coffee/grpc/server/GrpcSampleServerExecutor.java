@@ -22,7 +22,7 @@ package hu.icellmobilsoft.coffee.grpc.server;
 import jakarta.enterprise.context.Dependent;
 import jakarta.inject.Inject;
 
-import hu.icellmobilsoft.coffee.dto.exception.BaseException;
+import hu.icellmobilsoft.coffee.exception.BaseException;
 
 /**
  * Sample gRPC server executor

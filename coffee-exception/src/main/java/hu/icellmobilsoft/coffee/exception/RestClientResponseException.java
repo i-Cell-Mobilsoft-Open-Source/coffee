@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package hu.icellmobilsoft.coffee.dto.exception;
+package hu.icellmobilsoft.coffee.exception;
 
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 import hu.icellmobilsoft.coffee.dto.exception.enums.Severity;
@@ -30,27 +30,83 @@ import hu.icellmobilsoft.coffee.dto.exception.enums.Severity;
  */
 public class RestClientResponseException extends BaseException {
 
+    /**
+     * service
+     */
     private String service;
+    /**
+     * className
+     */
     private String className;
+    /**
+     * exception
+     */
     private String exception;
+    /**
+     * statusCode
+     */
     private int statusCode;
 
+    /**
+     * Constructor.
+     *
+     * @param message
+     *            message
+     */
     public RestClientResponseException(String message) {
         super(CoffeeFaultType.REST_CLIENT_EXCEPTION, message);
     }
 
+    /**
+     * Constructor.
+     *
+     * @param message
+     *            message
+     * @param e
+     *            cause
+     */
     public RestClientResponseException(String message, Throwable e) {
         super(CoffeeFaultType.REST_CLIENT_EXCEPTION, message, e);
     }
 
+    /**
+     * Constructor.
+     *
+     * @param faultTypeEnum
+     *            faultTypeEnum
+     * @param message
+     *            message
+     */
     public RestClientResponseException(Enum<?> faultTypeEnum, String message) {
         super(faultTypeEnum, message);
     }
 
+    /**
+     * Constructor.
+     *
+     * @param faultTypeEnum
+     *            faultTypeEnum
+     * @param message
+     *            message
+     * @param e
+     *            cause
+     */
     public RestClientResponseException(Enum<?> faultTypeEnum, String message, Throwable e) {
         super(faultTypeEnum, message, e);
     }
 
+    /**
+     * Constructor.
+     *
+     * @param faultTypeEnum
+     *            faultTypeEnum
+     * @param message
+     *            message
+     * @param e
+     *            cause
+     * @param severity
+     *            severity
+     */
     public RestClientResponseException(Enum<?> faultTypeEnum, String message, Throwable e, Severity severity) {
         super(faultTypeEnum, message, e, severity);
     }

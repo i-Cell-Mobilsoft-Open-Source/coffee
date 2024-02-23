@@ -21,8 +21,8 @@ package hu.icellmobilsoft.coffee.rest.validation.xml.exception;
 
 import jakarta.ws.rs.ProcessingException;
 
-import hu.icellmobilsoft.coffee.dto.exception.BaseException;
-import hu.icellmobilsoft.coffee.dto.exception.BaseExceptionWrapper;
+import hu.icellmobilsoft.coffee.exception.BaseException;
+import hu.icellmobilsoft.coffee.exception.BaseExceptionWrapper;
 
 /**
  * Exception for wrapping and throwing {@link BaseException} as {@link ProcessingException}.

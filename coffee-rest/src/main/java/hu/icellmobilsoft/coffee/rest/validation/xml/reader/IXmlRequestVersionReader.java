@@ -21,7 +21,7 @@ package hu.icellmobilsoft.coffee.rest.validation.xml.reader;
 
 import java.io.InputStream;
 
-import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
+import hu.icellmobilsoft.coffee.exception.TechnicalException;
 
 /**
  * Interfész az XML fájlok requestVersion értékének kiolvasásához

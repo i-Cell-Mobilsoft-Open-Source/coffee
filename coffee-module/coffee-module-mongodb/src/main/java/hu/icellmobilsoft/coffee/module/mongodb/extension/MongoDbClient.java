@@ -26,8 +26,7 @@ import org.bson.conversions.Bson;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.client.MongoDatabase;
-
-import hu.icellmobilsoft.coffee.dto.exception.BaseException;
+import hu.icellmobilsoft.coffee.exception.BaseException;
 import hu.icellmobilsoft.coffee.module.mongodb.annotation.MongoServiceBaseQualifier;
 import hu.icellmobilsoft.coffee.module.mongodb.service.MongoService;
 

@@ -27,7 +27,7 @@ import jakarta.xml.bind.JAXBException;
 import org.w3c.dom.ls.LSResourceResolver;
 import org.xml.sax.SAXException;
 
-import hu.icellmobilsoft.coffee.dto.exception.BaseException;
+import hu.icellmobilsoft.coffee.exception.BaseException;
 
 /**
  * XSD helper methods.

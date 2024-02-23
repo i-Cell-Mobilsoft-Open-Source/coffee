@@ -32,7 +32,7 @@ import jakarta.enterprise.inject.spi.CDI;
 import jakarta.enterprise.inject.spi.InjectionPoint;
 import jakarta.inject.Inject;
 
-import hu.icellmobilsoft.coffee.dto.exception.BaseException;
+import hu.icellmobilsoft.coffee.exception.BaseException;
 import hu.icellmobilsoft.coffee.grpc.client.GrpcClient;
 import hu.icellmobilsoft.coffee.grpc.client.config.GrpcClientConfig;
 import hu.icellmobilsoft.coffee.grpc.client.interceptor.ClientRequestInterceptor;
