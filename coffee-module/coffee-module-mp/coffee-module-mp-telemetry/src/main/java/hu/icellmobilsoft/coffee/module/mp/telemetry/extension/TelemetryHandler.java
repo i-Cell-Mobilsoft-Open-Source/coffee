@@ -19,6 +19,8 @@
  */
 package hu.icellmobilsoft.coffee.module.mp.telemetry.extension;
 
+import java.util.function.Supplier;
+
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
@@ -50,6 +52,21 @@ public class TelemetryHandler implements ITraceHandler {
      */
     public TelemetryHandler() {
         super();
+    }
+
+    @Override
+    public <T> T runWithTraceNoException(Supplier<T> function, Traced traced, String operation) {
+        SpanBuilder spanBuilder = TelemetryUtil.createSpanBuilder(tracer, traced, operation);
+        Span span = spanBuilder.startSpan();
+        TelemetryUtil.fillSpan(span, traced);
+        try {
+            return function.get();
+        } catch (RuntimeException e) {
+            TelemetryUtil.recordException(span, e);
+            throw e;
+        } finally {
+            span.end();
+        }
     }
 
     @Override

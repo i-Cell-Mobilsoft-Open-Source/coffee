@@ -19,6 +19,8 @@
  */
 package hu.icellmobilsoft.coffee.cdi.trace.spi;
 
+import java.util.function.Supplier;
+
 import hu.icellmobilsoft.coffee.cdi.trace.annotation.Traced;
 import hu.icellmobilsoft.coffee.exception.BaseException;
 import hu.icellmobilsoft.coffee.util.function.FunctionalInterfaces.BaseExceptionRunner;
@@ -31,6 +33,21 @@ import hu.icellmobilsoft.coffee.util.function.FunctionalInterfaces.BaseException
  * @since 2.5.0
  */
 public interface ITraceHandler {
+
+    /**
+     * Wrapping function in trace context.
+     *
+     * @param <T>
+     *            generic type for {@link Supplier}
+     * @param function
+     *            the function to wrap in trace context
+     * @param traced
+     *            holds information about tracing tags
+     * @param operation
+     *            name of Span
+     * @return the function result
+     */
+    <T> T runWithTraceNoException(Supplier<T> function, Traced traced, String operation);
 
     /**
      * Wrapping function in trace context.

@@ -55,7 +55,6 @@ import org.apache.deltaspike.data.impl.util.jpa.QueryStringExtractorFactory;
 import hu.icellmobilsoft.coffee.cdi.trace.annotation.Traced;
 import hu.icellmobilsoft.coffee.cdi.trace.constants.SpanAttribute;
 import hu.icellmobilsoft.coffee.cdi.trace.spi.ITraceHandler;
-import hu.icellmobilsoft.coffee.exception.BaseException;
 
 //import static org.apache.deltaspike.core.util.StringUtils.isNotEmpty;
 
@@ -79,11 +78,7 @@ public class AnnotatedQueryBuilder extends QueryBuilder
 
         Traced traced = new Traced.Literal(SpanAttribute.Database.COMPONENT, SpanAttribute.Database.KIND, SpanAttribute.Database.DB_TYPE);
         String operation = context.getRepositoryClass() + "." + method.getName();
-        try {
-            return traceHandler.runWithTrace(() -> context.executeQuery(jpaQuery), traced, operation);
-        } catch (BaseException e) {
-            throw new RuntimeException("Failed to execute query", e);
-        }
+        return traceHandler.runWithTraceNoException(() -> context.executeQuery(jpaQuery), traced, operation);
     }
 
     private jakarta.persistence.Query createJpaQuery(Query query, CdiQueryInvocationContext context)

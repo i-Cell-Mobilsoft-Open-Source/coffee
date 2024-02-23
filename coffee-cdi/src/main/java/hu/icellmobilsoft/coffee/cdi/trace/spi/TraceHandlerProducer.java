@@ -19,6 +19,8 @@
  */
 package hu.icellmobilsoft.coffee.cdi.trace.spi;
 
+import java.util.function.Supplier;
+
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.Instance;
 import jakarta.enterprise.inject.Produces;
@@ -61,6 +63,11 @@ public class TraceHandlerProducer {
         // default implementation
         ITraceHandler noTraceHandler = new ITraceHandler() {
             @Override
+            public <T> T runWithTraceNoException(Supplier<T> function, Traced traced, String operation) {
+                return function.get();
+            }
+
+            @Override
             public <T> T runWithTrace(BaseExceptionSupplier<T> function, Traced traced, String operation) throws BaseException {
                 return function.get();
             }
@@ -69,6 +76,7 @@ public class TraceHandlerProducer {
             public void runWithTrace(BaseExceptionRunner function, Traced traced, String operation) throws BaseException {
                 function.run();
             }
+
         };
 
         return noTraceHandler;

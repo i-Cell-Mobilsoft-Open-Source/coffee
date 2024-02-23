@@ -19,6 +19,8 @@
  */
 package hu.icellmobilsoft.coffee.module.mp.opentracing.extension;
 
+import java.util.function.Supplier;
+
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
@@ -51,6 +53,23 @@ public class OpenTraceHandler implements ITraceHandler {
      */
     public OpenTraceHandler() {
         super();
+    }
+
+    @Override
+    public <T> T runWithTraceNoException(Supplier<T> function, Traced traced, String operation) {
+        Tracer tracer = openTraceResolver.resolveTracer();
+        SpanBuilder spanBuilder = OpenTraceUtil.createSpanBuilder(tracer, traced, operation);
+        Span span = spanBuilder.start();
+        Scope scope = tracer.activateSpan(span);
+        try {
+            return function.get();
+        } catch (RuntimeException e) {
+            OpenTraceUtil.tagException(span, e);
+            throw e;
+        } finally {
+            span.finish();
+            scope.close();
+        }
     }
 
     @Override
