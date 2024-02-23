@@ -19,8 +19,10 @@
  */
 package hu.icellmobilsoft.coffee.model.base;
 
+import java.io.InputStream;
 import java.sql.Blob;
 import java.sql.Clob;
+import java.sql.SQLException;
 
 import javax.enterprise.inject.Vetoed;
 import javax.persistence.Column;
@@ -71,6 +73,10 @@ public class DefaultImplAbstractEntity extends AbstractEntity {
 
     public void setClobColumn(Clob clobColumn) {
         this.clobColumn = clobColumn;
+    }
+
+    public InputStream getBlobStream() throws SQLException {
+        return blobColumn == null ? null : blobColumn.getBinaryStream();
     }
 
 }

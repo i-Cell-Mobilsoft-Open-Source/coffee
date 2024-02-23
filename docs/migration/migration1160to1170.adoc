@@ -1,0 +1,12 @@
+= v1.15.0 → v1.16.0
+
+coff:ee v1.16.0 -> v1.17.0 migrációs leírás, újdonságok, változások leírása
+
+=== coffee-model-base
+
+* `AbstractEntity.toString()` fgv-e `java.io.InputStream`, `java.io.OutputStream`, `java.io.Reader` és `java.io.Writer` típusú propertyk esetén annak visszatérési értéke helyett a típusát használja fel.
+Korábban az értékkel dolgozott ilyen esetekben is, így pl logozás esetén felolvasta a stream-et.
+
+==== Átállás
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
