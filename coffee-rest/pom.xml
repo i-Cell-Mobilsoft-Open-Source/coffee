@@ -1,5 +1,4 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>hu.icellmobilsoft.coffee</groupId>
@@ -25,10 +24,6 @@
 		<dependency>
 			<groupId>hu.icellmobilsoft.coffee</groupId>
 			<artifactId>coffee-module-localization</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>hu.icellmobilsoft.coffee</groupId>
-			<artifactId>coffee-util</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>hu.icellmobilsoft.coffee</groupId>
@@ -92,7 +87,8 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<configuration>
-					<!-- LogSpecifiersAnnotationProcessor végett kell, különben még compile előtt megpróbálná önmagára lefuttatni -->
+					<!-- LogSpecifiersAnnotationProcessor végett kell, különben még compile 
+						előtt megpróbálná önmagára lefuttatni -->
 					<compilerArgument>-proc:none</compilerArgument>
 				</configuration>
 			</plugin>
