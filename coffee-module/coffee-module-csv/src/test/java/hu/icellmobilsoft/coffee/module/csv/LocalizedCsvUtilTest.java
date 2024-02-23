@@ -69,7 +69,7 @@ class LocalizedCsvUtilTest {
         );
 
         String os = System.lineSeparator().equals("\r\n") ? "win" : "unix";
-        String localizedTestCsv = FNP_LOCALIZED_TEST_CSV.formatted(os);
+        String localizedTestCsv = String.format(FNP_LOCALIZED_TEST_CSV, os);
 
         TEST_CSV = new String(LocalizedCsvUtilTest.class.getResourceAsStream(localizedTestCsv).readAllBytes(), StandardCharsets.UTF_8);
     }

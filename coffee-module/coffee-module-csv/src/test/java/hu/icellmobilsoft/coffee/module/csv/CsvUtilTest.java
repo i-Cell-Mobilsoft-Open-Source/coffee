@@ -60,9 +60,9 @@ class CsvUtilTest {
         );
 
         String os = System.lineSeparator().equals("\r\n") ? "win" : "unix";
-        String testCsv = FNP_TEST_CSV.formatted(os);
-        String testWithCommaCsv = FNP_TEST_WITH_COMMA_CSV.formatted(os);
-        String testWithCommaQuoteCsv = FNP_TEST_WITH_COMMA_QUOTE_CSV.formatted(os);
+        String testCsv = String.format(FNP_TEST_CSV, os);
+        String testWithCommaCsv = String.format(FNP_TEST_WITH_COMMA_CSV, os);
+        String testWithCommaQuoteCsv = String.format(FNP_TEST_WITH_COMMA_QUOTE_CSV, os);
 
         TEST_CSV = new String(CsvUtilTest.class.getResourceAsStream(testCsv).readAllBytes(), StandardCharsets.UTF_8);
         TEST_WITH_COMMA_CSV = new String(CsvUtilTest.class.getResourceAsStream(testWithCommaCsv).readAllBytes(), StandardCharsets.UTF_8);
