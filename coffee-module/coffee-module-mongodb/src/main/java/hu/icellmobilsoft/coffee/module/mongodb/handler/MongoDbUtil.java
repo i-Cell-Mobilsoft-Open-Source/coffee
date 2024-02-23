@@ -27,10 +27,10 @@ import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
-import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 import hu.icellmobilsoft.coffee.exception.BaseException;
 import hu.icellmobilsoft.coffee.exception.InvalidParameterException;
 import hu.icellmobilsoft.coffee.exception.TechnicalException;
+import hu.icellmobilsoft.coffee.exception.enums.CoffeeFaultType;
 import hu.icellmobilsoft.coffee.module.mongodb.codec.time.duration.DurationAsDocumentCodec;
 import hu.icellmobilsoft.coffee.module.mongodb.codec.time.xmlgregoriancalendar.XMLGregorianCalendarCodec;
 

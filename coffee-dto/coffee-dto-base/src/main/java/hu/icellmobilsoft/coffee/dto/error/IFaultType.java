@@ -19,7 +19,7 @@
  */
 package hu.icellmobilsoft.coffee.dto.error;
 
-import hu.icellmobilsoft.coffee.dto.exception.annotation.FaultTypeCode;
+import hu.icellmobilsoft.coffee.exception.annotation.FaultTypeCode;
 
 /**
  * Generic interface to mark the fault code enums and the generic error categories.

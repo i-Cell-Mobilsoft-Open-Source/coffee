@@ -29,12 +29,12 @@ import org.apache.commons.lang3.StringUtils;
 import org.eclipse.microprofile.rest.client.ext.ResponseExceptionMapper;
 
 import hu.icellmobilsoft.coffee.dto.common.commonservice.BaseExceptionResultType;
-import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 import hu.icellmobilsoft.coffee.exception.AccessDeniedException;
 import hu.icellmobilsoft.coffee.exception.BONotFoundException;
 import hu.icellmobilsoft.coffee.exception.BaseException;
 import hu.icellmobilsoft.coffee.exception.RestClientResponseException;
 import hu.icellmobilsoft.coffee.exception.TechnicalException;
+import hu.icellmobilsoft.coffee.exception.enums.CoffeeFaultType;
 import hu.icellmobilsoft.coffee.module.mp.restclient.exception.FaultTypeParser;
 import hu.icellmobilsoft.coffee.tool.gson.JsonUtil;
 import hu.icellmobilsoft.coffee.tool.utils.marshalling.MarshallingUtil;

@@ -22,10 +22,10 @@ package hu.icellmobilsoft.coffee.rest.validation.xml.exception;
 import java.util.ArrayList;
 import java.util.List;
 
-import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
-import hu.icellmobilsoft.coffee.dto.exception.enums.Severity;
 import hu.icellmobilsoft.coffee.exception.BaseException;
 import hu.icellmobilsoft.coffee.exception.XMLValidationError;
+import hu.icellmobilsoft.coffee.exception.enums.CoffeeFaultType;
+import hu.icellmobilsoft.coffee.exception.enums.Severity;
 
 /**
  * Xsd validáció / feldolgozás során keletkező hibákhoz kivétel osztály

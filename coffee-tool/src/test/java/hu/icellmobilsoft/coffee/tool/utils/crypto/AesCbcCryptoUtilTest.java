@@ -32,8 +32,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 import hu.icellmobilsoft.coffee.exception.BaseException;
+import hu.icellmobilsoft.coffee.exception.enums.CoffeeFaultType;
 
 /**
  * AES/CBC/PKCS5PADDING crypting tests

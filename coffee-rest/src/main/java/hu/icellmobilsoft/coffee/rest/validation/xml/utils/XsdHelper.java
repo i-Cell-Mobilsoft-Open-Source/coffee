@@ -38,9 +38,9 @@ import org.xml.sax.SAXException;
 
 import hu.icellmobilsoft.coffee.cdi.logger.AppLogger;
 import hu.icellmobilsoft.coffee.cdi.logger.ThisLogger;
-import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 import hu.icellmobilsoft.coffee.exception.BaseException;
 import hu.icellmobilsoft.coffee.exception.InvalidParameterException;
+import hu.icellmobilsoft.coffee.exception.enums.CoffeeFaultType;
 import hu.icellmobilsoft.coffee.rest.validation.xml.exception.XsdProcessingException;
 
 /**

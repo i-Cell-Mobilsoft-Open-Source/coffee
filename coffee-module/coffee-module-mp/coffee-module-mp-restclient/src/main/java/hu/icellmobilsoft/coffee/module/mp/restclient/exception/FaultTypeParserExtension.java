@@ -34,7 +34,7 @@ import jakarta.enterprise.inject.spi.AnnotatedType;
 import jakarta.enterprise.inject.spi.Extension;
 import jakarta.enterprise.inject.spi.ProcessAnnotatedType;
 
-import hu.icellmobilsoft.coffee.dto.exception.annotation.FaultTypeCode;
+import hu.icellmobilsoft.coffee.exception.annotation.FaultTypeCode;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
 
 /**

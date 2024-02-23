@@ -19,7 +19,7 @@
  */
 package hu.icellmobilsoft.coffee.exception;
 
-import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
+import hu.icellmobilsoft.coffee.exception.enums.CoffeeFaultType;
 
 /**
  *

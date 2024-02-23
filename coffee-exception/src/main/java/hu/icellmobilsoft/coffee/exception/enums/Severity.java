@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package hu.icellmobilsoft.coffee.dto.exception.enums;
+package hu.icellmobilsoft.coffee.exception.enums;
 
 /**
  * <p>

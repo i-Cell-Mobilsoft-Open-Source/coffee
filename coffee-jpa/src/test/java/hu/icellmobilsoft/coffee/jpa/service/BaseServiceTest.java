@@ -23,8 +23,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 import hu.icellmobilsoft.coffee.exception.TechnicalException;
+import hu.icellmobilsoft.coffee.exception.enums.CoffeeFaultType;
 
 /**
  * @author zsolt.tomai

@@ -31,9 +31,9 @@ import java.util.zip.GZIPOutputStream;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ArrayUtils;
 
-import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 import hu.icellmobilsoft.coffee.exception.BaseException;
 import hu.icellmobilsoft.coffee.exception.TechnicalException;
+import hu.icellmobilsoft.coffee.exception.enums.CoffeeFaultType;
 import hu.icellmobilsoft.coffee.tool.gson.JsonUtil;
 
 /**

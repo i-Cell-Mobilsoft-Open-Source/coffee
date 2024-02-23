@@ -41,8 +41,8 @@ import java.util.GregorianCalendar;
 
 import org.apache.commons.lang3.StringUtils;
 
-import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 import hu.icellmobilsoft.coffee.exception.BaseException;
+import hu.icellmobilsoft.coffee.exception.enums.CoffeeFaultType;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
 
 /**

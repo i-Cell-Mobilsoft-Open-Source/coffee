@@ -33,10 +33,10 @@ import org.bson.types.ObjectId;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.client.MongoCollection;
-import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 import hu.icellmobilsoft.coffee.exception.BONotFoundException;
 import hu.icellmobilsoft.coffee.exception.BaseException;
 import hu.icellmobilsoft.coffee.exception.InvalidParameterException;
+import hu.icellmobilsoft.coffee.exception.enums.CoffeeFaultType;
 import hu.icellmobilsoft.coffee.module.mongodb.annotation.MongoServiceBaseQualifier;
 import hu.icellmobilsoft.coffee.module.mongodb.repository.MongoRepository;
 import hu.icellmobilsoft.coffee.se.logging.Logger;

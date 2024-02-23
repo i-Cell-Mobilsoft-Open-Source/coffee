@@ -27,6 +27,11 @@
             </dependency>
             <dependency>
                 <groupId>hu.icellmobilsoft.coffee</groupId>
+                <artifactId>coffee-util</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>hu.icellmobilsoft.coffee</groupId>
                 <artifactId>coffee-dto-xsd</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -43,11 +48,6 @@
             <dependency>
                 <groupId>hu.icellmobilsoft.coffee</groupId>
                 <artifactId>coffee-dto-impl</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>hu.icellmobilsoft.coffee</groupId>
-                <artifactId>coffee-util</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

@@ -34,7 +34,7 @@ import org.jboss.jandex.AnnotationInstance;
 import org.jboss.jandex.DotName;
 import org.jboss.logging.Logger;
 
-import hu.icellmobilsoft.coffee.dto.exception.annotation.FaultTypeCode;
+import hu.icellmobilsoft.coffee.exception.annotation.FaultTypeCode;
 import hu.icellmobilsoft.coffee.module.mp.restclient.exception.FaultTypeClasses;
 import hu.icellmobilsoft.coffee.quarkus.extension.module.mp.restclient.FaultTypeClassesRecorder;
 import io.quarkus.arc.deployment.SyntheticBeanBuildItem;

@@ -27,7 +27,7 @@ import jakarta.enterprise.inject.spi.CDI;
 
 import org.apache.commons.lang3.EnumUtils;
 
-import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
+import hu.icellmobilsoft.coffee.exception.enums.CoffeeFaultType;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
 
 /**

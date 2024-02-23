@@ -19,8 +19,8 @@
  */
 package hu.icellmobilsoft.coffee.module.mongodb.extension;
 
-import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 import hu.icellmobilsoft.coffee.exception.TechnicalException;
+import hu.icellmobilsoft.coffee.exception.enums.CoffeeFaultType;
 
 /**
  * Exception class for mongo exceptions

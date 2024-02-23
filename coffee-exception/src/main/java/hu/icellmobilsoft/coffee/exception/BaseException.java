@@ -23,8 +23,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
-import hu.icellmobilsoft.coffee.dto.exception.enums.Severity;
+import hu.icellmobilsoft.coffee.exception.enums.CoffeeFaultType;
+import hu.icellmobilsoft.coffee.exception.enums.Severity;
 
 /**
  * <p>
@@ -42,7 +42,7 @@ public class BaseException extends Exception {
      * The fault type of the exception.
      *
      * @see CoffeeFaultType
-     * @see hu.icellmobilsoft.coffee.dto.exception.annotation.FaultTypeCode
+     * @see hu.icellmobilsoft.coffee.exception.annotation.FaultTypeCode
      */
     private Enum<?> faultType = CoffeeFaultType.OPERATION_FAILED;
 

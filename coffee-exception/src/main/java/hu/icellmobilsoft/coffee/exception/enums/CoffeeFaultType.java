@@ -17,9 +17,9 @@
  * limitations under the License.
  * #L%
  */
-package hu.icellmobilsoft.coffee.dto.exception.enums;
+package hu.icellmobilsoft.coffee.exception.enums;
 
-import hu.icellmobilsoft.coffee.dto.exception.annotation.FaultTypeCode;
+import hu.icellmobilsoft.coffee.exception.annotation.FaultTypeCode;
 
 /**
  * Coffee jakartaEE solution set container for Exceptions type

@@ -19,8 +19,8 @@
  */
 package hu.icellmobilsoft.coffee.exception;
 
-import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
-import hu.icellmobilsoft.coffee.dto.exception.enums.Severity;
+import hu.icellmobilsoft.coffee.exception.enums.CoffeeFaultType;
+import hu.icellmobilsoft.coffee.exception.enums.Severity;
 
 /**
  * Exception for mp rest client response exception mapping.

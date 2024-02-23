@@ -25,8 +25,8 @@ import java.text.MessageFormat;
 import jakarta.enterprise.context.Dependent;
 import jakarta.enterprise.inject.Alternative;
 
-import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 import hu.icellmobilsoft.coffee.exception.TechnicalException;
+import hu.icellmobilsoft.coffee.exception.enums.CoffeeFaultType;
 
 /**
  * JSON ismeretlen obejtbol kiszedjuk a requestVersion erteket.<br>
