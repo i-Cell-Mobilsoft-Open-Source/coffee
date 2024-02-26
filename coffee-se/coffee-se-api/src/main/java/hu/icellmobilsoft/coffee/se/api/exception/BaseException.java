@@ -35,11 +35,17 @@ public class BaseException extends Exception {
 
     private static final long serialVersionUID = 1L;
 
+    /**
+     * FaultType enum.
+     */
     private Enum<?> faultType;
 
     // TODO ha ezt átemeljük, törik minden
     // private Severity severity = Severity.CRITICAL;
 
+    /**
+     * The parameters of the message.
+     */
     private List<Serializable> messageParameters;
 
     // TODO faultType kotelezo, de nem final
