@@ -47,15 +47,19 @@ A Byte[] típusok eddig kezelve voltak, viszont a hibernate változások miatt a
 ** Byte[] lecserélése byte[]-ra
 ** A régi működéshez szükséges engedélyezni a `persistence.xml`-ben a legacy array feldolgozást a következő property-vel: `<property name="hibernate.type.wrapper_array_handling" value="legacy"/>`
 
-=== coffee-dto-base modularizálás
+=== coffee-cdi és coffee-dto-base modularizálás
 
 * `hu.icellmobilsoft.coffee.dto.exception` package tartalma átkerült a `coffee-exception` új modulba a `hu.icellmobilsoft.coffee.exception` package alá.
+* `hu.icellmobilsoft.coffee.cdi.annotation.FaultTypeCode` átkerült a `coffee-exception` új modulba a `hu.icellmobilsoft.coffee.exception.annotation.FaultTypeCode` néven.
+* `hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType` átkerült a `coffee-exception` új modulba a `hu.icellmobilsoft.coffee.exception.enums.CoffeeFaultType` néven.
+* `hu.icellmobilsoft.coffee.dto.exception.enums.Severity` átkerült a `coffee-exception` új modulba a `hu.icellmobilsoft.coffee.exception.enums.Severity` néven.
 * `hu.icellmobilsoft.coffee.tool.common.FunctionalInterfaces` osztály átkerült a `coffee-util` új modulba a `hu.icellmobilsoft.coffee.util.function.FunctionalInterfaces` néven.
 
 ==== Átállás
 
 * `coffee-exception` függőség behúzása (ha tranzitívan nem kapjuk meg)
 * `import hu.icellmobilsoft.coffee.dto.exception` cseréje `import hu.icellmobilsoft.coffee.exception`-re
+* `import hu.icellmobilsoft.coffee.cdi.annotation.FaultTypeCode` cseréje `import hu.icellmobilsoft.coffee.exception.annotation.FaultTypeCode`-re
 * `coffee-util` függőség behúzása (ha tranzitívan nem kapjuk meg)
 * `import hu.icellmobilsoft.coffee.tool.common.FunctionalInterfaces` cseréje `import hu.icellmobilsoft.coffee.util.function.FunctionalInterfaces`-re
 
