@@ -8,7 +8,7 @@ coff:ee v2.5.0 -> v2.6.0 migration description, news, changes
 
 💥 ***BREAKING CHANGE*** 💥
 
-[source]
+[source,text]
 ----
 Global change that coffee-bom was used to import coffee dependency on projects. This has been changed to coffee-bom-project.
 
@@ -23,12 +23,14 @@ You then need to import the project elements as follows:
         <scope>import</scope>
     </dependency>
 </dependencyManagement>
+
+This also means that the transitive dependencies that were previously put on projects from coffee-bom, are now removed.
+Because of this, these dependencies will be reported as not found by maven, so they will need to be defined in the project using coffee.
 ----
-<1> - coffee-bom -> changed to coffee-bom-project
---
+
+coffee-bom -> coffee-bom-project -re változott
 
 * Jandex index config fix.
---
 
 === Hibernate
 
@@ -66,7 +68,25 @@ Changes are backwards compatible doesn't need any migration.
 
 Changes are backwards compatible doesn't need any migration.
 
+==== Transactional annotation
+
+In the  `hu.icellmobilsoft.coffee.jpa.annotation.Transactional` annotation the annotation @Stereotype has been removed and in @Target the annotation ElementType.TYPE too.
+
+==== Migration
+
+Changes are backwards compatible doesn't need any migration.
+
 === coffee-rest
+
+* fix javax.annotation.processing.Processor file (rename back to javax.annotation.processing.Processor, because it hasn't changed to javax)
+
+==== RequestVersionReader
+
+RequestVersionReader has been rewritten. The stream mark() and reset() may have caused errors in some cases.
+
+==== Migration
+
+`IXmlRequestVersionReader` and `IJsonRequestVersionReader` have been removed, in case you used it update the interface to `IRequestVersionReader`.
 
 ==== Jsonb Config
 
@@ -86,16 +106,34 @@ Added the definition of the Jsonb configuration.
 
 The changes do not result in migration work, backwards default values are set for correct usage.
 
-=== coffee-rest
-
-* fix javax.annotation.processing.Processor file (rename back to javax.annotation.processing.Processor, because it hasn't changed to javax)
-* RequestVersionReader has been rewritten. The stream mark and reset could cause an error in some cases.
-
-==== Migration
-
-* `IXmlRequestVersionReader` and `IJsonRequestVersionReader` have been removed, in case you used it update the interface to `IRequestVersionReader`.
-
 === Coffee Quarkus Extensions
 
 A new module called Coffee Quarkus extension has been created, which adds other elements needed for Quarkus to some of the coffee modules.
 First element is coffee-module-mp-restclient-extension
+Second element is coffee-deltaspike-data-extension
+
+=== coffee-deltaspike-message
+
+* Changed the pacakage of `org.apache.deltaspike.core.util` to `org.apache.deltaspike.core.util.message`, since 2 separate modules have the same original package, which is sensitived by Quarkus.
+
+==== Migration
+
+* `org.apache.deltaspike.core.util.ClassUtils` -> `org.apache.deltaspike.core.util.message.ClassUtils`
+* `org.apache.deltaspike.core.util.PropertyFileUtils` -> `org.apache.deltaspike.core.util.message.PropertyFileUtils`
+
+==== coffee-module-csv
+
+Added new methods for changing the csv format. For example csv separator, escape char.
+
+==== Migration
+
+Changes are backwards compatible doesn't need any migration.
+
+=== coffee-model-base
+
+* The `AbstractEntity.toString()` function uses the type of the property instead of the value in case of `java.io.InputStream`, `java.io.OutputStream`, `java.io.Reader` and `java.io.Writer`.
+It used the value of the property in such cases, for e.g. it read the stream in case of logging.
+
+==== Migration
+
+Changes are backwards compatible doesn't need any migration.

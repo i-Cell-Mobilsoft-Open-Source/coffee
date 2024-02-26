@@ -19,6 +19,7 @@
  */
 package hu.icellmobilsoft.coffee.module.csv;
 
+import static com.opencsv.ICSVParser.DEFAULT_SEPARATOR;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.ByteArrayInputStream;
@@ -30,7 +31,10 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import com.opencsv.CSVParserBuilder;
+
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
+import hu.icellmobilsoft.coffee.module.csv.configuration.CsvWriterConfig;
 
 /**
  * Class for testing {@link CsvUtil}
@@ -42,6 +46,8 @@ class CsvUtilTest {
 
     private static List<TestBean> TEST_BEANS;
     private static String TEST_CSV;
+    private static String TEST_WITH_COMMA_CSV;
+    private static String TEST_WITH_COMMA_QUOTE_CSV;
 
     @BeforeAll
     static void beforeAll() throws IOException {
@@ -50,6 +56,10 @@ class CsvUtilTest {
                 new TestBean(12, "bar", false, LocalDate.of(2020, 1, 2), TestBean.Status.DONE) //
         );
         TEST_CSV = new String(CsvUtilTest.class.getResourceAsStream("/test.csv").readAllBytes(), StandardCharsets.UTF_8);
+        TEST_WITH_COMMA_CSV = new String(CsvUtilTest.class.getResourceAsStream("/test_with_comma.csv").readAllBytes(), StandardCharsets.UTF_8);
+        TEST_WITH_COMMA_QUOTE_CSV = new String(
+                CsvUtilTest.class.getResourceAsStream("/test_with_comma_quote.csv").readAllBytes(),
+                StandardCharsets.UTF_8);
     }
 
     @Test
@@ -58,6 +68,31 @@ class CsvUtilTest {
         List<TestBean> beans = TEST_BEANS;
         // WHEN
         String csv = CsvUtil.toCsv(beans, TestBean.class);
+        // THEN
+        assertEquals(TEST_CSV, csv);
+    }
+
+    @Test
+    void shouldConvertToCsvWithCommaAndQuote() throws BaseException {
+        // GIVEN
+        List<TestBean> beans = TEST_BEANS;
+        CsvWriterConfig csvWriterConfig = new CsvWriterConfig.Builder()
+                .withQuotechar('\'')
+                .withSeparator(',')
+                .build();
+        // WHEN
+        String csv = CsvUtil.toCsv(beans, TestBean.class, csvWriterConfig);
+        // THEN
+        assertEquals(TEST_WITH_COMMA_QUOTE_CSV, csv);
+    }
+
+    @Test
+    void shouldConvertToCsvWithDefaultConfig() throws BaseException {
+        // GIVEN
+        List<TestBean> beans = TEST_BEANS;
+        CsvWriterConfig csvWriterConfig = new CsvWriterConfig.Builder().build();
+        // WHEN
+        String csv = CsvUtil.toCsv(beans, TestBean.class, csvWriterConfig);
         // THEN
         assertEquals(TEST_CSV, csv);
     }
@@ -73,11 +108,46 @@ class CsvUtilTest {
     }
 
     @Test
+    void shouldParseCsvWithCommaQuote() throws BaseException {
+        // GIVEN
+        String csv = TEST_WITH_COMMA_QUOTE_CSV;
+        CSVParserBuilder csvParserBuilder = new CSVParserBuilder()
+                .withSeparator(',')
+                .withQuoteChar('\'');
+        // WHEN
+        List<TestBean> beans = CsvUtil.toBean(csv, TestBean.class, csvParserBuilder);
+        // THEN
+        assertEquals(TEST_BEANS, beans);
+    }
+
+    @Test
     void shouldParseCsvStream() throws BaseException {
         // GIVEN
         ByteArrayInputStream inputStream = new ByteArrayInputStream(TEST_CSV.getBytes(StandardCharsets.UTF_8));
         // WHEN
         List<TestBean> beans = CsvUtil.toBean(inputStream, TestBean.class);
+        // THEN
+        assertEquals(TEST_BEANS, beans);
+    }
+
+    @Test
+    void shouldParseCsvStreamComma() throws BaseException {
+        // GIVEN
+        ByteArrayInputStream inputStream = new ByteArrayInputStream(TEST_WITH_COMMA_CSV.getBytes(StandardCharsets.UTF_8));
+        CSVParserBuilder csvParserBuilder = new CSVParserBuilder().withSeparator(',');
+        // WHEN
+        List<TestBean> beans = CsvUtil.toBean(inputStream, TestBean.class, csvParserBuilder);
+        // THEN
+        assertEquals(TEST_BEANS, beans);
+    }
+
+    @Test
+    void shouldParseCsvStreamCommaQuote() throws BaseException {
+        // GIVEN
+        ByteArrayInputStream inputStream = new ByteArrayInputStream(TEST_WITH_COMMA_QUOTE_CSV.getBytes(StandardCharsets.UTF_8));
+        CSVParserBuilder csvParserBuilder = new CSVParserBuilder().withSeparator(DEFAULT_SEPARATOR).withQuoteChar('\'');
+        // WHEN
+        List<TestBean> beans = CsvUtil.toBean(inputStream, TestBean.class, csvParserBuilder);
         // THEN
         assertEquals(TEST_BEANS, beans);
     }

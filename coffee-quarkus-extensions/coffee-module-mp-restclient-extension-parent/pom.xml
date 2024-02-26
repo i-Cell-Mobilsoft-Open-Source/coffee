@@ -12,8 +12,8 @@
 
     <packaging>pom</packaging>
 
-    <name>Greeting Extension - Parent</name>
-    <description>Quarkus Extensions - Greeting extension</description>
+    <name>Coff:ee module mp restclient Extension - Parent</name>
+    <description>Quarkus Extensions - Coff:ee module mp restclient extension</description>
 
     <modules>
         <module>coffee-module-mp-restclient-extension-deployment</module>

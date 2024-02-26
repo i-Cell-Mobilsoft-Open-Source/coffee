@@ -48,7 +48,7 @@ import jakarta.enterprise.context.Dependent;
 
 import org.apache.deltaspike.core.api.message.MessageContext;
 import org.apache.deltaspike.core.api.message.MessageResolver;
-import org.apache.deltaspike.core.util.PropertyFileUtils;
+import org.apache.deltaspike.core.util.message.PropertyFileUtils;
 
 /**
  * Copy from deltaspike project

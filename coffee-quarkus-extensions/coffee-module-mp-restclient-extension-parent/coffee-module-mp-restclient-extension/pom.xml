@@ -9,7 +9,7 @@
     </parent>
 
     <artifactId>coffee-module-mp-restclient-extension</artifactId>
-    <name>Greeting Extension - Runtime</name>
+    <name>Coff:ee module mp restclient Extension - Runtime</name>
 
     <dependencies>
 

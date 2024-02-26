@@ -46,7 +46,7 @@ import java.util.List;
 
 import jakarta.persistence.EntityManager;
 
-import org.apache.deltaspike.core.util.ClassUtils;
+import org.apache.deltaspike.core.util.message.ClassUtils;
 //import org.apache.deltaspike.core.util.ExceptionUtils;
 import org.apache.deltaspike.data.api.EntityGraph;
 
