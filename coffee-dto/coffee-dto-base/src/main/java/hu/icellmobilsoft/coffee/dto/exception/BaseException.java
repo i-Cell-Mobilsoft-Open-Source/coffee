@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,9 +19,7 @@
  */
 package hu.icellmobilsoft.coffee.dto.exception;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Objects;
 
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 import hu.icellmobilsoft.coffee.dto.exception.enums.Severity;
@@ -34,36 +32,35 @@ import hu.icellmobilsoft.coffee.dto.exception.enums.Severity;
  * @author imre.scheffer
  * @since 1.0.0
  */
-public class BaseException extends Exception {
+@Deprecated(since = "2.7.0")
+public class BaseException extends hu.icellmobilsoft.coffee.se.api.exception.BaseException {
+
+    private static final CoffeeFaultType DEFAULT_FAULT_TYPE = CoffeeFaultType.OPERATION_FAILED;
 
     private static final long serialVersionUID = 1L;
 
-    private Enum<?> faultType = CoffeeFaultType.OPERATION_FAILED;
-
     private Severity severity = Severity.CRITICAL;
-
-    private List<Serializable> messageParameters;
 
     /**
      * Constructor for BaseException.
-     * 
+     *
      * @param message
      *            message
      */
     public BaseException(String message) {
-        this(CoffeeFaultType.OPERATION_FAILED, message, null, null);
+        this(DEFAULT_FAULT_TYPE, message, null, null);
     }
 
     /**
      * Constructor for BaseException.
-     * 
+     *
      * @param message
      *            message
      * @param e
      *            e
      */
     public BaseException(String message, Throwable e) {
-        this(CoffeeFaultType.OPERATION_FAILED, message, e, null);
+        this(DEFAULT_FAULT_TYPE, message, e, null);
     }
 
     /**
@@ -94,7 +91,7 @@ public class BaseException extends Exception {
 
     /**
      * Constructor for BaseException.
-     * 
+     *
      * @param faultTypeEnum
      *            faultTypeEnum
      * @param message
@@ -105,47 +102,29 @@ public class BaseException extends Exception {
      *            severity
      */
     public BaseException(Enum<?> faultTypeEnum, String message, Throwable e, Severity severity) {
-        super(message, e);
-        if (faultTypeEnum != null) {
-            this.faultType = faultTypeEnum;
+        super(faultTypeEnum, message, e);
+        if (Objects.isNull(faultTypeEnum)) {
+            setFaultType(DEFAULT_FAULT_TYPE);
         }
         this.severity = severity;
     }
 
     /**
-     * Add one message parameter to the message parameter list.
-     *
-     * @param messageParameter
-     *            messageParameter
-     */
-    public void addMessageParameter(Serializable messageParameter) {
-        getMessageParameters().add(messageParameter);
-    }
-
-    /**
-     * getFaultTypeEnum.
-     * 
-     * @return faultType
-     */
-    public Enum<?> getFaultTypeEnum() {
-        return faultType;
-    }
-
-    /**
      * Setter for the field <code>faultType</code>.
-     * 
+     *
      * @param faultTypeEnum
      *            faultTypeEnum
      */
+    @Override
     public void setFaultType(Enum<?> faultTypeEnum) {
-        if (faultTypeEnum != null) {
-            this.faultType = faultTypeEnum;
+        if (Objects.nonNull(faultTypeEnum)) {
+            super.setFaultType(faultTypeEnum);
         }
     }
 
     /**
      * Getter for the field <code>severity</code>.
-     * 
+     *
      * @return severity
      */
     public Severity getSeverity() {
@@ -154,7 +133,7 @@ public class BaseException extends Exception {
 
     /**
      * Setter for the field <code>severity</code>.
-     * 
+     *
      * @param severity
      *            severity
      */
@@ -162,25 +141,4 @@ public class BaseException extends Exception {
         this.severity = severity;
     }
 
-    /**
-     * Getter for the field <code>messageParameters</code>.
-     * 
-     * @return messageParameters
-     */
-    public List<Serializable> getMessageParameters() {
-        if (messageParameters == null) {
-            messageParameters = new ArrayList<Serializable>();
-        }
-        return messageParameters;
-    }
-
-    /**
-     * Setter for the field <code>messageParameters</code>.
-     * 
-     * @param messageParameters
-     *            messageParameters
-     */
-    public void setMessageParameters(List<Serializable> messageParameters) {
-        this.messageParameters = messageParameters;
-    }
 }
