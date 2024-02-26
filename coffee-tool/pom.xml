@@ -36,6 +36,12 @@
 	</build>
 
 	<dependencies>
+
+		<dependency>
+			<groupId>hu.icellmobilsoft.coffee</groupId>
+			<artifactId>coffee-se-function</artifactId>
+		</dependency>
+
 		<dependency>
 			<groupId>hu.icellmobilsoft.coffee</groupId>
 			<artifactId>coffee-cdi</artifactId>
