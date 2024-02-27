@@ -22,6 +22,9 @@ package hu.icellmobilsoft.coffee.se.api.exception;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+
+import hu.icellmobilsoft.coffee.se.api.exception.enums.Severity;
 
 /**
  * <p>
@@ -40,41 +43,34 @@ public class BaseException extends Exception {
      */
     private Enum<?> faultType;
 
-    // TODO ha ezt átemeljük, törik minden
-    // private Severity severity = Severity.CRITICAL;
+    private Severity severity = Severity.CRITICAL;
 
     /**
      * The parameters of the message.
      */
     private List<Serializable> messageParameters;
 
-    // TODO faultType kotelezo, de nem final
-    // /**
-    // * Constructor for BaseException.
-    // *
-    // * @param message
-    // * message
-    // */
-    // public BaseException(String message) {
-    // // TODO lasd severity
-    // // this(null, message, null, null);
-    // this(null, message, null);
-    // }
+    /**
+     * Constructor for BaseException.
+     *
+     * @param message
+     *            message
+     */
+    public BaseException(String message) {
+        this(null, message, null, null);
+    }
 
-    // TODO faultType kotelezo, de nem final
-    // /**
-    // * Constructor for BaseException.
-    // *
-    // * @param message
-    // * message
-    // * @param e
-    // * e
-    // */
-    // public BaseException(String message, Throwable e) {
-    // // TODO lasd severity
-    // // this(null, message, e, null);
-    // this(null, message, e);
-    // }
+    /**
+     * Constructor for BaseException.
+     *
+     * @param message
+     *            message
+     * @param e
+     *            e
+     */
+    public BaseException(String message, Throwable e) {
+        this(null, message, e, null);
+    }
 
     /**
      * Constructor for BaseException.
@@ -85,25 +81,8 @@ public class BaseException extends Exception {
      *            message
      */
     public BaseException(Enum<?> faultTypeEnum, String message) {
-        // TODO lasd severity
-        // this(faultTypeEnum, message, null, null);
-        this(faultTypeEnum, message, null);
+        this(faultTypeEnum, message, null, null);
     }
-
-    // TODO lasd severity
-    // /**
-    // * Constructor for BaseException.
-    // *
-    // * @param faultTypeEnum
-    // * faultTypeEnum
-    // * @param message
-    // * message
-    // * @param e
-    // * e
-    // */
-    // public BaseException(Enum<?> faultTypeEnum, String message, Throwable e) {
-    // this(faultTypeEnum, message, e, null);
-    // }
 
     /**
      * Constructor for BaseException.
@@ -115,13 +94,26 @@ public class BaseException extends Exception {
      * @param e
      *            e
      */
-    // TOOD lasd severity
-    // public BaseException(Enum<?> faultTypeEnum, String message, Throwable e, Severity severity) {
     public BaseException(Enum<?> faultTypeEnum, String message, Throwable e) {
+        this(faultTypeEnum, message, e, null);
+    }
+
+    /**
+     * Constructor for BaseException.
+     *
+     * @param faultTypeEnum
+     *            faultTypeEnum
+     * @param message
+     *            message
+     * @param e
+     *            e
+     * @param severity
+     *            severity
+     */
+    public BaseException(Enum<?> faultTypeEnum, String message, Throwable e, Severity severity) {
         super(message, e);
-        this.faultType = faultTypeEnum;
-        // TODO lasd severity
-        // this.severity = severity;
+        setFaultType(faultTypeEnum);
+        setSeverity(severity);
     }
 
     /**
@@ -150,29 +142,31 @@ public class BaseException extends Exception {
      *            faultTypeEnum
      */
     public void setFaultType(Enum<?> faultTypeEnum) {
-        this.faultType = faultTypeEnum;
+        if (Objects.nonNull(faultTypeEnum)) {
+            this.faultType = faultTypeEnum;
+        }
     }
 
-    // TOOD lasd severity
-    // /**
-    // * Getter for the field <code>severity</code>.
-    // *
-    // * @return severity
-    // */
-    // public Severity getSeverity() {
-    // return severity;
-    // }
+    /**
+     * Getter for the field <code>severity</code>.
+     *
+     * @return severity
+     */
+    public Severity getSeverity() {
+        return severity;
+    }
 
-    // TOOD lasd severity
-    // /**
-    // * Setter for the field <code>severity</code>.
-    // *
-    // * @param severity
-    // * severity
-    // */
-    // public void setSeverity(Severity severity) {
-    // this.severity = severity;
-    // }
+    /**
+     * Setter for the field <code>severity</code>.
+     *
+     * @param severity
+     *            severity
+     */
+    public void setSeverity(Severity severity) {
+        if (Objects.nonNull(severity)) {
+            this.severity = severity;
+        }
+    }
 
     /**
      * Getter for the field <code>messageParameters</code>.
