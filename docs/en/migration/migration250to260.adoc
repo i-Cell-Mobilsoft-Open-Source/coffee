@@ -131,6 +131,14 @@ It used the value of the property in such cases, for e.g. it read the stream in 
 
 Changes are backwards compatible doesn't need any migration.
 
+=== coffee-rest
+
+* The `XsdHelper` provides the opportunity to delete the schema and JAXB context cache.
+
+==== Migration
+
+Changes are backwards compatible doesn't need any migration.
+
 === coffee-module-redisstream
 
 ==== ConsumerLifeCycleManager
