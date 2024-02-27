@@ -135,7 +135,7 @@ Changes are backwards compatible doesn't need any migration.
 
 ==== ConsumerLifeCycleManager
 
-* If the `ConsumerLifeCycleManager.CONSUMER_COUNTER` less than one, the `ConsumerLifeCycleManager.stop()` will be skipped the `ConsumerLifeCycleManager.SEMAPHORE.acquire();` so in those cases where the container didn't contain any consumer, for e.g. in tests, the shutdown phase won't be stacked.
+* If the `ConsumerLifeCycleManager.CONSUMER_COUNTER` less than one, the `ConsumerLifeCycleManager.SEMAPHORE.acquire();` call will be skipped in the `ConsumerLifeCycleManager.stop()` method so in those cases where the container didn't contain any consumer, for e.g. in tests, the shutdown phase won't be stacked.
 
 ==== Migration
 
