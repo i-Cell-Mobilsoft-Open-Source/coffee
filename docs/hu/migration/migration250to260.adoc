@@ -131,3 +131,11 @@ Korábban az értékkel dolgozott ilyen esetekben is, így pl logozás esetén f
 ==== Átállás
 
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+=== coffee-rest
+
+* `XsdHelper` lehetőséget biztosít hogy töröljük a schema és jaxb context cache-t.
+
+=== Migration
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.

@@ -119,4 +119,19 @@ public class XsdHelper implements IXsdHelper {
         }
         return schema;
     }
+
+    /**
+     * Clearing the underlying XSD schema cache {@link XsdHelper#xsdCache}
+     */
+    public void clearXsdCache() {
+        xsdCache.clear();
+    }
+
+    /**
+     * Clearing the underlying jaxb context cache {@link XsdHelper#jaxbContextCache}
+     */
+    public void clearJaxbContextCache() {
+        jaxbContextCache.clear();
+    }
+
 }
