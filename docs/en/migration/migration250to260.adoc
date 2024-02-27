@@ -130,3 +130,13 @@ It used the value of the property in such cases, for e.g. it read the stream in 
 ==== Migration
 
 Changes are backwards compatible doesn't need any migration.
+
+=== coffee-module-redisstream
+
+==== ConsumerLifeCycleManager
+
+* If the `ConsumerLifeCycleManager.CONSUMER_COUNTER` less than one, the `ConsumerLifeCycleManager.stop()` will be skipped the `ConsumerLifeCycleManager.SEMAPHORE.acquire();` so in those cases where the container didn't contain any consumer, for e.g. in tests, the shutdown phase won't be stacked.
+
+==== Migration
+
+Changes are backwards compatible doesn't need any migration.

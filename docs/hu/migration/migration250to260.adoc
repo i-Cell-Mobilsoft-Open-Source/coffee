@@ -131,3 +131,13 @@ Korábban az értékkel dolgozott ilyen esetekben is, így pl logozás esetén f
 ==== Átállás
 
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+=== coffee-module-redisstream
+
+==== ConsumerLifeCycleManager
+
+* Amennyiben a `ConsumerLifeCycleManager.CONSUMER_COUNTER` kissebb, mint nulla, a `ConsumerLifeCycleManager.SEMAPHORE.acquire();` hívás nem törtínik meg, így az olyan esetekben, ahol nincs egyetlen consuemr sem (pl tesztek) a leállás nem akad meg.
+
+==== Átállás
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
