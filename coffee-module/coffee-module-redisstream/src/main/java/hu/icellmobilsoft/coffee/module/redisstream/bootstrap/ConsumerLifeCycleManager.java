@@ -68,9 +68,15 @@ public class ConsumerLifeCycleManager {
      */
     public void stop(@Observes @BeforeDestroyed(ApplicationScoped.class) Object init) {
         log.info("Initiate shutdown stopping consumers");
-        log.info("Stopping redis consumers, count: [{0}]", CONSUMER_COUNTER.get());
+        int consumerCount = CONSUMER_COUNTER.get();
+        log.info("Stopping redis consumers, count: [{0}]", consumerCount);
         // break consumer loop
         stopLoop();
+
+        if (consumerCount < 1) {
+            return;
+        }
+
         // wait for all consuemr to finish
         try {
             SEMAPHORE.acquire();
