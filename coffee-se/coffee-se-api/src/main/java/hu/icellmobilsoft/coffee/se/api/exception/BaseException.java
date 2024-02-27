@@ -39,10 +39,13 @@ public class BaseException extends Exception {
     private static final long serialVersionUID = 1L;
 
     /**
-     * FaultType enum.
+     * FaultType.
      */
     private Enum<?> faultType;
 
+    /**
+     * Severity.
+     */
     private Severity severity = Severity.CRITICAL;
 
     /**
