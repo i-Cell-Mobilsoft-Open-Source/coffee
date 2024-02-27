@@ -39,8 +39,6 @@ public class BaseException extends hu.icellmobilsoft.coffee.se.api.exception.Bas
 
     private static final long serialVersionUID = 1L;
 
-    private Severity severity = Severity.CRITICAL;
-
     /**
      * Constructor for BaseException.
      *
@@ -102,24 +100,7 @@ public class BaseException extends hu.icellmobilsoft.coffee.se.api.exception.Bas
      *            severity
      */
     public BaseException(Enum<?> faultTypeEnum, String message, Throwable e, Severity severity) {
-        super(faultTypeEnum, message, e);
-        if (Objects.isNull(faultTypeEnum)) {
-            setFaultType(DEFAULT_FAULT_TYPE);
-        }
-        this.severity = severity;
-    }
-
-    /**
-     * Setter for the field <code>faultType</code>.
-     *
-     * @param faultTypeEnum
-     *            faultTypeEnum
-     */
-    @Override
-    public void setFaultType(Enum<?> faultTypeEnum) {
-        if (Objects.nonNull(faultTypeEnum)) {
-            super.setFaultType(faultTypeEnum);
-        }
+        super(faultTypeEnum, message, e, Objects.nonNull(severity) ? severity.toNewValue() : null);
     }
 
     /**
@@ -127,8 +108,8 @@ public class BaseException extends hu.icellmobilsoft.coffee.se.api.exception.Bas
      *
      * @return severity
      */
-    public Severity getSeverity() {
-        return severity;
+    public Severity getOldSeverity() {
+        return Severity.fromNewValue(getSeverity());
     }
 
     /**
@@ -138,7 +119,9 @@ public class BaseException extends hu.icellmobilsoft.coffee.se.api.exception.Bas
      *            severity
      */
     public void setSeverity(Severity severity) {
-        this.severity = severity;
+        if (Objects.nonNull(severity)) {
+            setSeverity(severity.toNewValue());
+        }
     }
 
 }
