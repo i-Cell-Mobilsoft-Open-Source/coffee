@@ -136,12 +136,6 @@
 						</execution>
 					</executions>
 				</plugin>
-				<plugin>
-					<groupId>biz.aQute.bnd</groupId>
-					<artifactId>bnd-baseline-maven-plugin</artifactId>
-<!-- min version java 17     	<version>7.0.0</version> -->
-	                <version>6.4.0</version>
-				</plugin>
 			</plugins>
 		</pluginManagement>
 
@@ -176,22 +170,6 @@
 			<plugin>
 				<groupId>io.smallrye</groupId>
 				<artifactId>jandex-maven-plugin</artifactId>
-			</plugin>
-			<plugin>
-				<groupId>biz.aQute.bnd</groupId>
-				<artifactId>bnd-baseline-maven-plugin</artifactId>
-				<executions>
-				    <execution>
-				        <id>baseline</id>
-				        <goals>
-				            <goal>baseline</goal>
-				        </goals>
-	                    <configuration>
-	                         <failOnMissing>false</failOnMissing>
-	                         <continueOnError>true</continueOnError>
-	                    </configuration>
-				    </execution>
-				</executions>
 			</plugin>
 		</plugins>
 	</build>
