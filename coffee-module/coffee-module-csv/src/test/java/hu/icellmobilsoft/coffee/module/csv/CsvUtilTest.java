@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -32,17 +32,20 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import com.opencsv.CSVParserBuilder;
-
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.module.csv.configuration.CsvWriterConfig;
 
 /**
  * Class for testing {@link CsvUtil}
- * 
+ *
  * @author martin.nagy
  * @since 1.8.0
  */
 class CsvUtilTest {
+
+    private static final String FNP_TEST_CSV = "/%1$s/test.csv";
+    private static final String FNP_TEST_WITH_COMMA_CSV = "/%1$s/test_with_comma.csv";
+    private static final String FNP_TEST_WITH_COMMA_QUOTE_CSV = "/%1$s/test_with_comma_quote.csv";
 
     private static List<TestBean> TEST_BEANS;
     private static String TEST_CSV;
@@ -55,10 +58,16 @@ class CsvUtilTest {
                 new TestBean(11, "foo", true, LocalDate.of(2021, 11, 23), TestBean.Status.IN_PROGRESS), //
                 new TestBean(12, "bar", false, LocalDate.of(2020, 1, 2), TestBean.Status.DONE) //
         );
-        TEST_CSV = new String(CsvUtilTest.class.getResourceAsStream("/test.csv").readAllBytes(), StandardCharsets.UTF_8);
-        TEST_WITH_COMMA_CSV = new String(CsvUtilTest.class.getResourceAsStream("/test_with_comma.csv").readAllBytes(), StandardCharsets.UTF_8);
+
+        String os = System.lineSeparator().equals("\r\n") ? "win" : "unix";
+        String testCsv = String.format(FNP_TEST_CSV, os);
+        String testWithCommaCsv = String.format(FNP_TEST_WITH_COMMA_CSV, os);
+        String testWithCommaQuoteCsv = String.format(FNP_TEST_WITH_COMMA_QUOTE_CSV, os);
+
+        TEST_CSV = new String(CsvUtilTest.class.getResourceAsStream(testCsv).readAllBytes(), StandardCharsets.UTF_8);
+        TEST_WITH_COMMA_CSV = new String(CsvUtilTest.class.getResourceAsStream(testWithCommaCsv).readAllBytes(), StandardCharsets.UTF_8);
         TEST_WITH_COMMA_QUOTE_CSV = new String(
-                CsvUtilTest.class.getResourceAsStream("/test_with_comma_quote.csv").readAllBytes(),
+                CsvUtilTest.class.getResourceAsStream(testWithCommaQuoteCsv).readAllBytes(),
                 StandardCharsets.UTF_8);
     }
 
