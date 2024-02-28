@@ -29,6 +29,8 @@ import hu.icellmobilsoft.coffee.dto.exception.enums.Severity;
  * BaseException class.
  * </p>
  *
+ * @deprecated Helyette az ős osztályt kell használni {@link hu.icellmobilsoft.coffee.se.api.exception.BaseException}.
+ *
  * @author imre.scheffer
  * @since 1.0.0
  */
