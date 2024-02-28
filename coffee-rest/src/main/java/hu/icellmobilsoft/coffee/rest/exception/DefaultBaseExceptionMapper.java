@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -36,7 +36,6 @@ import hu.icellmobilsoft.coffee.dto.common.commonservice.TechnicalFault;
 import hu.icellmobilsoft.coffee.dto.common.commonservice.ValidationType;
 import hu.icellmobilsoft.coffee.dto.exception.AccessDeniedException;
 import hu.icellmobilsoft.coffee.dto.exception.BONotFoundException;
-import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.dto.exception.BusinessException;
 import hu.icellmobilsoft.coffee.dto.exception.DtoConversionException;
 import hu.icellmobilsoft.coffee.dto.exception.OptimisticLockException;
@@ -44,10 +43,11 @@ import hu.icellmobilsoft.coffee.dto.exception.ServiceUnavailableException;
 import hu.icellmobilsoft.coffee.dto.exception.XMLValidationError;
 import hu.icellmobilsoft.coffee.rest.exception.enums.HttpStatus;
 import hu.icellmobilsoft.coffee.rest.validation.xml.exception.XsdProcessingException;
+import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
 
 /**
  * Exception mapper for handled exception throwing
- * 
+ *
  * @author balazs.joo
  * @since 1.8.0
  */
@@ -108,7 +108,7 @@ public class DefaultBaseExceptionMapper implements ExceptionMapper<BaseException
 
     /**
      * Válasz létrehozása, mely tartalmazza a validációs hibákat
-     * 
+     *
      * @param e
      *            a kivétel
      * @param errors

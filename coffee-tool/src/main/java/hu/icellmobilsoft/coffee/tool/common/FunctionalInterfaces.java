@@ -24,10 +24,13 @@ import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 /**
  * Common class for @FunctionalInterface classes
  *
+ * @deprecated A wrapper {@link FunctionalInterfaces} meg fog szünni, mert felesleges. A benne foglalt funkcionális interfészek helyett azok ős
+ *             interfészeit kell használni a {@code coffee-se-function} modul {@code hu.icellmobilsoft.coffee.se.function} package-ből.
+ *
  * @author imre.scheffer
  * @since 1.0.0
  */
-@Deprecated(since = "2.6.0")
+@Deprecated(since = "2.7.0")
 public class FunctionalInterfaces {
 
     /**
