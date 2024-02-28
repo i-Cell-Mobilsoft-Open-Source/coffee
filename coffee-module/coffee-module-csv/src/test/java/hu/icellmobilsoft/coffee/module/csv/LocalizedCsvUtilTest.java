@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -34,17 +34,15 @@ import org.jboss.weld.junit5.WeldJunit5Extension;
 import org.jboss.weld.junit5.WeldSetup;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
-import hu.icellmobilsoft.coffee.module.csv.localization.LocalizedHeaderColumnNameWithPositionMappingStrategy;
 
 /**
  * Class for testing {@link CsvUtil#toLocalizedCsv}
- * 
+ *
  * @author martin.nagy
  * @since 1.8.0
  */
@@ -53,6 +51,7 @@ import hu.icellmobilsoft.coffee.module.csv.localization.LocalizedHeaderColumnNam
 @ExtendWith(WeldJunit5Extension.class)
 class LocalizedCsvUtilTest {
 
+    private static final String FNP_LOCALIZED_TEST_CSV = "/%1$s/localizedTest.csv";
     private static List<LocalizedTestBean> TEST_BEANS;
     private static String TEST_CSV;
 
@@ -68,7 +67,11 @@ class LocalizedCsvUtilTest {
                 new LocalizedTestBean(11, "foo", true, LocalDate.of(2021, 11, 23), LocalizedTestBean.Status.IN_PROGRESS), //
                 new LocalizedTestBean(12, null, false, LocalDate.of(2020, 1, 2), LocalizedTestBean.Status.DONE) //
         );
-        TEST_CSV = new String(LocalizedCsvUtilTest.class.getResourceAsStream("/localizedTest.csv").readAllBytes(), StandardCharsets.UTF_8);
+
+        String os = System.lineSeparator().equals("\r\n") ? "win" : "unix";
+        String localizedTestCsv = String.format(FNP_LOCALIZED_TEST_CSV, os);
+
+        TEST_CSV = new String(LocalizedCsvUtilTest.class.getResourceAsStream(localizedTestCsv).readAllBytes(), StandardCharsets.UTF_8);
     }
 
     @BeforeEach
