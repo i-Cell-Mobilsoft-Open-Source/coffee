@@ -19,43 +19,22 @@
  */
 package hu.icellmobilsoft.coffee.rest.validation.xml.reader;
 
-import java.io.InputStream;
-
-import jakarta.enterprise.context.Dependent;
-
-import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
+import jakarta.enterprise.inject.Default;
 
 /**
- * Dummy implementáció, ami a requestVersion értékét nem kezeli.
+ * Default Dummy implementáció, ami a requestVersion értékét nem kezeli.
  *
- * @see IXmlRequestVersionReader
- * @see IJsonRequestVersionReader
+ * @see IRequestVersionReader
  * @author robert.kaplar
  * @since 1.0.0
  */
-@Dependent
-public class EmptyRequestVersionReader implements IXmlRequestVersionReader, IJsonRequestVersionReader {
+@Default
+public class EmptyRequestVersionReader implements IRequestVersionReader {
 
     /**
      * Default constructor, constructs a new object.
      */
     public EmptyRequestVersionReader() {
         super();
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * Null-t ad vissza, amit a hívó kód lekezel
-     */
-    @Override
-    public String readFromXML(InputStream is) throws TechnicalException {
-        return null;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public <T> String readFromJSON(T dto) throws TechnicalException {
-        return null;
     }
 }

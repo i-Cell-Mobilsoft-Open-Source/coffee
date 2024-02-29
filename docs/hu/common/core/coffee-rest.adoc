@@ -204,7 +204,7 @@ A felépítése teljes mértékben moduláris, mindent projekt saját igényére
 A moduljai alapesetben ilyen működést biztosítanak:
 
 === Request verzió megállapítása
-Ezt az `*IXmlRequestVersionReader*` interfész biztosítja.
+Ezt az `*IRequestVersionReader*` interfész biztosítja.
 Az implementáló beépített és cserélhető osztály: `hu.icellmobilsoft.coffee.rest.validation.xml.reader.XmlRequestVersionReader`.
 
 Minta alapján a

@@ -203,7 +203,7 @@ Its structure is fully modular, you can customize everything to your project's n
 Its modules provide this functionality by default:
 
 === Request version determination
-This is provided by the `*IXmlRequestVersionReader*` interface.
+This is provided by the `IRequestVersionReader` interface.
 It implements a built-in and replaceable class `hu.icellmobilsoft.coffee.rest.validation.xml.reader.XmlRequestVersionReader`.
 
 Based on the pattern of the

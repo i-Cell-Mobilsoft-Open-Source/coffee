@@ -24,22 +24,41 @@ import java.io.InputStream;
 import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
 
 /**
- * Interfész az XML fájlok requestVersion értékének kiolvasásához
+ * Interfész a requestVersion értékének kiolvasásához
  *
- * @see XmlRequestVersionReader
- * @author ferenc.lutischan
- * @since 1.0.0
+ * @see EmptyRequestVersionReader
+ * @author tamas.cserhati
+ * @since 2.6.0
  */
-public interface IXmlRequestVersionReader {
+public interface IRequestVersionReader {
 
     /**
      * Verziószámot állapítja meg egy általános HTTP request alapján. Lehet az HTTP entity, header, akármi...
+     * Can read the request version from a general http request. (request body, header...)
      *
-     * @param is
-     *            HTTP entity in raw stream format
-     * @return request version
+     * @param inputStream
+     *            HTTP entity in raw stream format, if its possible read version from header or uri
+     * @return the request version
+     * @throws TechnicalException
+     *             on error
+     */
+    default String readVersion(InputStream inputStream) throws TechnicalException {
+        return null;
+    }
+    
+    /**
+     * Determines version number value from a DTO.
+     *
+     * @param <T>
+     *            T object
+     * @param dto
+     *            HTTP entity converted to DTO
+     * @return request number
      * @throws TechnicalException
      *             exception
      */
-    String readFromXML(InputStream is) throws TechnicalException;
+    default <T> String readVersion(T dto) throws TechnicalException {
+        return null;
+    }
+
 }

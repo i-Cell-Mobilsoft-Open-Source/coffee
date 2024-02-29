@@ -35,9 +35,9 @@ import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
 
 /**
- * A requestVersion értékének kiolvasását végzi XML stream-ból
+ * It reads the requestVersion value from XML stream, try not to use it, instead pass the requestversion in header or url.
  *
- * Példa a megkövetelt xml struktúrára:
+ * Example of the required xml structure:
  *
  * <pre>
  * &lt;xml&gt;
@@ -50,14 +50,14 @@ import hu.icellmobilsoft.coffee.se.logging.Logger;
  * &lt;/xml&gt;
  * </pre>
  *
- * @see IXmlRequestVersionReader
+ * @see IRequestVersionReader
  * @author imre.scheffer
  * @author ferenc.lutischan
  * @since 1.0.0
  */
 @Alternative
 @Dependent
-public class XmlRequestVersionReader implements IXmlRequestVersionReader {
+public class XmlRequestVersionReader implements IRequestVersionReader {
 
     private static final String STREAM_EXCEPTION = "Premature end of file";
 
@@ -74,7 +74,7 @@ public class XmlRequestVersionReader implements IXmlRequestVersionReader {
      * header.requestVersion valaszt adja vissza. Mas parameterek kiolvasara is alkalmas, de jelenleg nincs ra szukseg
      */
     @Override
-    public String readFromXML(InputStream is) throws TechnicalException {
+    public String readVersion(InputStream is) throws TechnicalException {
         if (is == null) {
             return null;
         }

@@ -78,6 +78,16 @@ A változtatások nem eredményeznek átállási munkálatokat, visszafelé komp
 
 === coffee-rest
 
+* fix javax.annotation.processing.Processor fájl (visszanevezése jakarta.annotation.processing.Processor-ra, mert ez nem változott jakarta-ra)
+
+==== RequestVersionReader
+
+RequestVersionReader újra lett írva, mert a stream `.mark()` and `.reset()` metódus hívása néhány esetben kivételt dobott
+
+==== Migration
+
+Az `IXmlRequestVersionReader` és `IJsonRequestVersionReader` megszüntetésre került, heylette a `IRequestVersionReader` interfész `readVersion` metódusa használandó.
+
 ==== Jsonb Config
 
 Bekerült a Jsonb kongigurációjának a definiálása.
@@ -95,10 +105,6 @@ Bekerült a Jsonb kongigurációjának a definiálása.
 ==== Migration
 
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé default értékek állítódnak be a helyes használhathoz.
-
-=== coffee-rest
-
-* fix javax.annotation.processing.Processor fájl (visszanevezése jakarta.annotation.processing.Processor-ra, mert ez nem változott jakarta-ra)
 
 === Coffee Quarkus Extensions
 

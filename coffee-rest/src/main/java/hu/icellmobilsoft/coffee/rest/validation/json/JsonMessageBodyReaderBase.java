@@ -37,16 +37,16 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.http.ParseException;
 import org.apache.http.entity.ContentType;
 
+import hu.icellmobilsoft.coffee.cdi.annotation.xml.ValidateXML;
 import hu.icellmobilsoft.coffee.cdi.logger.LogProducer;
 import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 import hu.icellmobilsoft.coffee.rest.validation.xml.JaxbTool;
 import hu.icellmobilsoft.coffee.rest.validation.xml.XmlMessageBodyReaderBase;
-import hu.icellmobilsoft.coffee.cdi.annotation.xml.ValidateXML;
 import hu.icellmobilsoft.coffee.rest.validation.xml.exception.BaseProcessingExceptionWrapper;
 import hu.icellmobilsoft.coffee.rest.validation.xml.exception.XsdProcessingException;
-import hu.icellmobilsoft.coffee.rest.validation.xml.reader.IJsonRequestVersionReader;
+import hu.icellmobilsoft.coffee.rest.validation.xml.reader.IRequestVersionReader;
 import hu.icellmobilsoft.coffee.tool.gson.JsonUtil;
 
 /**
@@ -77,7 +77,7 @@ public abstract class JsonMessageBodyReaderBase<T> implements MessageBodyReader<
     private JaxbTool jaxbTool;
 
     @Inject
-    private IJsonRequestVersionReader jsonRequestVersionReader;
+    private IRequestVersionReader requestVersionReader;
 
     /**
      * Default constructor, constructs a new object.
@@ -147,7 +147,7 @@ public abstract class JsonMessageBodyReaderBase<T> implements MessageBodyReader<
      */
     protected String readRequestVersion(Object object) throws XsdProcessingException {
         try {
-            return jsonRequestVersionReader.readFromJSON(object);
+            return requestVersionReader.readVersion(object);
         } catch (TechnicalException e) {
             throw new XsdProcessingException(CoffeeFaultType.INVALID_INPUT,
                     MessageFormat.format("Error in reading object [class: {0}]: [{1}]", object.getClass(), e.getLocalizedMessage()), e);

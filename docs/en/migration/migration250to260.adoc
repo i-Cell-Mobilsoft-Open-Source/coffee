@@ -78,6 +78,16 @@ Changes are backwards compatible doesn't need any migration.
 
 === coffee-rest
 
+* fix javax.annotation.processing.Processor file (rename back to javax.annotation.processing.Processor, because it hasn't changed to javax)
+
+==== RequestVersionReader
+
+RequestVersionReader has been rewritten. The stream mark() and reset() may have caused errors in some cases.
+
+==== Migration
+
+`IXmlRequestVersionReader` and `IJsonRequestVersionReader` have been removed, in case you used it update the interface to `IRequestVersionReader`.
+
 ==== Jsonb Config
 
 Added the definition of the Jsonb configuration.
@@ -95,9 +105,6 @@ Added the definition of the Jsonb configuration.
 ==== Migration
 
 The changes do not result in migration work, backwards default values are set for correct usage.
-=== coffee-rest
-
-* fix javax.annotation.processing.Processor file (rename back to javax.annotation.processing.Processor, because it hasn't changed to javax)
 
 === Coffee Quarkus Extensions
 
