@@ -141,7 +141,7 @@ A változtatások nem eredményeznek átállási munkálatokat, visszafelé komp
 === coffee-rest
 
 * `XsdHelper` lehetőséget biztosít hogy töröljük a schema és jaxb context cache-t.
-* `EmptyRequestVersionReader` Dependent dependent lett, a quarkus bean discovery is megtalálja ezentúl.
+* `EmptyRequestVersionReader` Dependent lett, a quarkus bean discovery is megtalálja ezentúl.
 
 === Migration
 
