@@ -72,3 +72,16 @@ fgv-t vár, amik dobhatnak `hu.icellmobilsoft.coffee.se.api.exception.BaseExcept
 * Az eredeti `ITraceHandler.runWithTrace()` hívásoknál le kell kezelni vagy tovább kell dobn a 
 `hu.icellmobilsoft.coffee.se.api.exception.BaseException`-t.
 * Ha olyan fgv-t trace-elünk, ami csak RTE-t dobhat, akkor használjuk a `runWithTraceNoException()` fgv-t.
+
+=== coffee-rest
+
+💥 ***BREAKING CHANGE*** 💥
+
+* `hu.icellmobilsoft.coffee.rest.exception` package-ben található `DefaultBaseExceptionMapper`,
+`DefaultExceptionMessageTranslator`, `DefaultGeneralExceptionMapper` és `IExceptionMessageTranslator` osztályok már 
+az új `hu.icellmobilsoft.coffee.se.api.exception.BaseException`-el dolgoznak.
+
+=== Átállás
+
+* A `jakarta.ws.rs.ext.ExceptionMapper` és `hu.icellmobilsoft.coffee.rest.exception.IExceptionMessageTranslator` 
+implementációkban álljunk át az új `hu.icellmobilsoft.coffee.se.api.exception.BaseException`-re.
