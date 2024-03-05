@@ -56,28 +56,6 @@ public class BaseException extends Exception {
     /**
      * Constructor for BaseException.
      *
-     * @param message
-     *            message
-     */
-    public BaseException(String message) {
-        this(null, message, null, null);
-    }
-
-    /**
-     * Constructor for BaseException.
-     *
-     * @param message
-     *            message
-     * @param e
-     *            e
-     */
-    public BaseException(String message, Throwable e) {
-        this(null, message, e, null);
-    }
-
-    /**
-     * Constructor for BaseException.
-     *
      * @param faultTypeEnum
      *            faultTypeEnum
      * @param message
