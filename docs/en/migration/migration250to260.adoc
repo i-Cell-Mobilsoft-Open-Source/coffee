@@ -141,6 +141,7 @@ Changes are backwards compatible doesn't need any migration.
 === coffee-rest
 
 * The `XsdHelper` provides the opportunity to delete the schema and JAXB context cache.
+* `EmptyRequestVersionReader` now has Dependent scope, so Quarkus bean discovery will now be able to find it.
 
 ==== Migration
 

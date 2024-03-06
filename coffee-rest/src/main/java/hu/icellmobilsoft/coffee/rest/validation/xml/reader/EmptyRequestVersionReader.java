@@ -19,7 +19,7 @@
  */
 package hu.icellmobilsoft.coffee.rest.validation.xml.reader;
 
-import jakarta.enterprise.inject.Default;
+import jakarta.enterprise.context.Dependent;
 
 /**
  * Default Dummy implementáció, ami a requestVersion értékét nem kezeli.
@@ -28,7 +28,7 @@ import jakarta.enterprise.inject.Default;
  * @author robert.kaplar
  * @since 1.0.0
  */
-@Default
+@Dependent
 public class EmptyRequestVersionReader implements IRequestVersionReader {
 
     /**
