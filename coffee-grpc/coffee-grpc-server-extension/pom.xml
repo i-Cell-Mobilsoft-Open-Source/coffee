@@ -19,6 +19,10 @@
         </dependency>
         <dependency>
             <groupId>hu.icellmobilsoft.coffee</groupId>
+            <artifactId>coffee-rest</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>hu.icellmobilsoft.coffee</groupId>
             <artifactId>coffee-grpc-api</artifactId>
         </dependency>
         <dependency>
