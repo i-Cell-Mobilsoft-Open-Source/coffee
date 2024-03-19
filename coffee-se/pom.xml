@@ -23,6 +23,8 @@
 	</dependencyManagement>
 
 	<modules>
+		<module>coffee-se-api</module>
+		<module>coffee-se-function</module>
 		<module>coffee-se-logging</module>
 	</modules>
 

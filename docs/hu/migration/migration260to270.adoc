@@ -2,7 +2,89 @@
 
 coff:ee v2.6.0 -> v2.7.0 migrációs leírás, újdonságok, változások leírása
 
-== Változások
+== coffee-se-api
+
+Új modul, mely alap Coffee API-t definiál úgy mint enumok, DTO-k, kivételek, melyeknek csak Java SE függősége lehet.
+
+Tartalma:
+
+* `hu.icellmobilsoft.coffee.se.api.exception.BaseException` (`hu.icellmobilsoft.coffee.dto.exception.BaseException` mintájára)
+* `hu.icellmobilsoft.coffee.se.api.exception.enums.Severity` (`hu.icellmobilsoft.coffee.dto.exception.enums.Severity` mintájára)
+
+== coffee-se-function
+
+Új modul, mely a Coffee-ban használatos funkcionális interface-eket tartalmazza, melyeknek csak Java SE illetve olyan Coffee modul,
+aminek szintén csak Java SE függősége lehet.
+
+Tartalma: (`hu.icellmobilsoft.coffee.tool.common.FunctionalInterfaces` mintájára, de már az új 
+`hu.icellmobilsoft.coffee.se.api.exception.BaseException`-t deklarálja)
+
+* `hu.icellmobilsoft.coffee.se.function.BaseExceptionConsumer`
+* `hu.icellmobilsoft.coffee.se.function.BaseExceptionFunction`
+* `hu.icellmobilsoft.coffee.se.function.BaseExceptionFunction2`
+* `hu.icellmobilsoft.coffee.se.function.BaseExceptionFunction3`
+* `hu.icellmobilsoft.coffee.se.function.BaseExceptionFunction4`
+* `hu.icellmobilsoft.coffee.se.function.BaseExceptionFunction5`
+* `hu.icellmobilsoft.coffee.se.function.BaseExceptionFunction6`
+* `hu.icellmobilsoft.coffee.se.function.BaseExceptionRunner`
+* `hu.icellmobilsoft.coffee.se.function.BaseExceptionSupplier`
+
+== coffee-tool
+
+* `hu.icellmobilsoft.coffee.tool.common.FunctionalInterfaces` deprecated lett. A becsomagolt funkcionális interfészek 
+az új `coffee-se-function` modulban létrehozott interfészeket terjesztik ki.
+
+=== Átállás
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis. Azonban ha egy új funkcionális interfészt 
+implementálunk, akkor már az új `hu.icellmobilsoft.coffee.se.api.exception.BaseException`-t kell lekezelni az adott helyen 
+pl exception mapperek, típus vizsgálatok pl `e instanceof BaseException`, try-catch blokkok.
+
+== coffee-dto-base
+
+💥 ***BREAKING CHANGE*** 💥
+
+* `hu.icellmobilsoft.coffee.dto.exception.enums.Severity` deprecated lett.
+* `hu.icellmobilsoft.coffee.dto.exception.BaseException` deprecated lett.
+
+=== Átállás
+
+* `hu.icellmobilsoft.coffee.dto.exception.enums.Severity` helyett a `coffee-se-api` modulban található 
+`hu.icellmobilsoft.coffee.se.api.exception.enums.Severity` használandó.
+* `hu.icellmobilsoft.coffee.dto.exception.BaseException` helyett az ősosztálya a 
+`hu.icellmobilsoft.coffee.se.api.exception.BaseException` használandó.
+** Az eredeti `getSeverity()` fgv már az új típussal a `hu.icellmobilsoft.coffee.se.api.exception.enums.Severity`-vel tér 
+vissza. Az eretei típus eléréséhez használjuk a `getOldSeverity()` fgv-t.
+
+== coffee-cdi
+
+💥 ***BREAKING CHANGE*** 💥
+
+* `hu.icellmobilsoft.coffee.cdi.trace.spi.ITraceHandler` változások:
+** A `runWithTrace()` fgv átnevezésre került `runWithTraceNoException()`-re ami paraméterül `java.util.function.Supplier`-t 
+vagy `java.lang.Runnable`-t vár. Az így trace-elt fgv-ek csak RTE-t dobhatnak.
+** Az eredeti `runWithTrace()` fgv mostantól `java.util.function.Supplier` helyett 
+`hu.icellmobilsoft.coffee.se.function.BaseExceptionSupplier` vagy `hu.icellmobilsoft.coffee.se.function.BaseExceptionRunner` 
+fgv-t vár, amik dobhatnak `hu.icellmobilsoft.coffee.se.api.exception.BaseException`-t.
+
+=== Átállás
+
+* Az eredeti `ITraceHandler.runWithTrace()` hívásoknál le kell kezelni vagy tovább kell dobn a 
+`hu.icellmobilsoft.coffee.se.api.exception.BaseException`-t.
+* Ha olyan fgv-t trace-elünk, ami csak RTE-t dobhat, akkor használjuk a `runWithTraceNoException()` fgv-t.
+
+=== coffee-rest
+
+💥 ***BREAKING CHANGE*** 💥
+
+* `hu.icellmobilsoft.coffee.rest.exception` package-ben található `DefaultBaseExceptionMapper`,
+`DefaultExceptionMessageTranslator`, `DefaultGeneralExceptionMapper` és `IExceptionMessageTranslator` osztályok már 
+az új `hu.icellmobilsoft.coffee.se.api.exception.BaseException`-el dolgoznak.
+
+=== Átállás
+
+* A `jakarta.ws.rs.ext.ExceptionMapper` és `hu.icellmobilsoft.coffee.rest.exception.IExceptionMessageTranslator` 
+implementációkban álljunk át az új `hu.icellmobilsoft.coffee.se.api.exception.BaseException`-re.
 
 === coffee-module-redis
 
@@ -10,11 +92,12 @@ coff:ee v2.6.0 -> v2.7.0 migrációs leírás, újdonságok, változások leír�
 
 [IMPORTANT]
 ====
-Az új verzió a redist 6.0-tól támogatja!
+Az újabb kliens a redist 6.0 verziótól támogatja!
 
 ====
 
-==== Migration
+==== Átállás
 
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
 
+=======
