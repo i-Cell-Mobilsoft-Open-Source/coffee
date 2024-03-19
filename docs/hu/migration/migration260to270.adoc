@@ -8,6 +8,12 @@ coff:ee v2.6.0 -> v2.7.0 migrációs leírás, újdonságok, változások leír�
 
 * Jedis driver verzió upgrade 4.2.3 -> 5.1.2
 
+[IMPORTANT]
+====
+Az új verzió a redist 6.0-tól támogatja!
+
+====
+
 ==== Migration
 
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
