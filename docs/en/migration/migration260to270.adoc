@@ -14,7 +14,6 @@ The new version supports redis from version 6.0!
 
 ====
 
-
 ==== Migration
 
 Changes are backwards compatible doesn't need any migration.
