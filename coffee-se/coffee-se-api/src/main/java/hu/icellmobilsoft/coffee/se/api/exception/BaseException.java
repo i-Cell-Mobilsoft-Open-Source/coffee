@@ -17,51 +17,41 @@
  * limitations under the License.
  * #L%
  */
-package hu.icellmobilsoft.coffee.dto.exception;
+package hu.icellmobilsoft.coffee.se.api.exception;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
-import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
-import hu.icellmobilsoft.coffee.dto.exception.enums.Severity;
+import hu.icellmobilsoft.coffee.se.api.exception.enums.Severity;
 
 /**
  * <p>
  * BaseException class.
  * </p>
  *
- * @deprecated Helyette az ős osztályt kell használni {@link hu.icellmobilsoft.coffee.se.api.exception.BaseException}.
- *
- * @author imre.scheffer
- * @since 1.0.0
+ * @author attila-kiss-it
+ * @since 2.7.0
  */
-@Deprecated(since = "2.7.0")
-public class BaseException extends hu.icellmobilsoft.coffee.se.api.exception.BaseException {
-
-    private static final CoffeeFaultType DEFAULT_FAULT_TYPE = CoffeeFaultType.OPERATION_FAILED;
+public class BaseException extends Exception {
 
     private static final long serialVersionUID = 1L;
 
     /**
-     * Constructor for BaseException.
-     *
-     * @param message
-     *            message
+     * FaultType.
      */
-    public BaseException(String message) {
-        this(DEFAULT_FAULT_TYPE, message, null, null);
-    }
+    private Enum<?> faultType;
 
     /**
-     * Constructor for BaseException.
-     *
-     * @param message
-     *            message
-     * @param e
-     *            e
+     * Severity.
      */
-    public BaseException(String message, Throwable e) {
-        this(DEFAULT_FAULT_TYPE, message, e, null);
-    }
+    private Severity severity = Severity.CRITICAL;
+
+    /**
+     * The parameters of the message.
+     */
+    private List<Serializable> messageParameters;
 
     /**
      * Constructor for BaseException.
@@ -102,7 +92,40 @@ public class BaseException extends hu.icellmobilsoft.coffee.se.api.exception.Bas
      *            severity
      */
     public BaseException(Enum<?> faultTypeEnum, String message, Throwable e, Severity severity) {
-        super(faultTypeEnum, message, e, Objects.nonNull(severity) ? severity.toNewValue() : null);
+        super(message, e);
+        setFaultType(faultTypeEnum);
+        setSeverity(severity);
+    }
+
+    /**
+     * Add one message parameter to the message parameter list.
+     *
+     * @param messageParameter
+     *            messageParameter
+     */
+    public void addMessageParameter(Serializable messageParameter) {
+        getMessageParameters().add(messageParameter);
+    }
+
+    /**
+     * getFaultTypeEnum.
+     *
+     * @return faultType
+     */
+    public Enum<?> getFaultTypeEnum() {
+        return faultType;
+    }
+
+    /**
+     * Setter for the field <code>faultType</code>.
+     *
+     * @param faultTypeEnum
+     *            faultTypeEnum
+     */
+    public void setFaultType(Enum<?> faultTypeEnum) {
+        if (Objects.nonNull(faultTypeEnum)) {
+            this.faultType = faultTypeEnum;
+        }
     }
 
     /**
@@ -110,8 +133,8 @@ public class BaseException extends hu.icellmobilsoft.coffee.se.api.exception.Bas
      *
      * @return severity
      */
-    public Severity getOldSeverity() {
-        return Severity.fromNewValue(getSeverity());
+    public Severity getSeverity() {
+        return severity;
     }
 
     /**
@@ -122,8 +145,29 @@ public class BaseException extends hu.icellmobilsoft.coffee.se.api.exception.Bas
      */
     public void setSeverity(Severity severity) {
         if (Objects.nonNull(severity)) {
-            setSeverity(severity.toNewValue());
+            this.severity = severity;
         }
     }
 
+    /**
+     * Getter for the field <code>messageParameters</code>.
+     *
+     * @return messageParameters
+     */
+    public List<Serializable> getMessageParameters() {
+        if (messageParameters == null) {
+            messageParameters = new ArrayList<Serializable>();
+        }
+        return messageParameters;
+    }
+
+    /**
+     * Setter for the field <code>messageParameters</code>.
+     *
+     * @param messageParameters
+     *            messageParameters
+     */
+    public void setMessageParameters(List<Serializable> messageParameters) {
+        this.messageParameters = messageParameters;
+    }
 }
