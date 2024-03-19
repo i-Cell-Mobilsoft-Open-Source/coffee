@@ -1,0 +1,14 @@
+= v2.6.0 → v2.7.0
+
+coff:ee v2.6.0 -> v2.7.0 migrációs leírás, újdonságok, változások leírása
+
+== Változások
+
+=== coffee-module-redis
+
+* Jedis driver verzió upgrade 4.2.3 -> 5.1.2
+
+==== Migration
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
