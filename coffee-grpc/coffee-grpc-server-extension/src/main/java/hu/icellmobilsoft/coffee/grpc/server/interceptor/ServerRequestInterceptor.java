@@ -76,25 +76,51 @@ public class ServerRequestInterceptor implements ServerInterceptor {
         String extSessionId = StringUtils.isNotBlank(extSessionIdHeader) ? extSessionIdHeader : RandomUtil.generateId();
         Context context = Context.current();
 
+        // TODO ez felfutasnal fix, tehat cachelni kellene
         int requestLogSize = getRequestLogSize(serverCall.getMethodDescriptor());
 
         Listener<ReqT> ctxlistener = Contexts.interceptCall(context, serverCall, headers, next);
         // intercept request, log sent message, handle MDC
         return new SimpleForwardingServerCallListener<>(ctxlistener) {
 
+            // TODO nem akad ez ossze ha tobb hivas van?
+            StringBuffer messageToPrint = new StringBuffer();
+            int count = 0;
+
             @Override
-            public void onMessage(ReqT message) {
+            public void onCancel() {
+                super.onCancel();
                 MDC.put(LogConstants.LOG_SESSION_ID, extSessionId);
-                String messageToPrint;
-                if (requestLogSize > LogSpecifier.UNLIMIT) {
-                    messageToPrint = StringUtils.truncate(message.toString(), requestLogSize) + "...<truncated>";
-                } else {
-                    messageToPrint = message.toString();
-                }
-                LOGGER.info("Request message: [{0}]", messageToPrint);
-                super.onMessage(message);
+                LOGGER.info("Request message onCancel in [{0}] parts: [\n{1}]", count, messageToPrint);
             }
 
+            @Override
+            public void onComplete() {
+                super.onComplete();
+                // TODO ennel megvaltozik a SID!
+                MDC.put(LogConstants.LOG_SESSION_ID, extSessionId);
+                LOGGER.info("Request message onComplete in [{0}] parts: [\n{1}]", count, messageToPrint);
+            }
+
+            @Override
+            public void onMessage(ReqT message) {
+                String part = "[#" + ++count + "#]\n";
+                if (LOGGER.isTraceEnabled()) {
+                    MDC.put(LogConstants.LOG_SESSION_ID, extSessionId);
+                    LOGGER.trace("onMessage part [{0}]", count);
+                }
+                if (requestLogSize > LogSpecifier.UNLIMIT) {
+                    if (messageToPrint.length() < requestLogSize) {
+                        messageToPrint.append(part).append(StringUtils.truncate(message.toString(), requestLogSize - messageToPrint.length()));
+                        if (messageToPrint.length() >= requestLogSize) {
+                            messageToPrint.append("...<truncated>");
+                        }
+                    }
+                } else {
+                    messageToPrint.append(part).append(message.toString());
+                }
+                super.onMessage(message);
+            }
         };
     }
 
