@@ -44,3 +44,11 @@ Changes are backwards compatible doesnt need any migration.
 ==== Migration
 
 Changes are backwards compatible doesnt need any migration.
+
+=== coffee-module-base
+
+** DefaultLoggerClientRequestFilter properly logs the outgoing entity stream.
+
+==== Migration
+
+Changes are backwards compatible doesnt need any migration.

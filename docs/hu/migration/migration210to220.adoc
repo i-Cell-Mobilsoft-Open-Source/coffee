@@ -43,3 +43,11 @@ A változtatások nem eredményeznek átállási munkálatokat, visszafelé komp
 
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
 
+=== coffee-module-mp-rest-client
+
+** DefaultLoggerClientRequestFilter Megfelelően logolja a kimenő entity streamet.
+
+==== Átállás
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
