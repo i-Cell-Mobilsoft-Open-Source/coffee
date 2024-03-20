@@ -5,7 +5,7 @@ The purpose of this module is to manage the online key-value of Redis.
 
 The "redis.clients:jedis" java driver based module not only serves queries and saves from Redis, but can also provide a cache management based on the CDI interceptor saved in Redis.
 
-NOTE: with the current jedis version 4.2.3, Redis compatibility is backwards to 2.8.x
+NOTE: with the current jedis version 5.1.2, Redis compatibility is backwards to 6.0.x
 
 == RedisConnection
 

@@ -85,3 +85,19 @@ az új `hu.icellmobilsoft.coffee.se.api.exception.BaseException`-el dolgoznak.
 
 * A `jakarta.ws.rs.ext.ExceptionMapper` és `hu.icellmobilsoft.coffee.rest.exception.IExceptionMessageTranslator` 
 implementációkban álljunk át az új `hu.icellmobilsoft.coffee.se.api.exception.BaseException`-re.
+
+=== coffee-module-redis
+
+* Jedis driver verzió upgrade 4.2.3 -> 5.1.2
+
+[IMPORTANT]
+====
+Az újabb kliens a redist 6.0 verziótól támogatja!
+
+====
+
+==== Átállás
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+=======
