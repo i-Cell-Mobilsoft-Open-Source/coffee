@@ -2,7 +2,7 @@
  * #%L
  * Coffee
  * %%
- * Copyright (C) 2020 i-Cell Mobilsoft Zrt.
+ * Copyright (C) 2020 - 2024 i-Cell Mobilsoft Zrt.
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,18 +17,16 @@
  * limitations under the License.
  * #L%
  */
-package hu.icellmobilsoft.coffee.dto.exception;
+package hu.icellmobilsoft.coffee.se.api.exception;
 
-import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
+import hu.icellmobilsoft.coffee.se.api.exception.enums.CoffeeFaultType;
 
 /**
  * DTO conversion exception
  *
  * @author imre.scheffer
- * @since 1.0.0
- * @deprecated replace with {@link hu.icellmobilsoft.coffee.se.api.exception.DtoConversionException}.
+ * @since 2.7.0
  */
-@Deprecated(since = "2.7.0")
 public class DtoConversionException extends BusinessException {
 
     private static final long serialVersionUID = 1L;
@@ -52,7 +50,7 @@ public class DtoConversionException extends BusinessException {
      *            e
      */
     public DtoConversionException(String message, Throwable e) {
-        this(CoffeeFaultType.DTO_CONVERSION_FAILED, message, e);
+        super(CoffeeFaultType.DTO_CONVERSION_FAILED, message, e);
     }
 
     /**

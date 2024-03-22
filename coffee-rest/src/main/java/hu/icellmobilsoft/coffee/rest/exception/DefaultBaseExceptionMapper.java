@@ -36,14 +36,14 @@ import hu.icellmobilsoft.coffee.dto.common.commonservice.TechnicalFault;
 import hu.icellmobilsoft.coffee.dto.common.commonservice.ValidationType;
 import hu.icellmobilsoft.coffee.dto.exception.AccessDeniedException;
 import hu.icellmobilsoft.coffee.dto.exception.BONotFoundException;
-import hu.icellmobilsoft.coffee.dto.exception.BusinessException;
-import hu.icellmobilsoft.coffee.dto.exception.DtoConversionException;
 import hu.icellmobilsoft.coffee.dto.exception.OptimisticLockException;
 import hu.icellmobilsoft.coffee.dto.exception.ServiceUnavailableException;
 import hu.icellmobilsoft.coffee.dto.exception.XMLValidationError;
 import hu.icellmobilsoft.coffee.rest.exception.enums.HttpStatus;
 import hu.icellmobilsoft.coffee.rest.validation.xml.exception.XsdProcessingException;
 import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
+import hu.icellmobilsoft.coffee.se.api.exception.BusinessException;
+import hu.icellmobilsoft.coffee.se.api.exception.DtoConversionException;
 
 /**
  * Exception mapper for handled exception throwing
@@ -96,10 +96,10 @@ public class DefaultBaseExceptionMapper implements ExceptionMapper<BaseException
         } else if (e instanceof XsdProcessingException) {
             XsdProcessingException xsdProcessingException = (XsdProcessingException) e;
             return createValidationErrorResponse(e, xsdProcessingException.getErrors());
-        } else if (e instanceof BusinessException) {
+        } else if (e instanceof BusinessException || e instanceof hu.icellmobilsoft.coffee.dto.exception.BusinessException) {
             return createResponse(e, HttpStatus.UNPROCESSABLE_ENTITY.getStatusCode(), new BusinessFault());
         } else if (e instanceof OptimisticLockException) {
-                return createResponse(e, HttpStatus.OPTIMISTIC_LOCK.getStatusCode(), new TechnicalFault());
+            return createResponse(e, HttpStatus.OPTIMISTIC_LOCK.getStatusCode(), new TechnicalFault());
         } else {
             // BaseException/TechnicalException
             return createResponse(e, Response.Status.INTERNAL_SERVER_ERROR, new TechnicalFault());
