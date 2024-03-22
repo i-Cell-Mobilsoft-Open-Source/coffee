@@ -30,7 +30,7 @@ import hu.icellmobilsoft.coffee.se.api.exception.DtoConversionException;
  *            GRPC proto type
  * @param <REST>
  *            XSD rest type
- * @since 2.1.0
+ * @since 2.7.0
  */
 public interface ProtoConverter<PROTO extends com.google.protobuf.MessageOrBuilder, REST> {
 
