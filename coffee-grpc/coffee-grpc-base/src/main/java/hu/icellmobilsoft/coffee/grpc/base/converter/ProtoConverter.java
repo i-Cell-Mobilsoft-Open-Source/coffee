@@ -66,7 +66,7 @@ public interface ProtoConverter<PROTO extends com.google.protobuf.MessageOrBuild
     };
 
     /**
-     * convert REST xsd to GRPC proto
+     * convert GRPC proto to REST xsd
      * 
      * @param destinationType
      *            REST xsd destination object
@@ -80,7 +80,7 @@ public interface ProtoConverter<PROTO extends com.google.protobuf.MessageOrBuild
     };
 
     /**
-     * convert GRPC proto to REST xsd
+     * convert REST xsd to GRPC proto
      * 
      * @param destinationProto
      *            GRPC proto destination object
