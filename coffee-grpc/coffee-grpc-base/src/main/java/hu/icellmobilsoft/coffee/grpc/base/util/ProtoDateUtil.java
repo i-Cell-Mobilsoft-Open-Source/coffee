@@ -34,6 +34,13 @@ import com.google.protobuf.Timestamp;
 public class ProtoDateUtil {
 
     /**
+     * Default constructor, constructs a new object.
+     */
+    private ProtoDateUtil() {
+        super();
+    }
+
+    /**
      * Convert Grpc protobuf {@link Timestamp} to {@link Instant}
      * 
      * @param timestamp
