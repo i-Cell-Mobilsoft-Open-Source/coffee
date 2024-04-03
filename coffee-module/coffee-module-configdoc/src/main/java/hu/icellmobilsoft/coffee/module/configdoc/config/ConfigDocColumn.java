@@ -49,5 +49,5 @@ public enum ConfigDocColumn {
     /**
      * Features represented as emojis
      */
-    FEATURES
+    FEATURES,
 }
