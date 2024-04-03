@@ -65,4 +65,20 @@ public @interface ConfigDoc {
      */
     String since() default "";
 
+    /**
+     * (Optional) {@code true} if the field is a startup parameter. Default {@code false}
+     *
+     * @return {@code true} if the field is a startup parameter
+     * @since 2.7.0
+     */
+    boolean isStartupParam() default false;
+
+    /**
+     * (Optional) {@code true} if the field can be overridden at runtime. Default {@code false}
+     *
+     * @return {@code true} if the field can be overridden at runtime
+     * @since 2.7.0
+     */
+    boolean isRuntimeOverridable() default false;
+
 }

@@ -40,6 +40,8 @@ import hu.icellmobilsoft.coffee.module.configdoc.writer.IDocWriter;
 public class AsciiDocWriter implements IDocWriter<DocData> {
     private static final String KEY_DELIMITER = ".";
     private final ConfigDocConfig config;
+    private final String startupParamEmoji = "🚀";
+    private final String runtimeOverridableParamEmoji = "⏳";
 
     /**
      * Constructor with the config object
@@ -111,6 +113,8 @@ public class AsciiDocWriter implements IDocWriter<DocData> {
             return StringUtils.defaultString(docData.getDefaultValue(), "");
         case SINCE:
             return StringUtils.defaultString(docData.getSince(), "");
+        case FEATURES:
+            return getFeaturesString(docData);
         default:
             throw newInvalidColumnException(column);
         }
@@ -128,6 +132,8 @@ public class AsciiDocWriter implements IDocWriter<DocData> {
             return "Default value";
         case SINCE:
             return "Since";
+        case FEATURES:
+            return "Features";
         default:
             throw newInvalidColumnException(column);
         }
@@ -138,7 +144,7 @@ public class AsciiDocWriter implements IDocWriter<DocData> {
         case KEY:
         case SOURCE:
         case DEFAULT_VALUE:
-        case SINCE:
+        case SINCE, FEATURES:
             return 1;
         case DESCRIPTION:
             return 3;
@@ -149,6 +155,13 @@ public class AsciiDocWriter implements IDocWriter<DocData> {
 
     private IllegalStateException newInvalidColumnException(ConfigDocColumn column) {
         return new IllegalStateException("Invalid column: " + column);
+    }
+
+    private String getFeaturesString(DocData docData) {
+        StringBuilder features = new StringBuilder();
+        if (docData.isStartupParam()) features.append(startupParamEmoji);
+        if (docData.isRuntimeOverridable()) features.append(runtimeOverridableParamEmoji);
+        return features.toString();
     }
 
 }

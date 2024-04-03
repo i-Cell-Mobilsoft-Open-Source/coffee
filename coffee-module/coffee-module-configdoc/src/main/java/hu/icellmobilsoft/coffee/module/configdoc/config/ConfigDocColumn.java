@@ -46,4 +46,8 @@ public enum ConfigDocColumn {
      * the version since the configuration key available
      */
     SINCE,
+    /**
+     * Features represented as emojis
+     */
+    FEATURES
 }

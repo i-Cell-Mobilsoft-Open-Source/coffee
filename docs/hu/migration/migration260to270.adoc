@@ -85,3 +85,14 @@ az új `hu.icellmobilsoft.coffee.se.api.exception.BaseException`-el dolgoznak.
 
 * A `jakarta.ws.rs.ext.ExceptionMapper` és `hu.icellmobilsoft.coffee.rest.exception.IExceptionMessageTranslator` 
 implementációkban álljunk át az új `hu.icellmobilsoft.coffee.se.api.exception.BaseException`-re.
+
+=== coffee-module
+
+* A `@ConfigDoc` annotáció kibővült két új paraméterrel(opcionálisak), `isStartupParam` illetve `isRuntimeOverridable`.
+A generált táblázatban egy új oszlop, `Features` alá jönnek az értékeik egy-egy emotikonnal reprezentálva ha true-ra vannak állítva(default false).
+** `isStartupParam` true esetén az emotikon: 🚀
+** `isRuntimeOverridable` true esetén az emotikon: ⏳
+
+=== Átállás
+
+* A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis, viszont mostmár megadható ez a két paraméter a `@ConfigDoc` annotációban.
