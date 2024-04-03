@@ -57,6 +57,14 @@ public interface ConfigDocExample {
      */
     @ConfigDoc(defaultValue = "5000") // <5>
     String baz = PREFIX + "baz";
+
+    /**
+     * Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsam, similique?
+     *
+     * @since 3.14159
+     */
+    @ConfigDoc(defaultValue = "999", isStartupParam = true, isRuntimeOverridable = true) // <6>
+    String features = PREFIX + "features";
 }
 ----
 <1> Generation is activated on a class with the annotation `@ConfigDoc`
@@ -64,6 +72,11 @@ public interface ConfigDocExample {
 <3> By default, the javadoc description is included in the generated file, which can be overwritten with the `description` field of the annotation
 <4> The `since` column of the generated table can be retrieved from the `@since` javadoc tag
 <5> The default value for the configuration can be specified
+<6> The `isStartupParam` marks if the parameter is for startup.
+The `isRuntimeOverridable` marks if the parameter can be overridden at runtime.
+Both of the parameters are going to be shown under the `Features`column represented as emojis:
+** For `isStartupParam` true the emoji is: 🚀
+** For `isRuntimeOverridable` true the emoji is: ⏳
 
 .The result of the above example code
 image::coffee-module-configdoc-example1.png[]
