@@ -72,7 +72,10 @@ public enum CoffeeFaultType {
     ENTITY_DELETE_FAILED,
     /**
      * DTO conversion fail
+     * 
+     * @deprecated use {@link hu.icellmobilsoft.coffee.se.api.exception.enums.CoffeeFaultType#DTO_CONVERSION_FAILED}
      */
+    @Deprecated
     DTO_CONVERSION_FAILED,
     /**
      * Service call failed!

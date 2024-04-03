@@ -2,7 +2,9 @@
 
 coff:ee v2.6.0 -> v2.7.0 migration description, news, changes
 
-== coffee-se-api
+== Global
+
+=== coffee-se-api
 
 A new module that defines a basic Coffee API such as enums, DTOs, exceptions, which can only have Java SE dependencies.
 
@@ -10,8 +12,10 @@ Contents:
 
 * `hu.icellmobilsoft.coffee.se.api.exception.BaseException` (based on `hu.icellmobilsoft.coffee.dto.exception.BaseException`)
 * `hu.icellmobilsoft.coffee.se.api.exception.enums.Severity` (based on `hu.icellmobilsoft.coffee.dto.exception.enums.Severity`)
+* `hu.icellmobilsoft.coffee.se.api.exception.BusinessException` (based on `hu.icellmobilsoft.coffee.dto.exception.BusinessException`)
+* `hu.icellmobilsoft.coffee.se.api.exception.DtoConversionException` (based on `hu.icellmobilsoft.coffee.dto.exception.DtoConversionException`)
 
-== coffee-se-function
+=== coffee-se-function
 
 A new module which contains functional interfaces used in Coffee, which can only have Java SE and such Coffee modules that
 can also only have Java SE dependencies.
@@ -29,34 +33,35 @@ Contents: (based on `hu.icellmobilsoft.coffee.tool.common.FunctionalInterfaces`,
 * `hu.icellmobilsoft.coffee.se.function.BaseExceptionRunner`
 * `hu.icellmobilsoft.coffee.se.function.BaseExceptionSupplier`
 
-== coffee-tool
+=== coffee-tool
 
 * `hu.icellmobilsoft.coffee.tool.common.FunctionalInterfaces` has become deprecated. The wrapped functional interfaces
 extends the new interfaces declared in `coffee-se-function` module.
 
-=== Migration
+==== Migration
 
 Changes are backwards compatible doesn't need any migration. However, if a new functional interface
 implemented, then the new `hu.icellmobilsoft.coffee.se.api.exception.BaseException` must be handled in the given locations
 e.g. exception mappers, type checks like `e instanceof BaseException`, try-catch blocks.
 
-== coffee-dto-base
-
-💥 ***BREAKING CHANGE*** 💥
+=== coffee-dto-base
 
 * `hu.icellmobilsoft.coffee.dto.exception.enums.Severity` has become deprecated.
 * `hu.icellmobilsoft.coffee.dto.exception.BaseException` has become deprecated.
+* `hu.icellmobilsoft.coffee.dto.exception.BusinessException` has become deprecated.
+* `hu.icellmobilsoft.coffee.dto.exception.DtoConversionException` has become deprecated.
 
-=== Migration
+==== Migration
 
 * The `hu.icellmobilsoft.coffee.se.api.exception.enums.Severity` enum defined in the `coffee-se-api` module should be used 
 instead of the old `hu.icellmobilsoft.coffee.dto.exception.enums.Severity`.
-* The `hu.icellmobilsoft.coffee.se.api.exception.BaseException` should be used instead of the old 
-`hu.icellmobilsoft.coffee.dto.exception.BaseException`.
+* Deprecated Exceptions are replaced with `hu.icellmobilsoft.coffee.se.api.exception.*`
+package (`hu.icellmobilsoft.coffee.dto.exception.BaseException` -> 
+`hu.icellmobilsoft.coffee.se.api.exception.BaseException`).
 ** The original `getSeverity()` function returns with the new `hu.icellmobilsoft.coffee.se.api.exception.enums.Severity` type.
 Use the `getOldSeverity()` function to get the original type.
 
-== coffee-cdi
+=== coffee-cdi
 
 💥 ***BREAKING CHANGE*** 💥
 
@@ -67,19 +72,42 @@ Use the `getOldSeverity()` function to get the original type.
 `hu.icellmobilsoft.coffee.se.function.BaseExceptionSupplier` or `hu.icellmobilsoft.coffee.se.function.BaseExceptionRunner`, 
 which can throw `hu.icellmobilsoft.coffee.se.api.exception.BaseException`.
 
-=== Migration
+==== Migration
 
 * The original `ITraceHandler.runWithTrace()` calls must handle the new `hu.icellmobilsoft.coffee.se.api.exception.BaseException`.
 * If we trace a function that can only throw RTE, then we must use the `runWithTraceNoException()` function.
 
 === coffee-rest
 
-💥 ***BREAKING CHANGE*** 💥
-
 * Tha classes found in the `hu.icellmobilsoft.coffee.rest.exception` package use the new `hu.icellmobilsoft.coffee.se.api.exception.BaseException`.
 Such as `DefaultBaseExceptionMapper`, `DefaultExceptionMessageTranslator`, `DefaultGeneralExceptionMapper` and `IExceptionMessageTranslator`.
 
-=== Migration
+==== Migration
 
 * `jakarta.ws.rs.ext.ExceptionMapper` and `hu.icellmobilsoft.coffee.rest.exception.IExceptionMessageTranslator` 
 implementations must use the new `hu.icellmobilsoft.coffee.se.api.exception.BaseException`.
+
+=== coffee-grpc
+
+* New `hu.icellmobilsoft.coffee.grpc.base.converter.ProtoConverter` interface,
+which support anyDto <--> protoDto conversion
+* New util class for support proto date conversion
+(`hu.icellmobilsoft.coffee.grpc.base.util.ProtoDateUtil`)
+
+==== Migration
+
+Changes are backwards compatible doesn't need any migration.
+
+=== coffee-module-redis
+
+* Jedis driver version bump 4.2.3 -> 5.1.2
+
+[IMPORTANT]
+====
+The new version supports redis from version 6.0! 
+
+====
+
+==== Migration
+
+Changes are backwards compatible doesn't need any migration.

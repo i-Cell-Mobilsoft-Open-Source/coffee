@@ -5,7 +5,7 @@ Modul célja Redis online key-value kezelése.
 
 A "redis.clients:jedis" java driver alapon működő modul nemcsak a Redisből való lekérdezéseket és mentéseket szolgálja ki, de tud nyújtani egy Redisben mentett cache kezelést is, ami a CDI interceptor alapjain működik.
 
-NOTE: a jelenlegi jedis 4.2.3 verzióval Redis kompatibilitás 2.8.x-ig visszamenőleg van
+NOTE: a jelenlegi jedis 5.1.2 verzióval Redis kompatibilitás 6.0.x-ig visszamenőleg van
 
 == RedisConnection
 
