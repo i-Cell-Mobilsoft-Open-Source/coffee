@@ -33,6 +33,7 @@ public class DocData {
     private final String description;
     private final String defaultValue;
     private final String since;
+    private final String title;
 
     /**
      * Creates a {@code DocData} instance with the given arguments
@@ -47,13 +48,16 @@ public class DocData {
      *            the default value of the configuration key
      * @param since
      *            the version since the configuration key available
+     * @param title
+     *            the title for overwriting the default
      */
-    public DocData(String key, String source, String description, String defaultValue, String since) {
+    public DocData(String key, String source, String description, String defaultValue, String since, String title) {
         this.key = key;
         this.source = source;
         this.description = description;
         this.defaultValue = defaultValue;
         this.since = since;
+        this.title = title;
     }
 
     /**
@@ -101,4 +105,15 @@ public class DocData {
     public String getSince() {
         return since;
     }
+
+    /**
+     * Returns the title for the table
+     *
+     * @return the title for the table
+     * @since 2.7.0
+     */
+    public String getTitle() {
+        return title;
+    }
+
 }

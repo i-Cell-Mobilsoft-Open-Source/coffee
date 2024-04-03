@@ -56,7 +56,8 @@ public class AsciiDocWriter implements IDocWriter<DocData> {
 
         String lastPrefix = null;
         for (DocData docData : dataList) {
-            String prefix = StringUtils.substringBefore(docData.getKey(), KEY_DELIMITER);
+            String prefix = StringUtils.isNotBlank(docData.getTitle()) ? docData.getTitle()
+                    : StringUtils.substringBefore(docData.getKey(), KEY_DELIMITER);
             if (!Objects.equals(lastPrefix, prefix)) {
                 if (lastPrefix != null) {
                     writer.write("|===\n\n");

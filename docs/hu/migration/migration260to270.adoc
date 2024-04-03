@@ -115,4 +115,13 @@ Az újabb kliens a redist 6.0 verziótól támogatja!
 
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
 
+=== coffee-module
+
+* A `@ConfigDoc` annotáció kibővült egy új paraméterrel(opcionális), `title`.
+A generált táblázatok alapértelmezett címét lehet felülírni ennek a megadásával.
+
+==== Átállás
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
 =======

@@ -86,16 +86,17 @@ public class ConfigDocVisitor extends ElementKindVisitor9<Void, List<DocData>> {
         Optional<String> descriptionOpt = configDocAnnotation.map(ConfigDoc::description).filter(StringUtils::isNotBlank);
         String defaultValue = configDocAnnotation.map(ConfigDoc::defaultValue).filter(StringUtils::isNotBlank).orElse(null);
         String since = configDocAnnotation.map(ConfigDoc::since).filter(StringUtils::isNotBlank).orElse(null);
+        String title = configDocAnnotation.map(ConfigDoc::title).filter(StringUtils::isNotBlank).orElse(null);
 
         if (descriptionOpt.isPresent()) {
-            dataList.add(new DocData(key, source, descriptionOpt.get(), defaultValue, since));
+            dataList.add(new DocData(key, source, descriptionOpt.get(), defaultValue, since, title));
             return;
         }
 
-        dataList.add(createDataFromJavaDoc(element, key, source, defaultValue, since));
+        dataList.add(createDataFromJavaDoc(element, key, source, defaultValue, since, title));
     }
 
-    private DocData createDataFromJavaDoc(VariableElement element, String key, String source, String defaultValue, String since) {
+    private DocData createDataFromJavaDoc(VariableElement element, String key, String source, String defaultValue, String since, String title) {
         String description = getJavaDoc(element);
         if (null == description) {
             String msg = MessageFormat.format("No java API doc attached to field [{0}] in this file: [{1}]", element, source);
@@ -109,7 +110,7 @@ public class ConfigDocVisitor extends ElementKindVisitor9<Void, List<DocData>> {
             }
             description = matcher.replaceAll("");
         }
-        return new DocData(key, source, description.trim(), defaultValue, since);
+        return new DocData(key, source, description.trim(), defaultValue, since, title);
     }
 
     private String getJavaDoc(VariableElement element) {

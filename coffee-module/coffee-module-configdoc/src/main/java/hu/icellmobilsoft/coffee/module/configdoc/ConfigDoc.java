@@ -65,4 +65,12 @@ public @interface ConfigDoc {
      */
     String since() default "";
 
+    /**
+     * (Optional) the default title of the table can be overridden
+     * 
+     * @return the title
+     * @since 2.7.0
+     */
+    String title() default "";
+
 }
