@@ -42,6 +42,8 @@ public class AsciiDocWriter implements IDocWriter<DocData> {
     private final ConfigDocConfig config;
     private final String startupParamEmoji = "🚀";
     private final String runtimeOverridableParamEmoji = "⏳";
+    private final String emojiInfo = "== The meainings of the emojis used in the table:\n" + startupParamEmoji + " - meaning that it is a startup parameter.\n"
+            + runtimeOverridableParamEmoji + "⏳ - meaning that this parameter can be overridden during runtime\n\n";
 
     /**
      * Constructor with the config object
@@ -55,7 +57,7 @@ public class AsciiDocWriter implements IDocWriter<DocData> {
 
     @Override
     public void write(List<DocData> dataList, Writer writer) throws IOException {
-
+        writer.write(emojiInfo);
         String lastPrefix = null;
         for (DocData docData : dataList) {
             String prefix = StringUtils.substringBefore(docData.getKey(), KEY_DELIMITER);
@@ -161,8 +163,10 @@ public class AsciiDocWriter implements IDocWriter<DocData> {
 
     private String getFeaturesString(DocData docData) {
         StringBuilder features = new StringBuilder();
-        if (docData.isStartupParam()) features.append(startupParamEmoji);
-        if (docData.isRuntimeOverridable()) features.append(runtimeOverridableParamEmoji);
+        if (docData.isStartupParam())
+            features.append(startupParamEmoji);
+        if (docData.isRuntimeOverridable())
+            features.append(runtimeOverridableParamEmoji);
         return features.toString();
     }
 
