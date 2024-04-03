@@ -144,10 +144,12 @@ public class AsciiDocWriter implements IDocWriter<DocData> {
         case KEY:
         case SOURCE:
         case DEFAULT_VALUE:
-        case SINCE, FEATURES:
+        case SINCE:
             return 1;
         case DESCRIPTION:
             return 3;
+        case FEATURES:
+            return 1;
         default:
             throw newInvalidColumnException(column);
         }
