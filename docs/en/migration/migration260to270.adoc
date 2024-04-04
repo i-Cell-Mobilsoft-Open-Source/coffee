@@ -114,9 +114,13 @@ Changes are backwards compatible doesn't need any migration.
 
 === coffee-module
 
+* The `@ConfigDoc` annotation got two new parameters(optionals), `isStartupParam` and `isRuntimeOverridable`.
+In the generated table there is a new column named `Features`. In this column we can see each of the new parameters represented as emojis in the case of `true` value(default is false).
+** For `isStartupParam` true the emoji is: 🚀
+** For `isRuntimeOverridable` true the emoji is: ⏳
 * The `@ConfigDoc` annotation got a new parameter(optional), `title`.
 It gives the possibility of overwriting the generated table names if we don't want to use the default.
 
 ==== Migration
 
-Changes are backwards compatible doesn't need any migration.
+* Changes are backwards compatible doesn't need any migration, although it is now possible to use these three new parameters in the `@ConfigDoc` annotation.

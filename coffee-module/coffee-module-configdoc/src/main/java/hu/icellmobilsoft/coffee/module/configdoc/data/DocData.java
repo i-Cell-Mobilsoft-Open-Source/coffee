@@ -33,6 +33,8 @@ public class DocData {
     private final String description;
     private final String defaultValue;
     private final String since;
+    private final boolean isStartupParam;
+    private final boolean isRuntimeOverridable;
     private final String title;
 
     /**
@@ -48,15 +50,22 @@ public class DocData {
      *            the default value of the configuration key
      * @param since
      *            the version since the configuration key available
+     * @param isStartupParam
+     *            the parameter is for startup or not
+     * @param isRuntimeOverridable
+     *            the parameter is overridable at runtime or not
      * @param title
      *            the title for overwriting the default
      */
-    public DocData(String key, String source, String description, String defaultValue, String since, String title) {
+    public DocData(String key, String source, String description, String defaultValue, String since, boolean isStartupParam,
+            boolean isRuntimeOverridable, String title) {
         this.key = key;
         this.source = source;
         this.description = description;
         this.defaultValue = defaultValue;
         this.since = since;
+        this.isStartupParam = isStartupParam;
+        this.isRuntimeOverridable = isRuntimeOverridable;
         this.title = title;
     }
 
@@ -104,6 +113,26 @@ public class DocData {
      */
     public String getSince() {
         return since;
+    }
+
+    /**
+     * Returns the value of isStartupParam
+     *
+     * @return boolean value of isStartupParam
+     * @since 2.7.0
+     */
+    public boolean isStartupParam() {
+        return isStartupParam;
+    }
+
+    /**
+     * Returns the value of isRuntimeOverridable
+     *
+     * @return boolean value of isRuntimeOverridable
+     * @since 2.7.0
+     */
+    public boolean isRuntimeOverridable() {
+        return isRuntimeOverridable;
     }
 
     /**

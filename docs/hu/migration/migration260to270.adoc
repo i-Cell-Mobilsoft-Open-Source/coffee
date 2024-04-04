@@ -57,7 +57,7 @@ pl exception mapperek, típus vizsgálatok pl `e instanceof BaseException`, try-
 * `hu.icellmobilsoft.coffee.dto.exception.enums.Severity` helyett a `coffee-se-api` modulban található 
 `hu.icellmobilsoft.coffee.se.api.exception.enums.Severity` használandó.
 * deprecated Exceptionok helyett a `hu.icellmobilsoft.coffee.se.api.exception.*`
-packagebe kerültek a pótlások (pl. `hu.icellmobilsoft.coffee.dto.exception.BaseException` helyett az ősosztálya a 
+packagebe kerültek a pótlások (pl. `hu.icellmobilsoft.coffee.dto.exception.BaseException` helyett az ősosztálya a
 `hu.icellmobilsoft.coffee.se.api.exception.BaseException` használandó).
 ** Az eredeti `getSeverity()` fgv már az új típussal a `hu.icellmobilsoft.coffee.se.api.exception.enums.Severity`-vel tér 
 vissza. Az eretei típus eléréséhez használjuk a `getOldSeverity()` fgv-t.
@@ -117,11 +117,15 @@ A változtatások nem eredményeznek átállási munkálatokat, visszafelé komp
 
 === coffee-module
 
+* A `@ConfigDoc` annotáció kibővült két új paraméterrel(opcionálisak), `isStartupParam` illetve `isRuntimeOverridable`.
+A generált táblázatban egy új oszlop, `Features` alá jönnek az értékeik egy-egy emotikonnal reprezentálva ha true-ra vannak állítva(default false).
+** `isStartupParam` true esetén az emotikon: 🚀
+** `isRuntimeOverridable` true esetén az emotikon: ⏳
 * A `@ConfigDoc` annotáció kibővült egy új paraméterrel(opcionális), `title`.
 A generált táblázatok alapértelmezett címét lehet felülírni ennek a megadásával.
 
 ==== Átállás
 
-A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+* A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis, viszont mostmár megadható ez a három paraméter a `@ConfigDoc` annotációban.
 
 =======

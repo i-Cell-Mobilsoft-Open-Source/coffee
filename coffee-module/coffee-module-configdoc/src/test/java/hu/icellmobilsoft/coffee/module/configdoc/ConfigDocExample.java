@@ -64,6 +64,14 @@ public interface ConfigDocExample {
      *
      * @since 3.14159
      */
+    @ConfigDoc(defaultValue = "999", isStartupParam = true, isRuntimeOverridable = true)
+    String features = PREFIX + "features";
+
+    /**
+     * Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsam, similique?
+     *
+     * @since 3.14159
+     */
     @ConfigDoc(defaultValue = "1234", title = "Title Test")
     String titleTest = PREFIX + "title";
 }
