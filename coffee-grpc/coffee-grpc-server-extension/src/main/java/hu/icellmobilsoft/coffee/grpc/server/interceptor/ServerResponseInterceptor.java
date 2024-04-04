@@ -50,8 +50,7 @@ public class ServerResponseInterceptor implements ServerInterceptor {
     @Override
     public <ReqT, RespT> Listener<ReqT> interceptCall(ServerCall<ReqT, RespT> serverCall, Metadata metadata, ServerCallHandler<ReqT, RespT> next) {
 
-        // intercept response, log sent message, handle MDC
-        return next.startCall(new SimpleForwardingServerCall<>(serverCall) {
+        ServerCall<ReqT, RespT> forwardingServerCall = new SimpleForwardingServerCall<>(serverCall) {
             @Override
             public void sendMessage(RespT message) {
                 LOGGER.info("Sending response message to client: [{0}]", message);
@@ -60,11 +59,19 @@ public class ServerResponseInterceptor implements ServerInterceptor {
 
             @Override
             public void close(Status status, Metadata trailers) {
-                LOGGER.info("Status on close: [{0}]", status);
+                if (status != Status.OK) {
+                    LOGGER.error("Error in processing GRPC call, status: [{0}], ", status);
+                    // ha itt dobunk hibat, akkor valami wrappeli INTERNAL hibara, ez valami onvedelem
+                    // throw status.asRuntimeException();
+                } else {
+                    LOGGER.error("Success processing GRPC call");
+                }
                 super.close(status, trailers);
             }
 
-        }, metadata);
-    }
+        };
 
+        // intercept response, log sent message, handle MDC
+        return next.startCall(forwardingServerCall, metadata);
+    }
 }

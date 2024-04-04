@@ -83,7 +83,6 @@ public class ServerRequestInterceptor implements ServerInterceptor {
         // intercept request, log sent message, handle MDC
         return new SimpleForwardingServerCallListener<>(ctxlistener) {
 
-            // TODO nem akad ez ossze ha tobb hivas van?
             StringBuffer messageToPrint = new StringBuffer();
             int count = 0;
 
@@ -105,7 +104,10 @@ public class ServerRequestInterceptor implements ServerInterceptor {
             @Override
             public void onMessage(ReqT message) {
                 String part = "[#" + ++count + "#]\n";
-                if (LOGGER.isTraceEnabled()) {
+                // reduce logging on multiple onNext messaging (e.g file upload)
+                // logging first 4 part and every 1K multiplier
+                boolean logging = count < 5 || count % 1000 == 0;
+                if (LOGGER.isTraceEnabled() && logging) {
                     MDC.put(LogConstants.LOG_SESSION_ID, extSessionId);
                     LOGGER.trace("onMessage part [{0}]", count);
                 }
