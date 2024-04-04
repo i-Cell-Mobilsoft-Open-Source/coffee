@@ -57,6 +57,14 @@ public interface ConfigDocExample {
      */
     @ConfigDoc(defaultValue = "5000") // <5>
     String baz = PREFIX + "baz";
+
+    /**
+     * Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsam, similique?
+     *
+     * @since 3.14159
+     */
+    @ConfigDoc(defaultValue = "999", isStartupParam = true, isRuntimeOverridable = true) // <6>
+    String features = PREFIX + "features";
 }
 ----
 <1> A generálást egy osztályon a `@ConfigDoc` annotációval aktiváljuk
@@ -64,6 +72,11 @@ public interface ConfigDocExample {
 <3> Alapértelmezetten a javadoc leírás kerül a generált fájlba, amit felül lehet írni az annotáció `description` mezőjével
 <4> A generált táblázat `since` oszlopa kinyerhető a `@since` javadoc tag-ből
 <5> A konfighoz tartozó default érték is megadható
+<6> Az `isStartupParam`-al jelölhető, hogy indítás idejű a paraméter.
+Az `isRuntimeOverridable`-el jelölhető, hogy futás időben manipulálható a paraméter.
+A két paraméter a `Features` oszlop alatt fog megjelenni emotikonokkal reprezentálva:
+** `isStartupParam` true esetén az emotikon: 🚀
+** `isRuntimeOverridable` true esetén az emotikon: ⏳
 
 .A fenti példa kód eredménye
 image::coffee-module-configdoc-example1.png[]

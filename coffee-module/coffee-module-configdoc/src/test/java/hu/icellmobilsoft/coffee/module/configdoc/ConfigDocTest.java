@@ -60,5 +60,9 @@ class ConfigDocTest {
 
         // since column
         assertTrue(generatedFile.contains("3.14159"));
+
+        // features column
+        assertTrue(generatedFile.contains("⏳"));
+        assertTrue(generatedFile.contains("🚀"));
     }
 }
