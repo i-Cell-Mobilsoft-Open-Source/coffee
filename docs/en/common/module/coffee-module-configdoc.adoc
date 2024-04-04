@@ -65,6 +65,14 @@ public interface ConfigDocExample {
      */
     @ConfigDoc(defaultValue = "999", isStartupParam = true, isRuntimeOverridable = true) // <6>
     String features = PREFIX + "features";
+
+    /**
+     * Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsam, similique?
+     *
+     * @since 3.14159
+     */
+    @ConfigDoc(defaultValue = "1234", title = "Title Test") // <7>
+    String titleTest = PREFIX + "title";
 }
 ----
 <1> Generation is activated on a class with the annotation `@ConfigDoc`
@@ -77,6 +85,7 @@ The `isRuntimeOverridable` marks if the parameter can be overridden at runtime.
 Both of the parameters are going to be shown under the `Features`column represented as emojis:
 ** For `isStartupParam` true the emoji is: 🚀
 ** For `isRuntimeOverridable` true the emoji is: ⏳
+<7> With the `title` parameter we can overwrite the default title for the generated tables(optional).
 
 .The result of the above example code
 image::coffee-module-configdoc-example1.png[]

@@ -65,6 +65,14 @@ public interface ConfigDocExample {
      */
     @ConfigDoc(defaultValue = "999", isStartupParam = true, isRuntimeOverridable = true) // <6>
     String features = PREFIX + "features";
+
+    /**
+     * Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsam, similique?
+     *
+     * @since 3.14159
+     */
+    @ConfigDoc(defaultValue = "1234", title = "Title Test") // <7>
+    String titleTest = PREFIX + "title";
 }
 ----
 <1> A generálást egy osztályon a `@ConfigDoc` annotációval aktiváljuk
@@ -77,6 +85,7 @@ Az `isRuntimeOverridable`-el jelölhető, hogy futás időben manipulálható a 
 A két paraméter a `Features` oszlop alatt fog megjelenni emotikonokkal reprezentálva:
 ** `isStartupParam` true esetén az emotikon: 🚀
 ** `isRuntimeOverridable` true esetén az emotikon: ⏳
+<7> A `title` paraméterrel felülírhatjuk az alapértelmezett generált táblázat címét(opcionális)
 
 .A fenti példa kód eredménye
 image::coffee-module-configdoc-example1.png[]
