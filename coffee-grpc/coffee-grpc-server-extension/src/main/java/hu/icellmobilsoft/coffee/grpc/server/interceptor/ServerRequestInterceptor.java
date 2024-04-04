@@ -32,13 +32,13 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
 
 import hu.icellmobilsoft.coffee.dto.common.LogConstants;
+import hu.icellmobilsoft.coffee.grpc.server.log.GrpcLogging;
 import hu.icellmobilsoft.coffee.rest.log.annotation.LogSpecifier;
 import hu.icellmobilsoft.coffee.rest.log.annotation.LogSpecifiers;
 import hu.icellmobilsoft.coffee.rest.log.annotation.enumeration.LogSpecifierTarget;
 import hu.icellmobilsoft.coffee.rest.utils.RestLoggerUtil;
 import hu.icellmobilsoft.coffee.se.logging.DefaultLogger;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
-import hu.icellmobilsoft.coffee.se.logging.mdc.MDC;
 import hu.icellmobilsoft.coffee.tool.utils.string.RandomUtil;
 import io.grpc.Context;
 import io.grpc.Contexts;
@@ -74,7 +74,7 @@ public class ServerRequestInterceptor implements ServerInterceptor {
 
         String extSessionIdHeader = headers.get(Metadata.Key.of(LogConstants.LOG_SESSION_ID, Metadata.ASCII_STRING_MARSHALLER));
         String extSessionId = StringUtils.isNotBlank(extSessionIdHeader) ? extSessionIdHeader : RandomUtil.generateId();
-        Context context = Context.current();
+        Context context = Context.current().withValue(GrpcLogging.CONTEXT_KEY_SESSIONID, extSessionId);
 
         // TODO ez felfutasnal fix, tehat cachelni kellene
         int requestLogSize = getRequestLogSize(serverCall.getMethodDescriptor());
@@ -83,32 +83,31 @@ public class ServerRequestInterceptor implements ServerInterceptor {
         // intercept request, log sent message, handle MDC
         return new SimpleForwardingServerCallListener<>(ctxlistener) {
 
-            StringBuffer messageToPrint = new StringBuffer();
+            StringBuilder messageToPrint = new StringBuilder();
             int count = 0;
 
             @Override
             public void onCancel() {
+                GrpcLogging.handleMdc(extSessionId);
                 super.onCancel();
-                MDC.put(LogConstants.LOG_SESSION_ID, extSessionId);
                 LOGGER.info("Request message onCancel in [{0}] parts: [\n{1}]", count, messageToPrint);
             }
 
             @Override
             public void onComplete() {
+                GrpcLogging.handleMdc(extSessionId);
                 super.onComplete();
-                // TODO ennel megvaltozik a SID!
-                MDC.put(LogConstants.LOG_SESSION_ID, extSessionId);
                 LOGGER.info("Request message onComplete in [{0}] parts: [\n{1}]", count, messageToPrint);
             }
 
             @Override
             public void onMessage(ReqT message) {
+                GrpcLogging.handleMdc(extSessionId);
                 String part = "[#" + ++count + "#]\n";
                 // reduce logging on multiple onNext messaging (e.g file upload)
                 // logging first 4 part and every 1K multiplier
                 boolean logging = count < 5 || count % 1000 == 0;
                 if (LOGGER.isTraceEnabled() && logging) {
-                    MDC.put(LogConstants.LOG_SESSION_ID, extSessionId);
                     LOGGER.trace("onMessage part [{0}]", count);
                 }
                 if (requestLogSize > LogSpecifier.UNLIMIT) {
@@ -127,6 +126,8 @@ public class ServerRequestInterceptor implements ServerInterceptor {
     }
 
     /**
+     * Getting defined max logging size value for request
+     * 
      * @param <ReqT>
      *            GRPC request message type
      * @param <RespT>

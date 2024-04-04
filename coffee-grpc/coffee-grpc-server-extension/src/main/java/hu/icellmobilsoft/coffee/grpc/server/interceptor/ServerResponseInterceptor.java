@@ -19,6 +19,7 @@
  */
 package hu.icellmobilsoft.coffee.grpc.server.interceptor;
 
+import hu.icellmobilsoft.coffee.grpc.server.log.GrpcLogging;
 import hu.icellmobilsoft.coffee.se.logging.DefaultLogger;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
 import io.grpc.ForwardingServerCall.SimpleForwardingServerCall;
@@ -33,6 +34,7 @@ import io.grpc.Status;
  * gRPC response interceptor example
  * 
  * @author czenczl
+ * @author Imre Scheffer
  * @since 2.1.0
  *
  */
@@ -53,12 +55,14 @@ public class ServerResponseInterceptor implements ServerInterceptor {
         ServerCall<ReqT, RespT> forwardingServerCall = new SimpleForwardingServerCall<>(serverCall) {
             @Override
             public void sendMessage(RespT message) {
+                GrpcLogging.handleMdc();
                 LOGGER.info("Sending response message to client: [{0}]", message);
                 super.sendMessage(message);
             }
 
             @Override
             public void close(Status status, Metadata trailers) {
+                GrpcLogging.handleMdc();
                 if (status != Status.OK) {
                     LOGGER.error("Error in processing GRPC call, status: [{0}], ", status);
                     // ha itt dobunk hibat, akkor valami wrappeli INTERNAL hibara, ez valami onvedelem
