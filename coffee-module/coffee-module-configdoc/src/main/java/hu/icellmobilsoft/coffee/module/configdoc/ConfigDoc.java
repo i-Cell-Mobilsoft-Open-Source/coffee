@@ -81,4 +81,12 @@ public @interface ConfigDoc {
      */
     boolean isRuntimeOverridable() default false;
 
+    /**
+     * (Optional) the default title of the table can be overridden
+     *
+     * @return the title
+     * @since 2.7.0
+     */
+    String title() default "";
+
 }

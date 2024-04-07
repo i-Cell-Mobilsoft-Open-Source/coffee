@@ -35,6 +35,7 @@ public class DocData {
     private final String since;
     private final boolean isStartupParam;
     private final boolean isRuntimeOverridable;
+    private final String title;
 
     /**
      * Creates a {@code DocData} instance with the given arguments
@@ -53,9 +54,11 @@ public class DocData {
      *            the parameter is for startup or not
      * @param isRuntimeOverridable
      *            the parameter is overridable at runtime or not
+     * @param title
+     *            the title for overwriting the default
      */
     public DocData(String key, String source, String description, String defaultValue, String since, boolean isStartupParam,
-            boolean isRuntimeOverridable) {
+            boolean isRuntimeOverridable, String title) {
         this.key = key;
         this.source = source;
         this.description = description;
@@ -63,6 +66,7 @@ public class DocData {
         this.since = since;
         this.isStartupParam = isStartupParam;
         this.isRuntimeOverridable = isRuntimeOverridable;
+        this.title = title;
     }
 
     /**
@@ -130,4 +134,15 @@ public class DocData {
     public boolean isRuntimeOverridable() {
         return isRuntimeOverridable;
     }
+
+    /**
+     * Returns the title for the table
+     *
+     * @return the title for the table
+     * @since 2.7.0
+     */
+    public String getTitle() {
+        return title;
+    }
+
 }

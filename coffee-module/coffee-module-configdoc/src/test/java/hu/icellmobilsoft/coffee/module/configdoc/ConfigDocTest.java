@@ -64,5 +64,8 @@ class ConfigDocTest {
         // features column
         assertTrue(generatedFile.contains("⏳"));
         assertTrue(generatedFile.contains("🚀"));
+
+        // Title overwritten
+        assertTrue(generatedFile.contains("Title Test"));
     }
 }

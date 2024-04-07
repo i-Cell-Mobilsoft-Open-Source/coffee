@@ -38,12 +38,11 @@ import hu.icellmobilsoft.coffee.module.configdoc.writer.IDocWriter;
  * @since 1.9.0
  */
 public class AsciiDocWriter implements IDocWriter<DocData> {
-    private static final String KEY_DELIMITER = ".";
     private final ConfigDocConfig config;
     private final String startupParamEmoji = "🚀";
     private final String runtimeOverridableParamEmoji = "⏳";
-    private final String emojiInfo = "== The meainings of the emojis used in the table:\n" + startupParamEmoji + " - meaning that it is a startup parameter.\n"
-            + runtimeOverridableParamEmoji + "⏳ - meaning that this parameter can be overridden during runtime\n\n";
+    private final String emojiInfo = "== The meainings of the emojis used in the table:\n" + startupParamEmoji + " - meaning that it is a startup parameter.\n\n"
+            + runtimeOverridableParamEmoji + " - meaning that this parameter can be overridden during runtime\n\n";
 
     /**
      * Constructor with the config object
@@ -60,7 +59,7 @@ public class AsciiDocWriter implements IDocWriter<DocData> {
         writer.write(emojiInfo);
         String lastPrefix = null;
         for (DocData docData : dataList) {
-            String prefix = StringUtils.substringBefore(docData.getKey(), KEY_DELIMITER);
+            String prefix = docData.getTitle();
             if (!Objects.equals(lastPrefix, prefix)) {
                 if (lastPrefix != null) {
                     writer.write("|===\n\n");
