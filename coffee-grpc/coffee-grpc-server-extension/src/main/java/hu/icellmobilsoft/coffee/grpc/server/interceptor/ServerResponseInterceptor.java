@@ -66,7 +66,7 @@ public class ServerResponseInterceptor implements ServerInterceptor {
     @Override
     public <ReqT, RespT> Listener<ReqT> interceptCall(ServerCall<ReqT, RespT> serverCall, Metadata metadata, ServerCallHandler<ReqT, RespT> next) {
 
-        // ez felfutasnal fix, lehet cachelni kellene
+        // it's fix on startup, maybe it should be cached
         int responseLogSize = getResponseLogSize(serverCall.getMethodDescriptor());
 
         ServerCall<ReqT, RespT> forwardingServerCall = new SimpleForwardingServerCall<>(serverCall) {

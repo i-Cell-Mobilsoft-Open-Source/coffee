@@ -76,7 +76,7 @@ public class ServerRequestInterceptor implements ServerInterceptor {
         String extSessionId = StringUtils.isNotBlank(extSessionIdHeader) ? extSessionIdHeader : RandomUtil.generateId();
         Context context = Context.current().withValue(GrpcLogging.CONTEXT_KEY_SESSIONID, extSessionId);
 
-        // ez felfutasnal fix, lehet cachelni kellene
+        // it's fix on startup, maybe it should be cached
         int requestLogSize = getRequestLogSize(serverCall.getMethodDescriptor());
 
         Listener<ReqT> ctxlistener = Contexts.interceptCall(context, serverCall, headers, next);

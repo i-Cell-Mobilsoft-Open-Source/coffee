@@ -96,6 +96,9 @@ implementációkban álljunk át az új `hu.icellmobilsoft.coffee.se.api.excepti
 ami anyDto <--> protoDto konverziót támogatja
 * Új util osztály a proto dátum konverziók támogatására
 (`hu.icellmobilsoft.coffee.grpc.base.util.ProtoDateUtil`)
+* Feljavított `hu.icellmobilsoft.coffee.grpc.server.interceptor.ServerRequestInterceptor`
+és `hu.icellmobilsoft.coffee.grpc.server.interceptor.ServerResponseInterceptor` loggolási interceptor,
+melyeket paraméterezni lehet a `@LogSpecifiers` és `@LogSpecifier` annotációkkal
 
 ==== Átállás
 
