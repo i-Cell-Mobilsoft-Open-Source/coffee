@@ -76,7 +76,7 @@ public class ServerRequestInterceptor implements ServerInterceptor {
         String extSessionId = StringUtils.isNotBlank(extSessionIdHeader) ? extSessionIdHeader : RandomUtil.generateId();
         Context context = Context.current().withValue(GrpcLogging.CONTEXT_KEY_SESSIONID, extSessionId);
 
-        // TODO ez felfutasnal fix, tehat cachelni kellene
+        // ez felfutasnal fix, lehet cachelni kellene
         int requestLogSize = getRequestLogSize(serverCall.getMethodDescriptor());
 
         Listener<ReqT> ctxlistener = Contexts.interceptCall(context, serverCall, headers, next);
@@ -90,14 +90,18 @@ public class ServerRequestInterceptor implements ServerInterceptor {
             public void onCancel() {
                 GrpcLogging.handleMdc(extSessionId);
                 super.onCancel();
-                LOGGER.info("Request message onCancel in [{0}] parts: [\n{1}]", count, messageToPrint);
+                String serviceName = serverCall.getMethodDescriptor().getServiceName();
+                String methodName = serverCall.getMethodDescriptor().getBareMethodName();
+                LOGGER.info("Call [{0}].[{1}] request message onCancel in [{2}] parts: [\n{3}]", serviceName, methodName, count, messageToPrint);
             }
 
             @Override
             public void onComplete() {
                 GrpcLogging.handleMdc(extSessionId);
                 super.onComplete();
-                LOGGER.info("Request message onComplete in [{0}] parts: [\n{1}]", count, messageToPrint);
+                String serviceName = serverCall.getMethodDescriptor().getServiceName();
+                String methodName = serverCall.getMethodDescriptor().getBareMethodName();
+                LOGGER.info("Call [{0}].[{1}] request message onComplete in [{2}] parts: [\n{3}]", serviceName, methodName, count, messageToPrint);
             }
 
             @Override
@@ -108,7 +112,9 @@ public class ServerRequestInterceptor implements ServerInterceptor {
                 // logging first 4 part and every 1K multiplier
                 boolean logging = count < 5 || count % 1000 == 0;
                 if (LOGGER.isTraceEnabled() && logging) {
-                    LOGGER.trace("onMessage part [{0}]", count);
+                    String serviceName = serverCall.getMethodDescriptor().getServiceName();
+                    String methodName = serverCall.getMethodDescriptor().getBareMethodName();
+                    LOGGER.trace("Call [{0}].[{1}] onMessage part [{2}]", serviceName, methodName, count);
                 }
                 if (requestLogSize > LogSpecifier.UNLIMIT) {
                     if (messageToPrint.length() < requestLogSize) {
