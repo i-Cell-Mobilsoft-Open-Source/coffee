@@ -20,7 +20,7 @@ Contents:
 A new module which contains functional interfaces used in Coffee, which can only have Java SE and such Coffee modules that
 can also only have Java SE dependencies.
 
-Contents: (based on `hu.icellmobilsoft.coffee.tool.common.FunctionalInterfaces`, but declares the new 
+Contents: (based on `hu.icellmobilsoft.coffee.tool.common.FunctionalInterfaces`, but declares the new
 `hu.icellmobilsoft.coffee.se.api.exception.BaseException`)
 
 * `hu.icellmobilsoft.coffee.se.function.BaseExceptionConsumer`
@@ -53,10 +53,10 @@ e.g. exception mappers, type checks like `e instanceof BaseException`, try-catch
 
 ==== Migration
 
-* The `hu.icellmobilsoft.coffee.se.api.exception.enums.Severity` enum defined in the `coffee-se-api` module should be used 
+* The `hu.icellmobilsoft.coffee.se.api.exception.enums.Severity` enum defined in the `coffee-se-api` module should be used
 instead of the old `hu.icellmobilsoft.coffee.dto.exception.enums.Severity`.
 * Deprecated Exceptions are replaced with `hu.icellmobilsoft.coffee.se.api.exception.*`
-package (`hu.icellmobilsoft.coffee.dto.exception.BaseException` -> 
+package (`hu.icellmobilsoft.coffee.dto.exception.BaseException` ->
 `hu.icellmobilsoft.coffee.se.api.exception.BaseException`).
 ** The original `getSeverity()` function returns with the new `hu.icellmobilsoft.coffee.se.api.exception.enums.Severity` type.
 Use the `getOldSeverity()` function to get the original type.
@@ -68,8 +68,8 @@ Use the `getOldSeverity()` function to get the original type.
 * `hu.icellmobilsoft.coffee.cdi.trace.spi.ITraceHandler` changes:
 ** The `runWithTrace()` function has been renamed to `runWithTraceNoException()`, which expects
 `java.util.function.Supplier` or `java.lang.Runnable` as an argument. Functions traced in this way can only throw RTE.
-** The original `runWithTrace()` function's argument is replaced to 
-`hu.icellmobilsoft.coffee.se.function.BaseExceptionSupplier` or `hu.icellmobilsoft.coffee.se.function.BaseExceptionRunner`, 
+** The original `runWithTrace()` function's argument is replaced to
+`hu.icellmobilsoft.coffee.se.function.BaseExceptionSupplier` or `hu.icellmobilsoft.coffee.se.function.BaseExceptionRunner`,
 which can throw `hu.icellmobilsoft.coffee.se.api.exception.BaseException`.
 
 ==== Migration
@@ -84,7 +84,7 @@ Such as `DefaultBaseExceptionMapper`, `DefaultExceptionMessageTranslator`, `Defa
 
 ==== Migration
 
-* `jakarta.ws.rs.ext.ExceptionMapper` and `hu.icellmobilsoft.coffee.rest.exception.IExceptionMessageTranslator` 
+* `jakarta.ws.rs.ext.ExceptionMapper` and `hu.icellmobilsoft.coffee.rest.exception.IExceptionMessageTranslator`
 implementations must use the new `hu.icellmobilsoft.coffee.se.api.exception.BaseException`.
 
 === coffee-grpc
@@ -107,7 +107,7 @@ Changes are backwards compatible doesn't need any migration.
 
 [IMPORTANT]
 ====
-The new version supports redis from version 6.0! 
+The new version supports redis from version 6.0!
 
 ====
 
@@ -127,3 +127,12 @@ It gives the possibility of overwriting the generated table names if we don't wa
 ==== Migration
 
 * Changes are backwards compatible doesn't need any migration, although it is now possible to use these three new parameters in the `@ConfigDoc` annotation.
+
+=== coffee-model
+
+* The TimestampsProvider got a new parameter which can be set as an ENV variable for manipulating the timezone(optional).
+** `TIMEZONE_ID`
+
+==== Migration
+
+* Changes are backwards compatible doesn't need any migration.

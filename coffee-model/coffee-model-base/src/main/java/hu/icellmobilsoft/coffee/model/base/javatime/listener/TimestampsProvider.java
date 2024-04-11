@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -23,6 +23,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.time.DateTimeException;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -33,6 +34,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.Dependent;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
@@ -47,13 +49,14 @@ import hu.icellmobilsoft.coffee.model.base.javatime.annotation.ModifiedOn;
 /**
  * Set java 8 timestamps on marked properties.
  *
- *
  * @author mark.petrenyi
  * @author zsolt.vasi
  * @since 1.0.0
  */
 @Dependent
 public class TimestampsProvider extends AbstractProvider {
+
+    private ZoneId zoneId;
 
     /**
      * Default constructor, constructs a new object.
@@ -113,13 +116,13 @@ public class TimestampsProvider extends AbstractProvider {
             } else if (isDateClass(fieldClass)) {
                 object = fieldClass.getConstructor(Long.TYPE).newInstance(systime);
             } else if (isOffsetDateTimeClass(fieldClass)) {
-                object = OffsetDateTime.ofInstant(Instant.ofEpochMilli(systime), ZoneId.systemDefault());
+                object = OffsetDateTime.ofInstant(Instant.ofEpochMilli(systime), zoneId);
             } else if (isOffsetTimeClass(fieldClass)) {
-                object = OffsetTime.ofInstant(Instant.ofEpochMilli(systime), ZoneId.systemDefault());
+                object = OffsetTime.ofInstant(Instant.ofEpochMilli(systime), zoneId);
             } else if (isLocalDateTimeClass(fieldClass)) {
-                object = LocalDateTime.ofInstant(Instant.ofEpochMilli(systime), ZoneId.systemDefault());
+                object = LocalDateTime.ofInstant(Instant.ofEpochMilli(systime), zoneId);
             } else if (isLocalDateClass(fieldClass)) {
-                object = LocalDateTime.ofInstant(Instant.ofEpochMilli(systime), ZoneId.systemDefault()).toLocalDate();
+                object = LocalDateTime.ofInstant(Instant.ofEpochMilli(systime), zoneId).toLocalDate();
             } else if (isInstantClass(fieldClass)) {
                 object = Instant.ofEpochMilli(systime);
             } else {
@@ -161,4 +164,13 @@ public class TimestampsProvider extends AbstractProvider {
         return Instant.class.isAssignableFrom(field);
     }
 
+    @PostConstruct
+    private void init() {
+        String zoneIdEnv = System.getenv("TIMEZONE_ID");
+        try {
+            zoneId = ZoneId.of(zoneIdEnv);
+        } catch (DateTimeException | NullPointerException exception) {
+            zoneId = ZoneId.systemDefault();
+        }
+    }
 }
