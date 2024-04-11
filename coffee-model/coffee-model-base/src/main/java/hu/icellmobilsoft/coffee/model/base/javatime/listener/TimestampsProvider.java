@@ -34,11 +34,11 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import jakarta.annotation.PostConstruct;
-import jakarta.enterprise.context.Dependent;
+import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 
 import hu.icellmobilsoft.coffee.model.base.AbstractProvider;
@@ -53,16 +53,28 @@ import hu.icellmobilsoft.coffee.model.base.javatime.annotation.ModifiedOn;
  * @author zsolt.vasi
  * @since 1.0.0
  */
-@Dependent
+@ApplicationScoped
 public class TimestampsProvider extends AbstractProvider {
 
     private ZoneId zoneId;
+
+    private final String TIMEZONE_ID = "TIMEZONE_ID";
 
     /**
      * Default constructor, constructs a new object.
      */
     public TimestampsProvider() {
         super();
+        String zoneIdEnv = System.getenv(TIMEZONE_ID);
+        try {
+            if (StringUtils.isBlank(zoneIdEnv)) {
+                zoneId = ZoneId.systemDefault();
+            } else {
+                zoneId = ZoneId.of(zoneIdEnv);
+            }
+        } catch (DateTimeException exception) {
+            zoneId = ZoneId.systemDefault();
+        }
     }
 
     /**
@@ -162,15 +174,5 @@ public class TimestampsProvider extends AbstractProvider {
 
     private boolean isInstantClass(Class<?> field) {
         return Instant.class.isAssignableFrom(field);
-    }
-
-    @PostConstruct
-    private void init() {
-        String zoneIdEnv = System.getenv("TIMEZONE_ID");
-        try {
-            zoneId = ZoneId.of(zoneIdEnv);
-        } catch (DateTimeException | NullPointerException exception) {
-            zoneId = ZoneId.systemDefault();
-        }
     }
 }
