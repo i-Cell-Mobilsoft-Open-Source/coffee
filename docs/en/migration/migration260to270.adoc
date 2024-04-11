@@ -93,6 +93,9 @@ implementations must use the new `hu.icellmobilsoft.coffee.se.api.exception.Base
 which support anyDto <--> protoDto conversion
 * New util class for support proto date conversion
 (`hu.icellmobilsoft.coffee.grpc.base.util.ProtoDateUtil`)
+* Improved `hu.icellmobilsoft.coffee.grpc.server.interceptor.ServerRequestInterceptor`
+and `hu.icellmobilsoft.coffee.grpc.server.interceptor.ServerResponseInterceptor` logging interceptors,
+which can be parameterized with `@LogSpecifiers` and `@LogSpecifier` annotations.
 
 ==== Migration
 

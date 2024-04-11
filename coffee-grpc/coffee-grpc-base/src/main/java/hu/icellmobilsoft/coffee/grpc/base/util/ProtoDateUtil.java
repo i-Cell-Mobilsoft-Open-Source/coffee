@@ -20,6 +20,7 @@
 package hu.icellmobilsoft.coffee.grpc.base.util;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 
@@ -94,5 +95,19 @@ public class ProtoDateUtil {
             return null;
         }
         return toTimestamp(offsetDateTime.toInstant());
+    }
+
+    /**
+     * Convert {@link LocalDateTime} to Grpc protobuf {@link Timestamp}
+     * 
+     * @param localDateTime
+     *            time to convert
+     * @return Grpc protobuf {@link Timestamp} on UTC zone
+     */
+    public static Timestamp toTimestamp(LocalDateTime localDateTime) {
+        if (localDateTime == null) {
+            return null;
+        }
+        return toTimestamp(localDateTime.toInstant(ZoneOffset.UTC));
     }
 }

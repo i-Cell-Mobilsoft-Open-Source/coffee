@@ -49,7 +49,8 @@ Implemented features:
 
 * gRPC server configuration based on https://github.com/grpc/grpc-java/blob/master/netty/src/main/java/io/grpc/netty/NettyServerBuilder.java[NettyServerBuilder]
 * MDC (Mapped Diagnostic Context) handling
-* Request/Response log
+* Request/Response log, applicable with <<common_core_coffee-rest_LogSpecifier,LogSpecifier>>
+annotation on GRPC service implementation method/class
 * Exception handling
 
 === Server thread pool

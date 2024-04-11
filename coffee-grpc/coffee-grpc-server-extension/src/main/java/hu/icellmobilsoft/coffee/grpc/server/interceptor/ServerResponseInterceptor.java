@@ -19,10 +19,25 @@
  */
 package hu.icellmobilsoft.coffee.grpc.server.interceptor;
 
+import java.lang.reflect.Method;
+import java.text.MessageFormat;
+import java.util.Arrays;
+import java.util.Optional;
+import java.util.Set;
+
+import jakarta.enterprise.inject.spi.Bean;
+import jakarta.enterprise.inject.spi.CDI;
+
+import org.apache.commons.lang3.StringUtils;
+
+import hu.icellmobilsoft.coffee.grpc.server.log.GrpcLogging;
+import hu.icellmobilsoft.coffee.rest.log.annotation.LogSpecifier;
+import hu.icellmobilsoft.coffee.rest.log.annotation.enumeration.LogSpecifierTarget;
 import hu.icellmobilsoft.coffee.se.logging.DefaultLogger;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
 import io.grpc.ForwardingServerCall.SimpleForwardingServerCall;
 import io.grpc.Metadata;
+import io.grpc.MethodDescriptor;
 import io.grpc.ServerCall;
 import io.grpc.ServerCall.Listener;
 import io.grpc.ServerCallHandler;
@@ -33,6 +48,7 @@ import io.grpc.Status;
  * gRPC response interceptor example
  * 
  * @author czenczl
+ * @author Imre Scheffer
  * @since 2.1.0
  *
  */
@@ -50,21 +66,77 @@ public class ServerResponseInterceptor implements ServerInterceptor {
     @Override
     public <ReqT, RespT> Listener<ReqT> interceptCall(ServerCall<ReqT, RespT> serverCall, Metadata metadata, ServerCallHandler<ReqT, RespT> next) {
 
-        // intercept response, log sent message, handle MDC
-        return next.startCall(new SimpleForwardingServerCall<>(serverCall) {
+        // it's fix on startup, maybe it should be cached
+        int responseLogSize = getResponseLogSize(serverCall.getMethodDescriptor());
+
+        ServerCall<ReqT, RespT> forwardingServerCall = new SimpleForwardingServerCall<>(serverCall) {
+
+            StringBuilder messageToPrint = new StringBuilder();
+            int count = 0;
+
             @Override
             public void sendMessage(RespT message) {
-                LOGGER.info("Sending response message to client: [{0}]", message);
+                GrpcLogging.handleMdc();
+                String part = "[#" + ++count + "#]\n";
+                if (responseLogSize > LogSpecifier.UNLIMIT) {
+                    if (messageToPrint.length() < responseLogSize) {
+                        messageToPrint.append(part).append(StringUtils.truncate(message.toString(), responseLogSize - messageToPrint.length()));
+                        if (messageToPrint.length() >= responseLogSize) {
+                            messageToPrint.append("...<truncated>");
+                        }
+                    }
+                } else {
+                    messageToPrint.append(part).append(message.toString());
+                }
                 super.sendMessage(message);
             }
 
             @Override
             public void close(Status status, Metadata trailers) {
-                LOGGER.info("Status on close: [{0}]", status);
+                GrpcLogging.handleMdc();
+                String serviceName = serverCall.getMethodDescriptor().getServiceName();
+                String methodName = serverCall.getMethodDescriptor().getBareMethodName();
+                if (status != Status.OK) {
+                    LOGGER.error("Error in processing GRPC call [{0}].[{1}], status: [{2}], ", serviceName, methodName, status);
+                } else {
+                    LOGGER.info("Call [{0}].[{1}] response message close in [{2}] parts:[\n{3}]", serviceName, methodName, count, messageToPrint);
+                }
                 super.close(status, trailers);
             }
 
-        }, metadata);
+        };
+
+        // intercept response, log sent message, handle MDC
+        return next.startCall(forwardingServerCall, metadata);
     }
 
+    /**
+     * Getting defined max logging size value for response
+     * 
+     * @param <ReqT>
+     *            GRPC request message type
+     * @param <RespT>
+     *            GRPC response message type
+     * @param methodDescriptor
+     *            Triggered GRPC method on call
+     * @return Defined (or not) response body log size. If not defined then {@link LogSpecifier#UNLIMIT}
+     */
+    protected <ReqT, RespT> int getResponseLogSize(MethodDescriptor<ReqT, RespT> methodDescriptor) {
+        String serviceName = methodDescriptor.getServiceName();
+        String methodName = methodDescriptor.getBareMethodName();
+        Class<?> serviceClass;
+        try {
+            Set<Bean<?>> services = CDI.current().getBeanManager().getBeans(Class.forName(serviceName));
+            if (services.isEmpty()) {
+                return LogSpecifier.UNLIMIT;
+            }
+            serviceClass = services.iterator().next().getBeanClass();
+        } catch (ClassNotFoundException e) {
+            LOGGER.debug(MessageFormat.format("Error on getting Request logging size: [{0}]", e.getLocalizedMessage()), e);
+            return LogSpecifier.UNLIMIT;
+        }
+        Optional<Method> oMethod = Arrays.stream(serviceClass.getDeclaredMethods()).filter(method -> method.getName().equalsIgnoreCase(methodName))
+                .findFirst();
+        return ServerRequestInterceptor.getMaxEntityLogSize(oMethod.get(), LogSpecifierTarget.RESPONSE);
+    }
 }

@@ -55,7 +55,8 @@ Implementált funkciók:
 
 * gRPC szerver konfiguráció, https://github.com/grpc/grpc-java/blob/master/netty/src/main/java/io/grpc/netty/NettyServerBuilder.java[NettyServerBuilder] alapon
 * MDC kezelés
-* Request/Response log
+* Request/Response log, használható a <<common_core_coffee-rest_LogSpecifier,LogSpecifier>>
+annotációval a GRPC service method/class implementáción 
 * Exception kezelés
 
 === Szerver thread pool
