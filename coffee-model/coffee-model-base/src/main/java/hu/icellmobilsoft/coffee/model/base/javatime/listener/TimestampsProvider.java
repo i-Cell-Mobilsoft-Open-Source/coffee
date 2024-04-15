@@ -59,22 +59,6 @@ public class TimestampsProvider extends AbstractProvider {
 
     private static final String TIMEZONE_ID = "COFFEE_MODEL_BASE_JAVA_TIME_TIMEZONE_ID";
 
-    private void initZoneId() {
-        if (zoneId == null) {
-            String zoneIdString = StringUtils.defaultIfBlank(System.getenv(TIMEZONE_ID), System.getProperty(TIMEZONE_ID));
-            if (StringUtils.isNotBlank(zoneIdString)) {
-                try {
-                    zoneId = ZoneId.of(zoneIdString);
-                } catch (DateTimeException e) {
-                    zoneId = ZoneId.systemDefault();
-                    Logger.getLogger(TimestampsProvider.class).warn("The COFFEE_MODEL_BASE_JAVA_TIME_TIMEZONE_ID environment/property variable was not set or it was not a valid zone id, using default as fallback: [{0}]", zoneId, e.getLocalizedMessage());
-                }
-            } else {
-                zoneId = ZoneId.systemDefault();
-            }
-        }
-    }
-
     /**
      * Default constructor, constructs a new object.
      */
@@ -151,6 +135,22 @@ public class TimestampsProvider extends AbstractProvider {
         } catch (IllegalAccessException | NoSuchMethodException | InstantiationException | InvocationTargetException exception) {
             throw new ProviderException("Failed to write value [" + object + "] to field [" + field + "], fieldClass [" + fieldClass + "], entity ["
                     + entity.getClass() + "]: " + exception.getLocalizedMessage(), exception);
+        }
+    }
+
+    private void initZoneId() {
+        if (zoneId == null) {
+            String zoneIdString = StringUtils.defaultIfBlank(System.getenv(TIMEZONE_ID), System.getProperty(TIMEZONE_ID));
+            if (StringUtils.isNotBlank(zoneIdString)) {
+                try {
+                    zoneId = ZoneId.of(zoneIdString);
+                } catch (DateTimeException e) {
+                    zoneId = ZoneId.systemDefault();
+                    Logger.getLogger(TimestampsProvider.class).warn("The COFFEE_MODEL_BASE_JAVA_TIME_TIMEZONE_ID environment/property variable was not set or it was not a valid zone id, using default as fallback: [{0}]", zoneId, e.getLocalizedMessage());
+                }
+            } else {
+                zoneId = ZoneId.systemDefault();
+            }
         }
     }
 
