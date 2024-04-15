@@ -37,7 +37,13 @@
  */
 package org.apache.deltaspike.data.impl.builder;
 
+import java.lang.reflect.Method;
+
+import hu.icellmobilsoft.coffee.cdi.trace.annotation.Traced;
+import hu.icellmobilsoft.coffee.cdi.trace.constants.SpanAttribute;
+import hu.icellmobilsoft.coffee.cdi.trace.spi.ITraceHandler;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 import jakarta.persistence.Query;
 
 import org.apache.deltaspike.data.impl.builder.part.QueryRoot;
@@ -48,11 +54,17 @@ import org.apache.deltaspike.data.impl.param.Parameters;
 public class MethodQueryBuilder extends QueryBuilder
 {
 
+    @Inject
+    private ITraceHandler traceHandler;
+
     @Override
     public Object execute(CdiQueryInvocationContext context)
     {
         Query jpaQuery = createJpaQuery(context);
-        return context.executeQuery(jpaQuery);
+        Method method = context.getMethod();
+        Traced traced = new Traced.Literal(SpanAttribute.Database.COMPONENT, SpanAttribute.Database.KIND, SpanAttribute.Database.DB_TYPE);
+        String operation = context.getRepositoryClass() + "." + method.getName();
+        return traceHandler.runWithTraceNoException(() -> context.executeQuery(jpaQuery), traced, operation);
     }
 
     private Query createJpaQuery(CdiQueryInvocationContext context)
