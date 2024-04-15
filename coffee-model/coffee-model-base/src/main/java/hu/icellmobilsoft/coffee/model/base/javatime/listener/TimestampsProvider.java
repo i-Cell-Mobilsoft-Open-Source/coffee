@@ -34,7 +34,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 
@@ -45,6 +44,7 @@ import hu.icellmobilsoft.coffee.model.base.AbstractProvider;
 import hu.icellmobilsoft.coffee.model.base.exception.ProviderException;
 import hu.icellmobilsoft.coffee.model.base.javatime.annotation.CreatedOn;
 import hu.icellmobilsoft.coffee.model.base.javatime.annotation.ModifiedOn;
+import hu.icellmobilsoft.coffee.se.logging.Logger;
 
 /**
  * Set java 8 timestamps on marked properties.
@@ -53,28 +53,34 @@ import hu.icellmobilsoft.coffee.model.base.javatime.annotation.ModifiedOn;
  * @author zsolt.vasi
  * @since 1.0.0
  */
-@ApplicationScoped
 public class TimestampsProvider extends AbstractProvider {
 
-    private ZoneId zoneId;
+    private static ZoneId zoneId;
 
-    private final String TIMEZONE_ID = "TIMEZONE_ID";
+    private static final String TIMEZONE_ID = "COFFEE_MODEL_BASE_JAVA_TIME_TIMEZONE_ID";
+
+    private void initZoneId() {
+        if (zoneId == null) {
+            String zoneIdString = StringUtils.defaultIfBlank(System.getenv(TIMEZONE_ID), System.getProperty(TIMEZONE_ID));
+            if (StringUtils.isNotBlank(zoneIdString)) {
+                try {
+                    zoneId = ZoneId.of(zoneIdString);
+                } catch (DateTimeException e) {
+                    zoneId = ZoneId.systemDefault();
+                    Logger.getLogger(TimestampsProvider.class).warn("The COFFEE_MODEL_BASE_JAVA_TIME_TIMEZONE_ID environment/property variable was not set or it was not a valid zone id, using default as fallback: {[0]}", zoneId, e.getLocalizedMessage());
+                }
+            } else {
+                zoneId = ZoneId.systemDefault();
+            }
+        }
+    }
 
     /**
      * Default constructor, constructs a new object.
      */
     public TimestampsProvider() {
         super();
-        String zoneIdEnv = System.getenv(TIMEZONE_ID);
-        try {
-            if (StringUtils.isBlank(zoneIdEnv)) {
-                zoneId = ZoneId.systemDefault();
-            } else {
-                zoneId = ZoneId.of(zoneIdEnv);
-            }
-        } catch (DateTimeException exception) {
-            zoneId = ZoneId.systemDefault();
-        }
+        initZoneId();
     }
 
     /**

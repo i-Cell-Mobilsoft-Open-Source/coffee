@@ -36,6 +36,30 @@ public class SimpleEntity extends AbstractIdentifiedEntity {
 }
 ----
 
+We have the option to set the timezone through environment variable or system property. If we don't set this, we'll use the system's timezone by default.
+
+The variable: `COFFEE_MODEL_BASE_JAVA_TIME_TIMEZONE_ID`
+
+.Docker container
+[sorce,text]
+----
+service:
+    environment:
+        COFFEE_MODEL_BASE_JAVA_TIME_TIMEZONE_ID: Europe/Budapest
+----
+
+.Command line
+[sorce,text]
+----
+java -DCOFFEE_MODEL_BASE_JAVA_TIME_TIMEZONE_ID=Europe/Budapest
+----
+
+.java code
+[sorce,java]
+----
+System.setProperty("COFFEE_MODEL_BASE_JAVA_TIME_TIMEZONE_ID","Europe/Budapest");
+----
+
 === Audit columns
 The audit columns are used to track all table-level movements, e.g. insertion or modification of a new record.
 The columns used for this purpose are separated.

@@ -66,6 +66,30 @@ public class SimpleEntity extends AbstractIdentifiedAuditEntity {
 }
 ----
 
+Lehetőségünk van az időzóna beállítására környezeti változón keresztül illetve rendszer változón keresztül, ha ezt nem állítjuk be akkor alapértelmezetten a rendszer időzónáját használjuk.
+
+A változó: `COFFEE_MODEL_BASE_JAVA_TIME_TIMEZONE_ID`
+
+.Docker container
+[sorce,text]
+----
+service:
+    environment:
+        COFFEE_MODEL_BASE_JAVA_TIME_TIMEZONE_ID: Europe/Budapest
+----
+
+.Command line
+[sorce,text]
+----
+java -DCOFFEE_MODEL_BASE_JAVA_TIME_TIMEZONE_ID=Europe/Budapest
+----
+
+.java code
+[sorce,java]
+----
+System.setProperty("COFFEE_MODEL_BASE_JAVA_TIME_TIMEZONE_ID","Europe/Budapest");
+----
+
 == coffee-model-security
 Modul célja egy általános jogosultság kezelés és az ide tartozó entitások gyűjtése.
 

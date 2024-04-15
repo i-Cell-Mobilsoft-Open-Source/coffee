@@ -134,7 +134,7 @@ A generált táblázatok alapértelmezett címét lehet felülírni ennek a mega
 === coffee-model
 
 * A TimestampsProvider bővült egy opcionálisan megadható környezeti változóval az időzóna megadáshoz.
-** `TIMEZONE_ID`
+** `COFFEE_MODEL_BASE_JAVA_TIME_TIMEZONE_ID`
 
 
 ==== Átállás

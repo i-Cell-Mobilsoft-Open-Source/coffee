@@ -131,7 +131,7 @@ It gives the possibility of overwriting the generated table names if we don't wa
 === coffee-model
 
 * The TimestampsProvider got a new parameter which can be set as an ENV variable for manipulating the timezone(optional).
-** `TIMEZONE_ID`
+** `COFFEE_MODEL_BASE_JAVA_TIME_TIMEZONE_ID`
 
 ==== Migration
 
