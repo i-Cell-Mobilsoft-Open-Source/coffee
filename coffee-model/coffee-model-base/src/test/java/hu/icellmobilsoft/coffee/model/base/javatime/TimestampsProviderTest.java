@@ -42,6 +42,8 @@ import hu.icellmobilsoft.coffee.model.base.javatime.listener.TimestampsProvider;
 @DisplayName("Testing TimestampsProvider class")
 class TimestampsProviderTest {
 
+    private final String TIMEZONE_ID = "COFFEE_MODEL_BASE_JAVA_TIME_TIMEZONE_ID";
+
     @Test
     @DisplayName("prePersist test")
     void testPrePersist() {
@@ -98,7 +100,7 @@ class TimestampsProviderTest {
     @DisplayName("zoneId through system property test")
     void testTimeZoneProperty() {
         // given
-        System.setProperty("COFFEE_MODEL_BASE_JAVA_TIME_TIMEZONE_ID","America/New_York");
+        System.setProperty(TIMEZONE_ID,"America/New_York");
         TimestampsProvider timestampsProvider = new TimestampsProvider();
         GetterAnnotatedEntity testEntity = new GetterAnnotatedEntity();
         // when
