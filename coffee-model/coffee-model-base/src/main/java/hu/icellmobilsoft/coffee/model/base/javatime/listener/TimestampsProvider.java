@@ -138,25 +138,26 @@ public class TimestampsProvider extends AbstractProvider {
         }
     }
 
-    private ZoneId getZoneId(){
-        if (zoneId == null){
+    private ZoneId getZoneId() {
+        if (zoneId == null) {
             initZoneId();
         }
         return zoneId;
     }
 
     private void initZoneId() {
-            String zoneIdString = StringUtils.defaultIfBlank(System.getenv(TIMEZONE_ID_ENV), System.getProperty(TIMEZONE_ID_PROP));
-            if (StringUtils.isNotBlank(zoneIdString)) {
-                try {
-                    zoneId = ZoneId.of(zoneIdString);
-                } catch (DateTimeException e) {
-                    zoneId = ZoneId.systemDefault();
-                    Logger.getLogger(TimestampsProvider.class).warn("The COFFEE_MODEL_BASE_JAVA_TIME_TIMEZONE_ID environment/property variable was not set or it was not a valid zone id, using default as fallback: [{0}]", zoneId, e.getLocalizedMessage());
-                }
-            } else {
+        String zoneIdString = StringUtils.defaultIfBlank(System.getenv(TIMEZONE_ID_ENV), System.getProperty(TIMEZONE_ID_PROP));
+        if (StringUtils.isNotBlank(zoneIdString)) {
+            try {
+                zoneId = ZoneId.of(zoneIdString);
+            } catch (DateTimeException e) {
                 zoneId = ZoneId.systemDefault();
+                Logger.getLogger(TimestampsProvider.class).warn("The COFFEE_MODEL_BASE_JAVA_TIME_TIMEZONE_ID environment/property"
+                        + " variable was not set or it was not a valid zone id, using default as fallback: [{0}]", zoneId, e.getLocalizedMessage());
             }
+        } else {
+            zoneId = ZoneId.systemDefault();
+        }
     }
 
     private boolean isCalendarClass(Class<?> field) {
