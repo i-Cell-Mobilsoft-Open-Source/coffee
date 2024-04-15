@@ -57,7 +57,8 @@ public class TimestampsProvider extends AbstractProvider {
 
     private static ZoneId zoneId;
 
-    private static final String TIMEZONE_ID = "COFFEE_MODEL_BASE_JAVA_TIME_TIMEZONE_ID";
+    private static final String TIMEZONE_ID_ENV = "COFFEE_MODEL_BASE_JAVA_TIME_TIMEZONE_ID";
+    private static final String TIMEZONE_ID_PROP = "coffee.model.base.java.time.timezone.id";
 
     /**
      * Default constructor, constructs a new object.
@@ -145,7 +146,7 @@ public class TimestampsProvider extends AbstractProvider {
     }
 
     private void initZoneId() {
-            String zoneIdString = StringUtils.defaultIfBlank(System.getenv(TIMEZONE_ID), System.getProperty(TIMEZONE_ID));
+            String zoneIdString = StringUtils.defaultIfBlank(System.getenv(TIMEZONE_ID_ENV), System.getProperty(TIMEZONE_ID_PROP));
             if (StringUtils.isNotBlank(zoneIdString)) {
                 try {
                     zoneId = ZoneId.of(zoneIdString);

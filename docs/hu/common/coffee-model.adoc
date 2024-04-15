@@ -81,13 +81,13 @@ service:
 .Command line
 [sorce,text]
 ----
-java -DCOFFEE_MODEL_BASE_JAVA_TIME_TIMEZONE_ID=Europe/Budapest
+java -Dcoffee.model.base.java.time.timezone.id=Europe/Budapest
 ----
 
 .java code
 [sorce,java]
 ----
-System.setProperty("COFFEE_MODEL_BASE_JAVA_TIME_TIMEZONE_ID","Europe/Budapest");
+System.setProperty("coffee.model.base.java.time.timezone.id","Europe/Budapest");
 ----
 
 == coffee-model-security
