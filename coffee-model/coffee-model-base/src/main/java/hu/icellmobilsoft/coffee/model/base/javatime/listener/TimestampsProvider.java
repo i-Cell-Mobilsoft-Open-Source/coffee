@@ -67,7 +67,7 @@ public class TimestampsProvider extends AbstractProvider {
                     zoneId = ZoneId.of(zoneIdString);
                 } catch (DateTimeException e) {
                     zoneId = ZoneId.systemDefault();
-                    Logger.getLogger(TimestampsProvider.class).warn("The COFFEE_MODEL_BASE_JAVA_TIME_TIMEZONE_ID environment/property variable was not set or it was not a valid zone id, using default as fallback: {[0]}", zoneId, e.getLocalizedMessage());
+                    Logger.getLogger(TimestampsProvider.class).warn("The COFFEE_MODEL_BASE_JAVA_TIME_TIMEZONE_ID environment/property variable was not set or it was not a valid zone id, using default as fallback: [{0}]", zoneId, e.getLocalizedMessage());
                 }
             } else {
                 zoneId = ZoneId.systemDefault();

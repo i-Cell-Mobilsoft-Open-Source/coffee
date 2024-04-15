@@ -22,6 +22,10 @@ package hu.icellmobilsoft.coffee.model.base.javatime;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
+import java.time.Instant;
+import java.time.ZoneId;
+
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -89,5 +93,21 @@ class TimestampsProviderTest {
         assertNull(testEntity.getCreationDate());
         assertNotNull(testEntity.getModificationDate());
     }
+
+    @Test
+    @DisplayName("zoneId through system property test")
+    void testTimeZoneProperty() {
+        // given
+        System.setProperty("COFFEE_MODEL_BASE_JAVA_TIME_TIMEZONE_ID","America/New_York");
+        TimestampsProvider timestampsProvider = new TimestampsProvider();
+        GetterAnnotatedEntity testEntity = new GetterAnnotatedEntity();
+        // when
+        timestampsProvider.prePersist(testEntity);
+        // then
+        assertNotNull(testEntity.getCreationDate());
+        assertNull(testEntity.getModificationDate());
+        Assertions.assertEquals(ZoneId.of("America/New_York").getRules().getOffset(Instant.now()),testEntity.getCreationDate().toZonedDateTime().getZone());
+    }
+
 
 }
