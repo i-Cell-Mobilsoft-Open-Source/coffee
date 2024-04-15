@@ -19,6 +19,7 @@
  */
 package hu.icellmobilsoft.coffee.model.base;
 
+import java.time.OffsetDateTime;
 import java.util.Date;
 
 import jakarta.persistence.Column;
@@ -49,14 +50,14 @@ public class GetterAnnotatedEntity extends AbstractIdentifiedEntity {
     @NotNull
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "X__INSDATE", updatable = false)
-    private Date creationDate;
+    private OffsetDateTime creationDate;
 
     /**
      * Last modification date of the entity
      */
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "X__MODDATE")
-    private Date modificationDate;
+    private OffsetDateTime modificationDate;
 
     /**
      * Creator user of the entity
@@ -77,7 +78,7 @@ public class GetterAnnotatedEntity extends AbstractIdentifiedEntity {
      * @return creationDate
      */
     @CreatedOn
-    public Date getCreationDate() {
+    public OffsetDateTime getCreationDate() {
         return this.creationDate;
     }
 
@@ -87,7 +88,7 @@ public class GetterAnnotatedEntity extends AbstractIdentifiedEntity {
      * @param creationDate
      *            creationDate
      */
-    public void setCreationDate(Date creationDate) {
+    public void setCreationDate(OffsetDateTime creationDate) {
         this.creationDate = creationDate;
     }
 
@@ -97,7 +98,7 @@ public class GetterAnnotatedEntity extends AbstractIdentifiedEntity {
      * @return modificationDate
      */
     @ModifiedOn
-    public Date getModificationDate() {
+    public OffsetDateTime getModificationDate() {
         return this.modificationDate;
     }
 
@@ -107,7 +108,7 @@ public class GetterAnnotatedEntity extends AbstractIdentifiedEntity {
      * @param modificationDate
      *            modificationDate
      */
-    public void setModificationDate(Date modificationDate) {
+    public void setModificationDate(OffsetDateTime modificationDate) {
         this.modificationDate = modificationDate;
     }
 

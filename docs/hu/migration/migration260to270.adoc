@@ -131,4 +131,14 @@ A generált táblázatok alapértelmezett címét lehet felülírni ennek a mega
 
 * A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis, viszont mostmár megadható ez a három paraméter a `@ConfigDoc` annotációban.
 
+=== coffee-model
+
+* A TimestampsProvider bővült egy opcionálisan megadható környezeti változóval az időzóna megadáshoz.
+** `COFFEE_MODEL_BASE_JAVA_TIME_TIMEZONE_ID`
+
+
+==== Átállás
+
+* A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
 =======
