@@ -136,3 +136,11 @@ It gives the possibility of overwriting the generated table names if we don't wa
 ==== Migration
 
 * Changes are backwards compatible doesn't need any migration.
+
+=== coffee-deltaspike-data
+
+* Tracing has been added to `org.apache.deltaspike.data.impl.builder.MethodQueryBuilder`.
+
+==== Migration
+
+Changes are backwards compatible doesn't need any migration.
