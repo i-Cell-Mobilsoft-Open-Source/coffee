@@ -64,7 +64,6 @@ public class TimestampsProvider extends AbstractProvider {
      */
     public TimestampsProvider() {
         super();
-        initZoneId();
     }
 
     /**
@@ -118,13 +117,13 @@ public class TimestampsProvider extends AbstractProvider {
             } else if (isDateClass(fieldClass)) {
                 object = fieldClass.getConstructor(Long.TYPE).newInstance(systime);
             } else if (isOffsetDateTimeClass(fieldClass)) {
-                object = OffsetDateTime.ofInstant(Instant.ofEpochMilli(systime), zoneId);
+                object = OffsetDateTime.ofInstant(Instant.ofEpochMilli(systime), getZoneId());
             } else if (isOffsetTimeClass(fieldClass)) {
-                object = OffsetTime.ofInstant(Instant.ofEpochMilli(systime), zoneId);
+                object = OffsetTime.ofInstant(Instant.ofEpochMilli(systime), getZoneId());
             } else if (isLocalDateTimeClass(fieldClass)) {
-                object = LocalDateTime.ofInstant(Instant.ofEpochMilli(systime), zoneId);
+                object = LocalDateTime.ofInstant(Instant.ofEpochMilli(systime), getZoneId());
             } else if (isLocalDateClass(fieldClass)) {
-                object = LocalDateTime.ofInstant(Instant.ofEpochMilli(systime), zoneId).toLocalDate();
+                object = LocalDateTime.ofInstant(Instant.ofEpochMilli(systime), getZoneId()).toLocalDate();
             } else if (isInstantClass(fieldClass)) {
                 object = Instant.ofEpochMilli(systime);
             } else {
@@ -138,8 +137,14 @@ public class TimestampsProvider extends AbstractProvider {
         }
     }
 
+    private ZoneId getZoneId(){
+        if (zoneId == null){
+            initZoneId();
+        }
+        return zoneId;
+    }
+
     private void initZoneId() {
-        if (zoneId == null) {
             String zoneIdString = StringUtils.defaultIfBlank(System.getenv(TIMEZONE_ID), System.getProperty(TIMEZONE_ID));
             if (StringUtils.isNotBlank(zoneIdString)) {
                 try {
@@ -151,7 +156,6 @@ public class TimestampsProvider extends AbstractProvider {
             } else {
                 zoneId = ZoneId.systemDefault();
             }
-        }
     }
 
     private boolean isCalendarClass(Class<?> field) {
