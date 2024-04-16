@@ -141,4 +141,12 @@ A generált táblázatok alapértelmezett címét lehet felülírni ennek a mega
 
 * A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
 
+=== coffee-deltaspike-data
+
+* Tracing hozzáadása az `org.apache.deltaspike.data.impl.builder.MethodQueryBuilder`-hez.
+
+==== Átállás
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
 =======
