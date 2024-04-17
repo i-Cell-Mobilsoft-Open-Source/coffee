@@ -29,7 +29,7 @@ import hu.icellmobilsoft.coffee.se.logging.Logger;
 import io.grpc.Metadata;
 
 /**
- * Grpc communication standard headers
+ * Grpc communication header helper
  * 
  * @author Imre Scheffer
  * @since 2.7.0
