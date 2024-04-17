@@ -34,12 +34,12 @@ import io.grpc.Metadata;
  * @author Imre Scheffer
  * @since 2.7.0
  */
-public class GrpcHeader {
+public class GrpcHeaderHelper {
 
     /**
      * Default constructor, constructs a new object.
      */
-    public GrpcHeader() {
+    private GrpcHeaderHelper() {
         super();
     }
 
@@ -61,7 +61,7 @@ public class GrpcHeader {
             } catch (Exception e) {
                 String msg = MessageFormat.format("Failed to determine Locale setting from language header [{0}], value [{1}]: [{2}]",
                         IGrpcHeader.HEADER_LANGUAGE.originalName(), languageString, e.getLocalizedMessage());
-                Logger.getLogger(GrpcHeader.class).debug(msg, e);
+                Logger.getLogger(GrpcHeaderHelper.class).debug(msg, e);
             }
         }
         return null;

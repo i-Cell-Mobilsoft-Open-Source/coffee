@@ -38,7 +38,7 @@ import com.google.rpc.Status;
 
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 import hu.icellmobilsoft.coffee.grpc.base.exception.ExceptionMapper;
-import hu.icellmobilsoft.coffee.grpc.server.metadata.GrpcHeader;
+import hu.icellmobilsoft.coffee.grpc.server.metadata.GrpcHeaderHelper;
 import hu.icellmobilsoft.coffee.rest.projectstage.ProjectStage;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
 import io.grpc.Metadata;
@@ -101,7 +101,7 @@ public class GrpcGeneralExceptionMapper implements ExceptionMapper<Exception> {
      * @return Locale from request
      */
     protected Locale getRequestLocale(Metadata requestHeaders) {
-        return GrpcHeader.getRequestLocale(requestHeaders);
+        return GrpcHeaderHelper.getRequestLocale(requestHeaders);
     }
 
     /**

@@ -36,7 +36,7 @@ import hu.icellmobilsoft.coffee.dto.exception.AccessDeniedException;
 import hu.icellmobilsoft.coffee.dto.exception.BONotFoundException;
 import hu.icellmobilsoft.coffee.dto.exception.ServiceUnavailableException;
 import hu.icellmobilsoft.coffee.grpc.base.exception.ExceptionMapper;
-import hu.icellmobilsoft.coffee.grpc.server.metadata.GrpcHeader;
+import hu.icellmobilsoft.coffee.grpc.server.metadata.GrpcHeaderHelper;
 import hu.icellmobilsoft.coffee.rest.projectstage.ProjectStage;
 import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
 import hu.icellmobilsoft.coffee.se.api.exception.BusinessException;
@@ -101,7 +101,7 @@ public class GrpcBaseExceptionMapper implements ExceptionMapper<BaseException> {
      * @return Locale from request
      */
     protected Locale getRequestLocale(Metadata requestHeaders) {
-        return GrpcHeader.getRequestLocale(requestHeaders);
+        return GrpcHeaderHelper.getRequestLocale(requestHeaders);
     }
 
     /**

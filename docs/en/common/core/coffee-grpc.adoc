@@ -52,6 +52,13 @@ Implemented features:
 * Request/Response log, applicable with <<common_core_coffee-rest_LogSpecifier,LogSpecifier>>
 annotation on GRPC service implementation method/class
 * Exception handling
+** Grpc status code mapping
+*** General exception: `hu.icellmobilsoft.coffee.grpc.server.mapper.GrpcGeneralExceptionMapper`
+*** BaseException exception: `hu.icellmobilsoft.coffee.grpc.server.mapper.GrpcBaseExceptionMapper`
+** Grpc header response additions:
+*** Business error code (`com.google.rpc.ErrorInfo`)
+*** Business error code translation by request locale (`com.google.rpc.LocalizedMessage`)
+*** Debug informations (`com.google.rpc.DebugInfo`)
 
 === Server thread pool
 The thread handling is an important part of the gRPC server. Two solutions have been implemented:
