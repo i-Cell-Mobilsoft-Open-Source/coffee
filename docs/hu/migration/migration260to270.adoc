@@ -99,6 +99,11 @@ ami anyDto <--> protoDto konverziót támogatja
 * Feljavított `hu.icellmobilsoft.coffee.grpc.server.interceptor.ServerRequestInterceptor`
 és `hu.icellmobilsoft.coffee.grpc.server.interceptor.ServerResponseInterceptor` loggolási interceptor,
 melyeket paraméterezni lehet a `@LogSpecifiers` és `@LogSpecifier` annotációkkal
+* Feljavított `hu.icellmobilsoft.coffee.grpc.server.interceptor.ErrorHandlerInterceptor`
+mostmár kibővíti kiegészítő hiba információkkal a Grpc választ:
+** Üzleti hibakód (FaultType)
+** Nyelvesített hibakód
+** Debug információ (stacktrace) 
 
 ==== Átállás
 

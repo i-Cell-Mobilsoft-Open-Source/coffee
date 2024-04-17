@@ -96,6 +96,11 @@ which support anyDto <--> protoDto conversion
 * Improved `hu.icellmobilsoft.coffee.grpc.server.interceptor.ServerRequestInterceptor`
 and `hu.icellmobilsoft.coffee.grpc.server.interceptor.ServerResponseInterceptor` logging interceptors,
 which can be parameterized with `@LogSpecifiers` and `@LogSpecifier` annotations.
+* Improved `hu.icellmobilsoft.coffee.grpc.server.interceptor.ErrorHandlerInterceptor`
+now can handle additional error information into Grpc response:
+** Business error code (FaultType)
+** Translated error code
+** Debug information (stacktrace)
 
 ==== Migration
 

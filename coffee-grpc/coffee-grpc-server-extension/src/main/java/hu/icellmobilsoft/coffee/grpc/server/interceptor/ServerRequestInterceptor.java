@@ -31,7 +31,7 @@ import jakarta.enterprise.inject.spi.CDI;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
 
-import hu.icellmobilsoft.coffee.dto.common.LogConstants;
+import hu.icellmobilsoft.coffee.grpc.api.metadata.IGrpcHeader;
 import hu.icellmobilsoft.coffee.grpc.server.log.GrpcLogging;
 import hu.icellmobilsoft.coffee.rest.log.annotation.LogSpecifier;
 import hu.icellmobilsoft.coffee.rest.log.annotation.LogSpecifiers;
@@ -72,7 +72,7 @@ public class ServerRequestInterceptor implements ServerInterceptor {
     @Override
     public <ReqT, RespT> Listener<ReqT> interceptCall(ServerCall<ReqT, RespT> serverCall, Metadata headers, ServerCallHandler<ReqT, RespT> next) {
 
-        String extSessionIdHeader = headers.get(Metadata.Key.of(LogConstants.LOG_SESSION_ID, Metadata.ASCII_STRING_MARSHALLER));
+        String extSessionIdHeader = headers.get(IGrpcHeader.HEADER_SID);
         String extSessionId = StringUtils.isNotBlank(extSessionIdHeader) ? extSessionIdHeader : RandomUtil.generateId();
         Context context = Context.current().withValue(GrpcLogging.CONTEXT_KEY_SESSIONID, extSessionId);
 

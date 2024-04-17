@@ -21,6 +21,8 @@ package hu.icellmobilsoft.coffee.grpc.base.exception;
 
 import com.google.rpc.Status;
 
+import io.grpc.Metadata;
+
 /**
  * ExceptionMapper is an interface for mapping an exception of type E to a gRPC {@link com.google.rpc.Status}.
  * <p>
@@ -29,6 +31,7 @@ import com.google.rpc.Status;
  * @param <E>
  *            The type of exception to be mapped to a gRPC Status
  * @author mark.petrenyi
+ * @author Imre Scheffer
  * @since 2.1.0
  */
 public interface ExceptionMapper<E extends Throwable> {
@@ -36,10 +39,12 @@ public interface ExceptionMapper<E extends Throwable> {
     /**
      * Maps an exception of type E to a gRPC Status.
      *
+     * @param requestHeaders
+     *            Incoming Grpc request headers
      * @param e
      *            The exception to be mapped
      * @return The gRPC Status resulting from the mapping
      */
-    Status toStatus(E e);
+    Status toStatus(Metadata requestHeaders, E e);
 
 }

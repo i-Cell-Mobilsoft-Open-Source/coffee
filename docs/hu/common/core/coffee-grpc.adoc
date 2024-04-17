@@ -57,7 +57,14 @@ Implementált funkciók:
 * MDC kezelés
 * Request/Response log, használható a <<common_core_coffee-rest_LogSpecifier,LogSpecifier>>
 annotációval a GRPC service method/class implementáción 
-* Exception kezelés
+* Exception kezelés:
+** Grpc status code mappelés
+*** Általános hiba: `hu.icellmobilsoft.coffee.grpc.server.mapper.GrpcGeneralExceptionMapper`
+*** BaseException hiba: `hu.icellmobilsoft.coffee.grpc.server.mapper.GrpcBaseExceptionMapper`
+** Grpc header response dúsítás:
+*** Üzleti hibakód (`com.google.rpc.ErrorInfo`)
+*** Üzleti hibakód nyelvesítése request nyelvi kérése alapján (`com.google.rpc.LocalizedMessage`)
+*** Debug információk (`com.google.rpc.DebugInfo`)
 
 === Szerver thread pool
 A gRPC server fontos része a szál kezelés.
