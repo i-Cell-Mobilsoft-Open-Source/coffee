@@ -54,12 +54,12 @@ public class StatusResponse {
     private final Metadata metadata;
 
     private StatusResponse(com.google.rpc.Status statusProto) {
-        status = Status.fromCodeValue(statusProto.getCode());
+        status = Status.fromCodeValue(statusProto.getCode()).withDescription(statusProto.getMessage());
         metadata = toMetadata(statusProto);
     }
 
     private StatusResponse(com.google.rpc.Status statusProto, Throwable cause) {
-        status = Status.fromCodeValue(statusProto.getCode()).withCause(cause);
+        status = Status.fromCodeValue(statusProto.getCode()).withDescription(statusProto.getMessage()).withCause(cause);
         metadata = toMetadata(statusProto);
     }
 

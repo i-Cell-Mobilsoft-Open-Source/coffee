@@ -45,6 +45,7 @@ import com.google.rpc.ErrorInfo;
 import com.google.rpc.Status;
 
 import hu.icellmobilsoft.coffee.se.logging.Logger;
+import io.grpc.Metadata;
 
 /**
  * The ExceptionHandler class serves to handle exceptions in gRPC services using ExceptionMappers, similar to how they are used in JAX-RS
@@ -96,22 +97,24 @@ public class ExceptionHandler {
      * 
      * @param <E>
      *            Generic type of the exception
+     * @param requestHeaders
+     *            Grpc request metadata
      * @param t
      *            the exception to be handled
      * @return the corresponding {@link StatusResponse}
      */
-    public <E extends Throwable> StatusResponse handle(E t) {
+    public <E extends Throwable> StatusResponse handle(Metadata requestHeaders, E t) {
         if (t instanceof GrpcRuntimeExceptionWrapper && ((GrpcRuntimeExceptionWrapper) t).getWrapped() != null) {
-            return handleStatus(((GrpcRuntimeExceptionWrapper) t).getWrapped());
+            return handleStatus(requestHeaders, ((GrpcRuntimeExceptionWrapper) t).getWrapped());
         }
-        return handleStatus(t);
+        return handleStatus(requestHeaders, t);
     }
 
-    private <E extends Throwable> StatusResponse handleStatus(E t) {
+    private <E extends Throwable> StatusResponse handleStatus(Metadata requestHeaders, E t) {
         try {
             List<Bean<?>> mapperBeans = getExceptionMapperBeans(t.getClass());
             for (Bean<?> exceptionMapperBean : mapperBeans) {
-                Status status = handleByBean(t, exceptionMapperBean);
+                Status status = handleByBean(requestHeaders, t, exceptionMapperBean);
                 // ha nem null visszaadjuk, ha null jön priority szerint a következő, esetleg az exception super class-ára írt
                 if (status != null) {
                     return StatusResponse.of(status, t);
@@ -121,17 +124,18 @@ public class ExceptionHandler {
             LOG.error("Error occurred in ExceptionHandler - " + e.getMessage(), e);
             return buildInternalErrorStatus(t, e.getMessage());
         }
-        return buildInternalErrorStatus(t, "Could not find ExceptionMapper");
+        String reason = MessageFormat.format("Could not find " + ExceptionMapper.class.getName() + " CDI implementation for [{0}]", t.getClass());
+        return buildInternalErrorStatus(t, reason);
     }
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
-    private <E extends Throwable> Status handleByBean(E t, Bean<?> exceptionMapperBean) {
+    private <E extends Throwable> Status handleByBean(Metadata requestHeaders, E t, Bean<?> exceptionMapperBean) {
         Instance<ExceptionMapper> instance = (Instance<ExceptionMapper>) CDI.current().select(exceptionMapperBean.getBeanClass());
         if (instance.isResolvable()) {
             ExceptionMapper exceptionMapper = null;
             try {
                 exceptionMapper = instance.get();
-                Status status = exceptionMapper.toStatus(t);
+                Status status = exceptionMapper.toStatus(requestHeaders, t);
                 if (status != null) {
                     return status;
                 }
@@ -179,11 +183,13 @@ public class ExceptionHandler {
         // ha exception mapper elszáll, akkor internal server error.
         Status.Builder statusBuilder = Status.newBuilder();
 
+        // ha nincs ExceptionHandler:
+        // 1. INTERNAL status kod
         statusBuilder.setCode(Code.INTERNAL.getNumber());
-        statusBuilder.setMessage("Could not handle error - " + throwableNotHandled.getMessage());
-        statusBuilder.addDetails(Any.pack(ErrorInfo.newBuilder() //
-                .setReason(reason) //
-                .setDomain(throwableNotHandled.getClass().toString()).build()));
+        // 2. valaszolunk eredeti hibaval
+        statusBuilder.setMessage(throwableNotHandled.getMessage());
+        // 3. ErrorInfo-ba pakoljuk a reszleteket
+        statusBuilder.addDetails(Any.pack(ErrorInfo.newBuilder().setReason(reason).setDomain(throwableNotHandled.getClass().getName()).build()));
         return StatusResponse.of(statusBuilder.build(), throwableNotHandled);
     }
 }

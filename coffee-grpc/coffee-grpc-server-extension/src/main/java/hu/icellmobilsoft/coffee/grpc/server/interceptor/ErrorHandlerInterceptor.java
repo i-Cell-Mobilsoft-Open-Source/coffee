@@ -82,7 +82,7 @@ public class ErrorHandlerInterceptor implements ServerInterceptor {
                 try {
                     super.onMessage(message);
                 } catch (Throwable e) {
-                    StatusResponse status = ExceptionHandler.getInstance().handle(e);
+                    StatusResponse status = ExceptionHandler.getInstance().handle(headers, e);
                     serverCall.close(status.getStatus(), status.getMetadata());
                 }
             }
@@ -92,7 +92,7 @@ public class ErrorHandlerInterceptor implements ServerInterceptor {
                 try {
                     super.onHalfClose();
                 } catch (Throwable e) {
-                    StatusResponse status = ExceptionHandler.getInstance().handle(e);
+                    StatusResponse status = ExceptionHandler.getInstance().handle(headers, e);
                     serverCall.close(status.getStatus(), status.getMetadata());
                 }
             }
