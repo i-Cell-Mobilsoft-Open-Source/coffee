@@ -183,7 +183,7 @@ public class ExceptionHandler {
         // ha exception mapper elszáll, akkor internal server error.
         Status.Builder statusBuilder = Status.newBuilder();
 
-        // ha nincs ExceptionHandler:
+        // ha nincs ExceptionMapper:
         // 1. INTERNAL status kod
         statusBuilder.setCode(Code.INTERNAL.getNumber());
         // 2. valaszolunk eredeti hibaval

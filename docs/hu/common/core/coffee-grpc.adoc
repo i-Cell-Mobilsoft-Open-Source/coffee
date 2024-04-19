@@ -120,6 +120,7 @@ coffee:
       _configKey_:
         host: localhost # default localhost
         port: 8199 # default 8199
+        maxInboundMetadataSize: 8192 # Bytes, default 8192 (8KiB)
 ----
 
 .CDI inject DummyServiceGrpc haszálata

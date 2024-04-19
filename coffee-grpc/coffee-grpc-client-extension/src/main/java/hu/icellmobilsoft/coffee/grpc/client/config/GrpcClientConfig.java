@@ -34,6 +34,7 @@ import org.eclipse.microprofile.config.Config;
  *       _configKey_:
  *         host: localhost # default localhost
  *         port: 8199 # default 8199
+ *         maxInboundMetadataSize: 1_048_576 # byte, default 8192
  * </pre>
  * 
  * @author Imre Scheffer
@@ -60,6 +61,10 @@ public class GrpcClientConfig implements IGrpcClientConfig {
      * gRPC server {@value} config
      */
     public static final String PORT = "port";
+    /**
+     * gRPC server {@value} config, in byte, default is 8192 byte
+     */
+    public static final String MAX_INBOUND_METADATA_SIZE = "maxInboundMetadataSize";
 
     @Inject
     private Config config;
@@ -81,6 +86,11 @@ public class GrpcClientConfig implements IGrpcClientConfig {
     @Override
     public Integer getPort() {
         return config.getOptionalValue(joinKey(PORT), Integer.class).orElse(8199);
+    }
+
+    @Override
+    public Integer getMaxInboundMetadataSize() {
+        return config.getOptionalValue(joinKey(MAX_INBOUND_METADATA_SIZE), Integer.class).orElse(8192);
     }
 
     /**
