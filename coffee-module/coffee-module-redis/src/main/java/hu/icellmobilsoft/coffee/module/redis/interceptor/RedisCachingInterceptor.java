@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -35,15 +35,15 @@ import org.apache.commons.lang3.StringUtils;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
-
 import hu.icellmobilsoft.coffee.cdi.logger.AppLogger;
 import hu.icellmobilsoft.coffee.cdi.logger.ThisLogger;
 import hu.icellmobilsoft.coffee.dto.common.Envelope;
-import hu.icellmobilsoft.coffee.dto.exception.BaseException;
+import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 import hu.icellmobilsoft.coffee.module.redis.annotation.RedisConnection;
 import hu.icellmobilsoft.coffee.module.redis.interceptor.annotation.RedisCached;
 import hu.icellmobilsoft.coffee.module.redis.manager.RedisManager;
 import hu.icellmobilsoft.coffee.module.redis.manager.RedisManagerConnection;
+import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
 import hu.icellmobilsoft.coffee.tool.gson.ClassTypeAdapter;
 import hu.icellmobilsoft.coffee.tool.gson.JsonUtil;
 import redis.clients.jedis.Jedis;
@@ -146,7 +146,10 @@ public class RedisCachingInterceptor {
             String poolConfigKey = redisConnection.poolConfigKey();
             return CDI.current().select(RedisManager.class, new RedisConnection.Literal(configKey, poolConfigKey)).get();
         } else {
-            throw new BaseException(MessageFormat.format("@RedisConnection annotation is missing from method: {0}#{1}",
+            throw new BaseException(
+                    CoffeeFaultType.OPERATION_FAILED,
+                    MessageFormat.format(
+                            "@RedisConnection annotation is missing from method: {0}#{1}",
                     method.getDeclaringClass().getCanonicalName(), method.getName()));
         }
     }

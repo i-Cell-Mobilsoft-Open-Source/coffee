@@ -32,8 +32,8 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import com.opencsv.CSVParserBuilder;
-import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.module.csv.configuration.CsvWriterConfig;
+import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
 
 /**
  * Class for testing {@link CsvUtil}

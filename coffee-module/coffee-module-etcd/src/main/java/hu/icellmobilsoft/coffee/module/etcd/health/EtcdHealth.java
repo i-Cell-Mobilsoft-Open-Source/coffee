@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -30,9 +30,9 @@ import org.eclipse.microprofile.health.HealthCheckResponse;
 import org.eclipse.microprofile.health.HealthCheckResponseBuilder;
 
 import hu.icellmobilsoft.coffee.cdi.health.constants.HealthConstant;
-import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.dto.exception.InvalidParameterException;
 import hu.icellmobilsoft.coffee.module.etcd.config.DefaultEtcdConfigImpl;
+import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
 import hu.icellmobilsoft.coffee.tool.utils.health.HealthUtil;
 import io.etcd.jetcd.ByteSequence;
@@ -40,7 +40,7 @@ import io.etcd.jetcd.Client;
 
 /**
  * To support microprofile-health mechanics, this class can check whether the etcd is reachable within a given timeout.
- * 
+ *
  * @author czenczl
  * @since 2.2.0
  *
@@ -60,7 +60,7 @@ public class EtcdHealth {
 
     /**
      * Checking whether the etcd is reachable
-     * 
+     *
      * @param builderName
      *            the name of the health check response
      * @return The created {@link HealthCheckResponse} contains information about whether the etcd server is reachable.
@@ -73,7 +73,7 @@ public class EtcdHealth {
 
     /**
      * Checking whether the etcd is reachable
-     * 
+     *
      * @param builderName
      *            the name of the health check response
      * @param nodeId

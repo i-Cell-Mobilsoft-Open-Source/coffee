@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -37,7 +37,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.jboss.weld.context.bound.BoundRequestContext;
 
 import hu.icellmobilsoft.coffee.dto.common.LogConstants;
-import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.module.redis.annotation.RedisConnection;
 import hu.icellmobilsoft.coffee.module.redis.manager.RedisManager;
 import hu.icellmobilsoft.coffee.module.redis.manager.RedisManagerConnection;
@@ -46,6 +45,7 @@ import hu.icellmobilsoft.coffee.module.redisstream.bootstrap.ConsumerLifeCycleMa
 import hu.icellmobilsoft.coffee.module.redisstream.config.IRedisStreamConstant;
 import hu.icellmobilsoft.coffee.module.redisstream.config.StreamGroupConfig;
 import hu.icellmobilsoft.coffee.module.redisstream.service.RedisStreamService;
+import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
 import hu.icellmobilsoft.coffee.se.logging.mdc.MDC;
 import hu.icellmobilsoft.coffee.tool.utils.annotation.AnnotationUtil;
@@ -56,7 +56,7 @@ import redis.clients.jedis.resps.StreamEntry;
 
 /**
  * Redis stream consumer executor class
- * 
+ *
  * @author imre.scheffer
  * @author czenczl
  * @since 1.3.0
@@ -221,7 +221,7 @@ public class RedisStreamConsumerExecutor implements IRedisStreamConsumerExecutor
     /**
      * Process execution with retry count. If retry {@code RedisStreamConsumer#retryCount()} &gt; count then on processing exception trying run again
      * and again
-     * 
+     *
      * @param streamEntry
      *            Redis stream input entry
      * @param counter
@@ -257,7 +257,7 @@ public class RedisStreamConsumerExecutor implements IRedisStreamConsumerExecutor
 
     /**
      * Process execution wrapper. Running process in self started request scope
-     * 
+     *
      * @param streamEntry
      *            Redis stream input entry
      * @return {@code Optional} result data from {@code IRedisStreamPipeConsumer#onStream(StreamEntry)}
@@ -286,7 +286,7 @@ public class RedisStreamConsumerExecutor implements IRedisStreamConsumerExecutor
 
     /**
      * Process execution wrapper. Running {@code IRedisStreamPipeConsumer#afterAck(StreamEntry, Map)} process in self started request scope
-     * 
+     *
      * @param streamEntry
      *            Redis stream input entry
      * @param onStreamResult
@@ -347,7 +347,7 @@ public class RedisStreamConsumerExecutor implements IRedisStreamConsumerExecutor
 
     /**
      * Logging MDC handling, setting variables
-     * 
+     *
      * @param streamEntry
      *            {@link IRedisStreamConsumer#onStream(StreamEntry)}
      */
@@ -360,7 +360,7 @@ public class RedisStreamConsumerExecutor implements IRedisStreamConsumerExecutor
 
     /**
      * Uniq stream consumer identifier
-     * 
+     *
      * @return identifier
      */
     public String getConsumerIdentifier() {
@@ -384,7 +384,7 @@ public class RedisStreamConsumerExecutor implements IRedisStreamConsumerExecutor
 
     /**
      * Returns the consumer bean instance
-     * 
+     *
      * @return the consumer bean instance
      */
     public Bean<? super IRedisStreamBaseConsumer> getConsumerBean() {

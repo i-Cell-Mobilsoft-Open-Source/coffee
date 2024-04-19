@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -32,11 +32,11 @@ import jakarta.ws.rs.ext.MessageBodyReader;
 
 import org.apache.commons.lang3.ArrayUtils;
 
-import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.cdi.annotation.xml.ValidateXML;
 import hu.icellmobilsoft.coffee.cdi.annotation.xml.ValidateXMLs;
 import hu.icellmobilsoft.coffee.rest.validation.xml.exception.BaseProcessingExceptionWrapper;
 import hu.icellmobilsoft.coffee.rest.validation.xml.reader.IRequestVersionReader;
+import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
 
 /**
  * JSON és XML payload-ból deszerializáló és validáló MessageBodyReader implementációk őse. Csak akkor fut le, ha a REST service metódus request body
@@ -57,7 +57,7 @@ import hu.icellmobilsoft.coffee.rest.validation.xml.reader.IRequestVersionReader
  * <br>
  *
  * Majd megannotálni a végpontot<br>
- * 
+ *
  * @param <T>
  *            message body type
  *
@@ -72,7 +72,7 @@ public abstract class XmlMessageBodyReaderBase<T> implements MessageBodyReader<T
 
     @Inject
     private JaxbTool jaxbTool;
-    
+
     @Inject
     private IRequestVersionReader requestVersionReader;
 
@@ -112,7 +112,7 @@ public abstract class XmlMessageBodyReaderBase<T> implements MessageBodyReader<T
 
     /**
      * Returns all {@link ValidateXML} annotations from given array of {@link Annotation}s.
-     * 
+     *
      * @param annotations
      *            array of {@code Annotation}s to search in
      * @return array of {@link ValidateXML} annotations, can be empty

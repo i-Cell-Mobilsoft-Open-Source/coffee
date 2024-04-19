@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -39,7 +39,6 @@ import org.apache.http.entity.ContentType;
 
 import hu.icellmobilsoft.coffee.cdi.annotation.xml.ValidateXML;
 import hu.icellmobilsoft.coffee.cdi.logger.LogProducer;
-import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 import hu.icellmobilsoft.coffee.rest.validation.xml.JaxbTool;
@@ -47,6 +46,7 @@ import hu.icellmobilsoft.coffee.rest.validation.xml.XmlMessageBodyReaderBase;
 import hu.icellmobilsoft.coffee.rest.validation.xml.exception.BaseProcessingExceptionWrapper;
 import hu.icellmobilsoft.coffee.rest.validation.xml.exception.XsdProcessingException;
 import hu.icellmobilsoft.coffee.rest.validation.xml.reader.IRequestVersionReader;
+import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
 import hu.icellmobilsoft.coffee.tool.gson.JsonUtil;
 
 /**
@@ -62,7 +62,7 @@ import hu.icellmobilsoft.coffee.tool.gson.JsonUtil;
  * </pre>
  *
  * <br>
- * 
+ *
  * @param <T>
  *            message body type
  *
@@ -118,7 +118,7 @@ public abstract class JsonMessageBodyReaderBase<T> implements MessageBodyReader<
 
     /**
      * Get the charset from the HTTP {@value HttpHeaders#CONTENT_TYPE} header or return UTF-8 in case of any issue
-     * 
+     *
      * @param httpHeaders
      *            the read-only HTTP headers associated with HTTP entity.
      * @return the charset or UTF-8 if its unknown
@@ -138,7 +138,7 @@ public abstract class JsonMessageBodyReaderBase<T> implements MessageBodyReader<
 
     /**
      * Reads request version from request entity.
-     * 
+     *
      * @param object
      *            object to read from
      * @return request version as {@link String}
@@ -156,7 +156,7 @@ public abstract class JsonMessageBodyReaderBase<T> implements MessageBodyReader<
 
     /**
      * Creates object from json inputStream.
-     * 
+     *
      * @param type
      *            type to deserialize into
      * @param charSet

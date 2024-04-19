@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -30,16 +30,16 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 
 import hu.icellmobilsoft.coffee.dto.common.LogConstants;
-import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.module.redisstream.config.IRedisStreamConstant;
 import hu.icellmobilsoft.coffee.rest.cdi.BaseApplicationContainer;
+import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
 import hu.icellmobilsoft.coffee.se.logging.mdc.MDC;
 import redis.clients.jedis.resps.StreamEntry;
 
 /**
  * Basic Redis Stream consumer tools
- * 
+ *
  * @author imre.scheffer
  * @since 1.5.0
  */
@@ -60,7 +60,7 @@ public class BaseStreamConsumer {
 
     /**
      * Logging MDC handling, setting variables
-     * 
+     *
      * @param streamEntry
      *            {@link IRedisStreamConsumer#onStream(StreamEntry)}
      */
@@ -73,7 +73,7 @@ public class BaseStreamConsumer {
 
     /**
      * Another stream message handlings, can be setup in every consumer implementation
-     * 
+     *
      * @param streamEntry
      *            {@link IRedisStreamConsumer#onStream(StreamEntry)}
      * @return true - skip message processing, dont send the message to business process but send ACK.
@@ -86,7 +86,7 @@ public class BaseStreamConsumer {
 
     /**
      * Message TTL is expired?
-     * 
+     *
      * @param streamEntry
      *            {@link IRedisStreamConsumer#onStream(StreamEntry)}
      * @return true - expires processing allowed time

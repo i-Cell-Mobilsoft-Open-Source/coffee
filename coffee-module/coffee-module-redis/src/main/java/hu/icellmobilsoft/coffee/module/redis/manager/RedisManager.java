@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -30,22 +30,22 @@ import org.apache.commons.lang3.StringUtils;
 
 import hu.icellmobilsoft.coffee.cdi.trace.annotation.Traced;
 import hu.icellmobilsoft.coffee.cdi.trace.constants.SpanAttribute;
-import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.dto.exception.InvalidParameterException;
 import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 import hu.icellmobilsoft.coffee.module.redis.annotation.RedisConnection;
+import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
+import hu.icellmobilsoft.coffee.se.function.BaseExceptionFunction;
+import hu.icellmobilsoft.coffee.se.function.BaseExceptionFunction2;
+import hu.icellmobilsoft.coffee.se.function.BaseExceptionFunction3;
+import hu.icellmobilsoft.coffee.se.function.BaseExceptionFunction4;
+import hu.icellmobilsoft.coffee.se.function.BaseExceptionFunction5;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
-import hu.icellmobilsoft.coffee.tool.common.FunctionalInterfaces.BaseExceptionFunction;
-import hu.icellmobilsoft.coffee.tool.common.FunctionalInterfaces.BaseExceptionFunction2;
-import hu.icellmobilsoft.coffee.tool.common.FunctionalInterfaces.BaseExceptionFunction3;
-import hu.icellmobilsoft.coffee.tool.common.FunctionalInterfaces.BaseExceptionFunction4;
-import hu.icellmobilsoft.coffee.tool.common.FunctionalInterfaces.BaseExceptionFunction5;
 import redis.clients.jedis.Jedis;
 
 /**
  * Handle redis operations, jedis connection, exceptions and logging
- * 
+ *
  * @author czenczl
  * @since 1.7.0
  *
@@ -86,7 +86,7 @@ public class RedisManager {
 
     /**
      * Adds log entry for method return if trace is enabled.
-     * 
+     *
      * @param functionName
      *            referenced function name
      * @param params
@@ -100,7 +100,7 @@ public class RedisManager {
 
     /**
      * Build string from functionName and parameters
-     * 
+     *
      * @param functionName
      *            called redis function name
      * @param params
@@ -142,7 +142,7 @@ public class RedisManager {
 
     /**
      * Runs the business logic method call in order to handle common logging and exception handling.
-     * 
+     *
      * @param <R>
      *            response object type
      * @param function
@@ -170,7 +170,7 @@ public class RedisManager {
 
     /**
      * Runs the business logic method call in order to handle common logging and exception handling.
-     * 
+     *
      * @param <R>
      *            response object type
      * @param <P1>
@@ -205,7 +205,7 @@ public class RedisManager {
 
     /**
      * Runs the business logic method call in order to handle common logging and exception handling.
-     * 
+     *
      * @param <R>
      *            response object type
      * @param <P1>
@@ -244,7 +244,7 @@ public class RedisManager {
 
     /**
      * Runs the business logic method call in order to handle common logging and exception handling.
-     * 
+     *
      * @param <R>
      *            response object type
      * @param <P1>
@@ -288,7 +288,7 @@ public class RedisManager {
 
     /**
      * Runs the business logic method call in order to handle common logging and exception handling.
-     * 
+     *
      * @param <R>
      *            response object type
      * @param <P1>
@@ -336,7 +336,7 @@ public class RedisManager {
 
     /**
      * Runs the business logic method call in order to handle jedis connection init and close, common logging and exception handling.
-     * 
+     *
      * @param <R>
      *            response object type
      * @param function
@@ -357,7 +357,7 @@ public class RedisManager {
     /**
      * Runs the business logic method call in order to handle jedis connection init and close, common logging and exception handling with one
      * parameter
-     * 
+     *
      * @param <R>
      *            response object type
      * @param <P1>
@@ -382,7 +382,7 @@ public class RedisManager {
     /**
      * Runs the business logic method call in order to handle jedis connection init and close, common logging and exception handling with two
      * parameters
-     * 
+     *
      * @param <R>
      *            response object type
      * @param <P1>
@@ -412,7 +412,7 @@ public class RedisManager {
     /**
      * Runs the business logic method call in order to handle jedis connection init and close, common logging and exception handling with three
      * parameters
-     * 
+     *
      * @param <R>
      *            response object type
      * @param <P1>
@@ -446,7 +446,7 @@ public class RedisManager {
     /**
      * Runs the business logic method call in order to handle jedis connection init and close, common logging and exception handling with four
      * parameters
-     * 
+     *
      * @param <R>
      *            response object type
      * @param <P1>
@@ -483,7 +483,7 @@ public class RedisManager {
 
     /**
      * Initialize jedis
-     * 
+     *
      * @return object representing the connection and used for automatic close
      */
     public RedisManagerConnection initConnection() {
@@ -508,7 +508,7 @@ public class RedisManager {
 
     /**
      * set config key for jedis initialization
-     * 
+     *
      * @param configKey
      *            for jedis initialization
      */

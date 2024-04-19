@@ -44,9 +44,9 @@ import com.google.gson.JsonSerializer;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.stream.JsonReader;
 import com.mongodb.BasicDBObject;
-
-import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.dto.exception.InvalidParameterException;
+import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
+import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
 import hu.icellmobilsoft.coffee.tool.gson.ClassTypeAdapter;
 import hu.icellmobilsoft.coffee.tool.utils.date.DateUtil;
@@ -126,7 +126,10 @@ public class MongoJsonUtil {
             LOGGER.debug("Converting to JSON successful: [" + json + "]");
             return json;
         } catch (Exception e) {
-            throw new BaseException("Error in converting dto [" + dto.getClass() + "] to String: " + e.getLocalizedMessage(), e);
+            throw new BaseException(
+                    CoffeeFaultType.OPERATION_FAILED,
+                    "Error in converting dto [" + dto.getClass() + "] to String: " + e.getLocalizedMessage(),
+                    e);
         }
     }
 
@@ -151,7 +154,10 @@ public class MongoJsonUtil {
             LOGGER.debug("Converting to Object successful: [" + dto + "]");
             return dto;
         } catch (Exception e) {
-            throw new BaseException("Error in converting json [" + json + "] to [" + classType + "]: " + e.getLocalizedMessage(), e);
+            throw new BaseException(
+                    CoffeeFaultType.OPERATION_FAILED,
+                    "Error in converting json [" + json + "] to [" + classType + "]: " + e.getLocalizedMessage(),
+                    e);
         }
     }
 
@@ -208,6 +214,7 @@ public class MongoJsonUtil {
         }
 
         /** {@inheritDoc} */
+        @Override
         public JsonElement serialize(XMLGregorianCalendar calendar, Type type, JsonSerializationContext jsonSerializationContext) {
             DateTimeFormatter f = DateTimeFormatter.ISO_INSTANT.withZone(ZoneId.systemDefault());
             String isoString = f.format(calendar.toGregorianCalendar().toInstant());
@@ -218,6 +225,7 @@ public class MongoJsonUtil {
         }
 
         /** {@inheritDoc} */
+        @Override
         public XMLGregorianCalendar deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) {
             try {
                 try {

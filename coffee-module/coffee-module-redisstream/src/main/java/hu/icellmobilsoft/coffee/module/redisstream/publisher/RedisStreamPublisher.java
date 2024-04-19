@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -33,7 +33,6 @@ import jakarta.inject.Inject;
 import org.apache.commons.lang3.StringUtils;
 
 import hu.icellmobilsoft.coffee.dto.common.LogConstants;
-import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.dto.exception.InvalidParameterException;
 import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.module.redis.manager.RedisManager;
@@ -43,6 +42,7 @@ import hu.icellmobilsoft.coffee.module.redisstream.config.IRedisStreamConstant;
 import hu.icellmobilsoft.coffee.module.redisstream.config.StreamGroupConfig;
 import hu.icellmobilsoft.coffee.module.redisstream.config.StreamMessageParameter;
 import hu.icellmobilsoft.coffee.module.redisstream.service.RedisStreamService;
+import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
 import hu.icellmobilsoft.coffee.se.logging.mdc.MDC;
 import redis.clients.jedis.Jedis;
@@ -51,7 +51,7 @@ import redis.clients.jedis.params.XAddParams;
 
 /**
  * Redis stream publish functions
- * 
+ *
  * @author imre.scheffer
  * @author martin.nagy
  * @since 1.3.0
@@ -78,7 +78,7 @@ public class RedisStreamPublisher {
 
     /**
      * Initialization
-     * 
+     *
      * @param redisManager
      *            redis connection, operation manager object
      * @param streamGroup
@@ -92,7 +92,7 @@ public class RedisStreamPublisher {
 
     /**
      * Publish (send) one message to stream calculated by initialized streamGroup name.
-     * 
+     *
      * @param streamMessage
      *            Message in stream. Can be String or JSON
      * @return Created Redis Stream message identifier from Redis server
@@ -105,7 +105,7 @@ public class RedisStreamPublisher {
 
     /**
      * Publish (send) one message to stream calculated by initialized streamGroup name.
-     * 
+     *
      * @param streamMessage
      *            Message in stream. Can be String or JSON
      * @param parameters
@@ -121,7 +121,7 @@ public class RedisStreamPublisher {
 
     /**
      * Publish (send) one message to stream calculated by input streamGroup name.
-     * 
+     *
      * @param streamGroup
      *            stream group to send (another than initialized)
      * @param streamMessage
@@ -136,7 +136,7 @@ public class RedisStreamPublisher {
 
     /**
      * Publish (send) one message to stream calculated by input streamGroup name.
-     * 
+     *
      * @param streamGroup
      *            stream group to send (another than initialized)
      * @param streamMessage
@@ -285,7 +285,7 @@ public class RedisStreamPublisher {
 
     /**
      * Publish (send) multiple messages to stream
-     * 
+     *
      * @param streamGroup
      *            Stream group to send (another than initialized)
      * @param streamMessages
@@ -328,7 +328,7 @@ public class RedisStreamPublisher {
 
     /**
      * Create Redis Stream message structure, ready to publish
-     * 
+     *
      * @param streamMessage
      *            Message in stream. Can be String or JSON List
      * @param parameters
@@ -383,7 +383,7 @@ public class RedisStreamPublisher {
 
     /**
      * Create one stream message parameter
-     * 
+     *
      * @param parameterKey
      *            system parameter enum
      * @param parameterValue
@@ -401,7 +401,7 @@ public class RedisStreamPublisher {
 
     /**
      * Validates the passed redis stream group
-     * 
+     *
      * @param streamGroup
      *            the stream group to validate
      * @throws TechnicalException
@@ -415,7 +415,7 @@ public class RedisStreamPublisher {
 
     /**
      * Validates the instance fields
-     * 
+     *
      * @throws BaseException
      *             if validation fails
      */
@@ -427,7 +427,7 @@ public class RedisStreamPublisher {
 
     /**
      * Validates the {@link #redisManager} field
-     * 
+     *
      * @throws TechnicalException
      *             if validation fails
      */

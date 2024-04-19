@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -29,14 +29,13 @@ import javax.annotation.concurrent.ThreadSafe;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
-
-import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
+import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
 
 /**
  * ETCD Config source Szandekosan semmi CDI, MP Config init kozben a CDI meg nem elerheto mindig. Thread-safe singleton
- * 
+ *
  * @author imre.scheffer
  * @since 1.3.0
  */
@@ -61,7 +60,7 @@ public class EtcdConfigSourceCache {
 
     /**
      * Returns value of given property.
-     * 
+     *
      * @param propertyName
      *            property to return value of
      * @return {@link Optional} value of property
@@ -87,7 +86,7 @@ public class EtcdConfigSourceCache {
 
     /**
      * Returns an instance of this class
-     * 
+     *
      * @return an instance of this class
      */
     public static EtcdConfigSourceCache instance() {

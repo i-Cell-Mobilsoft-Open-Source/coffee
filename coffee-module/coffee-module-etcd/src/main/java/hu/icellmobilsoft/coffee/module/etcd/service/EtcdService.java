@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -29,12 +29,12 @@ import java.util.concurrent.TimeUnit;
 import org.apache.commons.lang3.StringUtils;
 
 import hu.icellmobilsoft.coffee.dto.exception.BONotFoundException;
-import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.dto.exception.InvalidParameterException;
 import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 import hu.icellmobilsoft.coffee.module.etcd.config.EtcdConfig;
 import hu.icellmobilsoft.coffee.module.etcd.repository.EtcdRepository;
+import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
 import hu.icellmobilsoft.coffee.tool.utils.string.StringHelper;
 import hu.icellmobilsoft.coffee.tool.utils.string.StringUtil;
@@ -81,7 +81,7 @@ public class EtcdService {
 
     /**
      * ETCD service initialization
-     * 
+     *
      * @param etcdRepository
      *            ETCD repository
      */
@@ -91,7 +91,7 @@ public class EtcdService {
 
     /**
      * Check initialization
-     * 
+     *
      * @throws BaseException
      *             Exception if etcdRepository is null
      */
@@ -103,7 +103,7 @@ public class EtcdService {
 
     /**
      * Get value from ETCD. This call {@link EtcdRepository#get(ByteSequence)}
-     * 
+     *
      * @param key
      *            ETCD key
      * @return Optional value by key
@@ -241,7 +241,7 @@ public class EtcdService {
 
     /**
      * Delete value list from ETCD. This call {@link EtcdRepository#delete(ByteSequence)}
-     * 
+     *
      * @param key
      *            ETCD key
      * @throws BaseException
@@ -295,7 +295,7 @@ public class EtcdService {
 
     /**
      * Returns the ETCD repository
-     * 
+     *
      * @return the ETCD repository
      */
     public EtcdRepository getEtcdRepository() {

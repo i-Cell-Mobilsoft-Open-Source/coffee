@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -41,8 +41,8 @@ import java.util.GregorianCalendar;
 
 import org.apache.commons.lang3.StringUtils;
 
-import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
+import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
 
 /**
@@ -104,7 +104,7 @@ public class DateUtil {
 
     /**
      * Parses {@code String} to {@link Date}.
-     * 
+     *
      * @param dateString
      *            value to parse
      * @param pattern
@@ -245,7 +245,7 @@ public class DateUtil {
 
     /**
      * Convert {@link Calendar} to {@link GregorianCalendar}
-     * 
+     *
      * @param c
      *            {@code Calendar} to convert
      * @return {@code GregorianCalendar} instance or null if {@code c} is null
@@ -524,7 +524,7 @@ public class DateUtil {
 
     /**
      * Returns the last day of the target date's year.
-     * 
+     *
      * @param baseDate
      *            {@code LocalDate} the base date
      * @return {@code LocalDate} the last day of the target date's year. (yyyy.12.31)

@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -37,8 +37,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.stream.JsonReader;
-
-import hu.icellmobilsoft.coffee.dto.exception.BaseException;
+import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
+import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
 
 /**
@@ -76,7 +76,10 @@ public class JsonUtil {
             LOGGER.debug(CONVERTING_TO_OBJECT_SUCCESSFUL_0, dto);
             return dto;
         } catch (Exception e) {
-            throw new BaseException("Error in converting json [" + json + "] to [" + typeOfT + "]: " + e.getLocalizedMessage(), e);
+            throw new BaseException(
+                    CoffeeFaultType.OPERATION_FAILED,
+                    "Error in converting json [" + json + "] to [" + typeOfT + "]: " + e.getLocalizedMessage(),
+                    e);
         }
     }
 
@@ -199,7 +202,10 @@ public class JsonUtil {
             LOGGER.debug(CONVERTING_TO_JSON_SUCCESSFUL_0, StringUtils.abbreviate(json, 1000));
             return json;
         } catch (Exception e) {
-            throw new BaseException("Error in converting dto [" + dto.getClass() + "] to String: " + e.getLocalizedMessage(), e);
+            throw new BaseException(
+                    CoffeeFaultType.OPERATION_FAILED,
+                    "Error in converting dto [" + dto.getClass() + "] to String: " + e.getLocalizedMessage(),
+                    e);
         }
     }
 
@@ -222,7 +228,10 @@ public class JsonUtil {
             LOGGER.debug(CONVERTING_TO_OBJECT_SUCCESSFUL_0, dto);
             return dto;
         } catch (Exception e) {
-            throw new BaseException("Error in converting json [" + json + "] to [" + classType + "]: " + e.getLocalizedMessage(), e);
+            throw new BaseException(
+                    CoffeeFaultType.OPERATION_FAILED,
+                    "Error in converting json [" + json + "] to [" + classType + "]: " + e.getLocalizedMessage(),
+                    e);
         }
     }
 

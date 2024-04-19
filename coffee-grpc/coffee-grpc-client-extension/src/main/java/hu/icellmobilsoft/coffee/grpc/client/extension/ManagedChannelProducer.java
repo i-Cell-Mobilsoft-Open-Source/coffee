@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -32,7 +32,6 @@ import jakarta.enterprise.inject.spi.CDI;
 import jakarta.enterprise.inject.spi.InjectionPoint;
 import jakarta.inject.Inject;
 
-import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.grpc.client.GrpcClient;
 import hu.icellmobilsoft.coffee.grpc.client.config.GrpcClientConfig;
 import hu.icellmobilsoft.coffee.grpc.client.interceptor.ClientRequestInterceptor;
@@ -40,6 +39,7 @@ import hu.icellmobilsoft.coffee.grpc.client.interceptor.ClientResponseIntercepto
 import hu.icellmobilsoft.coffee.grpc.metrics.api.ClientMetricsInterceptorQualifier;
 import hu.icellmobilsoft.coffee.grpc.metrics.api.IMetricsInterceptor;
 import hu.icellmobilsoft.coffee.grpc.traces.api.ClientTracesInterceptorQualifier;
+import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
 import hu.icellmobilsoft.coffee.tool.utils.annotation.AnnotationUtil;
 import io.grpc.ClientInterceptor;
@@ -48,7 +48,7 @@ import io.grpc.ManagedChannelBuilder;
 
 /**
  * Factory class for grpc producer template
- * 
+ *
  * @author czenczl
  * @since 2.1.0
  *
@@ -73,7 +73,7 @@ public class ManagedChannelProducer {
 
     /**
      * produce ManagedChannel
-     * 
+     *
      * @param injectionPoint
      *            the injection point
      * @return ManagedChannel
@@ -114,7 +114,7 @@ public class ManagedChannelProducer {
 
     /**
      * Customize GRPC Channel Builder: interceptor activating, settings ...
-     * 
+     *
      * @param channelBuilder
      *            initialized GRPC Channel Builder
      * @throws BaseException
@@ -137,7 +137,7 @@ public class ManagedChannelProducer {
         // tracing
         Instance<ClientInterceptor> instanceTracing = CDI.current().select(ClientInterceptor.class, new ClientTracesInterceptorQualifier.Literal());
         if (instanceTracing.isResolvable()) {
-            channelBuilder.intercept((ClientInterceptor) instanceTracing.get());
+            channelBuilder.intercept(instanceTracing.get());
         } else {
             log.warn("Could not find Tracing interceptor implementation for gRPC client.");
         }

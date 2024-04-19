@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -34,13 +34,14 @@ import hu.icellmobilsoft.coffee.cdi.logger.ThisLogger;
 import hu.icellmobilsoft.coffee.dto.common.common.KeyValueBasicType;
 import hu.icellmobilsoft.coffee.dto.document.document.TemplateFullType;
 import hu.icellmobilsoft.coffee.dto.document.document.TemplateType;
-import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.dto.exception.InvalidParameterException;
+import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 import hu.icellmobilsoft.coffee.module.document.model.TemplateData;
 import hu.icellmobilsoft.coffee.module.document.model.TemplateParameter;
 import hu.icellmobilsoft.coffee.module.document.model.enums.TemplateDataType;
 import hu.icellmobilsoft.coffee.module.document.service.TemplateDataService;
 import hu.icellmobilsoft.coffee.module.document.service.TemplateParameterService;
+import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
 import hu.icellmobilsoft.coffee.tool.utils.date.DateUtil;
 
 /**
@@ -71,7 +72,7 @@ public class TemplateAction {
 
     /**
      * Returns {@link TemplateFullType} by given {@link TemplateType}.
-     * 
+     *
      * @param templateType
      *            dto
      * @return {@code TemplateFullType} dto
@@ -106,7 +107,7 @@ public class TemplateAction {
             data = processText(templateData, templateParameters, templateType.getParameter());
             break;
         default:
-            throw new BaseException("Not implemeted yet!");
+            throw new BaseException(CoffeeFaultType.OPERATION_FAILED, "Not implemeted yet!");
         }
 
         TemplateFullType response = new TemplateFullType();
@@ -123,7 +124,7 @@ public class TemplateAction {
 
     /**
      * Processes TEXT template. Replaces template parameters.
-     * 
+     *
      * @param templateData
      *            entity
      * @param templateParameters

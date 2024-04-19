@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -32,7 +32,8 @@ import java.time.format.DateTimeParseException;
 
 import org.apache.commons.lang3.StringUtils;
 
-import hu.icellmobilsoft.coffee.dto.exception.BaseException;
+import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
+import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
 
 /**
  * Helper osztály, java 8 time-ok parsolásához
@@ -66,10 +67,13 @@ public class DateParseHelper {
         try {
             return parseOffsetDateTime(from);
         } catch (Exception e) {
-            throw new BaseException(MessageFormat.format(
-                    "Couldn''t parse value:[{0}], msg:[{1}]! Value must be millis from UNIX epoch, "
-                            + "or must comfort to one of 'YYYY-MM-DDThh:mm:ss.SSS', 'YYYY-MM-DDThh:mm:ss.SSSZ', 'YYYY-MM-DDThh:mm:ss.SSS+hh:mm'!",
-                    from, e.getLocalizedMessage()));
+            throw new BaseException(
+                    CoffeeFaultType.OPERATION_FAILED,
+                    MessageFormat.format(
+                            "Couldn''t parse value:[{0}], msg:[{1}]! Value must be millis from UNIX epoch, "
+                                    + "or must comfort to one of 'YYYY-MM-DDThh:mm:ss.SSS', 'YYYY-MM-DDThh:mm:ss.SSSZ', 'YYYY-MM-DDThh:mm:ss.SSS+hh:mm'!",
+                            from,
+                            e.getLocalizedMessage()));
         }
     }
 
@@ -105,9 +109,12 @@ public class DateParseHelper {
         try {
             return parseOffsetTime(from);
         } catch (Exception e) {
-            throw new BaseException(MessageFormat.format(
-                    "Couldn''t parse value:[{0}], msg:[{1}]! Value must be string and comfort to one of 'hh:mm:ss.SSS', 'hh:mm:ss.SSSZ', 'hh:mm:ss.SSS+hh:mm'!",
-                    from, e.getLocalizedMessage()));
+            throw new BaseException(
+                    CoffeeFaultType.OPERATION_FAILED,
+                    MessageFormat.format(
+                            "Couldn''t parse value:[{0}], msg:[{1}]! Value must be string and comfort to one of 'hh:mm:ss.SSS', 'hh:mm:ss.SSSZ', 'hh:mm:ss.SSS+hh:mm'!",
+                            from,
+                            e.getLocalizedMessage()));
         }
     }
 
@@ -137,8 +144,13 @@ public class DateParseHelper {
         try {
             return parseLocalDate(from);
         } catch (Exception e) {
-            throw new BaseException(MessageFormat.format("Couldn''t parse value:[{0}], msg:[{1}]! Value must be millis from UNIX epoch, "
-                    + "or must comfort to one of 'YYYY-MM-DD', 'YYYY-MM-DDZ', 'YYYY-MM-DD+hh:mm'!", from, e.getLocalizedMessage()));
+            throw new BaseException(
+                    CoffeeFaultType.OPERATION_FAILED,
+                    MessageFormat.format(
+                            "Couldn''t parse value:[{0}], msg:[{1}]! Value must be millis from UNIX epoch, "
+                                    + "or must comfort to one of 'YYYY-MM-DD', 'YYYY-MM-DDZ', 'YYYY-MM-DD+hh:mm'!",
+                            from,
+                            e.getLocalizedMessage()));
         }
     }
 
