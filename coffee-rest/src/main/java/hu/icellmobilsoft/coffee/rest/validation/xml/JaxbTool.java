@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -42,13 +42,13 @@ import org.w3c.dom.ls.LSResourceResolver;
 import org.xml.sax.SAXException;
 
 import hu.icellmobilsoft.coffee.cdi.annotation.xml.ValidateXML;
-import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.dto.exception.InvalidParameterException;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 import hu.icellmobilsoft.coffee.rest.validation.xml.error.IXsdValidationErrorCollector;
 import hu.icellmobilsoft.coffee.rest.validation.xml.exception.XsdProcessingException;
 import hu.icellmobilsoft.coffee.rest.validation.xml.utils.IXsdHelper;
 import hu.icellmobilsoft.coffee.rest.validation.xml.utils.IXsdResourceResolver;
+import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
 import hu.icellmobilsoft.coffee.tool.utils.annotation.RangeUtil;
 
 /**
@@ -89,7 +89,7 @@ public class JaxbTool {
      * @return A eredményobjektum
      * @throws BaseException
      *             érvénytelen bemenet esetén, vagy ha nem lehet feldolgozni a bemeneti adatot
-     * 
+     *
      */
     public <T> T unmarshalXML(Class<T> type, InputStream entityStream, String requestVersion, ValidateXML[] validateXMLs) throws BaseException {
         String schemaPath = getXsdPath(validateXMLs, requestVersion);

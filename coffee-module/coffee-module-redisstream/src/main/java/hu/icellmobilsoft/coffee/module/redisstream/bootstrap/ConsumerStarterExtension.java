@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -33,19 +33,20 @@ import jakarta.enterprise.inject.spi.BeanManager;
 import jakarta.enterprise.inject.spi.CDI;
 import jakarta.enterprise.inject.spi.Extension;
 
-import hu.icellmobilsoft.coffee.dto.exception.BaseException;
+import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 import hu.icellmobilsoft.coffee.module.redisstream.annotation.RedisStreamConsumer;
 import hu.icellmobilsoft.coffee.module.redisstream.config.StreamGroupConfig;
 import hu.icellmobilsoft.coffee.module.redisstream.consumer.IRedisStreamBaseConsumer;
 import hu.icellmobilsoft.coffee.module.redisstream.consumer.IRedisStreamConsumerExecutor;
 import hu.icellmobilsoft.coffee.module.redisstream.consumer.RedisStreamConsumerExecutor;
+import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
 import hu.icellmobilsoft.coffee.tool.utils.annotation.AnnotationUtil;
 
 /**
  * Create Redis stream consumer in separate threads. This way have some limits, like JNDI access. This class can be activated by
  * <code>META-INF/services/javax.enterprise.inject.spi.Extension</code> file
- * 
+ *
  * @author imre.scheffer
  * @since 1.3.0
  *
@@ -65,7 +66,7 @@ public class ConsumerStarterExtension implements Extension {
 
     /**
      * After deployment validation
-     * 
+     *
      * @param adv
      *            object, not relevant
      */
@@ -90,7 +91,7 @@ public class ConsumerStarterExtension implements Extension {
         try {
             managedExecutorService = (ManagedExecutorService) InitialContext.doLookup("java:jboss/ee/concurrency/executor/default");
         } catch (NamingException e) {
-            adv.addDeploymentProblem(new BaseException("Can't get ManagedExecutorService", e));
+            adv.addDeploymentProblem(new BaseException(CoffeeFaultType.OPERATION_FAILED, "Can't get ManagedExecutorService", e));
         }
     }
 

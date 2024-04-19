@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -44,8 +44,6 @@ import hu.icellmobilsoft.coffee.cdi.logger.AppLoggerImpl;
 import hu.icellmobilsoft.coffee.cdi.logger.LogContainer;
 import hu.icellmobilsoft.coffee.cdi.logger.LogProducer;
 import hu.icellmobilsoft.coffee.cdi.logger.ThisLogger;
-import hu.icellmobilsoft.coffee.dto.exception.BaseException;
-import hu.icellmobilsoft.coffee.dto.exception.BusinessException;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 import hu.icellmobilsoft.coffee.module.totp.TOtpGenerator;
 import hu.icellmobilsoft.coffee.module.totp.TOtpVerifier;
@@ -55,12 +53,14 @@ import hu.icellmobilsoft.coffee.module.totp.constant.TOtpConfigKey;
 import hu.icellmobilsoft.coffee.module.totp.enums.TOtpAlgorithm;
 import hu.icellmobilsoft.coffee.module.totp.impl.DefaultTOtpGeneratorImpl;
 import hu.icellmobilsoft.coffee.module.totp.impl.DefaultTOtpVerifierImpl;
+import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
+import hu.icellmobilsoft.coffee.se.api.exception.BusinessException;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
 import io.smallrye.config.inject.ConfigExtension;
 
 /**
  * TOTPUtil osztaly unitteszt
- * 
+ *
  * @author cstamas
  *
  */

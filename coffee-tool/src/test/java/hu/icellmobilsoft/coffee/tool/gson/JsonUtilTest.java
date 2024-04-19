@@ -50,8 +50,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
+import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
 
-import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 
 /**
  * @author mark.petrenyi

@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -47,9 +47,9 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 
-import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
+import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
 import hu.icellmobilsoft.coffee.tool.gson.JsonUtil;
 
@@ -86,7 +86,7 @@ public class BaseApacheHttpClient {
 
     /**
      * Method called before everything else.
-     * 
+     *
      * @param request
      *            http request
      * @throws BaseException
@@ -109,7 +109,7 @@ public class BaseApacheHttpClient {
 
     /**
      * Builder method for {@link RequestConfig}.
-     * 
+     *
      * @return {@code RequestConfig.Builder}
      */
     protected RequestConfig.Builder createRequestConfig() {
@@ -118,7 +118,7 @@ public class BaseApacheHttpClient {
 
     /**
      * Creates {@link HttpClientBuilder} based on given {@link RequestConfig}.
-     * 
+     *
      * @param requestConfig
      *            request config
      * @return {@code HttpClientBuilder}
@@ -377,7 +377,7 @@ public class BaseApacheHttpClient {
 
     /**
      * Send http DELETE request.
-     * 
+     *
      * @param url
      *            URL
      * @return {@link HttpResponse}
@@ -411,7 +411,7 @@ public class BaseApacheHttpClient {
 
     /**
      * Adds param with given key and value to given map.
-     * 
+     *
      * @param map
      *            {@code Map} to add param to
      * @param key
@@ -427,7 +427,7 @@ public class BaseApacheHttpClient {
 
     /**
      * URL encodes given text.
-     * 
+     *
      * @param s
      *            text to encode
      * @return URL encoded {@code String} or null if encoding error
@@ -481,7 +481,7 @@ public class BaseApacheHttpClient {
 
     /**
      * Logs http request.
-     * 
+     *
      * @param request
      *            http request
      */
@@ -510,12 +510,12 @@ public class BaseApacheHttpClient {
 
     /**
      * Logs http response info.
-     * 
+     *
      * @param response
      *            {@link HttpResponse}
      * @param byteEntity
      *            byte array
-     * 
+     *
      */
     public void logResponse(HttpResponse response, byte[] byteEntity) {
         StringBuffer msg = new StringBuffer();
@@ -562,7 +562,7 @@ public class BaseApacheHttpClient {
 
     /**
      * Converts JSON object to {@link String}.
-     * 
+     *
      * @param object
      *            JSON to convert
      * @return JSON {@code String}

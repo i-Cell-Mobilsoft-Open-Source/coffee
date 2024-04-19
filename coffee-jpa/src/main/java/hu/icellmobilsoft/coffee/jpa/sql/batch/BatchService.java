@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -72,13 +72,13 @@ import org.hibernate.type.descriptor.converter.spi.BasicValueConverter;
 
 import hu.icellmobilsoft.coffee.cdi.logger.AppLogger;
 import hu.icellmobilsoft.coffee.cdi.logger.ThisLogger;
-import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.dto.exception.InvalidParameterException;
 import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 import hu.icellmobilsoft.coffee.jpa.sql.batch.enums.Status;
 import hu.icellmobilsoft.coffee.jpa.sql.batch.types.StringBasicType;
 import hu.icellmobilsoft.coffee.jpa.sql.entity.EntityHelper;
+import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
 import hu.icellmobilsoft.coffee.tool.utils.string.RandomUtil;
 
 /**
@@ -116,7 +116,7 @@ public class BatchService {
 
     /**
      * input validalas.
-     * 
+     *
      * @param entities
      *            - validalni kivant collection
      * @throws BaseException
@@ -540,7 +540,7 @@ public class BatchService {
 
     /**
      * Parameterek beallitasa az update szamara.
-     * 
+     *
      * @param <E>
      *            - entitas tipusa
      * @param ps
@@ -577,7 +577,7 @@ public class BatchService {
 
     /**
      * Parameterek beallitasa az insert szamara.
-     * 
+     *
      * @param <E>
      *            - entitas tipusa
      * @param ps
@@ -619,7 +619,7 @@ public class BatchService {
 
     /**
      * Adott objektum {@link PreparedStatement}-be valo behelyettesitese.
-     * 
+     *
      * @param <E>
      *            - entitas tipusa
      * @param ps
@@ -678,7 +678,7 @@ public class BatchService {
 
     /**
      * Sets a {@link ConvertedBasicType} object in the prepared statement.
-     * 
+     *
      * @param ps
      *            the prepared statement.
      * @param parameterIndex
@@ -767,7 +767,7 @@ public class BatchService {
 
     /**
      * Converts an object to {@link java.sql.Date}.
-     * 
+     *
      * @param value
      *            the object.
      * @return the converted {@link java.sql.Date} or null in case of unhandled java type.
@@ -850,7 +850,7 @@ public class BatchService {
      * Sets a timestamp object in the prepared statement.<br>
      * Be careful to use {@link Instant}, not every prepared statement implementation has converter for it.<br>
      * For example oracle prepared statement throws java.sql.Exception, because there is no converter for java.time.Instant to oracle.sql.TIMESTAMP.
-     * 
+     *
      * @param ps
      *            the prepared statement.
      * @param parameterIndex
@@ -911,7 +911,7 @@ public class BatchService {
 
     /**
      * Sets a boolean object in the prepared statement.
-     * 
+     *
      * @param ps
      *            the prepared statement.
      * @param parameterIndex
@@ -932,7 +932,7 @@ public class BatchService {
 
     /**
      * Sets a binary object in the prepared statement.
-     * 
+     *
      * @param ps
      *            the prepared statement.
      * @param parameterIndex
@@ -956,7 +956,7 @@ public class BatchService {
 
     /**
      * Audit bejegyzes beszurasanak kezelese
-     * 
+     *
      * @param <E>
      *            - entitas tipusa
      * @param entity
@@ -967,7 +967,7 @@ public class BatchService {
 
     /**
      * Audit bejegyzes modositasanak kezelese.
-     * 
+     *
      * @param <E>
      *            - entitas tipusa
      * @param entity
@@ -978,7 +978,7 @@ public class BatchService {
 
     /**
      * ID generalas
-     * 
+     *
      * @return random id
      */
     protected String generateId() {
@@ -987,7 +987,7 @@ public class BatchService {
 
     /**
      * Batch merete
-     * 
+     *
      * @return batch meret
      */
     protected int batchSize() {
@@ -996,7 +996,7 @@ public class BatchService {
 
     /**
      * Parameterkent kapott <code>java.util.Date</code> visszadasa <code>java.sql.Timestamp</code>-kent
-     * 
+     *
      * @param date
      *            - datum
      * @return {@link Timestamp}
@@ -1007,7 +1007,7 @@ public class BatchService {
 
     /**
      * Getter for the field <code>sqlPostfix</code>.
-     * 
+     *
      * @return SQL postfix
      */
     public String getSqlPostfix() {
@@ -1016,7 +1016,7 @@ public class BatchService {
 
     /**
      * Setter for the field <code>sqlPostfix</code>.
-     * 
+     *
      * @param sqlPostfix
      *            - postfix
      */
@@ -1026,7 +1026,7 @@ public class BatchService {
 
     /**
      * Entity id visszadasa.
-     * 
+     *
      * @param entity
      *            - entitas
      * @return entity id
@@ -1037,7 +1037,7 @@ public class BatchService {
 
     /**
      * Returns the db timezone.
-     * 
+     *
      * @return the db timezone.
      */
     protected TimeZone getDbTimeZone() {
@@ -1046,7 +1046,7 @@ public class BatchService {
 
     /**
      * Returns the {@link ZoneOffset} by {@link ZoneId}.
-     * 
+     *
      * @param zoneId
      *            the {@link ZoneId}.
      * @return {@link ZoneOffset} by {@link ZoneId}.

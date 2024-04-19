@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -46,16 +46,15 @@ import com.mongodb.connection.ClusterSettings;
 import com.mongodb.connection.ConnectionPoolSettings;
 import com.mongodb.connection.ServerSettings;
 import com.mongodb.connection.SocketSettings;
-
-import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
+import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
 import hu.icellmobilsoft.coffee.tool.utils.annotation.AnnotationUtil;
 import hu.icellmobilsoft.coffee.tool.utils.string.StringUtil;
 
 /**
  * Factory class to produce @MongoDbClient
- * 
+ *
  * @author czenczl
  * @since 1.1.0
  *
@@ -81,7 +80,7 @@ public class MongoDbClientFactory {
 
     /**
      * Producer method for creating MongoDbClient instance
-     * 
+     *
      * @param injectionPoint
      *            Provides access to metadata about MongoDbClient injection.
      * @return MongoDbClient
@@ -119,7 +118,7 @@ public class MongoDbClientFactory {
 
     /**
      * Create mongoClient and put in the container if not exist with the given configKey, thread safe
-     * 
+     *
      * @param mongoConfigHelper
      *            The initialized helper class with mongo connection parameters.
      * @throws BaseException
@@ -134,7 +133,7 @@ public class MongoDbClientFactory {
 
     /**
      * Creates mongoClient.
-     * 
+     *
      * @return mongo client
      * @throws BaseException
      *             if any exception occurs during creation

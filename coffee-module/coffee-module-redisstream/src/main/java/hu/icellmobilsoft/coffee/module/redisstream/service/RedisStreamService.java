@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -35,7 +35,6 @@ import jakarta.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
 
-import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.dto.exception.InvalidParameterException;
 import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.module.redis.manager.RedisManager;
@@ -43,6 +42,7 @@ import hu.icellmobilsoft.coffee.module.redis.manager.RedisManagerConnection;
 import hu.icellmobilsoft.coffee.module.redisstream.common.RedisStreamUtil;
 import hu.icellmobilsoft.coffee.module.redisstream.config.IStreamGroupConfig;
 import hu.icellmobilsoft.coffee.module.redisstream.config.StreamGroupConfig;
+import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.StreamEntryID;
@@ -55,7 +55,7 @@ import redis.clients.jedis.resps.StreamPendingEntry;
 
 /**
  * Service class for redis stream logic
- * 
+ *
  * @author imre.scheffer
  * @since 1.3.0
  *
@@ -86,7 +86,7 @@ public class RedisStreamService {
 
     /**
      * Stream key, calculated by {@link #group}
-     * 
+     *
      * @return Stream key
      */
     public String streamKey() {
@@ -104,11 +104,11 @@ public class RedisStreamService {
 
     /**
      * Count elements in stream. This is equivalent to redis console:
-     * 
+     *
      * <pre>
      * XLEN streamKey
      * </pre>
-     * 
+     *
      * @return elements count
      * @throws BaseException
      *             Exception
@@ -123,13 +123,13 @@ public class RedisStreamService {
 
     /**
      * Check group exist. This is equivalent to redis console:
-     * 
+     *
      * <pre>
      * XINFO GROUPS streamKey
      * </pre>
-     * 
+     *
      * and search checking group
-     * 
+     *
      * @return true if exist
      * @throws BaseException
      *             exception
@@ -142,13 +142,13 @@ public class RedisStreamService {
 
     /**
      * Checking for existing group. If not exist, then create it, with also creating non-existing stream too. This is equivalent to redis console:
-     * 
+     *
      * <pre>
      * XINFO GROUPS streamKey
      * # if not exist group then
      * XGROUP CREATE streamKey group 0 MKSTREAM
      * </pre>
-     * 
+     *
      * @throws BaseException
      *             exception
      */
@@ -181,11 +181,11 @@ public class RedisStreamService {
 
     /**
      * Consume one entry from stream. Read timeout is defined in configuration. This is equivalent to redis console:
-     * 
+     *
      * <pre>
      * XREADGROUP GROUP group consumerIdentifier BLOCK config.StreamReadTimeoutMillis COUNT 1 STREAMS mystream &gt;
      * </pre>
-     * 
+     *
      * @param consumerIdentifier
      *            unique consumer identifier
      * @return stream entry
@@ -229,7 +229,7 @@ public class RedisStreamService {
 
     /**
      * Creates the parameters for the {@link Jedis#xreadGroup}
-     * 
+     *
      * @return params for {@link Jedis#xreadGroup}
      */
     protected XReadGroupParams createXReadGroupParams() {
@@ -244,11 +244,11 @@ public class RedisStreamService {
 
     /**
      * ACK stream element. This is equivalent to redis console:
-     * 
+     *
      * <pre>
      * XACK streamKey group 1526569495631-0
      * </pre>
-     * 
+     *
      * @param streamEntryID
      *            stream element unique ID. If null then do nothing
      * @return success count, if &gt;0 then successfully ACKed
@@ -295,11 +295,11 @@ public class RedisStreamService {
 
     /**
      * List stream entries in pending. This is equivalent to redis console:
-     * 
+     *
      * <pre>
      * XPENDING streamKey group from to pendingCount
      * </pre>
-     * 
+     *
      * @param pendingCount
      *            pending count limit
      * @param from
@@ -324,11 +324,11 @@ public class RedisStreamService {
 
     /**
      * List the stream entries that were read without ACK and expired in durationg. This is equivalent to redis console:
-     * 
+     *
      * <pre>
      * XPENDING streamKey group - now-expiry pendingCount
      * </pre>
-     * 
+     *
      * @param pendingCount
      *            pending count limit
      * @param expiryDuration
@@ -346,14 +346,14 @@ public class RedisStreamService {
 
     /**
      * Clear expired pending stream entries. This is equivalent to redis console:
-     * 
+     *
      * <pre>
      * XPENDING streamKey group - now-expiry pendingCount
      * # loop for every entry
      * XACK streamKey group StreamEntryID
      * # until entry is zero
      * </pre>
-     * 
+     *
      * @param expiryDuration
      *            expiry duration
      * @return removed entries count
@@ -384,7 +384,7 @@ public class RedisStreamService {
 
     /**
      * List stream entries in pending
-     * 
+     *
      * @param pendingCount
      *            pending count limit
      * @param from
@@ -401,7 +401,7 @@ public class RedisStreamService {
 
     /**
      * List stream entries in pending
-     * 
+     *
      * @param pendingCount
      *            pending count limit
      * @return pending entries
@@ -414,7 +414,7 @@ public class RedisStreamService {
 
     /**
      * Convert Date types to StreamEntryID
-     * 
+     *
      * @param localDateTime
      *            date
      * @return new StreamEntryID
@@ -447,7 +447,7 @@ public class RedisStreamService {
 
     /**
      * Returns the redis stream group
-     * 
+     *
      * @return the redis stream group
      */
     public String getGroup() {
@@ -456,7 +456,7 @@ public class RedisStreamService {
 
     /**
      * Sets the redis stream group
-     * 
+     *
      * @param group
      *            the new redis stream group
      */
@@ -467,7 +467,7 @@ public class RedisStreamService {
 
     /**
      * Get CDI instance
-     * 
+     *
      * @return Dependent instance of RedisStreamService
      */
     public static Instance<RedisStreamService> instance() {

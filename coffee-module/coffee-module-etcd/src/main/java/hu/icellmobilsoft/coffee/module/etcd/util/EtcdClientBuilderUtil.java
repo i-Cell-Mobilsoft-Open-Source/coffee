@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -21,16 +21,17 @@ package hu.icellmobilsoft.coffee.module.etcd.util;
 
 import java.time.Duration;
 
-import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.dto.exception.InvalidParameterException;
+import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 import hu.icellmobilsoft.coffee.module.etcd.config.EtcdConfig;
+import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
 import io.etcd.jetcd.Client;
 import io.etcd.jetcd.ClientBuilder;
 
 /**
  * {@link ClientBuilder} creater util class
- * 
+ *
  * @author speter555
  * @since 1.13.0
  */
@@ -83,7 +84,7 @@ public class EtcdClientBuilderUtil {
                     .waitForReady(etcdConfig.isWaitForReady());
         } catch (Exception e) {
             logger.error("Problems trying to get the Etcd client builder.", e);
-            throw new BaseException("Problems trying to get the Etcd client builder.", e);
+            throw new BaseException(CoffeeFaultType.OPERATION_FAILED, "Problems trying to get the Etcd client builder.", e);
         }
         return etcdClientBuilder;
     }

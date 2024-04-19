@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -26,14 +26,13 @@ import org.bson.conversions.Bson;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.client.MongoDatabase;
-
-import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.module.mongodb.annotation.MongoServiceBaseQualifier;
 import hu.icellmobilsoft.coffee.module.mongodb.service.MongoService;
+import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
 
 /**
  * Class for handle @MongoDatabase and default MongoService functionality
- * 
+ *
  * @author czenczl
  * @since 1.1.0
  *
@@ -56,7 +55,7 @@ public class MongoDbClient {
 
     /**
      * init MongoRepository collection
-     * 
+     *
      * @param collection
      *            The selected mongo collection
      */
@@ -66,7 +65,7 @@ public class MongoDbClient {
 
     /**
      * get selected mongodatabase
-     * 
+     *
      * @return mongoDatabase
      */
     public MongoDatabase getMongoDatabase() {
@@ -75,7 +74,7 @@ public class MongoDbClient {
 
     /**
      * set mongo database
-     * 
+     *
      * @param mongoDatabase
      *            set the selected MongoDatabase
      */
@@ -87,7 +86,7 @@ public class MongoDbClient {
      * <p>
      * insertOne.
      * </p>
-     * 
+     *
      * @param document
      *            BasicDBObject to insert
      * @throws BaseException
@@ -101,7 +100,7 @@ public class MongoDbClient {
      * <p>
      * findFirst.
      * </p>
-     * 
+     *
      * @param filter
      *            mongo select filter
      * @return BasicDBObject
@@ -116,7 +115,7 @@ public class MongoDbClient {
      * <p>
      * findById.
      * </p>
-     * 
+     *
      * @param mongoId
      *            Mongo document object id
      * @return BasicDBObject

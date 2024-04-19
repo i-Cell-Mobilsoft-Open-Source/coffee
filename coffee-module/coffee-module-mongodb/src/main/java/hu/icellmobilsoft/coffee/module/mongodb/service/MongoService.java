@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -33,13 +33,12 @@ import org.bson.types.ObjectId;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.client.MongoCollection;
-
 import hu.icellmobilsoft.coffee.dto.exception.BONotFoundException;
-import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.dto.exception.InvalidParameterException;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 import hu.icellmobilsoft.coffee.module.mongodb.annotation.MongoServiceBaseQualifier;
 import hu.icellmobilsoft.coffee.module.mongodb.repository.MongoRepository;
+import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
 
 /**
@@ -49,7 +48,7 @@ import hu.icellmobilsoft.coffee.se.logging.Logger;
  *            MongoEntity parameter
  * @author imre.scheffer
  * @since 1.0.0
- * 
+ *
  */
 @Dependent
 @MongoServiceBaseQualifier
@@ -100,7 +99,7 @@ public class MongoService<T> {
             mongoRepository.insertOne(document);
         } catch (Exception e) {
             String msg = MessageFormat.format("Error occurred in inserting mongo data: {0}", e.getLocalizedMessage());
-            throw new BaseException(msg, e);
+            throw new BaseException(CoffeeFaultType.OPERATION_FAILED, msg, e);
         } finally {
             log.trace("<< MongoService.insertOne(document: [{0}]", document);
         }
@@ -114,7 +113,7 @@ public class MongoService<T> {
      * @throws BaseException
      *             When Mongo select fail.
      * @return T
-     * 
+     *
      */
     public T findById(String mongoId) throws BaseException {
         if (StringUtils.isBlank(mongoId)) {
@@ -125,7 +124,7 @@ public class MongoService<T> {
             return findFirst(new BasicDBObject(COLUMN_MONGO_ID, new ObjectId(mongoId)));
         } catch (IllegalArgumentException e) {
             String msg = MessageFormat.format("The mongoId [{0}] is invalid: {1}", mongoId, e.getLocalizedMessage());
-            throw new BaseException(msg, e);
+            throw new BaseException(CoffeeFaultType.OPERATION_FAILED, msg, e);
         }
     }
 
@@ -149,7 +148,7 @@ public class MongoService<T> {
             found = mongoRepository.findFirst(filter);
         } catch (Exception e) {
             String msg = MessageFormat.format(FILTER_RESULT_ERROR_MSG, e.getLocalizedMessage());
-            throw new BaseException(msg, e);
+            throw new BaseException(CoffeeFaultType.OPERATION_FAILED, msg, e);
         } finally {
             log.trace("<< MongoService.findFirst(filter: [{0}]", filter);
         }
@@ -182,7 +181,7 @@ public class MongoService<T> {
             found = mongoRepository.findFirst(filter, order);
         } catch (Exception e) {
             String msg = MessageFormat.format(FILTER_RESULT_ERROR_MSG, e.getLocalizedMessage());
-            throw new BaseException(msg, e);
+            throw new BaseException(CoffeeFaultType.OPERATION_FAILED, msg, e);
         } finally {
             log.trace("<< MongoService.findFirst(filter: [{0}], order: [{1}]", filter, order);
         }
@@ -224,7 +223,7 @@ public class MongoService<T> {
             found = mongoRepository.findAll(filter);
         } catch (Exception e) {
             String msg = MessageFormat.format(FILTER_RESULT_ERROR_MSG, e.getLocalizedMessage());
-            throw new BaseException(msg, e);
+            throw new BaseException(CoffeeFaultType.OPERATION_FAILED, msg, e);
         } finally {
             log.trace("<< MongoService.findAll(filter: [{0}])", filter);
         }
@@ -263,7 +262,7 @@ public class MongoService<T> {
             found = mongoRepository.find(filter, order, rows, page, clazz);
         } catch (Exception e) {
             String msg = MessageFormat.format(FILTER_RESULT_ERROR_MSG, e.getLocalizedMessage());
-            throw new BaseException(msg, e);
+            throw new BaseException(CoffeeFaultType.OPERATION_FAILED, msg, e);
         } finally {
             log.trace("<< MongoService.find(filter: [{0}], order: [{1}], rows: [{2}], page: [{3}], clazz: [{4}]", filter, order, rows, page, clazz);
         }
@@ -293,7 +292,7 @@ public class MongoService<T> {
             found = mongoRepository.count(filter);
         } catch (Exception e) {
             String msg = MessageFormat.format("Error occurred in counting mongo data by filter: {0}", e.getLocalizedMessage());
-            throw new BaseException(msg, e);
+            throw new BaseException(CoffeeFaultType.OPERATION_FAILED, msg, e);
         } finally {
             log.trace("<< MongoService.count(filter: [{0}]", filter);
         }
@@ -320,7 +319,7 @@ public class MongoService<T> {
             mongoRepository.insertMany(documents);
         } catch (Exception e) {
             String msg = MessageFormat.format("Error occurred in inserting mongo datas: {0}", e.getLocalizedMessage());
-            throw new BaseException(msg, e);
+            throw new BaseException(CoffeeFaultType.OPERATION_FAILED, msg, e);
         } finally {
             log.trace("<< BaseMongoService.insertMany(documents: [{0}]", documents);
         }
@@ -328,7 +327,7 @@ public class MongoService<T> {
 
     /**
      * BONotFoundException FaultType felülírás lehetőségét nyújtó metódus
-     * 
+     *
      * @return Enum
      */
     protected Enum<?> getDefaultNotFoundFaultTypeEnum() {

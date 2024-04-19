@@ -19,21 +19,21 @@
  */
 package hu.icellmobilsoft.coffee.jpa.helper;
 
-import jakarta.enterprise.context.Dependent;
-
 import java.util.Objects;
 
-import hu.icellmobilsoft.coffee.dto.exception.BaseException;
+import jakarta.enterprise.context.Dependent;
+
 import hu.icellmobilsoft.coffee.dto.exception.InvalidParameterException;
 import hu.icellmobilsoft.coffee.jpa.annotation.Transactional;
-import hu.icellmobilsoft.coffee.tool.common.FunctionalInterfaces.BaseExceptionFunction;
-import hu.icellmobilsoft.coffee.tool.common.FunctionalInterfaces.BaseExceptionFunction2;
-import hu.icellmobilsoft.coffee.tool.common.FunctionalInterfaces.BaseExceptionFunction3;
-import hu.icellmobilsoft.coffee.tool.common.FunctionalInterfaces.BaseExceptionFunction4;
-import hu.icellmobilsoft.coffee.tool.common.FunctionalInterfaces.BaseExceptionFunction5;
-import hu.icellmobilsoft.coffee.tool.common.FunctionalInterfaces.BaseExceptionFunction6;
-import hu.icellmobilsoft.coffee.tool.common.FunctionalInterfaces.BaseExceptionRunner;
-import hu.icellmobilsoft.coffee.tool.common.FunctionalInterfaces.BaseExceptionSupplier;
+import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
+import hu.icellmobilsoft.coffee.se.function.BaseExceptionFunction;
+import hu.icellmobilsoft.coffee.se.function.BaseExceptionFunction2;
+import hu.icellmobilsoft.coffee.se.function.BaseExceptionFunction3;
+import hu.icellmobilsoft.coffee.se.function.BaseExceptionFunction4;
+import hu.icellmobilsoft.coffee.se.function.BaseExceptionFunction5;
+import hu.icellmobilsoft.coffee.se.function.BaseExceptionFunction6;
+import hu.icellmobilsoft.coffee.se.function.BaseExceptionRunner;
+import hu.icellmobilsoft.coffee.se.function.BaseExceptionSupplier;
 
 /**
  * Helper class for managing transactions. <br>
@@ -73,7 +73,7 @@ public class TransactionHelper {
 
     /**
      * Execute the given {@link BaseExceptionRunner} inside a {@link Transactional} block.
-     * 
+     *
      * @param baseExceptionRunner
      *            the given {@link BaseExceptionRunner}.
      * @throws BaseException
@@ -89,7 +89,7 @@ public class TransactionHelper {
 
     /**
      * Execute the given {@link BaseExceptionFunction} inside a {@link Transactional} block.
-     * 
+     *
      * @param baseExceptionFunction
      *            the given {@link BaseExceptionFunction}.
      * @param p1
@@ -112,7 +112,7 @@ public class TransactionHelper {
 
     /**
      * Execute the given {@link BaseExceptionFunction2} inside a {@link Transactional} block.
-     * 
+     *
      * @param baseExceptionFunction
      *            the given {@link BaseExceptionFunction2}.
      * @param p1
@@ -139,7 +139,7 @@ public class TransactionHelper {
 
     /**
      * Execute the given {@link BaseExceptionFunction3} inside a {@link Transactional} block.
-     * 
+     *
      * @param baseExceptionFunction
      *            he given {@link BaseExceptionFunction3}.
      * @param p1
@@ -171,7 +171,7 @@ public class TransactionHelper {
 
     /**
      * Execute the given {@link BaseExceptionFunction4} inside a {@link Transactional} block.
-     * 
+     *
      * @param baseExceptionFunction
      *            he given {@link BaseExceptionFunction4}.
      * @param p1
@@ -207,7 +207,7 @@ public class TransactionHelper {
 
     /**
      * Execute the given {@link BaseExceptionFunction5} inside a {@link Transactional} block.
-     * 
+     *
      * @param baseExceptionFunction
      *            he given {@link BaseExceptionFunction5}.
      * @param p1
@@ -247,7 +247,7 @@ public class TransactionHelper {
 
     /**
      * Execute the given {@link BaseExceptionFunction6} inside a {@link Transactional} block.
-     * 
+     *
      * @param baseExceptionFunction
      *            he given {@link BaseExceptionFunction6}.
      * @param p1

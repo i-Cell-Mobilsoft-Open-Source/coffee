@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -25,14 +25,14 @@ import jakarta.ws.rs.PathParam;
 import hu.icellmobilsoft.coffee.cdi.logger.AppLogger;
 import hu.icellmobilsoft.coffee.cdi.logger.ThisLogger;
 import hu.icellmobilsoft.coffee.cdi.util.ProxyUtils;
-import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
-import hu.icellmobilsoft.coffee.tool.common.FunctionalInterfaces.BaseExceptionFunction;
-import hu.icellmobilsoft.coffee.tool.common.FunctionalInterfaces.BaseExceptionFunction2;
-import hu.icellmobilsoft.coffee.tool.common.FunctionalInterfaces.BaseExceptionFunction3;
-import hu.icellmobilsoft.coffee.tool.common.FunctionalInterfaces.BaseExceptionFunction4;
-import hu.icellmobilsoft.coffee.tool.common.FunctionalInterfaces.BaseExceptionSupplier;
+import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
+import hu.icellmobilsoft.coffee.se.function.BaseExceptionFunction;
+import hu.icellmobilsoft.coffee.se.function.BaseExceptionFunction2;
+import hu.icellmobilsoft.coffee.se.function.BaseExceptionFunction3;
+import hu.icellmobilsoft.coffee.se.function.BaseExceptionFunction4;
+import hu.icellmobilsoft.coffee.se.function.BaseExceptionSupplier;
 
 /**
  * Base REST service for all REST endpoint
@@ -71,7 +71,7 @@ public abstract class BaseRestService {
 
     /**
      * Logs given {@link Exception}, then returns {@link BaseException}.
-     * 
+     *
      * @param e
      *            {@code Exception}
      * @return {@code BaseException}
@@ -314,7 +314,7 @@ public abstract class BaseRestService {
 
     /**
      * Returns given method name concatenated with given {@link PathParam} names.
-     * 
+     *
      * @param methodName
      *            the REST method name e.g getCustomerInfoByUserId
      * @param paramNames
@@ -348,7 +348,7 @@ public abstract class BaseRestService {
 
     /**
      * Returns original, un-proxied class name.
-     * 
+     *
      * @return un-proxied class name
      */
     protected String getOriginalClassName() {

@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -42,13 +42,13 @@ import hu.icellmobilsoft.coffee.cdi.annotation.Range;
 import hu.icellmobilsoft.coffee.cdi.annotation.Version;
 import hu.icellmobilsoft.coffee.cdi.logger.AppLogger;
 import hu.icellmobilsoft.coffee.cdi.logger.ThisLogger;
-import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.dto.exception.InvalidParameterException;
 import hu.icellmobilsoft.coffee.module.ruleng.rule.IRule;
 import hu.icellmobilsoft.coffee.module.ruleng.rule.IRuleSelector;
 import hu.icellmobilsoft.coffee.module.ruleng.rule.RuleException;
 import hu.icellmobilsoft.coffee.module.ruleng.rule.RuleGroup;
 import hu.icellmobilsoft.coffee.module.ruleng.rule.RuleResult;
+import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
 import hu.icellmobilsoft.coffee.tool.utils.annotation.AnnotationUtil;
 import hu.icellmobilsoft.coffee.tool.utils.annotation.RangeUtil;
 
@@ -107,7 +107,7 @@ public abstract class AbstractEvaluator<INPUT, RULERESULT extends RuleResult> im
      *     return new RuleQualifier.Literal();
      * }
      * </pre>
-     * 
+     *
      * @return {@code Annotation}
      */
     protected abstract Annotation cdiSelectLiteral();
@@ -123,7 +123,7 @@ public abstract class AbstractEvaluator<INPUT, RULERESULT extends RuleResult> im
      *     };
      * }
      * </pre>
-     * 
+     *
      * @return {@code TypeLiteral}
      */
     protected abstract TypeLiteral<IRule<INPUT, RULERESULT>> cdiTypeLiteral();

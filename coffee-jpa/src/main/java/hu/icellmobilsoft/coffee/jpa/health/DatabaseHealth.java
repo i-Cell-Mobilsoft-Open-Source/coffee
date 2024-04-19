@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -42,14 +42,14 @@ import org.eclipse.microprofile.health.HealthCheckResponseBuilder;
 
 import hu.icellmobilsoft.coffee.cdi.config.IConfigKey;
 import hu.icellmobilsoft.coffee.cdi.health.constants.HealthConstant;
-import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.dto.exception.InvalidParameterException;
+import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
 import hu.icellmobilsoft.coffee.tool.utils.health.HealthUtil;
 
 /**
  * To support microprofile-health mechanics, this class can check whether the database is reachable within a given timeout.
- * 
+ *
  * @author czenczl
  * @since 2.2.0
  *
@@ -75,9 +75,9 @@ public class DatabaseHealth {
     }
 
     /**
-     * 
+     *
      * Checking whether the database is reachable
-     * 
+     *
      * @param dataBaseResourceConfig
      *            configuration to connect the database
      * @return the created {@link HealthCheckResponse} contains information about whether the database is reachable and the connection details
@@ -90,7 +90,7 @@ public class DatabaseHealth {
 
     /**
      * Checking whether the database is reachable
-     * 
+     *
      * @param dataBaseResourceConfig
      *            configuration to connect the database
      * @param nodeId

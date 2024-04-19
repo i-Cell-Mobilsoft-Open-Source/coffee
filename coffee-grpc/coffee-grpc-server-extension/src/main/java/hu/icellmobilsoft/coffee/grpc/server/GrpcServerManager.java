@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -42,7 +42,6 @@ import jakarta.inject.Inject;
 
 import org.apache.commons.lang3.ArrayUtils;
 
-import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.grpc.api.service.IGrpcService;
 import hu.icellmobilsoft.coffee.grpc.metrics.api.IMetricsInterceptor;
 import hu.icellmobilsoft.coffee.grpc.metrics.api.ServerMetricsInterceptorQualifier;
@@ -53,6 +52,7 @@ import hu.icellmobilsoft.coffee.grpc.server.interceptor.ErrorHandlerInterceptor;
 import hu.icellmobilsoft.coffee.grpc.server.interceptor.ServerRequestInterceptor;
 import hu.icellmobilsoft.coffee.grpc.server.interceptor.ServerResponseInterceptor;
 import hu.icellmobilsoft.coffee.grpc.traces.api.ServerTracesInterceptorQualifier;
+import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
 import io.grpc.BindableService;
 import io.grpc.Server;
@@ -61,7 +61,7 @@ import io.grpc.ServerInterceptor;
 
 /**
  * Sample gRPC server manager
- * 
+ *
  * @author czenczl
  * @author Imre Scheffer
  * @since 2.1.0
@@ -94,7 +94,7 @@ public class GrpcServerManager {
 
     /**
      * Server initialization, port bind, adding services to the server, defining interceptors
-     * 
+     *
      * @throws BaseException
      *             on error
      */
@@ -118,7 +118,7 @@ public class GrpcServerManager {
 
     /**
      * Configure gRPC server instance common settings
-     * 
+     *
      * @param serverBuilder
      *            gRPC server instance
      * @throws BaseException
@@ -139,7 +139,7 @@ public class GrpcServerManager {
 
     /**
      * Configure gRPC server instance thread pool executor
-     * 
+     *
      * @param serverBuilder
      *            gRPC server instance
      * @throws BaseException
@@ -164,7 +164,7 @@ public class GrpcServerManager {
 
     /**
      * Adding services to the server, start grpc operations interception
-     * 
+     *
      * @param bean
      *            gRPC service implementation bean
      * @param serverBuilder
@@ -212,7 +212,7 @@ public class GrpcServerManager {
     /**
      * Request/Response sample interceptor, you have to be careful with this, because the call chain is called in a strange way in reverse order, and
      * it can run here several times in one process
-     * 
+     *
      * @param serverBuilder
      *            GRPC server builder
      */
@@ -231,7 +231,7 @@ public class GrpcServerManager {
 
         Instance<ServerInterceptor> instanceTracing = CDI.current().select(ServerInterceptor.class, new ServerTracesInterceptorQualifier.Literal());
         if (instanceTracing.isResolvable()) {
-            serverBuilder.intercept((ServerInterceptor) instanceTracing.get()); // 1
+            serverBuilder.intercept(instanceTracing.get()); // 1
         } else {
             log.warn("Could not find tracing interceptor implementation for gRPC server.");
         }

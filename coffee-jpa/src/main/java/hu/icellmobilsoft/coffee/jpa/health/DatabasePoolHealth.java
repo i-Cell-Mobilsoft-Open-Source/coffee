@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -32,13 +32,13 @@ import hu.icellmobilsoft.coffee.cdi.health.constants.HealthConstant;
 import hu.icellmobilsoft.coffee.cdi.metric.MetricTag;
 import hu.icellmobilsoft.coffee.cdi.metric.spi.IMetricsHandler;
 import hu.icellmobilsoft.coffee.cdi.metric.spi.IMetricsHandler.Implementation;
-import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.dto.exception.InvalidParameterException;
+import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
 import hu.icellmobilsoft.coffee.tool.utils.health.HealthUtil;
 
 /**
  * To support microprofile-health mechanics, this class can check whether the database connection pool usage is below the desired threshold.
- * 
+ *
  * @author czenczl
  * @since 2.2.0
  *
@@ -61,7 +61,7 @@ public class DatabasePoolHealth {
 
     /**
      * Checking the database connection pool usage
-     * 
+     *
      * @param builderName
      *            the name of the health check response
      * @return The created {@link HealthCheckResponse} contains information about whether the database connection pool usage is below the desired
@@ -75,7 +75,7 @@ public class DatabasePoolHealth {
 
     /**
      * Checking the database connection pool usage
-     * 
+     *
      * @param builderName
      *            the name of the health check response
      * @param nodeId

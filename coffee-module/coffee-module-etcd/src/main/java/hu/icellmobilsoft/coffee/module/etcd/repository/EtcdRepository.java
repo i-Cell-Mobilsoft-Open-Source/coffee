@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -21,9 +21,9 @@ package hu.icellmobilsoft.coffee.module.etcd.repository;
 
 import java.util.concurrent.CompletableFuture;
 
-import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
+import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
 import io.etcd.jetcd.ByteSequence;
 import io.etcd.jetcd.Client;
 import io.etcd.jetcd.KV;
@@ -51,7 +51,7 @@ public class EtcdRepository {
 
     /**
      * ETCD repository initialization
-     * 
+     *
      * @param etcdClient
      *            ETCD client
      */
@@ -61,7 +61,7 @@ public class EtcdRepository {
 
     /**
      * Check initialization
-     * 
+     *
      * @throws BaseException
      *             Exception if etcdClient is null
      */
@@ -73,7 +73,7 @@ public class EtcdRepository {
 
     /**
      * Put value into ETCD. This call {@link KV#put(ByteSequence, ByteSequence)}
-     * 
+     *
      * @param key
      *            ETCD key
      * @param value
@@ -94,7 +94,7 @@ public class EtcdRepository {
 
     /**
      * Get value from ETCD. This call {@link KV#get(ByteSequence)}
-     * 
+     *
      * @param key
      *            ETCD key
      * @return ETCD response
@@ -113,7 +113,7 @@ public class EtcdRepository {
 
     /**
      * Delete value in ETCD. This call {@link KV#delete(ByteSequence)}
-     * 
+     *
      * @param key
      *            ETCD key
      * @return ETCD response
@@ -132,7 +132,7 @@ public class EtcdRepository {
 
     /**
      * Get values from ETCD. This call {@link KV#get(ByteSequence, GetOption)} wit list setting of {@link GetOption.Builder#withRange(ByteSequence)}
-     * 
+     *
      * @param startKey
      *            start key
      * @param endKey
@@ -153,7 +153,7 @@ public class EtcdRepository {
 
     /**
      * Returns the ETCD client
-     * 
+     *
      * @return the ETCD client
      */
     public Client getEtcdClient() {

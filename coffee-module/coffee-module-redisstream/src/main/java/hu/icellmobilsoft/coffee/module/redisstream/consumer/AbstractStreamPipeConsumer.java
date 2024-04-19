@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -24,13 +24,13 @@ import java.util.Map;
 
 import hu.icellmobilsoft.coffee.cdi.trace.annotation.Traced;
 import hu.icellmobilsoft.coffee.cdi.trace.constants.SpanAttribute;
-import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.module.redisstream.config.IRedisStreamConstant;
+import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
 import redis.clients.jedis.resps.StreamEntry;
 
 /**
  * Default Redis stream consumer for PIPE consumer
- * 
+ *
  * @author imre.scheffer
  * @since 1.5.0
  */
@@ -44,10 +44,10 @@ public abstract class AbstractStreamPipeConsumer extends BaseStreamConsumer impl
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * <br>
      * Input is full Redis Stream message
-     * 
+     *
      * <br>
      * If opentrace extension is active, the method will be traced by opentracing implementation
      */
@@ -65,7 +65,7 @@ public abstract class AbstractStreamPipeConsumer extends BaseStreamConsumer impl
 
     /**
      * Default imlepmenting menthod, contains only business logic
-     * 
+     *
      * @param text
      *            stream data content, {@value IRedisStreamConstant.Common#DATA_KEY_MESSAGE} key value, which can be string or json
      * @return result data which can be used after the request scope destroying, used in {@code IRedisStreamPipeConsumer#afterAck(StreamEntry, Map)}

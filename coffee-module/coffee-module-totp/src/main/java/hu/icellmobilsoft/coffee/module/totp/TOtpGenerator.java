@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -21,8 +21,8 @@ package hu.icellmobilsoft.coffee.module.totp;
 
 import java.security.SecureRandom;
 
-import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.module.totp.enums.TOtpAlgorithm;
+import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
 
 /**
  * TOtpGenerator interface.
@@ -93,7 +93,7 @@ public interface TOtpGenerator {
     /**
      * Returns a fix 16 bytes long secret key in base32 format (A-Z2-7) using {@link SecureRandom}. This secret key can be used to generate a QR code
      * to be shared with the user. The length of the key can be declared using {@link #generateSecretBase32(int)}.
-     * 
+     *
      * @return 16 bytes long secret key
      * @throws BaseException
      *             if any exception occurs
@@ -103,7 +103,7 @@ public interface TOtpGenerator {
 
     /**
      * Returns a fix 16 bytes long secret key using {@link SecureRandom}. Valid byte values in the array are between 0 and 32 for later readability.
-     * 
+     *
      * @return 16 bytes long secret key
      * @throws BaseException
      *             if any exception occurs

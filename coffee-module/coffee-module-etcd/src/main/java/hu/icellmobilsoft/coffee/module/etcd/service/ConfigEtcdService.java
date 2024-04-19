@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -30,10 +30,10 @@ import java.util.Set;
 import org.apache.commons.lang3.StringUtils;
 
 import hu.icellmobilsoft.coffee.dto.exception.BONotFoundException;
-import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.dto.exception.InvalidParameterException;
 import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
+import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
 
 /**
@@ -57,7 +57,7 @@ public class ConfigEtcdService {
 
     /**
      * ETCD service initialization
-     * 
+     *
      * @param etcdService
      *            ETCD service
      */
@@ -67,7 +67,7 @@ public class ConfigEtcdService {
 
     /**
      * Check initialization
-     * 
+     *
      * @throws BaseException
      *             Exception if etcdService is null
      */
@@ -79,7 +79,7 @@ public class ConfigEtcdService {
 
     /**
      * Get value from ETCD
-     * 
+     *
      * @param key
      *            key in ETCD
      * @return value of key, no value is {@value EtcdService#EMPTY_VALUE} (empty String)
@@ -95,7 +95,7 @@ public class ConfigEtcdService {
 
     /**
      * Get value from ETCD. If value is inside "{}" then continue finding to this value as key
-     * 
+     *
      * @param key
      *            key in ETCD
      * @return value of key, no value is {@value EtcdService#EMPTY_VALUE} (empty String)
@@ -112,7 +112,7 @@ public class ConfigEtcdService {
 
     /**
      * Put value to ETCD
-     * 
+     *
      * @param key
      *            key in ETCD
      * @param value
@@ -127,7 +127,7 @@ public class ConfigEtcdService {
 
     /**
      * Get all key-values pair from ETCD
-     * 
+     *
      * @return all key/values
      * @throws BaseException
      *             technical error
@@ -140,7 +140,7 @@ public class ConfigEtcdService {
 
     /**
      * Remapping {@code Map<String, Optional<String>>} to {@code Map<String, String>}
-     * 
+     *
      * @param map
      *            input
      * @return output
@@ -160,7 +160,7 @@ public class ConfigEtcdService {
      * <li>input: "abc" - search keys: "abc"-"abd"</li>
      * <li>input: "c" - search keys: "c"-"d"</li>
      * </ul>
-     * 
+     *
      * @param startKey
      *            start key for filtration
      * @return key/values
@@ -187,7 +187,7 @@ public class ConfigEtcdService {
 
     /**
      * Extended implementation of {@link #searchList(String)} when input is aggregated by input keys
-     * 
+     *
      * @param startKeyArray
      *            start keys array for filtration
      * @return key/values
@@ -205,7 +205,7 @@ public class ConfigEtcdService {
 
     /**
      * Delete key from ETCD
-     * 
+     *
      * @param key
      *            key for deletion
      * @throws BaseException
@@ -220,7 +220,7 @@ public class ConfigEtcdService {
 
     /**
      * Inifinity loop cheking for values
-     * 
+     *
      * @param key
      *            initial key
      * @param previousKeys
@@ -251,7 +251,7 @@ public class ConfigEtcdService {
 
     /**
      * Returns the ETCD service
-     * 
+     *
      * @return the ETCD service
      */
     public EtcdService getEtcdService() {
