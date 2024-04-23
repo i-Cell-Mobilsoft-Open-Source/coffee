@@ -87,7 +87,7 @@ public class AsciiDocWriter implements IDocWriter<DocData> {
 
     private int getTitleHeadingLevelForKey(List<DocData> docData) {
         return docData.stream().filter(data -> data.getTitleHeadingLevel() >= 0 || data.getTitleHeadingLevel() <= 5)
-                .toList().stream().mapToInt(DocData::getTitleHeadingLevel).min().orElse(DEFAULT_TITLE_HEADING_LEVEL);
+                .collect(Collectors.toList()).stream().mapToInt(DocData::getTitleHeadingLevel).min().orElse(DEFAULT_TITLE_HEADING_LEVEL);
     }
 
     private void writeHeader(Writer writer, String prefix, int titleHeadingLevel) throws IOException {
