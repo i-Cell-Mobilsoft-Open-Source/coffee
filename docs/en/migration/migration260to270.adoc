@@ -79,8 +79,10 @@ which can throw `hu.icellmobilsoft.coffee.se.api.exception.BaseException`.
 
 === coffee-rest
 
-* Tha classes found in the `hu.icellmobilsoft.coffee.rest.exception` package use the new `hu.icellmobilsoft.coffee.se.api.exception.BaseException`.
+* The classes found in the `hu.icellmobilsoft.coffee.rest.exception` package use the new `hu.icellmobilsoft.coffee.se.api.exception.BaseException`.
 Such as `DefaultBaseExceptionMapper`, `DefaultExceptionMessageTranslator`, `DefaultGeneralExceptionMapper` and `IExceptionMessageTranslator`.
+
+* The `hu.icellmobilsoft.coffee.rest.log.optimized.BaseRestLogger` has been improved so the HTTP GET calls are logged now.
 
 ==== Migration
 

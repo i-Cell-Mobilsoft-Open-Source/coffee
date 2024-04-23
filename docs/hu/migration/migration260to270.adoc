@@ -85,6 +85,8 @@ fgv-t vár, amik dobhatnak `hu.icellmobilsoft.coffee.se.api.exception.BaseExcept
 `DefaultExceptionMessageTranslator`, `DefaultGeneralExceptionMapper` és `IExceptionMessageTranslator` osztályok már 
 az új `hu.icellmobilsoft.coffee.se.api.exception.BaseException`-el dolgoznak.
 
+* `hu.icellmobilsoft.coffee.rest.log.optimized.BaseRestLogger` javításra került, a HTTP GET kérések is már logolódnak.
+
 ==== Átállás
 
 * A `jakarta.ws.rs.ext.ExceptionMapper` és `hu.icellmobilsoft.coffee.rest.exception.IExceptionMessageTranslator` 
