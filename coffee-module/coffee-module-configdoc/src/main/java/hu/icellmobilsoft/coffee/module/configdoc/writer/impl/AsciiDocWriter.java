@@ -21,8 +21,10 @@ package hu.icellmobilsoft.coffee.module.configdoc.writer.impl;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.text.MessageFormat;
 import java.util.List;
-import java.util.Objects;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -43,6 +45,8 @@ public class AsciiDocWriter implements IDocWriter<DocData> {
     private final String runtimeOverridableParamEmoji = "⏳";
     private final String emojiInfo = "== The meainings of the emojis used in the table:\n" + startupParamEmoji + " - meaning that it is a startup parameter.\n\n"
             + runtimeOverridableParamEmoji + " - meaning that this parameter can be overridden during runtime\n\n";
+    private static final int DEFAULT_TITLE_HEADING_LEVEL = 3;
+
 
     /**
      * Constructor with the config object
@@ -57,25 +61,37 @@ public class AsciiDocWriter implements IDocWriter<DocData> {
     @Override
     public void write(List<DocData> dataList, Writer writer) throws IOException {
         writer.write(emojiInfo);
-        String lastPrefix = null;
-        for (DocData docData : dataList) {
-            String prefix = docData.getTitle();
-            if (!Objects.equals(lastPrefix, prefix)) {
-                if (lastPrefix != null) {
-                    writer.write("|===\n\n");
-                }
-
-                writeHeader(writer, prefix);
-                lastPrefix = prefix;
+        Map<String, List<DocData>> docDataMap = dataList.stream().collect(Collectors.groupingBy(DocData::getKey));
+        for (String key : docDataMap.keySet()) {
+            String title = getTitleForKey(docDataMap.get(key));
+            int titleHeadingLevel = getTitleHeadingLevelForKey(docDataMap.get(key));
+            writeHeader(writer, title, titleHeadingLevel);
+            for (DocData docData : docDataMap.get(key)) {
+                writeLine(docData, writer);
             }
-
-            writeLine(docData, writer);
+            writer.write("|===\n");
         }
-        writer.write("|===\n");
     }
 
-    private void writeHeader(Writer writer, String prefix) throws IOException {
-        writer.write("=== ");
+    private String getTitleForKey(List<DocData> docData) {
+        String title = docData.get(0).getTitle();
+        docData.stream().filter(data -> StringUtils.isNotBlank(data.getTitle()))
+                .collect(Collectors.groupingBy(DocData::getTitle))
+                .forEach((tmpTitle, data) -> {
+                    if (data.size() > 1 && data.stream().map(DocData::getTitle).distinct().count() > 1) {
+                        throw new IllegalStateException(MessageFormat.format("Different titles given for same key: [{0}]", docData.get(0).getKey()));
+                    }
+                });
+        return StringUtils.defaultString(title, docData.get(0).getKey());
+    }
+
+    private int getTitleHeadingLevelForKey(List<DocData> docData) {
+        return docData.stream().filter(data -> data.getTitleHeadingLevel() >= 0 || data.getTitleHeadingLevel() <= 5)
+                .toList().stream().mapToInt(DocData::getTitleHeadingLevel).min().orElse(DEFAULT_TITLE_HEADING_LEVEL);
+    }
+
+    private void writeHeader(Writer writer, String prefix, int titleHeadingLevel) throws IOException {
+        writeTitleLevel(writer, titleHeadingLevel);
         writer.write(prefix);
         writer.write(" keys\n[cols=\"");
         ConfigDocColumn[] columns = config.getColumns();
@@ -92,6 +108,15 @@ public class AsciiDocWriter implements IDocWriter<DocData> {
             writer.write(getColumnDisplayName(column));
         }
         writer.write("\n");
+    }
+
+    private void writeTitleLevel(Writer writer, int titleHeadingLevel) throws IOException {
+        for (int i = 0; i < titleHeadingLevel; i++) {
+            writer.write("=");
+            if (i == titleHeadingLevel - 1) {
+                writer.write(" ");
+            }
+        }
     }
 
     private void writeLine(DocData docData, Writer writer) throws IOException {

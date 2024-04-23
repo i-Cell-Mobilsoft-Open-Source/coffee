@@ -65,7 +65,7 @@ class ConfigDocTest {
         assertTrue(generatedFile.contains("⏳"));
         assertTrue(generatedFile.contains("🚀"));
 
-        // Title overwritten
-        assertTrue(generatedFile.contains("Title Test"));
+        // Title overwritten and heading level is 1
+        assertTrue(generatedFile.contains("= Title Test"));
     }
 }
