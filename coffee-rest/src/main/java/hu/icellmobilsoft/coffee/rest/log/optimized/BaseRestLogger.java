@@ -21,8 +21,8 @@ package hu.icellmobilsoft.coffee.rest.log.optimized;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.time.OffsetDateTime;
 
+import hu.icellmobilsoft.coffee.tool.utils.date.DateUtil;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.servlet.http.HttpServletResponse;
@@ -207,7 +207,7 @@ public abstract class BaseRestLogger implements ContainerRequestFilter, WriterIn
     protected void appendRequestLine(StringBuilder b, ContainerRequestContext requestContext) {
         b.append(requestResponseLogger.printRequestLine(requestContext));
         // Mivel csak a stream végén történik a logolás, a timestamp nem a request beérkezését mutatja
-        b.append(RequestResponseLogger.REQUEST_PREFIX).append("-- Request timestamp:").append(OffsetDateTime.now()).append('\n');
+        b.append(RequestResponseLogger.REQUEST_PREFIX).append("-- Request timestamp:").append(DateUtil.nowUTC()).append('\n');
     }
 
     /**
