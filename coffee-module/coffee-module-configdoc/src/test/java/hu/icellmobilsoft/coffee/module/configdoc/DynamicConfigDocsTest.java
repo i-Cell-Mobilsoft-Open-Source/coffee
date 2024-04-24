@@ -54,6 +54,6 @@ class DynamicConfigDocsTest {
         assertTrue(generatedFile.contains(":0: xyz"));
         assertTrue(generatedFile.contains("Title override for config key {0}"));
         // kétszer kell tartalmazza a kulcsokat, a két injecthez (ezért split-nek 3 része kell legyen)
-        assertEquals(5, generatedFile.split("test\\.\\{0\\}\\.foo").length);
+        assertEquals(3, generatedFile.split("test\\.\\{0\\}\\.foo").length);
     }
 }

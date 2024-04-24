@@ -24,6 +24,8 @@ import java.io.Writer;
 import java.text.MessageFormat;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
@@ -46,6 +48,7 @@ public class AsciiDocWriter implements IDocWriter<DocData> {
     private final String emojiInfo = "== The meainings of the emojis used in the table:\n" + startupParamEmoji + " - meaning that it is a startup parameter.\n\n"
             + runtimeOverridableParamEmoji + " - meaning that this parameter can be overridden during runtime\n\n";
     private static final int DEFAULT_TITLE_HEADING_LEVEL = 3;
+    private static final String KEY_DELIMITER = ".";
 
 
     /**
@@ -60,29 +63,41 @@ public class AsciiDocWriter implements IDocWriter<DocData> {
 
     @Override
     public void write(List<DocData> dataList, Writer writer) throws IOException {
+        Map<String, List<DocData>> docDataMap = dataList.stream().collect(Collectors.groupingBy(data -> StringUtils.substringBefore(data.getKey(), KEY_DELIMITER)));
+        verifyTitles(docDataMap);
         writer.write(emojiInfo);
-        Map<String, List<DocData>> docDataMap = dataList.stream().collect(Collectors.groupingBy(DocData::getKey));
-        for (String key : docDataMap.keySet()) {
-            String title = getTitleForKey(docDataMap.get(key));
-            int titleHeadingLevel = getTitleHeadingLevelForKey(docDataMap.get(key));
-            writeHeader(writer, title, titleHeadingLevel);
-            for (DocData docData : docDataMap.get(key)) {
-                writeLine(docData, writer);
+
+        String lastTitle = null;
+        for (DocData docData : dataList) {
+            String key = StringUtils.substringBefore(docData.getKey(), KEY_DELIMITER);
+            String title = findTitleForKey(docDataMap.get(key)).orElse(key);
+            if (!Objects.equals(lastTitle, title)) {
+                if (lastTitle != null) {
+                    writer.write("|===\n\n");
+                }
+                writeHeader(writer, title, getTitleHeadingLevelForKey(docDataMap.get(key)));
+                lastTitle = title;
             }
-            writer.write("|===\n");
+            writeLine(docData, writer);
+        }
+        writer.write("|===\n");
+    }
+
+    private void verifyTitles(Map<String, List<DocData>> docDataMap) {
+        for (String key : docDataMap.keySet()) {
+            List<String> titleList = docDataMap.get(key).stream().map(DocData::getTitle)
+                    .filter(StringUtils::isNotBlank)
+                    .collect(Collectors.toList());
+            if (titleList.size() > 1 && titleList.stream().distinct().count() > 1) {
+                throw new IllegalStateException(MessageFormat.format("Different titles given for same key: [{0}]", key));
+            }
         }
     }
 
-    private String getTitleForKey(List<DocData> docData) {
-        String title = docData.get(0).getTitle();
-        docData.stream().filter(data -> StringUtils.isNotBlank(data.getTitle()))
-                .collect(Collectors.groupingBy(DocData::getTitle))
-                .forEach((tmpTitle, data) -> {
-                    if (data.size() > 1 && data.stream().map(DocData::getTitle).distinct().count() > 1) {
-                        throw new IllegalStateException(MessageFormat.format("Different titles given for same key: [{0}]", docData.get(0).getKey()));
-                    }
-                });
-        return StringUtils.defaultString(title, docData.get(0).getKey());
+    private Optional<String> findTitleForKey(List<DocData> docDataList) {
+        return docDataList.stream().filter(docData -> StringUtils.isNotBlank(docData.getTitle()))
+                .findFirst()
+                .map(DocData::getTitle);
     }
 
     private int getTitleHeadingLevelForKey(List<DocData> docData) {

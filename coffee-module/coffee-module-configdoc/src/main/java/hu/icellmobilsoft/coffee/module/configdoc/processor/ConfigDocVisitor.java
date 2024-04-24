@@ -46,6 +46,8 @@ public class ConfigDocVisitor extends ElementKindVisitor9<Void, List<DocData>> {
     private final Pattern sinceTagPattern = Pattern.compile("\n\\s*@since ([^\n]+)", Pattern.MULTILINE);
     private static final int DEFAULT_TITLE_HEADING_LEVEL = 3;
     private final ProcessingEnvironment processingEnv;
+    private static final String KEY_DELIMITER = ".";
+
 
     /**
      * Creates a visitor instance with the {@code processingEnv}
@@ -91,7 +93,6 @@ public class ConfigDocVisitor extends ElementKindVisitor9<Void, List<DocData>> {
         boolean isRuntimeOverridable = configDocAnnotation.map(ConfigDoc::isRuntimeOverridable).orElse(false);
         String title = configDocAnnotation.map(ConfigDoc::title).filter(StringUtils::isNotBlank).orElse(null);
         int titleHeadingLevel = configDocAnnotation.map(ConfigDoc::titleHeadingLevel).orElse(DEFAULT_TITLE_HEADING_LEVEL);
-
         if (descriptionOpt.isPresent()) {
             dataList.add(new DocData(key, source, descriptionOpt.get(), defaultValue, since, isStartupParam, isRuntimeOverridable, title, titleHeadingLevel));
             return;
