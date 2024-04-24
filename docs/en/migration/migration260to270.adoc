@@ -101,6 +101,13 @@ now can handle additional error information into Grpc response:
 ** Business error code (FaultType)
 ** Translated error code
 ** Debug information (stacktrace)
+* Expanded `coffee-grpc-client-extension` module:
+** Bugfix in `GrpcClientExtension` to only produce virtual beans for clients of type `AbstractBlockingStub`.
+** `GrpcClientConfig` extended with the `maxInboundMetadataSize` parameter,
+which serves to set the size of incoming grpc headers in the possible response
+(for example, due to the size of debug information).
+** New `GrpcClienResponseException` which handles coffee Grpc server error response
+** New `GrpcClientHeaderHelper` which handles sending Grpc message header 
 
 ==== Migration
 

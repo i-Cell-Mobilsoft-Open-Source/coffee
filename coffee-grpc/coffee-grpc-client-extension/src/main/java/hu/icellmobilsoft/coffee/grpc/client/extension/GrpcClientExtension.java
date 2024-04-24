@@ -39,6 +39,8 @@ import jakarta.enterprise.inject.spi.Extension;
 import jakarta.enterprise.inject.spi.InjectionPoint;
 import jakarta.enterprise.inject.spi.ProcessInjectionPoint;
 
+import org.apache.commons.lang3.reflect.TypeUtils;
+
 import hu.icellmobilsoft.coffee.grpc.client.GrpcClient;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
 import io.grpc.stub.AbstractBlockingStub;
@@ -123,8 +125,12 @@ public class GrpcClientExtension implements Extension {
 
         for (Annotation annotation : ip.getQualifiers()) {
             if (annotation.annotationType() == GrpcClient.class) {
-                GrpcClient grpcClient = (GrpcClient) annotation;
-                grpcClientMap.put(ip.getType(), grpcClient);
+                Type type = ip.getType();
+                if (TypeUtils.isAssignable(type, AbstractBlockingStub.class)) {
+                    LOGGER.debug("Found @Inject @GrpcClient AbstractBlockingStub: [{0}]", type);
+                    GrpcClient grpcClient = (GrpcClient) annotation;
+                    grpcClientMap.put(ip.getType(), grpcClient);
+                }
             }
         }
 

@@ -103,7 +103,15 @@ melyeket paraméterezni lehet a `@LogSpecifiers` és `@LogSpecifier` annotáció
 mostmár kibővíti kiegészítő hiba információkkal a Grpc választ:
 ** Üzleti hibakód (FaultType)
 ** Nyelvesített hibakód
-** Debug információ (stacktrace) 
+** Debug információ (stacktrace)
+* Kibővített `coffee-grpc-client-extension` modul:
+** Javítva a `GrpcClientExtension`,
+hogy csak `AbstractBlockingStub` típusú klienseknek gyárcson le virtuális beaneket
+** `GrpcClientConfig` kibővítve a `maxInboundMetadataSize` paraméterrel,
+ami az esetleges response-ban érkéző grpc header méretének beállítására szolgál
+(például debug információ mérete miatt)
+** Új `GrpcClienResponseException` ami a coffee Grpc szerver bővített hiba választ dolgozza fel
+** Új `GrpcClientHeaderHelper` ami a küldendő Grpc üzenet fejlécét tudja kezelni 
 
 ==== Átállás
 

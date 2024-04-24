@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package hu.icellmobilsoft.coffee.grpc.server.metadata;
+package hu.icellmobilsoft.coffee.grpc.base.metadata;
 
 import java.text.MessageFormat;
 import java.util.Locale;

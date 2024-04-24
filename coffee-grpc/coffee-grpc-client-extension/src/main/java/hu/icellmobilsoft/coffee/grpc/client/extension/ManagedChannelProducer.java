@@ -100,7 +100,8 @@ public class ManagedChannelProducer {
         try {
 
             // TODO usePlaintext config
-            ManagedChannelBuilder<?> channelBuilder = ManagedChannelBuilder.forAddress(host, port).usePlaintext();
+            ManagedChannelBuilder<?> channelBuilder = ManagedChannelBuilder.forAddress(host, port)
+                    .maxInboundMetadataSize(grpcClientConfig.getMaxInboundMetadataSize()).usePlaintext();
 
             configureChannelBuilder(channelBuilder);
 

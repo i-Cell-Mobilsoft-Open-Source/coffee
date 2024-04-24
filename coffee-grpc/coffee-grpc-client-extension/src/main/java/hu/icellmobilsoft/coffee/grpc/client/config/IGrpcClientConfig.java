@@ -40,4 +40,12 @@ public interface IGrpcClientConfig {
      * @return the port
      */
     Integer getPort();
+
+    /**
+     * Get Max inbound Metadata header size in byte. Grpc default is 8192. If an error occurs on the server and sends debugging information to the
+     * client, the default size is not sufficient
+     * 
+     * @return Inbound metadata max size
+     */
+    Integer getMaxInboundMetadataSize();
 }
