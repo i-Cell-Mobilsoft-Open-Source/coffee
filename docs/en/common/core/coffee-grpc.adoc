@@ -118,18 +118,25 @@ coffee:
 ----
 
 .CDI inject DummyServiceGrpc usage
+[source,java]
 ----
 @Inject
 @GrpcClient(configKey = "_configKey_") //<1>
 private DummyServiceGrpc.DummyServiceBlockingStub dummyGrpcService; //<2>
 
 ...
-DummyResponse helloResponse = dummyGrpcService.getDummy(dummyRequest); //<3>
+// add header
+DummyServiceGrpc.DummyServiceBlockingStub stub = GrpcClientHeaderHelper
+    .addHeader(dummyGrpcServiceStub, GrpcClientHeaderHelper.headerWithSid(errorLanguage)); //<3>
+
+// equivalent with `stub.getDummy(dummyRequest);` + exception handling
+DummyResponse helloResponse = GrpcClientWrapper.call(stub::getDummy, dummyRequest); //<4>
 ...
 ----
 <1> Configuration key for connection parameters (e.g., server host and port)
 <2> Generated service Stub
-<3> gRPC service call
+<3> Add custom header
+<4> gRPC service call + exception handling
 
 == gRPC Metrics
 The gRPC server and client can optionally activate interceptors to provide metric data.

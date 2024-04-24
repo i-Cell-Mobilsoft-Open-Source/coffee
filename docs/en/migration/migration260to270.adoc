@@ -106,6 +106,8 @@ now can handle additional error information into Grpc response:
 ** `GrpcClientConfig` extended with the `maxInboundMetadataSize` parameter,
 which serves to set the size of incoming grpc headers in the possible response
 (for example, due to the size of debug information).
+** New `GrpcClienResponseException` which handles coffee Grpc server error response
+** New `GrpcClientHeaderHelper` which handles sending Grpc message header 
 
 ==== Migration
 

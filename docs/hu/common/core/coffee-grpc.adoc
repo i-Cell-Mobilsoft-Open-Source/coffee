@@ -124,18 +124,25 @@ coffee:
 ----
 
 .CDI inject DummyServiceGrpc haszálata
+[source,java]
 ----
 @Inject
 @GrpcClient(configKey = "_configKey_") //<1>
-private DummyServiceGrpc.DummyServiceBlockingStub dummyGrpcService; //<2>
+private DummyServiceGrpc.DummyServiceBlockingStub dummyGrpcServiceStub; //<2>
 
 ...
-DummyResponse helloResponse = dummyGrpcService.getDummy(dummyRequest); //<3>
+// add header
+DummyServiceGrpc.DummyServiceBlockingStub stub = GrpcClientHeaderHelper
+    .addHeader(dummyGrpcServiceStub, GrpcClientHeaderHelper.headerWithSid(errorLanguage)); //<3>
+
+// equivalent with `stub.getDummy(dummyRequest);` + exception handling
+DummyResponse helloResponse = GrpcClientWrapper.call(stub::getDummy, dummyRequest); //<4>
 ...
 ----
 <1> Konfigurációs kulcs a csatlakozási paraméterekről (pl. szerver host és port)
 <2> Generált service Stub
-<3> gRPC service hívás
+<3> Grpc header bővítés
+<4> gRPC service hívás + hibakezelés
 
 == gRPC Metrics
 gRPC szerver és kliens opcionálisan aktiválhat interceptorokat metrika adatok szolgáltatására.
