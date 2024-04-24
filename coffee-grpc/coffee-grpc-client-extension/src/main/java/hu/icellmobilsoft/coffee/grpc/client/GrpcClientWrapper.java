@@ -36,6 +36,13 @@ import io.grpc.StatusRuntimeException;
 public class GrpcClientWrapper {
 
     /**
+     * Default constructor, constructs a new object.
+     */
+    private GrpcClientWrapper() {
+        super();
+    }
+
+    /**
      * Wrap and call given function. Main focus is standardized handling exception and other common usage. Example usage:
      * 
      * <pre>
