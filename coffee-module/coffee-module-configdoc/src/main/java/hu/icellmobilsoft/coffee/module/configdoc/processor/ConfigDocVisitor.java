@@ -44,9 +44,9 @@ import hu.icellmobilsoft.coffee.module.configdoc.data.DocData;
  */
 public class ConfigDocVisitor extends ElementKindVisitor9<Void, List<DocData>> {
     private final Pattern sinceTagPattern = Pattern.compile("\n\\s*@since ([^\n]+)", Pattern.MULTILINE);
+    private static final String KEY_DELIMITER = ".";
     private static final int DEFAULT_TITLE_HEADING_LEVEL = 3;
     private final ProcessingEnvironment processingEnv;
-    private static final String KEY_DELIMITER = ".";
 
 
     /**
