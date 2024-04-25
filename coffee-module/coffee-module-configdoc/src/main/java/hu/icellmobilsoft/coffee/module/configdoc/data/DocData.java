@@ -36,6 +36,7 @@ public class DocData {
     private final boolean isStartupParam;
     private final boolean isRuntimeOverridable;
     private final String title;
+    private final int titleHeadingLevel;
 
     /**
      * Creates a {@code DocData} instance with the given arguments
@@ -56,9 +57,11 @@ public class DocData {
      *            the parameter is overridable at runtime or not
      * @param title
      *            the title for overwriting the default
+     * @param titleHeadingLevel
+     *            the level of the table's title
      */
     public DocData(String key, String source, String description, String defaultValue, String since, boolean isStartupParam,
-            boolean isRuntimeOverridable, String title) {
+                   boolean isRuntimeOverridable, String title, int titleHeadingLevel) {
         this.key = key;
         this.source = source;
         this.description = description;
@@ -67,6 +70,7 @@ public class DocData {
         this.isStartupParam = isStartupParam;
         this.isRuntimeOverridable = isRuntimeOverridable;
         this.title = title;
+        this.titleHeadingLevel = titleHeadingLevel;
     }
 
     /**
@@ -144,5 +148,16 @@ public class DocData {
     public String getTitle() {
         return title;
     }
+
+    /**
+     * Returns the value of titleHeadingLevel
+     *
+     * @return the integer value of titleHeadingLevel
+     * @since 2.7.0
+     */
+    public int getTitleHeadingLevel() {
+        return titleHeadingLevel;
+    }
+
 
 }

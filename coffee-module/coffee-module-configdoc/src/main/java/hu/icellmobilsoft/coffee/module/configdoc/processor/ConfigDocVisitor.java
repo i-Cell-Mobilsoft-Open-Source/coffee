@@ -44,8 +44,9 @@ import hu.icellmobilsoft.coffee.module.configdoc.data.DocData;
  */
 public class ConfigDocVisitor extends ElementKindVisitor9<Void, List<DocData>> {
     private final Pattern sinceTagPattern = Pattern.compile("\n\\s*@since ([^\n]+)", Pattern.MULTILINE);
-    private static final String KEY_DELIMITER = ".";
+    private static final int DEFAULT_TITLE_HEADING_LEVEL = 3;
     private final ProcessingEnvironment processingEnv;
+
 
     /**
      * Creates a visitor instance with the {@code processingEnv}
@@ -90,20 +91,17 @@ public class ConfigDocVisitor extends ElementKindVisitor9<Void, List<DocData>> {
         boolean isStartupParam = configDocAnnotation.map(ConfigDoc::isStartupParam).orElse(false);
         boolean isRuntimeOverridable = configDocAnnotation.map(ConfigDoc::isRuntimeOverridable).orElse(false);
         String title = configDocAnnotation.map(ConfigDoc::title).filter(StringUtils::isNotBlank).orElse(null);
-        if (StringUtils.isBlank(title)) {
-            title = StringUtils.substringBefore(key, KEY_DELIMITER);
-        }
-
+        int titleHeadingLevel = configDocAnnotation.map(ConfigDoc::titleHeadingLevel).orElse(DEFAULT_TITLE_HEADING_LEVEL);
         if (descriptionOpt.isPresent()) {
-            dataList.add(new DocData(key, source, descriptionOpt.get(), defaultValue, since, isStartupParam, isRuntimeOverridable, title));
+            dataList.add(new DocData(key, source, descriptionOpt.get(), defaultValue, since, isStartupParam, isRuntimeOverridable, title, titleHeadingLevel));
             return;
         }
 
-        dataList.add(createDataFromJavaDoc(element, key, source, defaultValue, since, isStartupParam, isRuntimeOverridable, title));
+        dataList.add(createDataFromJavaDoc(element, key, source, defaultValue, since, isStartupParam, isRuntimeOverridable, title, titleHeadingLevel));
     }
 
     private DocData createDataFromJavaDoc(VariableElement element, String key, String source, String defaultValue, String since,
-            boolean isStartupParam, boolean isRuntimeOverridable, String title) {
+                                          boolean isStartupParam, boolean isRuntimeOverridable, String title, int titleHeadingLevel) {
         String description = getJavaDoc(element);
         if (null == description) {
             String msg = MessageFormat.format("No java API doc attached to field [{0}] in this file: [{1}]", element, source);
@@ -117,7 +115,7 @@ public class ConfigDocVisitor extends ElementKindVisitor9<Void, List<DocData>> {
             }
             description = matcher.replaceAll("");
         }
-        return new DocData(key, source, description.trim(), defaultValue, since, isStartupParam, isRuntimeOverridable, title);
+        return new DocData(key, source, description.trim(), defaultValue, since, isStartupParam, isRuntimeOverridable, title, titleHeadingLevel);
     }
 
     private String getJavaDoc(VariableElement element) {

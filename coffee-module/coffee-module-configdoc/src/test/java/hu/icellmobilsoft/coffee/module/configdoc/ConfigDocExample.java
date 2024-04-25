@@ -74,4 +74,12 @@ public interface ConfigDocExample {
      */
     @ConfigDoc(defaultValue = "1234", title = "Title Test")
     String titleTest = PREFIX + "title";
+
+    /**
+     * Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsam, similique?
+     *
+     * @since 3.14159
+     */
+    @ConfigDoc(defaultValue = "1234", title = "Title Test", titleHeadingLevel = 1)
+    String titleHeadingLevelTest = PREFIX + "titleHeadingLevelTest";
 }

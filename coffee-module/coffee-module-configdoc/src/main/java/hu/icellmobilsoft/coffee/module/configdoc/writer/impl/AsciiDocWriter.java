@@ -21,8 +21,12 @@ package hu.icellmobilsoft.coffee.module.configdoc.writer.impl;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.text.MessageFormat;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -43,6 +47,9 @@ public class AsciiDocWriter implements IDocWriter<DocData> {
     private final String runtimeOverridableParamEmoji = "⏳";
     private final String emojiInfo = "== The meainings of the emojis used in the table:\n" + startupParamEmoji + " - meaning that it is a startup parameter.\n\n"
             + runtimeOverridableParamEmoji + " - meaning that this parameter can be overridden during runtime\n\n";
+    private static final int DEFAULT_TITLE_HEADING_LEVEL = 3;
+    private static final String KEY_DELIMITER = ".";
+
 
     /**
      * Constructor with the config object
@@ -56,28 +63,56 @@ public class AsciiDocWriter implements IDocWriter<DocData> {
 
     @Override
     public void write(List<DocData> dataList, Writer writer) throws IOException {
+        Map<String, List<DocData>> docDataMap = dataList.stream().collect(Collectors.groupingBy(data -> StringUtils.substringBefore(data.getKey(), KEY_DELIMITER)));
+        verifyTitles(docDataMap);
         writer.write(emojiInfo);
-        String lastPrefix = null;
+
+        String lastTitle = null;
         for (DocData docData : dataList) {
-            String prefix = docData.getTitle();
-            if (!Objects.equals(lastPrefix, prefix)) {
-                if (lastPrefix != null) {
+            String keyPrefixForTitle = StringUtils.substringBefore(docData.getKey(), KEY_DELIMITER);
+            String title = findTitleForKey(docDataMap.get(keyPrefixForTitle)).orElse(keyPrefixForTitle);
+            if (!Objects.equals(lastTitle, title)) {
+                if (lastTitle != null) {
                     writer.write("|===\n\n");
                 }
-
-                writeHeader(writer, prefix);
-                lastPrefix = prefix;
+                if (StringUtils.equals(title, keyPrefixForTitle)) {
+                    writeHeader(writer, title, getTitleHeadingLevelForKey(docDataMap.get(keyPrefixForTitle)), " keys\n[cols=\"");
+                } else {
+                    writeHeader(writer, title, getTitleHeadingLevelForKey(docDataMap.get(keyPrefixForTitle)), "\n[cols=\"");
+                }
+                lastTitle = title;
             }
-
             writeLine(docData, writer);
         }
         writer.write("|===\n");
     }
 
-    private void writeHeader(Writer writer, String prefix) throws IOException {
-        writer.write("=== ");
-        writer.write(prefix);
-        writer.write(" keys\n[cols=\"");
+    private void verifyTitles(Map<String, List<DocData>> docDataMap) {
+        for (String key : docDataMap.keySet()) {
+            List<String> titleList = docDataMap.get(key).stream().map(DocData::getTitle)
+                    .filter(StringUtils::isNotBlank)
+                    .collect(Collectors.toList());
+            if (titleList.size() > 1 && titleList.stream().distinct().count() > 1) {
+                throw new IllegalStateException(MessageFormat.format("Different titles given for same keyPrefixForTitle: [{0}]", key));
+            }
+        }
+    }
+
+    private Optional<String> findTitleForKey(List<DocData> docDataList) {
+        return docDataList.stream().filter(docData -> StringUtils.isNotBlank(docData.getTitle()))
+                .findFirst()
+                .map(DocData::getTitle);
+    }
+
+    private int getTitleHeadingLevelForKey(List<DocData> docData) {
+        return docData.stream().filter(data -> data.getTitleHeadingLevel() >= 0 || data.getTitleHeadingLevel() <= 5)
+                .collect(Collectors.toList()).stream().mapToInt(DocData::getTitleHeadingLevel).min().orElse(DEFAULT_TITLE_HEADING_LEVEL);
+    }
+
+    private void writeHeader(Writer writer, String title, int titleHeadingLevel, String titlePostFix) throws IOException {
+        writeTitleLevel(writer, titleHeadingLevel);
+        writer.write(title);
+        writer.write(titlePostFix);
         ConfigDocColumn[] columns = config.getColumns();
         for (int i = 0; i < columns.length; i++) {
             if (i > 0) {
@@ -92,6 +127,15 @@ public class AsciiDocWriter implements IDocWriter<DocData> {
             writer.write(getColumnDisplayName(column));
         }
         writer.write("\n");
+    }
+
+    private void writeTitleLevel(Writer writer, int titleHeadingLevel) throws IOException {
+        for (int i = 0; i < titleHeadingLevel; i++) {
+            writer.write("=");
+            if (i == titleHeadingLevel - 1) {
+                writer.write(" ");
+            }
+        }
     }
 
     private void writeLine(DocData docData, Writer writer) throws IOException {

@@ -135,8 +135,8 @@ Changes are backwards compatible doesn't need any migration.
 In the generated table there is a new column named `Features`. In this column we can see each of the new parameters represented as emojis in the case of `true` value(default is false).
 ** For `isStartupParam` true the emoji is: 🚀
 ** For `isRuntimeOverridable` true the emoji is: ⏳
-* The `@ConfigDoc` annotation got a new parameter(optional), `title`.
-It gives the possibility of overwriting the generated table names if we don't want to use the default.
+* The `@ConfigDoc` annotation got two new parameters(optionals), `title` and `titleHeadingLevel`.
+these two give the possibility of overwriting the generated table names if we don't want to use the default with the `title` parameter and we can set it's heading level with the `titleHeadingLevel` parameter.
 
 ==== Migration
 

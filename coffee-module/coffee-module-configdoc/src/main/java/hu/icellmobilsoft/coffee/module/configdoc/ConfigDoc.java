@@ -89,4 +89,12 @@ public @interface ConfigDoc {
      */
     String title() default "";
 
+    /**
+     * (Optional) The level of the generated table in the adoc file. If given it needs to be in the range of [0,5] otherwise we use fallback to 3.
+     *
+     * @return the title level value
+     * @since 2.7.0
+     */
+    int titleHeadingLevel() default 3;
+
 }
