@@ -69,13 +69,17 @@ public class AsciiDocWriter implements IDocWriter<DocData> {
 
         String lastTitle = null;
         for (DocData docData : dataList) {
-            String key = StringUtils.substringBefore(docData.getKey(), KEY_DELIMITER);
-            String title = findTitleForKey(docDataMap.get(key)).orElse(key);
+            String keyPrefixForTitle = StringUtils.substringBefore(docData.getKey(), KEY_DELIMITER);
+            String title = findTitleForKey(docDataMap.get(keyPrefixForTitle)).orElse(keyPrefixForTitle);
             if (!Objects.equals(lastTitle, title)) {
                 if (lastTitle != null) {
                     writer.write("|===\n\n");
                 }
-                writeHeader(writer, title, getTitleHeadingLevelForKey(docDataMap.get(key)));
+                if (StringUtils.equals(title, keyPrefixForTitle)) {
+                    writeHeader(writer, title, getTitleHeadingLevelForKey(docDataMap.get(keyPrefixForTitle)), " keys\n[cols=\"");
+                } else {
+                    writeHeader(writer, title, getTitleHeadingLevelForKey(docDataMap.get(keyPrefixForTitle)), "\n[cols=\"");
+                }
                 lastTitle = title;
             }
             writeLine(docData, writer);
@@ -89,7 +93,7 @@ public class AsciiDocWriter implements IDocWriter<DocData> {
                     .filter(StringUtils::isNotBlank)
                     .collect(Collectors.toList());
             if (titleList.size() > 1 && titleList.stream().distinct().count() > 1) {
-                throw new IllegalStateException(MessageFormat.format("Different titles given for same key: [{0}]", key));
+                throw new IllegalStateException(MessageFormat.format("Different titles given for same keyPrefixForTitle: [{0}]", key));
             }
         }
     }
@@ -105,10 +109,10 @@ public class AsciiDocWriter implements IDocWriter<DocData> {
                 .collect(Collectors.toList()).stream().mapToInt(DocData::getTitleHeadingLevel).min().orElse(DEFAULT_TITLE_HEADING_LEVEL);
     }
 
-    private void writeHeader(Writer writer, String prefix, int titleHeadingLevel) throws IOException {
+    private void writeHeader(Writer writer, String title, int titleHeadingLevel, String titlePostFix) throws IOException {
         writeTitleLevel(writer, titleHeadingLevel);
-        writer.write(prefix);
-        writer.write(" keys\n[cols=\"");
+        writer.write(title);
+        writer.write(titlePostFix);
         ConfigDocColumn[] columns = config.getColumns();
         for (int i = 0; i < columns.length; i++) {
             if (i > 0) {
