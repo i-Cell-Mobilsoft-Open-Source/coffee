@@ -1,0 +1,24 @@
+= v2.7.0 → v2.8.0
+
+coff:ee v2.7.0 -> v2.8.0 migration description, news, changes
+
+== Global
+
+=== coffee-jpa
+
+💥 ***BREAKING CHANGE*** 💥
+
+Changes in `hu.icellmobilsoft.coffee.jpa.sql.batch.BatchService`:
+
+* The `BatchService` is not depend on Hibernate any more (`coffee-jpa` is still depend on Hibernate).
+* The type of `BatchService` is changed from class to interface.
+* Its super interface is `hu.icellmobilsoft.coffee.jpa.sql.batch.IJpaBatchService`.
+* Its implementation has been moved to the Frapp:EE project's `frappee-jpa` module.
+
+==== Migration
+
+Usage of `hu.icellmobilsoft.coffee.jpa.sql.batch.BatchService`:
+
+* Add the new `hu.icellmobilsoft.frappee:frappee-jpa` module to the Maven dependencies. The
+ `hu.icellmobilsoft.frappee.batch.hibernate.HibernateBatchService` implementation can be found in this module.
+* If the earlier `BatchService` is extended by your project the new `HibernateBatchService` must be extended now.
