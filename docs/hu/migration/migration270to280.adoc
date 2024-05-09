@@ -13,13 +13,13 @@ A `hu.icellmobilsoft.coffee.jpa.sql.batch.BatchService` átalakítások:
 * A `BatchService` Hibernate függősége megszünt (a `coffee-jpa`-nak továbbra is függősége a Hibernate).
 * Típusa osztályból interface lett.
 * Ős interface az új `hu.icellmobilsoft.coffee.jpa.sql.batch.IJpaBatchService`.
-* Implementációja a Frapp:EE projekt `frappee-jpa` modulba lett átmozgatva.
+* Implementációja a Frapp:EE projekt `frappee-hibernate` modulba lett átmozgatva.
 
 ==== Átállás
 
 A `hu.icellmobilsoft.coffee.jpa.sql.batch.BatchService` használata:
 
-* Be kell behúznunk a `hu.icellmobilsoft.frappee:frappee-jpa` modult a függőségek közé és készen is vagyunk. Itt
+* Be kell behúznunk a `hu.icellmobilsoft.frappee:frappee-hibernate` modult a függőségek közé és készen is vagyunk. Itt
  található a `hu.icellmobilsoft.frappee.batch.hibernate.HibernateBatchService` implementáció.
 * Ha kiterjesztettük a korábbi `BatchService`-t, akkor a `HibernateBatchService`-t kell kiterjesztenünk.
 
