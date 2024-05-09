@@ -22,6 +22,7 @@ Usage of `hu.icellmobilsoft.coffee.jpa.sql.batch.BatchService`:
 * Add the new `hu.icellmobilsoft.frappee:frappee-hibernate` module to the Maven dependencies. The
  `hu.icellmobilsoft.frappee.batch.hibernate.HibernateBatchService` implementation can be found in this module.
 * If the earlier `BatchService` is extended by your project the new `HibernateBatchService` must be extended now.
+For more information check the Frapp:EE documentation.
 
 === coffee-rest
 

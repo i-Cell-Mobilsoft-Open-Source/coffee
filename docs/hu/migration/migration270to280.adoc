@@ -22,6 +22,7 @@ A `hu.icellmobilsoft.coffee.jpa.sql.batch.BatchService` használata:
 * Be kell behúznunk a `hu.icellmobilsoft.frappee:frappee-hibernate` modult a függőségek közé és készen is vagyunk. Itt
  található a `hu.icellmobilsoft.frappee.batch.hibernate.HibernateBatchService` implementáció.
 * Ha kiterjesztettük a korábbi `BatchService`-t, akkor a `HibernateBatchService`-t kell kiterjesztenünk.
+Bővebb információ a Frapp:EE dokumentációban található.
 
 === coffee-rest
 
