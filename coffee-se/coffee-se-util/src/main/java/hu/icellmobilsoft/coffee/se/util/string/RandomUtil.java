@@ -31,8 +31,6 @@ import hu.icellmobilsoft.coffee.se.logging.Logger;
 /**
  * Util class for generating random Strings
  * 
- * @deprecated Helyette a {@link hu.icellmobilsoft.coffee.se.util.string.RandomUtil} használandó.
- *
  * @author imre.scheffer
  * @since 1.0.0
  */

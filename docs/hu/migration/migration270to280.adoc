@@ -4,11 +4,14 @@ coff:ee v2.7.0 -> v2.8.0 migrációs leírás, újdonságok, változások leír�
 
 == Global
 
+Dependency csere: `org.hibernate:hibernate-core` -> `org.hibernate.orm:hibernate-core` (a korábbi csak egy proxy volt már).
+
 === coffee-jpa
 
 💥 ***BREAKING CHANGE*** 💥
 
-A `hu.icellmobilsoft.coffee.jpa.sql.batch.BatchService` megszűnt.
+A `hu.icellmobilsoft.coffee.jpa.sql.batch.BatchService` megszűnt és átmozgatásra került a frapp:ee projektbe a
+függőségeivel együtt, úgy mint `BatchMode`, `Status` és `StringBasicType`.
 
 ==== Átállás
 
@@ -20,3 +23,50 @@ A `hu.icellmobilsoft.coffee.jpa.sql.batch.BatchService` megszűnt.
  `HibernateBatchServiceProducer` néven.
 * Ha kiterjesztettük a korábbi `BatchService`-t, akkor a `HibernateBatchService`-t kell kiterjesztenünk és
  kell készíteni hozzá egy producert is. Bővebb információ a Frapp:EE dokumentációban található.
+
+=== coffee-dto-base
+
+`TechnicalException` deprecated lett, helyette a `coffee-se-api`-ba átmozgatott
+ `hu.icellmobilsoft.coffee.se.api.exception.TechnicalException` használandó.
+
+==== Átállás
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis. Javasolt az
+ új `hu.icellmobilsoft.coffee.se.api.exception.TechnicalException` használata.
+
+=== coffee-tool
+
+A `RandomUtil` deprecated lett, helyette a `coffee-se-util` modulban található
+ `hu.icellmobilsoft.coffee.se.util.string.RandomUtil` használandó.
+ 
+==== Átállás
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis. Javasolt a
+ `hu.icellmobilsoft.coffee.se.util.string.RandomUtil` használata.
+
+=== coffee-se-api
+
+`hu.icellmobilsoft.coffee.se.api.exception.TechnicalException` bevezetése.
+
+==== Átállás
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+=== coffee-se-util
+
+Új coff:ee modul. Utility osztályok gyűjteménye.
+
+A `hu.icellmobilsoft.coffee.se.util.string.RandomUtil` bevezetése.
+
+==== Átállás
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+=== coffee-mode-base
+
+Az `EntityIdGenerator` az azonosító generáláshoz a `coffee-se-util`-ba átmozgatott `RandomUtil`-t használja.
+Implementációja 100%-ban megegyezik a korábban itt található megoldással.
+
+==== Átállás
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
