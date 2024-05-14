@@ -30,4 +30,11 @@ package hu.icellmobilsoft.coffee.tool.utils.string;
 @Deprecated(forRemoval = true, since = "2.8.0")
 public class RandomUtil extends hu.icellmobilsoft.coffee.se.util.string.RandomUtil {
 
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public RandomUtil() {
+        super();
+    }
+
 }
