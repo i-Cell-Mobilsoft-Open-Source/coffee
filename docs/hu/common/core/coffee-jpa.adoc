@@ -57,11 +57,6 @@ public class TransactionHelperExample {
 }
 ----
 
-== IJpaBatchService [[IJpaBatchService]] (a.k.a BatchService)
-
-Az *IJpaBatchService* a tömeges adatbázis műveletek (insert, update, delete) csoportosan való végrehajtására szolgál.
-Hibernate alapú implementációja a `frappee-hibernate` modulban található.
-
 == microprofile-health támogatás
 
 A *DatabaseHealth* ellenőrizni tudja hogy elérhető-e az adatbázis.

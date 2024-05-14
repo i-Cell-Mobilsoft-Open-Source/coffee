@@ -8,21 +8,18 @@ coff:ee v2.7.0 -> v2.8.0 migration description, news, changes
 
 💥 ***BREAKING CHANGE*** 💥
 
-Changes in `hu.icellmobilsoft.coffee.jpa.sql.batch.BatchService`:
-
-* The `BatchService` is not depend on Hibernate any more (`coffee-jpa` is still depend on Hibernate).
-* The type of `BatchService` is changed from class to interface.
-* Its super interface is `hu.icellmobilsoft.coffee.jpa.sql.batch.IJpaBatchService`.
-* Its implementation has been moved to the Frapp:EE project's `frappee-hibernate` module.
+The `hu.icellmobilsoft.coffee.jpa.sql.batch.BatchService` has been deleted.
 
 ==== Migration
 
-Usage of `hu.icellmobilsoft.coffee.jpa.sql.batch.BatchService`:
-
-* Add the new `hu.icellmobilsoft.frappee:frappee-hibernate` module to the Maven dependencies. The
- `hu.icellmobilsoft.frappee.batch.hibernate.HibernateBatchService` implementation can be found in this module.
-* If the earlier `BatchService` is extended by your project the new `HibernateBatchService` must be extended now.
-For more information check the Frapp:EE documentation.
+* Add the new `hu.icellmobilsoft.frappee:frappee-jpa-batch-api` module to the Maven dependencies.
+* The `hu.icellmobilsoft.frappee.jpa.batch.IJpaBatchService` must be used instead of the former `BatchService`.
+* The `HibernateBatchService` Hibernate specific implementation of the `IJpaBatchService` can be found in the
+`hu.icellmobilsoft.frappee:frappee-hiberante-batch` module.
+* The JakartaEE 10 producer of the `HibernateBatchService` can be found in the `frappee-hiberante-batch-jee10`
+module.
+* If the former `BatchService` is extended by your project the new `HibernateBatchService` must be extended and a new
+producer must be created. For more information check the Frapp:EE documentation.
 
 === coffee-rest
 

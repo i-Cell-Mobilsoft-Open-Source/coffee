@@ -8,21 +8,18 @@ coff:ee v2.7.0 -> v2.8.0 migrációs leírás, újdonságok, változások leír�
 
 💥 ***BREAKING CHANGE*** 💥
 
-A `hu.icellmobilsoft.coffee.jpa.sql.batch.BatchService` átalakítások:
-
-* A `BatchService` Hibernate függősége megszünt (a `coffee-jpa`-nak továbbra is függősége a Hibernate).
-* Típusa osztályból interface lett.
-* Ős interface az új `hu.icellmobilsoft.coffee.jpa.sql.batch.IJpaBatchService`.
-* Implementációja a Frapp:EE projekt `frappee-hibernate` modulba lett átmozgatva.
+A `hu.icellmobilsoft.coffee.jpa.sql.batch.BatchService` megszűnt.
 
 ==== Átállás
 
-A `hu.icellmobilsoft.coffee.jpa.sql.batch.BatchService` használata:
-
-* Be kell behúznunk a `hu.icellmobilsoft.frappee:frappee-hibernate` modult a függőségek közé és készen is vagyunk. Itt
- található a `hu.icellmobilsoft.frappee.batch.hibernate.HibernateBatchService` implementáció.
-* Ha kiterjesztettük a korábbi `BatchService`-t, akkor a `HibernateBatchService`-t kell kiterjesztenünk.
-Bővebb információ a Frapp:EE dokumentációban található.
+* Be kell behúznunk a `hu.icellmobilsoft.frappee:frappee-jpa-batch-api` modult a függőségek közé.
+* A korábbi `BatchService` helyett a `hu.icellmobilsoft.frappee.jpa.batch.IJpaBatchService` használandó.
+* Az `IJpaBatchService` Hibernate-es implementációja `hu.icellmobilsoft.frappee:frappee-hiberante-batch` modulban
+ található `HibernateBatchService` néven.
+* A `HibernateBatchService` JakartaEE 10-es producerét a `frappee-hiberante-batch-jee10` modul szolgáltatja
+ `HibernateBatchServiceProducer` néven.
+* Ha kiterjesztettük a korábbi `BatchService`-t, akkor a `HibernateBatchService`-t kell kiterjesztenünk és
+ kell készíteni hozzá egy producert is. Bővebb információ a Frapp:EE dokumentációban található.
 
 === coffee-rest
 

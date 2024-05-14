@@ -57,11 +57,6 @@ public class TransactionHelperExample {
 }
 ----
 
-== IJpaBatchService [[IJpaBatchService]] (a.k.a BatchService)
-
-*IJpaBatchService* is used to perform bulk database operations (insert, update, delete) in a group. Its Hibernate
-implementation can be found in the `frappee-hibernate` module.
-
 == microprofile-health support
 
 The *DatabaseHealth* can check if the database is reachable.
