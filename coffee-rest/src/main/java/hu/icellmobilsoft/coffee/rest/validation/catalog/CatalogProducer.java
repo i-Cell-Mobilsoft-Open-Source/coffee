@@ -75,9 +75,9 @@ public class CatalogProducer {
      */
     @Produces
     public Catalog publicCatalogResolver() throws BaseException {
-        Optional<String> xmlCatalogPath = applicationConfiguration.getOptionalString(IConfigKey.CATALOG_XML_PATH);
-        String[] catalogPaths = xmlCatalogPath
-                .orElseThrow(() -> new TechnicalException(MessageFormat.format("The config of [{0}] not found!", IConfigKey.CATALOG_XML_PATH))).split(";");
+        Optional<String[]> configCatalogPaths = applicationConfiguration.getOptionalValue(IConfigKey.CATALOG_XML_PATH, String[].class);
+        String[] catalogPaths = configCatalogPaths
+                .orElseThrow(() -> new TechnicalException(MessageFormat.format("The config of [{0}] not found!", IConfigKey.CATALOG_XML_PATH)));
         List<URI> catalogUris = new ArrayList<>();
 
         for (String catalogPath : catalogPaths) {

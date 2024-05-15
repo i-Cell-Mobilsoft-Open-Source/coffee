@@ -317,7 +317,7 @@ Ezekután készen is vagyunk és XSD Catalog szerint fog történni a XSD séma 
 
 [NOTE]
 ====
-Több katalógus fájl is megadható `;` jellel elválasztva
+Több katalógus fájl is megadható `,` jellel elválasztva
 
 ====
 

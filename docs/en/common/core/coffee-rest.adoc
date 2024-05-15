@@ -316,7 +316,7 @@ After that we are ready and the XSD Catalog will do the XSD schema reading.
 
 [NOTE]
 ====
-You can add multiple catalog file separated with `;`
+You can add multiple catalog file separated with `,`
 
 ====
 

@@ -4,7 +4,7 @@ coff:ee v2.7.0 -> v2.8.0 migrációs leírás, újdonságok, változások leír�
 
 === coffee-rest
 
-* Több xml katalógus fájl támogatása `;` jellel elválasztva
+* Több xml katalógus fájl támogatása `,` jellel elválasztva
 * Marshalling esetén megadható a `JaxbTool`-nak több osztály, amit hozzá szeretnénk adni a `JAXBContext`-hez
 
 ==== Migration
