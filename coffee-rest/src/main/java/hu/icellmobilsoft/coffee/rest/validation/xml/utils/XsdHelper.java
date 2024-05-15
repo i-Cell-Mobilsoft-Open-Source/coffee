@@ -72,7 +72,7 @@ public class XsdHelper implements IXsdHelper {
     /**
      * {@inheritDoc}
      *
-     * Létrehoz egy osztályhoz egy JAXBContext-et, cache-eli a választ.
+     * Creates and caches JAXBContext for the class
      */
     @Override
     public JAXBContext getJAXBContext(Class<?> forClass) throws JAXBException, BaseException {
@@ -92,7 +92,7 @@ public class XsdHelper implements IXsdHelper {
     /**
      * {@inheritDoc}
      *
-     * Létrehoz egy osztályhoz egy több classból álló JAXBContext-et, cache-eli a választ.
+     * Creates and caches JAXBContext for the classes
      */
     @Override
     public JAXBContext getJAXBContext(Class<?>... forClasses) throws JAXBException, BaseException {
@@ -112,7 +112,7 @@ public class XsdHelper implements IXsdHelper {
     /**
      * {@inheritDoc}
      *
-     * Létrehoz a megadott XSD-hez egy Schema-t, cache-eli a választ.
+     * Creates and caches a {@link Schema} for the given XSD
      */
     @Override
     public Schema getSchema(String xsd, LSResourceResolver lsResourceResolver) throws BaseException, SAXException {

@@ -296,7 +296,7 @@ public class JaxbTool {
      *            path to XSD or catalog to validate on, if null, then validation is not executed
      * @return XML String
      * @param additionalClasses
-     *            these classes will be added to the {@link JAXBContext}
+     *            these classes will be added to the {@link JAXBContext}. Typically in case of 'Class not known to this context' errors.
      * @throws BaseException
      *             if invalid input or cannot be marshalled
      */
@@ -322,9 +322,11 @@ public class JaxbTool {
      * @param marshallerProperties
      *            marshaller properties
      * @return XML String
+     * @throws BaseException
+     *             if invalid input or cannot be marshalled
      */
-    public String marshalXML(Object obj, String schemaPath, Map<String, Object> marshallerProperties) {
-        return marshalXML(obj, schemaPath, marshallerProperties);
+    public String marshalXML(Object obj, String schemaPath, Map<String, Object> marshallerProperties) throws BaseException {
+        return marshalXML(obj, schemaPath, marshallerProperties, (Class<?>) null);
     }
 
     /**
@@ -338,7 +340,7 @@ public class JaxbTool {
      * @param marshallerProperties
      *            marshaller properties
      * @param additionalClasses
-     *            these classes will be added to the {@link JAXBContext}
+     *            these classes will be added to the {@link JAXBContext}. Typically in case of 'Class not known to this context' errors.
      * @return XML String
      * @throws BaseException
      *             if invalid input or cannot be marshalled
