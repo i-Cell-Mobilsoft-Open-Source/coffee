@@ -23,7 +23,7 @@ package hu.icellmobilsoft.coffee.se.api.exception;
  * Unexpected technical exception
  *
  * @author attila-kiss-it
- * @since 2.7.0
+ * @since 2.8.0
  */
 public class TechnicalException extends BaseException {
 
