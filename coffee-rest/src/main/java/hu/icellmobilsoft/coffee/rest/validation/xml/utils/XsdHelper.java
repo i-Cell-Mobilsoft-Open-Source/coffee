@@ -20,8 +20,11 @@
 package hu.icellmobilsoft.coffee.rest.validation.xml.utils;
 
 import java.io.InputStream;
+import java.util.Arrays;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
@@ -81,6 +84,26 @@ public class XsdHelper implements IXsdHelper {
             return jaxbContextCache.get(className);
         } else {
             JAXBContext jaxbContext = JAXBContext.newInstance(forClass);
+            jaxbContextCache.put(className, jaxbContext);
+            return jaxbContext;
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * Létrehoz egy osztályhoz egy több classból álló JAXBContext-et, cache-eli a választ.
+     */
+    @Override
+    public JAXBContext getJAXBContext(Class<?>... forClasses) throws JAXBException, BaseException {
+        if (forClasses == null) {
+            throw new InvalidParameterException("forClasses is null!");
+        }
+        String className = Arrays.stream(forClasses).filter(Objects::nonNull).map(Class::getName).sorted().collect(Collectors.joining());
+        if (jaxbContextCache.containsKey(className)) {
+            return jaxbContextCache.get(className);
+        } else {
+            JAXBContext jaxbContext = JAXBContext.newInstance(forClasses);
             jaxbContextCache.put(className, jaxbContext);
             return jaxbContext;
         }
