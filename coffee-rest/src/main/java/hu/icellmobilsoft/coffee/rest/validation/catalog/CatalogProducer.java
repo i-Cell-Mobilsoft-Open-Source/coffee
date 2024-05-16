@@ -21,6 +21,8 @@ package hu.icellmobilsoft.coffee.rest.validation.catalog;
 
 import java.net.URI;
 import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import javax.xml.catalog.Catalog;
@@ -73,17 +75,20 @@ public class CatalogProducer {
      */
     @Produces
     public Catalog publicCatalogResolver() throws BaseException {
-        Optional<String> xmlCatalogPath = applicationConfiguration.getOptionalString(IConfigKey.CATALOG_XML_PATH);
-        String path = xmlCatalogPath
+        Optional<String[]> configCatalogPaths = applicationConfiguration.getOptionalValue(IConfigKey.CATALOG_XML_PATH, String[].class);
+        String[] catalogPaths = configCatalogPaths
                 .orElseThrow(() -> new TechnicalException(MessageFormat.format("The config of [{0}] not found!", IConfigKey.CATALOG_XML_PATH)));
-        try {
-            URI catalogUri = Thread.currentThread().getContextClassLoader().getResource(path).toURI();
+        List<URI> catalogUris = new ArrayList<>();
 
-            return CatalogManager.catalog(CatalogFeatures.defaults(), catalogUri);
-        } catch (Exception e) {
-            String msg = MessageFormat.format("Can not resolve catalog:[{0}], [{1}]", path, e.getLocalizedMessage());
-            log.error(msg, e);
-            throw new XsdProcessingException(CoffeeFaultType.OPERATION_FAILED, msg, e);
+        for (String catalogPath : catalogPaths) {
+            try {
+                catalogUris.add(Thread.currentThread().getContextClassLoader().getResource(catalogPath).toURI());
+            } catch (Exception e) {
+                String msg = MessageFormat.format("Can not resolve catalog:[{0}], [{1}]", catalogPath, e.getLocalizedMessage());
+                log.error(msg, e);
+                throw new XsdProcessingException(CoffeeFaultType.OPERATION_FAILED, msg, e);
+            }
         }
+        return CatalogManager.catalog(CatalogFeatures.defaults(), catalogUris.toArray(new URI[0]));
     }
 }

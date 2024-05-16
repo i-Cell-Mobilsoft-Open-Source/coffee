@@ -1,0 +1,12 @@
+= v2.7.0 → v2.8.0
+
+coff:ee v2.7.0 -> v2.8.0 migration description, news, changes
+
+=== coffee-rest
+
+* Support of multiple xml catalog file separated with `,`
+* For marshalling, you can give `JaxbTool` multiple classes to add to `JAXBContext`
+
+==== Migration
+
+Changes are backwards compatible doesn't need any migration.

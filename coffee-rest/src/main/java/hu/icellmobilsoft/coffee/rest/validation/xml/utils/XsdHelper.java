@@ -20,8 +20,11 @@
 package hu.icellmobilsoft.coffee.rest.validation.xml.utils;
 
 import java.io.InputStream;
+import java.util.Arrays;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
@@ -69,7 +72,7 @@ public class XsdHelper implements IXsdHelper {
     /**
      * {@inheritDoc}
      *
-     * Létrehoz egy osztályhoz egy JAXBContext-et, cache-eli a választ.
+     * Creates and caches JAXBContext for the class
      */
     @Override
     public JAXBContext getJAXBContext(Class<?> forClass) throws JAXBException, BaseException {
@@ -89,7 +92,27 @@ public class XsdHelper implements IXsdHelper {
     /**
      * {@inheritDoc}
      *
-     * Létrehoz a megadott XSD-hez egy Schema-t, cache-eli a választ.
+     * Creates and caches JAXBContext for the classes
+     */
+    @Override
+    public JAXBContext getJAXBContext(Class<?>... forClasses) throws JAXBException, BaseException {
+        if (forClasses == null) {
+            throw new InvalidParameterException("forClasses is null!");
+        }
+        String className = Arrays.stream(forClasses).filter(Objects::nonNull).map(Class::getName).sorted().collect(Collectors.joining());
+        if (jaxbContextCache.containsKey(className)) {
+            return jaxbContextCache.get(className);
+        } else {
+            JAXBContext jaxbContext = JAXBContext.newInstance(forClasses);
+            jaxbContextCache.put(className, jaxbContext);
+            return jaxbContext;
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * Creates and caches a {@link Schema} for the given XSD
      */
     @Override
     public Schema getSchema(String xsd, LSResourceResolver lsResourceResolver) throws BaseException, SAXException {

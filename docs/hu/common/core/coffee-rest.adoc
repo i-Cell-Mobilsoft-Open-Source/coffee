@@ -315,6 +315,12 @@ coffee:
 ----
 Ezekután készen is vagyunk és XSD Catalog szerint fog történni a XSD séma felolvasás.
 
+[NOTE]
+====
+Több katalógus fájl is megadható `,` jellel elválasztva
+
+====
+
 == Json támogatás
 
 A keretrendszer támogatja a REST kommunikáció során a JSON formátumú üzeneteket is az XML mellett.

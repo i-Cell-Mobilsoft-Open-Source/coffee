@@ -22,7 +22,10 @@ package hu.icellmobilsoft.coffee.rest.validation.xml;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
@@ -267,7 +270,7 @@ public class JaxbTool {
      * @param obj
      *            XML {@code Object}
      * @param schemaPath
-     *            path to XSD to validate on, if null, then validation is not executed
+     *            path to XSD or catalog to validate on, if null, then validation is not executed
      * @return XML String
      * @throws BaseException
      *             if invalid input or cannot be marshalled
@@ -280,13 +283,42 @@ public class JaxbTool {
     }
 
     /**
-     *
-     * Marshals given XML {@link Object} to {@link String} with given parameters.
+     * Marshals given XML {@link Object} to {@link String}. <br>
+     * Sets the following fix parameters for the conversion:
+     * <ul>
+     * <li>jaxb.formatted.output - TRUE ({@link Marshaller#JAXB_FORMATTED_OUTPUT})</li>
+     * <li>jaxb.fragment - TRUE ({@link Marshaller#JAXB_FRAGMENT})</li>
+     * </ul>
      *
      * @param obj
      *            XML {@code Object}
      * @param schemaPath
-     *            path to XSD to validate on, if null, then validation is not executed
+     *            path to XSD or catalog to validate on, if null, then validation is not executed
+     * @return XML String
+     * @param additionalClasses
+     *            these classes will be added to the {@link JAXBContext}. Typically in case of 'Class not known to this context' errors.
+     * @throws BaseException
+     *             if invalid input or cannot be marshalled
+     */
+    public String marshalXML(Object obj, String schemaPath, Class<?>... additionalClasses) throws BaseException {
+        Map<String, Object> properties = new HashMap<>();
+        properties.put(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+        properties.put(Marshaller.JAXB_FRAGMENT, Boolean.TRUE);
+        return marshalXML(obj, schemaPath, properties, additionalClasses);
+    }
+
+    /**
+     * Marshals given XML {@link Object} to {@link String}. <br>
+     * Sets the following fix parameters for the conversion:
+     * <ul>
+     * <li>jaxb.formatted.output - TRUE ({@link Marshaller#JAXB_FORMATTED_OUTPUT})</li>
+     * <li>jaxb.fragment - TRUE ({@link Marshaller#JAXB_FRAGMENT})</li>
+     * </ul>
+     *
+     * @param obj
+     *            XML {@code Object}
+     * @param schemaPath
+     *            path to XSD or catalog file to validate on, if null, then validation is not executed
      * @param marshallerProperties
      *            marshaller properties
      * @return XML String
@@ -294,12 +326,40 @@ public class JaxbTool {
      *             if invalid input or cannot be marshalled
      */
     public String marshalXML(Object obj, String schemaPath, Map<String, Object> marshallerProperties) throws BaseException {
+        return marshalXML(obj, schemaPath, marshallerProperties, (Class<?>) null);
+    }
+
+    /**
+     *
+     * Marshals given XML {@link Object} to {@link String} with given parameters.
+     *
+     * @param obj
+     *            XML {@code Object}
+     * @param schemaPath
+     *            path to XSD or catalog to validate on, if null, then validation is not executed (possibly it should be an xml catalog file)
+     * @param marshallerProperties
+     *            marshaller properties
+     * @param additionalClasses
+     *            these classes will be added to the {@link JAXBContext}. Typically in case of 'Class not known to this context' errors.
+     * @return XML String
+     * @throws BaseException
+     *             if invalid input or cannot be marshalled
+     */
+    public String marshalXML(Object obj, String schemaPath, Map<String, Object> marshallerProperties, Class<?>... additionalClasses)
+            throws BaseException {
         if (obj == null) {
             throw new InvalidParameterException("obj is null!");
         }
         try {
             IXsdHelper xsdHelper = createCDIInstance(IXsdHelper.class);
-            JAXBContext jaxbContext = xsdHelper.getJAXBContext(obj.getClass());
+            JAXBContext jaxbContext;
+            if (additionalClasses != null && additionalClasses.length != 0) {
+                List<Class<?>> contextClasses = new ArrayList<>(Arrays.asList(additionalClasses));
+                contextClasses.add(obj.getClass());
+                jaxbContext = xsdHelper.getJAXBContext(contextClasses.toArray(new Class<?>[0]));
+            } else {
+                jaxbContext = xsdHelper.getJAXBContext(obj.getClass());
+            }
             Marshaller marshaller = jaxbContext.createMarshaller();
             if (marshallerProperties != null) {
                 for (Entry<String, Object> entry : marshallerProperties.entrySet()) {

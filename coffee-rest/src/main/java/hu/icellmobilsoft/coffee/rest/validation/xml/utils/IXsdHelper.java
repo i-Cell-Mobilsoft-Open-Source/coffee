@@ -51,6 +51,19 @@ public interface IXsdHelper {
     JAXBContext getJAXBContext(Class<?> forClass) throws JAXBException, BaseException;
 
     /**
+     * Returns {@link JAXBContext} for given class.
+     *
+     * @param forClasses
+     *            classes of desired {@code JAXBContext}
+     * @return {@code JAXBContext}
+     * @throws JAXBException
+     *             if JAXB exception occurs
+     * @throws BaseException
+     *             if XSD processing exception occurs
+     */
+    JAXBContext getJAXBContext(Class<?> ...forClasses) throws JAXBException, BaseException;
+
+    /**
      * Returns {@link Schema} for given XSD.
      *
      * @param xsd

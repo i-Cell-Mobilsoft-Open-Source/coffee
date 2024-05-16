@@ -314,6 +314,12 @@ coffee:
 ----
 After that we are ready and the XSD Catalog will do the XSD schema reading.
 
+[NOTE]
+====
+You can add multiple catalog file separated with `,`
+
+====
+
 == Json support
 
 The framework supports JSON format messages in addition to XML for REST communication.
