@@ -2,6 +2,74 @@
 
 coff:ee v2.7.0 -> v2.8.0 migration description, news, changes
 
+== Global
+
+Dependency replacement: `org.hibernate:hibernate-core` -> `org.hibernate.orm:hibernate-core` (the former artifact was just a proxy).
+
+=== coffee-jpa
+
+💥 ***BREAKING CHANGE*** 💥
+
+The `hu.icellmobilsoft.coffee.jpa.sql.batch.BatchService` has been deleted.
+
+==== Migration
+
+* Add the new `hu.icellmobilsoft.frappee:frappee-jpa-batch-api` module to the Maven dependencies.
+* The `hu.icellmobilsoft.frappee.jpa.batch.IJpaBatchService` must be used instead of the former `BatchService`.
+* The `HibernateBatchService` Hibernate specific implementation of the `IJpaBatchService` can be found in the
+`hu.icellmobilsoft.frappee:frappee-hiberante-batch` module.
+* The JakartaEE 10 producer of the `HibernateBatchService` can be found in the `frappee-hiberante-batch-jee10`
+module.
+* If the former `BatchService` is extended by your project the new `HibernateBatchService` must be extended and a new
+producer must be created. For more information check the Frapp:EE documentation.
+
+=== coffee-dto-base
+
+The `TechnicalException` has been deprecated. The new `hu.icellmobilsoft.coffee.se.api.exception.TechnicalException`
+ should be used instead from the `coffee-se-api` module.
+
+==== Migartion
+
+Changes are backwards compatible doesn't need any migration. It is recommended to use the new
+ `hu.icellmobilsoft.coffee.se.api.exception.TechnicalException`.
+
+=== coffee-tool
+
+The `RandomUtil` has been deprecated. The new `hu.icellmobilsoft.coffee.se.util.string.RandomUtil` should be used
+instean from the `coffee-se-util` module.
+
+==== Migartion
+
+Changes are backwards compatible doesn't need any migration. It is recommended to use the new
+ `hu.icellmobilsoft.coffee.se.util.string.RandomUtil`.
+
+=== coffee-se-api
+
+Intorducing the new `hu.icellmobilsoft.coffee.se.api.exception.TechnicalException`.
+
+==== Migartion
+
+Changes are backwards compatible doesn't need any migration.
+
+=== coffee-se-util
+
+New coff:ee module. Collection of utility classes.
+
+Introducing the new `hu.icellmobilsoft.coffee.se.util.string.RandomUtil`.
+
+==== Migartion
+
+Changes are backwards compatible doesn't need any migration.
+
+=== coffee-mode-base
+
+The `EntityIdGenerator` uses the new `RandomUtil` from the `coffee-se-util` module to generate random identifiers.
+ Its implementation is 100% identical to the former one.
+
+==== Migartion
+
+Changes are backwards compatible doesn't need any migration.
+
 === coffee-rest
 
 * Support of multiple xml catalog file separated with `,`

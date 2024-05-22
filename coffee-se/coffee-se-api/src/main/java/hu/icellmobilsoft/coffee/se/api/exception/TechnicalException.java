@@ -17,33 +17,17 @@
  * limitations under the License.
  * #L%
  */
-package hu.icellmobilsoft.coffee.dto.exception;
-
-import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
+package hu.icellmobilsoft.coffee.se.api.exception;
 
 /**
- *
  * Unexpected technical exception
  *
- * @deprecated Helyette a {@link hu.icellmobilsoft.coffee.se.api.exception.TechnicalException} használandó.
- * 
- * @author imre.scheffer
- * @since 1.0.0
+ * @author attila-kiss-it
+ * @since 2.8.0
  */
-@Deprecated(forRemoval = true, since = "2.8.0")
-public class TechnicalException extends hu.icellmobilsoft.coffee.se.api.exception.TechnicalException {
+public class TechnicalException extends BaseException {
 
     private static final long serialVersionUID = 1L;
-
-    /**
-     * Constructor for TechnicalException.
-     *
-     * @param message
-     *            message
-     */
-    public TechnicalException(String message) {
-        this(CoffeeFaultType.REPOSITORY_FAILED, message, null);
-    }
 
     /**
      * Constructor for TechnicalException.

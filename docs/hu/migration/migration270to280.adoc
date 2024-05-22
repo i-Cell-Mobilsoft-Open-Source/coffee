@@ -2,11 +2,80 @@
 
 coff:ee v2.7.0 -> v2.8.0 migrációs leírás, újdonságok, változások leírása
 
+== Global
+
+Dependency csere: `org.hibernate:hibernate-core` -> `org.hibernate.orm:hibernate-core` (a korábbi csak egy proxy volt már).
+
+=== coffee-jpa
+
+💥 ***BREAKING CHANGE*** 💥
+
+A `hu.icellmobilsoft.coffee.jpa.sql.batch.BatchService` megszűnt és átmozgatásra került a frapp:ee projektbe a
+függőségeivel együtt, úgy mint `BatchMode`, `Status` és `StringBasicType`.
+
+==== Átállás
+
+* Be kell behúznunk a `hu.icellmobilsoft.frappee:frappee-jpa-batch-api` modult a függőségek közé.
+* A korábbi `BatchService` helyett a `hu.icellmobilsoft.frappee.jpa.batch.IJpaBatchService` használandó.
+* Az `IJpaBatchService` Hibernate-es implementációja `hu.icellmobilsoft.frappee:frappee-hiberante-batch` modulban
+ található `HibernateBatchService` néven.
+* A `HibernateBatchService` JakartaEE 10-es producerét a `frappee-hiberante-batch-jee10` modul szolgáltatja
+ `HibernateBatchServiceProducer` néven.
+* Ha kiterjesztettük a korábbi `BatchService`-t, akkor a `HibernateBatchService`-t kell kiterjesztenünk és
+ kell készíteni hozzá egy producert is. Bővebb információ a Frapp:EE dokumentációban található.
+
+=== coffee-dto-base
+
+`TechnicalException` deprecated lett, helyette a `coffee-se-api`-ba átmozgatott
+ `hu.icellmobilsoft.coffee.se.api.exception.TechnicalException` használandó.
+
+==== Átállás
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis. Javasolt az
+ új `hu.icellmobilsoft.coffee.se.api.exception.TechnicalException` használata.
+
+=== coffee-tool
+
+A `RandomUtil` deprecated lett, helyette a `coffee-se-util` modulban található
+ `hu.icellmobilsoft.coffee.se.util.string.RandomUtil` használandó.
+
+==== Átállás
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis. Javasolt a
+ `hu.icellmobilsoft.coffee.se.util.string.RandomUtil` használata.
+
+=== coffee-se-api
+
+`hu.icellmobilsoft.coffee.se.api.exception.TechnicalException` bevezetése.
+
+==== Átállás
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+=== coffee-se-util
+
+Új coff:ee modul. Utility osztályok gyűjteménye.
+
+A `hu.icellmobilsoft.coffee.se.util.string.RandomUtil` bevezetése.
+
+==== Átállás
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+=== coffee-mode-base
+
+Az `EntityIdGenerator` az azonosító generáláshoz a `coffee-se-util`-ba átmozgatott `RandomUtil`-t használja.
+Implementációja 100%-ban megegyezik a korábban itt található megoldással.
+
+==== Átállás
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
 === coffee-rest
 
 * Több xml katalógus fájl támogatása `,` jellel elválasztva
 * Marshalling esetén megadható a `JaxbTool`-nak több osztály, amit hozzá szeretnénk adni a `JAXBContext`-hez
 
-==== Migration
+==== Átállás
 
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.

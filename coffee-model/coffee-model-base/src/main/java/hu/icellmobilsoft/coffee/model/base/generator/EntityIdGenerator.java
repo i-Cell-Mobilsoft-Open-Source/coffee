@@ -20,16 +20,13 @@
 package hu.icellmobilsoft.coffee.model.base.generator;
 
 import java.io.Serializable;
-import java.lang.management.ManagementFactory;
-import java.util.Date;
-import java.util.Random;
 
-import org.apache.commons.lang3.StringUtils;
 import org.hibernate.HibernateException;
 import org.hibernate.engine.spi.SharedSessionContractImplementor;
 import org.hibernate.id.IdentifierGenerator;
 
 import hu.icellmobilsoft.coffee.model.base.IIdentifiedEntity;
+import hu.icellmobilsoft.coffee.se.util.string.RandomUtil;
 
 /**
  * Entity identifier generator.
@@ -59,113 +56,13 @@ public class EntityIdGenerator implements IdentifierGenerator {
         return generateId();
     }
 
-    private static final long DATE_2013_01_01 = 1356998400000L;
-
-    private static final int RADIX = 36;
-    // [0-9a-zA-Z]
-    private static final int MAX_NUM_SYS = 62;
-    // [a-z]
-    private static final char[] LOWERCASE;
-    // [A-Z]
-    private static final char[] UPPERCASE;
-    // [0-9a-zA-Z]
-    private static final char[] ALL_LETTER;
-    private static final String ALL_LETTER_STRING;
-    private static int generatedIndex = 0;
-    private static final int PID;
-    private static final String PID62;
-    private static final String PID36;
-
-    /* init */
-    static {
-        UPPERCASE = new char[26];
-        for (int i = 65; i < 65 + 26; i++) {
-            UPPERCASE[i - 65] = (char) i;
-        }
-        LOWERCASE = new char[26];
-        for (int i = 97; i < 97 + 26; i++) {
-            LOWERCASE[i - 97] = (char) i;
-        }
-        ALL_LETTER = new char[MAX_NUM_SYS];
-        for (int i = 48; i < 48 + 10; i++) {
-            ALL_LETTER[i - 48] = (char) i;
-        }
-        for (int i = 10; i < 10 + 26; i++) {
-            ALL_LETTER[i] = UPPERCASE[i - 10];
-        }
-        for (int i = 10 + 26; i < 10 + 26 + 26; i++) {
-            ALL_LETTER[i] = LOWERCASE[i - 10 - 26];
-        }
-        ALL_LETTER_STRING = new String(ALL_LETTER);
-        PID = Integer.valueOf(ManagementFactory.getRuntimeMXBean().getName().split("@")[0]);
-        /* pid */
-        // maxpid = 238327
-        PID62 = paddL(convertToRadix(PID, MAX_NUM_SYS), 3, '0').substring(0, 3);
-        // maxpid
-        PID36 = paddL(convertToRadix(PID, RADIX), 3, '0').substring(0, 3);
-    }
-
-    private static final Random RANDOM = new Random();
-
     /**
      * generate fix 16 length id!
      *
      * @return entityId
      */
     public static String generateId() {
-        int xInd = getNextIndex();
-        Date xDate = new Date();
-        xDate.setTime(xDate.getTime() - DATE_2013_01_01);
-        /* time based */
-        String xRes = convertToRadix(xDate.getTime(), RADIX);
-        // 8888 -ig eleg a 8 karakter :) 7 karakter 2081 -ig jo.
-        xRes = paddL(xRes, 8, '0');
-
-        StringBuilder builder = new StringBuilder();
-        builder.append(xRes);
-
-        // nano, utolso 4 karaktert levagjuk mert csak az változik millisecen belül
-        long nano = System.nanoTime();
-        String xNano = convertToRadix(nano, RADIX);
-        builder.append(xNano.substring(xNano.length() - 4, xNano.length()));
-
-        /* random */
-        // 2
-        builder.append(paddL(convertToRadix(RANDOM.nextInt(RADIX * RADIX), RADIX), 2, '0'));
-        /* generation index */
-        builder.append(paddL(convertToRadix(xInd, RADIX), 2, '0'));
-
-        return builder.toString();
+        return RandomUtil.generateId();
     }
 
-    private static synchronized int getNextIndex() {
-        generatedIndex++;
-        // MAX a ZZ
-        if (generatedIndex > RADIX * RADIX - 1) {
-            generatedIndex = 0;
-        }
-        return generatedIndex;
-    }
-
-    private static String paddL(String str, int length, char padd) {
-        return StringUtils.leftPad(str, length, padd);
-    }
-
-    /*
-     *
-     * Egy szám tetszőleges számrendszerbe való váltása. 62-es szamrendszer a max
-     */
-    private static String convertToRadix(long inNum, long radix) {
-        long dig;
-        long numDivRadix;
-        long num = inNum;
-        String result = "";
-        do {
-            numDivRadix = num / radix;
-            dig = ((num % radix) + radix) % radix;
-            result = ALL_LETTER[(int) dig] + result;
-            num = numDivRadix;
-        } while (num != 0);
-        return result;
-    }
 }
