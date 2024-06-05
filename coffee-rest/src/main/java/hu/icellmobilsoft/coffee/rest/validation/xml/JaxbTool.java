@@ -326,7 +326,7 @@ public class JaxbTool {
      *             if invalid input or cannot be marshalled
      */
     public String marshalXML(Object obj, String schemaPath, Map<String, Object> marshallerProperties) throws BaseException {
-        return marshalXML(obj, schemaPath, marshallerProperties, (Class<?>) null);
+        return marshalXML(obj, schemaPath, marshallerProperties, (Class<?>[]) null);
     }
 
     /**
