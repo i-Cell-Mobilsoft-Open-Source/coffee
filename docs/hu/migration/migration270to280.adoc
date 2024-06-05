@@ -58,6 +58,8 @@ A változtatások nem eredményeznek átállási munkálatokat, visszafelé komp
 
 A `hu.icellmobilsoft.coffee.se.util.string.RandomUtil` bevezetése.
 
+* A `generateToken()` metódus `public` módosítót kapott, ellentétben a régi RandomUtil osztállyal, ahol `protected` volt.
+
 ==== Átállás
 
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.

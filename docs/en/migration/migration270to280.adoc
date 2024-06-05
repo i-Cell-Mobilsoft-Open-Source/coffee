@@ -57,6 +57,8 @@ New coff:ee module. Collection of utility classes.
 
 Introducing the new `hu.icellmobilsoft.coffee.se.util.string.RandomUtil`.
 
+* The generateToken() method has been made `public` unlike in the old RandomUtil class.
+
 ==== Migartion
 
 Changes are backwards compatible doesn't need any migration.
