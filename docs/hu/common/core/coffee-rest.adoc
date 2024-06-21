@@ -272,7 +272,7 @@ hu.icellmobilsoft.coffee.rest.validation.catalog.MavenURLStreamHandlerProvider
 Tehát létre kell hozni a `src/main/resources/META-INF/services/java.net.spi.URLStreamHandlerProvider` fájlt
 és beleírni azt a class-t mely kezelésbe veszi (Coffee része).
 
-WARNING: Lehetnek olyan rendszerek (pl. Thorntail),
+WARNING: Lehetnek olyan rendszerek,
 melyek nem képesek ezt a fájlt beolvasni időben az alkalmazás felfutása idejében.
 Ilyenkor van még egy lehetőségünk a `URL.setURLStreamHandlerFactory(factory);` megoldáson keresztül.
 

@@ -50,37 +50,6 @@ Ez a filter kellene kezelje, de ez jelenleg exception alapú, ami a resten nem f
 https://github.com/opentracing-contrib/java-jaxrs/blob/master/opentracing-jaxrs2/src/main/java/io/opentracing/contrib/jaxrs2/server/SpanFinishingFilter.java
 A filter feladata hogy ezt az esetet lekezelje.
 
-
-=== Thorntail alapú projekt konfig
-Default a Jaeger trace implementációt használja.
-https://docs.thorntail.io/2.5.0.Final/#_jaeger
-
-
-.project-defaults.yml
-[source,yaml]
-----
-thorntail:
-    jaeger:
-        service-name: ${service.name}
-        sampler-type: const #There are 4 supported type: 'const', 'probabilistic', 'ratelimiting' and 'remote'.
-        sampler-parameter: 1 #For a 'Constant' sampler 0 means no trace and 1 means all traces.
-        remote-reporter-http-endpoint: 'http://jaeger-collector.istio-system:14268/api/traces'
-----
-.pom.xml
-----
-<dependency>
-    <groupId>hu.icellmobilsoft.coffee</groupId>
-    <artifactId>coffee-module-mp-opentracing</artifactId>
-</dependency>
-<dependency>
-    <groupId>io.thorntail</groupId>
-    <artifactId>microprofile-opentracing</artifactId>
-</dependency>
-<dependency>
-    <groupId>io.thorntail</groupId>
-    <artifactId>jaeger</artifactId>
-</dependency>
-----
 === Wildfly alapú projekt konfig
 Verziótól függően a Jaeger trace implementációt vagy az OTEL trace propagációt tudja kezelni.
 https://docs.wildfly.org/30/Admin_Guide.html#configuration-8

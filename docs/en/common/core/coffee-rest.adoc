@@ -271,7 +271,7 @@ hu.icellmobilsoft.coffee.rest.validation.catalog.MavenURLStreamHandlerProvider
 So you need to create the file `src/main/resources/META-INF/services/java.net.spi.URLStreamHandlerProvider`
 and include the class that handles it (Coffee part).
 
-WARNING: There may be systems (e.g. Thorntail),
+WARNING: There may be systems,
 which are not able to read this file in time for the application to run.
 In such cases, there is another option via `URL.setURLStreamHandlerFactory(factory);`.
 
