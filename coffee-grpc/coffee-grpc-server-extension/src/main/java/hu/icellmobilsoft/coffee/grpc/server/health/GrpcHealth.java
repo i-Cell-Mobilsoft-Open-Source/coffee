@@ -35,7 +35,7 @@ import hu.icellmobilsoft.coffee.se.logging.Logger;
  * To support microprofile-health mechanics, this class can check whether the gRPC server is reachable.
  *
  * @author karoly.tamas
- * @since 2.7.1
+ * @since 2.8.0
  */
 @ApplicationScoped
 public class GrpcHealth {
