@@ -53,9 +53,11 @@ public class GrpcHealth {
     /**
      * Checking whether the gRPC server is reachable
      *
-     * @param builderName the name of the health check response
+     * @param builderName
+     *            the name of the health check response
      * @return The created {@link HealthCheckResponse} contains information about whether the gRPC server is reachable.
-     * @throws BaseException if check failed
+     * @throws BaseException
+     *             if check failed
      */
     public HealthCheckResponse check(String builderName) throws BaseException {
         if (StringUtils.isBlank(builderName)) {
