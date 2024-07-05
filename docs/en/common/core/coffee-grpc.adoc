@@ -256,6 +256,3 @@ Contains all Coff:ee proto files and their generated classes. The plugin generat
 == microprofile-health support
 
 The *GrpcHealth* can check if the gRPC server is reachable.
-
-This function is based on metric data,
-so it is necessary that one of the implementations is activated.
