@@ -31,7 +31,7 @@ import java.lang.annotation.Target;
 import jakarta.inject.Qualifier;
 
 /**
- * Eredeti AppLogger osztaly qualifier. Igazabol azert kell, hogy lehessen hasznalni a nativ Logger producer-t
+ * Original AppLogger class qualifier. Essentially used to utilize the native Logger producer.
  *
  * @author ischeffer
  * @since 1.0.0

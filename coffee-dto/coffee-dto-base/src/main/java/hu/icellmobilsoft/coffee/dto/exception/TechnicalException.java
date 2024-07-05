@@ -25,7 +25,7 @@ import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
  *
  * Unexpected technical exception
  *
- * @deprecated Helyette a {@link hu.icellmobilsoft.coffee.se.api.exception.TechnicalException} használandó.
+ * @deprecated Instead, use {@link hu.icellmobilsoft.coffee.se.api.exception.TechnicalException}.
  * 
  * @author imre.scheffer
  * @since 1.0.0

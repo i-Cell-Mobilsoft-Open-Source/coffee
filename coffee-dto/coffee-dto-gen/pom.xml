@@ -36,12 +36,12 @@
 	<build>
 		<plugins>
 			<plugin>
-<!-- eredeti plugin: ez nem tudja a jaxb3 vagy 4-et
+<!-- Original plugin: it does not support JAXB 3 or 4.
 				<groupId>org.jvnet.jaxb2.maven2</groupId>
 				<artifactId>maven-jaxb2-plugin</artifactId>
 				<version>0.15.1</version>
 -->
-<!-- forkolt es releaselt plugin a felsobol kiindulva jaxb4-re -->
+<!-- Forked and released plugin based on the above for JAXB 4. -->
 <!-- https://github.com/phax/maven-jaxb2-plugin/tree/v016 -->
 				<groupId>com.helger.maven</groupId>
 				<artifactId>jaxb40-maven-plugin</artifactId>

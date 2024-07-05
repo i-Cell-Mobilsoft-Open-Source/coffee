@@ -74,7 +74,7 @@ public class AppLoggerImpl implements AppLogger {
 
     private Logger logger() {
         if (getLogger() == null) {
-            // hogyha null lenne a logger (nem allitja be valaki amikor kell)
+            // if the logger were null (not set by anyone when needed)
             // Logger log = CommonLoggerFactory.getLogger(getClass());
             // Logger log = Logger.getLogger(getClass());
             Logger log = Logger.getLogger(getClass().getName());
@@ -193,7 +193,7 @@ public class AppLoggerImpl implements AppLogger {
     /**
      * {@inheritDoc}
      *
-     * request szinten eltarolt valtozo elkerese
+     * Accessing a variable stored at the request level
      */
     public Object getValue(String key) {
         return logContainer.getValue(key);
@@ -202,7 +202,7 @@ public class AppLoggerImpl implements AppLogger {
     /**
      * {@inheritDoc}
      *
-     * request szinten eltarolt valtozo elmentese
+     * Saving a variable stored at the request level
      */
     public void setValue(String key, Object value) {
         logContainer.setValue(key, value);
@@ -211,7 +211,7 @@ public class AppLoggerImpl implements AppLogger {
     /**
      * {@inheritDoc}
      *
-     * request szinten eltarolt valtozo torlese
+     * Deleting a variable stored at the request level
      */
     public void removeValue(String key) {
         logContainer.removeValue(key);

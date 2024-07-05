@@ -43,7 +43,7 @@ import com.salesforce.jprotoc.ProtocPlugin;
  * "https://github.com/quarkusio/quarkus/blob/main/extensions/grpc/protoc/src/main/java/io/quarkus/grpc/protoc/plugin/MutinyGrpcGenerator.java">Quarkus
  * generator</a>
  *
- * A templatek vannak lecserélve
+ * The templates have been replaced.
  * 
  * @author Paulo Lopes
  * @author mark.petrenyi

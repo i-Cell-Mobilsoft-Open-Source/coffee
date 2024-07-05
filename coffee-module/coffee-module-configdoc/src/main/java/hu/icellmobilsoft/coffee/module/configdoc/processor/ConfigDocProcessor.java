@@ -107,7 +107,7 @@ public class ConfigDocProcessor extends AbstractProcessor {
         ArrayList<DocData> dataList = new ArrayList<>();
         for (TypeElement annotation : annotations) {
             for (Element element : roundEnv.getElementsAnnotatedWith(annotation)) {
-                // Ha van rajta vagy valamelyik ősén DynamicConfigTemplate, akkor az másik adocba kerül, itt skippeljük
+                // If it has a DynamicConfigTemplate or any of its ancestors do, it goes into the other adoc; skip it here
                 if (isWithoutDynamicConfigTemplate(element)) {
                     visitor.visit(element, dataList);
                 }

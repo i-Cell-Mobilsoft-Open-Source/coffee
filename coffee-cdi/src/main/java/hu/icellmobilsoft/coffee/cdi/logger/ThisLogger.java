@@ -31,7 +31,7 @@ import java.lang.annotation.Target;
 import jakarta.inject.Qualifier;
 
 /**
- * Request-scope-ban hasznalt minden log kiiras gyujtojere kell rakni
+ * All log outputs used in request scope should be directed to a collector.
  *
  * @author ischeffer
  * @since 1.0.0

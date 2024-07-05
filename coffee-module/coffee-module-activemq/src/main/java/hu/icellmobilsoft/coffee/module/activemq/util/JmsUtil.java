@@ -125,7 +125,7 @@ public class JmsUtil {
      */
     public static void close(Connection connection) {
         if (connection != null) {
-            // ez zar producert is es sessiont is
+            // This closes both the producer and the session
             try {
                 connection.close();
             } catch (JMSException e) {

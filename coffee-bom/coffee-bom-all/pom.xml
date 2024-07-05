@@ -173,7 +173,7 @@
                 <version>${version.commons-io}</version>
             </dependency>
 
-            <!-- Resteasy 4+: resteasy-jaxrs szet van bontva core, core-spi es egyebekre-->
+            <!-- Resteasy 4+: the resteasy-jaxrs set is split into core, core-spi, and others -->
             <dependency>
                 <groupId>org.jboss.resteasy</groupId>
                 <artifactId>resteasy-core</artifactId>

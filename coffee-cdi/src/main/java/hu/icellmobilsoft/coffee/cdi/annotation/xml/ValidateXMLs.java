@@ -27,21 +27,21 @@ import java.lang.annotation.Target;
 import jakarta.enterprise.util.Nonbinding;
 
 /**
- * Ha egy RestService-ben szereplő metódus a request body paraméterét megannotáljuk ezzel az annotációval, akkor a deszerializációt és a validációt a
- * MessageBodyReaderBase megfelelő implementáció végzik
+ * If we annotate a method's request body parameter in a RestService with this annotation,
+ * the deserialization and validation are handled by the appropriate implementation of MessageBodyReaderBase.
  *
- * Példa a használatra:
+ * Example of use:
  *
  * <pre>
  * ExampleResponse postExampleRequest(@Context HttpHeaders headers, @Context HttpServletRequest servletRequest,
- *         &#64;ValidateXMLs({ @ValidateXML(version = @Version(include = @Range(from = "1.0", to = "1.9")), xsdPath = ""), // Nincs XSD validáció
+ *         &#64;ValidateXMLs({ @ValidateXML(version = @Version(include = @Range(from = "1.0", to = "1.9")), xsdPath = ""), // There is no XSD validation
  *                 &#64;ValidateXML(version = @Version(include = @Range(from = "1.10")), xsdPath = "sample.xsd") }) ExampleRequest exampleRequest)
  *         throws BaseException;
  * </pre>
  *
- * Lehet egy ValidateXML annotáció is önmagában.
+ * LIt can be a ValidateXML annotation on its own.
  *
- * Teljes használati leírás: /docs/howto/xsd_xml_validation_depend_on_version.adoc
+ * Full instructions: /docs/howto/xsd_xml_validation_depend_on_version.adoc
  *
  * @see ValidateXML
  * @author ferenc.lutischan
@@ -52,9 +52,9 @@ import jakarta.enterprise.util.Nonbinding;
 public @interface ValidateXMLs {
 
     /**
-     * Az egyes xsd validációk verziófüggő felsorolása (azaz Verzió -&gt; xsd összerendelés)
+     * The version-specific mapping of XSD validations (i.e., Version -&gt; XSD mapping)
      *
-     * @return {@code ValidateXML} tömb
+     * @return {@code ValidateXML} array
      */
     @Nonbinding
     ValidateXML[] value();

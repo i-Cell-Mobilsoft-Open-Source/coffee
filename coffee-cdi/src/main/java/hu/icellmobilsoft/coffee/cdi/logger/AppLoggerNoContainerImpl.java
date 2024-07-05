@@ -70,7 +70,7 @@ public class AppLoggerNoContainerImpl implements AppLogger {
 
     private Logger logger() {
         if (getLogger() == null) {
-            // hogyha null lenne a logger (nem allitja be valaki amikor kell)
+            // if the logger were null (not set by anyone when needed)
             // Logger log = CommonLoggerFactory.getLogger(getClass());
             Logger log = Logger.getLogger(getClass().getName());
             log.log(JulLevel.WARN, "Logger not SET! Applogger create temporary logger!");
@@ -191,7 +191,7 @@ public class AppLoggerNoContainerImpl implements AppLogger {
     /**
      * {@inheritDoc}
      *
-     * request szinten eltarolt valtozo elkerese
+     * Accessing a variable stored at the request level
      */
     public Object getValue(String key) {
         return null;
@@ -200,7 +200,7 @@ public class AppLoggerNoContainerImpl implements AppLogger {
     /**
      * {@inheritDoc}
      *
-     * request szinten eltarolt valtozo elmentese
+     * Saving a variable stored at the request level
      */
     public void setValue(String key, Object value) {
     }
@@ -208,7 +208,7 @@ public class AppLoggerNoContainerImpl implements AppLogger {
     /**
      * {@inheritDoc}
      *
-     * request szinten eltarolt valtozo torlese
+     * Deleting a variable stored at the request level
      */
     public void removeValue(String key) {
     }

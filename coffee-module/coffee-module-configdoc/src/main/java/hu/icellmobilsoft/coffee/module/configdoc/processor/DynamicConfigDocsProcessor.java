@@ -78,18 +78,17 @@ public class DynamicConfigDocsProcessor extends AbstractProcessor {
 
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-        // @DynamicConfigDocs annotációk feldolgozása
+        // @DynamicConfigDocs processing annotations
         docHeaders.addAll(processDynamicConfigDocsAnnotations(annotations, roundEnv));
 
-        // hivatkozott templatek felolvasása
+        // Reading referenced templates
         for (DynamicDocData header : docHeaders) {
             templateMap.computeIfAbsent(header.getTemplateClassName(), this::readTemplate);
         }
-        // utolsó körben írjuk ki a fájlt, hátha egyszerre fordul a template és a dinamikus doksi ezért lehet, hogy adott körben nem sikerül
-        // felolvasni
-        // a template-et, de utolsóra meg kell legyen mindegyik
+        // We write out the file in the last round, as sometimes the template and the dynamic documentation might compile together.
+        // Thus, in a given round, reading the template might fail, but by the last round, all should be available.
         if (roundEnv.processingOver()) {
-            // összeszedjük a template-eket, rendezünk
+            // We collect the templates and sort them
             List<DynamicDocData> dataToWrite = collectDataToWrite(docHeaders, templateMap);
 
             ConfigDocConfig config;

@@ -18,12 +18,12 @@
 	<build>
 		<plugins>
 			<plugin>
-<!-- eredeti plugin: ez nem tudja a jaxb3 vagy 4-et
+<!-- Original plugin: it does not support JAXB 3 or 4.
 				<groupId>org.jvnet.jaxb2.maven2</groupId>
 				<artifactId>maven-jaxb2-plugin</artifactId>
 				<version>0.14.0</version>
 -->
-<!-- forkolt es releaselt plugin a felsobol kiindulva: ez csak a jaxb3-at tudja, 4-et nem de lagalabb jakarta csomagok vannak hasznalva -->
+<!-- Forked and released plugin based on the above: it supports only JAXB 3, not 4, but at least it uses Jakarta packages. -->
                 <groupId>com.evolvedbinary.maven.jvnet</groupId>
                 <artifactId>jaxb30-maven-plugin</artifactId>
                 <version>0.15.0</version>
@@ -36,7 +36,7 @@
 						<configuration>
 							<episodes>
 								<episode>
-									<!-- Nem generálja le újra a coffee dto-kat csak felhasználja -->
+									<!-- It does not regenerate the Coffee DTOs; it just uses them. -->
 									<groupId>hu.icellmobilsoft.coffee</groupId>
 									<artifactId>coffee-dto-gen</artifactId>
 								</episode>
@@ -58,7 +58,7 @@
 					<verbose>true</verbose>
 					<schemaDirectory>src/main/resources</schemaDirectory>
 					<args>
-<!-- a pluginunk nem tud jaxb3+ dolgozni
+<!-- Our plugin cannot work with JAXB 3 or higher.
 						<arguments>-openapify</arguments>
 -->
 						<arguments>-Xfluent-api</arguments>
