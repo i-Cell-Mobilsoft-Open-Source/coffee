@@ -83,6 +83,8 @@ Changes are backwards compatible doesn't need any migration.
 
 === coffee-grpc
 
+** microprofile-health support
+
 ** Use separated managed-executor-service (java:jboss/ee/concurrency/executor/grpc) for gRPC calls.
 The `managed-executor-service` configuration is explained in the `coffee-grpc-server-extension` documentation.
 

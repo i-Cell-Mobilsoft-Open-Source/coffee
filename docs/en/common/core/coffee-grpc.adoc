@@ -265,3 +265,7 @@ The `schema2proto` parameter activates XSD -> proto generation, and the `copy-ge
 
 == coffee-dto/coffee-dto-stub-gen
 Contains all Coff:ee proto files and their generated classes. The plugin generates an interface descriptor that can be implemented in a full CDI environment. It also generates a BindableService implementation that delegates gRPC calls to the implemented interface.
+
+== microprofile-health support
+
+The *GrpcHealth* can check if the gRPC server is reachable.
