@@ -258,4 +258,13 @@ public class GrpcServerManager {
     public void stopServer() {
         server.shutdownNow();
     }
+
+    /**
+     * Checks the server started.
+     *
+     * @return True if server started
+     */
+    public boolean isStarted() {
+        return server != null && !server.isTerminated() && !server.isShutdown();
+    }
 }
