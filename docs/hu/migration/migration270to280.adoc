@@ -87,6 +87,6 @@ A változtatások nem eredményeznek átállási munkálatokat, visszafelé komp
 
 ** microprofile-health támogatás
 
-==== Migration
+==== Átállás
 
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
