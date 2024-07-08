@@ -44,7 +44,7 @@ public class GrpcStarter {
     @Inject
     private Logger log;
 
-    @Resource
+    @Resource(lookup = "java:jboss/ee/concurrency/executor/grpc")
     private ManagedExecutorService executorService;
 
     /**

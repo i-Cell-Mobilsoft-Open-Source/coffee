@@ -80,7 +80,7 @@ public class GrpcServerManager {
     @GrpcServerConnection(configKey = IGrpcServerConfig.DEFAULT_SERVER_KEY)
     private GrpcServerConfig serverConfig;
 
-    @Resource
+    @Resource(lookup = "java:jboss/ee/concurrency/executor/grpc")
     private ManagedExecutorService managedExecutorService;
 
     private Server server;

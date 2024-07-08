@@ -101,6 +101,21 @@ coffee:
 ----
 <1> if `true` then `coffee.grpc.server.threadpool.default` ignored
 
+A `ManagedExecutorService` thread pool esetében további Wildfly konfigurációra van szükség.
+
+.Wildfly gRPC managed executor service konfiguráció
+[source,xml]
+----
+<managed-executor-services>
+    <managed-executor-service name="grpc" jndi-name="java:jboss/ee/concurrency/executor/grpc" context-service="default" hung-task-termination-period="0" hung-task-threshold="60000" core-threads="${env.MANAGED_EXECUTOR_SERVICE_GRPC_CORE_THREADS,managed-executor-service.grpc.core-threads:16}" keepalive-time="5000"/>
+</managed-executor-services>
+----
+
+Ez a konfiguráció a https://github.com/i-Cell-Mobilsoft-Open-Source/docker-wildfly[docker-wildfly] MicroProfile image-ekben érhető el a 3.1-es verziótól kezdve.
+
+* A jndi-name-nek meg kell egyeznie a példában szereplővel (`java:jboss/ee/concurrency/executor/grpc`).
+* A minimális szálak számát (`core-threads`) a példában látható módon lehet paraméterezni a `MANAGED_EXECUTOR_SERVICE_GRPC_CORE_THREADS` környezeti változóval vagy a `managed-executor-service.grpc.core-threads` MicroProfile paraméter segítségével.
+
 Minta alkalmazás: https://github.com/i-Cell-Mobilsoft-Open-Source/backend-sampler/tree/main/sample/sample-grpc-server-service[sample-grpc-server-service]
 
 == gRPC client (coffee-grpc-client-extension)
