@@ -81,3 +81,12 @@ A változtatások nem eredményeznek átállási munkálatokat, visszafelé komp
 ==== Átállás
 
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+
+=== coffee-grpc
+
+** microprofile-health támogatás
+
+==== Migration
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
