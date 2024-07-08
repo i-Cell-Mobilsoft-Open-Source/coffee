@@ -59,7 +59,7 @@ import hu.icellmobilsoft.coffee.se.logging.Logger;
 import io.smallrye.config.inject.ConfigExtension;
 
 /**
- * TOTPUtil osztaly unitteszt
+ * TOTPUtil class unit test
  *
  * @author cstamas
  *
@@ -102,12 +102,12 @@ public class TOtpTest {
         System.setProperty(TOtpConfigKey.PASSWORD_HASH_ALGORITHM, TOtpAlgorithm.HMACSHA1.value());
         System.setProperty(TOtpConfigKey.PASSWORD_SECRET_LENGTH, "16");
 
-        // ezzel a secrettel teszteltem az otp authenticatort
+        // I tested the OTP authenticator with this secret
         secret = StringUtils.replace("APMC QKSC YITU IK5Z", " ", "");
         secretKey = new Base32().decode(secret);
 
         currentTime = System.currentTimeMillis();
-        // direkt egy eltolt idot hasznalunk majd a jelszohoz
+        // We intentionally use a time offset for the password
         Logger.getLogger(TOtpTest.class).info("secret: [{0}] ", secret);
     }
 
@@ -118,10 +118,10 @@ public class TOtpTest {
     public String generateTOtp(long offset) throws BaseException {
         offsetTime = System.currentTimeMillis() + offset;
         log.info("offset.time: [{0}], current.time: [{1}]", offsetTime, currentTime);
-        // generalunk egy direkt az idoablakon kivuli jelszot
+        // We generate a password directly outside the time window.
         String otp = totpGenerator.generatePassword(secretKey, offsetTime);
         log.info("otp:[{0}] generated with algorithm: [{1}]", otp, otpConfig.getHashAlgorithm());
-        // ez csak erdekessegkepp: az aktualis idoablakbol hatralevo ido masodpercben
+        // Just for curiosity: the remaining time in seconds from the current time window.
         log.info("validity: [{0}] seconds]", 30 - Math.round((currentTime / 1000) % 30));
 
         return otp;
@@ -135,11 +135,11 @@ public class TOtpTest {
     @Test
     @DisplayName("should throw INVALID_ONE_TIME_PASSWORD exception")
     public void generateInvalidTOtp() {
-        // nincs extra idoablak vizsgalat, de masik idoablakban generaljuk a jelszot
+        // There is no extra time window check, but we generate the password in another time window.
         System.setProperty(TOtpConfigKey.VERIFY_ADDITIONAL_WINDOWS_COUNT, "2");
         BusinessException exception = Assertions.assertThrows(BusinessException.class, () -> {
             String otp = "123435";
-            // a server es kliens kozotti idoeltolodast teszteljuk egy masik idoablakban torteno validalassal
+            // We are testing the time offset between server and client with validation in another time window.
             totpVerifier.verify(secretKey, otp, currentTime);
         });
         System.setProperty(TOtpConfigKey.VERIFY_ADDITIONAL_WINDOWS_COUNT, "0");
@@ -149,7 +149,7 @@ public class TOtpTest {
     @Test
     @DisplayName("should generate a valid otp")
     public void generateValidTOtp() {
-        // beallitunk (+-) 1 extra idoablak vizsgalatot
+        // We set (+/-) 1 extra time window validation.
         System.setProperty(TOtpConfigKey.VERIFY_ADDITIONAL_WINDOWS_COUNT, "1");
         Assertions.assertDoesNotThrow(() -> {
             String otp = generateTOtp();

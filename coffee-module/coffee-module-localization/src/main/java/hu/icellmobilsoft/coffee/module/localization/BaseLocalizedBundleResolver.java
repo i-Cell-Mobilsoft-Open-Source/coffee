@@ -33,7 +33,7 @@ import hu.icellmobilsoft.coffee.cdi.logger.AppLogger;
 import hu.icellmobilsoft.coffee.cdi.logger.ThisLogger;
 
 /**
- * Szótár kezelésére szolgáló általános osztály.
+ * A general class for handling dictionaries
  *
  * @author imre.scheffer
  * @since 1.0.0

@@ -25,40 +25,40 @@ import java.util.List;
 import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
 
 /**
- * Általános rule interfész
+ * General rule interface
  *
  * @author imre.scheffer
  * @param <INPUT>
- *            input objektum osztály típus, melyre a rule alkalmazható
+ *           The class type of the input object on which the rule can be applied.
  * @param <RULERESULT>
- *            kiértékelés eredmény class típus
+ *            The class type of the evaluation result.
  * @since 1.0.0
  */
 public interface IRule<INPUT, RULERESULT extends RuleResult> {
 
     /**
-     * Rule kiértékelése
+     * Rule evaluation
      *
      * @param input
-     *            kiértékelésre váró objektum
-     * @return kiértékelés eredménye
+     *            object to be evaluated
+     * @return evaluation result
      * @throws RuleException
-     *             rule kiértékelését sértő hiba
+     *             error violating the rule evaluation
      * @throws BaseException
-     *             általános, nemvárt hiba a kiértékelésnél
+     *            General, unexpected error during evaluation
      */
     RULERESULT apply(INPUT input) throws RuleException, BaseException;
 
     /**
-     * Kiértékelés több eredményel
+     * Evaluation with multiple results
      *
      * @param input
-     *            kiértékelésre váró objektum
-     * @return kiértékelések eredménye
+     *            object to be evaluated
+     * @return evaluation result
      * @throws RuleException
-     *             rule kiértékelését sértő hiba
+     *             error violating the rule evaluation
      * @throws BaseException
-     *             általános, nemvárt hiba a kiértékelésnél
+     *             General, unexpected error during evaluation
      */
     default List<RULERESULT> applyList(INPUT input) throws RuleException, BaseException {
         return Collections.emptyList();

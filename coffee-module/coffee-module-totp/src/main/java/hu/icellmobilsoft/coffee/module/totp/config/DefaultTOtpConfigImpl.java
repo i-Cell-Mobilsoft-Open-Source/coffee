@@ -30,7 +30,7 @@ import hu.icellmobilsoft.coffee.module.totp.constant.TOtpConfigKey;
 import hu.icellmobilsoft.coffee.module.totp.enums.TOtpAlgorithm;
 
 /**
- * (T)OTP generalashoz hasznalhato konfiguraciok
+ * Configurations suitable for (T)OTP generation.
  *
  * @author tamas.cserhati
  * @since 1.0.0

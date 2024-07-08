@@ -85,7 +85,7 @@ public class EmailDataBase extends EmailBase {
     /** {@inheritDoc} */
     @Override
     public String send() throws BaseException {
-        // nincs requestScope, nem ugyan az az osztaly!
+        // There is no request scope, it is not the same class!
         Email emailEntity = emailHelper.insertToDb(this);
         String sendResult = null;
         try {

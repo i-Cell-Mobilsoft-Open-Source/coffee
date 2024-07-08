@@ -14,8 +14,8 @@
 			<artifactId>coffee-model-base</artifactId>
 		</dependency>
 
-		<!-- ha a dto generalas projekt szinten tortenik akkor ezt a dependencyt 
-			provided vagy excludolni kell -->
+		<!-- If the DTO generation occurs at the project level, then this dependency 
+		 should be marked as provided or excluded. -->
 		<dependency>
 			<groupId>hu.icellmobilsoft.coffee</groupId>
 			<artifactId>coffee-module-notification-dto</artifactId>

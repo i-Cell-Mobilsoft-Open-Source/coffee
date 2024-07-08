@@ -31,8 +31,7 @@ import hu.icellmobilsoft.coffee.module.mp.restclient.RestClientPriority;
 import hu.icellmobilsoft.coffee.se.logging.mdc.MDC;
 
 /**
- * Rest Client default request setting filter. Serviceken keresztul osszekotheto sessionId valtozo beallitasa hogy a loggolas es az authentikacio
- * alapjai tudjanak mukodni
+ * Rest Client default request setting filter. Setting up the sessionId variable to be passed through services to facilitate logging and authentication mechanisms.
  *
  * @author imre.scheffer
  * @since 1.0.0

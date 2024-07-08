@@ -29,7 +29,7 @@ import jakarta.enterprise.util.Nonbinding;
 import jakarta.inject.Qualifier;
 
 /**
- * hu.icellmobilsoft.coffee.module.mongodb.extension.MongoDbClient használatához szükséges annotáció és MongoService osztalyok inicializalasahoz
+ * Annotation required for using `hu.icellmobilsoft.coffee.module.mongodb.extension.MongoDbClient` and initialization of `MongoService` classes.
  * 
  * @author czenczl
  * @since 1.1.0

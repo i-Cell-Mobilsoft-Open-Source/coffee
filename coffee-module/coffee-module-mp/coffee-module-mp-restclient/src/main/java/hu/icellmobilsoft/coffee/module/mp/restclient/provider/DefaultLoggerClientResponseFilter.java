@@ -48,9 +48,9 @@ import hu.icellmobilsoft.coffee.rest.utils.RestLoggerUtil;
 import hu.icellmobilsoft.coffee.tool.utils.string.StringHelper;
 
 /**
- * Default REST client response log filter. A response filterek kozul ennek kell lennie az elsonek, hogy erintetlen adatokat tudjunk loggolni.<br>
+ * Default REST client response log filter. Among the response filters, this one should be the first to log untouched data.<br>
  * <br>
- * A priority mindenkeppen a io.smallrye.restclient.ExceptionMapping bekotesnel magasabb kell hogy legyen, jelenleg "1" az erteke
+ * The priority value must be higher than "1" for the io.smallrye.restclient.ExceptionMapping binding.
  *
  * @author imre.scheffer
  * @since 1.0.0

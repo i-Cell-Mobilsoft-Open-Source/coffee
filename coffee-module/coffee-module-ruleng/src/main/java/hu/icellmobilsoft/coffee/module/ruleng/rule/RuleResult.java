@@ -20,7 +20,7 @@
 package hu.icellmobilsoft.coffee.module.ruleng.rule;
 
 /**
- * Általános kiértékelés eredménye (valid és invalid esetén is)
+ * General evaluation result (both for valid and invalid cases).
  *
  * @author imre.scheffer
  * @since 1.0.0

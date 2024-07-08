@@ -74,8 +74,8 @@ class JedisPoolTest {
     @Test
     @DisplayName("default pool test")
     void defaultValues() {
-        // tobbet sajnos nem tudunk kiszedni belole
-        // de azert a producer loggol infokat
+        // Unfortunately, we cannot extract more from it
+        // But it logs information as a producer
         Assertions.assertEquals(16, jedisPool.getMaxIdle());
         Assertions.assertEquals(64, jedisPool.getMaxTotal());
     }
