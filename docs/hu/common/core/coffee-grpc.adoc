@@ -275,7 +275,7 @@ ami az interface CDI implementációjának delegálja a grpc hívásokat.
 
 == microprofile-health támogatás
 
-A *GrpcHealth* ellenőrizi, hogy a gRPC szerver elérhető-e.
+A *GrpcHealth* ellenőrzi, hogy a gRPC szerver elérhető-e.
 
 .Startup példa
 [source,java]
