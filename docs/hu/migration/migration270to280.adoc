@@ -81,3 +81,11 @@ A változtatások nem eredményeznek átállási munkálatokat, visszafelé komp
 ==== Átállás
 
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+=== coffee-module
+
+* A `@ConfigDoc` annotáció által generált adoc fájlban az emoji információ leírás címsora törölve lett.
+
+==== Átállás
+
+* A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
