@@ -269,3 +269,28 @@ Contains all Coff:ee proto files and their generated classes. The plugin generat
 == microprofile-health support
 
 The *GrpcHealth* can check if the gRPC server is reachable.
+
+.Startup example
+[source,java]
+----
+@ApplicationScoped
+public class GrpcHealthCheck {
+
+    @Inject
+    private GrpcHealth grpcHealth;
+
+    public HealthCheckResponse checkGrpc() {
+        try {
+            return grpcHealth.check("gRPC");
+        } catch (BaseException e) {
+            return HealthCheckResponse.builder().name("gRPC").up().build();
+        }
+    }
+
+    @Produces
+    @Startup
+    public HealthCheck produceGrpcStartup() {
+        return this::checkGrpc;
+    }
+}
+----

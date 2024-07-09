@@ -286,3 +286,33 @@ Minden Coff:ee proto fájl és generált osztályai.
 Plugin generál egy interface leírót, amit full CDI környezetben tudunk implementálni.
 Valamint egy BindableService implementációt,
 ami az interface CDI implementációjának delegálja a grpc hívásokat.
+
+
+== microprofile-health támogatás
+
+A *GrpcHealth* ellenőrzi, hogy a gRPC szerver elérhető-e.
+
+.Startup példa
+[source,java]
+----
+@ApplicationScoped
+public class GrpcHealthCheck {
+
+    @Inject
+    private GrpcHealth grpcHealth;
+
+    public HealthCheckResponse checkGrpc() {
+        try {
+            return grpcHealth.check("gRPC");
+        } catch (BaseException e) {
+            return HealthCheckResponse.builder().name("gRPC").up().build();
+        }
+    }
+
+    @Produces
+    @Startup
+    public HealthCheck produceGrpcStartup() {
+        return this::checkGrpc;
+    }
+}
+----
