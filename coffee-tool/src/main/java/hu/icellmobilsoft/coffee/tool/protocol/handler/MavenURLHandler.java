@@ -60,13 +60,13 @@ public class MavenURLHandler extends URLStreamHandler {
     @Override
     protected URLConnection openConnection(URL url) throws IOException {
         String path = url.getPath();
-        // levagjuk az elso "!" jelig majd a maradekot a classpathban keressuk
+        // We cut until the first "!" and then look for the remainder in the classpath.
         if (StringUtils.contains(path, SEPARATOR)) {
             path = StringUtils.substringAfter(path, SEPARATOR);
         }
         URL classPathUrl = Thread.currentThread().getContextClassLoader().getResource(path);
 
-        // kesobbiekben annyit lehet csinalni hogy a valos classban keressuk
+        // Later on, you can simply search within the actual class.
         return classPathUrl.openConnection();
     }
 }

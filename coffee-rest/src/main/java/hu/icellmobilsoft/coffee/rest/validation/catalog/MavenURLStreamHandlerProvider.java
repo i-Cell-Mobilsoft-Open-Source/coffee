@@ -49,10 +49,10 @@ public class MavenURLStreamHandlerProvider extends URLStreamHandlerProvider {
     @Override
     public URLStreamHandler createURLStreamHandler(String protocol) {
         LOGGER.info("MavenURLStreamHandlerProvider registered");
-        // valahogy meg kell szerezni az eredeti Handler osztalyokat, nem szep megoldas,
-        // de nem mukodik a TT-ben sem a "java.protocol.handler.pkgs" settings,
-        // sem a src/main/resources/META-INF/services/java.net.spi.URLStreamHandlerProvider megoldas sem,
-        // mert a jboss indulasnal beolvas sajat ModularURLStreamHandlerFactory osztaly
+        // Somehow we need to obtain the original Handler classes,
+        // but it's not a clean solution, and neither the `java.protocol.handler.pkgs` setting 
+        //nor the `src/main/resources/META-INF/services/java.net.spi.URLStreamHandlerProvider` solution works in TT,
+        // because JBoss reads its own `ModularURLStreamHandlerFactory` class during startup.
         return "maven".equals(protocol) ? new MavenURLHandler() : createDefaultURLStreamHandler(protocol);
     }
 

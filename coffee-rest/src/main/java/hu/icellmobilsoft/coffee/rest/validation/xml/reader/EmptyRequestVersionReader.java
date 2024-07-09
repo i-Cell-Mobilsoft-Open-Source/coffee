@@ -22,7 +22,7 @@ package hu.icellmobilsoft.coffee.rest.validation.xml.reader;
 import jakarta.enterprise.context.Dependent;
 
 /**
- * Default Dummy implementáció, ami a requestVersion értékét nem kezeli.
+ * Default dummy implementation that does not handle the requestVersion value.
  *
  * @see IRequestVersionReader
  * @author robert.kaplar

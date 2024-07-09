@@ -211,7 +211,7 @@ public class StringUtil {
      * @return replaced {@code String} or input {@code text} if invalid input
      */
     public static String replaceAllIgnoreCase(String text, String regex, String replacement) {
-        // replacement-re csak null-t ellenőrzünk, üres Stringre engedjük cserélni
+        // In replacement, we only check for null; an empty string is allowed as a replacement
         if (StringUtils.isNoneBlank(text, regex) && replacement != null) {
             Pattern pattern = patternCache.getPattern(regex);
             Matcher matcher = pattern.matcher(text);

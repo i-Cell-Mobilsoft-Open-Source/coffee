@@ -101,7 +101,7 @@ public class DatePrintUtil {
             return null;
         }
         if (StringUtils.isBlank(pattern)) {
-            // java time implementációknál a típusnak megfelő ISO formátumban adja vissza
+            // In Java time implementations, it returns the type in the appropriate ISO format.
             return temporalAccessor.toString();
         }
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);

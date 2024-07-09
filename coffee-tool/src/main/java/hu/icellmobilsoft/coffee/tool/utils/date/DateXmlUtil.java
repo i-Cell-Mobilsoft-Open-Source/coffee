@@ -221,21 +221,20 @@ public class DateXmlUtil {
             return null;
         }
         Calendar cal = xmlGregorianCalendar.toGregorianCalendar();
-        // az oracle figyelmen kivul hadja a timezone erteket sima date tipusu mezonel,
-        // es ezert ugy tekintjuk az input ISO datumot mindha sajat idozonaban lenne
+        // Oracle ignores the timezone value for a simple `DATE` type field, so we treat the input ISO date
+        // as if it were in its own timezone.
         cal.setTimeZone(TimeZone.getDefault());
         return cal.getTime();
     }
 
     /**
-     * {@link XMLGregorianCalendar}-bol kiszedi a datumot (ido nullazva). Hasznalhato foleg birthDate mezoknel es ott ahol xsd:date tipus van
-     * hasznalva.<br>
+     * Extracts the date (with time set to midnight) from {@link XMLGregorianCalendar}.
+     * Useful primarily for birthDate fields and where the xsd:date type is utilized.<br>
      * <br>
-     * Azt a problemat orvosolja hogy long-kent beadott datum (UTC zero ido) json formatumban a {@code XMLGregorianCalendar} helyi idore forditja, es
-     * igy mindig belekerul ido eltolodas.<br>
+     * It solves the problem where a date passed as a long (UTC zero time) is converted to local time in JSON format by {@code XMLGregorianCalendar}, causing a shift in time.<br>
      * <ul>
-     * <li>json datum: 1515452400000 (Tue Jan 09 00:00:00 CET 2018)</li>
-     * <li>ebbol XMLGregorianCalendar: 2018-01-09T01:00:00+01:00</li>
+     * <li>json date: 1515452400000 (Tue Jan 09 00:00:00 CET 2018)</li>
+     * <li>from this XMLGregorianCalendar: 2018-01-09T01:00:00+01:00</li>
      * <li>(hibas) toDate(XMLGregorianCalendar): 2018-01-09 01:00:00</li>
      * <li>(jo) toDateOnly(XMLGregorianCalendar): 2018-01-09 00:00:00</li>
      * </ul>

@@ -25,7 +25,7 @@ import java.util.Optional;
 import jakarta.enterprise.inject.spi.InjectionPoint;
 
 /**
- * Annotációkat kezelő gyűjtő
+ * Annotation handler collector
  *
  * @author imre.scheffer
  * @since 1.0.0

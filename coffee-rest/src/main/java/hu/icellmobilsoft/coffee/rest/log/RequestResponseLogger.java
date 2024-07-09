@@ -200,7 +200,7 @@ public class RequestResponseLogger {
         for (Map.Entry<String, String[]> param : servletRequest.getParameterMap().entrySet()) {
             queryParameters.put(param.getKey(), Arrays.asList(param.getValue()));
         }
-        // HttpServletRequest nem tudja a path parametereket kiolvasni, ezert emptyMap-ot adunk be
+        // HttpServletRequest cannot read path parameters, so we pass an emptyMap
         return printRequestLine(servletRequest.getMethod(), servletRequest.getRequestURL().toString(), Collections.emptyMap(), queryParameters);
     }
 
@@ -262,7 +262,7 @@ public class RequestResponseLogger {
         if (entity.length == 0) {
             return "";
         }
-        // input parameter szerint korlatozzuk a logot
+        // We limit the log based on the input parameter
         byte[] requestEntityPart = entity;
         if (maxLogSize != null && maxLogSize >= LogSpecifier.NO_LOG && entity.length > maxLogSize.intValue()) {
             requestEntityPart = Arrays.copyOf(entity, maxLogSize);
@@ -290,12 +290,12 @@ public class RequestResponseLogger {
             byte[] requestEntity = out.toByteArray();
             int maxRequestEntityLogSize = RestLoggerUtil.getMaxEntityLogSize(requestContext, LogSpecifierTarget.REQUEST);
             if (maxRequestEntityLogSize != LogSpecifier.NO_LOG &&
-            // byte-code betoltesi fajlokat ne loggoljuk ki egeszben
+            // Do not log bytecode loading files entirely
                     Objects.equals(requestContext.getMediaType(), MediaType.APPLICATION_OCTET_STREAM_TYPE)) {
                 maxRequestEntityLogSize = RequestResponseLogger.BYTECODE_MAX_LOG;
 
             }
-            // vissza irjuk a kiolvasott streamet
+            // We write back the read stream
             requestContext.setEntityStream(new ByteArrayInputStream(requestEntity));
 
             return printRequestEntity(requestEntity, maxRequestEntityLogSize);
@@ -322,7 +322,7 @@ public class RequestResponseLogger {
             IOUtils.copy(in, out);
 
             byte[] requestEntity = out.toByteArray();
-            // byte-code betoltesi fajlokat ne loggoljuk ki egeszben
+            // Do not log bytecode loading files entirely
             boolean logLimit = Objects.equals(servletRequest.getContentType(), MediaType.APPLICATION_OCTET_STREAM);
 
             return printRequestEntity(requestEntity, logLimit ? RequestResponseLogger.BYTECODE_MAX_LOG : null);

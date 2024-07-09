@@ -114,13 +114,13 @@ public class RandomUtil {
         xDate.setTime(xDate.getTime() - DATE_2013_01_01);
         /* time based */
         String xRes = convertToRadix(xDate.getTime(), RADIX);
-        // 8888 -ig eleg a 8 karakter :) 7 karakter 2081 -ig jo.
+        // 8888 is sufficient with 8 characters :) 7 characters are enough for up to 2081.
         xRes = paddL(xRes, 8, '0');
 
         StringBuilder builder = new StringBuilder();
         builder.append(xRes);
 
-        // nano, utolso 4 karaktert levagjuk mert csak az változik millisecen belül
+        // nano, we truncate the last 4 characters because they change within milliseconds
         Long nano = System.nanoTime();
         String xNano = convertToRadix(nano, RADIX);
         builder.append(xNano.substring(xNano.length() - 4, xNano.length()));

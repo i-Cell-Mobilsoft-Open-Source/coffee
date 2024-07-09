@@ -29,9 +29,9 @@ import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 
 /**
- * JSON ismeretlen objectbol kiszedjuk a requestVersion erteket.<br>
- * Jelen esetben a "context/requestVersion" logika van keresve, persze ez nem felel meg mindenkinek, akkor CDI-el felul kell irni. Ez egy mintanak is
- * szolgal
+ * We extract the value of requestVersion from the unknown JSON object.<br>
+ * In this case, the "context/requestVersion" logic is being sought; however, this may not be suitable for everyone, so it should be overridden with CDI if necessary.
+ * This also serves as an example.
  *
  * @author imre.scheffer
  * @since 1.0.0
@@ -51,7 +51,7 @@ public class JsonRequestVersionReader implements IRequestVersionReader {
     @Override
     public <T> String readVersion(T dto) throws TechnicalException {
         try {
-            // ha ismerjuk a pontos strukturankat, akkor siman castolni is lehet es egyszeruen kiszedni
+            // If we know the exact structure, then we can simply cast and extract it easily.
             Method contextMethod = dto.getClass().getMethod("getContext");
             Object contextValue = contextMethod.invoke(dto);
 

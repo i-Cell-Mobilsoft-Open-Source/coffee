@@ -47,7 +47,7 @@ public class MavenURLHandlerTest {
         Assertions.assertThrows(MalformedURLException.class, () -> new URL("maven:"));
     }
 
-    // kell az order, mert a URL.setURLStreamHandlerFactory ervenyes az egesz JVM futasra
+    // The order matters because URL.setURLStreamHandlerFactory applies to the entire JVM runtime
     @Order(2)
     @Test
     @DisplayName("new URL with hadler")

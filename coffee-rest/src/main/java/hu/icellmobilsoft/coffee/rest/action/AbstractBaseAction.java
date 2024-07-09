@@ -57,7 +57,7 @@ public abstract class AbstractBaseAction {
      *
      * @return {@code ContextType} object
      */
-    // A context.timestamp vegett nem lehet az Coffee-ben (Date vs OffsetDateTime)
+    // The context.timestamp cannot be in Coffee (Date vs. OffsetDateTime)
     public abstract ContextType createContext();
 
     /**

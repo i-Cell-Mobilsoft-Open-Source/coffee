@@ -60,7 +60,7 @@ public class ResponseEntityCollectorOutputStream extends OutputStream {
     @Override
     public void write(int b) throws IOException {
         if (logCollectLimit != 0) {
-            // logoláshoz gyűjtjük a stream tartalmát amíg még nem értük el a limitet
+            // We collect the content of a stream for logging purposes until we reach the limit.
             entityLog.write(b);
             logCollectLimit--;
         }

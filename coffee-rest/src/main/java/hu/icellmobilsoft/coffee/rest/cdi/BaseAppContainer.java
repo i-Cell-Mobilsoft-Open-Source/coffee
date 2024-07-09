@@ -24,7 +24,7 @@ import jakarta.inject.Inject;
 import jakarta.inject.Named;
 
 /**
- * Kulonbozo applikacioban hasznalt containerek gyujtoje
+ * A collection of containers used in different applications.
  *
  * @author imre.scheffer
  * @since 1.0.0

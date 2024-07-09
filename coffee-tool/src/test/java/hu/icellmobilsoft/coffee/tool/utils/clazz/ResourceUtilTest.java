@@ -43,9 +43,9 @@ class ResourceUtilTest {
         assertNull(result);
     }
 
-    // Mivel a Class-t általánosan nem lehet mockolni, így speciálisan az AppLogger osztályt használjuk a teszthez, mivel az coffee-tool függőségként
-    // az coffee-cdi-t behúzza, amiben az AppLogger is megtalálható. További limitáció, hogy csak a név elejét hasonlítjuk össze az elvárt eredményként
-    // a jar verzióváltásait kikerülve.
+    // Since it's generally not possible to mock the Class class, we specifically use the AppLogger class for testing.
+    // This is possible because the coffee-tool dependency pulls in coffee-cdi, where the AppLogger is also found.
+    // Another limitation is that we only compare the beginning of the name as the expected result, avoiding the impacts of jar version changes.
     @Test
     @DisplayName("Testing getAppName() for the class AppLogger which loaded from coffee-cdi jar")
     void testCoffeeCdiJar() throws Exception {

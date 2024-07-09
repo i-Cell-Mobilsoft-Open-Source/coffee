@@ -116,7 +116,7 @@ public class PublicCatalogResolver implements LSResourceResolver, IXsdResourceRe
 
             }
         }
-        // Kikeressük classpath-ról a catalog által meghatározott xsd-t
+        // We retrieve the XSD defined by the catalog from the classpath.
         if (resolvedSystemId != null) {
             log.debug("Found resource with catalog resolvedSystemId:[{0}]", resolvedSystemId);
         } else {
@@ -141,10 +141,10 @@ public class PublicCatalogResolver implements LSResourceResolver, IXsdResourceRe
     /**
      * {@inheritDoc}
      *
-     * A paraméterben kapott Xsd elérési útvonalat lementi egy belső változóba (ha szükséges).
+     * It saves the provided XSD file path parameter into an internal variable (if necessary)
      */
     @Override
     public void setXsdDirPath(String xsdDirPath) {
-        // Cataloghoz ez nem kell
+        // For the catalog, this is not needed
     }
 }

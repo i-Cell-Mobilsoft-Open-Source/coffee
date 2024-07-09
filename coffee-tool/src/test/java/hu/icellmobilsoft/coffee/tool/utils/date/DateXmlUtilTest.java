@@ -132,7 +132,7 @@ class DateXmlUtilTest {
             // given
             Calendar source = Calendar.getInstance(TimeZone.getTimeZone("UTC"), new Locale("ja", "JP", "JP"));
             source.set(Calendar.MILLISECOND, 51);
-            // NOTE: 8u211-es java verzióig a régi japán era miatt ezt kell használni
+            // NOTE: Up until Java version 8u211, you need to use the old Japanese era format for this.
             // https://www.oracle.com/technetwork/java/javase/8u211-relnotes-5290139.html
             source.set(31, 1, 11, 15, 23, 34);
 
@@ -150,7 +150,7 @@ class DateXmlUtilTest {
             // given
             Calendar source = Calendar.getInstance(TimeZone.getTimeZone("UTC"), new Locale("ja", "JP", "JP"));
             source.set(Calendar.MILLISECOND, 51);
-            // NOTE: 8u211-es java verzió után egy új japán era miatt ezt kell használni
+            // NOTE: Starting from Java version 8u211, a new Japanese era format must be used for this.
             // https://www.oracle.com/technetwork/java/javase/8u211-relnotes-5290139.html
             source.set(1, 1, 11, 15, 23, 34);
 

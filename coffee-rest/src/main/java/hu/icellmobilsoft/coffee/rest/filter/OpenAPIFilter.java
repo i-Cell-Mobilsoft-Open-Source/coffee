@@ -35,9 +35,9 @@ import org.eclipse.microprofile.openapi.models.responses.APIResponses;
 import hu.icellmobilsoft.coffee.rest.filter.util.ApiResponseUtil;
 
 /**
- * Openapi filter, mely hozzáadja az általános response-okat leírásukkal, ezen kívül általános header elemeket lehet minden végponthoz definiálni.
+ * An OpenAPI filter that adds general responses with their descriptions. Additionally, it allows defining common header elements for every endpoint.
  *
- * Azon Response leírások melyeket már a filterig jutásig tartalmaz az OpenApi leíró, nem lesznek felülírva!!!
+ * The response descriptions already included in the OpenAPI descriptor up to the point of filtering will not be overwritten.
  *
  * @author speter555
  * @since 1.11.0
@@ -52,17 +52,17 @@ public class OpenAPIFilter implements OASFilter {
     }
 
     /**
-     * Az mp-openapi a pattern-nel rendelkező, de nem String típusu objektumokat (pl.dátum típusok) object type-nak veszi, így nem generálja le a
-     * pattern-t a definícióba.
+     * The MP-OpenAPI treats objects with patterns (e.g., date types) as object types rather than string types,
+     * so it does not generate the pattern in the definition.
      *
      * @param schema
-     *            az aktuális séma elem
-     * @return a módosított séma
+     *            the current schema element
+     * @return the modified schema
      */
     @Override
     public Schema filterSchema(Schema schema) {
         if (schema != null && StringUtils.isNotBlank(schema.getPattern())) {
-            // Ha van pattern, akkor request/response szinten string kell legyen (a dto-ban lehet object pl. XmlGregorianCalendar)
+            // If there is a pattern, then at the request/response level it should be a string (even if the DTO has an object like XmlGregorianCalendar)
             schema.setType(Schema.SchemaType.STRING);
         }
         return schema;
@@ -77,18 +77,18 @@ public class OpenAPIFilter implements OASFilter {
     }
 
     /**
-     * Az általános hibakód halmaz és hozzátartozó {@link APIResponse} leírók
+     * The general set of error codes and corresponding {@link APIResponse} descriptions
      * 
-     * @return Az általános hibakód halmaz és hozzátartozó {@link APIResponse} leírók
+     * @return The general error code set and corresponding {@link APIResponse} descriptions
      */
     protected Map<Integer, APIResponse> getCommonApiResponseByStatusCodeMap() {
         return ApiResponseUtil.getCommonApiResponseByStatusCodeMap();
     }
 
     /**
-     * Azon paraméterek, melyek minden rest végponton rajta kell hogy legyenek, pl nyelv meghatározás, api verzió stb.
+     * Parameters that should be present on every REST endpoint, such as language definition, API version, etc
      *
-     * @return OpenApi Parameter lista mely az általános requestHeader leírását tartalmazza
+     * @return OpenAPI parameter list containing the description of general request headers
      */
     protected List<Parameter> getCommonRequestHeaderParameters() {
         return Collections.emptyList();
@@ -96,7 +96,7 @@ public class OpenAPIFilter implements OASFilter {
 
     private void addCommonResponseCodes(OpenAPI openAPI) {
 
-        // NOTE Új modulhoz még nem feltétlen van végpont
+        // NOTE The new module may not necessarily have endpoints yet.
         if (isOpenapiPathEmpty(openAPI)) {
             return;
         }
@@ -115,7 +115,7 @@ public class OpenAPIFilter implements OASFilter {
     }
 
     private void addCommonRequestHeaderParameters(OpenAPI openAPI) {
-        // NOTE Új modulhoz még nem feltétlen van végpont
+        // NOTE The new module may not necessarily have endpoints yet.
         if (isOpenapiPathEmpty(openAPI) || getCommonRequestHeaderParameters() == null || getCommonRequestHeaderParameters().isEmpty()) {
             return;
         }

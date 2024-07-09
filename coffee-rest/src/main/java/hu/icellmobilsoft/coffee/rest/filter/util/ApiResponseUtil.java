@@ -30,7 +30,7 @@ import org.eclipse.microprofile.openapi.OASFactory;
 import org.eclipse.microprofile.openapi.models.responses.APIResponse;
 
 /**
- * ApiResponse util, mely visszaadja a http response kódokat és a hozzájuk tartozó {@link APIResponse} objektumokat, melyek a projektben álltalánosak.
+ * An ApiResponse utility that returns HTTP response codes and their corresponding {@link APIResponse} objects, which are general-purpose within the project.
  *
  * @since 1.11.0
  * @author speter555

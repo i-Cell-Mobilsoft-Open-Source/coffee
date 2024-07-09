@@ -78,7 +78,7 @@ public class DefaultLogger implements hu.icellmobilsoft.coffee.se.logging.Logger
 
     private Logger logger() {
         if (getLogger() == null) {
-            // hogyha null lenne a logger (nem allitja be valaki amikor kell)
+            // If the logger were null (not set when it should be):
             // Logger log = CommonLoggerFactory.getLogger(getClass());
             Logger log = Logger.getLogger(getClass().getName());
             log.log(JulLevel.WARN, "Logger not SET! Applogger create temporary logger!");
