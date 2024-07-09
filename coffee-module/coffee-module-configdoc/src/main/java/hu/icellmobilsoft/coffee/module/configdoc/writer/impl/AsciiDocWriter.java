@@ -45,7 +45,7 @@ public class AsciiDocWriter implements IDocWriter<DocData> {
     private final ConfigDocConfig config;
     private final String startupParamEmoji = "🚀";
     private final String runtimeOverridableParamEmoji = "⏳";
-    private final String emojiInfo = "The meainings of the emojis used in the table:\n" + startupParamEmoji + " - meaning that it is a startup parameter.\n\n"
+    private final String emojiInfo = "The meanings of the emojis used in the table:\n\n" + startupParamEmoji + " - meaning that it is a startup parameter.\n\n"
             + runtimeOverridableParamEmoji + " - meaning that this parameter can be overridden during runtime\n\n";
     private static final int DEFAULT_TITLE_HEADING_LEVEL = 3;
     private static final String KEY_DELIMITER = ".";
