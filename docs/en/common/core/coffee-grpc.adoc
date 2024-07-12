@@ -96,6 +96,19 @@ coffee:
 ----
 <1> if `true`, then `coffee.grpc.server.threadpool.default` is ignored.
 
+In case `ManagedExecutorService` thread pool handling an additional Wildfly configuration is required.
+
+.Wildfly gRPC managed executor service configuration
+[source,xml]
+----
+<managed-executor-services>
+    <managed-executor-service name="grpc" jndi-name="java:jboss/ee/concurrency/executor/grpc" context-service="default" hung-task-termination-period="0" hung-task-threshold="60000" core-threads="${env.MANAGED_EXECUTOR_SERVICE_GRPC_CORE_THREADS,managed-executor-service.grpc.core-threads:16}" keepalive-time="5000"/>
+</managed-executor-services>
+----
+This configuration is provided in the https://github.com/i-Cell-Mobilsoft-Open-Source/docker-wildfly[docker-wildfly] MicroProfile images starting from version 3.1.
+
+* The jndi-name must match the one in the example (`java:jboss/ee/concurrency/executor/grpc`).
+* The minimum number of threads (`core-threads`) can be parameterized according to the example with the `MANAGED_EXECUTOR_SERVICE_GRPC_CORE_THREADS` environment parameter or `managed-executor-service.grpc.core-threads` MicroProfile parameter.
 
 == gRPC client (coffee-grpc-client-extension)
 It includes support for implementing a gRPC client.
@@ -256,3 +269,28 @@ Contains all Coff:ee proto files and their generated classes. The plugin generat
 == microprofile-health support
 
 The *GrpcHealth* can check if the gRPC server is reachable.
+
+.Startup example
+[source,java]
+----
+@ApplicationScoped
+public class GrpcHealthCheck {
+
+    @Inject
+    private GrpcHealth grpcHealth;
+
+    public HealthCheckResponse checkGrpc() {
+        try {
+            return grpcHealth.check("gRPC");
+        } catch (BaseException e) {
+            return HealthCheckResponse.builder().name("gRPC").up().build();
+        }
+    }
+
+    @Produces
+    @Startup
+    public HealthCheck produceGrpcStartup() {
+        return this::checkGrpc;
+    }
+}
+----

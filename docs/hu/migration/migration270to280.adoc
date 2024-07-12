@@ -81,3 +81,21 @@ A változtatások nem eredményeznek átállási munkálatokat, visszafelé komp
 ==== Átállás
 
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+=== coffee-grpc
+
+** microprofile-health támogatás
+** Külön managed-executor-service használata (java /ee/concurrency/executor/grpc) a gRPC hívásokhoz.
+A `managed-executor-service` konfigurációja a `coffee-grpc-server-extension` dokumentációban van bemutatva.
+
+==== Átállás
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+=== coffee-module
+
+* A `@ConfigDoc` annotáció által generált adoc fájlban az emoji információ leírás címsora törölve lett.
+
+==== Átállás
+
+* A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
