@@ -99,3 +99,14 @@ Changes are backwards compatible doesn't need any migration.
 ==== Migration
 
 * Changes are backwards compatible doesn't need any migration.
+
+=== coffee-dto-base
+
+New XSD simple types are added to the `http://common.dto.coffee.icellmobilsoft.hu/common` XSD namespace:
+
+* DateType - xsd:date with yyyy-MM-dd pattern
+* TimestampWithoutMillisType - xsd:dateTime with yyyy-MM-ddTHH:mm:ssZ pattern
+
+==== Migration
+
+Changes are backwards compatible doesn't need any migration.

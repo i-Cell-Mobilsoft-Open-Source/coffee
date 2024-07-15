@@ -99,3 +99,14 @@ A változtatások nem eredményeznek átállási munkálatokat, visszafelé komp
 ==== Átállás
 
 * A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+=== coffee-dto-base
+
+Új XSD simple type-okkal bővült a `http://common.dto.coffee.icellmobilsoft.hu/common` névterű XSD:
+
+* DateType - xsd:date típus yyyy-MM-dd formátummal
+* TimestampWithoutMillisType - xsd:dateTime típus yyyy-MM-ddTHH:mm:ssZ formátummal
+
+==== Átállás
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
