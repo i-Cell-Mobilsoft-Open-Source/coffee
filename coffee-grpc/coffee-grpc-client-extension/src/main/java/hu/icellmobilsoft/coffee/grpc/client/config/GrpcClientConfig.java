@@ -67,12 +67,12 @@ public class GrpcClientConfig implements IGrpcClientConfig {
     public static final String MAX_INBOUND_METADATA_SIZE = "maxInboundMetadataSize";
 
     /**
-     * gRPC client request log size in characters, default is 1000
+     * gRPC client request log maximum size in characters, default is 1000
      */
     public static final String REQUEST_LOG_SIZE = "requestLogSize";
 
     /**
-     * gRPC client response log size in characters, default is 1000
+     * gRPC client response log maximum size in characters, default is 1000
      */
     public static final String RESPONSE_LOG_SIZE = "responseLogSize";
 

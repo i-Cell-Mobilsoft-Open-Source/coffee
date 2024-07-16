@@ -89,7 +89,7 @@ Changes are backwards compatible doesn't need any migration.
 The `managed-executor-service` configuration is explained in the `coffee-grpc-server-extension` documentation.
 
 ** `GrpcClientConfig` extended with the `requestLogSize` and the `responseLogSize` parameter,
-which serves to set the client request and response log size in characters,
+which serves to set the client request and response maximum log size in characters,
 the characters exceeding the limit will be truncated.
 
 ==== Migration

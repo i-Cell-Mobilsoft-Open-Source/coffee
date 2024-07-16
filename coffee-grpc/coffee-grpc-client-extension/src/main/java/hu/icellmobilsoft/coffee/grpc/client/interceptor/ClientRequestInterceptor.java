@@ -55,10 +55,10 @@ public class ClientRequestInterceptor implements ClientInterceptor {
     public <ReqT, RespT> ClientCall<ReqT, RespT> interceptCall(MethodDescriptor<ReqT, RespT> method, CallOptions callOptions, Channel next) {
 
         ClientCall<ReqT, RespT> call = new SimpleForwardingClientCall<ReqT, RespT>(next.newCall(method, callOptions)) {
-            
+
             int logSize = 0;
             int count = 0;
-            
+
             @Override
             public void sendMessage(ReqT message) {
                 int requestLogSize = CDI.current().select(GrpcClientConfig.class).get().getRequestLogSize();
