@@ -48,4 +48,19 @@ public interface IGrpcClientConfig {
      * @return Inbound metadata max size
      */
     Integer getMaxInboundMetadataSize();
+
+    /**
+     * Gets the request log size
+     *
+     * @return the port
+     */
+    Integer getRequestLogSize();
+
+    /**
+     * Gets the response log size
+     *
+     * @return the port
+     */
+    Integer getResponseLogSize();
+
 }

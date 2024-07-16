@@ -66,6 +66,16 @@ public class GrpcClientConfig implements IGrpcClientConfig {
      */
     public static final String MAX_INBOUND_METADATA_SIZE = "maxInboundMetadataSize";
 
+    /**
+     * gRPC client request log size in characters, default is 1000
+     */
+    public static final String REQUEST_LOG_SIZE = "requestLogSize";
+
+    /**
+     * gRPC client response log size in characters, default is 1000
+     */
+    public static final String RESPONSE_LOG_SIZE = "responseLogSize";
+
     @Inject
     private Config config;
 
@@ -91,6 +101,16 @@ public class GrpcClientConfig implements IGrpcClientConfig {
     @Override
     public Integer getMaxInboundMetadataSize() {
         return config.getOptionalValue(joinKey(MAX_INBOUND_METADATA_SIZE), Integer.class).orElse(8192);
+    }
+
+    @Override
+    public Integer getRequestLogSize() {
+        return config.getOptionalValue(joinKey(REQUEST_LOG_SIZE), Integer.class).orElse(1000);
+    }
+
+    @Override
+    public Integer getResponseLogSize() {
+        return config.getOptionalValue(joinKey(RESPONSE_LOG_SIZE), Integer.class).orElse(1000);
     }
 
     /**

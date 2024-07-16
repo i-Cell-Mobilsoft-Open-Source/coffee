@@ -19,6 +19,11 @@
  */
 package hu.icellmobilsoft.coffee.grpc.client.interceptor;
 
+import jakarta.enterprise.inject.spi.CDI;
+
+import org.apache.commons.lang3.StringUtils;
+
+import hu.icellmobilsoft.coffee.grpc.client.config.GrpcClientConfig;
 import hu.icellmobilsoft.coffee.se.logging.DefaultLogger;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
 import io.grpc.CallOptions;
@@ -56,9 +61,29 @@ public class ClientResponseInterceptor implements ClientInterceptor {
             @Override
             public void start(Listener<RespT> responseListener, Metadata headers) {
                 Listener<RespT> listener = new SimpleForwardingClientCallListener<RespT>(responseListener) {
+
+                    int logSize = 0;
+                    int count = 0;
+
                     @Override
                     public void onMessage(RespT message) {
-                        LOGGER.info("Received response message: [{0}]", message);
+                        int responseLogSize = CDI.current().select(GrpcClientConfig.class).get().getResponseLogSize();
+
+                        StringBuilder messageToPrint = new StringBuilder();
+
+                        String messageString = message.toString();
+                        if (messageString.length() > responseLogSize - logSize) {
+                            if (responseLogSize - logSize > 0) {
+                                messageToPrint.append(StringUtils.truncate(messageString, responseLogSize - logSize));
+                                logSize += messageToPrint.length();
+                            }
+                            messageToPrint.append("...<truncated>");
+                        } else {
+                            messageToPrint.append(messageString);
+                            logSize += messageToPrint.length();
+                        }
+
+                        LOGGER.info("Received response message part [{0}]: [{1}]", count++, messageToPrint.toString());
                         super.onMessage(message);
                     }
 
