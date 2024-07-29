@@ -35,6 +35,8 @@ import org.eclipse.microprofile.config.Config;
  *         host: localhost # default localhost
  *         port: 8199 # default 8199
  *         maxInboundMetadataSize: 1_048_576 # byte, default 8192
+ *         requestLogSize: 1000 # Characters, default 1000
+ *         responseLogSize: 1000 # Characters, default 1000
  * </pre>
  * 
  * @author Imre Scheffer

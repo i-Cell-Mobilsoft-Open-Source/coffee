@@ -52,14 +52,14 @@ public interface IGrpcClientConfig {
     /**
      * Gets the request log maximum size
      *
-     * @return the port
+     * @return the request log maximum size
      */
     Integer getRequestLogSize();
 
     /**
      * Gets the response log maximum size
      *
-     * @return the port
+     * @return the response log maximum size
      */
     Integer getResponseLogSize();
 
