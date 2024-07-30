@@ -110,3 +110,15 @@ A változtatások nem eredményeznek átállási munkálatokat, visszafelé komp
 ==== Átállás
 
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+=== coffee-se-io
+
+Új modul.
+
+* `SizeLimitExceededIOException`: InputStream olvasás közben elértük a limitet.
+* `LimitedSizeInputStream`: Olyan InputStream, ami `SizeLimitExceededIOException`-t dob ha a stream olvasása közben eléri a
+beállított limitet.
+
+==== Átállás
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
