@@ -38,7 +38,9 @@ public class LimitedSizeInputStream extends FilterInputStream {
 
     private final long maxSize;
 
-    private long total;
+    private long readBytes;
+
+    private long markedPosition = -1;
 
     /**
      * Creates a {@code LimitedSizeInputStream} by assigning the argument {@code in} to the field {@code this.in} so as to remember it for later use.
@@ -91,12 +93,37 @@ public class LimitedSizeInputStream extends FilterInputStream {
         return i;
     }
 
-    private void incrementCounter(int size) throws SizeLimitExceededIOException {
-        total += size;
-        if (total > maxSize) {
+    private void incrementCounter(long size) throws SizeLimitExceededIOException {
+        readBytes += size;
+        if (readBytes > maxSize) {
             throw new SizeLimitExceededIOException(
-                    MessageFormat.format("InputStream exceeded maximum size in bytes. Read bytes [{0}], maximum size [{1}]", total, maxSize));
+                    MessageFormat.format("InputStream exceeded maximum size in bytes. Read bytes [{0}], maximum size [{1}]", readBytes, maxSize));
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     * <p>
+     * If {@code maxSize} is reached while skipping bytes it throws a {@link SizeLimitExceededIOException} that can be handled separately from other
+     * {@link IOException}.
+     */
+    @Override
+    public long skip(long n) throws IOException {
+        long skipped = super.skip(n);
+        incrementCounter(skipped);
+        return skipped;
+    }
+
+    @Override
+    public synchronized void mark(int readlimit) {
+        super.mark(readlimit);
+        markedPosition = readBytes;
+    }
+
+    @Override
+    public synchronized void reset() throws IOException {
+        super.reset();
+        readBytes = markedPosition;
     }
 
 }

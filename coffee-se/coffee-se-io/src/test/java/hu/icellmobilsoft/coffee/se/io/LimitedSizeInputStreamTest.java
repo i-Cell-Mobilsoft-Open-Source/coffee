@@ -172,6 +172,28 @@ class LimitedSizeInputStreamTest {
         testSizeLimitExceededCase(inputStream, inputStreamConsumer);
     }
 
+    @Test
+    @DisplayName("Testing too big InputStream consumed by skip()")
+    void testTooBigInputStreamConsumeByReadWhileSkipped() {
+
+        // given
+        InputStream inputStream = createInputStream(MAX_SIZE + 1);
+        InputStreamConsumer inputStreamConsumer = this::consumeInputStreamBySkip;
+
+        testSizeLimitExceededCase(inputStream, inputStreamConsumer);
+    }
+
+    @Test
+    @DisplayName("Testing too big InputStream consumed by read() and mark() reset()")
+    void testMaxSizeInputStreamConsumeByReadAndMarkReset() {
+
+        // given
+        InputStream inputStream = createInputStream(MAX_SIZE);
+        InputStreamConsumer inputStreamConsumer = this::consumeInputStreamByReadAndMarkReset;
+
+        testHappyCase(inputStream, inputStreamConsumer);
+    }
+
     private void testHappyCase(InputStream inputStream, InputStreamConsumer inputStreamConsumer) {
 
         try (inputStream) {
@@ -198,7 +220,7 @@ class LimitedSizeInputStreamTest {
 
             // then
             Assertions.fail("Should throw SizeLimitExceededIOException");
-            
+
         } catch (SizeLimitExceededIOException e) {
 
             // then
@@ -220,6 +242,28 @@ class LimitedSizeInputStreamTest {
         while (inputStream.read() >= 0) {
             // nothing to do
         }
+    }
+
+    private void consumeInputStreamByReadAndMarkReset(InputStream inputStream) throws IOException {
+
+        inputStream.read();
+
+        inputStream.mark(MAX_SIZE);
+
+        for (int i = 0; i < MAX_SIZE / 2; i++) {
+            inputStream.read();
+        }
+
+        inputStream.reset();
+
+        while (inputStream.read() >= 0) {
+            // nothing to do
+        }
+    }
+
+    private void consumeInputStreamBySkip(InputStream inputStream) throws IOException {
+
+        inputStream.skip(MAX_SIZE + 1);
     }
 
     private void consumeInputStreamByReadBuffer(InputStream inputStream) throws IOException {
