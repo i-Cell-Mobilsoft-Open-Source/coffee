@@ -27,6 +27,7 @@
 		<module>coffee-se-function</module>
 		<module>coffee-se-logging</module>
 		<module>coffee-se-util</module>
+		<module>coffee-se-io</module>
 	</modules>
 
 </project>

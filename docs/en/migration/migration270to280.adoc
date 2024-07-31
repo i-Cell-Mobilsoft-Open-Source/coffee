@@ -110,3 +110,14 @@ New XSD simple types are added to the `http://common.dto.coffee.icellmobilsoft.h
 ==== Migration
 
 Changes are backwards compatible doesn't need any migration.
+
+=== coffee-se-io
+
+New module.
+
+* `SizeLimitExceededIOException`: Signals that a limit is reach while reading an InputStream.
+* `LimitedSizeInputStream`: Throws `SizeLimitExceededIOException` if the limit is reached while reading the stream.
+
+==== Migration
+
+Changes are backwards compatible doesn't need any migration.

@@ -135,6 +135,11 @@
             </dependency>
             <dependency>
                 <groupId>hu.icellmobilsoft.coffee</groupId>
+                <artifactId>coffee-se-io</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>hu.icellmobilsoft.coffee</groupId>
                 <artifactId>coffee-system-jpa</artifactId>
                 <version>${project.version}</version>
             </dependency>
