@@ -62,18 +62,24 @@ public class JsonbUtil {
      */
     public static final String JSONB_CONFIG_PREFIX = "coffee.jsonb.config";
 
-    /**
-     * Create {@link Jsonb} instance with {@link FieldOnlyVisibilityStrategy} property visibility strategy.
-     * 
-     * @return configured {@link Jsonb} instance
-     */
-    public static Jsonb getContext() {
+    private static final Jsonb JSONB;
+
+    static {
         Config config = ConfigUtil.getInstance().defaultConfig();
         JsonbConfig jsonbConfig = new JsonbConfig()
                 // property visibility strategy setting
                 .withPropertyVisibilityStrategy(getPropertyVisibilityStrategyClass(config))
                 .withBinaryDataStrategy(getBinaryDataStrategy(config));
-        return JsonbBuilder.newBuilder().withConfig(jsonbConfig).build();
+        JSONB = JsonbBuilder.newBuilder().withConfig(jsonbConfig).build();
+    }
+
+    /**
+     * {@link Jsonb} instance getter.
+     *
+     * @return configured {@link Jsonb} instance
+     */
+    public static Jsonb getContext() {
+        return JSONB;
     }
 
     private static PropertyVisibilityStrategy getPropertyVisibilityStrategyClass(Config config) {
