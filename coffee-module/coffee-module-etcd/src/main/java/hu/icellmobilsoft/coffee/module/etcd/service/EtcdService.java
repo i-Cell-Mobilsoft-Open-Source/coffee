@@ -277,7 +277,7 @@ public class EtcdService {
 
     private String replaceSensitiveDataInResponseString(Response response) {
         // Pattern: (kvs[\S\s]*?key:[\s]*?"(stringHelper.getSensitiveKeyPattern())"[\S\s]*?value:[\s]*?)"(.*?)"
-        // ETCD válasz formátumára, $1 csoportba kerül minden a "kvs" és "value " között, így a value értéke egyszerüen cserélhetó $1"*"-gal.
+        // For the ETCD response format, $1 captures everything between "kvs" and "value ", allowing for simple replacement of the value with $1"*"
         // kvs {
         // key: "stringHelper.getSensitiveKeyPattern()"
         // create_revision: 679

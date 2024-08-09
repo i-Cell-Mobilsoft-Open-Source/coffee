@@ -85,12 +85,11 @@ public class RequestLoggerInputStream extends InputStream {
         }
 
         if (streamData != -1 && logCollectLimit != 0) {
-            // logoláshoz gyűjtjük a stream tartalmát amíg van, és még nem értük el a limitet
+            // We collect the content of a stream for logging purposes as long as there is content and we have not reached the limit
             entityLog.append((char) streamData);
             logCollectLimit--;
         } else if (!isLogged) {
-            // ha a stream végére értünk vagy elértük a limitet és még nem logoltunk,
-            // akkor küldünk egy eventet hogy megtörténjen a logolás
+            // If we reach the end of the stream or reach the limit without logging yet, we send an event to trigger logging.
             prepareAndSendLoggingEvent();
 
             isLogged = true;

@@ -22,12 +22,11 @@ package hu.icellmobilsoft.coffee.dto.exception;
 import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
 
 /**
- * Nem céges kivételek, amik nem a BaseException-bol öröklődnek, ezen az interfészen keresztül tudnak kapcsolódni a céges kivételkezelő rendszerhez.
+ * Non-company exceptions that do not inherit from BaseException can connect to the corporate exception handling system through this interface.
  *
- * Az interfész célja, hogy a céges kivételeket be lehessen burkolni olyan alacsony szintű JAX-RS metódusokban, amik kötött dobási szabályal
- * rendelkeznek.
+ * The purpose of the interface is to encapsulate corporate exceptions within low-level JAX-RS methods that have strict throwing rules.
  *
- * Példa:
+ * Example:
  *
  * <pre>
  * <code>
@@ -65,7 +64,7 @@ import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
  * </pre>
  *
  * @param <E>
- *            Kivétel osztály, ami a keretrendszer BaseException osztályából származik.
+ *            Exception class derived from the framework's BaseException class.
  * @author attila.gluck
  * @author attila.nyers
  * @author ferenc.lutischan

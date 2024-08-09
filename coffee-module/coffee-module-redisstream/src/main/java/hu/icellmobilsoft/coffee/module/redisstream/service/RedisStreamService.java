@@ -172,7 +172,7 @@ public class RedisStreamService {
             if (!(e.getCause() instanceof JedisDataException)) {
                 throw e;
             }
-            // ha nincs kulcs akkor a kovetkezo hiba jon:
+            // If there is no key, then the following error occurs:
             // redis.clients.jedis.exceptions.JedisDataException: ERR no such key
             log.info("Redis exception during checking group [{0}]: [{1}]", streamKey(), e.getLocalizedMessage());
             return false;
@@ -200,13 +200,13 @@ public class RedisStreamService {
         Optional<List<Entry<String, List<StreamEntry>>>> result = getRedisManager().run(Jedis::xreadGroup, "xreadGroup", getGroup(),
                 consumerIdentifier, createXReadGroupParams(), streamQuery);
         if (result.isEmpty() || result.get().isEmpty()) {
-            // nincs uj uzenet
+            // There are no new messages
             if (log.isTraceEnabled()) {
                 log.trace("No new message in [{0}] stream", streamKey());
             }
             return Optional.empty();
         }
-        // 1 stream-bol olvasunk
+        // We are reading from one stream.
         Entry<String, List<StreamEntry>> stream = result.get().get(0);
         if (stream.getValue() == null || stream.getValue().isEmpty()) {
             if (log.isTraceEnabled()) {
@@ -214,7 +214,7 @@ public class RedisStreamService {
             }
             return Optional.empty();
         }
-        // csak 1 tetelt kertunk ki belole, tobb nem lessz benne
+        // We requested only one item from it; there won't be more
         StreamEntry entry = stream.getValue().get(0);
         if (log.isTraceEnabled()) {
             StringBuilder sb = new StringBuilder("Consumed one entry from:");
@@ -234,7 +234,7 @@ public class RedisStreamService {
      */
     protected XReadGroupParams createXReadGroupParams() {
         int readTimeoutMillis = config.getStreamReadTimeoutMillis().intValue();
-        // kepes tobb streambol is egyszerre olvasni, de mi 1-re hasznaljuk
+        // It is capable of reading from multiple streams simultaneously, but we are using it for just one.
         XReadGroupParams params = new XReadGroupParams().count(1).block(readTimeoutMillis);
         if (!config.isManualAck()) {
             params.noAck();

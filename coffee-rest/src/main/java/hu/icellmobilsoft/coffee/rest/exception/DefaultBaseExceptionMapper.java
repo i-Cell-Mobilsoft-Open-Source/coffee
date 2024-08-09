@@ -78,11 +78,11 @@ public class DefaultBaseExceptionMapper implements ExceptionMapper<BaseException
     }
 
     /**
-     * Kivétel kezelése
+     * Exception handling.
      *
      * @param e
-     *            a kivétel
-     * @return összeállított válasz
+     *            the exception
+     * @return compiled response
      */
     protected Response handleException(BaseException e) {
         if (e instanceof AccessDeniedException) {
@@ -107,13 +107,13 @@ public class DefaultBaseExceptionMapper implements ExceptionMapper<BaseException
     }
 
     /**
-     * Válasz létrehozása, mely tartalmazza a validációs hibákat
+     * Creating a response that includes the validation errors
      *
      * @param e
-     *            a kivétel
+     *             the exception
      * @param errors
-     *            validációs hibák gyűjteménye
-     * @return összeállított válasz
+     *            A collection of validation errors
+     * @return compiled response
      */
     protected Response createValidationErrorResponse(BaseException e, Collection<XMLValidationError> errors) {
         InvalidRequestFault dto = new InvalidRequestFault();
@@ -122,30 +122,30 @@ public class DefaultBaseExceptionMapper implements ExceptionMapper<BaseException
     }
 
     /**
-     * Válasz létrehozása
+     * Creating a response
      *
      * @param e
-     *            a kivétel
+     *            the exception
      * @param status
-     *            a válasznak átadni kívánt {@link Response.Status}
+     *            the response to be passed {@link Response.Status}
      * @param dto
-     *            {@link BaseExceptionResultType} leszármazott, mely átadásra kerül a válaszban
-     * @return összeállított válasz
+     *            {@link BaseExceptionResultType} subclass that gets passed in the response
+     * @return compiled response
      */
     protected Response createResponse(BaseException e, Response.Status status, BaseExceptionResultType dto) {
         return createResponse(e, status.getStatusCode(), dto);
     }
 
     /**
-     * Válasz létrehozása
+     * Creating a response
      *
      * @param e
-     *            a kivétel
+     *            the exception
      * @param statusCode
-     *            a válasznak átadni kívánt státusz kódja (pl.: 418)
+     *            the status code to be passed in the response (pl.: 418)
      * @param dto
-     *            {@link BaseExceptionResultType} leszármazott, mely átadásra kerül a válaszban
-     * @return összeállított válasz
+     *            {@link BaseExceptionResultType} subclass that will be passed in the response
+     * @return compiled response
      */
     protected Response createResponse(BaseException e, int statusCode, BaseExceptionResultType dto) {
         exceptionMessageTranslator.addCommonInfo(dto, e, e.getFaultTypeEnum());

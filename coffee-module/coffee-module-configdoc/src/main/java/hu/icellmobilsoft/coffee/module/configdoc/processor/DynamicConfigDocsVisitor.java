@@ -75,8 +75,8 @@ public class DynamicConfigDocsVisitor extends ElementKindVisitor9<DynamicDocData
         header.setDescription(annotation.description());
         header.setTemplateVariables(annotation.templateVariables());
         try {
-            // compile time vagyunk így ez lehet elhasal,
-            // de az exceptionből megkapjuk a template classnak megfelelő TypeMirror-t
+            // We are at compile time, so this might fail, but from the exception,
+            // we get the TypeMirror corresponding to the template class.
             header.setTemplateClassName(annotation.template().getCanonicalName());
         } catch (MirroredTypeException e) {
             TypeMirror typeMirror = e.getTypeMirror();

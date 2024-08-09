@@ -115,7 +115,7 @@ public class ExceptionHandler {
             List<Bean<?>> mapperBeans = getExceptionMapperBeans(t.getClass());
             for (Bean<?> exceptionMapperBean : mapperBeans) {
                 Status status = handleByBean(requestHeaders, t, exceptionMapperBean);
-                // ha nem null visszaadjuk, ha null jön priority szerint a következő, esetleg az exception super class-ára írt
+                // If it's not null, we return it; if null, we prioritize the next based on priority, potentially writing to the superclass of the exception
                 if (status != null) {
                     return StatusResponse.of(status, t);
                 }
@@ -174,21 +174,21 @@ public class ExceptionHandler {
         if (beans != null && !beans.isEmpty()) {
             beansFound.addAll(beans.stream().sorted(PRIORITY_COMPARATOR.thenComparing(Bean::getName)).collect(Collectors.toList()));
         }
-        // összeszedjük az exception parentjére írt mappereket is
+        // We gather the mappers written for the parent of the exception as well.
         beansFound.addAll(resolveParameterizedBeans(beanClass, parameterClass.getSuperclass()));
         return ImmutableList.copyOf(beansFound);
     }
 
     private StatusResponse buildInternalErrorStatus(Throwable throwableNotHandled, String reason) {
-        // ha exception mapper elszáll, akkor internal server error.
+        // If an exception mapper fails, then it results in an internal server error.
         Status.Builder statusBuilder = Status.newBuilder();
 
-        // ha nincs ExceptionMapper:
-        // 1. INTERNAL status kod
+        // If there is no ExceptionMapper:
+        // 1. INTERNAL status code
         statusBuilder.setCode(Code.INTERNAL.getNumber());
-        // 2. valaszolunk eredeti hibaval
+        // 2. we respond with the original error
         statusBuilder.setMessage(throwableNotHandled.getMessage());
-        // 3. ErrorInfo-ba pakoljuk a reszleteket
+        // 3. We put the details into ErrorInfo.
         statusBuilder.addDetails(Any.pack(ErrorInfo.newBuilder().setReason(reason).setDomain(throwableNotHandled.getClass().getName()).build()));
         return StatusResponse.of(statusBuilder.build(), throwableNotHandled);
     }

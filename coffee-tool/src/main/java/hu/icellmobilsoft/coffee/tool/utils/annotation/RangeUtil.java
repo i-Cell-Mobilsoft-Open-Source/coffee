@@ -25,7 +25,7 @@ import hu.icellmobilsoft.coffee.cdi.annotation.Range;
 import hu.icellmobilsoft.coffee.tool.version.ComparableVersion;
 
 /**
- * A @Range annotációban használt értékek a ComparableVersion.class szerinti kezelését kiszolgáló eszköz gyűjtemény
+ * A collection of tools that facilitate handling values used in the @Range annotation according to ComparableVersion.class
  *
  * @author imre.scheffer
  * @since 1.0.0
@@ -40,13 +40,13 @@ public class RangeUtil {
     }
 
     /**
-     * Érték keresés a Range annotációban
+     * Searching for values in the Range annotation
      *
      * @param range
-     *            range annotáció
+     *            Range annotation
      * @param value
-     *            keresett érték bele-e tartozik a Range annotáció megjelölésben
-     * @return true, ha a Range annotáció tartalmazza a keresett értéket
+     *            Checks if the searched value is included in the Range annotation.
+     * @return true if the Range annotation contains the searched value
      */
     public static boolean inRange(Range range, String value) {
         if (range == null || StringUtils.isBlank(value)) {
@@ -62,7 +62,7 @@ public class RangeUtil {
         } else {
             geFrom = true;
         }
-        // ha mar a from-nal is korabbi ne nezzuk tovabb
+        // if you are older than "from", look no further
         if (!geFrom) {
             return false;
         }
@@ -78,13 +78,13 @@ public class RangeUtil {
     }
 
     /**
-     * Érték keresés a Range annotációban tömb-ben
+     * Searching for a value in an array within the Range annotation
      *
      * @param ranges
-     *            Range annotáció tömb
+     *            Array within the Range annotation
      * @param value
-     *            keresett érték bele-e tartozik a Range annotációkban
-     * @return true, ha a Range annotáció tömb tartalmazza a keresett értéket
+     *            Checks if the searched value is included in the Range annotations
+     * @return true if the array of Range annotations contains the searched value
      */
     public static boolean inRanges(Range[] ranges, String value) {
         if (ranges == null || StringUtils.isBlank(value)) {

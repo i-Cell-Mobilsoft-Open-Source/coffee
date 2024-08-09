@@ -30,8 +30,8 @@ import hu.icellmobilsoft.coffee.cdi.config.IConfigKey;
 import hu.icellmobilsoft.coffee.configuration.ApplicationConfiguration;
 
 /**
- * Nyelvesítés kezelésére szolgáló osztály.<br>
- * A szótár fájlokat a {@link IConfigKey#RESOURCE_BUNDLES} konfiguráció segítségével lehet beállítani.
+ * The class used for language localization.<br>
+ * The dictionary files can be configured using the {@link IConfigKey#RESOURCE_BUNDLES} configuration.
  *
  * @author imre.scheffer
  * @since 1.0.0

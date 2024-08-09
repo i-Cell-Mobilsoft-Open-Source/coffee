@@ -39,12 +39,12 @@ import hu.icellmobilsoft.coffee.rest.validation.xml.reader.IRequestVersionReader
 import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
 
 /**
- * JSON és XML payload-ból deszerializáló és validáló MessageBodyReader implementációk őse. Csak akkor fut le, ha a REST service metódus request body
- * paraméterén szerepel a @ValidateXML annotáció.<br>
+ * Ancestor implementation of JSON and XML payload deserialization and validation MessageBodyReader.
+ * It executes only when the REST service method's request body parameter includes the @ValidateXML annotation.<br>
  * <br>
- * Teljes használati leírás: /docs/howto/xsd_xml_validation_depend_on_version.adoc<br>
+ * Full instructions for use: /docs/howto/xsd_xml_validation_depend_on_version.adoc<br>
  * <br>
- * Példa a kiterjesztésre:<br>
+ * Example of an extension:<br>
  *
  * <pre>
  * &#64;Provider
@@ -56,7 +56,7 @@ import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
  *
  * <br>
  *
- * Majd megannotálni a végpontot<br>
+ * Then annotate the endpoint.<br>
  *
  * @param <T>
  *            message body type
@@ -86,7 +86,7 @@ public abstract class XmlMessageBodyReaderBase<T> implements MessageBodyReader<T
     /**
      * {@inheritDoc}
      *
-     * Xsd validálásra kerülhet-e?
+     * Can XSD validation be performed?
      */
     @Override
     public boolean isReadable(Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType) {
@@ -96,7 +96,7 @@ public abstract class XmlMessageBodyReaderBase<T> implements MessageBodyReader<T
     /**
      * {@inheritDoc}
      *
-     * Ha van ValidateXML annotáció, akkor azt használja
+     * If there is a ValidateXML annotation, then it uses that.
      */
     @Override
     public T readFrom(Class<T> type, Type genericType, Annotation[] annotations, MediaType mediaType, MultivaluedMap<String, String> httpHeaders,

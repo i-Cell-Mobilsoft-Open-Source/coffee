@@ -23,7 +23,7 @@ import org.eclipse.microprofile.config.Config;
 
 /**
  * Extract the outgoing configuration for the {@code coffee-redis-pubsub} connector. <br>
- * PM: Jó lenne ConnectorAttribute annotációval generáltatni, de wf alatt még experimental, ezért copy-paste és javadoc fix a generátumból
+ * PM: It would be good to generate using ConnectorAttribute annotation, but it's still experimental under WF, so for now, copy-paste and fix the javadoc in the generated code.
  *
  * @author mark.petrenyi
  * @since 1.13.0

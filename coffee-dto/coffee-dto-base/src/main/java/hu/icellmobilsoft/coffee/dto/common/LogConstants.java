@@ -20,7 +20,7 @@
 package hu.icellmobilsoft.coffee.dto.common;
 
 /**
- * Loggolansal hasznalt konstans azonositok
+ * Constant identifiers used for logging purposes
  *
  * @author imre.scheffer
  * @since 1.0.0
@@ -28,12 +28,12 @@ package hu.icellmobilsoft.coffee.dto.common;
 public interface LogConstants {
 
     /**
-     * Logolaskor ezt a valtozot keresi a patternhez
+     * When logging, this variable is searched for in the pattern.
      */
     final String LOG_SESSION_ID = "extSessionId";
 
     /**
-     * Logolasnal a service name
+     * When logging, the service name
      */
     final String LOG_SERVICE_NAME = "serviceName";
 

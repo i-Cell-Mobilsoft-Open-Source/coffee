@@ -339,7 +339,7 @@ public class RedisStreamPublisher {
         Map<String, String> keyValues = new HashMap<>();
         keyValues.put(IRedisStreamConstant.Common.DATA_KEY_FLOW_ID, getFlowIdMessage(parameters));
         keyValues.put(IRedisStreamConstant.Common.DATA_KEY_MESSAGE, streamMessage);
-        // szandekosan a vegen van hogy felul lehessen csapni a fenti ertekeket
+        // Intentionally, it's positioned at the end so that the above values can be overridden if needed.
         if (parameters != null) {
             keyValues.putAll(parameters);
         }

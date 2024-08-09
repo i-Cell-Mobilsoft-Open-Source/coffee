@@ -32,7 +32,7 @@ import java.io.Serializable;
 public interface AppLogger extends hu.icellmobilsoft.coffee.se.logging.Logger, Serializable {
 
     /**
-     * request szinten eltarolt valtozo elkerese
+     * Accessing a variable stored at the request level
      *
      * @param key
      *            key
@@ -41,7 +41,7 @@ public interface AppLogger extends hu.icellmobilsoft.coffee.se.logging.Logger, S
     public Object getValue(String key);
 
     /**
-     * request szinten eltarolt valtozo elmentese
+     * Saving a variable stored at the request level
      *
      * @param key
      *            key
@@ -51,7 +51,7 @@ public interface AppLogger extends hu.icellmobilsoft.coffee.se.logging.Logger, S
     public void setValue(String key, Object value);
 
     /**
-     * request szinten eltarolt valtozo torlese
+     * Deleting a variable stored at the request level
      *
      * @param key
      *            key
@@ -59,18 +59,18 @@ public interface AppLogger extends hu.icellmobilsoft.coffee.se.logging.Logger, S
     public void removeValue(String key);
 
     /**
-     * Kiirja a container tartalmat INFO-ba
+     * Logging the contents of the container to INFO
      */
     public void writeLogToInfo();
 
     /**
-     * Kiirja a container tartalmat ERROR-ba
+     * Logging the contents of the container to ERROR
      */
     public void writeLogToError();
 
     /**
-     * Kiirja a container tartalmat a legmabasabb szintu hibatipuskent, ami a containerben van. Tehat ha van a containerben ERROR akkor error-kent
-     * fogja loggolni ha csak INFO akkor infoba fog menni kiiras...
+     * Logging the contents of the container at the lowest level of error type present in the container.
+     * So, if there is an ERROR in the container, it will log as ERROR; if only INFO is present, it will log to INFO.
      */
     public void writeLog();
 
@@ -79,7 +79,7 @@ public interface AppLogger extends hu.icellmobilsoft.coffee.se.logging.Logger, S
      * isThereAnyError.
      * </p>
      *
-     * @return true hogyha ERROR vagy magasabb szintu log van benne
+     * @return True if there is an ERROR or higher level log present in it
      */
     public boolean isThereAnyError();
 
@@ -88,7 +88,7 @@ public interface AppLogger extends hu.icellmobilsoft.coffee.se.logging.Logger, S
      * isThereAnyWarning.
      * </p>
      *
-     * @return true hogyha WARNING vagy magasabb szintu log van benne
+     * @return True if there is a WARNING or higher level log present in it
      */
     public boolean isThereAnyWarning();
 }

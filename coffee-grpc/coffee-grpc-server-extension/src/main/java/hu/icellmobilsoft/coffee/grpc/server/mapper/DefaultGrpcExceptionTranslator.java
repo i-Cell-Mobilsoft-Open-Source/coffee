@@ -57,8 +57,8 @@ public class DefaultGrpcExceptionTranslator implements IGrpcExceptionTranslator 
         LocalizedMessage.Builder lmBuilder = LocalizedMessage.newBuilder();
         if (faultType != null) {
             Locale returnLocale = locale == null ? DEFAULT_LOCALE : locale;
-            // localizedMessage.message(faultType, messageArguments) jelenleg nem megfelelo,
-            // mert REST headerbol olvassa a nyelvesito kulcsot es itt most nincs request scope sem
+            // localizedMessage.message(faultType, messageArguments) Currently not suitable because
+            // it reads the language key from the REST header and there is no request scope here.
             String translatedMessage = localizedMessage.messageByLanguage(returnLocale.getLanguage(),
                     "{" + faultType.getClass().getName() + "." + faultType.name() + "}", messageArguments);
             lmBuilder.setLocale(returnLocale.toString()).setMessage(translatedMessage);

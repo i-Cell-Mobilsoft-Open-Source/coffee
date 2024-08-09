@@ -388,7 +388,7 @@ class JsonUtilTest {
     }
 
     /**
-     * Segéd osztály a teszteléshez
+     * Helper class for testing
      */
     private static class TestObject {
         XMLGregorianCalendar xmlGregorianCalendar;

@@ -38,7 +38,7 @@ import hu.icellmobilsoft.coffee.se.api.exception.BusinessException;
 
 /**
  *
- * T(ime Based) OTP ellenorzesehez szukseges osztaly default implementcaioja
+ * Default implementation class required for verifying Time-Based OTP (TOTP).
  *
  * @author cstamas
  * @since 1.0.0

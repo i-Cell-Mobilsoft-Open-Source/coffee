@@ -123,7 +123,7 @@ public abstract class BaseRestLogger implements ContainerRequestFilter, WriterIn
                 RequestResponseLogger.REQUEST_PREFIX,
                 logMessage);
 
-        // a saját InputStream-et állítjuk be a context-be, ami majd az entity stream olvasáskor log-olja a request-et
+        // We set our own InputStream in the context, which will log the request when reading the entity stream
         requestContext.setEntityStream(requestLoggerInputStream);
     }
 
@@ -152,7 +152,7 @@ public abstract class BaseRestLogger implements ContainerRequestFilter, WriterIn
             int maxResponseEntityLogSize = requestResponseLogger.getMaxResponseEntityLogSize(context);
             if (maxResponseEntityLogSize != LogSpecifier.NO_LOG) {
                 var responseEntityCollectorOutputStream = new ResponseEntityCollectorOutputStream(originalResponseStream, maxResponseEntityLogSize);
-                // a saját OutputStream-et állítjuk be a context-be, ami majd az entity stream-be írásakor gyűjti azt a log-olás számára
+                // We set our own OutputStream in the context, which will collect the entity stream when writing to it for logging purposes
                 context.setOutputStream(responseEntityCollectorOutputStream);
                 context.proceed();
                 entity = responseEntityCollectorOutputStream.getEntity();
@@ -167,10 +167,10 @@ public abstract class BaseRestLogger implements ContainerRequestFilter, WriterIn
     }
 
     /**
-     * HTTP headerben szereplo session kulcs neve. Ezt a kulcsot fogja a logger keresni a http headerekből, aminek az értékét fel használja a
-     * <code>MDC.put(LogConstants.LOG_SESSION_ID, ertek)</code> részben.<br>
+     * The name of the session key appearing in the HTTP headers. 
+     * The logger will look for this key in the HTTP headers and use its value in the <code>MDC.put(LogConstants.LOG_SESSION_ID, value)</code> section.<br>
      * <br>
-     * Folyamat azonosítás, Graylog loggolásban van nagy értelme
+     * Process identification makes a lot of sense in Graylog logging
      *
      * @return session key
      */
@@ -206,7 +206,7 @@ public abstract class BaseRestLogger implements ContainerRequestFilter, WriterIn
      */
     protected void appendRequestLine(StringBuilder b, ContainerRequestContext requestContext) {
         b.append(requestResponseLogger.printRequestLine(requestContext));
-        // Mivel csak a stream végén történik a logolás, a timestamp nem a request beérkezését mutatja
+        // Since logging occurs only at the end of the stream, the timestamp does not reflect when the request was received
         b.append(RequestResponseLogger.REQUEST_PREFIX).append("-- Request timestamp:").append(DateUtil.nowUTC()).append('\n');
     }
 

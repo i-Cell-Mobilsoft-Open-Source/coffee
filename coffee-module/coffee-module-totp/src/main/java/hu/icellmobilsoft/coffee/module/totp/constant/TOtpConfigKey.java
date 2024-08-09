@@ -28,28 +28,28 @@ package hu.icellmobilsoft.coffee.module.totp.constant;
 public interface TOtpConfigKey {
 
     /**
-     * Generalt (T)OTP hany karakterbol alljon
+     * How many characters should the generated (T)OTP consist of?
      */
     public static final String PASSWORD_DIGITS_LENGTH = "totp.password.digits.length";
 
     /**
-     * Mennyi ideig legyen ervenyes egy adott jelszo (msec).
+     * How long should a specific password remain valid (in milliseconds)?
      */
     public static final String PASSWORD_TIMESTEP_MILLISEC = "totp.password.timestep.millisec";
 
     /**
-     * Az OTP milyen hash algoritmust hasznaljon {@link hu.icellmobilsoft.coffee.module.totp.enums.TOtpAlgorithm}.
+     * What hash algorithm should the OTP use? {@link hu.icellmobilsoft.coffee.module.totp.enums.TOtpAlgorithm}.
      */
     public static final String PASSWORD_HASH_ALGORITHM = "totp.password.hash.algorithm";
 
     /**
-     * A jelszo ellenorzesekor {@link hu.icellmobilsoft.coffee.module.totp.TOtpVerifier#verify} engedjen-e tovabbi idoablakokat vizsgalni<br>
-     * pl. 1-es ertek eseten megvizsgalja a megadott (T)OTP-t a kovetkezo es elozo idoablakban is
+     * When verifying the password, should {@link hu.icellmobilsoft.coffee.module.totp.TOtpVerifier#verify} allow checking additional time windows?<br>
+     * For example, when the value is 1, {@link hu.icellmobilsoft.coffee.module.totp.TOtpVerifier#verify} checks the provided (T)OTP in the current, previous, and next time windows as well.
      */
     public static final String VERIFY_ADDITIONAL_WINDOWS_COUNT = "totp.verify.additional.windows.count";
 
     /**
-     * az OTP-hez hasznalt secret hossza byteban megadva.
+     * Specifying the length of the secret used for OTP in bytes.
      */
     public static final String PASSWORD_SECRET_LENGTH = "totp.password.secret.length";
 }

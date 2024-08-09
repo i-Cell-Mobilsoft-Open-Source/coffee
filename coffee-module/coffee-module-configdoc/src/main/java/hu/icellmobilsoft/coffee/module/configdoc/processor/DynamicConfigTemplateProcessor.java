@@ -116,7 +116,7 @@ public class DynamicConfigTemplateProcessor extends AbstractProcessor {
                 if (isClassOrInterface(element)) {
                     List<DocData> fieldData = new ArrayList<>();
                     visitor.visit(element, fieldData);
-                    // csak templatet hozunk létre, hogy később lehessen használni, nem szükséges paraméterzni a filenevet
+                    // We are just creating a template so that it can be used later; there's no need to specify the filename parameter now
                     String templateFileName = DynamicConfigTemplate.TEMPLATE_DIR + element.asType().toString() + DynamicConfigTemplate.TEMPLATE_TYPE;
                     docFileMap.put(templateFileName, fieldData);
                 }

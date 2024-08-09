@@ -38,7 +38,7 @@
                 <version>${version.jakarta.enterprise.cdi-api}</version>
             </dependency>
 
-            <!-- benne van a ee csomagban
+            <!-- it is in the ee package
                         <dependency>
                             <groupId>jakarta.activation</groupId>
                             <artifactId>jakarta.activation-api</artifactId>

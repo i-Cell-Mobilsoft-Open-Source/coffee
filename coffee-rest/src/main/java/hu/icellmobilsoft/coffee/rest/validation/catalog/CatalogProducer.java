@@ -43,7 +43,7 @@ import hu.icellmobilsoft.coffee.rest.validation.xml.exception.XsdProcessingExcep
 import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
 
 /**
- * Producer Catalog-hoz, hogy CDI injektálható legyen
+ * To make it injectable with CDI for the Producer Catalog
  *
  * @author mark.petrenyi
  * @author imre.scheffer

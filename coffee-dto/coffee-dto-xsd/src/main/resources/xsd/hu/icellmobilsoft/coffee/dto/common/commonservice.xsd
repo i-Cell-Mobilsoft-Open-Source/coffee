@@ -149,7 +149,7 @@
 		<xsd:complexContent>
 			<xsd:extension base="BaseExceptionResultType">
 				<xsd:sequence>
-					<!-- validacios hibak felsorolasa -->
+					<!-- Listing validation errors -->
 					<xsd:element name="error" type="ValidationType"
 						minOccurs="0" maxOccurs="unbounded" />
 				</xsd:sequence>

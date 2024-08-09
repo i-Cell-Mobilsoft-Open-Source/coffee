@@ -140,11 +140,11 @@ public abstract class BaseRestLogger implements ContainerRequestFilter, WriterIn
                 hu.icellmobilsoft.coffee.tool.utils.stream.OutputStreamCopier osc = new hu.icellmobilsoft.coffee.tool.utils.stream.OutputStreamCopier(
                         originalStream);
                 context.setOutputStream(osc);
-                // elegessuk a stream-et, kozben masoljuk a tartalmat
+                // Let's consume the stream while copying its content
                 try {
                     context.proceed();
                 } finally {
-                    // IS: kerdeses erdemes-e vissza irni az eredeti stream-et...
+                    // IS: Question whether it's worth writing back the original stream...
                     context.setOutputStream(originalStream);
                 }
                 entityCopy = osc.getCopy();
@@ -160,10 +160,10 @@ public abstract class BaseRestLogger implements ContainerRequestFilter, WriterIn
     }
 
     /**
-     * HTTP headerben szereplo session kulcs neve. Ezt a kulcsot fogja a logger keresni a http headerekből, aminek az értékét fel használja a
-     * <code>MDC.put(LogConstants.LOG_SESSION_ID, ertek)</code> részben.<br>
+     * The name of the session key appearing in the HTTP headers. 
+     * The logger will search for this key in the HTTP headers and use its value in the <code>MDC.put(LogConstants.LOG_SESSION_ID, value)</code> section.<br>
      * <br>
-     * Folyamat azonosítás, Graylog loggolásban van nagy értelme
+     * Process identification is highly meaningful in Graylog logging.
      * 
      * @return session key
      */

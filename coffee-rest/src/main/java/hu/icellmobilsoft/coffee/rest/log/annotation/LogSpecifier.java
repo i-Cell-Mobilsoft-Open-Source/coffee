@@ -35,10 +35,10 @@ import jakarta.inject.Qualifier;
 import hu.icellmobilsoft.coffee.rest.log.annotation.enumeration.LogSpecifierTarget;
 
 /**
- * Alap loggolast pontosithatjuk mit hogyan szeretnenk kiloggolni. Repeatable, tehát többször definiálható (önmagában vagy {@link LogSpecifiers}-be
- * csomagolva, de egy target-re ({@link LogSpecifierTarget#REQUEST}, {@link LogSpecifierTarget#RESPONSE}) csak egyszer szerepelhet, ezt biztosítja
- * fordítási időben a {@link hu.icellmobilsoft.coffee.rest.log.annotation.processing.LogSpecifiersAnnotationProcessor} <br>
- * Minta:
+ * We can specify the basic logging more precisely, indicating how and what we want to log.
+ * It should be repeatable, meaning it can be defined multiple times (either directly or wrapped in {@link LogSpecifiers}), but each target ({@link LogSpecifierTarget#REQUEST},
+ * {@link LogSpecifierTarget#RESPONSE}) can only appear once. This is ensured at compile time by the {@link hu.icellmobilsoft.coffee.rest.log.annotation.processing.LogSpecifiersAnnotationProcessor}. <br>
+ * Example:
  *
  * <pre>
  * &#64;POST
@@ -59,7 +59,7 @@ import hu.icellmobilsoft.coffee.rest.log.annotation.enumeration.LogSpecifierTarg
 public @interface LogSpecifier {
 
     /**
-     * Nincs korlatozas a loggolas hossz korlatozasal, alapertelmezett ertek
+     * There is no limit on the length of logging, defaulting to unrestricted.
      */
     public static final int UNLIMIT = -1;
     /**
@@ -83,25 +83,25 @@ public @interface LogSpecifier {
             LogSpecifierTarget.CLIENT_RESPONSE };
 
     /**
-     * Mekkora lehet a REST entity log maximalis merete a {@link #target()}-re vonatkozóan
+     * What is the maximum allowed REST entity log size for the specified {@link #target()}?
      * 
      * @return
      *         <ul>
      *         <li>&lt;0 =&gt; unlimit</li>
-     *         <li>=0 =&gt; nincs loggolas</li>
-     *         <li>&gt;0 =&gt; loggolas korlatozas</li>
+     *         <li>=0 =&gt; Logging is disabled</li>
+     *         <li>&gt;0 =&gt; Logging limitation</li>
      *         </ul>
      */
     @Nonbinding
     int maxEntityLogSize() default UNLIMIT;
 
     /**
-     * Loggolás teljes kikapcsolása
+     * Disabling logging completely
      * 
      * @return
      *         <ul>
-     *         <li>false (default) =&gt; van loggolás</li>
-     *         <li>true =&gt; nincs loggolás a {@link #target()}-re</li>
+     *         <li>false (default) =&gt; Logging is enabled</li>
+     *         <li>true =&gt; No logging for the {@link #target()}.</li>
      *         </ul>
      */
     @Nonbinding

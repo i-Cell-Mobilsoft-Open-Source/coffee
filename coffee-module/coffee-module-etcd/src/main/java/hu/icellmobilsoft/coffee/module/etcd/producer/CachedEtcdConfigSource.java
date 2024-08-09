@@ -35,8 +35,8 @@ import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
 public class CachedEtcdConfigSource extends DefaultEtcdConfigSource {
 
     /**
-     * Konfigurációs kulcsokat cachel-i, hogy ne legyenek mindig lekérdezve. Vannak helyzetek amikor többszörösen hívodik (futás közben ugyse kerül be
-     * uj konfigurációs kulcs)
+     * It caches configuration keys to avoid repeated querying. There are situations where it might be called multiple times
+     * (during runtime, new configuration keys are not added).)
      */
     private static final Set<String> PROPERTY_NAME_CACHE = Collections.synchronizedSet(new HashSet<>());
 
@@ -48,7 +48,7 @@ public class CachedEtcdConfigSource extends DefaultEtcdConfigSource {
     }
 
     /**
-     * Visszaadja a config-source-okon elérhető kulcsokat, az első hívás eredményét cacheli, minden továbbit a cache-ből szolgál ki
+     * It returns the keys available on the config sources. It caches the result of the first call, serving all subsequent calls from the cache.
      *
      * <br>
      * {@inheritDoc}

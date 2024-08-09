@@ -26,8 +26,8 @@ import jakarta.xml.bind.ValidationEventHandler;
 import hu.icellmobilsoft.coffee.dto.exception.XMLValidationError;
 
 /**
- * ValidationEventHandler interfészt terjeszti ki<br>
- * Alap implementációja az:<br>
+ * It extends the ValidationEventHandler interface.<br>
+ * Basic implementation of it is:<br>
  *
  * @see XsdValidationErrorCollector
  * @author ferenc.lutischan

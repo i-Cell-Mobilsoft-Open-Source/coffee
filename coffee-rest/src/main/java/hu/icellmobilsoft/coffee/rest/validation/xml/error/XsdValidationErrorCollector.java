@@ -33,7 +33,7 @@ import hu.icellmobilsoft.coffee.dto.exception.XMLValidationError;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
 
 /**
- * Hiba összegyűjtő az XSD validáláskor talált hibákhoz
+ * Error collector for errors encountered during XSD validation
  *
  * @author imre.scheffer
  * @author ferenc.lutischan
@@ -74,7 +74,7 @@ public class XsdValidationErrorCollector implements IXsdValidationErrorCollector
     /**
      * {@inheritDoc}
      *
-     * Error lista törlése Akkor szükséges meghívni, ha újrahasznosítjuk a létrehozott példányt! Egyébként memória luk keletkezhet!
+     * Clearing the list of errors is necessary when reusing the created instance! Otherwise, memory leaks may occur!
      */
     @Override
     public void clearErrors() {

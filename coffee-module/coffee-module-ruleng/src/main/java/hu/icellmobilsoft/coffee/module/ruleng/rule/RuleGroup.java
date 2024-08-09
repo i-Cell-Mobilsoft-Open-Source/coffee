@@ -20,14 +20,14 @@
 package hu.icellmobilsoft.coffee.module.ruleng.rule;
 
 /**
- * Alapértelmezett rule enum csoport
+ * Default rule enum group
  *
  * @author imre.scheffer
  * @since 1.0.0
  */
 public enum RuleGroup {
     /**
-     * Csoport nélküli
+     * Without group
      */
     NONE,
 }

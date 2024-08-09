@@ -65,7 +65,7 @@ import redis.clients.jedis.resps.StreamEntry;
 public class RedisStreamConsumerExecutor implements IRedisStreamConsumerExecutor {
 
     /**
-     * Jedis driver hibakódja ha nem tálható a stream vagy a csoport
+     * A Jedis driver error code if the stream or group is not found.
      */
     private static final String NOGROUP_PREFIX = "NOGROUP";
 
@@ -112,7 +112,7 @@ public class RedisStreamConsumerExecutor implements IRedisStreamConsumerExecutor
         // register consumer as a counter
         ConsumerLifeCycleManager.CONSUMER_COUNTER.getAndIncrement();
         consumerIdentifier = RandomUtil.generateId();
-        // óvatos futás, ellenőrzi a stream es csoport létezését
+        // Careful execution, checking the existence of the stream and group.
         boolean prudentRun = true;
         while (!ConsumerLifeCycleManager.ENDLOOP) {
             Optional<StreamEntry> streamEntry = Optional.empty();
@@ -122,7 +122,7 @@ public class RedisStreamConsumerExecutor implements IRedisStreamConsumerExecutor
                 redisStreamService.setRedisManager(redisManager);
 
                 if (prudentRun) {
-                    // lehethogy a csoport nem letezik
+                    // It's possible that the group does not exist.
                     redisStreamService.handleGroup();
                     prudentRun = false;
                 }
@@ -149,7 +149,7 @@ public class RedisStreamConsumerExecutor implements IRedisStreamConsumerExecutor
                 }
                 String message = cause.getLocalizedMessage();
                 // JedisDataException: NOGROUP No such key 'xyStream' or consumer group 'xy' in XREADGROUP with GROUP option
-                // ha elpusztul a Redis, helyre kell tudni allitani a stream es a csoportot
+                // If Redis crashes, we need to be able to restore the stream and the group.
                 if (StringUtils.startsWith(message, NOGROUP_PREFIX)) {
                     log.error(
                             "Detected problem on redisConfigKey [{0}] with stream group [{1}] and activating prudentRun on next cycle. Exception: [{2}]",
@@ -175,7 +175,7 @@ public class RedisStreamConsumerExecutor implements IRedisStreamConsumerExecutor
     private void cleanup(Instance<RedisManager> redisManagerInstance, RedisManager redisManager) {
         try {
             if (redisManager != null) {
-                // el kell engedni a connectiont
+                // The connection needs to be released.
                 redisManagerInstance.destroy(redisManager);
             }
             MDC.clear();
@@ -331,8 +331,8 @@ public class RedisStreamConsumerExecutor implements IRedisStreamConsumerExecutor
 
     private void sleep() {
         try {
-            // fontos a szuneteltetes hogy peldaul a connection szakadasa ne floodolja a logot
-            // es ne menjen felesleges korlatlan vegtelen probalkosba
+            // fIt's important to pause operations so that, for example, 
+            //a connection failure doesn't flood the logs or lead to unnecessary infinite retry attempts.
             TimeUnit.SECONDS.sleep(30);
         } catch (InterruptedException ex) {
             log.warn("Interrupted sleep.", ex);

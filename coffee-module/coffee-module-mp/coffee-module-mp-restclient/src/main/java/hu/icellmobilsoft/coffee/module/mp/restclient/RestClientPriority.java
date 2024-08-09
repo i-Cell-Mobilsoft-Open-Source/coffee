@@ -22,7 +22,7 @@ package hu.icellmobilsoft.coffee.module.mp.restclient;
 import jakarta.ws.rs.Priorities;
 
 /**
- * HTTP Rest Clienseken hasznalt fiterek priority gyujtoje
+ * A collection of priorities for filters used in HTTP Rest Clients
  *
  * @author imre.scheffer
  * @since 1.0.0
@@ -30,23 +30,23 @@ import jakarta.ws.rs.Priorities;
 public interface RestClientPriority {
 
     /**
-     * HTTP REST Client request loggolas
+     * HTTP REST Client request logging
      */
     static final int REQUEST_LOG = Priorities.HEADER_DECORATOR + 100;
 
     /**
-     * HTTP REST Client setting - sessionId, user, stb beallitasok
+     * HTTP REST Client setting - sessionId, user, e.g. settings
      */
     static final int REQUEST_SETTING = Priorities.AUTHENTICATION - 100;
 
     /**
-     * HTTP REST Client response loggolas. <br>
-     * A priority mindenkeppen a io.smallrye.restclient.ExceptionMapping bekotesnel magasabb kell hogy legyen, aminek jelenleg 1 az erteke
+     * HTTP REST Client response logging. <br>
+     * The priority value must be higher than "1" for the io.smallrye.restclient.ExceptionMapping binding
      */
     static final int RESPONSE_LOG = Priorities.AUTHENTICATION;
 
     /**
-     * BaseException-re fordito HTTP ResponseExceptionMapper
+     * HTTP ResponseExceptionMapper that translates to BaseException
      */
     static final int EXCEPTION_BASE = Priorities.USER;
 }

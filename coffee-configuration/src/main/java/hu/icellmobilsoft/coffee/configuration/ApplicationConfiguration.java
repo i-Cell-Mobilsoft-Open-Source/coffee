@@ -38,8 +38,8 @@ import hu.icellmobilsoft.coffee.se.logging.Logger;
 import hu.icellmobilsoft.coffee.tool.utils.string.StringHelper;
 
 /**
- * Alkamazás szintű konfiguráció gyűjtő, mely időnkent ({@value #CACHE_TIME_MINUTES} percenként) űjra kérdezi a beállításokat az konfiguráció
- * forrásokból, vagy ad lehetőséget arra, hogy rögtön újraolvassa őket
+ * An application-level configuration collector that periodically (every {@value #CACHE_TIME_MINUTES} minutes)
+ * retrieves settings from configuration sources or allows immediate refreshing of them.
  *
  * @author imre.scheffer
  * @since 1.0.0

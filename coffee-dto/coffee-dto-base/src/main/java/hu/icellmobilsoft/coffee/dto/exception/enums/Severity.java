@@ -26,7 +26,7 @@ import java.util.Objects;
  * Severity class.
  * </p>
  *
- * @deprecated Helyette a {@link hu.icellmobilsoft.coffee.se.api.exception.enums.Severity} használandó.
+ * @deprecated Instead, use {@link hu.icellmobilsoft.coffee.se.api.exception.enums.Severity}.
  *
  * @author imre.scheffer
  * @since 1.0.0

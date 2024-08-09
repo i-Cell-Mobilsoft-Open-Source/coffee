@@ -25,7 +25,7 @@ import java.io.Reader;
 import org.w3c.dom.ls.LSInput;
 
 /**
- * LSInput implementáció
+ * LSInput implementation
  *
  * @see XsdResourceResolver
  * @author ferenc.lutischan

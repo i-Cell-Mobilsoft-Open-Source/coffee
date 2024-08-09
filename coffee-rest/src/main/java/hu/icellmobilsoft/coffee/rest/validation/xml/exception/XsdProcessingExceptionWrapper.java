@@ -24,7 +24,7 @@ import jakarta.ws.rs.ProcessingException;
 import hu.icellmobilsoft.coffee.dto.exception.BaseExceptionWrapper;
 
 /**
- * Kivétel osztály, hogy tudjunk céges kivételt dobni a MessageBodyReader/MessageBodyWriter osztályokból.
+ * An exception class to enable throwing a custom exception from MessageBodyReader/MessageBodyWriter classes.
  *
  * @author attila.nyers
  * @author ferenc.lutischan
@@ -43,7 +43,7 @@ public class XsdProcessingExceptionWrapper extends ProcessingException implement
     private XsdProcessingException exception;
 
     /**
-     * Becsomagol egy BaseException típusú kivételt
+     * Wraps an exception of type BaseException.
      *
      * @param cause
      *            Az eredeti BaseException

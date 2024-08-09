@@ -34,7 +34,7 @@ public interface IRedisStreamConsumerExecutor extends Runnable {
      * Stream consumer executor inicializacioja
      * 
      * @param redisConfigKey
-     *            kulcs ami a redis konfiguraciot celozza, @RedisConnection-ba hasznalja fel
+     *            A key that targets the Redis configuration, used in `@RedisConnection`
      * @param group
      *            stream consumer group nev
      * @param consumerBean

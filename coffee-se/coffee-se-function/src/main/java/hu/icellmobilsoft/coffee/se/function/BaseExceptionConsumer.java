@@ -22,7 +22,7 @@ package hu.icellmobilsoft.coffee.se.function;
 import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
 
 /**
- * Consumer {@link BaseException}-t dobó operációkhoz
+ * For operations that throw a consumer {@link BaseException}:
  *
  * @param <T>
  *            input objektum tipusa

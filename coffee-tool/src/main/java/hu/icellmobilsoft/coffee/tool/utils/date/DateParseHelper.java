@@ -36,7 +36,7 @@ import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
 
 /**
- * Helper osztály, java 8 time-ok parsolásához
+ * Helper class for parsing Java 8 time objects
  *
  * @author mark.petrenyi
  * @since 1.0.0

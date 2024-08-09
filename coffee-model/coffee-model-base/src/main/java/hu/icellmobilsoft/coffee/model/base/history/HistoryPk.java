@@ -30,7 +30,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 /**
- * History táblák primáris kulcsa
+ * The primary key of history tables
  *
  * @author imre.scheffer
  * @since 1.0.0
@@ -48,7 +48,7 @@ public class HistoryPk implements Serializable {
     }
 
     /**
-     * Elő rekord id
+     * Pre record id
      */
     @Column(name = "X__ID", nullable = false, length = 30)
     @NotNull
@@ -56,7 +56,7 @@ public class HistoryPk implements Serializable {
     private String id;
 
     /**
-     * History rekord létrehozásának ideje
+     * Creation time of the history record
      */
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "TS", nullable = false, length = 7)

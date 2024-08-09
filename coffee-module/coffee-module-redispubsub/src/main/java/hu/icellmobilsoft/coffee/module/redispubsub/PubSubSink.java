@@ -79,15 +79,15 @@ public class PubSubSink {
             redisManager = redisManagerInstance.get();
             Optional<Long> published = redisManager.runWithConnection(Jedis::publish, "publish", channel, messagePayload);
             log.trace("Message published to [{0}] clients!", published.orElse(0L));
-            // redis pub/sub nem kezel ack/nack-ot, de az MP reactive streams igen +
-            // ide érkező message is jöhet olyan forrásból ahol kell (pl. kafka...),
-            // egyelőre ha sikeres a kiküldés ackolunk, ha nem akkor nack, később ezen lehet finomítani.
+            // Redis pub/sub does not handle ack/nack, but MP Reactive Streams does.
+            // Messages arriving here can come from sources like Kafka where ack/nack is needed.
+            // For now, we acknowledge (ack) on successful sending and nack on failure; this can be refined later.
             msg.ack();
         } catch (Exception e) {
             String errorMsg = MessageFormat.format("Could not publish message:[{0}] to redis pub/sub channel:[{1}]", msg, channel);
             log.error(errorMsg, e);
-            // MP subscriberben vagyunk, a hívó csak completionStage-et kap exception dobás helyett nack-olni kell
-            // aki hívta az emittert kezelheti, ha akarja ExecutionException-be csomagolva fogja megkapni
+            // We are in an MP subscriber. Instead of throwing an exception, the caller should nack when receiving a CompletionStage.
+            // The caller handling the emitter can choose to catch it wrapped in an ExecutionException if desired.
             msg.nack(e);
         } finally {
             if (redisManager != null) {

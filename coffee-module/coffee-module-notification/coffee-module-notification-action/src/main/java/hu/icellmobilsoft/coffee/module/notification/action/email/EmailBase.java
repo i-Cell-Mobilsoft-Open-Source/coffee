@@ -100,7 +100,7 @@ public class EmailBase {
 
     private Email email;
 
-    // csak belso celokra, mert egyebkent az email-ben benne van, csak nem elerheto
+    // For internal purposes only, because it is included in the email but not accessible otherwise
     private Object content;
     private String to;
 

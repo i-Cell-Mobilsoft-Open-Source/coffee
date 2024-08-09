@@ -61,7 +61,7 @@ public class PubSubSource implements Publisher<Message<?>>, AutoCloseable {
 
     @Override
     public void subscribe(Subscriber<? super Message<?>> subscriber) {
-        // külön szálon indítjuk a hallgatózást, különben a deployment szálat beragasztanánk
+        // We start the listening on a separate thread to avoid blocking the deployment thread.
         subscriberService.execute(() -> jedisSubscribe(subscriber));
     }
 
@@ -74,9 +74,9 @@ public class PubSubSource implements Publisher<Message<?>>, AutoCloseable {
         try {
             redisSubscription.subscribe(subscriber);
         } catch (Exception e) {
-            // Ha üres a lista, akkor close-olva lett miközben subscribe-ban voltunk, nincs dolgunk
+            // If the list is empty, it means it was closed while we were in the subscribe operation, so we don't need to do anything.
             if (!redisSubscriptions.isEmpty()) {
-                // MP stream hiba - ezt majd a connector onErrorja indítja újra
+                // MP Stream error - this will be restarted by the connector's onError handler.
                 log.error(MessageFormat.format("Unexpected error occured while subscribed to redis channel:[{0}]...", channel), e);
                 redisSubscription.close();
                 redisSubscriptions.remove(redisSubscription);
@@ -88,7 +88,7 @@ public class PubSubSource implements Publisher<Message<?>>, AutoCloseable {
     @Override
     public void close() {
         List<RedisSubscription> subscriptionsToClose = new ArrayList<>(redisSubscriptions);
-        // elsőnek cleareljük a listát, hogy ha close alatt száll el aktív felíratkozás, akkor azzal ne foglalkozzunk
+        // First, we clear the list so that if an active subscription fails during closing, we don't handle it.
         redisSubscriptions.clear();
         subscriptionsToClose.forEach(RedisSubscription::close);
     }

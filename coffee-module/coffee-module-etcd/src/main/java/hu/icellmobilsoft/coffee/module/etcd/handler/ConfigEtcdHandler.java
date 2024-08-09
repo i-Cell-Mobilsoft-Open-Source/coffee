@@ -35,7 +35,7 @@ import hu.icellmobilsoft.coffee.module.etcd.service.ConfigEtcdService;
 import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
 
 /**
- * Az ETCD paramétereket kezelését segíti. A lekérdezésnél a beágyazottan másik kulcsokra hivatkozó értékeket kiértékeli körellenőrzéssel a láncban.
+ * It assists in managing ETCD parameters. During querying, it evaluates values that refer to other keys embeddedly with chain verification.
  *
  * @author robert.kaplar
  * @since 1.0.0
