@@ -48,6 +48,7 @@ import org.apache.commons.lang3.StringUtils;
 public class MavenURLHandler extends URLStreamHandler {
 
     private static final String SEPARATOR = "!";
+    private static final String DIR_SEPARATOR = "/";
 
     /**
      * Default constructor, constructs a new object.
@@ -64,7 +65,15 @@ public class MavenURLHandler extends URLStreamHandler {
         if (StringUtils.contains(path, SEPARATOR)) {
             path = StringUtils.substringAfter(path, SEPARATOR);
         }
-        URL classPathUrl = Thread.currentThread().getContextClassLoader().getResource(path);
+        // Some runtime packaging (like Quarkus) may not be able to find the resource in the classpath.
+        // Quarkus dev mode vs package works differently.
+        // In dev mode, the resource is found in the classpath, but in the package needs to be searched for in the relative path.
+        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        URL classPathUrl = classLoader.getResource(path);
+        if (classPathUrl == null && StringUtils.startsWith(path, DIR_SEPARATOR)) {
+            // If it cannot be found in the classpath, try to search for it using the relative path
+            classPathUrl = classLoader.getResource(StringUtils.substringAfter(path, DIR_SEPARATOR));
+        }
 
         // Later on, you can simply search within the actual class.
         return classPathUrl.openConnection();

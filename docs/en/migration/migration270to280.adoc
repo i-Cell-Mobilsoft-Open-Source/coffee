@@ -35,8 +35,9 @@ Changes are backwards compatible doesn't need any migration. It is recommended t
 
 === coffee-tool
 
-The `RandomUtil` has been deprecated. The new `hu.icellmobilsoft.coffee.se.util.string.RandomUtil` should be used
+* The `RandomUtil` has been deprecated. The new `hu.icellmobilsoft.coffee.se.util.string.RandomUtil` should be used
 instean from the `coffee-se-util` module.
+* The `MavenURLHandler` is optimized for Quarkus packaging.
 
 ==== Migration
 
