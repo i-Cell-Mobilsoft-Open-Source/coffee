@@ -82,6 +82,6 @@
 		<module>coffee-dto-impl</module>
 		<module>coffee-dto-gen</module>
 		<module>coffee-dto-xsd2proto</module>
-		<module>coffee-dto-stub-gen</module>
+<!--		<module>coffee-dto-stub-gen</module>-->
 	</modules>
 </project>

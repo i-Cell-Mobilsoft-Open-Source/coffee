@@ -29,7 +29,6 @@ import jakarta.mail.internet.InternetAddress;
 import org.apache.commons.lang3.StringUtils;
 
 import hu.icellmobilsoft.coffee.dto.exception.BONotFoundException;
-import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.jpa.annotation.Transactional;
 import hu.icellmobilsoft.coffee.module.notification.model.Email;
 import hu.icellmobilsoft.coffee.module.notification.model.EmailRecipient;
@@ -38,6 +37,7 @@ import hu.icellmobilsoft.coffee.module.notification.model.enums.RecipientType;
 import hu.icellmobilsoft.coffee.module.notification.service.EmailRecipientService;
 import hu.icellmobilsoft.coffee.module.notification.service.EmailService;
 import hu.icellmobilsoft.coffee.module.notification.service.RecipientService;
+import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
 
 /**
  * CDI helper class for email handling
@@ -67,6 +67,14 @@ public class EmailHelper implements Serializable {
      */
     @Inject
     private EmailService emailService;
+
+
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public EmailHelper() {
+        super();
+    }
 
     /**
      * Inserts {@link EmailDataBase} into DB.

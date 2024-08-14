@@ -23,6 +23,8 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
+import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
+import hu.icellmobilsoft.coffee.se.api.exception.TechnicalException;
 import jakarta.activation.DataHandler;
 import jakarta.enterprise.context.Dependent;
 import jakarta.inject.Inject;
@@ -34,16 +36,14 @@ import jakarta.mail.internet.MimeMultipart;
 import jakarta.mail.util.ByteArrayDataSource;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.mail.Email;
-import org.apache.commons.mail.EmailException;
-import org.apache.commons.mail.MultiPartEmail;
 
 import hu.icellmobilsoft.coffee.cdi.logger.AppLogger;
 import hu.icellmobilsoft.coffee.cdi.logger.ThisLogger;
-import hu.icellmobilsoft.coffee.dto.exception.BaseException;
-import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 import hu.icellmobilsoft.coffee.module.notification.action.email.annotation.EmailOnly;
+import org.apache.commons.mail2.core.EmailException;
+import org.apache.commons.mail2.jakarta.Email;
+import org.apache.commons.mail2.jakarta.MultiPartEmail;
 
 /**
  * Handles basic e-mail sending, based on Apache commons-email
@@ -103,6 +103,13 @@ public class EmailBase {
     // For internal purposes only, because it is included in the email but not accessible otherwise
     private Object content;
     private String to;
+
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public EmailBase() {
+        super();
+    }
 
     /**
      * Setter for {@code mailSession} field of {@link Email}.
@@ -416,7 +423,7 @@ public class EmailBase {
     }
 
     /**
-     * Getter for the field {@code email}. If it's not initialized yet, creates an {@link org.apache.commons.mail.MultiPartEmail} instance. For a
+     * Getter for the field {@code email}. If it's not initialized yet, creates an {@link MultiPartEmail} instance. For a
      * different {@link Email} class, use {@link #setEmail(Email)}.
      *
      * @return {@code email}
