@@ -158,11 +158,11 @@
                 <artifactId>coffee-module-document-action</artifactId>
                 <version>${project.version}</version>
             </dependency>
-            <!--			<dependency>-->
-            <!--				<groupId>hu.icellmobilsoft.coffee</groupId>-->
-            <!--				<artifactId>coffee-module-notification</artifactId>-->
-            <!--				<version>${project.version}</version>-->
-            <!--			</dependency>-->
+            <dependency>
+                <groupId>hu.icellmobilsoft.coffee</groupId>
+                <artifactId>coffee-module-notification</artifactId>
+                <version>${project.version}</version>
+            </dependency>
             <dependency>
                 <groupId>hu.icellmobilsoft.coffee</groupId>
                 <artifactId>coffee-module-notification-dto</artifactId>
@@ -282,12 +282,6 @@
                 <groupId>hu.icellmobilsoft.coffee</groupId>
                 <artifactId>coffee-module-mp-micrometer</artifactId>
                 <version>${project.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.apache.commons</groupId>
-                <artifactId>commons-email2-jakarta</artifactId>
-                <version>2.0.0-M1</version>
             </dependency>
 
             <!-- Coff:ee quarkus extensions -->
