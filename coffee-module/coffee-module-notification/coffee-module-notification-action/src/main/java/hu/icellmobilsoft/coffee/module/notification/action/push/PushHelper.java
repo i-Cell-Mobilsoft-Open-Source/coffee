@@ -23,7 +23,6 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
 import jakarta.enterprise.context.Dependent;
 import jakarta.inject.Inject;
 
@@ -36,6 +35,7 @@ import hu.icellmobilsoft.coffee.module.notification.model.Push;
 import hu.icellmobilsoft.coffee.module.notification.model.PushDevice;
 import hu.icellmobilsoft.coffee.module.notification.service.PushDeviceService;
 import hu.icellmobilsoft.coffee.module.notification.service.PushService;
+import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
 import hu.icellmobilsoft.coffee.tool.gson.JsonUtil;
 import hu.icellmobilsoft.coffee.tool.utils.enums.EnumUtil;
 

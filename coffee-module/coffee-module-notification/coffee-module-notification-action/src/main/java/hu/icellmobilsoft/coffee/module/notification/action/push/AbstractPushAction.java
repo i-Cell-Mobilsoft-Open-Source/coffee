@@ -25,8 +25,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
-import hu.icellmobilsoft.coffee.se.api.exception.TechnicalException;
 import jakarta.enterprise.context.Dependent;
 import jakarta.inject.Inject;
 
@@ -41,6 +39,8 @@ import hu.icellmobilsoft.coffee.dto.notification.notification.PushType;
 import hu.icellmobilsoft.coffee.module.notification.exception.PushClientException;
 import hu.icellmobilsoft.coffee.module.notification.exception.PushServerException;
 import hu.icellmobilsoft.coffee.module.notification.model.Push;
+import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
+import hu.icellmobilsoft.coffee.se.api.exception.TechnicalException;
 
 /**
  * Push notification business logic class

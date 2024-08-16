@@ -21,8 +21,6 @@ package hu.icellmobilsoft.coffee.module.notification.service;
 
 import java.io.Serializable;
 
-import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
-import hu.icellmobilsoft.coffee.se.api.exception.TechnicalException;
 import jakarta.enterprise.context.Dependent;
 import jakarta.inject.Inject;
 import jakarta.persistence.NoResultException;
@@ -34,6 +32,8 @@ import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 import hu.icellmobilsoft.coffee.jpa.service.BaseService;
 import hu.icellmobilsoft.coffee.module.notification.model.Recipient;
 import hu.icellmobilsoft.coffee.module.notification.repository.RecipientRepository;
+import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
+import hu.icellmobilsoft.coffee.se.api.exception.TechnicalException;
 
 /**
  * Service for {@link Recipient} functionality. Represents only DB operations

@@ -19,11 +19,11 @@
  */
 package hu.icellmobilsoft.coffee.jpa.service;
 
-import hu.icellmobilsoft.coffee.se.api.exception.TechnicalException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 
 /**
