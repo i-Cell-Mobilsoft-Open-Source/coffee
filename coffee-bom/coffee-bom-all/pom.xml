@@ -276,7 +276,6 @@
                 <version>${version.io.micrometer}</version>
             </dependency>
 
-
         </dependencies>
     </dependencyManagement>
 </project>
