@@ -1,0 +1,6 @@
+= v2.8.0 → v2.9.0
+
+coff:ee v2.8.0 -> v2.9.0 migrációs leírás, újdonságok, változások leírása
+
+=== coffee-module-notification
+Frissítésre került a commons-email jakarta kompatibilis release, így ez a modul visszakcsolásra került.
