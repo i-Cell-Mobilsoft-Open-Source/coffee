@@ -29,13 +29,13 @@ import jakarta.inject.Inject;
 import org.apache.commons.lang3.StringUtils;
 
 import hu.icellmobilsoft.coffee.dto.common.common.KeyValueBasicType;
-import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.dto.notification.notification.DeviceType;
 import hu.icellmobilsoft.coffee.jpa.annotation.Transactional;
 import hu.icellmobilsoft.coffee.module.notification.model.Push;
 import hu.icellmobilsoft.coffee.module.notification.model.PushDevice;
 import hu.icellmobilsoft.coffee.module.notification.service.PushDeviceService;
 import hu.icellmobilsoft.coffee.module.notification.service.PushService;
+import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
 import hu.icellmobilsoft.coffee.tool.gson.JsonUtil;
 import hu.icellmobilsoft.coffee.tool.utils.enums.EnumUtil;
 

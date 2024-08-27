@@ -24,8 +24,8 @@ import jakarta.inject.Inject;
 
 import hu.icellmobilsoft.coffee.cdi.logger.AppLogger;
 import hu.icellmobilsoft.coffee.cdi.logger.ThisLogger;
-import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.module.notification.model.Email;
+import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
 
 /**
  * Extends the functionality of {@link EmailBase} with database save. Operates with OUTPUT_JOB table.
