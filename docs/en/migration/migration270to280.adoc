@@ -76,6 +76,7 @@ Changes are backwards compatible doesn't need any migration.
 
 * Support of multiple xml catalog file separated with `,`
 * For marshalling, you can give `JaxbTool` multiple classes to add to `JAXBContext`
+* JsonbUtil does not instantiate Jsonb on every call.
 
 ==== Migration
 

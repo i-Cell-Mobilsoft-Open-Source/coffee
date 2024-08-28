@@ -512,9 +512,40 @@ coffee:
     config:
       propertyvisibilitystrategyclass: "en.icellmobilsoft.coffee.rest.provider.FieldOnlyVisibilityStrategy" <1>
       binarydatastrategy: "BASE_64" <2>
+      formatting: true <3>
+      nullValues: false <4>
+      encoding: "UTF-8" <5>
+      strictIJSON: false <6>
+      propertyNamingStrategy: "your.custom.PropertyNamingStrategy" <7>
+      propertyOrderStrategy: "LEXICOGRAPHICAL" <8>
+      dateFormat: "yyyy-MM-dd'T'HH:mm:ss.SSSZ" <9>
+      locale: "en_US" <10>
+      adapters:
+        - "your.custom.JsonbAdapter1"
+        - "your.custom.JsonbAdapter2" <11>
+      serializers:
+        - "your.custom.JsonbSerializer1"
+        - "your.custom.JsonbSerializer2" <12>
+      deserializers:
+        - "your.custom.JsonbDeserializer1"
+        - "your.custom.JsonbDeserializer2" <13>
+      creatorParametersRequired: true <14>
 ----
 
 In the above configuration, 2 elements can be set:
 
 <1> full access to the class implementing the interface PropertyVisibilityStrategy in jakarta.json.bind.config.PropertyVisibilityStrategy.
 <2> This type can take the values of the enum BinaryDataStrategy in jakarta.json.bind.config.BinaryDataStrategy to determine how binary data is handled.
+<3> Determines if the JSON output should be pretty-printed (indented).
+<4> Controls whether null values should be serialized.
+<5> Specifies the character encoding.
+<6> Enables strict I-JSON compliance if set to true.
+<7> Custom property naming strategy class for converting Java field names to JSON keys.
+<8> Determines the order of properties in the serialized JSON output.
+<9> Specifies the date format used in serialization/deserialization, along with the locale.
+<10> Defines the Locale to be used for localization during JSON processing.
+<11> Specifies custom JsonbAdapter classes for additional control over serialization and deserialization.
+<12> Custom JsonbAdapter classes for additional control over JSON processing.
+<12> Custom JsonbSerializer classes for serializing specific types.
+<13> Custom JsonbDeserializer classes for deserializing specific types.
+<14> If set to true, requires parameters for object creation to be present in JSON.

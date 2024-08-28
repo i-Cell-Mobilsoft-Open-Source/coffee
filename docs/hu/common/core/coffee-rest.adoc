@@ -514,9 +514,39 @@ coffee:
     config:
       propertyvisibilitystrategyclass: "hu.icellmobilsoft.coffee.rest.provider.FieldOnlyVisibilityStrategy" <1>
       binarydatastrategy: "BASE_64" <2>
+      formatting: true <3>
+      nullValues: false <4>
+      encoding: "UTF-8" <5>
+      strictIJSON: false <6>
+      propertyNamingStrategy: "your.custom.PropertyNamingStrategy" <7>
+      propertyOrderStrategy: "LEXICOGRAPHICAL" <8>
+      dateFormat: "yyyy-MM-dd'T'HH:mm:ss.SSSZ" <9>
+      locale: "en_US" <10>
+      adapters:
+        - "your.custom.JsonbAdapter1"
+        - "your.custom.JsonbAdapter2" <11>
+      serializers:
+        - "your.custom.JsonbSerializer1"
+        - "your.custom.JsonbSerializer2" <12>
+      deserializers:
+        - "your.custom.JsonbDeserializer1"
+        - "your.custom.JsonbDeserializer2" <13>
+      creatorParametersRequired: true <14>
 ----
 
 A fenti configurációban 2 elem állítható be:
 
 <1> jakarta.json.bind.config.PropertyVisibilityStrategy interface-t megvalósító osztály teljes elérése.
 <2> Ez a típus a jakarta.json.bind.config.BinaryDataStrategy enum értékeit veheti fel, hogy miként kezelődjön a bináris adat.
+<3> A JSON kimenet formázásának engedélyezése.
+<4> Null értékek szerepeltetése a JSON kimenetben.
+<5> Az adatok kódolásához használt karakterkészlet.
+<6> Az I-JSON szabvány szigorú betartása.
+<7> A tulajdonságnevek elnevezési stratégiája.
+<8> A tulajdonságok sorrendezési stratégiája.
+<9> A dátumok formátuma.
+<10> A JSON feldolgozásához használt nyelvi környezet.
+<11> Egyedi JsonbAdapter osztályok, melyek a JSON feldolgozást módosítják.
+<12> Egyedi JsonbSerializer osztályok, melyek a JSON objektumok szerializásáért felelősek.
+<13> Egyedi JsonbDeserializer osztályok, melyek a JSON objektumok deszerializálásáért felelősek.
+<14> Annak meghatározása, hogy kötelezőek-e a paraméterek az objektumkészítő metódusokban.
