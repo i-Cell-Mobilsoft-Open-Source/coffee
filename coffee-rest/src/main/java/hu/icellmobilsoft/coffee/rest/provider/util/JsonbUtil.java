@@ -73,7 +73,6 @@ public class JsonbUtil {
     private static final String ADAPTERS_POSTFIX = "adapters";
     private static final String SERIALIZERS_POSTFIX = "serializers";
     private static final String DESERIALIZERS_POSTFIX = "deserializers";
-    private static final String CREATOR_PARAMETERS_REQUIRED_POSTFIX = "creatorParametersRequired";
 
     /**
      * Prefix for all configs
@@ -81,9 +80,6 @@ public class JsonbUtil {
     public static final String JSONB_CONFIG_PREFIX = "coffee.jsonb.config";
 
     private static final Jsonb JSONB;
-
-//    @Inject
-//    private static Instance<JsonbAdapter> jsonbAdapters;
 
     static {
         Config config = ConfigUtil.getInstance().defaultConfig();
