@@ -38,7 +38,7 @@ jobs:
     name: Maven release
 
     # Permission check https://github.community/t/who-has-permission-to-workflow-dispatch/133981
-    if: contains('["rombow","czenczl"]', github.actor)
+    if: contains('["rombow","czenczl","petrenyi-mark","speter555","bucherarnold"]', github.actor)
 
     runs-on: ubuntu-latest
 
