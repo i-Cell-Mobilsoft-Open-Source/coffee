@@ -12,7 +12,7 @@
 
 	<properties>
 		<version.no.entur.schema2proto-maven-plugin>1.83</version.no.entur.schema2proto-maven-plugin>
-		<version.com.google.protobuf.protobuf-java>3.21.7</version.com.google.protobuf.protobuf-java>
+		<version.com.google.protobuf.protobuf-java>3.25.5</version.com.google.protobuf.protobuf-java>
 		<version.com.google.api.grpc.proto-google-common-protos>2.9.0</version.com.google.api.grpc.proto-google-common-protos>
 	</properties>
 
