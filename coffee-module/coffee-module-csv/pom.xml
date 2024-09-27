@@ -48,6 +48,10 @@
 			<artifactId>weld-junit5</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>io.qameta.allure</groupId>
+			<artifactId>allure-junit5</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>io.smallrye.config</groupId>
 			<artifactId>smallrye-config</artifactId>
 			<scope>test</scope>

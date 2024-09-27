@@ -21,7 +21,7 @@
 			<groupId>hu.icellmobilsoft.coffee</groupId>
 			<artifactId>coffee-rest</artifactId>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>io.opentelemetry</groupId>
 			<artifactId>opentelemetry-api</artifactId>
@@ -40,6 +40,10 @@
 		<dependency>
 			<groupId>org.jboss.weld</groupId>
 			<artifactId>weld-junit5</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>io.qameta.allure</groupId>
+			<artifactId>allure-junit5</artifactId>
 		</dependency>
 	</dependencies>
 </project>

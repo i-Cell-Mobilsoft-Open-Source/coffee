@@ -41,5 +41,9 @@
 			<groupId>io.smallrye.config</groupId>
 			<artifactId>smallrye-config</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>io.qameta.allure</groupId>
+			<artifactId>allure-junit5</artifactId>
+		</dependency>
 	</dependencies>
 </project>

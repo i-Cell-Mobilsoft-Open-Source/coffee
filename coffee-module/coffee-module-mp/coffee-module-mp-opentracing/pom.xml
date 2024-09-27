@@ -30,7 +30,7 @@
 			<groupId>io.grpc</groupId>
 			<artifactId>grpc-context</artifactId>
 		</dependency>
-		
+
 		<!-- TEST -->
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
@@ -39,6 +39,10 @@
 		<dependency>
 			<groupId>org.jboss.weld</groupId>
 			<artifactId>weld-junit5</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>io.qameta.allure</groupId>
+			<artifactId>allure-junit5</artifactId>
 		</dependency>
 	</dependencies>
 </project>

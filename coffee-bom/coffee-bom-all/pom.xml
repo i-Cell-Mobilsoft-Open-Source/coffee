@@ -31,6 +31,7 @@
 
         <version.io.etcd.jetcd-core>0.7.5</version.io.etcd.jetcd-core>
         <version.io.grpc.version>1.51.0</version.io.grpc.version>
+        <version.io.qameta.allure>2.25.0</version.io.qameta.allure>
 
         <version.io.micrometer>1.9.13</version.io.micrometer>
     </properties>
@@ -76,6 +77,13 @@
                 <groupId>io.grpc</groupId>
                 <artifactId>grpc-bom</artifactId>
                 <version>${version.io.grpc.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>io.qameta.allure</groupId>
+                <artifactId>allure-bom</artifactId>
+                <version>${version.io.qameta.allure}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -274,6 +282,14 @@
                 <groupId>io.micrometer</groupId>
                 <artifactId>micrometer-core</artifactId>
                 <version>${version.io.micrometer}</version>
+            </dependency>
+
+            <!-- OSS tool for test result reporting -->
+            <dependency>
+                <groupId>io.qameta.allure</groupId>
+                <artifactId>allure-junit5</artifactId>
+                <version>${version.io.qameta.allure}</version>
+                <scope>test</scope>
             </dependency>
 
         </dependencies>

@@ -5,7 +5,7 @@ image:https://img.shields.io/maven-central/v/hu.icellmobilsoft.coffee/coffee?log
 image:https://img.shields.io/github/license/i-Cell-Mobilsoft-Open-Source/coffee?style=plastic&logo=apache[License of Parent pom project]
 image:https://img.shields.io/badge/Use JakartaEE-project-brightgreen.svg?style=plastic&logo=jakartaee[Use JakartaEE project]
 
-<<readme-hu,Hungarian version>> 
+<<readme-hu,Hungarian version>>
 
 :sectnums!:
 [[readme-en]]
@@ -135,6 +135,15 @@ a projekten elég behúzni a BOM-ot mely minden almodult lekezel:
     </dependency>
     ...egyéb coff:ee modulok...
 </dependencies>
+----
+
+generate allure reports:
+[source, bash]
+----
+mvn verify
+mkdir allure-results
+find -wholename '**/target/allure-results/*' -exec cp {} allure-results/ \;
+allure generate --single-file -c
 ----
 
 Bővebb leírás a http://i-cell-mobilsoft-open-source.github.io/coffee[coff:ee dokumentáció] oldalon található.

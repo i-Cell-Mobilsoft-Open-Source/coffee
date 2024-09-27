@@ -61,6 +61,10 @@
 			<groupId>org.jboss.weld</groupId>
 			<artifactId>weld-junit5</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>io.qameta.allure</groupId>
+			<artifactId>allure-junit5</artifactId>
+		</dependency>
 
 	</dependencies>
 </project>

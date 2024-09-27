@@ -78,6 +78,10 @@
 					<version>3.1.2</version>
 					<configuration>
 						<excludedGroups>weld,it,integration</excludedGroups>
+						<systemPropertyVariables>
+							<!-- put allure results in target -->
+							<allure.results.directory>${project.build.directory}/allure-results</allure.results.directory>
+						</systemPropertyVariables>
 					</configuration>
 				</plugin>
 				<plugin>
@@ -100,6 +104,10 @@
 							<include>**/*Tests.java</include>
 							<include>**/*TestCase.java</include>
 						</includes>
+						<systemPropertyVariables>
+							<!-- put allure results in target -->
+							<allure.results.directory>${project.build.directory}/allure-results</allure.results.directory>
+						</systemPropertyVariables>
 						<groups>weld,it,integration</groups>
 					</configuration>
 				</plugin>

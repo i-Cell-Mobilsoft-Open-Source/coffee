@@ -4,5 +4,7 @@
 .project
 .classpath
 target/
-release/ant\.properties 
+release/ant\.properties
 .vscode/
+*allure*
+
