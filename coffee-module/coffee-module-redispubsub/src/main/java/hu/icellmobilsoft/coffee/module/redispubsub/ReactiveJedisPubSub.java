@@ -29,7 +29,7 @@ import hu.icellmobilsoft.coffee.module.redispubsub.bundle.PubSubMessage;
 import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
 import hu.icellmobilsoft.coffee.se.logging.mdc.MDC;
-import hu.icellmobilsoft.coffee.tool.gson.JsonUtil;
+import hu.icellmobilsoft.coffee.tool.utils.json.JsonUtil;
 import hu.icellmobilsoft.coffee.tool.utils.string.RandomUtil;
 import redis.clients.jedis.JedisPubSub;
 
@@ -78,7 +78,7 @@ public class ReactiveJedisPubSub extends JedisPubSub implements AutoCloseable {
 
     private PubSubMessage getPubSubMessage(String message) {
         try {
-            return JsonUtil.toObjectEx(message, PubSubMessage.class);
+            return JsonUtil.toObject(message, PubSubMessage.class);
         } catch (BaseException e) {
             LOG.warn("Could not parse message as PubSubMessage, assuming message is payload! [{0}]", e.getLocalizedMessage());
             return PubSubMessage.of(message);

@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package hu.icellmobilsoft.coffee.tool.gson;
+package hu.icellmobilsoft.coffee.tool.utils.json;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -51,6 +51,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
+import hu.icellmobilsoft.coffee.se.api.exception.JsonConversionException;
 
 
 /**
@@ -69,7 +70,7 @@ class JsonUtilTest {
             "\"xmlGregorianCalendar\":\"2019-02-11T15:23:34.051Z\"," + //
             "\"bytes\":\"" + TEST_STRING_BASE64 + "\"," + //
             "\"string\":\"test1\"," + //
-            "\"clazz\":\"hu.icellmobilsoft.coffee.tool.gson.JsonUtilTest\"," + //
+            "\"clazz\":\"hu.icellmobilsoft.coffee.utils.json.JsonUtilTest\"," + //
             "\"offsetDateTime\":\"2019-02-11T15:23:34.051Z\"," + //
             "\"offsetTime\":\"15:23:34.051Z\"," + //
             "\"localDate\":\"2019-02-11\"," + //
@@ -115,7 +116,7 @@ class JsonUtilTest {
 
             @Test
             @DisplayName("Testing toObject() with invalid input JSON")
-            void invalidJSON() {
+            void invalidJSON() throws JsonConversionException {
                 // given
 
                 // when
@@ -140,7 +141,7 @@ class JsonUtilTest {
 
             @Test
             @DisplayName("Testing toObject() with invalid JSON object YearMonth")
-            void invalidJsonObjectYearMonth() {
+            void invalidJsonObjectYearMonth() throws JsonConversionException {
                 //given
 
                 //when
@@ -152,7 +153,7 @@ class JsonUtilTest {
 
             @Test
             @DisplayName("Testing toObject() with invalid JSON array YearMonth")
-            void invalidJsonArrayYearMonth() {
+            void invalidJsonArrayYearMonth() throws JsonConversionException {
                 //given
 
                 //when

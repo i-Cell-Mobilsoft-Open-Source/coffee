@@ -47,7 +47,7 @@ import hu.icellmobilsoft.coffee.rest.validation.xml.exception.BaseProcessingExce
 import hu.icellmobilsoft.coffee.rest.validation.xml.exception.XsdProcessingException;
 import hu.icellmobilsoft.coffee.rest.validation.xml.reader.IRequestVersionReader;
 import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
-import hu.icellmobilsoft.coffee.tool.gson.JsonUtil;
+import hu.icellmobilsoft.coffee.tool.utils.json.JsonUtil;
 
 /**
  * Extending the JSON-based implementation of XML/XSD.<br>
@@ -169,7 +169,7 @@ public abstract class JsonMessageBodyReaderBase<T> implements MessageBodyReader<
      */
     protected T deserializeJson(Class<T> type, Charset charSet, InputStream entityStream) throws XsdProcessingException {
         try {
-            return JsonUtil.toObjectGson(new InputStreamReader(entityStream, charSet), type);
+            return JsonUtil.toObject(new InputStreamReader(entityStream, charSet), type);
         } catch (Exception e) {
             throw new XsdProcessingException(CoffeeFaultType.INVALID_INPUT, e.getMessage(), e);
         }

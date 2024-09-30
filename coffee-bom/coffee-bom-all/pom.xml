@@ -33,6 +33,7 @@
         <version.io.grpc.version>1.51.0</version.io.grpc.version>
 
         <version.io.micrometer>1.9.13</version.io.micrometer>
+        <version.org.eclipse.yasson>3.0.3</version.org.eclipse.yasson>
     </properties>
 
 
@@ -274,6 +275,14 @@
                 <groupId>io.micrometer</groupId>
                 <artifactId>micrometer-core</artifactId>
                 <version>${version.io.micrometer}</version>
+            </dependency>
+
+            <!-- JSONB implementation -->
+            <dependency>
+                <groupId>org.eclipse</groupId>
+                <artifactId>yasson</artifactId>
+                <version>${version.org.eclipse.yasson}</version>
+                <scope>provided</scope>
             </dependency>
 
         </dependencies>

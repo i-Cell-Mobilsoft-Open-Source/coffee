@@ -51,7 +51,7 @@ import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
-import hu.icellmobilsoft.coffee.tool.gson.JsonUtil;
+import hu.icellmobilsoft.coffee.tool.utils.json.JsonUtil;
 
 /**
  * BaseApacheHttpClient class.
@@ -573,7 +573,7 @@ public class BaseApacheHttpClient {
             entityString = (String) object;
         } else {
             // Convert object to JSON string
-            entityString = JsonUtil.toJson(object);
+            entityString = JsonUtil.toJsonOpt(object).orElse("");
         }
         return entityString;
     }

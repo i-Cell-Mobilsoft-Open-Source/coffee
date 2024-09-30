@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -36,7 +36,7 @@ import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 import hu.icellmobilsoft.coffee.module.mp.restclient.exception.FaultTypeParser;
 import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
-import hu.icellmobilsoft.coffee.tool.gson.JsonUtil;
+import hu.icellmobilsoft.coffee.tool.utils.json.JsonUtil;
 import hu.icellmobilsoft.coffee.tool.utils.marshalling.MarshallingUtil;
 
 /**
@@ -79,7 +79,7 @@ public class DefaultBaseExceptionResponseExceptionMapper implements ResponseExce
 
     /**
      * Tries to unmarshall the response entity to a given class
-     * 
+     *
      * @param response
      *            the HTTP response
      * @param dtoClass
@@ -98,12 +98,12 @@ public class DefaultBaseExceptionResponseExceptionMapper implements ResponseExce
             return null;
         }
         if (StringUtils.equalsAnyIgnoreCase(mediaType.getSubtype(), "json")) {
-            return JsonUtil.toObject(entity, dtoClass);
+            return JsonUtil.toObjectOpt(entity, dtoClass).orElse(null);
         } else if (StringUtils.equalsAnyIgnoreCase(mediaType.getSubtype(), "xml")) {
             return MarshallingUtil.unmarshallUncheckedXml(entity, dtoClass);
         } else if (mediaType.equals(MediaType.APPLICATION_OCTET_STREAM_TYPE)) {
             if (StringUtils.startsWith(entity, "{")) {
-                return JsonUtil.toObject(entity, dtoClass);
+                return JsonUtil.toObjectOpt(entity, dtoClass).orElse(null);
             } else if (StringUtils.startsWith(entity, "<")) {
                 return MarshallingUtil.unmarshallUncheckedXml(entity, dtoClass);
             } else {

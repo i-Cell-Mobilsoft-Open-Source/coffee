@@ -17,38 +17,28 @@
  * limitations under the License.
  * #L%
  */
-package hu.icellmobilsoft.coffee.rest.provider;
+package hu.icellmobilsoft.coffee.tool.jsonb.adapter;
 
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.enterprise.inject.Produces;
-import jakarta.json.bind.Jsonb;
+import java.time.YearMonth;
 
-import hu.icellmobilsoft.coffee.rest.provider.util.JsonbUtil;
+import jakarta.json.bind.adapter.JsonbAdapter;
 
 /**
- * Jsonb producer class
- * 
- * @author speter555
- * @since 2.6.0
+ * {@link YearMonth} jsonb adapter
+ *
+ * @author martin.nagy
+ * @author bucherarnold
+ * @since 2.9.0
  */
-@ApplicationScoped
-public class JsonbProducer {
+public class YearMonthJsonbAdapter implements JsonbAdapter<YearMonth, String> {
 
-    /**
-     * Default constructor
-     */
-    public JsonbProducer() {
-        super();
+    @Override
+    public String adaptToJson(YearMonth obj) {
+        return obj != null ? obj.toString() : null;
     }
 
-    /**
-     * Jsonb producer
-     * 
-     * @return Jsonb instance
-     */
-    @Produces
-    @ApplicationScoped
-    public Jsonb getJsonb() {
-        return JsonbUtil.getContext();
+    @Override
+    public YearMonth adaptFromJson(String obj) {
+        return obj != null ? YearMonth.parse(obj) : null;
     }
 }
