@@ -41,11 +41,13 @@ public class FieldOnlyVisibilityStrategy implements PropertyVisibilityStrategy {
         super();
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean isVisible(Field field) {
         return true;
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean isVisible(Method method) {
         return false;

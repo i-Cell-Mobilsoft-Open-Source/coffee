@@ -44,6 +44,7 @@ public class JsonbContextResolverProvider implements ContextResolver<Jsonb> {
         super();
     }
 
+    /** {@inheritDoc} */
     @Override
     public Jsonb getContext(Class<?> type) {
         return JsonUtil.getJsonbContext();

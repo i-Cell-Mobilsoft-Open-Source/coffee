@@ -41,11 +41,13 @@ public class XMLGregorianCalendarJsonbAdapter implements JsonbAdapter<XMLGregori
 
     private static Logger LOGGER = Logger.getLogger(XMLGregorianCalendarJsonbAdapter.class);
 
+    /** {@inheritDoc} */
     @Override
     public String adaptToJson(XMLGregorianCalendar calendar) {
         return calendar.toXMLFormat();
     }
 
+    /** {@inheritDoc} */
     @Override
     public XMLGregorianCalendar adaptFromJson(String calendar) {
         try {

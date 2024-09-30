@@ -32,11 +32,13 @@ import jakarta.json.bind.adapter.JsonbAdapter;
  */
 public class ClassTypeJsonbAdapter implements JsonbAdapter<Class<?>, String> {
 
+    /** {@inheritDoc} */
     @Override
     public String adaptToJson(Class<?> obj) {
         return obj.getName();
     }
 
+    /** {@inheritDoc} */
     @Override
     public Class<?> adaptFromJson(String obj) {
         try {

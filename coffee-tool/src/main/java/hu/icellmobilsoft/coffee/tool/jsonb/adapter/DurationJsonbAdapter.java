@@ -33,11 +33,13 @@ import hu.icellmobilsoft.coffee.tool.utils.date.DateXmlUtil;
  */
 public class DurationJsonbAdapter implements JsonbAdapter<Duration, String> {
 
+    /** {@inheritDoc} */
     @Override
     public String adaptToJson(Duration duration) {
         return String.valueOf(duration);
     }
 
+    /** {@inheritDoc} */
     @Override
     public Duration adaptFromJson(String duration) {
         return DateXmlUtil.getDatatypeFactory().newDuration(duration);

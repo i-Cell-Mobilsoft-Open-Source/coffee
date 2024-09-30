@@ -37,11 +37,13 @@ public class DateJsonbAdapter implements JsonbAdapter<Date, Long> {
 
     private static Logger LOGGER = Logger.getLogger(DateJsonbAdapter.class);
 
+    /** {@inheritDoc} */
     @Override
     public Long adaptToJson(Date date) {
         return date.getTime();
     }
 
+    /** {@inheritDoc} */
     @Override
     public Date adaptFromJson(Long date) {
         try {
