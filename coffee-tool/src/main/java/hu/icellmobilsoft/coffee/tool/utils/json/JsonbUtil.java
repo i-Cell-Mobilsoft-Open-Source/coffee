@@ -32,6 +32,10 @@ import org.eclipse.microprofile.config.Config;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
 import hu.icellmobilsoft.coffee.tool.jsonb.FieldOnlyVisibilityStrategy;
 import hu.icellmobilsoft.coffee.tool.jsonb.adapter.ByteArrayJsonbAdapter;
+import hu.icellmobilsoft.coffee.tool.jsonb.adapter.ClassTypeJsonbAdapter;
+import hu.icellmobilsoft.coffee.tool.jsonb.adapter.DateJsonbAdapter;
+import hu.icellmobilsoft.coffee.tool.jsonb.adapter.DurationJsonbAdapter;
+import hu.icellmobilsoft.coffee.tool.jsonb.adapter.XMLGregorianCalendarJsonbAdapter;
 import hu.icellmobilsoft.coffee.tool.jsonb.adapter.YearMonthJsonbAdapter;
 import hu.icellmobilsoft.coffee.tool.utils.config.ConfigUtil;
 
@@ -104,11 +108,18 @@ public class JsonbUtil {
      */
     public static Jsonb getContext() {
         Config config = ConfigUtil.getInstance().defaultConfig();
-        JsonbConfig jsonbConfig = new JsonbConfig().withPropertyVisibilityStrategy(getPropertyVisibilityStrategyClass(config))
+        JsonbConfig jsonbConfig = new JsonbConfig()//
+                .withPropertyVisibilityStrategy(getPropertyVisibilityStrategyClass(config))
                 .withBinaryDataStrategy(getBinaryDataStrategy(config))
                 .withNullValues(getSerializeNullValues(config))
                 .withFormatting(getFormatting(config))
-                .withAdapters(new YearMonthJsonbAdapter(), new ByteArrayJsonbAdapter());
+                .withAdapters(//
+                        new YearMonthJsonbAdapter(),
+                        new ByteArrayJsonbAdapter(),
+                        new ClassTypeJsonbAdapter(),
+                        new DateJsonbAdapter(),
+                        new DurationJsonbAdapter(),
+                        new XMLGregorianCalendarJsonbAdapter());
         jsonbConfig.setProperty(JSONB_PROPERTY_NAME_FAIL_ON_UNKNOWN_PROPERTIES, getFailOnUnknownProperties(config));
         return JsonbBuilder.newBuilder().withConfig(jsonbConfig).build();
     }

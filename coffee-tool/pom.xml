@@ -28,7 +28,10 @@
 				<configuration>
 					<!-- Due to the combination of Java 17 and Gson 2.8.9, XMLGregorianCalendar parsing might require special handling. See also: //https://github.com/highsource/jaxb2-basics/issues/130. -->
 					<argLine>--add-exports=java.xml/com.sun.org.apache.xerces.internal.jaxp.datatype=ALL-UNNAMED
-						--add-opens=java.xml/com.sun.org.apache.xerces.internal.jaxp.datatype=ALL-UNNAMED</argLine>
+						--add-opens=java.xml/com.sun.org.apache.xerces.internal.jaxp.datatype=ALL-UNNAMED
+						--add-opens java.base/java.lang=ALL-UNNAMED
+						--add-opens java.base/java.util=ALL-UNNAMED
+					</argLine>
 				</configuration>
 			</plugin>
 		</plugins>

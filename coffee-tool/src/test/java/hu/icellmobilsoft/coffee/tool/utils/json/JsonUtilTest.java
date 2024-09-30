@@ -70,7 +70,7 @@ class JsonUtilTest {
             "\"xmlGregorianCalendar\":\"2019-02-11T15:23:34.051Z\"," + //
             "\"bytes\":\"" + TEST_STRING_BASE64 + "\"," + //
             "\"string\":\"test1\"," + //
-            "\"clazz\":\"hu.icellmobilsoft.coffee.utils.json.JsonUtilTest\"," + //
+            "\"clazz\":\"hu.icellmobilsoft.coffee.tool.utils.json.JsonUtilTest\"," + //
             "\"offsetDateTime\":\"2019-02-11T15:23:34.051Z\"," + //
             "\"offsetTime\":\"15:23:34.051Z\"," + //
             "\"localDate\":\"2019-02-11\"," + //
@@ -298,7 +298,7 @@ class JsonUtilTest {
             }
 
             @Test
-            @DisplayName("Testing toJson() with unparsable Object")
+            @DisplayName("Testing toJson() with unparsable Object should not throw exception")
             void unparsable() throws Exception {
                 // given
                 TestObject source = givenWeHaveTestObject();
@@ -306,10 +306,25 @@ class JsonUtilTest {
                 source.setXmlGregorianCalendar(unparseableXMLGregorianCalendar);
 
                 // when
-                String actual = JsonUtil.toJson(source);
+                String actual = JsonUtil.toJsonOpt(source).orElse(null);
 
                 // then
                 assertNull(actual);
+            }
+
+            @Test
+            @DisplayName("Testing toJson() with unparsable Object should throw exception")
+            void unparsableWithException() throws Exception {
+                // given
+                TestObject source = givenWeHaveTestObject();
+                XMLGregorianCalendar unparseableXMLGregorianCalendar = DatatypeFactory.newInstance().newXMLGregorianCalendar();
+                source.setXmlGregorianCalendar(unparseableXMLGregorianCalendar);
+
+                // when
+                Executable operation = () -> JsonUtil.toJson(source);
+
+                // then
+                assertThrows(JsonConversionException.class, operation);
             }
 
         }
