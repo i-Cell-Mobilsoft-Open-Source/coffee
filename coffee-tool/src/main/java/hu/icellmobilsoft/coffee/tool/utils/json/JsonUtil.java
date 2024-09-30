@@ -73,13 +73,37 @@ public class JsonUtil {
     private static final String CONVERTING_TO_OBJECT_SUCCESSFUL_0 = "Converting to Object successful: [{0}]";
     private static final String CONVERTING_TO_JSON_SUCCESSFUL_0 = "Converting to JSON successful: [{0}]";
 
-    private static final Gson gson = initGson();
-    private static final Jsonb jsonb = JsonbUtil.getContext();
+    private static Gson gson;
+    private static Jsonb jsonb;
 
     /**
      * Private constructor
      */
     private JsonUtil() {
+    }
+
+    /**
+     * Get jsonb context with lazy initialization
+     *
+     * @return {@link Jsonb}
+     */
+    public static Jsonb getJsonbContext() {
+        if (jsonb == null) {
+            jsonb = JsonbUtil.getContext();
+        }
+        return jsonb;
+    }
+
+    /**
+     * Get gson context with lazy initialization
+     *
+     * @return {@link Gson}
+     */
+    public static Gson getGsonConfig() {
+        if (gson == null) {
+            gson = initGson();
+        }
+        return gson;
     }
 
     /**
@@ -93,7 +117,7 @@ public class JsonUtil {
      */
     public static String toJson(Object dto) throws JsonConversionException {
         try {
-            String json = jsonb.toJson(dto);
+            String json = getJsonbContext().toJson(dto);
             LOGGER.debug(CONVERTING_TO_JSON_SUCCESSFUL_0, StringUtils.abbreviate(json, 1000));
             return json;
         } catch (JsonbException e) {
@@ -110,7 +134,7 @@ public class JsonUtil {
      */
     public static Optional<String> toJsonOpt(Object dto) {
         try {
-            String json = jsonb.toJson(dto);
+            String json = getJsonbContext().toJson(dto);
             LOGGER.debug(CONVERTING_TO_JSON_SUCCESSFUL_0, StringUtils.abbreviate(json, 1000));
             return Optional.ofNullable(json);
         } catch (JsonbException e) {
@@ -134,7 +158,7 @@ public class JsonUtil {
      */
     public static <T> T toObject(String json, Type typeOfT) throws JsonConversionException {
         try {
-            T dto = jsonb.fromJson(json, typeOfT);
+            T dto = getJsonbContext().fromJson(json, typeOfT);
             LOGGER.debug(CONVERTING_TO_OBJECT_SUCCESSFUL_0, dto);
             return dto;
         } catch (Exception e) {
@@ -157,7 +181,7 @@ public class JsonUtil {
      */
     public static <T> T toObject(Reader reader, Type typeOfT) throws JsonConversionException {
         try {
-            T dto = jsonb.fromJson(reader, typeOfT);
+            T dto = getJsonbContext().fromJson(reader, typeOfT);
             LOGGER.debug(CONVERTING_TO_OBJECT_SUCCESSFUL_0, dto);
             return dto;
         } catch (Exception e) {
@@ -178,7 +202,7 @@ public class JsonUtil {
      */
     public static <T> Optional<T> toObjectOpt(String json, Class<T> classType) {
         try {
-            T dto = jsonb.fromJson(json, classType);
+            T dto = getJsonbContext().fromJson(json, classType);
             LOGGER.debug(CONVERTING_TO_OBJECT_SUCCESSFUL_0, dto);
             return Optional.ofNullable(dto);
         } catch (JsonbException e) {
@@ -228,12 +252,12 @@ public class JsonUtil {
     @Deprecated(since = "2.9.0", forRemoval = true)
     public static <T> T toObjectUncheckedGson(String json, Type typeOfT) {
         try {
-            return gson.fromJson(json, typeOfT);
+            return getGsonConfig().fromJson(json, typeOfT);
         } catch (JsonSyntaxException e) {
             LOGGER.warn(ERROR_IN_PARSE_JSON_0_TRY_LENIENT, e.getLocalizedMessage());
             JsonReader reader = new JsonReader(new StringReader(json));
             reader.setLenient(true);
-            return gson.fromJson(reader, typeOfT);
+            return getGsonConfig().fromJson(reader, typeOfT);
         }
     }
 
@@ -251,35 +275,14 @@ public class JsonUtil {
     @Deprecated(since = "2.9.0", forRemoval = true)
     public static <T> T toObjectUncheckedGson(Reader reader, Type typeOfT) {
         try {
-            return gson.fromJson(reader, typeOfT);
+            return getGsonConfig().fromJson(reader, typeOfT);
         } catch (JsonSyntaxException e) {
             LOGGER.warn(ERROR_IN_PARSE_JSON_0_TRY_LENIENT, e.getLocalizedMessage());
             JsonReader jsonreader = new JsonReader(reader);
             jsonreader.setLenient(true);
-            return gson.fromJson(jsonreader, typeOfT);
+            return getGsonConfig().fromJson(jsonreader, typeOfT);
         }
     }
-
-//    /**
-//     * Converting JSON string to DTO object without throwing exception
-//     *
-//     * @param <T>
-//     *            type of returned object
-//     * @param json
-//     *            JSON String
-//     * @param classType
-//     *            class of returned object
-//     * @return object
-//     */
-//    @Deprecated(since = "2.9.0", forRemoval = true)
-//    public static <T> T toObject(String json, Class<T> classType) {
-//        try {
-//            return toObjectEx(json, classType);
-//        } catch (BaseException e) {
-//            LOGGER.error(e.getLocalizedMessage(), e);
-//            return null;
-//        }
-//    }
 
     /**
      * Converting JSON string to DTO object without throwing exception
@@ -361,7 +364,7 @@ public class JsonUtil {
      */
     @Deprecated(since = "2.9.0", forRemoval = true)
     public static String toJsonGson(Object dto) {
-        return gson.toJson(dto);
+        return getGsonConfig().toJson(dto);
     }
 
     /**
@@ -378,12 +381,12 @@ public class JsonUtil {
     @Deprecated(since = "2.9.0", forRemoval = true)
     public static <T> T toObjectGson(String json, Class<T> classType) {
         try {
-            return gson.fromJson(json, classType);
+            return getGsonConfig().fromJson(json, classType);
         } catch (JsonSyntaxException e) {
             LOGGER.warn(ERROR_IN_PARSE_JSON_0_TRY_LENIENT, e.getLocalizedMessage());
             JsonReader reader = new JsonReader(new StringReader(json));
             reader.setLenient(true);
-            return gson.fromJson(reader, classType);
+            return getGsonConfig().fromJson(reader, classType);
         }
     }
 
@@ -401,12 +404,12 @@ public class JsonUtil {
     @Deprecated(since = "2.9.0", forRemoval = true)
     public static <T> T toObjectGson(Reader reader, Class<T> classType) {
         try {
-            return gson.fromJson(reader, classType);
+            return getGsonConfig().fromJson(reader, classType);
         } catch (JsonSyntaxException e) {
             LOGGER.warn(ERROR_IN_PARSE_JSON_0_TRY_LENIENT, e.getLocalizedMessage());
             JsonReader jsonreader = new JsonReader(reader);
             jsonreader.setLenient(true);
-            return gson.fromJson(jsonreader, classType);
+            return getGsonConfig().fromJson(jsonreader, classType);
         }
     }
 

@@ -23,7 +23,7 @@ import jakarta.json.bind.Jsonb;
 import jakarta.ws.rs.ext.ContextResolver;
 import jakarta.ws.rs.ext.Provider;
 
-import hu.icellmobilsoft.coffee.tool.utils.json.JsonbUtil;
+import hu.icellmobilsoft.coffee.tool.utils.json.JsonUtil;
 
 /**
  * Custom default JSON-B JAXRS provider. Used in {@code org.jboss.resteasy.plugins.providers.jsonb.AbstractJsonBindingProvider}
@@ -46,6 +46,6 @@ public class JsonbContextResolverProvider implements ContextResolver<Jsonb> {
 
     @Override
     public Jsonb getContext(Class<?> type) {
-        return JsonbUtil.getContext();
+        return JsonUtil.getJsonbContext();
     }
 }

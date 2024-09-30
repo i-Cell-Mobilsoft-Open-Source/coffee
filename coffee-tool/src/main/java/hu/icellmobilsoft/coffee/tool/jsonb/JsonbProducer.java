@@ -23,7 +23,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.Produces;
 import jakarta.json.bind.Jsonb;
 
-import hu.icellmobilsoft.coffee.tool.utils.json.JsonbUtil;
+import hu.icellmobilsoft.coffee.tool.utils.json.JsonUtil;
 
 /**
  * Jsonb producer class
@@ -49,6 +49,6 @@ public class JsonbProducer {
     @Produces
     @ApplicationScoped
     public Jsonb getJsonb() {
-        return JsonbUtil.getContext();
+        return JsonUtil.getJsonbContext();
     }
 }
