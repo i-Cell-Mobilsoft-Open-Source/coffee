@@ -149,7 +149,7 @@ public class JsonbUtil {
     }
 
     private static boolean getFailOnUnknownProperties(Config config) {
-        return config.getOptionalValue(FAIL_ON_UNKNOWN_PROPERTIES, Boolean.class).orElse(false);
+        return config.getOptionalValue(FAIL_ON_UNKNOWN_PROPERTIES, Boolean.class).orElse(true);
     }
 
 }

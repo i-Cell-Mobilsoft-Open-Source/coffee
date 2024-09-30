@@ -56,8 +56,8 @@ import hu.icellmobilsoft.coffee.se.api.exception.JsonConversionException;
 
 /**
  * @author mark.petrenyi
+ * @author bucherarnold
  */
-
 @ExtendWith(MockitoExtension.class)
 @DisplayName("Testing JsonUtil")
 class JsonUtilTest {
@@ -116,11 +116,11 @@ class JsonUtilTest {
 
             @Test
             @DisplayName("Testing toObject() with invalid input JSON")
-            void invalidJSON() throws JsonConversionException {
+            void invalidJSON() {
                 // given
 
                 // when
-                TestObject actual = JsonUtil.toObject(INVALID_JSON, TestObject.class);
+                TestObject actual = JsonUtil.toObjectOpt(INVALID_JSON, TestObject.class).orElse(null);
 
                 // then
                 assertNull(actual);
@@ -141,11 +141,11 @@ class JsonUtilTest {
 
             @Test
             @DisplayName("Testing toObject() with invalid JSON object YearMonth")
-            void invalidJsonObjectYearMonth() throws JsonConversionException {
+            void invalidJsonObjectYearMonth() {
                 //given
 
                 //when
-                TestObject actual = JsonUtil.toObject(INVALID_JSON_OBJECT_YEAR_MONTH, TestObject.class);
+                TestObject actual = JsonUtil.toObjectOpt(INVALID_JSON_OBJECT_YEAR_MONTH, TestObject.class).orElse(null);
 
                 //then
                 assertNull(actual);
@@ -153,13 +153,39 @@ class JsonUtilTest {
 
             @Test
             @DisplayName("Testing toObject() with invalid JSON array YearMonth")
-            void invalidJsonArrayYearMonth() throws JsonConversionException {
+            void invalidJsonArrayYearMonth() {
                 //given
 
                 //when
-                TestObject actual = JsonUtil.toObject(INVALID_JSON_ARRAY_YEAR_MONTH, TestObject.class);
+                TestObject actual = JsonUtil.toObjectOpt(INVALID_JSON_ARRAY_YEAR_MONTH, TestObject.class).orElse(null);
 
                 //then
+                assertNull(actual);
+            }
+
+            @Test
+            @DisplayName("Testing with unknown properties should throw exception")
+            void validJsonWithUnknowProperties() {
+                // given
+                String tmpTestObject = TEST_OBJECT_AS_JSON.replaceFirst("test1", "test1\",\"unknownPropertyAAA\":\"AAA");
+
+                // when
+                Executable operation = () -> JsonUtil.toObject(tmpTestObject, TestObject.class);
+
+                // then
+                assertThrows(JsonConversionException.class, operation);
+            }
+
+            @Test
+            @DisplayName("Testing with unknown properties optional")
+            void validOptionalJsonWithUnknowProperties() {
+                // given
+                String tmpTestObject = TEST_OBJECT_AS_JSON.replaceFirst("test1", "test1\",\"unknownPropertyAAA\":\"AAA");
+
+                // when
+                TestObject actual = JsonUtil.toObjectOpt(tmpTestObject, TestObject.class).orElse(null);
+
+                // then
                 assertNull(actual);
             }
         }
@@ -167,11 +193,13 @@ class JsonUtilTest {
         @Nested
         @DisplayName("Testing toObjectEx()")
         class ToObjectExTest {
+
             @Test
             @DisplayName("Test toObjectEx() with valid input JSON")
             void validJSON() throws BaseException, DatatypeConfigurationException {
                 // given
                 TestObject expected = givenWeHaveTestObject();
+
                 // when
                 TestObject actual = JsonUtil.toObjectEx(TEST_OBJECT_AS_JSON, TestObject.class);
 
@@ -277,6 +305,7 @@ class JsonUtilTest {
     @Nested
     @DisplayName("Testing json creation")
     class JSONTest {
+
         @Nested
         @DisplayName("Testing toJson()")
         class ToJsonTest {
@@ -406,7 +435,7 @@ class JsonUtilTest {
     /**
      * Helper class for testing
      */
-    private static class TestObject {
+    public static class TestObject {
         XMLGregorianCalendar xmlGregorianCalendar;
         Date date;
         byte[] bytes;
