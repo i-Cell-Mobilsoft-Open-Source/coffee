@@ -4,3 +4,65 @@ coff:ee v2.8.0 -> v2.9.0 migration description, news, changes
 
 === coffee-module-notification
 The commons-email was updated to a Jakarta-compatible release, and the module has been re-enabled.
+
+=== json library change
+Gson library has been replaced with Eclipse Yasson JSONB implementation, due to a known issue related with unknown properties at JSON comminication (see coffee-tools readme for details). This has impact for more modules and reflect the following changes:
+
+*JsonUtil related changes:*
+
+- change in package name: `hu.icellmobilsoft.coffee.tool.gson.JsonUtil` has been moved to `hu.icellmobilsoft.coffee.tool.utils.json.JsonUtil`
+
+- GSON lib implementation has been changed to JSONB implementation in the following existing methods, and throws a new checked exception:
++
+`String toJson(Object dto) throws JsonConversionException`
++
+`T toObject(String json, Class<T> classType) throws JsonConversionException`
+
+- new methods has been introduces for returning optional value:
++
+`Optional<String> toJsonOpt(Object dto)`
++
+`Optional<T> toObjectOpt(String json, Class<T> classType)`
+
+- the following methods was marked as deprecated:
++
+`String toJsonGson(Object dto)`
++
+`String toJsonEx(Object dto) throws BaseException`
++
+`T toObjectEx(String json, Class<T> classType) throws BaseException`
++
+`T toObjectGson(String json, Class<T> classType)`
++
+`T toObjectGson(Reader reader, Class<T> classType)`
++
+`T toObjectUncheckedEx(String json, Type typeOfT) throws BaseException`
++
+`T toObjectUncheckedGson(String json, Type typeOfT)`
++
+`T toObjectUncheckedGson(Reader reader, Type typeOfT)`
++
+`T toObjectUnchecked(String json, Type typeOfT)`
+
+- GSON was hold for backward compatibility, initialization has been optimized
+
+*Affected modules:*
+
+- coffee-rest: Request-response logger
+- coffee-rest: Rest response exception mapper
+- coffee-rest: Apache HTTPClient
+- coffee-module-redis: Redis module caching
+- coffee-module-redispubsub: PubSubSink, ReactiveJedisPubSub
+- coffee-tool: GZIPUtil
+
+*New config has been introduced:*
+
+- coffee.jsonb.config.nullValues
+- coffee.jsonb.config.formatting
+- coffee.jsonb.config.failOnUnknownProperties
+
+*JsonB related changes:*
+
+- new adapters has been added
+- JsonbContextResolverProvider, JsonbProducer, FieldOnlyVisibilityStrategy and JsonbUtil has been moved from coffee-rest to coffee-tool
+- Jsonb context initialization has been optimized

@@ -33,14 +33,42 @@ String decodedString = new String(decoded, "UTF-8"); //test input test
 +
 IMPORTANT: Adott kulcs-IV párt nem szabad újra használni! Emiatt az IV nélküli encrypt/decrypt-et csak egyszer használatos kulcsokkal szabad meghívni!
 
+`JSON szerializálás/deszerializálás`::
+
+Java objektumok JSON-re való szerializálása és deszerializálása az https://projects.eclipse.org/projects/ee4j.yasson[Eclipse Yasson] keretrendszerrel történik, mely egy szabványos réteget biztosít a Java osztályok és a JSON dokumentumok között (Yasson a hivatalos JSONB referencia implementációja)
++
+Konfigurációja a project-defaults.yml által történik, az alábbi példa alapján:
+
+[source, yml]
+----
+coffee:
+    jsonb:
+        config:
+            propertyVisibilityStrategyClass: hu.icellmobilsoft.coffee.tool.jsonb.FieldOnlyVisibilityStrategy <1>
+            binaryDataStrategy: BASE_64 <2>
+            nullValues: false <3>
+            formatting: false <4>
+            failOnUnknownProperties: true <5>
+----
+
+In the above configuration, 5 elements can be set:
+
+<1> jakarta.json.bind.config.PropertyVisibilityStrategy interface-t megvalósító osztály teljes elérése.
+<2> Ez a típus a jakarta.json.bind.config.BinaryDataStrategy enum értékeit veheti fel, hogy miként kezelődjön a bináris adat.
+<3> Ezzel a beállítással megadható, hogy a json tartalmazzon-e null értékkel rendelkező mezőket vagy sem.
+<4> Json tartalom formázása állítható be vele
+<5> Ezzel a beállítással megadható, hogy ismeretlen mező esetén dobjon-e hibát vagy sem
+
+A példában megjelölt értékek az alapértelmezett értékei, amennyiben nincs külön konfiguráció megadva, ezeket az értékeket fogja használni.
+
 `JsonUtil`::
-A JsonUtil osztály egy a Gson használatára épülő util osztály
+A JsonUtil osztály egy a JSONB használatára épülő util osztály
 +
 [source, java]
 .példa - generikus típus deszerializációja
 ----
 String paramString = "[{\"key\":\"testTitleKey\",\"value\":\"testTitleValue\"}]";
 Type paramListType = new TypeToken<List<ParameterType>>() {}.getType();
-List<ParameterType> list = JsonUtil.toObjectUncheckedEx(paramString, paramListType);
+List<ParameterType> list = JsonUtil.toObject(paramString, paramListType);
 System.out.println(list.get(0).getKey());
 ----

@@ -323,7 +323,7 @@ You can add multiple catalog file separated with `,`
 == Json support
 
 The framework supports JSON format messages in addition to XML for REST communication.
-To serialize/deserialize these messages, it uses an external module, https://github.com/google/gson[Gson], maintained by Google The framework complements/upgrades Gson with some custom adapters.
+To serialize/deserialize these messages, it uses an external module, https://projects.eclipse.org/projects/ee4j.yasson[Eclipse Yasson], complements/upgrades with some custom adapters.
 Below is an example JSON, and its own added adapters.
 The ISO 8601 standard is used for the time-related values, except in one case.
 In the case of the ```Date``` class, the format has been changed to the universal UNIX epoch in milliseconds
@@ -497,24 +497,3 @@ public class MyBean {
     }
 }
 ----
-
-== Jsonb configuration
-
-The default implementor of Jsonb is https://projects.eclipse.org/projects/ee4j.yasson[Eclipse Yasson].
-This can be changed using default configurations:
-
-
-.project-defaults.yml
-[source,yml]
-----
-coffee:
-  jsonb:
-    config:
-      propertyvisibilitystrategyclass: "en.icellmobilsoft.coffee.rest.provider.FieldOnlyVisibilityStrategy" <1>
-      binarydatastrategy: "BASE_64" <2>
-----
-
-In the above configuration, 2 elements can be set:
-
-<1> full access to the class implementing the interface PropertyVisibilityStrategy in jakarta.json.bind.config.PropertyVisibilityStrategy.
-<2> This type can take the values of the enum BinaryDataStrategy in jakarta.json.bind.config.BinaryDataStrategy to determine how binary data is handled.

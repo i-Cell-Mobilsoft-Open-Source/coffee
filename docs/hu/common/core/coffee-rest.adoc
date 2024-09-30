@@ -324,7 +324,7 @@ Több katalógus fájl is megadható `,` jellel elválasztva
 == Json támogatás
 
 A keretrendszer támogatja a REST kommunikáció során a JSON formátumú üzeneteket is az XML mellett.
-Ezen üzenetek szerializálására/deszerializálására egy külső modult használ, a Google által karbantartott https://github.com/google/gson[Gson]-t A keretrendszer kiegészíti/felüldefiniálja a Gson-t néhány saját adapterrel.
+Ezen üzenetek szerializálására/deszerializálására egy külső modult használ, az https://projects.eclipse.org/projects/ee4j.yasson[Eclipse Yasson]-t A keretrendszer kiegészíti/felüldefiniálja néhány saját adapterrel.
 Alább látható egy példa JSON, és a saját hozzáadott adapterek.
 Az idővel kapcsolatos értékeknél egy eset kivételével az ISO 8601 szabvány került alkalmazásra.
 A ```Date``` osztály esetén a formátum az egyetemes UNIX epoch lett milliszekundumban
@@ -499,24 +499,3 @@ public class MyBean {
     }
 }
 ----
-
-== Jsonb konfiguráció
-
-A Jsonb alapértelmezett implementálója az https://projects.eclipse.org/projects/ee4j.yasson[Eclipse Yasson].
-Ezt lehet kiegszéíteni default configurációk segítéségvel:
-
-
-.project-defaults.yml
-[source,yml]
-----
-coffee:
-  jsonb:
-    config:
-      propertyvisibilitystrategyclass: "hu.icellmobilsoft.coffee.rest.provider.FieldOnlyVisibilityStrategy" <1>
-      binarydatastrategy: "BASE_64" <2>
-----
-
-A fenti configurációban 2 elem állítható be:
-
-<1> jakarta.json.bind.config.PropertyVisibilityStrategy interface-t megvalósító osztály teljes elérése.
-<2> Ez a típus a jakarta.json.bind.config.BinaryDataStrategy enum értékeit veheti fel, hogy miként kezelődjön a bináris adat.
