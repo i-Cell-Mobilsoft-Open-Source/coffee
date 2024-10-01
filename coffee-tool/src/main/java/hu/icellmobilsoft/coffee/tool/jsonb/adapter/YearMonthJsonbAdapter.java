@@ -32,6 +32,13 @@ import jakarta.json.bind.adapter.JsonbAdapter;
  */
 public class YearMonthJsonbAdapter implements JsonbAdapter<YearMonth, String> {
 
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public YearMonthJsonbAdapter() {
+        super();
+    }
+
     /** {@inheritDoc} */
     @Override
     public String adaptToJson(YearMonth obj) {

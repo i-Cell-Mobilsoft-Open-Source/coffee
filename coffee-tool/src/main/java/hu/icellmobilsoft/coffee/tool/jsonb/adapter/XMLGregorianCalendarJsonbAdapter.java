@@ -41,6 +41,13 @@ public class XMLGregorianCalendarJsonbAdapter implements JsonbAdapter<XMLGregori
 
     private static Logger LOGGER = Logger.getLogger(XMLGregorianCalendarJsonbAdapter.class);
 
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public XMLGregorianCalendarJsonbAdapter() {
+        super();
+    }
+
     /** {@inheritDoc} */
     @Override
     public String adaptToJson(XMLGregorianCalendar calendar) {

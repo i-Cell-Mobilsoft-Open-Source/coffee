@@ -32,6 +32,13 @@ import jakarta.json.bind.adapter.JsonbAdapter;
  */
 public class ByteArrayJsonbAdapter implements JsonbAdapter<byte[], String> {
 
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public ByteArrayJsonbAdapter() {
+        super();
+    }
+
     /** {@inheritDoc} */
     @Override
     public String adaptToJson(byte[] obj) {

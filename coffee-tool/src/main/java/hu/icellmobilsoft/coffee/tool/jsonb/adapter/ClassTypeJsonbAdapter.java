@@ -32,6 +32,13 @@ import jakarta.json.bind.adapter.JsonbAdapter;
  */
 public class ClassTypeJsonbAdapter implements JsonbAdapter<Class<?>, String> {
 
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public ClassTypeJsonbAdapter() {
+        super();
+    }
+
     /** {@inheritDoc} */
     @Override
     public String adaptToJson(Class<?> obj) {
