@@ -19,18 +19,27 @@
  */
 package hu.icellmobilsoft.coffee.tool.utils.json;
 
+import java.lang.reflect.Constructor;
+import java.nio.charset.StandardCharsets;
 import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Optional;
 
 import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbBuilder;
 import jakarta.json.bind.JsonbConfig;
+import jakarta.json.bind.adapter.JsonbAdapter;
 import jakarta.json.bind.config.BinaryDataStrategy;
+import jakarta.json.bind.config.PropertyNamingStrategy;
+import jakarta.json.bind.config.PropertyOrderStrategy;
 import jakarta.json.bind.config.PropertyVisibilityStrategy;
+import jakarta.json.bind.serializer.JsonbDeserializer;
+import jakarta.json.bind.serializer.JsonbSerializer;
 
 import org.eclipse.microprofile.config.Config;
 
-import hu.icellmobilsoft.coffee.se.logging.Logger;
-import hu.icellmobilsoft.coffee.tool.jsonb.FieldOnlyVisibilityStrategy;
 import hu.icellmobilsoft.coffee.tool.jsonb.adapter.ByteArrayJsonbAdapter;
 import hu.icellmobilsoft.coffee.tool.jsonb.adapter.ClassTypeJsonbAdapter;
 import hu.icellmobilsoft.coffee.tool.jsonb.adapter.DateJsonbAdapter;
@@ -51,6 +60,22 @@ import hu.icellmobilsoft.coffee.tool.utils.config.ConfigUtil;
  *       {@value JsonbUtil#NULL_VALUES}: false
  *       {@value JsonbUtil#FORMATTING}: false
  *       {@value JsonbUtil#FAIL_ON_UNKNOWN_PROPERTIES}: false
+ *       {@value JsonbUtil#ENCODING}: "UTF-8"
+ *       {@value JsonbUtil#STRICT_IJSON}: false
+ *       {@value JsonbUtil#PROPERTY_NAMING_STRATEGY}: IDENTITY
+ *       {@value JsonbUtil#PROPERTY_ORDER_STRATEGY}: LEXICOGRAPHICAL
+ *       {@value JsonbUtil#DATE_FORMAT}: "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+ *       {@value JsonbUtil#LOCALE}: "en_US"
+ *       {@value JsonbUtil#CUSTOM_ADAPTERS}:
+ *          - "your.custom.JsonbAdapter1"
+ *          - "your.custom.JsonbAdapter2"
+ *       {@value JsonbUtil#CUSTOM_SERIALIZERS}:
+ *          - "your.custom.JsonbSerializer1"
+ *          - "your.custom.JsonbSerializer2"
+ *       {@value JsonbUtil#CUSTOM_DESERIALIZERS}:
+ *          - "your.custom.JsonbDeserializer1"
+ *          - "your.custom.JsonbDeserializer2"
+ *
  * </pre>
  *
  * @author speter555
@@ -59,7 +84,7 @@ import hu.icellmobilsoft.coffee.tool.utils.config.ConfigUtil;
  */
 public class JsonbUtil {
 
-    private static final String MSG_WARN_PROPERTY_VISIBILITY_STRATEGY = "The PropertyVisibilityStrategy class in the [{0}] config with value [{1}] has a problem ";
+    private static final String DEFAULT_FIELD_ONLY_VISIBILITY_STRATEGY = "hu.icellmobilsoft.coffee.tool.jsonb.FieldOnlyVisibilityStrategy";
 
     /**
      * Config delimiter
@@ -69,6 +94,7 @@ public class JsonbUtil {
      * Prefix for all configs
      */
     public static final String JSONB_CONFIG_PREFIX = "coffee.jsonb.config" + KEY_DELIMITER;
+
     /**
      * Config property for jsonb.property-visibility-strategy
      */
@@ -89,6 +115,43 @@ public class JsonbUtil {
      * Config property for jsonb.fail-on-unknown-properties
      */
     private static final String FAIL_ON_UNKNOWN_PROPERTIES = JSONB_CONFIG_PREFIX + "failOnUnknownProperties";
+    /**
+     * Config property for jsonb.encoding
+     */
+    private static final String ENCODING = JSONB_CONFIG_PREFIX + "encoding";
+    /**
+     * Config property for jsonb.strict-i-json
+     */
+    private static final String STRICT_IJSON = JSONB_CONFIG_PREFIX + "strictIJSON";
+    /**
+     * Config property for jsonb.property-naming-strategy
+     */
+    private static final String PROPERTY_NAMING_STRATEGY = JSONB_CONFIG_PREFIX + "propertyNamingStrategy";
+    /**
+     * Config property for jsonb.property-order-strategy
+     */
+    private static final String PROPERTY_ORDER_STRATEGY = JSONB_CONFIG_PREFIX + "propertyOrderStrategy";
+    /**
+     * Config property for jsonb.date-format
+     */
+    private static final String DATE_FORMAT = JSONB_CONFIG_PREFIX + "dateFormat";
+    /**
+     * Config property for jsonb.locale
+     */
+    private static final String LOCALE = JSONB_CONFIG_PREFIX + "locale";
+    /**
+     * Config property for custom adapter classes
+     */
+    private static final String CUSTOM_ADAPTERS = JSONB_CONFIG_PREFIX + "customAdapters";
+    /**
+     * Config property for custom serializer classes
+     */
+    private static final String CUSTOM_SERIALIZERS = JSONB_CONFIG_PREFIX + "customSerializers";
+    /**
+     * Config property for custom deserializers classes
+     */
+    private static final String CUSTOM_DESERIALIZERS = JSONB_CONFIG_PREFIX + "customDeserializers";
+
     /**
      * Config property name
      */
@@ -113,27 +176,81 @@ public class JsonbUtil {
                 .withBinaryDataStrategy(getBinaryDataStrategy(config))
                 .withNullValues(getSerializeNullValues(config))
                 .withFormatting(getFormatting(config))
-                .withAdapters(//
-                        new YearMonthJsonbAdapter(),
-                        new ByteArrayJsonbAdapter(),
-                        new ClassTypeJsonbAdapter(),
-                        new DateJsonbAdapter(),
-                        new DurationJsonbAdapter(),
-                        new XMLGregorianCalendarJsonbAdapter());
+                .withEncoding(getEncoding(config))
+                .withStrictIJSON(getStrictIJson(config))
+                .withPropertyNamingStrategy(getPropertyNamingStrategy(config))
+                .withPropertyOrderStrategy(getPropertyOrderStrategy(config))
+                .withDateFormat(getDateFormat(config), getLocale(config))
+                .withLocale(getLocale(config))
+                .withAdapters(getAdapters(config))
+                .withSerializers(getSerializers(config))
+                .withDeserializers(getDeserializers(config));
         jsonbConfig.setProperty(JSONB_PROPERTY_NAME_FAIL_ON_UNKNOWN_PROPERTIES, getFailOnUnknownProperties(config));
         return JsonbBuilder.newBuilder().withConfig(jsonbConfig).build();
     }
 
-    private static PropertyVisibilityStrategy getPropertyVisibilityStrategyClass(Config config) {
-        String className = config.getOptionalValue(PROPERTY_VISIBILITY_STRATEGY_CLASS, String.class)
-                .orElse("hu.icellmobilsoft.coffee.tool.jsonb.FieldOnlyVisibilityStrategy");
-        try {
-            return (PropertyVisibilityStrategy) Class.forName(className).getConstructor().newInstance();
-        } catch (Exception e) {
-            String msg = MessageFormat.format(MSG_WARN_PROPERTY_VISIBILITY_STRATEGY, PROPERTY_VISIBILITY_STRATEGY_CLASS, className);
-            Logger.getLogger(JsonbUtil.class).warn(msg, e);
-            return new FieldOnlyVisibilityStrategy();
+    @SuppressWarnings("rawtypes")
+    private static JsonbAdapter[] getAdapters(Config config) {
+        List<JsonbAdapter> jsonbAdapters = new ArrayList<>();
+        jsonbAdapters.add(new YearMonthJsonbAdapter());
+        jsonbAdapters.add(new ByteArrayJsonbAdapter());
+        jsonbAdapters.add(new ClassTypeJsonbAdapter());
+        jsonbAdapters.add(new DateJsonbAdapter());
+        jsonbAdapters.add(new DurationJsonbAdapter());
+        jsonbAdapters.add(new XMLGregorianCalendarJsonbAdapter());
+
+        Optional<List<String>> customClassNames = config.getOptionalValues(CUSTOM_ADAPTERS, String.class);
+        if (customClassNames.isPresent()) {
+            // add custom adapters from config
+            for (String customAdapterClass : customClassNames.get()) {
+                jsonbAdapters.add(getCustomClassInstance(customAdapterClass));
+            }
         }
+
+        return jsonbAdapters.toArray(new JsonbAdapter[0]);
+    }
+
+    @SuppressWarnings("rawtypes")
+    private static JsonbSerializer[] getSerializers(Config config) {
+        List<JsonbSerializer> jsonbSerializers = new ArrayList<>();
+        Optional<List<String>> customClassNames = config.getOptionalValues(CUSTOM_SERIALIZERS, String.class);
+        if (customClassNames.isPresent()) {
+            // add custom serializers from config
+            for (String customAdapterClass : customClassNames.get()) {
+                jsonbSerializers.add(getCustomClassInstance(customAdapterClass));
+            }
+        }
+        return jsonbSerializers.toArray(new JsonbSerializer[0]);
+    }
+
+    @SuppressWarnings("rawtypes")
+    private static JsonbDeserializer[] getDeserializers(Config config) {
+        List<JsonbDeserializer> jsonbDeserializers = new ArrayList<>();
+        Optional<List<String>> customClassNames = config.getOptionalValues(CUSTOM_DESERIALIZERS, String.class);
+        if (customClassNames.isPresent()) {
+            // add custom serializers from config
+            for (String customAdapterClass : customClassNames.get()) {
+                jsonbDeserializers.add(getCustomClassInstance(customAdapterClass));
+            }
+        }
+        return jsonbDeserializers.toArray(new JsonbDeserializer[0]);
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <T> T getCustomClassInstance(String customClassName) {
+        try {
+            Class<?> clazz = Class.forName(customClassName);
+            Constructor<?> ctor = clazz.getConstructor();
+            return (T) ctor.newInstance();
+        } catch (Exception e) {
+            String msg = MessageFormat.format("Cannot create class instance for [{0}] due to [{1}]", customClassName, e.getMessage());
+            throw new IllegalStateException(msg, e);
+        }
+    }
+
+    private static PropertyVisibilityStrategy getPropertyVisibilityStrategyClass(Config config) {
+        String className = config.getOptionalValue(PROPERTY_VISIBILITY_STRATEGY_CLASS, String.class).orElse(DEFAULT_FIELD_ONLY_VISIBILITY_STRATEGY);
+        return getCustomClassInstance(className);
     }
 
     private static String getBinaryDataStrategy(Config config) {
@@ -152,4 +269,27 @@ public class JsonbUtil {
         return config.getOptionalValue(FAIL_ON_UNKNOWN_PROPERTIES, Boolean.class).orElse(true);
     }
 
+    private static String getEncoding(Config config) {
+        return config.getOptionalValue(ENCODING, String.class).orElse(StandardCharsets.UTF_8.name());
+    }
+
+    private static boolean getStrictIJson(Config config) {
+        return config.getOptionalValue(STRICT_IJSON, Boolean.class).orElse(false);
+    }
+
+    private static String getPropertyNamingStrategy(Config config) {
+        return config.getOptionalValue(PROPERTY_NAMING_STRATEGY, String.class).orElse(PropertyNamingStrategy.IDENTITY);
+    }
+
+    private static String getPropertyOrderStrategy(Config config) {
+        return config.getOptionalValue(PROPERTY_ORDER_STRATEGY, String.class).orElse(PropertyOrderStrategy.LEXICOGRAPHICAL);
+    }
+
+    private static String getDateFormat(Config config) {
+        return config.getOptionalValue(DATE_FORMAT, String.class).orElse(null);
+    }
+
+    private static Locale getLocale(Config config) {
+        return config.getOptionalValue(LOCALE, String.class).map(Locale::forLanguageTag).orElse(Locale.getDefault());
+    }
 }

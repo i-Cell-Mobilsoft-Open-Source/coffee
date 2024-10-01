@@ -49,15 +49,39 @@ coffee:
             nullValues: false <3>
             formatting: false <4>
             failOnUnknownProperties: true <5>
+            encoding: "UTF-8" <6>
+            strictIJSON: false <7>
+            propertyNamingStrategy: IDENTITY <8>
+            propertyOrderStrategy: LEXICOGRAPHICAL <9>
+            dateFormat: "yyyy-MM-dd'T'HH:mm:ss.SSSZ" <10>
+            locale: "en_US" <11>
+            customAdapters: <12>
+              - "your.custom.JsonbAdapter1"
+              - "your.custom.JsonbAdapter2"
+            customSerializers: <13>
+              - "your.custom.JsonbSerializer1"
+              - "your.custom.JsonbSerializer2"
+            customDeserializers: <14>
+              - "your.custom.JsonbDeserializer1"
+              - "your.custom.JsonbDeserializer2"
 ----
 
-In the above configuration, 5 elements can be set:
+A fenti beállításokban a következő értékek adhatóak meg:
 
 <1> jakarta.json.bind.config.PropertyVisibilityStrategy interface-t megvalósító osztály teljes elérése.
 <2> Ez a típus a jakarta.json.bind.config.BinaryDataStrategy enum értékeit veheti fel, hogy miként kezelődjön a bináris adat.
 <3> Ezzel a beállítással megadható, hogy a json tartalmazzon-e null értékkel rendelkező mezőket vagy sem.
 <4> Json tartalom formázása állítható be vele
 <5> Ezzel a beállítással megadható, hogy ismeretlen mező esetén dobjon-e hibát vagy sem
+<6> Szerializálásnál használt kódolási formátum
+<7> I-JSON ("Internet JSON") korlátozott profil engedélyezése  https://datatracker.ietf.org/doc/html/rfc7493[I-JSON rfc]
+<8> Szerializálásnál és deszerializálásnál használt mező nevezési stratégiája https://jakarta.ee/specifications/jsonb/1.0/apidocs/javax/json/bind/config/propertynamingstrategy[javadoc]
+<9> Szerializálásnál és deszerializálásnál használt mezők rendezési stratégiája https://jakarta.ee/specifications/jsonb/1.0/apidocs/javax/json/bind/config/propertyorderstrategy[javadoc]
+<10> Egyedi beállítás dátum formátumra
+<11> Egyedi locale beállítás ISO szabvány formátumban
+<12> Egyedi JsonbAdapter osztályok
+<13> Egyedi JsonbSerializer osztályok
+<14> Egyedi JsonbDeserializer osztályok
 
 A példában megjelölt értékek az alapértelmezett értékei, amennyiben nincs külön konfiguráció megadva, ezeket az értékeket fogja használni.
 

@@ -60,6 +60,15 @@ Gson library has been replaced with Eclipse Yasson JSONB implementation, due to 
 - coffee.jsonb.config.nullValues
 - coffee.jsonb.config.formatting
 - coffee.jsonb.config.failOnUnknownProperties
+- coffee.jsonb.config.encoding
+- coffee.jsonb.config.strictIJSON
+- coffee.jsonb.config.propertyNamingStrategy
+- coffee.jsonb.config.propertyOrderStrategy
+- coffee.jsonb.config.dateFormat
+- coffee.jsonb.config.locale
+- coffee.jsonb.config.customAdapters
+- coffee.jsonb.config.customSerializers
+- coffee.jsonb.config.customDeserializers
 
 *JsonB related changes:*
 

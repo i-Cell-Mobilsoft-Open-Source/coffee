@@ -49,15 +49,39 @@ coffee:
             nullValues: false <3>
             formatting: false <4>
             failOnUnknownProperties: true <5>
+            encoding: "UTF-8" <6>
+            strictIJSON: false <7>
+            propertyNamingStrategy: IDENTITY <8>
+            propertyOrderStrategy: LEXICOGRAPHICAL <9>
+            dateFormat: "yyyy-MM-dd'T'HH:mm:ss.SSSZ" <10>
+            locale: "en_US" <11>
+            customAdapters: <12>
+              - "your.custom.JsonbAdapter1"
+              - "your.custom.JsonbAdapter2"
+            customSerializers: <13>
+              - "your.custom.JsonbSerializer1"
+              - "your.custom.JsonbSerializer2"
+            customDeserializers: <14>
+              - "your.custom.JsonbDeserializer1"
+              - "your.custom.JsonbDeserializer2"
 ----
 
-In the above configuration, 5 elements can be set:
+In the above configuration, the following elements can be set:
 
 <1> Property used to specify custom visibility strategy, which fields/properties should be (de)serialized. this configuration requires full class name implementing the interface PropertyVisibilityStrategy in jakarta.json.bind.config.PropertyVisibilityStrategy.
 <2> This type can take the values of the enum BinaryDataStrategy in jakarta.json.bind.config.BinaryDataStrategy to determine how binary data is handled.
 <3> Property used to specify if json should include fields with null values or not.
 <4> Use this setting if you want to pretty format json content.
 <5> Property used to specify behaviour in case of unknown properties.
+<6> Serialized JSON output encoding format
+<7> Enable/Disable restricted profile I-JSON (short for "Internet JSON") https://datatracker.ietf.org/doc/html/rfc7493[I-JSON rfc]
+<8> Set predefined naming strategy which affects serialization and deserialization https://jakarta.ee/specifications/jsonb/1.0/apidocs/javax/json/bind/config/propertynamingstrategy[javadoc]
+<9> Set predefined ordering strategy which affects serialization and deserialization https://jakarta.ee/specifications/jsonb/1.0/apidocs/javax/json/bind/config/propertyorderstrategy[javadoc]
+<10> Customized dateFormat applied globally
+<11> Customized local in ISO standard format applied globally
+<12> Custom JsonbAdapter classes for additional control over JSON processing.
+<13> Custom JsonbSerializer classes for serializing specific types.
+<14> Custom JsonbDeserializer classes for deserializing specific types.
 
 The values mention above in the example are the default values, these are used in case of missing configuration.
 

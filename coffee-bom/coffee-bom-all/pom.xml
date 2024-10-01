@@ -282,7 +282,6 @@
                 <groupId>org.eclipse</groupId>
                 <artifactId>yasson</artifactId>
                 <version>${version.org.eclipse.yasson}</version>
-                <scope>provided</scope>
             </dependency>
 
         </dependencies>
