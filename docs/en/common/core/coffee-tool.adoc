@@ -64,6 +64,9 @@ coffee:
             customDeserializers: <14>
               - "your.custom.JsonbDeserializer1"
               - "your.custom.JsonbDeserializer2"
+            customProperties: <15>
+              - "jsonb.other-config-parameter1#value1"
+              - "jsonb.other-config-parameter2#value2"
 ----
 
 In the above configuration, the following elements can be set:
@@ -82,6 +85,7 @@ In the above configuration, the following elements can be set:
 <12> Custom JsonbAdapter classes for additional control over JSON processing.
 <13> Custom JsonbSerializer classes for serializing specific types.
 <14> Custom JsonbDeserializer classes for deserializing specific types.
+<15> Custom jsonb config parameters, key-values are separated by #
 
 The values mention above in the example are the default values, these are used in case of missing configuration.
 

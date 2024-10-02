@@ -64,6 +64,9 @@ coffee:
             customDeserializers: <14>
               - "your.custom.JsonbDeserializer1"
               - "your.custom.JsonbDeserializer2"
+            customProperties: <15>
+              - "jsonb.other-config-parameter1#value1"
+              - "jsonb.other-config-parameter2#value2"
 ----
 
 A fenti beállításokban a következő értékek adhatóak meg:
@@ -82,6 +85,7 @@ A fenti beállításokban a következő értékek adhatóak meg:
 <12> Egyedi JsonbAdapter osztályok
 <13> Egyedi JsonbSerializer osztályok
 <14> Egyedi JsonbDeserializer osztályok
+<15> Egyedi jsonb config paraméterek, az értékkészlet # jellel van elválaszva
 
 A példában megjelölt értékek az alapértelmezett értékei, amennyiben nincs külön konfiguráció megadva, ezeket az értékeket fogja használni.
 

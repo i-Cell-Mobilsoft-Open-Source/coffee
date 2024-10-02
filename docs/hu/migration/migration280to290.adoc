@@ -69,6 +69,7 @@ Gson library le lett cserélve Eclipse Yasson JSONB implementációra egy ismert
 - coffee.jsonb.config.customAdapters
 - coffee.jsonb.config.customSerializers
 - coffee.jsonb.config.customDeserializers
+- coffee.jsonb.config.customProperties
 
 *JsonB-vel kapcsolatos változások:*
 

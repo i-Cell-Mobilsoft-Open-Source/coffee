@@ -23,8 +23,10 @@ import java.lang.reflect.Constructor;
 import java.nio.charset.StandardCharsets;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Optional;
 
 import jakarta.json.bind.Jsonb;
@@ -38,6 +40,7 @@ import jakarta.json.bind.config.PropertyVisibilityStrategy;
 import jakarta.json.bind.serializer.JsonbDeserializer;
 import jakarta.json.bind.serializer.JsonbSerializer;
 
+import org.apache.commons.lang3.BooleanUtils;
 import org.eclipse.microprofile.config.Config;
 
 import hu.icellmobilsoft.coffee.tool.jsonb.adapter.ByteArrayJsonbAdapter;
@@ -75,6 +78,9 @@ import hu.icellmobilsoft.coffee.tool.utils.config.ConfigUtil;
  *       {@value JsonbUtil#CUSTOM_DESERIALIZERS}:
  *          - "your.custom.JsonbDeserializer1"
  *          - "your.custom.JsonbDeserializer2"
+ *       {@value JsonbUtil#CUSTOM_PROPERTIES}:
+ *          - "jsonb.other-config-parameter1#value1"
+ *          - "jsonb.other-config-parameter2#value2"
  *
  * </pre>
  *
@@ -151,9 +157,13 @@ public class JsonbUtil {
      * Config property for custom deserializers classes
      */
     private static final String CUSTOM_DESERIALIZERS = JSONB_CONFIG_PREFIX + "customDeserializers";
+    /**
+     * Config property for custom properties values
+     */
+    private static final String CUSTOM_PROPERTIES = JSONB_CONFIG_PREFIX + "customProperties";
 
     /**
-     * Config property name
+     * Config property names
      */
     private static final String JSONB_PROPERTY_NAME_FAIL_ON_UNKNOWN_PROPERTIES = "jsonb.fail-on-unknown-properties";
 
@@ -185,7 +195,10 @@ public class JsonbUtil {
                 .withAdapters(getAdapters(config))
                 .withSerializers(getSerializers(config))
                 .withDeserializers(getDeserializers(config));
-        jsonbConfig.setProperty(JSONB_PROPERTY_NAME_FAIL_ON_UNKNOWN_PROPERTIES, getFailOnUnknownProperties(config));
+
+        // add custom property configurations from config
+        getCustomProperties(config).forEach(jsonbConfig::setProperty);
+
         return JsonbBuilder.newBuilder().withConfig(jsonbConfig).build();
     }
 
@@ -234,6 +247,31 @@ public class JsonbUtil {
             }
         }
         return jsonbDeserializers.toArray(new JsonbDeserializer[0]);
+    }
+
+    private static Map<String, Object> getCustomProperties(Config config) {
+        Map<String, Object> customProperties = new HashMap<>();
+
+        // add default custom property
+        customProperties.put(JSONB_PROPERTY_NAME_FAIL_ON_UNKNOWN_PROPERTIES, getFailOnUnknownProperties(config));
+
+        Optional<List<String>> customPropertiesConfig = config.getOptionalValues(CUSTOM_PROPERTIES, String.class);
+        if (customPropertiesConfig.isPresent()) {
+            // add custom property from config
+            for (String customProperty : customPropertiesConfig.get()) {
+                String[] configValue = customProperty.split("#");
+                String key = configValue[0];
+                String value = configValue[1];
+                if (BooleanUtils.toBooleanObject(value) != null) {
+                    // jsonb requires to pass boolean as config value
+                    customProperties.put(key, BooleanUtils.toBoolean(value));
+                } else {
+                    customProperties.put(key, value);
+                }
+            }
+        }
+
+        return customProperties;
     }
 
     @SuppressWarnings("unchecked")
@@ -292,4 +330,5 @@ public class JsonbUtil {
     private static Locale getLocale(Config config) {
         return config.getOptionalValue(LOCALE, String.class).map(Locale::forLanguageTag).orElse(Locale.getDefault());
     }
+
 }
