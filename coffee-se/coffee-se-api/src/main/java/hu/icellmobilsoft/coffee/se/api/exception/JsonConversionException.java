@@ -27,7 +27,7 @@ import hu.icellmobilsoft.coffee.se.api.exception.enums.CoffeeFaultType;
  * @author bucherarnold
  * @since 2.9.0
  */
-public class JsonConversionException extends BusinessException {
+public class JsonConversionException extends TechnicalException {
 
     private static final long serialVersionUID = 1L;
 
