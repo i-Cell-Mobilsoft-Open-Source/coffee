@@ -19,6 +19,7 @@
         <version.org.glassfish.jaxb.jaxb-runtime>4.0.1</version.org.glassfish.jaxb.jaxb-runtime>
         <version.org.hibernate.validator>8.0.0.Final</version.org.hibernate.validator>
         <version.org.glassfish.expressly.expressly>5.0.0</version.org.glassfish.expressly.expressly>
+        <version.org.openjdk.jmh>1.36</version.org.openjdk.jmh>
     </properties>
 
     <dependencyManagement>
@@ -90,7 +91,19 @@
                 <scope>test</scope>
             </dependency>
 
-
+            <!-- JMH benchmark test -->
+            <dependency>
+                <groupId>org.openjdk.jmh</groupId>
+                <artifactId>jmh-core</artifactId>
+                <version>${version.org.openjdk.jmh}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.openjdk.jmh</groupId>
+                <artifactId>jmh-generator-annprocess</artifactId>
+                <version>${version.org.openjdk.jmh}</version>
+                <scope>test</scope>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 </project>

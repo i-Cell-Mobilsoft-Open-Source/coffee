@@ -6,7 +6,7 @@ coff:ee v2.8.0 -> v2.9.0 migration description, news, changes
 The commons-email was updated to a Jakarta-compatible release, and the module has been re-enabled.
 
 === json library change
-Gson library has been replaced with Eclipse Yasson JSONB implementation, due to a known issue related with unknown properties at JSON comminication (see coffee-tools readme for details). This has impact for more modules and reflect the following changes:
+Gson library has been replaced with Eclipse Yasson JSONB implementation, due to a known issue related with unknown properties at JSON communication (see coffee-tools readme for details). This has impact for more modules and reflect the following changes:
 
 *JsonUtil related changes:*
 
