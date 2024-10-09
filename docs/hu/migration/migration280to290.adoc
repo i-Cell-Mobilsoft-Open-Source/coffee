@@ -7,3 +7,9 @@ Javításra került néhány hiba az angol nyelvű dokumentációban.
 
 === coffee-module-notification
 Frissítésre került a commons-email jakarta kompatibilis release, így ez a modul visszakapcsolásra került.
+
+=== coffee-grpc
+
+** GrpcClientConfig kibővítve a requestLogSize és a responseLogSize paraméterekkel,
+ezek a kliens kérés és válasz maximális log méretének korlátozására szolgálnak karakterekben,
+a limit feletti karakterek levágásra kerülnek.

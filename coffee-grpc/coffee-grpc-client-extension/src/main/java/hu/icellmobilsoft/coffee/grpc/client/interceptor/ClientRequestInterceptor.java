@@ -19,6 +19,13 @@
  */
 package hu.icellmobilsoft.coffee.grpc.client.interceptor;
 
+import jakarta.enterprise.inject.spi.CDI;
+
+import org.apache.commons.lang3.StringUtils;
+
+import hu.icellmobilsoft.coffee.grpc.client.GrpcClient;
+import hu.icellmobilsoft.coffee.grpc.client.config.GrpcClientConfig;
+import hu.icellmobilsoft.coffee.grpc.client.extension.GrpcClientProducerFactory;
 import hu.icellmobilsoft.coffee.se.logging.DefaultLogger;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
 import io.grpc.CallOptions;
@@ -49,14 +56,44 @@ public class ClientRequestInterceptor implements ClientInterceptor {
     @Override
     public <ReqT, RespT> ClientCall<ReqT, RespT> interceptCall(MethodDescriptor<ReqT, RespT> method, CallOptions callOptions, Channel next) {
 
-        ClientCall<ReqT, RespT> call = new SimpleForwardingClientCall<ReqT, RespT>(next.newCall(method, callOptions)) {
+        final String configKey = callOptions.getOption(GrpcClientProducerFactory.CONFIG_VALUE_KEY);
+
+        return new SimpleForwardingClientCall<>(next.newCall(method, callOptions)) {
+
+            int logSize = 0;
+            int count = 0;
+
             @Override
             public void sendMessage(ReqT message) {
-                LOGGER.info("Sending request message: [{0}]", message);
+
+                int requestLogSize = CDI.current().select(GrpcClientConfig.class, new GrpcClient.Literal(configKey)).get().getRequestLogSize();
+
+                if (LOGGER.isTraceEnabled()) {
+                    LOGGER.trace("Sending request message part [{0}]: [{1}]", count++, String.valueOf(message));
+                } else {
+                    StringBuilder messageToPrint = new StringBuilder();
+
+                    String messageString = String.valueOf(message);
+                    if (messageString.length() > requestLogSize - logSize) {
+                        if (requestLogSize - logSize > 0) {
+                            messageToPrint.append(StringUtils.truncate(messageString, requestLogSize - logSize));
+                            logSize += messageToPrint.length();
+                            messageToPrint.append("...<truncated>");
+                        }
+                    } else {
+                        messageToPrint.append(messageString);
+                        logSize += messageToPrint.length();
+                    }
+
+                    if (messageToPrint.length() > 0) {
+                        LOGGER.info("Sending request message part [{0}]: [{1}]", count++, messageToPrint.toString());
+                    }
+                }
+
                 super.sendMessage(message);
             }
+
         };
-        return call;
     }
 
 }
