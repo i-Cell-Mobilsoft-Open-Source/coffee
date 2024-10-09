@@ -2,5 +2,8 @@
 
 coff:ee v2.8.0 -> v2.9.0 migration description, news, changes
 
+=== documentation
+Some english translation issue has been fixed.
+
 === coffee-module-notification
 The commons-email was updated to a Jakarta-compatible release, and the module has been re-enabled.

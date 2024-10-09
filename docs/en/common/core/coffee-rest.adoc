@@ -510,7 +510,7 @@ This can be changed using default configurations:
 coffee:
   jsonb:
     config:
-      propertyvisibilitystrategyclass: "en.icellmobilsoft.coffee.rest.provider.FieldOnlyVisibilityStrategy" <1>
+      propertyvisibilitystrategyclass: "hu.icellmobilsoft.coffee.rest.provider.FieldOnlyVisibilityStrategy" <1>
       binarydatastrategy: "BASE_64" <2>
 ----
 
