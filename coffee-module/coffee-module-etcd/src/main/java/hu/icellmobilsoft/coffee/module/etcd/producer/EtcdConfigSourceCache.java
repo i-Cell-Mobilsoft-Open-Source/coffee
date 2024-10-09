@@ -34,7 +34,7 @@ import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
 
 /**
- * ETCD Config source Szandekosan semmi CDI, MP Config init kozben a CDI meg nem elerheto mindig. Thread-safe singleton
+ * ETCD Config source intentionally avoids CDI. During MP Config initialization, CDI is not always available. It is a thread-safe singleton.
  *
  * @author imre.scheffer
  * @since 1.3.0

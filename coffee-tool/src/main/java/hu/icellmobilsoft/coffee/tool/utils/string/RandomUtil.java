@@ -22,7 +22,7 @@ package hu.icellmobilsoft.coffee.tool.utils.string;
 /**
  * Util class for generating random Strings
  * 
- * @deprecated Helyette a {@link hu.icellmobilsoft.coffee.se.util.string.RandomUtil} használandó.
+ * @deprecated Instead, use {@link hu.icellmobilsoft.coffee.se.util.string.RandomUtil}.
  *
  * @author imre.scheffer
  * @since 1.0.0

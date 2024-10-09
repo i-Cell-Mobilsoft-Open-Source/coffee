@@ -81,8 +81,8 @@ public class DefaultMessageResolver implements MessageResolver
                 return null;
             }
             
-            // org.apache.deltaspike.core.impl.message.DefaultMessageContext-ban elofordulhat hogy pont akkor valtoztatja meg a listat amikor
-            // mar az iteratort elkertuk, ezert ConcurrentModificationException dobodhat véletlenszeruen több property feloldas soran parhuzamosan
+            // In `org.apache.deltaspike.core.impl.message.DefaultMessageContext`, it's possible that it modifies the list at the exact moment when we've already requested the iterator,
+            // hence a ConcurrentModificationException can randomly occur during parallel property resolution processes.
             // Iterator<String> messageSourceIterator = messageSources.iterator();
             
             List<String> copy = new ArrayList<>(messageSources);

@@ -173,22 +173,22 @@ public abstract class AbstractJmsClient implements Serializable {
         MessageProducer producer = null;
         try {
             jmsHandler.init(getConnectionFactory());
-            // 1. verzio (tovabb konfigolhato)
+            // Version 1 (further configurable)
             jmsHandler.getSession(true, Session.CLIENT_ACKNOWLEDGE);
-            // producer kaphat tovabbi konfigot (lejarati ido stb...)
+            // The producer can receive additional configuration (expiration time, etc.).
             producer = jmsHandler.createMessageProducer(getQueue());
             jmsHandler.setMessageProducer(producer);
-            // 2. verzio (egyszeru)
+            // Version 2 (simple)
             // jmsUtil.setMessageProducer(queue);
 
             // jms kuldese
             for (String content : contents) {
                 try {
-                    // 1. verzio (tovabb konfigolhato)
+                    // Version 1 (further configurable)
                     TextMessage message = jmsHandler.createTextMessage(content);
                     addProperties(message, propertyValues);
                     jmsHandler.sendJmsMessage(message);
-                    // 2. verzio (egyszeru)
+                    // Version 2 (simple)
                     // jmsHandler.sendSimpleTextMessage(id);
                 } catch (JMSException e) {
                     log.error("Error in jms TextMessage with content:[" + content + "], propertyValues: " + propertyValues != null

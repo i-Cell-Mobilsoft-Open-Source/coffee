@@ -32,13 +32,13 @@ import jakarta.enterprise.util.Nonbinding;
 import jakarta.inject.Qualifier;
 
 /**
- * Verzió szerinti annotáció jelölés. Minta használat:
+ * Annotation marking by version. Sample usage:
  * <TABLE border="1">
- * <caption>Verzió szerinti annotáció jelölés</caption>
+ * <caption>Version-specific annotation marking</caption>
  * <tr>
- * <th>Példa</th>
- * <th>Érvényes</th>
- * <th>Nem érvényes</th>
+ * <th>Example</th>
+ * <th>Valid</th>
+ * <th>Not valid</th>
  * </tr>
  * <tr>
  * <td>@Version(include = @Range(from = "1.0"))</td>

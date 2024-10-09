@@ -125,11 +125,11 @@ public abstract class AbstractEntity implements IVersionable, Serializable {
             Class<?> propertyType = property.getPropertyType();
 
             if (ClassUtils.isAssignable(propertyType, AbstractEntity.class)) {
-                // dependency kapcsolatokon ne menjen vegig, ne lazy-zzon
+                // Do not traverse dependency relationships, do not lazy-load
                 s.append(name, propertyType.getSimpleName());
             } else if (propertyType == byte[].class || propertyType == Blob.class || propertyType == Clob.class || propertyType == InputStream.class
                     || propertyType == OutputStream.class || propertyType == Reader.class || propertyType == Writer.class) {
-                // nagy adatmennyiseggel ne foglalkozzon, stream-eket ne nyektesse
+                // Do not handle large amounts of data, do not hassle with streams.
                 s.append(name, propertyType.getSimpleName());
             } else {
                 try {

@@ -198,7 +198,7 @@ public class RequestResponseLogger {
         for (Map.Entry<String, String[]> param : servletRequest.getParameterMap().entrySet()) {
             queryParameters.put(param.getKey(), Arrays.asList(param.getValue()));
         }
-        // HttpServletRequest nem tudja a path parametereket kiolvasni, ezert emptyMap-ot adunk be
+        // HttpServletRequest cannot read path parameters, so we pass an emptyMap.
         return printRequestLine(servletRequest.getMethod(), servletRequest.getRequestURL().toString(), Collections.emptyMap(), queryParameters);
     }
 
@@ -263,7 +263,7 @@ public class RequestResponseLogger {
         if (entity.length == 0) {
             return "";
         }
-        // input parameter szerint korlatozzuk a logot
+        // We limit the logging based on the input parameter
         byte[] requestEntityPart = entity;
         if (maxLogSize != null && maxLogSize >= LogSpecifier.NO_LOG && entity.length > maxLogSize.intValue()) {
             requestEntityPart = Arrays.copyOf(entity, maxLogSize);
@@ -281,13 +281,13 @@ public class RequestResponseLogger {
      * @return the maximum log size of the entity
      */
     protected int getMaxRequestEntityLogSize(ContainerRequestContext requestContext) {
-        // ha octet-stream vagy multipart és nincs LogSpecifier annotáció, akkor korlátozunk
+        // If it's octet-stream or multipart and there's no LogSpecifier annotation, then we restrict logging
         if (RestLoggerUtil.isLogSizeLimited(requestContext, MediaType.APPLICATION_OCTET_STREAM_TYPE, MediaType.MULTIPART_FORM_DATA_TYPE)
                 && !RestLoggerUtil.isLogSpecifierPresent(requestContext)) {
             return RequestResponseLogger.ENTITY_MAX_LOG;
         }
 
-        // különben annotációban meghatározott maxEntityLogSize (ha nincs annotáció, akkor unlimit)
+        // Otherwise, we use the maxEntityLogSize defined in the annotation (if no annotation exists, then it is unlimited)
         return RestLoggerUtil.getMaxEntityLogSize(requestContext, LogSpecifierTarget.REQUEST);
     }
 
@@ -300,13 +300,13 @@ public class RequestResponseLogger {
      * @return the maximum log size of the entity
      */
     protected int getMaxResponseEntityLogSize(WriterInterceptorContext context) {
-        // ha octet-stream vagy multipart és nincs LogSpecifier annotáció, akkor korlátozunk
+        // If it's octet-stream or multipart and there's no LogSpecifier annotation, we limit the logging
         if (RestLoggerUtil.isLogSizeLimited(context, MediaType.APPLICATION_OCTET_STREAM_TYPE, MediaType.MULTIPART_FORM_DATA_TYPE)
                 && !RestLoggerUtil.isLogSpecifierPresent(context)) {
             return RequestResponseLogger.ENTITY_MAX_LOG;
         }
 
-        // különben annotációban meghatározott maxEntityLogSize (ha nincs annotáció, akkor unlimit)
+        // Otherwise, the maxEntityLogSize defined in the annotation is used (if no annotation exists, then it's unlimited)
         return RestLoggerUtil.getMaxEntityLogSize(context, LogSpecifierTarget.RESPONSE);
     }
 

@@ -65,14 +65,14 @@ public class MongoService<T> {
     private MongoRepository<T> mongoRepository;
 
     /**
-     * Default constructor, constructs a new object.
+     * Default constructor, constructs a new object
      */
     public MongoService() {
         super();
     }
 
     /**
-     * Mongo Collection beállítása
+     * Setting up Mongo Collection
      *
      * @param mongoCollection
      *            MongoDb collection
@@ -82,7 +82,7 @@ public class MongoService<T> {
     }
 
     /**
-     * Objektum beszúrása az előre beállított Mongo Collection-be
+     * Inserting an object into the pre-configured Mongo Collection
      *
      * @param document
      *            MongoEntity document
@@ -106,7 +106,7 @@ public class MongoService<T> {
     }
 
     /**
-     * Objektum keresése a megadott mongoId alapján
+     * Searching for an object by the specified mongoId
      *
      * @param mongoId
      *            mongo document id
@@ -129,7 +129,7 @@ public class MongoService<T> {
     }
 
     /**
-     * Objektum keresése a megadott szűrő feltételek alapján, rendezés nélkül
+     * Searching for an object by the specified filter criteria, without sorting
      *
      * @param filter
      *            mongo select filter
@@ -160,7 +160,7 @@ public class MongoService<T> {
     }
 
     /**
-     * Objektum keresése a megadott szűrő feltételek alapján, rendezéssel
+     * Searching for an object by the specified filter criteria, with sorting
      *
      * @param filter
      *            mongo select filter
@@ -193,7 +193,7 @@ public class MongoService<T> {
     }
 
     /**
-     * Objektumok közötti keresés, ahol az eredmény a megadott típusú elemek listája.
+     * Searching among objects, where the result is a list of elements of the specified type.
      *
      * @throws BaseException
      *             When Mongo select fail.
@@ -204,7 +204,7 @@ public class MongoService<T> {
     }
 
     /**
-     * Objektumok közötti keresés, ahol az eredmény a megadott szűrés alapján található megadott típusú elemek listája.
+     * Searching among objects where the result is a list of elements of the specified type based on the given filter criteria.
      *
      * @param filter
      *            mongo select filter
@@ -234,8 +234,7 @@ public class MongoService<T> {
     }
 
     /**
-     * Objektumok közötti keresés, ahol az eredmény a megadott szűrés, rendezés, és lapozási beállítások alapján található megadott típusú elemek
-     * listája.
+     * Searching among objects where the result is a list of elements of the specified type based on the given filtering, sorting, and pagination settings.
      *
      * @param filter
      *            mongo select filter
@@ -273,7 +272,7 @@ public class MongoService<T> {
     }
 
     /**
-     * A megadott szűrés alapján megtalálható elemek számosságát adja vissza.
+     * Returns the count of elements that match the provided filtering criteria
      *
      * @param filter
      *            mongo select filter
@@ -300,7 +299,7 @@ public class MongoService<T> {
     }
 
     /**
-     * Batchelt mentést megvalósító metódus
+     * A method implementing batch saving.
      *
      * @param documents
      *            Documents to insert
@@ -326,7 +325,7 @@ public class MongoService<T> {
     }
 
     /**
-     * BONotFoundException FaultType felülírás lehetőségét nyújtó metódus
+     * A method that offers the possibility to override the FaultType in BONotFoundException
      *
      * @return Enum
      */

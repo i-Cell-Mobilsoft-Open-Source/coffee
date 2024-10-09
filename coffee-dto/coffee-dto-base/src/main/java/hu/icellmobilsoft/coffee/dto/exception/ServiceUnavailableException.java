@@ -22,7 +22,7 @@ package hu.icellmobilsoft.coffee.dto.exception;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 
 /**
- * Amikor az alkalmazas tudatosan ugy van beallitva hogy elutasitsa a feldolgozast
+ * When the application is intentionally configured to reject processing
  *
  * @author imre.scheffer
  * @since 1.0.0

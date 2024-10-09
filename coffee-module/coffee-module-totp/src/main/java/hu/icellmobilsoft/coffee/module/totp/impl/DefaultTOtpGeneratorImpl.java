@@ -43,7 +43,7 @@ import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
 
 /**
  *
- * T(ime Based) OTP es titkos kulcs generalashoz szukseges osztaly default implementcaioja
+ * Default implementation class required for generating Time-Based OTP (TOTP) and secret key.
  *
  * @author cstamas
  * @since 1.0.0

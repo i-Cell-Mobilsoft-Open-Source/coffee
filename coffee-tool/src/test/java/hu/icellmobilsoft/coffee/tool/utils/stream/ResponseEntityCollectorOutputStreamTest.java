@@ -56,7 +56,7 @@ class ResponseEntityCollectorOutputStreamTest {
         OutputStream original = new ByteArrayOutputStream(TEST_BYTES_UTF_8.length);
         ResponseEntityCollectorOutputStream out = new ResponseEntityCollectorOutputStream(original, 1000);
         // when
-        // kiírunk a streamre
+        // We write it to the stream.
         IOUtils.copy(input, out);
         //then
         byte[] actualCollectedBytes = out.getEntity();

@@ -3,7 +3,7 @@
 	<parent>
 		<groupId>hu.icellmobilsoft.coffee</groupId>
 		<artifactId>coffee</artifactId>
-		<version>2.8.0-SNAPSHOT</version>
+		<version>2.9.0-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>coffee-rest</artifactId>
@@ -87,8 +87,8 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<configuration>
-					<!-- LogSpecifiersAnnotationProcessor végett kell, különben még compile 
-						előtt megpróbálná önmagára lefuttatni -->
+					<!-- LogSpecifiersAnnotationProcessor is necessary to prevent it from attempting
+					  to run on itself even before compilation. -->
 					<compilerArgument>-proc:none</compilerArgument>
 				</configuration>
 			</plugin>

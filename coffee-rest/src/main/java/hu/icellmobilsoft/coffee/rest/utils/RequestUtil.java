@@ -67,7 +67,7 @@ public class RequestUtil {
         }
         ResourceMethodInvoker invoker = (ResourceMethodInvoker) requestContext.getProperty(ResourceMethodInvoker.class.getName());
         if (invoker == null) {
-            // Manualis rest client esetekben lehet null
+            // In manual REST client cases, it can be null
             return null;
         }
         Method serviceMethod = invoker.getMethod();
@@ -93,7 +93,7 @@ public class RequestUtil {
         }
         Method invokedMethod = (Method) requestContext.getProperty(ECLIPSE_MICROPROFILE_REST_CLIENT_INVOKED_METHOD_KEY);
         if (invokedMethod == null) {
-            // Manualis rest client esetekben lehet null
+            // In manual REST client cases, it can be null
             return null;
         }
         return invokedMethod.getAnnotation(clazz);

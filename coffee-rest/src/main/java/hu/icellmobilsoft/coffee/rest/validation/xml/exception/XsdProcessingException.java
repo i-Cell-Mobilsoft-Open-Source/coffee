@@ -28,7 +28,7 @@ import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
 import hu.icellmobilsoft.coffee.se.api.exception.enums.Severity;
 
 /**
- * Xsd validáció / feldolgozás során keletkező hibákhoz kivétel osztály
+ * Exception class for errors occurring during XSD validation/processin
  *
  * @see XsdProcessingExceptionWrapper
  * @see hu.icellmobilsoft.coffee.rest.validation.xml.JaxbTool

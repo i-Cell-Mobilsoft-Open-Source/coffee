@@ -82,7 +82,7 @@ public class FaultTypeParserExtension implements Extension {
     }
 
     /**
-     * After type discovery. Feltölti a faultTypeClasses listát priority szerint rendezve
+     * After type discovery. It fills the `faultTypeClasses` list sorted by priority.
      *
      * @param afterTypeDiscovery
      *            the after type discovery

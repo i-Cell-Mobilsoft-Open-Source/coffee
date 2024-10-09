@@ -20,7 +20,7 @@
 package hu.icellmobilsoft.coffee.module.totp.enums;
 
 /**
- * TOTP generalashoz hasznalt hmac algoritmus tipusok
+ * Types of HMAC algorithms used for TOTP generation
  *
  * @author tamas.cserhati
  * @since 1.0.0

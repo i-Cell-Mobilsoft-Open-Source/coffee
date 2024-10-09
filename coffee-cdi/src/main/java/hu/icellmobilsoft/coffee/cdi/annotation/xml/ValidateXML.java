@@ -28,8 +28,8 @@ import hu.icellmobilsoft.coffee.cdi.annotation.Version;
 import jakarta.enterprise.util.Nonbinding;
 
 /**
- * Ha egy RestService-ben szereplő metódus a request body paraméterét megannotáljuk ezzel az annotációval, akkor a deszerializációt és a validációt a
- * MessageBodyReaderBase megfelelő implementáció végzik
+ * If we annotate a method parameter in a RestService with this annotation,
+ * then the deserialization and validation are handled by the appropriate implementation of MessageBodyReaderBase.
  *
  * @see ValidateXMLs
  * @see Version
@@ -42,7 +42,7 @@ import jakarta.enterprise.util.Nonbinding;
 public @interface ValidateXML {
 
     /**
-     * Melyik verziókra aktiválódjon
+     * Which versions should be activated
      *
      * @return {@link Version}
      */
@@ -50,7 +50,7 @@ public @interface ValidateXML {
     Version version() default @Version();
 
     /**
-     * A Version-höz rendelt xsd fájl elérési útvonallal
+     * The file path associated with the Version for the XSD file
      *
      * @return path of XSD file
      */

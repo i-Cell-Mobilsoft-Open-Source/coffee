@@ -178,9 +178,9 @@ public abstract class AbstractEvaluator<INPUT, RULERESULT extends RuleResult> im
      * @return prepared Rule list
      */
     protected Map<Enum<?>, List<IRule<INPUT, RULERESULT>>> prepareRuleInstances(Instance<IRule<INPUT, RULERESULT>> instance) {
-        // csoportositas
+        // Grouping
         Map<Enum<?>, List<IRule<INPUT, RULERESULT>>> groupedRules = instance.stream().collect(Collectors.groupingBy(ruleGroupGetter));
-        // sorbarendezes
+        // sorting
         groupedRules.values().forEach(l -> Collections.sort(l, ruleComparator));
         return groupedRules;
     }
@@ -196,16 +196,16 @@ public abstract class AbstractEvaluator<INPUT, RULERESULT extends RuleResult> im
 
         if (groupedRules == null) {
             Instance<IRule<INPUT, RULERESULT>> instances = initRuleInstances(cdiTypeLiteral(), cdiSelectLiteral());
-            // előkészítés
+            // preparation
             groupedRules = prepareRuleInstances(instances);
         }
 
         for (Entry<Enum<?>, List<IRule<INPUT, RULERESULT>>> ruleEntry : groupedRules.entrySet()) {
             try {
                 for (IRule<INPUT, RULERESULT> rule : ruleEntry.getValue()) {
-                    // feldolgozas (validalas) megszakitas lehetosege az exception dobasaban van
+                    // The possibility of interrupting processing (validation) is handled by throwing an exception.
                     if (StringUtils.isNotBlank(getCurrentVersion())) {
-                        // verzio ellenorzes
+                        // Version checking
                         Version ruleVersionAnnotation = AnnotationUtil.getAnnotation(rule.getClass(), Version.class);
                         if (ruleVersionAnnotation != null) {
                             Range[] ranges = ruleVersionAnnotation.include();

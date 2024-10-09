@@ -131,11 +131,10 @@ public class RepositoryExtension implements Extension {
                     .types(type, Object.class) //
                     .beanClass(type).qualifiers(Default.Literal.INSTANCE, Any.Literal.INSTANCE) //
                     .createWith(ctx -> {
-                        // inject fázisban amikor az implementáló projekten hasznalva van repository, akkor itt proxy objektumokon keresztül kezeljük
-                        // a hivast egy központi InvocationHandler segítségével
-                        // a proxy letrehozás lényegében kiváltja régi asm által létrehozott fix implementációkat.
-                        // ezen a ponton lényegeben megadjuk hogy minden repository interface-ben talalhato metodus keresztul menjen a QueryHandler
-                        // osztalyon
+                        // In the injection phase, when the repository is used in the implementing project,
+                        // we handle the invocation through proxy objects using a central InvocationHandler.
+                        // Creating the proxy essentially replaces the fixed implementations previously created by ASM.
+                        // At this point, essentially, we specify that every method found in any repository interface should go through the QueryHandler class.
                         final InvocationHandler handler = (InvocationHandler) beanManager.getReference(
                                 beanManager.resolve(beanManager.getBeans(QueryHandler.class, new Default.Literal())),
                                 QueryHandler.class, beanManager.createCreationalContext(null));

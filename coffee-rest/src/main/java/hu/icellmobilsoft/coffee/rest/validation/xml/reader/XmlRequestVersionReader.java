@@ -71,7 +71,7 @@ public class XmlRequestVersionReader implements IRequestVersionReader {
     /**
      * {@inheritDoc}
      *
-     * header.requestVersion valaszt adja vissza. Mas parameterek kiolvasara is alkalmas, de jelenleg nincs ra szukseg
+     * It returns header.requestVersion. It's capable of extracting other parameters as well, but currently not needed.
      */
     @Override
     public String readVersion(InputStream is) throws TechnicalException {
@@ -79,7 +79,7 @@ public class XmlRequestVersionReader implements IRequestVersionReader {
             return null;
         }
         XMLInputFactory inputFactory = XMLInputFactory.newInstance();
-        // Ez a sor vajon kell?: 1. konfigurációból elvileg kezelve van a biztonsági hiba. 2. Nem adunk vissza olvasott adatot
+        // Do we need this line?: 1. The security issue is theoretically handled in the configuration. 2. We do not return read data.
         inputFactory.setProperty(XMLInputFactory.IS_SUPPORTING_EXTERNAL_ENTITIES, Boolean.FALSE);
         XMLStreamReader reader = null;
         try {

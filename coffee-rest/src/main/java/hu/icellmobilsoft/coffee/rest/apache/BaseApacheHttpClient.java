@@ -145,16 +145,16 @@ public class BaseApacheHttpClient {
         RequestConfig config = createRequestConfig().build();
         CloseableHttpClient client = createHttpClientBuilder(config).build();
 
-        // SSL lekezeles
+        // SSL handling
         handleSSL(client, get.getURI());
 
         try {
-            // modositasi lehetoseg
+            // Modification option
             beforeGet(get);
-            // kiloggoljuk a requestet
+            // We log the request
             logRequest(get);
 
-            // kuldjuk
+            // We send it
             return client.execute(get);
         } catch (ClientProtocolException e) {
             throw new TechnicalException(CoffeeFaultType.OPERATION_FAILED, "HTTP protocol exception: " + e.getLocalizedMessage(), e);
@@ -196,7 +196,7 @@ public class BaseApacheHttpClient {
         RequestConfig config = createRequestConfig().build();
         CloseableHttpClient client = createHttpClientBuilder(config).build();
 
-        // SSL lekezeles
+        // SSL handling
         handleSSL(client, post.getURI());
 
         // add header
@@ -207,11 +207,11 @@ public class BaseApacheHttpClient {
 
             StringEntity stringEntity = new StringEntity(entityString, contentType);
             post.setEntity(stringEntity);
-            // modositasi lehetoseg
+            // Modification option
             beforePost(post);
-            // kiloggoljuk a requestet
+            // We log the request
             logRequest(post, entityString);
-            // kuldjuk
+            // We send it
             return client.execute(post);
         } catch (ClientProtocolException e) {
             throw new TechnicalException(CoffeeFaultType.OPERATION_FAILED, "HTTP protocol exception: " + e.getLocalizedMessage(), e);
@@ -241,7 +241,7 @@ public class BaseApacheHttpClient {
         RequestConfig config = createRequestConfig().build();
         CloseableHttpClient client = createHttpClientBuilder(config).build();
 
-        // SSL lekezeles
+        // SSL handling
         handleSSL(client, post.getURI());
 
         // add header
@@ -250,11 +250,11 @@ public class BaseApacheHttpClient {
         try {
             ByteArrayEntity byteEntityRequest = new ByteArrayEntity(request);
             post.setEntity(byteEntityRequest);
-            // modositasi lehetoseg
+            // Modification option
             beforePost(post);
-            // kiloggoljuk a requestet
+            // We log the request
             logRequest(post, org.apache.commons.lang3.StringUtils.abbreviate(new String(request), 80));
-            // kuldjuk
+            // We send it
             return client.execute(post);
         } catch (ClientProtocolException e) {
             throw new TechnicalException(CoffeeFaultType.OPERATION_FAILED, "HTTP protocol exception: " + e.getLocalizedMessage(), e);
@@ -296,7 +296,7 @@ public class BaseApacheHttpClient {
         RequestConfig config = createRequestConfig().build();
         CloseableHttpClient client = createHttpClientBuilder(config).build();
 
-        // SSL lekezeles
+        // SSL handling
         handleSSL(client, put.getURI());
 
         // add header
@@ -307,11 +307,11 @@ public class BaseApacheHttpClient {
 
             StringEntity stringEntity = new StringEntity(entityString, contentType);
             put.setEntity(stringEntity);
-            // modositasi lehetoseg
+            // Modification option
             beforePut(put);
-            // kiloggoljuk a requestet
+            // We log the request
             logRequest(put, entityString);
-            // kuldjuk
+            // We send it
             return client.execute(put);
         } catch (ClientProtocolException e) {
             throw new TechnicalException(CoffeeFaultType.OPERATION_FAILED, "HTTP protocol exception: " + e.getLocalizedMessage(), e);
@@ -341,7 +341,7 @@ public class BaseApacheHttpClient {
         RequestConfig config = createRequestConfig().build();
         CloseableHttpClient client = createHttpClientBuilder(config).build();
 
-        // SSL lekezeles
+        // SSL handling
         handleSSL(client, put.getURI());
 
         // add header
@@ -350,11 +350,11 @@ public class BaseApacheHttpClient {
         try {
             ByteArrayEntity byteEntityRequest = new ByteArrayEntity(request);
             put.setEntity(byteEntityRequest);
-            // modositasi lehetoseg
+            // Modification option
             beforePut(put);
-            // kiloggoljuk a requestet
+            // We log the request
             logRequest(put, org.apache.commons.lang3.StringUtils.abbreviate(new String(request), 80));
-            // kuldjuk
+            // We send it
             return client.execute(put);
         } catch (ClientProtocolException e) {
             throw new TechnicalException(CoffeeFaultType.OPERATION_FAILED, "HTTP protocol exception: " + e.getLocalizedMessage(), e);
@@ -392,15 +392,15 @@ public class BaseApacheHttpClient {
         RequestConfig config = createRequestConfig().build();
         CloseableHttpClient client = createHttpClientBuilder(config).build();
 
-        // SSL lekezeles
+        // SSL handling
         handleSSL(client, delete.getURI());
 
         try {
-            // modositasi lehetoseg
+            // Modification option
             beforeDelete(delete);
-            // kiloggoljuk a requestet
+            // We log the request
             logRequest(delete);
-            // kuldjuk
+            // We send it
             return client.execute(delete);
         } catch (ClientProtocolException e) {
             throw new TechnicalException(CoffeeFaultType.OPERATION_FAILED, "HTTP protocol exception: " + e.getLocalizedMessage(), e);

@@ -50,8 +50,8 @@ import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
 import hu.icellmobilsoft.coffee.tool.gson.JsonUtil;
 
 /**
- * JSON kiterjesztése az XML/XSD alapon működő megvalósításnak.<br>
- * Működési alapja hogy a JSON inputStream-ből DTO class keletkezik majd annak az értékei validációs XML marshaller-re van küldve.
+ * Extending the JSON-based implementation of XML/XSD.<br>
+ * Its operation is based on generating a DTO class from the JSON inputStream, and then its values are sent to a validation XML marshaller.
  *
  * <pre>
  * &#64;Provider
@@ -89,7 +89,7 @@ public abstract class JsonMessageBodyReaderBase<T> implements MessageBodyReader<
     /**
      * {@inheritDoc}
      *
-     * Xsd validálásra kerülhet-e?
+     * Can XSD validation be performed?
      */
     @Override
     public boolean isReadable(Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType) {
@@ -99,7 +99,7 @@ public abstract class JsonMessageBodyReaderBase<T> implements MessageBodyReader<
     /**
      * {@inheritDoc}
      *
-     * Ha van ValidateXML annotáció, akkor azt használja
+     * If there is a ValidateXML annotation present, then it will be used
      */
     @Override
     public T readFrom(Class<T> type, Type genericType, Annotation[] annotations, MediaType mediaType, MultivaluedMap<String, String> httpHeaders,

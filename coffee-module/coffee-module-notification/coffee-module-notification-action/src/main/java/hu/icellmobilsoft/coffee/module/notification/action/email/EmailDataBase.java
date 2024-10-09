@@ -24,8 +24,8 @@ import jakarta.inject.Inject;
 
 import hu.icellmobilsoft.coffee.cdi.logger.AppLogger;
 import hu.icellmobilsoft.coffee.cdi.logger.ThisLogger;
-import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.module.notification.model.Email;
+import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
 
 /**
  * Extends the functionality of {@link EmailBase} with database save. Operates with OUTPUT_JOB table.
@@ -85,7 +85,7 @@ public class EmailDataBase extends EmailBase {
     /** {@inheritDoc} */
     @Override
     public String send() throws BaseException {
-        // nincs requestScope, nem ugyan az az osztaly!
+        // There is no request scope, it is not the same class!
         Email emailEntity = emailHelper.insertToDb(this);
         String sendResult = null;
         try {

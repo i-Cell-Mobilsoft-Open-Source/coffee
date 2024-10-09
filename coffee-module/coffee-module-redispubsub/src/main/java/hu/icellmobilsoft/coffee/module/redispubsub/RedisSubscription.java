@@ -34,7 +34,7 @@ import hu.icellmobilsoft.coffee.se.logging.Logger;
 import redis.clients.jedis.Jedis;
 
 /**
- * Microprofile reactive subscription - redis subscribe és mp stream-et köti össze
+ * Microprofile reactive subscription - Connects Redis subscribe with mp Streams.
  * 
  * @since 1.13.0
  * @author mark.petrenyi
@@ -85,7 +85,7 @@ public class RedisSubscription implements Subscription, Closeable {
             jedis.subscribe(pubSub, channel);
         } catch (Exception e) {
             if (pubSub != null) {
-                // Jedis hiba, az mp stream még él, elég csak a redisre újra csatlakozni
+                // Jedis error, MP stream is still active, simply reconnect to Redis.
                 log.error("Jedis subscribe failed, closing resources and waiting to retry...", e);
                 jedisClose();
                 sleep();
@@ -96,8 +96,8 @@ public class RedisSubscription implements Subscription, Closeable {
 
     private void sleep() {
         try {
-            // fontos a szuneteltetes hogy peldaul a connection szakadasa ne floodolja a logot
-            // es ne menjen felesleges korlatlan vegtelen probalkosba
+            // It's important to pause, for example, when a connection breaks so that it doesn't
+            // flood the logs with unnecessary infinite retry attempts.
             TimeUnit.SECONDS.sleep(config.getRetrySeconds());
         } catch (InterruptedException ex) {
             log.warn("Interrupted sleep.", ex);
@@ -113,7 +113,7 @@ public class RedisSubscription implements Subscription, Closeable {
     @Override
     public void request(long n) {
         log.trace("Consumer is ready for [{0}] new messages.", n);
-        // egyelőre csak logolunk, később lehet akár belső queue-ingot kialakítani
+        // For now, we're just logging; later, we might develop an internal queuing mechanism
     }
 
     @Override

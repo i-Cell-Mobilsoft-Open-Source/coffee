@@ -19,8 +19,8 @@
  */
 package hu.icellmobilsoft.coffee.module.notification.exception;
 
-import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
+import hu.icellmobilsoft.coffee.se.api.exception.TechnicalException;
 
 /**
  * PushServerException class.

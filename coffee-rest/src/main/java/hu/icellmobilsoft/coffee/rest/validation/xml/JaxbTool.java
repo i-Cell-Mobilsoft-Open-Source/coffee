@@ -55,7 +55,7 @@ import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
 import hu.icellmobilsoft.coffee.tool.utils.annotation.RangeUtil;
 
 /**
- * JAXB (un)marshaller es jaxb kapcsolatos muveletek
+ * JAXB (un)marshaller and JAXB-related operations
  *
  * @author attila.nyers
  * @author ferenc.lutischan
@@ -77,45 +77,45 @@ public class JaxbTool {
     }
 
     /**
-     * Deszerializálja az objektumot, és validálja a megadott XSD séma alapján
+     * Deserialize the object and validate it against the specified XSD schema.
      *
      * @param <T>
-     *            Visszatérő típus
+     *            Returning type
      * @param type
-     *            Milyen típusba illeszkedik a bejövő adat
+     *            What type does the incoming data fit into?
      * @param entityStream
-     *            A feldolgozandó bemeneti folyam
+     *            The incoming stream to be processed
      * @param requestVersion
-     *            A korábban megállapított requestVersion, ami alapján a validálás megvalósítható
+     *            The previously determined requestVersion, based on which the validation can be performed.
      * @param validateXMLs
-     *            Az XSD validációhoz kapcsolódó annotációk
-     * @return A eredményobjektum
+     *            Annotations related to XSD validation
+     * @return The result object
      * @throws BaseException
-     *             érvénytelen bemenet esetén, vagy ha nem lehet feldolgozni a bemeneti adatot
+     *             In case of invalid input, or if the input data cannot be processed
      *
      */
     public <T> T unmarshalXML(Class<T> type, InputStream entityStream, String requestVersion, ValidateXML[] validateXMLs) throws BaseException {
         String schemaPath = getXsdPath(validateXMLs, requestVersion);
-        // Ha nem kap csak üres schemaPath-ot nem validál, csak objektummá alakít:
+        // If it receives an empty schemaPath, it doesn't validate but simply converts it into an object
         return unmarshalXML(type, entityStream, schemaPath);
     }
 
     /**
-     * Deszerializálja az objektumot, és validálja a megadott XSD séma alapján
+     * Deserialize the object and validate it against the specified XSD schema.
      *
      * @param <T>
-     *            Visszatérő típus
+     *            Returning type
      * @param type
-     *            Milyen típusba illeszkedik a bejövő adat
+     *            What type does the incoming data fit into?
      * @param binary
-     *            A feldolgozandó bemeneti bináris
+     *            The incoming binary data to be processed
      * @param requestVersion
-     *            A korábban megállapított requestVersion, ami alapján a validálás megvalósítható
+     *            The previously determined requestVersion, based on which the validation can be performed.
      * @param validateXMLs
-     *            Az XSD validációhoz kapcsolódó annotációk
-     * @return A eredményobjektum
+     *            Annotations related to XSD validation
+     * @return The result object
      * @throws BaseException
-     *             érvénytelen bemenet esetén, vagy ha nem lehet feldolgozni a bemeneti adatot
+     *             In case of invalid input, or if the input data cannot be processed
      */
     public <T> T unmarshalXML(Class<T> type, byte[] binary, String requestVersion, ValidateXML[] validateXMLs) throws BaseException {
         if (Objects.isNull(type) || ArrayUtils.isEmpty(binary)) {
@@ -126,34 +126,34 @@ public class JaxbTool {
     }
 
     /**
-     * XML objektummá alakítás séma validáció nélkül.
+     * Converts XML into an object without schema validation.
      *
      * @param <T>
-     *            visszatérő típus
+     *            Returning type
      * @param type
-     *            xml objektumot reprezentáló osztály típusa
+     *            Type of class representing an XML object
      * @param inputStream
-     *            a bemeneti adatokat tartalmazó folyam
-     * @return xml-nek megfelelő objektum a felolvasott értékekkel.
+     *            Stream containing the input data
+     * @return An object corresponding to the XML with the read values.
      * @throws BaseException
-     *             érvénytelen bemenet esetén, vagy ha nem lehet feldolgozni a bemeneti adatot
+     *             In case of invalid input, or if the input data cannot be processed
      */
     public <T> T unmarshalXML(Class<T> type, InputStream inputStream) throws BaseException {
         return unmarshalXML(type, inputStream, (String) null);
     }
 
     /**
-     * XML objektummá alakítás séma validáció nélkül.
+     * Converts XML into an object without schema validation.
      *
      * @param <T>
-     *            visszatérő típus
+     *            Returning type
      * @param type
-     *            xml objektumot reprezentáló osztály típusa
+     *            Type of class representing an XML object
      * @param binary
-     *            a bemeneti adatokat tartalmazó bináris
-     * @return xml-nek megfelelő objektum a felolvasott értékekkel.
+     *            Binary data containing the input information
+     * @return An object corresponding to the XML with the read values.
      * @throws BaseException
-     *             érvénytelen bemenet esetén, vagy ha nem lehet feldolgozni a bemeneti adatot
+     *             In case of invalid input, or if the input data cannot be processed
      */
     public <T> T unmarshalXML(Class<T> type, byte[] binary) throws BaseException {
         if (Objects.isNull(type) || ArrayUtils.isEmpty(binary)) {
@@ -164,13 +164,13 @@ public class JaxbTool {
     }
 
     /**
-     * XML objektummá alakítás séma validációval.<br>
+     * Converting XML into an object with schema validation.<br>
      * <br>
-     * Szukseg eseten lehetseges testre szabni a unmarshall igenyeket a "feature" vagy a "properties" beallitasokkal.<br>
-     * Egy pelda a security beallitasokra: <br>
+     * If necessary, it is possible to customize unmarshalling requirements using the "feature" or "properties" settings<br>
+     * An example of security settings:<br>
      * https://owasp.org/www-project-cheat-sheets/cheatsheets/XML_External_Entity_Prevention_Cheat_Sheet.html#JAXB_Unmarshaller <br>
      * <br>
-     * Mi ezt leggyakrabban a xerces konfigjain keresztul csinaljuk:
+     * We usually do this most commonly through the Xerces configurations:
      *
      * <pre>
      * -Dorg.xml.sax.parser=com.sun.org.apache.xerces.internal.parsers.SAXParser
@@ -179,7 +179,7 @@ public class JaxbTool {
      * -DentityExpansionLimit=100
      * </pre>
      *
-     * Lehetoseg van tovabbi beallitasokra a kovetkezo minta szerint:<br>
+     * Additional settings can be configured as follows:<br>
      * https://docs.oracle.com/javase/7/docs/api/javax/xml/bind/Unmarshaller.html
      *
      * <pre>
@@ -194,16 +194,16 @@ public class JaxbTool {
      * </pre>
      *
      * @param <T>
-     *            visszatérő típus
+     *            Returning type
      * @param type
-     *            xml objektumot reprezentáló osztály típusa
+     *            Type of class representing an XML object
      * @param inputStream
-     *            a bemeneti adatokat tartalmazó folyam
+     *            A stream containing the input data
      * @param schemaPath
-     *            séma elérési útja
-     * @return xml-nek megfelelő objektum a felolvasott értékekkel.
+     *            Schema path
+     * @return An object corresponding to the XML with the read values.
      * @throws BaseException
-     *             érvénytelen bemenet esetén, vagy ha nem lehet feldolgozni a bemeneti adatot
+     *             In case of invalid input, or if the input data cannot be processed
      */
     public <T> T unmarshalXML(Class<T> type, InputStream inputStream, String schemaPath) throws BaseException {
         if (type == null || inputStream == null) {
@@ -227,9 +227,9 @@ public class JaxbTool {
 
             return result;
         } catch (UnmarshalException e) {
-            // a default parser az elso FATAL_ERROR-nal megszakitja a folyamatot exception dobassal.
-            // Ezt a mukodest lehet allitani a spf.setFeature("http://apache.org/xml/features/continue-after-fatal-error", true)
-            // feature beallitassal, de nekunk megfelel igy is. Viszont az addig eszlelt hibakat bele kell rakni az exceptionba
+            // The default parser terminates the process on the first FATAL_ERROR with an exception throw.
+            // This behavior can be set using spf.setFeature ("http://apache.org/xml/features/continue-after-fatal-error", true)
+            // You can achieve this behavior using the setFeature method, but it currently meets our needs. However, the errors detected so far must be included in the exception.
             throw new XsdProcessingException(errorCollector.getErrors(), e);
         } catch (JAXBException | SAXException e) {
             throw new XsdProcessingException(CoffeeFaultType.INVALID_INPUT, e.getLocalizedMessage(), e);
@@ -237,19 +237,19 @@ public class JaxbTool {
     }
 
     /**
-     * XML objektummá alakítás séma validációval.
+     * Converting XML into an object with schema validation.
      *
      * @param <T>
-     *            visszatérő típus
+     *            Returning type
      * @param type
-     *            xml objektumot reprezentáló osztály típusa
+     *            Type of class representing an XML object
      * @param binary
-     *            a bemeneti adatokat tartalmazó bináris
+     *            The binary data containing the input
      * @param schemaPath
-     *            séma elérési útja
-     * @return xml-nek megfelelő objektum a felolvasott értékekkel.
+     *            Schema path
+     * @return An object corresponding to the XML with the read values.
      * @throws BaseException
-     *             érvénytelen bemenet esetén, vagy ha nem lehet feldolgozni a bemeneti adatot
+     *             In case of invalid input, or if the input data cannot be processed
      */
     public <T> T unmarshalXML(Class<T> type, byte[] binary, String schemaPath) throws BaseException {
         if (Objects.isNull(type) || ArrayUtils.isEmpty(binary)) {
@@ -384,15 +384,15 @@ public class JaxbTool {
     }
 
     /**
-     * Visszatér egy {@link LSResourceResolver} példánnyal.<br>
-     * Így lehetővé válik, hogy ennek a felülírásával saját {@code LSResourceResolver} implementációt alkalmazzunk az XSD-k megtalálására.<br>
-     * A felülíráshoz a {@link IXsdResourceResolver}-t kell implementálni (@Alternative és @Modell annotációval).<br>
-     * Valamint a {@code beans.xml}-be be kell jegyezni, mint alternative class-t.<br>
-     * Kapcsolódó dokumentáció: /docs/howto/xsd_xml_validation_depend_on_version.adoc
+     * Returns an instance of {@link LSResourceResolver}.<br>
+     * This allows overriding it to use your own {@code LSResourceResolver} implementation for locating XSDs.<br>
+     * To override this, you need to implement {@link IXsdResourceResolver} with {@code @Alternative} and {@code @Model} annotations.<br>
+     * Also, you need to register it in the beans.xml as an alternative class.<br>
+     * Related documentation: /docs/howto/xsd_xml_validation_depend_on_version.adoc
      *
      * @param schemaPath
-     *            séma elérési útja
-     * @return Új {@code LSResourceResolver} implementáció példánya
+     *            Schema path
+     * @return Instance of a new {@code LSResourceResolver} implementation
      */
     protected LSResourceResolver createLSResourceResolverInstance(String schemaPath) {
         IXsdResourceResolver resourceResolver = createCDIInstance(IXsdResourceResolver.class);
@@ -403,13 +403,13 @@ public class JaxbTool {
     }
 
     /**
-     * ValidateXML annotációval ellátott metódus paraméter megszerzése
+     * Obtaining a method parameter annotated with ValidateXML
      *
      * @param validateXMLs
-     *            ValidateXML annotációk REST metódus paraméterén
+     *            Annotations of ValidateXML on REST method parameters
      * @param requestVersion
-     *            keresett verzió
-     * @return definiált XSD path
+     *            searched version
+     * @return defined XSD path
      * @throws BaseException
      *             if invalid input or cannot read xsd path
      */
@@ -418,7 +418,7 @@ public class JaxbTool {
             throw new InvalidParameterException("validateXMLs is null!");
         }
         for (ValidateXML versionValidate : validateXMLs) {
-            if (versionValidate.version().include().length == 0 // Nincs version megadva
+            if (versionValidate.version().include().length == 0 // No version specified
                     || RangeUtil.inRanges(versionValidate.version().include(), requestVersion)) {
                 return versionValidate.xsdPath();
             }

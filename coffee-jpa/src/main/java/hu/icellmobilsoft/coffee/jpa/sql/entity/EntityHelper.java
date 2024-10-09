@@ -99,8 +99,7 @@ public class EntityHelper {
     }
 
     /**
-     * Általános bemeneti id listát partícionál {@link #MAX_PARAMETER_COUNT} alapján, a partícionált id listával lefuttatja f függvény alapján a kért
-     * lekérdezéseket
+     * Partition a general input ID list based on {@link #MAX_PARAMETER_COUNT}, then execute the requested queries with the partitioned ID lists using function f.
      *
      * @param ids
      *            a {@link java.util.Collection} object.
@@ -129,8 +128,7 @@ public class EntityHelper {
     }
 
     /**
-     * Általános bemeneti id listát partícionál MAX_PARAMETER_COUNT alapján, a partícionált id listával és param1 felhasználásával lefuttatja f
-     * függvény alapján a kért lekérdezéseket
+     * Partition a general input ID list based on MAX_PARAMETER_COUNT, then execute the requested queries using the partitioned ID lists and param1 with function f.
      *
      * @param <T>
      *            T object
@@ -139,10 +137,10 @@ public class EntityHelper {
      * @param ids
      *            id lista
      * @param param1
-     *            select paraméter
+     *            select parameter
      * @param function
-     *            hívott funkció {@link BaseExceptionFunction2}
-     * @return id lista select eredménye, mely {@value #MAX_PARAMETER_COUNT} sublista selectekre volt bontva
+     *            called function {@link BaseExceptionFunction2}
+     * @return The result of selecting an ID list, which was divided into {@value #MAX_PARAMETER_COUNT} sublists for selects
      * @throws BaseException
      *             exception
      */
@@ -164,8 +162,7 @@ public class EntityHelper {
     }
 
     /**
-     * Általános bemeneti id listát partícionál MAX_PARAMETER_COUNT alapján, a partícionált id listával és param1, param2 felhasználásával lefuttatja
-     * f függvény alapján a kért lekérdezéseket
+     * Partition a general input ID list based on MAX_PARAMETER_COUNT. Execute the requested queries using the partitioned ID lists, param1, and param2 with function f.
      *
      * @param <T>
      *            a T object.
@@ -176,12 +173,12 @@ public class EntityHelper {
      * @param ids
      *            id lista
      * @param param1
-     *            select paraméter
+     *            select parameter
      * @param param2
-     *            select paraméter
+     *            select parameter
      * @param function
-     *            hívott funkció {@link BaseExceptionFunction3}
-     * @return id lista select eredménye, mely {@value #MAX_PARAMETER_COUNT} sublista selectekre volt bontva
+     *           called function {@link BaseExceptionFunction3}
+     * @return The result of selecting an ID list, which was divided into {@value #MAX_PARAMETER_COUNT} sublist selects
      * @throws BaseException
      *             exception
      */

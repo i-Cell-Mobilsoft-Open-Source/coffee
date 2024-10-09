@@ -49,7 +49,7 @@ public class XsdResourceResolverTest {
     @Test
     @DisplayName("Testing resolve resource with good params")
     void resolveResourceWithGoodParams() throws BaseException {
-        // kihasznalja, hogy az src/test/resource-ban megtalalhato a file
+        // It takes advantage of the fact that the file is located in src/test/resources.
         // Given
         XsdResourceResolver xsdResourceResolver = new XsdResourceResolver();
         xsdResourceResolver.setXsdDirPath("./reqversion.xml");

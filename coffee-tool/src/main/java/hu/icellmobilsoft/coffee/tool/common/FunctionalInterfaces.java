@@ -24,8 +24,8 @@ import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 /**
  * Common class for @FunctionalInterface classes
  *
- * @deprecated A wrapper {@link FunctionalInterfaces} meg fog szünni, mert felesleges. A benne foglalt funkcionális interfészek helyett azok ős
- *             interfészeit kell használni a {@code coffee-se-function} modul {@code hu.icellmobilsoft.coffee.se.function} package-ből.
+ * @deprecated The wrapper {@link FunctionalInterfaces} will be deprecated because it's unnecessary. Instead of the functional interfaces it contains,
+ *             you should use their parent interfaces from the {@code hu.icellmobilsoft.coffee.se.function} package in the {@code coffee-se-function} module.
  *
  * @author imre.scheffer
  * @since 1.0.0
@@ -60,7 +60,7 @@ public class FunctionalInterfaces {
     }
 
     /**
-     * Consumer {@link BaseException}-t dobó operációkhoz
+     * For operations that throw a consumer {@link BaseException}
      *
      * @param <T>
      *            input objektum tipusa

@@ -40,8 +40,8 @@ public class StringHelper {
     /** Constant <code>DEFAULT_PATTERN=".*?(pass|secret).*?"</code> */
     public static final String[] DEFAULT_PATTERN = { "[\\w\\s]*?secret[\\w\\s]*?", "[\\w\\s]*?pass[\\w\\s]*?" };
 
-    // PM: Csak a default config source-okat huzhatjuk be, mivel ez az osztály használva van az etcd config sourc-ban (emiatt a
-    // @org.eclipse.microprofile.config.inject.ConfigProperty annotacio nem megfelelo)
+    // PM: Only the default config sources can be pulled in, as this class is used in the etcd config source
+    // (hence the @org.eclipse.microprofile.config.inject.ConfigProperty annotation is not appropriate).
     private static Config config = ConfigProviderResolver.instance().getBuilder().addDefaultSources().build();
 
     /**

@@ -27,12 +27,12 @@ import org.eclipse.microprofile.rest.client.RestClientBuilder;
 import org.eclipse.microprofile.rest.client.spi.RestClientBuilderListener;
 
 /**
- * A <a href=
+ * A class for activating the base provider according to the <a href=
  * "https://download.eclipse.org/microprofile/microprofile-rest-client-1.2.1/microprofile-rest-client-1.2.1.html#_provider_declaration">Microprofile
- * Rest Client</a> szerinti REST kliens alap provider aktivalasara szolgalo osztaly. Ezt az osztalyt meg a
- * <code>META-INF/services/org.eclipse.microprofile.rest.client.spi.RestClientBuilderListener</code> fajlon keresztul aktivalni kell <br>
+ * Rest Client</a>This class should be activated through the following file
+ * <code>META-INF/services/org.eclipse.microprofile.rest.client.spi.RestClientBuilderListener</code><br>
  * <br>
- * Tartalmazza a request/response loggolasat + alap ceges szintu http setting beallitasokat
+ * It includes logging of request/response and basic company-wide HTTP setting configurations.
  *
  * @author imre.scheffer
  * @see DefaultLoggerClientRequestFilter
@@ -54,7 +54,7 @@ public class DefaultRestClientBuilderListener implements RestClientBuilderListen
     public void onNewBuilder(RestClientBuilder builder) {
         CDI<Object> cdi = CDI.current();
         // log
-        // A filtereket CDI-on keresztül regisztráljuk, hogy feloldhatoak legyenek az Inject-ek
+        // Filters are registered via CDI to make them injectable.
         builder.register(cdi.select(DefaultLoggerClientRequestFilter.class).get());
         builder.register(cdi.select(DefaultLoggerClientResponseFilter.class).get());
         // settings

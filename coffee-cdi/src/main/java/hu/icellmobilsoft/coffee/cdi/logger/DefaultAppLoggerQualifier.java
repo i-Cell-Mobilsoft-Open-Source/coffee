@@ -22,7 +22,7 @@ package hu.icellmobilsoft.coffee.cdi.logger;
 import jakarta.enterprise.util.AnnotationLiteral;
 
 /**
- * Ez csak azert kell, hogy lehessen rahivatkozni a qualifier annotaciora
+ * This is needed solely to reference it for the qualifier annotation.
  *
  * @author ischeffer
  * @since 1.0.0

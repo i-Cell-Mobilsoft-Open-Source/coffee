@@ -22,7 +22,7 @@ package hu.icellmobilsoft.coffee.module.ruleng.rule;
 import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
 
 /**
- * Kiértékelést sértő hiba
+ * Evaluation-violating error
  *
  * @author imre.scheffer
  * @since 1.0.0

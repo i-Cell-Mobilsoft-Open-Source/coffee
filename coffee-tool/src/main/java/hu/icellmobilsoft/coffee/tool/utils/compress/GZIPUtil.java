@@ -162,7 +162,7 @@ public class GZIPUtil {
     }
 
     /**
-     * Visszaadja a GZIP eredeti meretet. Valojaban nem mindig lehet szamolni vele, de megis van valami. Minta:
+     * Returns the original size of a GZIP file. In reality, it's not always possible to calculate accurately, but there's something to work with. Sample:
      *
      * @param data
      *            input adat

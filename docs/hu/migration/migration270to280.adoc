@@ -36,8 +36,9 @@ A változtatások nem eredményeznek átállási munkálatokat, visszafelé komp
 
 === coffee-tool
 
-A `RandomUtil` deprecated lett, helyette a `coffee-se-util` modulban található
+* A `RandomUtil` deprecated lett, helyette a `coffee-se-util` modulban található
  `hu.icellmobilsoft.coffee.se.util.string.RandomUtil` használandó.
+* A `MavenURLHandler` optimalizálva lett a Quarkus csomagoláshoz.
 
 ==== Átállás
 
@@ -111,6 +112,18 @@ A változtatások nem eredményeznek átállási munkálatokat, visszafelé komp
 
 * DateType - xsd:date típus yyyy-MM-dd formátummal
 * TimestampWithoutMillisType - xsd:dateTime típus yyyy-MM-ddTHH:mm:ssZ formátummal
+
+==== Átállás
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+=== coffee-se-io
+
+Új modul.
+
+* `SizeLimitExceededIOException`: InputStream olvasás közben elértük a limitet.
+* `LimitedSizeInputStream`: Olyan InputStream, ami `SizeLimitExceededIOException`-t dob ha a stream olvasása közben eléri a
+beállított limitet.
 
 ==== Átállás
 

@@ -30,8 +30,8 @@ import hu.icellmobilsoft.coffee.cdi.logger.AppLogger;
 import hu.icellmobilsoft.coffee.cdi.logger.ThisLogger;
 import hu.icellmobilsoft.coffee.dto.common.common.KeyValueBasicType;
 import hu.icellmobilsoft.coffee.dto.document.document.TemplateFullType;
-import hu.icellmobilsoft.coffee.dto.exception.BaseException;
 import hu.icellmobilsoft.coffee.dto.notification.notification.EmailPlainTextType;
+import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
 
 /**
  * AbstractEmailPlainTextAction class.

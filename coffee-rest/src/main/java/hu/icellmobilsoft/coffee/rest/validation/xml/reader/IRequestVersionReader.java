@@ -24,7 +24,7 @@ import java.io.InputStream;
 import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
 
 /**
- * Interfész a requestVersion értékének kiolvasásához
+ * Interface for reading the requestVersion value.
  *
  * @see EmptyRequestVersionReader
  * @author tamas.cserhati
@@ -33,7 +33,7 @@ import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
 public interface IRequestVersionReader {
 
     /**
-     * Verziószámot állapítja meg egy általános HTTP request alapján. Lehet az HTTP entity, header, akármi...
+     * Determines the version number based on a general HTTP request. It could be from the HTTP entity, header, or anything else.
      * Can read the request version from a general http request. (request body, header...)
      *
      * @param inputStream

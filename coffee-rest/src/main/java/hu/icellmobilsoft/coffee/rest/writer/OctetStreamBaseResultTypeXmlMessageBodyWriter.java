@@ -38,8 +38,8 @@ import hu.icellmobilsoft.coffee.dto.common.commonservice.BaseResultType;
 import hu.icellmobilsoft.coffee.tool.utils.marshalling.MarshallingUtil;
 
 /**
- * Octet stream response filter a Coffee BaseResultType típusokhoz. Eredetileg nem létezik semmi hasonló a resteasyben, egyszerűen elnyeli a response
- * body objektumot akármilyen figyelmeztetés nélkül. Válaszban XML String van becsomagolva.
+ * An octet stream response filter for Coffee BaseResultType types. Originally, there is nothing similar in Resteasy;
+ * it simply consumes the response body object without any warning. The response contains an XML string wrapped.
  * 
  * @author imre.scheffer
  * @since 0.12.0

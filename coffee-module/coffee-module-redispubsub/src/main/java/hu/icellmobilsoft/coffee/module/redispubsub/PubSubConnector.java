@@ -103,7 +103,7 @@ import hu.icellmobilsoft.coffee.se.logging.Logger;
  */
 @ApplicationScoped
 @Connector(PubSubConnector.CONNECTOR_NAME)
-// Legenerálná a config osztályokat és a config doksit is, de egyelőre csak experimental a WF alatt
+// I would generate the config classes and the config documentation, but for now, it's experimental under WF.
 // @ConnectorAttribute(name = "connection-key", mandatory = true, type = "string", direction = ConnectorAttribute.Direction.INCOMING_AND_OUTGOING,
 // description = "Coffee redis connection key coffee.redis.*")
 // @ConnectorAttribute(name = "pool-key", type = "string", direction = ConnectorAttribute.Direction.INCOMING_AND_OUTGOING,

@@ -116,9 +116,9 @@ public class XsdHelper implements IXsdHelper {
      */
     @Override
     public Schema getSchema(String xsd, LSResourceResolver lsResourceResolver) throws BaseException, SAXException {
-        // ebben az esetben az xsd-knek a jboss szerveren kell lenniuk valahol
-        // ha a warba akarjuk csomagolni, akkor valoszinuleg masik
-        // classloader kell (at kell adni egy classt is)
+        // In this case, the XSD files need to be located somewhere on the JBoss server
+        // if you want to package them into the WAR file. You'll likely need another classloader (possibly pass it through a class)
+        // to ensure they are accessible and can be loaded correctly.
         if (StringUtils.isBlank(xsd) || lsResourceResolver == null) {
             throw new InvalidParameterException("xsd is blank or lsResourceResolver is null!");
         }

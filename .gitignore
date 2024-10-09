@@ -5,3 +5,4 @@
 .classpath
 target/
 release/ant\.properties 
+.vscode/

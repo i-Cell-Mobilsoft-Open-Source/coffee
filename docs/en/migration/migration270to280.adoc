@@ -35,8 +35,9 @@ Changes are backwards compatible doesn't need any migration. It is recommended t
 
 === coffee-tool
 
-The `RandomUtil` has been deprecated. The new `hu.icellmobilsoft.coffee.se.util.string.RandomUtil` should be used
+* The `RandomUtil` has been deprecated. The new `hu.icellmobilsoft.coffee.se.util.string.RandomUtil` should be used
 instean from the `coffee-se-util` module.
+* The `MavenURLHandler` is optimized for Quarkus packaging.
 
 ==== Migration
 
@@ -110,6 +111,17 @@ New XSD simple types are added to the `http://common.dto.coffee.icellmobilsoft.h
 
 * DateType - xsd:date with yyyy-MM-dd pattern
 * TimestampWithoutMillisType - xsd:dateTime with yyyy-MM-ddTHH:mm:ssZ pattern
+
+==== Migration
+
+Changes are backwards compatible doesn't need any migration.
+
+=== coffee-se-io
+
+New module.
+
+* `SizeLimitExceededIOException`: Signals that a limit is reach while reading an InputStream.
+* `LimitedSizeInputStream`: Throws `SizeLimitExceededIOException` if the limit is reached while reading the stream.
 
 ==== Migration
 

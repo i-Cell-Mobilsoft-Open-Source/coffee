@@ -32,7 +32,7 @@ import jakarta.enterprise.util.Nonbinding;
 import jakarta.inject.Qualifier;
 
 /**
- * From-To megadásra alkalmazható annotació.
+ * Annotation applicable for specifying a From-To range.
  *
  * @author imre.scheffer
  * @see Version

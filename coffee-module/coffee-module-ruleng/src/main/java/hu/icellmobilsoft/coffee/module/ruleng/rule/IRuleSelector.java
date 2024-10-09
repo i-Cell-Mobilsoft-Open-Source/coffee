@@ -22,7 +22,7 @@ package hu.icellmobilsoft.coffee.module.ruleng.rule;
 import java.util.Comparator;
 
 /**
- * Rule kiértékelését kiegészítő interfész
+ * Supplementary interface for rule evaluation.
  *
  * @author imre.scheffer
  * @since 1.0.0
@@ -30,18 +30,18 @@ import java.util.Comparator;
 public interface IRuleSelector extends Comparable<IRuleSelector> {
 
     /**
-     * Sorrend, ez szerint sorrendezzünk
+     * Order, sort according to this order.
      *
-     * @return alapból 0
+     * @return 0 by default
      */
     default int order() {
         return 0;
     }
 
     /**
-     * Csoportosítás
+     * Grouping
      *
-     * @return alapból {@link RuleGroup#NONE}
+     * @return by default {@link RuleGroup#NONE}
      * @see RuleGroup
      */
     default Enum<?> group() {

@@ -41,13 +41,12 @@ public class ConfigUtil {
      * 
      * @return default microprofile config without other configsources
      */
-    // Fontos - A {@link ConfigBuilder#build()} metódust a SmallRyeConfigBuilder osztály valósítja meg a smallrye config implementáción belül, és
-    // ennek használata során a SmallRyeConfig osztályból új példány jön létre, és a példányosítása során a generateDottedProperties metódus nagyon
-    // sok CPU erőforrást emészt el. Ezért szükséges olyan módon megoldani ezt a default config tárolást, hogy az ne jelentsen problémát se CDI
-    // használatkor, se pedig CDI-n kívül.
+    // Important - The {@link ConfigBuilder#build()} method is implemented by the SmallRyeConfigBuilder class within the SmallRye Config implementation.
+    // When using this, a new instance of the SmallRyeConfig class is created, and during instantiation, the generateDottedProperties method consumes a significant amount of CPU resources.
+    // Therefore, it is necessary to handle default config storage in such a way that it does not pose a problem both during CDI usage and outside of CDI.
     //
-    // Lefixaljuk arra a classloader-re ahol kezeljunk a kodunkat, ezzel biztositjuk hogyha netan az alkalmazas szerver mas classloaderrel
-    // inicializal mindig megtalalja a sajat 'microprofile-config.properties' fajlunkat
+    // We fix this on the classloader where we manage our code, ensuring that if the application server initializes
+    // with a different classloader, it always finds our own 'microprofile-config.properties' file.
     private Config config;
 
     private ConfigUtil() {

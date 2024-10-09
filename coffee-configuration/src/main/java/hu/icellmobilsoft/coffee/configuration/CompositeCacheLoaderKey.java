@@ -22,7 +22,7 @@ package hu.icellmobilsoft.coffee.configuration;
 import java.util.Objects;
 
 /**
- * Összetett kulcs osztály létrehozása az ApplicationConfiguration osztály cache - jéhez.
+ * Creating a complex key class for caching in the ApplicationConfiguration class.
  *
  * @author csaba.suli
  * @since 1.1.0

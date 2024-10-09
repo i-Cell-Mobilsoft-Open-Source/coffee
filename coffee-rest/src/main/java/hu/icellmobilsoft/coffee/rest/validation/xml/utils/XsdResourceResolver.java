@@ -67,7 +67,7 @@ public class XsdResourceResolver implements LSResourceResolver, IXsdResourceReso
     /**
      * {@inheritDoc}
      *
-     * Xsd feloldás
+     * Xsd resolving
      */
     @Override
     public LSInput resolveResource(String type, String namespaceURI, String publicId, String systemId, String baseURI) {
@@ -93,7 +93,7 @@ public class XsdResourceResolver implements LSResourceResolver, IXsdResourceReso
                 temp2 = StringUtils.substringAfter(systemId, "..");
                 // temp2 = "/common/common.xsd"
             } else {
-                // hogyha sajat konyvtarban van az import, vissza kell rakni a levagott separatort
+                // If the import is in your own directory, you need to reattach the trimmed separator.
                 temp = temp + "/";
             }
             String path = temp + temp2;

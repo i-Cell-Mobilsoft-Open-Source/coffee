@@ -31,7 +31,7 @@ import java.lang.annotation.Target;
 import jakarta.inject.Qualifier;
 
 /**
- * Csak az email kuldesevel foglalkozo bean-re hivatkozik, nem csinalhat semmi mas muveletet
+ * It refers only to the bean responsible for sending emails and should not perform any other operations
  *
  * @author ischeffer
  * @since 1.0.0

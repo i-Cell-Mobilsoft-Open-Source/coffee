@@ -62,7 +62,7 @@ public abstract class AbstractMetricsInterceptor {
         // microprofile metric
         MetricRegistry metricRegistry = CDI.current().select(MetricRegistry.class).get();
 
-        // lehetséges hogy cache fog itt kelleni hogy gyorsabb legyen
+        // It might be necessary to use caching here for improved performance
         // request counter
         Tag method = new Tag(IGrpcMetricConstant.Tag.TAG_METHOD, methodDescriptor.getBareMethodName());
         Tag methodType = new Tag(IGrpcMetricConstant.Tag.TAG_METHOD_TYPE, methodDescriptor.getType().name());

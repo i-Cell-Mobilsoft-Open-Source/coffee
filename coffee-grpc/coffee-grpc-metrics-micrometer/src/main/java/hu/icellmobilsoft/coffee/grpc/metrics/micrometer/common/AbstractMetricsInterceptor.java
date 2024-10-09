@@ -69,7 +69,7 @@ public abstract class AbstractMetricsInterceptor {
         Tag serviceName = Tag.of(IGrpcMetricConstant.Tag.TAG_SERVICE, methodDescriptor.getServiceName());
         Iterable<Tag> tags = List.of(method, methodType, serviceName);
 
-        // lehetséges hogy cache fog itt kelleni hogy gyorsabb legyen
+        // It might be necessary to use caching here for improved performance
         // request counter
         Counter requestCounter = Counter.builder(getRequestMetadataName()).description(getRequestMetadataName()).tags(tags).register(meterRegistry);
         metricBundle.setRequestCounter(requestCounter);

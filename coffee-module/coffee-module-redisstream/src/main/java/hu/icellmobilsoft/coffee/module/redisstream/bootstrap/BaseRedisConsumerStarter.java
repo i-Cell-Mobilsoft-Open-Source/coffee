@@ -123,15 +123,15 @@ public class BaseRedisConsumerStarter {
     protected void handleConsumerBean(Bean<?> bean) {
         log.info("Found consumer: [{0}]", bean.getBeanClass());
         RedisStreamConsumer redisStreamConsumerAnnotation = AnnotationUtil.getAnnotation(bean.getBeanClass(), RedisStreamConsumer.class);
-        // a coffee.redisstream beallitasok kellenek, annal a group a kulcs
+        // We need the settings for coffee.redisstream, where group is the key.
         config.setConfigKey(redisStreamConsumerAnnotation.group());
         int threads = config.getConsumerThreadsCount().orElse(redisStreamConsumerAnnotation.consumerThreadsCount());
-        // Letrehozunk annyi onnalo instance-t (dependent) amennyi a konfigban van megadva
+        // We create as many independent instances (dependent scoped) as specified in the configuration.
         Instance<RedisStreamConsumerExecutor> consumerExecutor = CDI.current().select(RedisStreamConsumerExecutor.class);
         for (int i = 0; i < threads; i++) {
             IRedisStreamConsumerExecutor executor = consumerExecutor.get();
 
-            // kulon onnalo szalban inditjuk a vegtelen hallgatozo ciklust
+            // We start the infinite listener loop in a separate independent thread.
             startThread(executor, redisStreamConsumerAnnotation, bean);
         }
     }

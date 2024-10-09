@@ -37,17 +37,17 @@ jobs:
   release_job:
     name: Maven release
 
-    # Permission ellenorzes https://github.community/t/who-has-permission-to-workflow-dispatch/133981
-    if: contains('["rombow","czenczl"]', github.actor)
+    # Permission check https://github.community/t/who-has-permission-to-workflow-dispatch/133981
+    if: contains('["rombow","czenczl","petrenyi-mark","speter555","bucherarnold"]', github.actor)
 
     runs-on: ubuntu-latest
 
     steps:
       - name: Import GPG key
         env:
-          # GPG privat kulcs, ami armor-al exportalva (kezdete: '-----BEGIN PGP PRIVATE KEY BLOCK-----') ez az egesz tartalom base64 elkodolva, az betoltve a secrets tartalomnak
+          # GPG private key exported with armor (start: '-----BEGIN PGP PRIVATE KEY BLOCK-----') this is the whole content base64 encoded, inserted as the secrets content
           GPG_SIGNING_KEY: ${{ secrets.GPG_SIGNING_KEY_GITHUB_TECHUSER }}
-        # dekodoljuk a base64 elkodolt privat kulcsot es betoltjuk
+        # decode the base64 encoded private key and insert it
         run: |
           mkdir -p ~/.gnupg/
           echo "$GPG_SIGNING_KEY" | base64 --decode > ~/.gnupg/private.key
@@ -55,16 +55,16 @@ jobs:
       - name: Install SSH key
         uses: shimataro/ssh-key-action@v2
         with:
-          # A tartalma egy PEM formatumos (kezdete: '-----BEGIN RSA PRIVATE KEY-----') SSH kulcs
+          # The content is a SSH key with PEM format (start with '-----BEGIN RSA PRIVATE KEY-----')
           key: ${{ secrets.SSH_PRIVATE_KEY_GITHUB_TECHUSER }}
           name: id_rsa # optional
-          known_hosts: ${{ secrets.KNOWN_HOSTS }} # jelenleg ures a tartalma
+          known_hosts: ${{ secrets.KNOWN_HOSTS }} # currently empty
           # config: ${{ secrets.CONFIG }} # ssh_config; optional
 
       - name: Checkout ${{ github.event.ref }}
         uses: actions/checkout@v3
         with:
-          # Ne az a user legyen aki a workflow-ot inditotta
+          # Don't let it be the user who started the workflow.
           token: ${{ secrets.GH_TOKEN_TECHUSER_JAVA }}
 
       - name: Set up JDK 11
@@ -75,11 +75,11 @@ jobs:
           server-id: ossrh # Value of the distributionManagement/repository/id field of the pom.xml
           settings-path: ${{ github.workspace }} # location for the settings.xml file
 
-      # Buildelt fajlok alairas tesztelese
+      # Testing the signature of built files.
       #- name: Check sign
       #  run: mvn -B package gpg:sign -Dgpg.keyname=$GPG_KEY_ID_GITHUB_TECHUSER --file pom.xml
 
-      # mar nem kell, potolja a actions/checkout@v3.with.token + lejebb levo git config parancsok
+      # It's no longer needed; it gets replaced by `actions/checkout@v3.with.token` + the Git config commands below.
       #- name: Setup GIT token
       #  uses: fregante/setup-git-token@v1
       #  with:
@@ -92,7 +92,7 @@ jobs:
 
       - name: Configure GIT for signed commit
         env:
-          # GPG kulcs azonositoja, jelenleg F0744443DCD76BF5DC11D3ED3C8AD450A27EF801
+          # The GPG key ID is currently F0744443DCD76BF5DC11D3ED3C8AD450A27EF801
           GPG_KEY_ID_GITHUB_TECHUSER: ${{ secrets.GPG_KEY_ID_GITHUB_TECHUSER }}
         run: |
           git config --global user.name "icellmobilsoft-robot"

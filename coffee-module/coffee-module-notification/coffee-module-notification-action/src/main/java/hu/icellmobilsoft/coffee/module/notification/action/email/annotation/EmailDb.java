@@ -31,7 +31,7 @@ import java.lang.annotation.Target;
 import jakarta.inject.Qualifier;
 
 /**
- * Email kuldesevel es mentesevel foglalkozo bean-re hivatkozik, nem csinalhat semmi mas muveletet
+ * It refers to the bean responsible for sending and saving emails and should not perform any other operations
  *
  * @author ischeffer
  * @since 1.0.0
