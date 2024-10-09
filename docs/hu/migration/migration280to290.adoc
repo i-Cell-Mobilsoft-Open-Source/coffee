@@ -4,3 +4,9 @@ coff:ee v2.8.0 -> v2.9.0 migrációs leírás, újdonságok, változások leír�
 
 === coffee-module-notification
 Frissítésre került a commons-email jakarta kompatibilis release, így ez a modul visszakapcsolásra került.
+
+=== coffee-grpc
+
+** GrpcClientConfig kibővítve a requestLogSize és a responseLogSize paraméterekkel,
+ezek a kliens kérés és válasz maximális log méretének korlátozására szolgálnak karakterekben,
+a limit feletti karakterek levágásra kerülnek.

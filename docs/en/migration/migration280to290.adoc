@@ -4,3 +4,9 @@ coff:ee v2.8.0 -> v2.9.0 migration description, news, changes
 
 === coffee-module-notification
 The commons-email was updated to a Jakarta-compatible release, and the module has been re-enabled.
+
+=== coffee-grpc
+
+** `GrpcClientConfig` extended with the `requestLogSize` and the `responseLogSize` parameter,
+which serves to set the client request and response maximum log size in characters,
+the characters exceeding the limit will be truncated.
