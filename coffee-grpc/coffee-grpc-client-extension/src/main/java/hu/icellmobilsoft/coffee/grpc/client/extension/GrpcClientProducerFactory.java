@@ -33,6 +33,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import hu.icellmobilsoft.coffee.grpc.client.GrpcClient;
 import hu.icellmobilsoft.coffee.tool.utils.annotation.AnnotationUtil;
+import io.grpc.CallOptions;
 import io.grpc.Channel;
 import io.grpc.ManagedChannel;
 import io.grpc.stub.AbstractBlockingStub;
@@ -46,6 +47,11 @@ import io.grpc.stub.AbstractBlockingStub;
  */
 @ApplicationScoped
 public class GrpcClientProducerFactory {
+
+    /**
+     * {@link CallOptions.Key} for configValue parameter
+     */
+    public static final CallOptions.Key<String> CONFIG_VALUE_KEY = CallOptions.Key.createWithDefault("configValue", StringUtils.EMPTY);
 
     /**
      * Default constructor, constructs a new object.
@@ -96,7 +102,7 @@ public class GrpcClientProducerFactory {
 
         instance.destroy(channel);
 
-        return blockingStub;
+        return (AbstractBlockingStub) blockingStub.withOption(CONFIG_VALUE_KEY, configKey);
     }
 
 }
