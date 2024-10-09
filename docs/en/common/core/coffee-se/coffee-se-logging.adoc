@@ -9,7 +9,7 @@ Contains a basic logging system using `java.util.logging.Logger`.
 .sample usage in SE environment
 [source,java]
 ----
-import en.icellmobilsoft.coffee.se.logging.Logger;
+import hu.icellmobilsoft.coffee.se.logging.Logger;
 
 private Logger log = Logger.getLogger(LogSample.class);
 
@@ -65,7 +65,7 @@ public class CustomMDCAdapterProvider implements MDCAdapterProvider {
 ----
 . Bind `CustomMDCAdapterProvider` via service loader:
 +
-.META-INF/services/en.icellmobilsoft.coffee.se.logging.mdc.MDCAdapterProvider
+.META-INF/services/hu.icellmobilsoft.coffee.se.logging.mdc.MDCAdapterProvider
 [source,text]
 ----
 com.project.CustomMDCAdapterProvider

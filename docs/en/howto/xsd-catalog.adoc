@@ -447,7 +447,7 @@ This may be some Eclipse Bug.
 In <<howto_xsd_catalog_CatalogMegoldas,Catalog solution>> there is an example of the super.catalog.xml file.
 In it you can see that the file is accessed via maven dependency:
 
- uri="maven:en.icellmobilsoft.coffee.dto.xsd:coffee-dto-xsd:jar::!/xsd/en/icellmobilsoft/coffee/dto/common/common.xsd"
+ uri="maven:hu.icellmobilsoft.coffee.dto.xsd:coffee-dto-xsd:jar::!/xsd/en/icellmobilsoft/coffee/dto/common/common.xsd"
 
 This actually refers to the following:
 
