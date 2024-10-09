@@ -85,7 +85,7 @@ public class ClientRequestInterceptor implements ClientInterceptor {
                         logSize += messageToPrint.length();
                     }
 
-                    if (!messageToPrint.isEmpty()) {
+                    if (messageToPrint.length() > 0) {
                         LOGGER.info("Sending request message part [{0}]: [{1}]", count++, messageToPrint.toString());
                     }
                 }

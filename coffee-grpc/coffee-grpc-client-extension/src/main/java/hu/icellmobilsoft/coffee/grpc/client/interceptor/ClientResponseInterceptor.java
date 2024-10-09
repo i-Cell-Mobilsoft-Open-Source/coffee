@@ -95,7 +95,7 @@ public class ClientResponseInterceptor implements ClientInterceptor {
                                 logSize += messageToPrint.length();
                             }
 
-                            if (!messageToPrint.isEmpty()) {
+                            if (messageToPrint.length() > 0) {
                                 LOGGER.info("Received response message part [{0}]: [{1}]", count++, messageToPrint.toString());
                             }
                         }
