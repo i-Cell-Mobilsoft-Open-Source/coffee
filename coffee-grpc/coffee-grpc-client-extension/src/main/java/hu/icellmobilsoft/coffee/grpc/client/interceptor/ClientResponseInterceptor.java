@@ -79,11 +79,11 @@ public class ClientResponseInterceptor implements ClientInterceptor {
                                 .getResponseLogSize();
 
                         if (LOGGER.isTraceEnabled()) {
-                            LOGGER.trace("Received response message part [{0}]: [{1}]", count++, message.toString());
+                            LOGGER.trace("Received response message part [{0}]: [{1}]", count++,String.valueOf(message));
                         } else {
                             StringBuilder messageToPrint = new StringBuilder();
 
-                            String messageString = message.toString();
+                            String messageString = String.valueOf(message);
                             if (messageString.length() > responseLogSize - logSize) {
                                 if (responseLogSize - logSize > 0) {
                                     messageToPrint.append(StringUtils.truncate(messageString, responseLogSize - logSize));

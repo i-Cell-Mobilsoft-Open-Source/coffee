@@ -69,11 +69,11 @@ public class ClientRequestInterceptor implements ClientInterceptor {
                 int requestLogSize = CDI.current().select(GrpcClientConfig.class, new GrpcClient.Literal(configKey)).get().getRequestLogSize();
 
                 if (LOGGER.isTraceEnabled()) {
-                    LOGGER.trace("Sending request message part [{0}]: [{1}]", count++, message.toString());
+                    LOGGER.trace("Sending request message part [{0}]: [{1}]", count++, String.valueOf(message));
                 } else {
                     StringBuilder messageToPrint = new StringBuilder();
 
-                    String messageString = message.toString();
+                    String messageString = String.valueOf(message);
                     if (messageString.length() > requestLogSize - logSize) {
                         if (requestLogSize - logSize > 0) {
                             messageToPrint.append(StringUtils.truncate(messageString, requestLogSize - logSize));
