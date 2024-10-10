@@ -28,7 +28,8 @@
 				<configuration>
 					<!-- Due to the combination of Java 17 and Gson 2.8.9, XMLGregorianCalendar parsing might require special handling. See also: //https://github.com/highsource/jaxb2-basics/issues/130. -->
 					<argLine>--add-exports=java.xml/com.sun.org.apache.xerces.internal.jaxp.datatype=ALL-UNNAMED
-						--add-opens=java.xml/com.sun.org.apache.xerces.internal.jaxp.datatype=ALL-UNNAMED</argLine>
+						--add-opens=java.xml/com.sun.org.apache.xerces.internal.jaxp.datatype=ALL-UNNAMED
+					</argLine>
 				</configuration>
 			</plugin>
 		</plugins>
@@ -100,6 +101,18 @@
 		<dependency>
 			<groupId>io.smallrye.config</groupId>
 			<artifactId>smallrye-config</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse</groupId>
+			<artifactId>yasson</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.openjdk.jmh</groupId>
+			<artifactId>jmh-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.openjdk.jmh</groupId>
+			<artifactId>jmh-generator-annprocess</artifactId>
 		</dependency>
 	</dependencies>
 </project>

@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -35,7 +35,7 @@ import hu.icellmobilsoft.coffee.module.redis.manager.RedisManager;
 import hu.icellmobilsoft.coffee.module.redispubsub.bundle.PubSubMessage;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
 import hu.icellmobilsoft.coffee.se.logging.mdc.MDC;
-import hu.icellmobilsoft.coffee.tool.gson.JsonUtil;
+import hu.icellmobilsoft.coffee.tool.utils.json.JsonUtil;
 import redis.clients.jedis.Jedis;
 
 /**
@@ -105,11 +105,11 @@ public class PubSubSink {
             bundle = (PubSubMessage) msg.getPayload();
         } else {
             Object payload = msg.getPayload();
-            String payloadString = (payload instanceof String) ? (String) payload : JsonUtil.toJson(payload);
+            String payloadString = (payload instanceof String) ? (String) payload : JsonUtil.toJsonOpt(payload).orElse("");
             Map<String, String> context = new HashMap<>();
             context.put(LogConstants.LOG_SESSION_ID, MDC.get(LogConstants.LOG_SESSION_ID));
             bundle = PubSubMessage.of(payloadString, context);
         }
-        return JsonUtil.toJson(bundle);
+        return JsonUtil.toJsonOpt(bundle).orElse("");
     }
 }

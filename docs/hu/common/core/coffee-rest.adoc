@@ -62,7 +62,7 @@ amennyiben a projekten szükséges, úgy a regex felülírható ha valamelyik *a
 > X-CustomerNumber: 10098990
 > X-Password: *
 > X-UserName: sample
-> 
+>
 > entity: [<?xml version="1.0" encoding="UTF-8"?>
 <SampleRequest xmlns="http://schemas.nav.gov.hu/OSA/1.0/api">
     <header>
@@ -108,11 +108,11 @@ import hu.icellmobilsoft.coffee.rest.log.optimized.BaseRestLogger;
 
 @Provider // <1>
 public class RestLogger extends BaseRestLogger {
-    
+
     @Inject
     @ThisLogger
     private AppLogger log;
-    
+
     @Override
     public String sessionKey() { // <2>
         return LogConstants.LOG_SESSION_ID;
@@ -241,7 +241,7 @@ Egész funkciót a <<common_core_coffee-rest_JaxbTool,JaxbTool>> osztály végzi
 Szándékosan olyan modulárisan van felépítve hogy könnyen lehessen igényekhez hajlítani.
 A fenti leírás alapján a Coffee tartalmaz egy `*IXsdResourceResolver*` implementációt,
 ami fel tudja olvasni az XSD Catalog-ban megadott séma struktúrát.
-Ez az osztály a 
+Ez az osztály a
 
 .hu.icellmobilsoft.coffee.rest.validation.catalog.PublicCatalogResolver
 [source,java]
@@ -262,7 +262,7 @@ Mivel az XSD Catalog generálásnál használunk maven által bekötött függő
 Így fel kell készülni a `maven:` URI protokolhoz kezelésére.
 Ez el is készült a `hu.icellmobilsoft.coffee.tool.protocol.handler.MavenURLHandler` osztályban,
 amit aktiválni kell.
-Ez megtörténhet több féle képpen, ajánlott megoldás a következő: 
+Ez megtörténhet több féle képpen, ajánlott megoldás a következő:
 
 .src/main/resources/META-INF/services/java.net.spi.URLStreamHandlerProvider
 [source,txt]
@@ -298,7 +298,7 @@ A `PublicCatalogResolver` aktiválása klasszikus CDI módon történik:
 </beans>
 ----
 
-A catalog xsd fájl megadása pedig a konfiguráción keresztül történik, pontosabban a 
+A catalog xsd fájl megadása pedig a konfiguráción keresztül történik, pontosabban a
 
  coffee.config.xml.catalog.path
 
@@ -324,7 +324,7 @@ Több katalógus fájl is megadható `,` jellel elválasztva
 == Json támogatás
 
 A keretrendszer támogatja a REST kommunikáció során a JSON formátumú üzeneteket is az XML mellett.
-Ezen üzenetek szerializálására/deszerializálására egy külső modult használ, a Google által karbantartott https://github.com/google/gson[Gson]-t A keretrendszer kiegészíti/felüldefiniálja a Gson-t néhány saját adapterrel.
+Ezen üzenetek szerializálására/deszerializálására egy külső modult használ, az https://projects.eclipse.org/projects/ee4j.yasson[Eclipse Yasson]-t A keretrendszer kiegészíti/felüldefiniálja néhány saját adapterrel.
 Alább látható egy példa JSON, és a saját hozzáadott adapterek.
 Az idővel kapcsolatos értékeknél egy eset kivételével az ISO 8601 szabvány került alkalmazásra.
 A ```Date``` osztály esetén a formátum az egyetemes UNIX epoch lett milliszekundumban
@@ -337,7 +337,7 @@ A ```Date``` osztály esetén a formátum az egyetemes UNIX epoch lett milliszek
     "xmlGregorianCalendar": "2019-02-11T15:23:34.051Z",
     "bytes": "dGVzdFN0cmluZw==",
     "string": "test1",
-    "clazz": "hu.icellmobilsoft.coffee.tool.gson.JsonUtilTest",
+    "clazz": "hu.icellmobilsoft.coffee.utils.json.JsonUtilTest",
     "offsetDateTime": "2019-02-11T15:23:34.051Z",
     "offsetTime": "15:23:34.051Z",
     "localDate": "2019-02-11",
@@ -499,24 +499,3 @@ public class MyBean {
     }
 }
 ----
-
-== Jsonb konfiguráció
-
-A Jsonb alapértelmezett implementálója az https://projects.eclipse.org/projects/ee4j.yasson[Eclipse Yasson].
-Ezt lehet kiegszéíteni default configurációk segítéségvel:
-
-
-.project-defaults.yml
-[source,yml]
-----
-coffee:
-  jsonb:
-    config:
-      propertyvisibilitystrategyclass: "hu.icellmobilsoft.coffee.rest.provider.FieldOnlyVisibilityStrategy" <1>
-      binarydatastrategy: "BASE_64" <2>
-----
-
-A fenti configurációban 2 elem állítható be:
-
-<1> jakarta.json.bind.config.PropertyVisibilityStrategy interface-t megvalósító osztály teljes elérése.
-<2> Ez a típus a jakarta.json.bind.config.BinaryDataStrategy enum értékeit veheti fel, hogy miként kezelődjön a bináris adat.

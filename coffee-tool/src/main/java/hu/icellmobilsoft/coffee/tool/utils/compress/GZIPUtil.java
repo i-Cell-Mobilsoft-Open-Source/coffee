@@ -34,7 +34,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
-import hu.icellmobilsoft.coffee.tool.gson.JsonUtil;
+import hu.icellmobilsoft.coffee.tool.utils.json.JsonUtil;
 
 /**
  * Helper class to GZIP compress/decompress string contents <br>
@@ -158,7 +158,7 @@ public class GZIPUtil {
         }
         byte[] jsonByte = GZIPUtil.decompress(data);
         String jsonString = new String(jsonByte, StandardCharsets.UTF_8);
-        return JsonUtil.toObject(jsonString, clazz);
+        return JsonUtil.toObjectGson(jsonString, clazz);
     }
 
     /**

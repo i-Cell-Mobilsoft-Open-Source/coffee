@@ -13,3 +13,75 @@ Frissítésre került a commons-email jakarta kompatibilis release, így ez a mo
 ** GrpcClientConfig kibővítve a requestLogSize és a responseLogSize paraméterekkel,
 ezek a kliens kérés és válasz maximális log méretének korlátozására szolgálnak karakterekben,
 a limit feletti karakterek levágásra kerülnek.
+
+=== json library változások
+Gson library le lett cserélve Eclipse Yasson JSONB implementációra egy ismert hiba javitásaként, ami JSON kommunikációnál lépett fel. Ennek a módosításnak több modulra van ráhatása, a következők változtak:
+
+*JsonUtil-t érintő változások:*
+
+- package neve megváltozott: `hu.icellmobilsoft.coffee.tool.gson.JsonUtil` átkerült ide `hu.icellmobilsoft.coffee.tool.utils.json.JsonUtil`
+
+- a következő metódusokban a GSON lib implementációját JSONB implementációra cseréltük és egy új checked exception került bevezetésre:
++
+`String toJson(Object dto) throws JsonConversionException`
++
+`T toObject(String json, Class<T> classType) throws JsonConversionException`
+
+- új optional metódusok lettek bevezetve:
++
+`Optional<String> toJsonOpt(Object dto)`
++
+`Optional<T> toObjectOpt(String json, Class<T> classType)`
+
+- deprecatedek lettek a következők:
++
+`String toJsonGson(Object dto)`
++
+`String toJsonEx(Object dto) throws BaseException`
++
+`T toObjectEx(String json, Class<T> classType) throws BaseException`
++
+`T toObjectGson(String json, Class<T> classType)`
++
+`T toObjectGson(Reader reader, Class<T> classType)`
++
+`T toObjectUncheckedEx(String json, Type typeOfT) throws BaseException`
++
+`T toObjectUncheckedGson(String json, Type typeOfT)`
++
+`T toObjectUncheckedGson(Reader reader, Type typeOfT)`
++
+`T toObjectUnchecked(String json, Type typeOfT)`
+
+- GSON megmaradt a visszafele kompatibilitás miatt, az inicializálása optimalizáva lett
+
+*Érintett modulok:*
+
+- coffee-rest: Request-response logger
+- coffee-rest: Rest response exception mapper
+- coffee-rest: Apache HTTPClient
+- coffee-module-redis: Redis module caching
+- coffee-module-redispubsub: PubSubSink, ReactiveJedisPubSub
+- coffee-tool: GZIPUtil
+
+*Új configok lettek bevezetve:*
+
+- coffee.jsonb.config.nullValues
+- coffee.jsonb.config.formatting
+- coffee.jsonb.config.failOnUnknownProperties
+- coffee.jsonb.config.encoding
+- coffee.jsonb.config.strictIJSON
+- coffee.jsonb.config.propertyNamingStrategy
+- coffee.jsonb.config.propertyOrderStrategy
+- coffee.jsonb.config.dateFormat
+- coffee.jsonb.config.locale
+- coffee.jsonb.config.customAdapters
+- coffee.jsonb.config.customSerializers
+- coffee.jsonb.config.customDeserializers
+- coffee.jsonb.config.customProperties
+
+*JsonB-vel kapcsolatos változások:*
+
+- új adapterek lettek hozzáadva
+- JsonbContextResolverProvider, JsonbProducer, FieldOnlyVisibilityStrategy és JsonbUtil átkerültek coffee-rest-ből coffee-tool-ba
+- Jsonb context inicializálása optimalizáva lett

@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,38 +17,37 @@
  * limitations under the License.
  * #L%
  */
-package hu.icellmobilsoft.coffee.rest.provider;
+package hu.icellmobilsoft.coffee.tool.jsonb.adapter;
 
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.enterprise.inject.Produces;
-import jakarta.json.bind.Jsonb;
+import java.time.YearMonth;
 
-import hu.icellmobilsoft.coffee.rest.provider.util.JsonbUtil;
+import jakarta.json.bind.adapter.JsonbAdapter;
 
 /**
- * Jsonb producer class
- * 
- * @author speter555
- * @since 2.6.0
+ * {@link YearMonth} jsonb adapter
+ *
+ * @author martin.nagy
+ * @author bucherarnold
+ * @since 2.9.0
  */
-@ApplicationScoped
-public class JsonbProducer {
+public class YearMonthJsonbAdapter implements JsonbAdapter<YearMonth, String> {
 
     /**
-     * Default constructor
+     * Default constructor, constructs a new object.
      */
-    public JsonbProducer() {
+    public YearMonthJsonbAdapter() {
         super();
     }
 
-    /**
-     * Jsonb producer
-     * 
-     * @return Jsonb instance
-     */
-    @Produces
-    @ApplicationScoped
-    public Jsonb getJsonb() {
-        return JsonbUtil.getContext();
+    /** {@inheritDoc} */
+    @Override
+    public String adaptToJson(YearMonth obj) {
+        return obj != null ? obj.toString() : null;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public YearMonth adaptFromJson(String obj) {
+        return obj != null ? YearMonth.parse(obj) : null;
     }
 }

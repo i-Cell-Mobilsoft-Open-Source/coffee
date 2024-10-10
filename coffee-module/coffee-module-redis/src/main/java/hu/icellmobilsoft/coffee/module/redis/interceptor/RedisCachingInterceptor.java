@@ -45,7 +45,7 @@ import hu.icellmobilsoft.coffee.module.redis.manager.RedisManager;
 import hu.icellmobilsoft.coffee.module.redis.manager.RedisManagerConnection;
 import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
 import hu.icellmobilsoft.coffee.tool.gson.ClassTypeAdapter;
-import hu.icellmobilsoft.coffee.tool.gson.JsonUtil;
+import hu.icellmobilsoft.coffee.tool.utils.json.JsonUtil;
 import redis.clients.jedis.Jedis;
 
 /**
@@ -103,7 +103,7 @@ public class RedisCachingInterceptor {
                 long timeToExpire = getTime(ctx.getMethod());
                 Envelope envelope = new Envelope(gson.toJson(objectToReturn), objectToReturn.getClass());
 
-                Optional<String> statusCode = redisManager.run(Jedis::setex, "setex", key, timeToExpire, JsonUtil.toJsonEx(envelope));
+                Optional<String> statusCode = redisManager.run(Jedis::setex, "setex", key, timeToExpire, JsonUtil.toJson(envelope));
 
                 if (statusCode.isPresent() && !StringUtils.equals(statusCode.get(), "OK")) {
                     log.warn("Problems in recording cache - status code [{0}]", statusCode);

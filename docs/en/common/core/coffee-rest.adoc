@@ -62,7 +62,7 @@ if needed in the project, the regex can be overwritten by specifying the configu
 > X-CustomerNumber: 10098990
 > X-Password: *
 > X-UserName: sample
-> 
+>
 > entity: [<?xml version="1.0" encoding="UTF-8"?>
 <SampleRequest xmlns="http://schemas.nav.gov.hu/OSA/1.0/api">
     <header>
@@ -107,11 +107,11 @@ import hu.icellmobilsoft.coffee.rest.log.optimized.BaseRestLogger;
 
 @Provider // <1>
 public class RestLogger extends BaseRestLogger {
-    
+
     @Inject
     @ThisLogger
     private AppLogger log;
-    
+
     @Override
     public String sessionKey() { // <2>
         return LogConstants.LOG_SESSION_ID;
@@ -240,7 +240,7 @@ The whole function is performed by the <<common_core_coffee-rest_JaxbTool,JaxbTo
 It is intentionally built in a modular way so that it can be easily adapted to needs.
 As described above, Coffee includes an implementation of `*IXsdResourceResolver*`,
 that can read the schema structure specified in the XSD Catalog.
-This class is called 
+This class is called
 
 .hu.icellmobilsoft.coffee.rest.validation.catalog.PublicCatalogResolver
 [source,java]
@@ -261,7 +261,7 @@ Since we use maven-bound dependencies to generate the XSD Catalog, such as:
 So you need to be prepared to manage the `maven:` URI protocol.
 This is done in the `hu.icellmobilsoft.coffee.tool.protocol.handler.MavenURLHandler` class,
 which needs to be activated.
-This can be done in several ways, the recommended solution is the following: 
+This can be done in several ways, the recommended solution is the following:
 
 .src/main/resources/META-INF/services/java.net.spi.URLStreamHandlerProvider
 [source,txt]
@@ -297,7 +297,7 @@ Activating `PublicCatalogResolver` is done in the classic CDI way:
 </beans>
 ----
 
-And the catalog xsd file is specified via the configuration, more specifically the key 
+And the catalog xsd file is specified via the configuration, more specifically the key
 
  coffee.config.xml.catalog.path
 
@@ -323,7 +323,7 @@ You can add multiple catalog file separated with `,`
 == Json support
 
 The framework supports JSON format messages in addition to XML for REST communication.
-To serialize/deserialize these messages, it uses an external module, https://github.com/google/gson[Gson], maintained by Google The framework complements/upgrades Gson with some custom adapters.
+To serialize/deserialize these messages, it uses an external module, https://projects.eclipse.org/projects/ee4j.yasson[Eclipse Yasson], complements/upgrades with some custom adapters.
 Below is an example JSON, and its own added adapters.
 The ISO 8601 standard is used for the time-related values, except in one case.
 In the case of the ```Date``` class, the format has been changed to the universal UNIX epoch in milliseconds
@@ -336,7 +336,7 @@ In the case of the ```Date``` class, the format has been changed to the universa
     "xmlGregorianCalendar": "2019-02-11T15:23:34.051Z",
     }, "bytes": "dGVzdFN0cmluZw==",
     "string": "test1",
-    "clazz": "hu.icellmobilsoft.coffee.tool.gson.JsonUtilTest",
+    "clazz": "hu.icellmobilsoft.coffee.utils.json.JsonUtilTest",
     "offsetDateTime": "2019-02-11T15:23:34.051Z",
     "offsetTime": "15:23:34.051Z",
     "localDate": "2019-02-11",
@@ -497,24 +497,3 @@ public class MyBean {
     }
 }
 ----
-
-== Jsonb configuration
-
-The default implementor of Jsonb is https://projects.eclipse.org/projects/ee4j.yasson[Eclipse Yasson].
-This can be changed using default configurations:
-
-
-.project-defaults.yml
-[source,yml]
-----
-coffee:
-  jsonb:
-    config:
-      propertyvisibilitystrategyclass: "hu.icellmobilsoft.coffee.rest.provider.FieldOnlyVisibilityStrategy" <1>
-      binarydatastrategy: "BASE_64" <2>
-----
-
-In the above configuration, 2 elements can be set:
-
-<1> full access to the class implementing the interface PropertyVisibilityStrategy in jakarta.json.bind.config.PropertyVisibilityStrategy.
-<2> This type can take the values of the enum BinaryDataStrategy in jakarta.json.bind.config.BinaryDataStrategy to determine how binary data is handled.

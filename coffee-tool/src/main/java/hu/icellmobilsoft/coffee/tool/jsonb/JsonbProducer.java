@@ -17,22 +17,38 @@
  * limitations under the License.
  * #L%
  */
-package hu.icellmobilsoft.coffee.se.api.exception.enums;
+package hu.icellmobilsoft.coffee.tool.jsonb;
+
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.inject.Produces;
+import jakarta.json.bind.Jsonb;
+
+import hu.icellmobilsoft.coffee.tool.utils.json.JsonUtil;
 
 /**
- * Coffee exceptions type
+ * Jsonb producer class
  *
- * @author imre.scheffer
- * @since 2.7.0
+ * @author speter555
+ * @since 2.6.0
  */
-public enum CoffeeFaultType {
+@ApplicationScoped
+public class JsonbProducer {
 
     /**
-     * DTO conversion fail
+     * Default constructor
      */
-    DTO_CONVERSION_FAILED,
+    public JsonbProducer() {
+        super();
+    }
+
     /**
-     * Operation failed
+     * Jsonb producer
+     *
+     * @return Jsonb instance
      */
-    OPERATION_FAILED,
+    @Produces
+    @ApplicationScoped
+    public Jsonb getJsonb() {
+        return JsonUtil.getJsonbContext();
+    }
 }
