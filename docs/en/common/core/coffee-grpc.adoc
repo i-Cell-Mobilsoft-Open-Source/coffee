@@ -128,6 +128,8 @@ coffee:
         host: localhost # default localhost
         port: 8199 # default 8199
         maxInboundMetadataSize: 8192 # Bytes, default 8192 (8KiB)
+        requestLogSize: 1000 # Characters, default 1000
+        responseLogSize: 1000 # Characters, default 1000
 ----
 
 .CDI inject DummyServiceGrpc usage

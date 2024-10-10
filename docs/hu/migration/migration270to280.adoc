@@ -86,6 +86,7 @@ A változtatások nem eredményeznek átállási munkálatokat, visszafelé komp
 === coffee-grpc
 
 ** microprofile-health támogatás
+
 ** Külön managed-executor-service használata (java /ee/concurrency/executor/grpc) a gRPC hívásokhoz.
 A `managed-executor-service` konfigurációja a `coffee-grpc-server-extension` dokumentációban van bemutatva.
 
