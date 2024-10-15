@@ -85,3 +85,6 @@ Gson library has been replaced with Eclipse Yasson JSONB implementation, due to 
 - new adapters has been added
 - JsonbContextResolverProvider, JsonbProducer, FieldOnlyVisibilityStrategy and JsonbUtil has been moved from coffee-rest to coffee-tool
 - Jsonb context initialization has been optimized
+
+=== coffee-configuration
+A misleading exception message has been clarified in ApplicationConfiguration class.
