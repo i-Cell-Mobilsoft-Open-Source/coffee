@@ -85,6 +85,3 @@ Gson library le lett cserélve Eclipse Yasson JSONB implementációra egy ismert
 - új adapterek lettek hozzáadva
 - JsonbContextResolverProvider, JsonbProducer, FieldOnlyVisibilityStrategy és JsonbUtil átkerültek coffee-rest-ből coffee-tool-ba
 - Jsonb context inicializálása optimalizáva lett
-
-=== coffee-configuration
-Pontosításra került egy félrevezető hibaüzenet az ApplicationConfiguration osztályban.
