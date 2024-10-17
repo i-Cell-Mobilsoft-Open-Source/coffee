@@ -18,96 +18,24 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  print_params:
-    name: Print parameters
-
+  mvn-release:
     runs-on: ubuntu-latest
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
-    steps:
-
-    # Runs a single command using the runners shell
-    - name: Print
-      run: |
-        echo "github.event.inputs.comment ${{ github.event.inputs.comment }}"
-        echo "github.ref: ${{ github.ref }}"
-        echo "github.event.ref: ${{ github.event.ref }}"
-        echo "github.repository: ${{ github.repository }}"
-        echo "github.workspace: ${{ github.workspace }}"
-  release_job:
-    name: Maven release
-
     # Permission check https://github.community/t/who-has-permission-to-workflow-dispatch/133981
     if: contains('["rombow","czenczl","petrenyi-mark","speter555","bucherarnold"]', github.actor)
 
-    runs-on: ubuntu-latest
-
     steps:
-      - name: Import GPG key
-        env:
-          # GPG private key exported with armor (start: '-----BEGIN PGP PRIVATE KEY BLOCK-----') this is the whole content base64 encoded, inserted as the secrets content
-          GPG_SIGNING_KEY: ${{ secrets.GPG_SIGNING_KEY_GITHUB_TECHUSER }}
-        # decode the base64 encoded private key and insert it
-        run: |
-          mkdir -p ~/.gnupg/
-          echo "$GPG_SIGNING_KEY" | base64 --decode > ~/.gnupg/private.key
-          gpg --import ~/.gnupg/private.key
-      - name: Install SSH key
-        uses: shimataro/ssh-key-action@v2
+      - name: Release
+        uses: speter555/gh-action-mvn-release-main@v0.32.0
         with:
-          # The content is a SSH key with PEM format (start with '-----BEGIN RSA PRIVATE KEY-----')
-          key: ${{ secrets.SSH_PRIVATE_KEY_GITHUB_TECHUSER }}
-          name: id_rsa # optional
-          known_hosts: ${{ secrets.KNOWN_HOSTS }} # currently empty
-          # config: ${{ secrets.CONFIG }} # ssh_config; optional
-
-      - name: Checkout ${{ github.event.ref }}
-        uses: actions/checkout@v3
-        with:
-          # Don't let it be the user who started the workflow.
-          token: ${{ secrets.GH_TOKEN_TECHUSER_JAVA }}
-
-      - name: Set up JDK 11
-        uses: actions/setup-java@v3
-        with:
-          java-version: 11
-          distribution: 'temurin'
-          server-id: ossrh # Value of the distributionManagement/repository/id field of the pom.xml
-          settings-path: ${{ github.workspace }} # location for the settings.xml file
-
-      # Testing the signature of built files.
-      #- name: Check sign
-      #  run: mvn -B package gpg:sign -Dgpg.keyname=$GPG_KEY_ID_GITHUB_TECHUSER --file pom.xml
-
-      # It's no longer needed; it gets replaced by `actions/checkout@v3.with.token` + the Git config commands below.
-      #- name: Setup GIT token
-      #  uses: fregante/setup-git-token@v1
-      #  with:
-      #    # The token provided by GitHub actions via secrets.GITHUB_TOKEN
-      #    token: ${{ secrets.GH_TOKEN_TECHUSER_JAVA }}
-      #    # The name that will be used as "Author" of future commits
-      #    name: icellmobilsoft-robot
-      #    # The email that will be used as "Author" of future commits
-      #    email: github_techuser@icellmobilsoft.hu
-
-      - name: Configure GIT for signed commit
-        env:
-          # The GPG key ID is currently F0744443DCD76BF5DC11D3ED3C8AD450A27EF801
-          GPG_KEY_ID_GITHUB_TECHUSER: ${{ secrets.GPG_KEY_ID_GITHUB_TECHUSER }}
-        run: |
-          git config --global user.name "icellmobilsoft-robot"
-          git config --global user.email "github_techuser@icellmobilsoft.hu"
-          git config --global user.signingkey "$GPG_KEY_ID_GITHUB_TECHUSER"
-          git config --global commit.gpgsign true
-          git config --global tag.gpgSign true
-      - name: mvn -B release:prepare
-        env:
-          GPG_KEY_ID_GITHUB_TECHUSER: ${{ secrets.GPG_KEY_ID_GITHUB_TECHUSER }}
-        run: mvn -B release:prepare -Dgpg.keyname=$GPG_KEY_ID_GITHUB_TECHUSER
-
-      - name: mvn -B release:perform
-        env:
-          GPG_KEY_ID_GITHUB_TECHUSER: ${{ secrets.GPG_KEY_ID_GITHUB_TECHUSER }}
-          OSSRH_USERNAME: '${{ secrets.OSS_SONATYPE_ORG_USER }}'
-          OSSRH_PASSWORD: '${{ secrets.OSS_SONATYPE_ORG_PASSWORD }}'
-        run: mvn -B release:perform -Dgpg.keyname=$GPG_KEY_ID_GITHUB_TECHUSER -s $GITHUB_WORKSPACE/.github/.m2/settings.xml
+          GITHUB_TOKEN: '${{ secrets.GH_TOKEN_TECHUSER_JAVA }}'
+          ARTIFACT_STORE_SERVER_ID: 'ossrh'
+          SETTINGS_XML_PATH: '.github/.m2/settings.xml'
+          GPG_KEY_ID_GITHUB_TECHUSER: '${{ secrets.GPG_KEY_ID_GITHUB_TECHUSER }}'
+          GPG_SIGNING_KEY_GITHUB_TECHUSER: '${{ secrets.GPG_SIGNING_KEY_GITHUB_TECHUSER }}'
+          SSH_PRIVATE_KEY_GITHUB_TECHUSER: '${{ secrets.SSH_PRIVATE_KEY_GITHUB_TECHUSER }}'
+          TECH_USER_USERNAME: 'icellmobilsoft-robot'
+          TECH_USER_EMAIL: 'github_techuser@icellmobilsoft.hu'
+          NEXUS_USER: '${{ secrets.OSS_SONATYPE_ORG_USER }}'
+          NEXUS_PASSWORD: '${{ secrets.OSS_SONATYPE_ORG_PASSWORD }}'
+          JAVA_VERSION: '11'
+          JAVA_DISTRIBUTION: 'temurin'
