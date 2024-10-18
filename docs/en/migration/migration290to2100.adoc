@@ -4,3 +4,6 @@ coff:ee v2.9.0 -> v2.10.0 migration description, news, changes
 
 === coffee-configuration
 A misleading exception message has been clarified in ApplicationConfiguration class.
+
+==== Migration
+Changes are backwards compatible doesnt need any migration.
