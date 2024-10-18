@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -38,8 +38,8 @@ import hu.icellmobilsoft.coffee.se.logging.Logger;
 import hu.icellmobilsoft.coffee.tool.utils.string.StringHelper;
 
 /**
- * An application-level configuration collector that periodically (every {@value #CACHE_TIME_MINUTES} minutes)
- * retrieves settings from configuration sources or allows immediate refreshing of them.
+ * An application-level configuration collector that periodically (every {@value #CACHE_TIME_MINUTES} minutes) retrieves settings from configuration
+ * sources or allows immediate refreshing of them.
  *
  * @author imre.scheffer
  * @since 1.0.0
@@ -47,16 +47,24 @@ import hu.icellmobilsoft.coffee.tool.utils.string.StringHelper;
 @ApplicationScoped
 public class ApplicationConfiguration {
 
-    /** Constant <code>CACHE_TIME_MINUTES=30</code> */
+    /**
+     * Constant <code>CACHE_TIME_MINUTES=30</code>
+     */
     public static final int CACHE_TIME_MINUTES = 30;
 
-    /** Constant <code>ERROR_IN_GETTING_KEY=Error in getting configuration for key [{0}]: [{1}]</code> */
+    /**
+     * Constant <code>ERROR_IN_GETTING_KEY=Error in getting configuration for key [{0}]: [{1}]</code>
+     */
     public static final String ERROR_IN_GETTING_KEY = "Error in getting configuration for key [{0}]: [{1}]";
 
-    /** Constant <code>MSG_ETCD_VALUE_NOT_FOUND=Etcd value not found, key: [{0}] valueClass: [{1}]!</code> */
-    public static final String MSG_ETCD_VALUE_NOT_FOUND = "Etcd value not found, key: [{0}] valueClass: [{1}]!";
+    /**
+     * Constant <code>MSG_VALUE_NOT_FOUND=Value not found in any config sources, key: [{0}] valueClass: [{1}]!</code>
+     */
+    public static final String MSG_VALUE_NOT_FOUND = "Value not found in any config sources, key: [{0}] valueClass: [{1}]!";
 
-    /** Constant <code>MSG_ETCD_VALUE_FOR_KEY=Key [{0}] value [{1}]</code> */
+    /**
+     * Constant <code>MSG_ETCD_VALUE_FOR_KEY=Key [{0}] value [{1}]</code>
+     */
     public static final String MSG_ETCD_VALUE_FOR_KEY = "Key [{0}] value [{1}]";
 
     @Inject
@@ -73,16 +81,17 @@ public class ApplicationConfiguration {
     }
 
     private LoadingCache<CompositeCacheLoaderKey, Optional<?>> cache = CacheBuilder.newBuilder()
-            .expireAfterWrite(CACHE_TIME_MINUTES, TimeUnit.MINUTES).build(new CacheLoader<CompositeCacheLoaderKey, Optional<?>>() {
+            .expireAfterWrite(CACHE_TIME_MINUTES, TimeUnit.MINUTES)
+            .build(new CacheLoader<CompositeCacheLoaderKey, Optional<?>>() {
                 @SuppressWarnings("unchecked")
                 @Override
                 public Optional<?> load(CompositeCacheLoaderKey compositeCacheLoaderKey) throws Exception {
-                    Optional<?> optValue = configurationHelper.getConfigOptionalValue(compositeCacheLoaderKey.getKey(),
-                            compositeCacheLoaderKey.getValueClass());
+                    Optional<?> optValue = configurationHelper
+                            .getConfigOptionalValue(compositeCacheLoaderKey.getKey(), compositeCacheLoaderKey.getValueClass());
                     // if the value is missing or ETCD cluster failure happened
                     if (optValue.isEmpty()) {
-                        String msg = MessageFormat.format(MSG_ETCD_VALUE_NOT_FOUND, compositeCacheLoaderKey.getKey(),
-                                compositeCacheLoaderKey.getValueClass());
+                        String msg = MessageFormat
+                                .format(MSG_VALUE_NOT_FOUND, compositeCacheLoaderKey.getKey(), compositeCacheLoaderKey.getValueClass());
                         throw new BONotFoundException(msg);
                     }
                     return optValue;

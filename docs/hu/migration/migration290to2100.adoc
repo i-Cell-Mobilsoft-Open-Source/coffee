@@ -1,0 +1,9 @@
+= v2.9.0 → v2.10.0
+
+coff:ee v2.9.0 -> v2.10.0 migrációs leírás, újdonságok, változások leírása
+
+=== coffee-configuration
+Pontosításra került egy félrevezető hibaüzenet az ApplicationConfiguration osztályban.
+
+==== Migration
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
