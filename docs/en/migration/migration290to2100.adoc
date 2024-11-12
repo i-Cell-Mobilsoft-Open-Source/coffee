@@ -6,4 +6,10 @@ coff:ee v2.9.0 -> v2.10.0 migration description, news, changes
 A misleading exception message has been clarified in ApplicationConfiguration class.
 
 ==== Migration
-Changes are backwards compatible doesnt need any migration.
+Changes are backwards compatible doesn't need any migration.
+
+=== coffee-module-configdoc
+The default behavior of documentation generation from configuration keys is reversed, fields do not need to be excluded from generation with the `@ConfigDoc(exclude = true)` annotation, but only fields marked with the `@ConfigDoc` annotation will be included in the generated file.
+
+==== Migration
+Where the `@ConfigDoc(exclude = true)` annotation was used, it can be removed, but where there was no annotation, the `@ConfigDoc` annotation must be added, otherwise, they will not be included in the generated documentation.

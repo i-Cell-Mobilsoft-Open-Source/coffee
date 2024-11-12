@@ -33,11 +33,11 @@ public interface DynamicConfigTemplateExample {
     /**
      * test prefix
      */
-    @ConfigDoc(exclude = true)
     String PREFIX = "test.";
 
     /**
      * Lorem ipsum dolor sit amet, consectetur adipisicing elit. Illo, placeat!
      */
+    @ConfigDoc
     String foo = PREFIX + "{0}.foo";
 }

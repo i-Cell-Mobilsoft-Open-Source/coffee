@@ -38,11 +38,13 @@ public interface ConfigDocExample {
     /**
      * test2
      */
+    @ConfigDoc
     String test2 = "test2.xxx";
 
     /**
      * Lorem ipsum dolor sit amet, consectetur adipisicing elit. Illo, placeat!
      */
+    @ConfigDoc
     String foo = PREFIX + "foo";
 
     /**
@@ -81,10 +83,12 @@ public interface ConfigDocExample {
      */
     @ConfigDoc(defaultValue = "1234", title = "Title Test", titleHeadingLevel = 1) // <8>
     String titleHeadingLevelTest = PREFIX + "titleHeadingLevelTest";
+
+    String notAProperty = "notAProperty"; // <9>
 }
 ----
 <1> A generálást egy osztályon a `@ConfigDoc` annotációval aktiváljuk
-<2> Az `exclude` mezővel ki lehet hagyni a generálásból mezőket
+<2> Az `exclude` mezővel ki lehet hagyni a generálásból mezőket, de alapértelmezetten a nem annotált mezők nem kerülnek a generált fájlba
 <3> Alapértelmezetten a javadoc leírás kerül a generált fájlba, amit felül lehet írni az annotáció `description` mezőjével
 <4> A generált táblázat `since` oszlopa kinyerhető a `@since` javadoc tag-ből
 <5> A konfighoz tartozó default érték is megadható
@@ -96,6 +100,7 @@ A két paraméter a `Features` oszlop alatt fog megjelenni emotikonokkal repreze
 <7> A `title` paraméterrel felülírhatjuk az alapértelmezett generált táblázat címét(opcionális)
 <8> A `titleHeadingLevel` paraméterrel állíthatjuk a generált táblázat címsorának a szintjét(opcionális).
 Note: Ha több paraméteren is megadjuk ugyanannak a címsrnak a legkisebb értéket fogjuk használni a megadottak közül illetve a [0,5] intervallumon kívüli értékeknél visszatérünk az alapértelmezett 3-as értékre.
+<9> A nem annotált mezők nem kerülnek a generált fájlba
 
 .A fenti példa kód eredménye
 image::coffee-module-configdoc-example1.png[]
@@ -129,12 +134,12 @@ public interface DynamicConfigTemplateExample {
     /**
      * test prefix
      */
-    @ConfigDoc(exclude = true) //<2>
     String PREFIX = "test.";
 
     /**
      * Lorem ipsum dolor sit amet, consectetur adipisicing elit. Illo, placeat!
      */
+    @ConfigDoc //<2>
     String foo = PREFIX + "{0}.foo"; //<3>
 }
 ----

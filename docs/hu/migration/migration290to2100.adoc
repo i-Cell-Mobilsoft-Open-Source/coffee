@@ -5,5 +5,13 @@ coff:ee v2.9.0 -> v2.10.0 migrációs leírás, újdonságok, változások leír
 === coffee-configuration
 Pontosításra került egy félrevezető hibaüzenet az ApplicationConfiguration osztályban.
 
-==== Migration
+==== Átállás
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+=== coffee-module-configdoc
+
+A konfigurációs kulcsokból dokumentáció generálás alap működése felcserélődik, nem kell kizárni mezőket a generálásból a `@ConfigDoc(exclude = true)` annotációval, hanem csak a `@ConfigDoc` annotációval megjelölt mezők kerülnek a generált fájlba.
+
+==== Átállás
+
+Ahol `@ConfigDoc(exclude = true)` annotáció volt, az kitörölhető, ahol viszont nem volt annotáció, ott hozzá kell adni a `@ConfigDoc` annotációt, különben nem kerülnek bele a kigenerált dokumentációba.

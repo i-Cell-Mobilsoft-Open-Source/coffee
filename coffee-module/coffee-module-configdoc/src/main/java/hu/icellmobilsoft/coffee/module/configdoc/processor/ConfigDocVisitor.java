@@ -74,7 +74,7 @@ public class ConfigDocVisitor extends ElementKindVisitor9<Void, List<DocData>> {
 
     private void processField(VariableElement element, List<DocData> dataList) {
         Optional<ConfigDoc> configDocAnnotation = Optional.ofNullable(element.getAnnotation(ConfigDoc.class));
-        if (configDocAnnotation.isPresent() && configDocAnnotation.get().exclude()) {
+        if (configDocAnnotation.isEmpty() || configDocAnnotation.get().exclude()) {
             return;
         }
 

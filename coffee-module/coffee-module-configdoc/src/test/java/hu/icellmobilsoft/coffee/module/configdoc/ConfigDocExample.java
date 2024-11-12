@@ -38,11 +38,13 @@ public interface ConfigDocExample {
     /**
      * test2
      */
+    @ConfigDoc
     String test2 = "test2.xxx";
 
     /**
      * Lorem ipsum dolor sit amet, consectetur adipisicing elit. Illo, placeat!
      */
+    @ConfigDoc
     String foo = PREFIX + "foo";
 
     /**
@@ -82,4 +84,6 @@ public interface ConfigDocExample {
      */
     @ConfigDoc(defaultValue = "1234", title = "Title Test", titleHeadingLevel = 1)
     String titleHeadingLevelTest = PREFIX + "titleHeadingLevelTest";
+
+    String notAProperty = "notAProperty";
 }

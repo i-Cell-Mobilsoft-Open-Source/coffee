@@ -38,11 +38,13 @@ public interface ConfigDocExample {
     /**
      * test2
      */
+    @ConfigDoc
     String test2 = "test2.xxx";
 
     /**
      * Lorem ipsum dolor sit amet, consectetur adipisicing elit. Illo, placeat!
      */
+    @ConfigDoc
     String foo = PREFIX + "foo";
 
     /**
@@ -81,10 +83,12 @@ public interface ConfigDocExample {
      */
     @ConfigDoc(defaultValue = "1234", title = "Title Test", titleHeadingLevel = 1) // <8>
     String titleHeadingLevelTest = PREFIX + "titleHeadingLevelTest";
+
+    String notAProperty = "notAProperty"; // <9>
 }
 ----
 <1> Generation is activated on a class with the annotation `@ConfigDoc`
-<2> The `exclude` field can be used to exclude fields from the generation
+<2> The `exclude` field can be used to exclude fields from the generation, but by default, non-annotated fields are not included in the generated file
 <3> By default, the javadoc description is included in the generated file, which can be overwritten with the `description` field of the annotation
 <4> The `since` column of the generated table can be retrieved from the `@since` javadoc tag
 <5> The default value for the configuration can be specified
@@ -96,6 +100,7 @@ Both of the parameters are going to be shown under the `Features`column represen
 <7> With the `title` parameter we can overwrite the default title for the generated tables(optional).
 <8> With the `titleHeadingLevel` parameter we can set the heading level for the title of the generated table(optional).
 Note that if multiple values are given for the same title on multiple parameters the smallest value will be selected and it also needs to be in the range of [0,5] if not we use the value of 3 as fallback.
+<9> Non-annotated fields are not included in the generated file.
 
 .The result of the above example code
 image::coffee-module-configdoc-example1.png[]
@@ -127,12 +132,12 @@ public interface DynamicConfigTemplateExample {
     /**
      * test prefix
      */
-    @ConfigDoc(exclude = true) //<2>
     String PREFIX = "test.";
 
     /**
      * Lorem ipsum dolor sit amet, consectetur adipisicing elit. Illo, placeat!
      */
+    @ConfigDoc //<2>
     String foo = PREFIX + "{0}.foo"; //<3>
 }
 ----
