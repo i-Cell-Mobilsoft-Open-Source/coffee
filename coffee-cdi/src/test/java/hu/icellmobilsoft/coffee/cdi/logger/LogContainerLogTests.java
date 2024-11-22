@@ -108,6 +108,18 @@ public class LogContainerLogTests {
         testLog(logContainer, logLevel);
     }
 
+    @Test
+    @DisplayName("Test logs size")
+    public void testLogsSize() {
+        LogContainer logContainer = new LogContainer();
+        for (int i = 0; i < 90_000; i++) {
+            logContainer.info("Message [%d]", i);
+        }
+
+        String[] logContainerRows = logContainer.toString().split("\\n");
+        Assertions.assertTrue(logContainerRows.length <= 10_000);
+    }
+
     private void testLog(LogContainer logContainer, String logLevel) {
         String[] logContainerRows = logContainer.toString().split("\\n");
         Assertions.assertTrue(

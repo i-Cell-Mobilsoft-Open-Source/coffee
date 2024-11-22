@@ -40,6 +40,8 @@ import jakarta.enterprise.inject.Model;
 @Model
 public class LogContainer {
 
+    private final int LOG_MAX_SIZE = 10_000;
+
     private final List<LogContainer.Log> logs = new ArrayList<>();
     private final Map<String, Object> customParam = new HashMap<>();
 
@@ -57,7 +59,7 @@ public class LogContainer {
      *            log message
      */
     public void trace(String msg) {
-        logs.add(new Log(LogLevel.TRACE, msg));
+        addLog(new Log(LogLevel.TRACE, msg));
     }
 
     /**
@@ -70,7 +72,7 @@ public class LogContainer {
      */
     public void trace(String format, Object... arguments) {
         String message = format(format, arguments);
-        logs.add(new Log(LogLevel.TRACE, message));
+        addLog(new Log(LogLevel.TRACE, message));
     }
 
     /**
@@ -83,7 +85,7 @@ public class LogContainer {
      */
     public void trace(String msg, Throwable t) {
         String message = getFullStackTrace(msg, t);
-        logs.add(new Log(LogLevel.TRACE, message));
+        addLog(new Log(LogLevel.TRACE, message));
     }
 
     /**
@@ -93,7 +95,7 @@ public class LogContainer {
      *            log message
      */
     public void debug(String msg) {
-        logs.add(new Log(LogLevel.DEBUG, msg));
+        addLog(new Log(LogLevel.DEBUG, msg));
     }
 
     /**
@@ -106,7 +108,7 @@ public class LogContainer {
      */
     public void debug(String format, Object... arguments) {
         String message = format(format, arguments);
-        logs.add(new Log(LogLevel.DEBUG, message));
+        addLog(new Log(LogLevel.DEBUG, message));
     }
 
     /**
@@ -119,7 +121,7 @@ public class LogContainer {
      */
     public void debug(String msg, Throwable t) {
         String message = getFullStackTrace(msg, t);
-        logs.add(new Log(LogLevel.DEBUG, message));
+        addLog(new Log(LogLevel.DEBUG, message));
     }
 
     /**
@@ -129,7 +131,7 @@ public class LogContainer {
      *            log message
      */
     public void info(String msg) {
-        logs.add(new Log(LogLevel.INFO, msg));
+        addLog(new Log(LogLevel.INFO, msg));
     }
 
     /**
@@ -142,7 +144,7 @@ public class LogContainer {
      */
     public void info(String format, Object... arguments) {
         String message = format(format, arguments);
-        logs.add(new Log(LogLevel.INFO, message));
+        addLog(new Log(LogLevel.INFO, message));
     }
 
     /**
@@ -155,7 +157,7 @@ public class LogContainer {
      */
     public void info(String msg, Throwable t) {
         String message = getFullStackTrace(msg, t);
-        logs.add(new Log(LogLevel.INFO, message));
+        addLog(new Log(LogLevel.INFO, message));
     }
 
     /**
@@ -165,7 +167,7 @@ public class LogContainer {
      *            log message
      */
     public void warn(String msg) {
-        logs.add(new Log(LogLevel.WARN, msg));
+        addLog(new Log(LogLevel.WARN, msg));
     }
 
     /**
@@ -178,7 +180,7 @@ public class LogContainer {
      */
     public void warn(String format, Object... arguments) {
         String message = format(format, arguments);
-        logs.add(new Log(LogLevel.WARN, message));
+        addLog(new Log(LogLevel.WARN, message));
     }
 
     /**
@@ -191,7 +193,7 @@ public class LogContainer {
      */
     public void warn(String msg, Throwable t) {
         String message = getFullStackTrace(msg, t);
-        logs.add(new Log(LogLevel.WARN, message));
+        addLog(new Log(LogLevel.WARN, message));
     }
 
     /**
@@ -201,7 +203,7 @@ public class LogContainer {
      *            log message
      */
     public void error(String msg) {
-        logs.add(new Log(LogLevel.ERROR, msg));
+        addLog(new Log(LogLevel.ERROR, msg));
     }
 
     /**
@@ -214,7 +216,7 @@ public class LogContainer {
      */
     public void error(String format, Object... arguments) {
         String message = format(format, arguments);
-        logs.add(new Log(LogLevel.ERROR, message));
+        addLog(new Log(LogLevel.ERROR, message));
     }
 
     /**
@@ -227,7 +229,7 @@ public class LogContainer {
      */
     public void error(String msg, Throwable t) {
         String message = getFullStackTrace(msg, t);
-        logs.add(new Log(LogLevel.ERROR, message));
+        addLog(new Log(LogLevel.ERROR, message));
     }
 
     /**
@@ -251,7 +253,7 @@ public class LogContainer {
      */
     public void setValue(String key, Object value) {
         String msg = (customParam.containsKey(key) ? "Replaced" : "Added") + " key: [" + key + "], value: [" + value + "]";
-        logs.add(new Log(LogLevel.CUSTOM, msg));
+        addLog(new Log(LogLevel.CUSTOM, msg));
         customParam.put(key, value);
     }
 
@@ -262,7 +264,7 @@ public class LogContainer {
      *            the key to remove
      */
     public void removeValue(String key) {
-        logs.add(new Log(LogLevel.CUSTOM, "Remove key: [" + key + "]"));
+        addLog(new Log(LogLevel.CUSTOM, "Remove key: [" + key + "]"));
         customParam.remove(key);
     }
 
@@ -366,5 +368,18 @@ public class LogContainer {
          * indicating some errors
          */
         ERROR,
+    }
+
+    private void cleanOlderLogs() {
+        if (logs.size() >= LOG_MAX_SIZE) {
+            for (int i = 1; i <= logs.size() - LOG_MAX_SIZE; i++) {
+                logs.remove(0);
+            }
+        }
+    }
+
+    private void addLog(LogContainer.Log log) {
+        logs.add(log);
+        cleanOlderLogs();
     }
 }
