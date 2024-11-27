@@ -31,6 +31,8 @@ import java.util.Map;
 
 import jakarta.enterprise.inject.Model;
 
+import org.eclipse.microprofile.config.ConfigProvider;
+
 /**
  * Container for logging.
  *
@@ -40,7 +42,20 @@ import jakarta.enterprise.inject.Model;
 @Model
 public class LogContainer {
 
-    private final int LOG_MAX_SIZE = 10_000;
+    /**
+     * Log maximum size configuration key
+     */
+    private static final String LOG_MAX_SIZE_CONFIG_KEY = "coffee.logger.logContainer.maxSize";
+
+    /**
+     * Default log maximum size
+     */
+    private final int DEFAULT_LOG_MAX_SIZE = 10_000;
+
+    /**
+     * Log maximum size
+     */
+    private final int LOG_MAX_SIZE = ConfigProvider.getConfig().getOptionalValue(LOG_MAX_SIZE_CONFIG_KEY, Integer.class).orElse(DEFAULT_LOG_MAX_SIZE);
 
     private final List<LogContainer.Log> logs = new ArrayList<>();
     private final Map<String, Object> customParam = new HashMap<>();
@@ -371,10 +386,8 @@ public class LogContainer {
     }
 
     private void cleanOlderLogs() {
-        if (logs.size() >= LOG_MAX_SIZE) {
-            for (int i = 1; i <= logs.size() - LOG_MAX_SIZE; i++) {
-                logs.remove(0);
-            }
+        if (logs.size() > LOG_MAX_SIZE) {
+            logs.subList(0, logs.size() - LOG_MAX_SIZE).clear();
         }
     }
 
