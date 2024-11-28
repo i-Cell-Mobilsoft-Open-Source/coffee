@@ -49,6 +49,14 @@ even if the ETCD does not contain it,
 so we can reduce a lot of repetitive queries.
 Cache is a thread safe singleton,
 it is possible to clear it by calling `EtcdConfigSourceCache.instance().clear()`.
+It is possible to disable a ConfigSource with configuration, e.g.:
++
+----
+hu.icellmobilsoft.coffee.module.etcd.producer.CachedEtcdConfigSource.enabled: false
+----
+There are two ways to set this configuration based on the return value of the following methods:
+. `ConfigurableConfigSource.getClassEnableKey()`
+. `ConfigurableConfigSource.getConfigSourceNameKey()`
 * `hu.icellmobilsoft.coffee.module.etcd.producer.RuntimeEtcdConfigSource` -
 Can be activated during runtime as needed (e.g., AfterBeanDiscovery) as follows
 +
