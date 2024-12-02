@@ -7,3 +7,9 @@ A misleading exception message has been clarified in ApplicationConfiguration cl
 
 ==== Migration
 Changes are backwards compatible doesnt need any migration.
+
+=== Java11 support remove
+Java11 support has been removed from the ci build process, and the default Java version has been changed to 17.
+
+==== Migration
+The minimum supported Java version is 17.
