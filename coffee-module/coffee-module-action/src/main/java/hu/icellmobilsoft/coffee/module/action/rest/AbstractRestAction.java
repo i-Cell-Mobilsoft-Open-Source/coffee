@@ -1,3 +1,22 @@
+/*-
+ * #%L
+ * Coffee
+ * %%
+ * Copyright (C) 2020 - 2024 i-Cell Mobilsoft Zrt.
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
 package hu.icellmobilsoft.coffee.module.action.rest;
 
 import hu.icellmobilsoft.coffee.cdi.trace.annotation.Traced;
@@ -11,8 +30,8 @@ import jakarta.inject.Inject;
 /**
  * Abstract implementation of an {@link IRestAction#process(Object)} function. The implementation invokes the {@link AbstractAction} methods in the
  * following order: {@link #init(Object)}, {@link #validateState()}, {@link #collectData()}, {@link #processData()}, {@link #saveData()}. If any error
- * occurres during these steps then the {@link #handleError(Object, BaseException)} method is called. Otherwise the {@link #publishNextEvent()} method
- * is called to trigger the next consumer action if necessary. All of these methods are traced with {@link ITraceHandler}.
+ * occurres during these steps then the {@link #handleError(Object, BaseException)} method is called. Otherwise the {@link #returnResponse()} method
+ * is called to return the required response. All of these methods are traced with {@link ITraceHandler}.
  *
  * @param <T>
  *            the type of the processed request
