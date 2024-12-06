@@ -57,6 +57,9 @@ public class XMLGregorianCalendarJsonbAdapter implements JsonbAdapter<XMLGregori
     /** {@inheritDoc} */
     @Override
     public XMLGregorianCalendar adaptFromJson(String calendar) {
+        if (calendar == null) {
+            return null;
+        }
         try {
             XMLGregorianCalendar xmlCal = toXMLGregorianCalendar(calendar);
             return xmlCal.normalize();

@@ -53,6 +53,9 @@ public class DateJsonbAdapter implements JsonbAdapter<Date, Long> {
     /** {@inheritDoc} */
     @Override
     public Date adaptFromJson(Long date) {
+        if (date == null) {
+            return null;
+        }
         try {
             return new Date(date);
         } catch (Exception e) {

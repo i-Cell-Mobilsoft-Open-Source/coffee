@@ -49,6 +49,9 @@ public class DurationJsonbAdapter implements JsonbAdapter<Duration, String> {
     /** {@inheritDoc} */
     @Override
     public Duration adaptFromJson(String duration) {
+        if (duration == null) {
+            return null;
+        }
         return DateXmlUtil.getDatatypeFactory().newDuration(duration);
     }
 }

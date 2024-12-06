@@ -48,6 +48,9 @@ public class ClassTypeJsonbAdapter implements JsonbAdapter<Class<?>, String> {
     /** {@inheritDoc} */
     @Override
     public Class<?> adaptFromJson(String obj) {
+        if (obj == null) {
+            return null;
+        }
         try {
             return Class.forName(obj);
         } catch (ClassNotFoundException e) {
