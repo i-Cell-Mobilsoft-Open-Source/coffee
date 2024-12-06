@@ -19,8 +19,6 @@
  */
 package hu.icellmobilsoft.coffee.tool.jsonb.adapter;
 
-import java.time.YearMonth;
-
 import jakarta.json.bind.JsonbException;
 import jakarta.json.bind.adapter.JsonbAdapter;
 
@@ -45,7 +43,13 @@ public class ClassTypeJsonbAdapter implements JsonbAdapter<Class<?>, String> {
         return obj.getName();
     }
 
-    /** {@inheritDoc} */
+    /**
+     * Converts a {@link String} into a {@link Class}
+     *
+     * @param obj
+     *         string to convert or {@code null}.
+     * @return the converted object or {@code null}, if the given {@code date} param is null
+     */
     @Override
     public Class<?> adaptFromJson(String obj) {
         if (obj == null) {
