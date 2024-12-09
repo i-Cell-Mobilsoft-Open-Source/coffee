@@ -13,3 +13,9 @@ Java11 support has been removed from the ci build process, and the default Java 
 
 ==== Migration
 The minimum supported Java version is 17.
+
+=== coffee-tool
+The default custom jsonb adapters have become null safe.
+
+==== Migration
+Changes are backwards compatible doesnt need any migration.
