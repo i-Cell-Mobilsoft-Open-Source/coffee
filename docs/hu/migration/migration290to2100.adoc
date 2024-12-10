@@ -7,3 +7,9 @@ Pontosításra került egy félrevezető hibaüzenet az ApplicationConfiguration
 
 ==== Migration
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+=== Java11 támogatás eltávolítása
+A ci build folyamatból el lett távolítva a java11 támogatás, és az alapértelmezett java verzió a 17 lett.
+
+==== Migration
+A legkisebb támogatott java verzió a 17-es.

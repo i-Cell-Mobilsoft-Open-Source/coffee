@@ -37,5 +37,5 @@ jobs:
           TECH_USER_EMAIL: 'github_techuser@icellmobilsoft.hu'
           NEXUS_USER: '${{ secrets.OSS_SONATYPE_ORG_USER }}'
           NEXUS_PASSWORD: '${{ secrets.OSS_SONATYPE_ORG_PASSWORD }}'
-          JAVA_VERSION: '11'
+          JAVA_VERSION: '17'
           JAVA_DISTRIBUTION: 'temurin'
