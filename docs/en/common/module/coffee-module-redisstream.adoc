@@ -183,6 +183,17 @@ redisStreamPublisher.publish("message", parameters); //<3>
 // or
 RedisStreamPublication publication = RedisStreamPublication.of(id).withTTL(defaultTTL).withParameter(StreamMessageParameter.FLOW_ID_EXTENSION, id))
 redisStreamPublisher.publishPublication(publication); //<4>
+
+// In case of many records, it might be a better option to publish messages through pipeline
+List<RedisStreamPublication> redisStreamPublicationsPipelined = new ArrayList<>();
+for (int i = 0; i < 1000; i++) {
+    redisStreamPublicationsPipelined.add(RedisStreamPublication.of("alternativeGroup", "pipelined - " + i, parameters));
+}
+publisher.publishPublicationsPipelined(redisStreamPublicationsPipelined);
+// or
+List<String> ids = IntStream.range(0, 1000).mapToObj(i -> RandomUtil.generateId()).toList();
+publisher.publishPipelined(ids); //<5>
+
 ----
 <1> "group" is not mandatory in all cases
 <2> The "message" content itself will be stored in a kind of coffee stream message structure,

@@ -3,9 +3,19 @@
 coff:ee v2.9.0 -> v2.10.0 migrációs leírás, újdonságok, változások leírása
 
 === coffee-configuration
+
 Pontosításra került egy félrevezető hibaüzenet az ApplicationConfiguration osztályban.
 
 ==== Migration
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+=== coffee-redisstream
+
+A RedisStreamPublisher ki lett egészítve egy új funkcióval, ami lehetővé teszi egyszerre több üzenet Redis streamre küldését pipeline-on keresztül.
+
+==== Migration
+
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
 
 === Java11 támogatás eltávolítása

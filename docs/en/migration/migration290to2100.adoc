@@ -3,9 +3,19 @@
 coff:ee v2.9.0 -> v2.10.0 migration description, news, changes
 
 === coffee-configuration
+
 A misleading exception message has been clarified in ApplicationConfiguration class.
 
 ==== Migration
+
+Changes are backwards compatible doesnt need any migration.
+
+=== coffee-redisstream
+
+A new function has been added to RedisStreamPublisher, which makes it possible to send multiple messages at once to Redis stream through pipeline.
+
+==== Migration
+
 Changes are backwards compatible doesnt need any migration.
 
 === Java11 support remove
