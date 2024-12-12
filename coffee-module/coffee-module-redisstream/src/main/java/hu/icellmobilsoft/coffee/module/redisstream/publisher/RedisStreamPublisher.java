@@ -630,6 +630,13 @@ public class RedisStreamPublisher {
         return pipeline.xadd(RedisStreamUtil.streamKey(streamGroup), jedisMessage, getXAddParams());
     }
 
+    /**
+     * Gets StreamEntryIds-s from pipeline responses
+     * 
+     * @param responses
+     *            {@link Pipeline#xadd(String, Map, XAddParams)} response list
+     * @return list of optional StreamEntryIds
+     */
     protected List<Optional<StreamEntryID>> getStreamEntryIds(List<Response<StreamEntryID>> responses) {
         List<Optional<StreamEntryID>> streamEntryIds = responses.stream().map(Response::get).map(Optional::ofNullable).toList();
         if (log.isTraceEnabled()) {
