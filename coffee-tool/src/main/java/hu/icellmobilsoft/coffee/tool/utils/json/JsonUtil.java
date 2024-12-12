@@ -27,14 +27,13 @@ import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.time.OffsetTime;
 import java.time.YearMonth;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 import javax.xml.datatype.Duration;
 import javax.xml.datatype.XMLGregorianCalendar;
-
-import jakarta.json.bind.Jsonb;
-import jakarta.json.bind.JsonbException;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -56,6 +55,9 @@ import hu.icellmobilsoft.coffee.tool.gson.OffsetDateTimeConverter;
 import hu.icellmobilsoft.coffee.tool.gson.OffsetTimeConverter;
 import hu.icellmobilsoft.coffee.tool.gson.XMLGregorianCalendarConverter;
 import hu.icellmobilsoft.coffee.tool.gson.YearMonthConverter;
+import hu.icellmobilsoft.coffee.tool.utils.validation.ParamValidatorUtil;
+import jakarta.json.bind.Jsonb;
+import jakarta.json.bind.JsonbException;
 
 /**
  * Json util.
@@ -123,6 +125,28 @@ public class JsonUtil {
         } catch (JsonbException e) {
             throw new JsonConversionException(MessageFormat.format(ERROR_OBJECT_TO_JSON, dto.getClass()), e);
         }
+    }
+
+    /**
+     * Converting list of DTO objects to list of JSON String, throws exception with OPERATION_FAILED fault type if any error occurred.
+     *
+     * @param dto
+     *            list of DTO objects to convert
+     * @return list of JSON Strings
+     * @throws JsonConversionException
+     *             exception during serialization process
+     */
+    public static <T> List<String> toJsonList(List<T> dtos) throws BaseException {
+        ParamValidatorUtil.requireNonNull(dtos, "dtos");
+        List<String> jsons = new ArrayList<>();
+        for (T dto : dtos) {
+            String json = toJson(dto);
+            jsons.add(json);
+            if (LOGGER.isTraceEnabled()) {
+                LOGGER.trace("Converting to JSON successful: [{0}]", StringUtils.abbreviate(json, 1000));
+            }
+        }
+        return jsons;
     }
 
     /**
