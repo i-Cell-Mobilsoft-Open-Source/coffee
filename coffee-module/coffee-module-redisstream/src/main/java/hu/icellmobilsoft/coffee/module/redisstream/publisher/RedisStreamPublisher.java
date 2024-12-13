@@ -62,6 +62,8 @@ import redis.clients.jedis.params.XAddParams;
 @Dependent
 public class RedisStreamPublisher {
 
+    private static final int PIPELINE_SIZE = 1000;
+
     @Inject
     private Logger log;
 
@@ -229,6 +231,7 @@ public class RedisStreamPublisher {
         try (RedisManagerConnection ignored = redisManager.initConnection()) {
             List<Response<StreamEntryID>> responses = new ArrayList<>(publications.size());
             Pipeline pipeline = initPipeline();
+            int i = 1;
             for (RedisStreamPublication publication : publications) {
                 Response<StreamEntryID> response;
                 if (StringUtils.isBlank(publication.getStreamGroup())) {
@@ -245,8 +248,9 @@ public class RedisStreamPublisher {
                             createJedisMessage(publication.getStreamMessage(), publication.getParameters()));
                 }
                 responses.add(response);
+                i = syncPipelineIfNeeded(pipeline, publications.size(), i);
             }
-            pipeline.sync();
+            syncPipelineIfNeeded(pipeline, publications.size(), i);
             return getStreamEntryIds(responses);
         }
     }
@@ -436,12 +440,14 @@ public class RedisStreamPublisher {
 
         Pipeline pipeline = initPipeline();
 
+        int i = 1;
         List<Response<StreamEntryID>> responses = new ArrayList<>(streamMessages.size());
         for (String streamMessage : streamMessages) {
             Response<StreamEntryID> response = publishThroughPipeline(pipeline, streamGroup, createJedisMessage(streamMessage, parameters));
             responses.add(response);
+            i = syncPipelineIfNeeded(pipeline, streamMessages.size(), i);
         }
-        pipeline.sync();
+        syncPipelineIfNeeded(pipeline, streamMessages.size(), i);
         return getStreamEntryIds(responses);
     }
 
@@ -646,6 +652,39 @@ public class RedisStreamPublisher {
                     RedisStreamUtil.streamKey(streamGroup));
         }
         return streamEntryIds;
+    }
+
+    /**
+     * Syncs pipeline if needed and increases the counter<br/>
+     * If pipelined responses reach {@link RedisStreamPublisher#PIPELINE_SIZE},<br/>
+     * or if all messages have been sent, and there are pipelined responses,<br/>
+     * then {@link Pipeline#sync()} is called<br/>
+     *
+     * @param pipeline
+     *            the Pipeline instance
+     * @param messagesToSend
+     *            The number of messages to be sent
+     * @param messagesSent
+     *            The number of sent messages
+     * @return The number of sent messages increased
+     * 
+     */
+    protected int syncPipelineIfNeeded(Pipeline pipeline, int messagesToSend, int messagesSent) {
+        if ((messagesSent < messagesToSend && messagesSent % getPipelineSize() == 0)
+                || (messagesSent == messagesToSend && pipeline.hasPipelinedResponse())) {
+            pipeline.sync();
+        }
+        messagesSent++;
+        return messagesSent;
+    }
+
+    /**
+     * Returns the size of the pipeline
+     *
+     * @return the size of the pipeline
+     */
+    protected int getPipelineSize() {
+        return PIPELINE_SIZE;
     }
 
     private TechnicalException notInitializedException() {
