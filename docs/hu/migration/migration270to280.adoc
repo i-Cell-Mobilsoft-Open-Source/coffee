@@ -22,7 +22,8 @@ függőségeivel együtt, úgy mint `BatchMode`, `Status` és `StringBasicType`.
 * A `HibernateBatchService` JakartaEE 10-es producerét a `frappee-hiberante-batch-jee10` modul szolgáltatja
  `HibernateBatchServiceProducer` néven.
 * Ha kiterjesztettük a korábbi `BatchService`-t, akkor a `HibernateBatchService`-t kell kiterjesztenünk és
- kell készíteni hozzá egy producert is. Bővebb információ a Frapp:EE dokumentációban található.
+ kell készíteni hozzá egy producert is. Bővebb információ a https://i-cell-mobilsoft-open-source.github.io/frappee/#HibernateBatchService[Frapp:EE dokumentációban] található. Egy példa a kiterjesztésre a `backend-sampler` projektben található:
+ https://github.com/i-Cell-Mobilsoft-Open-Source/backend-sampler/blob/main/common/common-system-jpa/src/main/java/hu/icellmobilsoft/sampler/common/system/jpa/service/CustomHibernateBatchService.java#L40[CustomHibernateBatchService].
 
 === coffee-dto-base
 
