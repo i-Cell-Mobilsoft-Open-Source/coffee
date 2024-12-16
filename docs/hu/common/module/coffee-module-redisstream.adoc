@@ -183,6 +183,17 @@ redisStreamPublisher.publish("message", parameters); //<3>
 // vagy
 RedisStreamPublication publication = RedisStreamPublication.of(id).withTTL(defaultTTL).withParameter(StreamMessageParameter.FLOW_ID_EXTENSION, id))
 redisStreamPublisher.publishPublication(publication); //<4>
+
+// Nagy számú üzenet esetén érdemes pipeline-on keresztül küldeni az üzeneteket:
+List<RedisStreamPublication> redisStreamPublicationsPipelined = new ArrayList<>();
+for (int i = 0; i < 1000; i++) {
+    redisStreamPublicationsPipelined.add(RedisStreamPublication.of("alternativeGroup", "pipelined - " + i, parameters));
+}
+publisher.publishPublicationsPipelined(redisStreamPublicationsPipelined);
+// vagy
+List<String> ids = IntStream.range(0, 1000).mapToObj(i -> RandomUtil.generateId()).toList();
+publisher.publishPipelined(ids);
+
 ----
 <1> "group" nem kötelező minden esetben
 <2> Maga a "message" tartalom egyfajta coffee stream message struktúrába fog kerülni,
