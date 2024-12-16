@@ -49,6 +49,26 @@ azt is hogyha az ETCD nem tartalmazza,
 így csökkenthetjük a rengeteg ismétlődő lekérdezést.
 A Cache egy thread safe singleton,
 lehetőség van üríteni a `EtcdConfigSourceCache.instance().clear()` hívással.
+* Lehetőség van letiltani a ConfigSource a konfigurációban, pl.:
++
+----
+hu.icellmobilsoft.coffee.module.etcd.producer.CachedEtcdConfigSource.enabled: false
+hu.icellmobilsoft.coffee.module.etcd.producer.DefaultEtcdConfigSource.enabled: false
+hu.icellmobilsoft.coffee.module.etcd.producer.FilteredEtcdConfigSource.enabled: false
+hu.icellmobilsoft.coffee.module.etcd.producer.RuntimeEtcdConfigSource.enabled: false
+----
+Lehet használni a rövid kulcsokat is, pl.:
++
+----
+CachedEtcdConfigSource.enabled: false
+DefaultEtcdConfigSource.enabled: false
+FilteredEtcdConfigSource.enabled: false
+RuntimeEtcdConfigSource.enabled: false
+----
+Két módon is be lehet állítani ezt a konfigurációt, a következő metódusok visszatérési értéke alapján:
+. `ConfigurableConfigSource.getClassEnableKey()`
+. `ConfigurableConfigSource.getConfigSourceNameKey()`
+
 * `hu.icellmobilsoft.coffee.module.etcd.producer.RuntimeEtcdConfigSource` -
 Futás közben aktiválható a szükség szerint (pl. AfterBeanDiscovery) a következő módon
 +
