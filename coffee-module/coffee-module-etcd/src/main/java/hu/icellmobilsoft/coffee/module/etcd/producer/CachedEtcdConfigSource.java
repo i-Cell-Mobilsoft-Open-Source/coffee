@@ -21,6 +21,7 @@ package hu.icellmobilsoft.coffee.module.etcd.producer;
 
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
@@ -34,9 +35,10 @@ import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
  */
 public class CachedEtcdConfigSource extends DefaultEtcdConfigSource {
 
+    static boolean active = false;
     /**
-     * It caches configuration keys to avoid repeated querying. There are situations where it might be called multiple times
-     * (during runtime, new configuration keys are not added).)
+     * It caches configuration keys to avoid repeated querying. There are situations where it might be called multiple times (during runtime, new
+     * configuration keys are not added).)
      */
     private static final Set<String> PROPERTY_NAME_CACHE = Collections.synchronizedSet(new HashSet<>());
 
@@ -55,10 +57,11 @@ public class CachedEtcdConfigSource extends DefaultEtcdConfigSource {
      */
     @Override
     public Set<String> getPropertyNames() {
-        if (!isEnabled()) {
+        if (!isEnabled() || !active) {
             // not enabled, dont create cache
-            Collections.emptyMap();
+            return Collections.emptySet();
         }
+
         Set<String> propertyNames = new HashSet<>();
         if (PROPERTY_NAME_CACHE.isEmpty()) {
             PROPERTY_NAME_CACHE.addAll(super.getPropertyNames());
@@ -69,6 +72,10 @@ public class CachedEtcdConfigSource extends DefaultEtcdConfigSource {
 
     @Override
     protected Optional<String> readValue(String propertyName) throws BaseException {
+        if (!isEnabled() || !active) {
+            return Optional.empty();
+        }
+
         return EtcdConfigSourceCache.instance().getValue(propertyName);
     }
 
@@ -76,4 +83,38 @@ public class CachedEtcdConfigSource extends DefaultEtcdConfigSource {
     public String getName() {
         return this.getClass().getSimpleName();
     }
+
+    /**
+     * Activate property finding in ETCD
+     *
+     * @param active
+     *            true - properties is find on ETCD, false - properties not finding and return default null
+     */
+    public static void setActive(boolean active) {
+        CachedEtcdConfigSource.active = active;
+    }
+
+    /**
+     * Return the properties, unless disabled return empty
+     *
+     * @return the map containing the properties in this config source or empty if disabled
+     */
+    @Override
+    public Map<String, String> getProperties() {
+        if (!active) {
+            return Collections.emptyMap();
+        }
+
+        return super.getProperties();
+    }
+
+    @Override
+    public String getValue(String propertyName) {
+        if (!active) {
+            return null;
+        }
+
+        return super.getValue(propertyName);
+    }
+
 }
