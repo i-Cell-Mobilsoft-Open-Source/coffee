@@ -23,3 +23,9 @@ A ci build folyamatból el lett távolítva a java11 támogatás, és az alapér
 
 ==== Migration
 A legkisebb támogatott java verzió a 17-es.
+
+=== coffee-tool
+Az alapértelmezett egyedi jsob adapterek null safe-ek lettek.
+
+==== Migration
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.

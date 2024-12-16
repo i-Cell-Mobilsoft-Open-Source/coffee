@@ -50,9 +50,18 @@ public class DateJsonbAdapter implements JsonbAdapter<Date, Long> {
         return date.getTime();
     }
 
-    /** {@inheritDoc} */
+    /**
+     * Converts a {@link Long} into a {@link Date} object
+     *
+     * @param date
+     *         Long to convert or {@code null}.
+     * @return the converted object or {@code null}, if the given {@code date} param is null
+     */
     @Override
     public Date adaptFromJson(Long date) {
+        if (date == null) {
+            return null;
+        }
         try {
             return new Date(date);
         } catch (Exception e) {

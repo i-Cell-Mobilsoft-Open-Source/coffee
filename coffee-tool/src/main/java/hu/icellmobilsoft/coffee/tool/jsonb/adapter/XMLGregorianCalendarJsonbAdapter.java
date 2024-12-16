@@ -54,9 +54,18 @@ public class XMLGregorianCalendarJsonbAdapter implements JsonbAdapter<XMLGregori
         return calendar.toXMLFormat();
     }
 
-    /** {@inheritDoc} */
+    /**
+     * Converts a {@link String}r into a {@link XMLGregorianCalendar} object
+     *
+     * @param calendar
+     *         string to convert or {@code null}.
+     * @return the converted object or {@code null}, if the given {@code calendar} param is null
+     */
     @Override
     public XMLGregorianCalendar adaptFromJson(String calendar) {
+        if (calendar == null) {
+            return null;
+        }
         try {
             XMLGregorianCalendar xmlCal = toXMLGregorianCalendar(calendar);
             return xmlCal.normalize();
