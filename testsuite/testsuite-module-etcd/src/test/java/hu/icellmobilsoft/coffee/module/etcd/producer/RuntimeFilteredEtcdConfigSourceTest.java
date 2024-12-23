@@ -36,17 +36,17 @@ import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
 import hu.icellmobilsoft.coffee.tool.utils.string.RandomUtil;
 
 /**
- * CachedEtcdConfigSource tests
+ * RuntimeFilteredEtcdConfigSource tests
  *
  * @author gyengus
  */
-@DisplayName("Testing RuntimeCachedEtcdConfigSource")
+@DisplayName("Testing RuntimeFilteredEtcdConfigSource")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-class RuntimeCachedEtcdConfigSourceTest extends BaseEtcdTest {
+class RuntimeFilteredEtcdConfigSourceTest extends BaseEtcdTest {
 
-    static final String TEST_KEY = "TEST_KEY_" + RandomUtil.generateId();
-    static final String TEST_KEY2 = "TEST_KEY2_" + RandomUtil.generateId();
-    static final String TEST_VALUE = "TEST_VALUE_" + RandomUtil.generateId();
+    static final String TEST_KEY = "public.TEST_KEY_" + RandomUtil.generateId();
+    static final String TEST_KEY2 = "public.TEST_KEY2_" + RandomUtil.generateId();
+    static final String TEST_VALUE = "public.TEST_VALUE_" + RandomUtil.generateId();
 
     @Inject
     private ConfigEtcdHandler configEtcdHandler;
@@ -54,13 +54,13 @@ class RuntimeCachedEtcdConfigSourceTest extends BaseEtcdTest {
     @BeforeAll
     static void beforeAll() {
         defaultBeforeAll();
-        System.setProperty("RuntimeCachedEtcdConfigSource.enabled", "true");
+        System.setProperty("RuntimeFilteredEtcdConfigSource.enabled", "true");
     }
 
     @AfterAll
     static void afterAll() {
         defaultAfterAll();
-        System.setProperty("RuntimeCachedEtcdConfigSource.enabled", "false");
+        System.setProperty("RuntimeFilteredEtcdConfigSource.enabled", "false");
     }
 
     @Test
@@ -98,8 +98,8 @@ class RuntimeCachedEtcdConfigSourceTest extends BaseEtcdTest {
     void testExistingKeyActive() throws BaseException {
         // GIVEN
         assertAllEtcdConfigSource();
+        RuntimeFilteredEtcdConfigSource.setActive(true);
         configEtcdHandler.putValue(TEST_KEY2, TEST_VALUE);
-        RuntimeCachedEtcdConfigSource.setActive(true);
 
         // WHEN
         String actual = ConfigProvider.getConfig().getOptionalValue(TEST_KEY2, String.class).orElse(NO_VALUE);
