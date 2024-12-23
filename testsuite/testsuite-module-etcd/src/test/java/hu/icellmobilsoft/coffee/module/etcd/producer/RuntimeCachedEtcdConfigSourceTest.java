@@ -21,9 +21,9 @@ import hu.icellmobilsoft.coffee.tool.utils.string.RandomUtil;
  *
  * @author gyengus
  */
-@DisplayName("Testing CachedEtcdConfigSource")
+@DisplayName("Testing RuntimeCachedEtcdConfigSource")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-class CachedEtcdConfigSourceTest extends BaseEtcdTest {
+class RuntimeCachedEtcdConfigSourceTest extends BaseEtcdTest {
 
     static final String TEST_KEY = "TEST_KEY_" + RandomUtil.generateId();
     static final String TEST_KEY2 = "TEST_KEY2_" + RandomUtil.generateId();
@@ -35,13 +35,13 @@ class CachedEtcdConfigSourceTest extends BaseEtcdTest {
     @BeforeAll
     static void beforeAll() {
         defaultBeforeAll();
-        System.setProperty("CachedEtcdConfigSource.enabled", "true");
+        System.setProperty("RuntimeCachedEtcdConfigSource.enabled", "true");
     }
 
     @AfterAll
     static void afterAll() {
         defaultAfterAll();
-        System.setProperty("CachedEtcdConfigSource.enabled", "false");
+        System.setProperty("RuntimeCachedEtcdConfigSource.enabled", "false");
     }
 
     @Test
@@ -80,7 +80,7 @@ class CachedEtcdConfigSourceTest extends BaseEtcdTest {
         // GIVEN
         assertAllEtcdConfigSource();
         configEtcdHandler.putValue(TEST_KEY2, TEST_VALUE);
-        CachedEtcdConfigSource.setActive(true);
+        RuntimeCachedEtcdConfigSource.setActive(true);
 
         // WHEN
         String actual = ConfigProvider.getConfig().getOptionalValue(TEST_KEY2, String.class).orElse(NO_VALUE);
