@@ -49,7 +49,7 @@ azt is hogyha az ETCD nem tartalmazza,
 így csökkenthetjük a rengeteg ismétlődő lekérdezést.
 A Cache egy thread safe singleton,
 lehetőség van üríteni a `EtcdConfigSourceCache.instance().clear()` hívással.
-* Lehetőség van letiltani a ConfigSource a konfigurációban, pl.:
+* Lehetőség van letiltani a ConfigSource-t a konfigurációban, pl.:
 +
 ----
 hu.icellmobilsoft.coffee.module.etcd.producer.CachedEtcdConfigSource.enabled: false

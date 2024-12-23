@@ -65,7 +65,7 @@ DefaultEtcdConfigSource.enabled: false
 FilteredEtcdConfigSource.enabled: false
 RuntimeEtcdConfigSource.enabled: false
 ----
-There are two ways to set this configuration based on the return value of the following methods:
+There are other two ways to set this configuration based on the return value of the following methods:
 . `ConfigurableConfigSource.getClassEnableKey()`
 . `ConfigurableConfigSource.getConfigSourceNameKey()`
 * `hu.icellmobilsoft.coffee.module.etcd.producer.RuntimeEtcdConfigSource` -
