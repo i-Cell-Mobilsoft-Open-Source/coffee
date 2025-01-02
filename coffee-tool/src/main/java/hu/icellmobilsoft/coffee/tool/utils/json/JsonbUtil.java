@@ -205,12 +205,6 @@ public class JsonbUtil {
     @SuppressWarnings("rawtypes")
     private static JsonbAdapter[] getAdapters(Config config) {
         List<JsonbAdapter> jsonbAdapters = new ArrayList<>();
-        jsonbAdapters.add(new YearMonthJsonbAdapter());
-        jsonbAdapters.add(new ByteArrayJsonbAdapter());
-        jsonbAdapters.add(new ClassTypeJsonbAdapter());
-        jsonbAdapters.add(new DateJsonbAdapter());
-        jsonbAdapters.add(new DurationJsonbAdapter());
-        jsonbAdapters.add(new XMLGregorianCalendarJsonbAdapter());
 
         Optional<List<String>> customClassNames = config.getOptionalValues(CUSTOM_ADAPTERS, String.class);
         if (customClassNames.isPresent()) {
@@ -219,6 +213,13 @@ public class JsonbUtil {
                 jsonbAdapters.add(getCustomClassInstance(customAdapterClass));
             }
         }
+
+        jsonbAdapters.add(new YearMonthJsonbAdapter());
+        jsonbAdapters.add(new ByteArrayJsonbAdapter());
+        jsonbAdapters.add(new ClassTypeJsonbAdapter());
+        jsonbAdapters.add(new DateJsonbAdapter());
+        jsonbAdapters.add(new DurationJsonbAdapter());
+        jsonbAdapters.add(new XMLGregorianCalendarJsonbAdapter());
 
         return jsonbAdapters.toArray(new JsonbAdapter[0]);
     }
