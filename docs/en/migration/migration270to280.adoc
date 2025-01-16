@@ -21,7 +21,8 @@ The `hu.icellmobilsoft.coffee.jpa.sql.batch.BatchService` has been deleted.
 * The JakartaEE 10 producer of the `HibernateBatchService` can be found in the `frappee-hiberante-batch-jee10`
 module.
 * If the former `BatchService` is extended by your project the new `HibernateBatchService` must be extended and a new
-producer must be created. For more information check the Frapp:EE documentation.
+producer must be created. For more information check the https://i-cell-mobilsoft-open-source.github.io/frappee/#HibernateBatchService[Frapp:EE documentation]. An example can be found in the `backend-sampler` project:
+https://github.com/i-Cell-Mobilsoft-Open-Source/backend-sampler/blob/main/common/common-system-jpa/src/main/java/hu/icellmobilsoft/sampler/common/system/jpa/service/CustomHibernateBatchService.java#L40[CustomHibernateBatchService].
 
 === coffee-dto-base
 
