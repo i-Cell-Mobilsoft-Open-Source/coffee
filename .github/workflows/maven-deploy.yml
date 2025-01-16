@@ -41,5 +41,5 @@ jobs:
       run: mvn deploy -s $GITHUB_WORKSPACE/.github/.m2/settings.xml
       env:
         GITHUB_TOKEN: '${{ secrets.GH_TOKEN_TECHUSER_JAVA }}'
-        OSSRH_USERNAME: '${{ secrets.OSS_SONATYPE_ORG_USER }}'
-        OSSRH_PASSWORD: '${{ secrets.OSS_SONATYPE_ORG_PASSWORD }}'
+        USERNAME: '${{ secrets.OSS_SONATYPE_ORG_USER }}'
+        PASSWORD: '${{ secrets.OSS_SONATYPE_ORG_PASSWORD }}'
