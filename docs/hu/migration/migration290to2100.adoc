@@ -29,3 +29,12 @@ Az alapértelmezett egyedi jsob adapterek null safe-ek lettek.
 
 ==== Migration
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+=== coffee-model-base
+
+Az `AbstractIdentifiedEntity` implementálja az `IIdentifiedEntity` interfészt az `AbstractIdentifiedAuditEntity`-hez hasonlóan.
+Így érvényesül ezen entitások esetén is a `hu.icellmobilsoft.coffee.model.base.generator.EntityIdGenerator`-ban implmentált logika.
+
+==== Migration
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
