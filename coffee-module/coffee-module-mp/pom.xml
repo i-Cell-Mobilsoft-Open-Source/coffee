@@ -22,7 +22,7 @@
 			<dependency>
 				<groupId>org.eclipse.microprofile</groupId>
 				<artifactId>microprofile</artifactId>
-				<version>5.0</version>
+				<version>6.1</version>
 				<scope>import</scope>
 				<type>pom</type>
 			</dependency>
