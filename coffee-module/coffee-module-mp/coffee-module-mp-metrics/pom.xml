@@ -17,9 +17,12 @@
             <groupId>hu.icellmobilsoft.coffee</groupId>
             <artifactId>coffee-dto-base</artifactId>
         </dependency>
+        <!--WildFly no longer support MicroProfile Metrics, now we use the old mp version -->
         <dependency>
             <groupId>org.eclipse.microprofile.metrics</groupId>
             <artifactId>microprofile-metrics-api</artifactId>
+            <!--from MP 6.1 the 5.1 mp-metrics has some modifications that will broke the coffee metrics modules -->
+            <version>4.0</version>
         </dependency>
 
         <!-- Test -->
