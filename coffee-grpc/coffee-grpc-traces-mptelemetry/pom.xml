@@ -9,7 +9,8 @@
   <artifactId>coffee-grpc-traces-mptelemetry</artifactId>
 
   <properties>
-    <version.io.opentelemetry.instrumentation>2.0.0-alpha</version.io.opentelemetry.instrumentation>
+    <!-- TODO validate the version for gRPC module-->
+    <version.io.opentelemetry.instrumentation>1.29.0-alpha</version.io.opentelemetry.instrumentation>
   </properties>
 
   <dependencies>
