@@ -22,9 +22,8 @@ package hu.icellmobilsoft.coffee.tool.utils.compress;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
-import java.util.Objects;
+import java.util.Date;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -38,6 +37,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
 import hu.icellmobilsoft.coffee.tool.utils.json.JsonUtil;
+import hu.icellmobilsoft.coffee.tool.utils.json.TestObject;
 
 /**
  * @author balazs.joo
@@ -102,37 +102,35 @@ class GZIPUtilTest {
     @DisplayName("Testing compressJson() and decompressEx()")
     class CompressDecompressJson {
 
-        private TestData testData;
+        private TestObject testObject;
 
         @BeforeEach
         void setUp() {
-            testData = new TestData();
-            testData.setS(new String(new byte[9_999_999])); // nagy string
-            testData.setBd(new BigDecimal(42));
-            testData.setB(true);
+            testObject = new TestObject();
+            testObject.setBytes(new byte[1024]);
+            testObject.setString((new String(new byte[1024])));
+            testObject.setDate(new Date(Long.parseLong("1549898614051")));
         }
 
         @Test
         @DisplayName("Testing compressJson() and decompressEx()")
         void compressDecompress() throws BaseException {
-            byte[] compressedByte = GZIPUtil.compressJson(testData);
+            byte[] compressedByte = GZIPUtil.compressJson(testObject);
             Assertions.assertNotNull(compressedByte);
 
-            TestData decompressedTestData = GZIPUtil.decompressEx(compressedByte, TestData.class);
-            Assertions.assertEquals(testData, decompressedTestData);
+            TestObject decompressedTestData = GZIPUtil.decompressEx(compressedByte, TestObject.class);
+            Assertions.assertEquals(testObject, decompressedTestData);
         }
 
         @Test
         @DisplayName("Testing compressJson() and decompressToInputStream()")
-        void compressDecompressToInputStream() throws BaseException {
-            byte[] compressedByte = GZIPUtil.compressJson(testData);
+        void compressDecompressToInputStream() throws BaseException, IOException {
+            byte[] compressedByte = GZIPUtil.compressJson(testObject);
             Assertions.assertNotNull(compressedByte);
 
             try (InputStream gzipInputStream = GZIPUtil.decompressToInputStream(compressedByte);
                     InputStreamReader reader = new InputStreamReader(gzipInputStream, StandardCharsets.UTF_8)) {
-                Assertions.assertEquals(testData, JsonUtil.toObjectGson(reader, TestData.class));
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+                Assertions.assertEquals(testObject, JsonUtil.toObjectGson(reader, TestObject.class));
             }
         }
     }
@@ -219,53 +217,5 @@ class GZIPUtilTest {
         Assertions.assertNull(GZIPUtil.decompress(null, Object.class));
         Assertions.assertEquals(0, GZIPUtil.decompressedSize(new byte[] {}));
         Assertions.assertEquals(0, GZIPUtil.decompressedSize(null));
-    }
-
-    /**
-     * Test DTO for compressing/decompressing.
-     */
-    public static class TestData {
-        private String s;
-        private BigDecimal bd;
-        private boolean b;
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o)
-                return true;
-            if (o == null || getClass() != o.getClass())
-                return false;
-            TestData testData = (TestData) o;
-            return b == testData.b && Objects.equals(s, testData.s) && Objects.equals(bd, testData.bd);
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(s, bd, b);
-        }
-
-        public String getS() {
-            return s;
-        }
-
-        public void setS(String s) {
-            this.s = s;
-        }
-
-        public BigDecimal getBd() {
-            return bd;
-        }
-
-        public void setBd(BigDecimal bd) {
-            this.bd = bd;
-        }
-
-        public boolean isB() {
-            return b;
-        }
-
-        public void setB(boolean b) {
-            this.b = b;
-        }
     }
 }
