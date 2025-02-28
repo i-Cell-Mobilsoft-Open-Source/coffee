@@ -368,6 +368,19 @@ public class JsonUtil {
     }
 
     /**
+     * Generate dto to json and appends it to the passed {@link Appendable}.
+     *
+     * @param dto
+     *            object to convert to json
+     * @param writer
+     *            the output of the conversion
+     */
+    @Deprecated(since = "2.10.0", forRemoval = true)
+    public static void toJsonGson(Object dto, Appendable writer) {
+        getGsonConfig().toJson(dto, writer);
+    }
+
+    /**
      * Convert JSON String to DTO object without throwing exception
      *
      * @param <T>

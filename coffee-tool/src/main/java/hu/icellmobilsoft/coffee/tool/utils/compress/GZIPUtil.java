@@ -22,6 +22,9 @@ package hu.icellmobilsoft.coffee.tool.utils.compress;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.charset.StandardCharsets;
@@ -31,9 +34,9 @@ import java.util.zip.GZIPOutputStream;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ArrayUtils;
 
-import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
+import hu.icellmobilsoft.coffee.se.api.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.tool.utils.json.JsonUtil;
 
 /**
@@ -102,6 +105,33 @@ public class GZIPUtil {
             IOUtils.closeQuietly(inputStream);
             IOUtils.closeQuietly(gzipOutputStream);
             IOUtils.closeQuietly(outputStream);
+        }
+    }
+
+    /**
+     * Compress JSON DTO object to binary. Input object is parsed with ({@link JsonUtil#toJsonGson(Object, java.lang.Appendable)}
+     *
+     * @param <T>
+     *            Input DTO class type
+     * @param jsonDto
+     *            dto object, expected to json serialize
+     * @return GZIP compressed binary
+     * @throws BaseException
+     *             json parse or GZIP compile errors
+     */
+    public static <T> byte[] compressJson(T jsonDto) throws BaseException {
+        if (jsonDto == null) {
+            return new byte[0];
+        }
+        try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+                GZIPOutputStream gzipOutputStream = new GZIPOutputStream(outputStream);
+                OutputStreamWriter writer = new OutputStreamWriter(gzipOutputStream, StandardCharsets.UTF_8)) {
+            JsonUtil.toJsonGson(jsonDto, writer);
+            writer.flush();
+            gzipOutputStream.finish();
+            return outputStream.toByteArray();
+        } catch (IOException ioe) {
+            throw new TechnicalException(CoffeeFaultType.OPERATION_FAILED, "Error at compressing", ioe);
         }
     }
 
@@ -183,6 +213,62 @@ public class GZIPUtil {
             fileSize += (1L << 32);
         }
         return fileSize;
+    }
+
+    /**
+     * Decompresses and parses the passed byte array as a JSON.<br>
+     * Throws exception on JSON parse error.
+     *
+     * @param <T>
+     *            the type parameter
+     * @param data
+     *            byte array to decompress and parse
+     * @param clazz
+     *            the type of the resulting class
+     * @return the t
+     * @throws BaseException
+     *             on GZIP or JSON error
+     */
+    public static <T> T decompressEx(byte[] data, Class<T> clazz) throws BaseException {
+        if (data == null || data.length == 0) {
+            return null;
+        }
+        try (ByteArrayInputStream inputStream = new ByteArrayInputStream(data);
+                GZIPInputStream gzipInputStream = new GZIPInputStream(inputStream);
+                InputStreamReader reader = new InputStreamReader(gzipInputStream, StandardCharsets.UTF_8)) {
+            return JsonUtil.toObjectGson(reader, clazz);
+        } catch (IOException ioe) {
+            throw new TechnicalException(CoffeeFaultType.OPERATION_FAILED, "Error at decompressing", ioe);
+        }
+    }
+
+    /**
+     * Creates an {@link InputStream} with decompressed content from a compressed byte array. <br>
+     * The logic is the same as {@link GZIPUtil#decompress(byte[])}, but this implementation does not load the entire decompressed byte array into
+     * memory. <br>
+     * The stream must be closed after call!
+     *
+     * @param data
+     *            input byte array
+     * @return decompressed inputStream
+     * @throws BaseException
+     *             exception
+     */
+    public static InputStream decompressToInputStream(byte[] data) throws BaseException {
+        if (data == null || data.length == 0) {
+            return null;
+        }
+        if (!isCompressed(data)) {
+            throw new TechnicalException(CoffeeFaultType.GZIP_DECOMPRESSION_ERROR, "Input data is not GZIP (does not have GZIP header)");
+        }
+
+        try (ByteArrayInputStream inputStream = new ByteArrayInputStream(data)) {
+            return new GZIPInputStream(inputStream);
+        } catch (IOException e) {
+            throw new TechnicalException(CoffeeFaultType.GZIP_DECOMPRESSION_ERROR, "IOException at decompressing: " + e.getLocalizedMessage(), e);
+        } catch (Exception e) {
+            throw new TechnicalException(CoffeeFaultType.GZIP_DECOMPRESSION_ERROR, "Exception at decompressing: " + e.getLocalizedMessage(), e);
+        }
     }
 
     /**
