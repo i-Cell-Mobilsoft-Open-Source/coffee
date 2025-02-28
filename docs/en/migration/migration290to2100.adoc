@@ -27,6 +27,8 @@ The minimum supported Java version is 17.
 === coffee-tool
 * The default custom jsonb adapters have become null safe.
 * The order of adding custom json adapters have changed to ensure the possibility to change the default behavior.
+* GZIPUtil extended with `compressJson()`, `decompressEx` and `decompressToInputStream` methods.
+** These methods utilize deprecated `JsonUtol` methods; this may change in a future version.
 
 ==== Migration
 Changes are backwards compatible doesnt need any migration.

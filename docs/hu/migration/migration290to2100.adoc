@@ -25,7 +25,9 @@ A ci build folyamatból el lett távolítva a java11 támogatás, és az alapér
 A legkisebb támogatott java verzió a 17-es.
 
 === coffee-tool
-Az alapértelmezett egyedi jsob adapterek null safe-ek lettek.
+* Az alapértelmezett egyedi jsob adapterek null safe-ek lettek.
+* GZIPUtil bővítve lett a `compressJson()`, `decompressEx` and `decompressToInputStream` metódusokkal.
+** Ezek a metódusok deprecated `JsonUtol` metódusokat használnak; ez változni fog a jövőben.
 
 ==== Migration
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
