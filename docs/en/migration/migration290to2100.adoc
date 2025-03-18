@@ -39,3 +39,11 @@ The `hu.icellmobilsoft.coffee.model.base.generator.EntityIdGenerator` works for 
 ==== Migration
 
 Changes are backwards compatible doesnt need any migration.
+
+=== coffee-rest
+
+Missing i18n translation added for key `hu.icellmobilsoft.coffee.se.api.exception.enums.CoffeeFaultType.OPERATION_FAILED`.
+
+==== Migration
+
+The changes are backwards compatible don't need any migration. It is recommended to remove this key at the project level, if it was previously added as a workaround.
