@@ -46,6 +46,7 @@ import io.quarkus.deployment.annotations.ExecutionTime;
 import io.quarkus.deployment.annotations.Record;
 import io.quarkus.deployment.builditem.CombinedIndexBuildItem;
 import io.quarkus.deployment.builditem.FeatureBuildItem;
+import io.quarkus.deployment.builditem.nativeimage.NativeImageProxyDefinitionBuildItem;
 
 /**
  * Deltaspike data processor
@@ -129,6 +130,13 @@ class DeltaspikeDataProcessor {
         });
     }
 
+    @BuildStep
+    void registerProxies(BuildProducer<NativeImageProxyDefinitionBuildItem> nativeImageProxyDefinitionBuildItemBuildProducer, DeltaspikeDataBuidItem deltaspikeDataBuidItem) {
+        for (Class<?> repositoryClass : deltaspikeDataBuidItem.getRepositoryClasses()) {
+            nativeImageProxyDefinitionBuildItemBuildProducer.produce(new NativeImageProxyDefinitionBuildItem(repositoryClass.getName()));
+        }
+
+    }
     /**
      * Create Repository beans
      * 
