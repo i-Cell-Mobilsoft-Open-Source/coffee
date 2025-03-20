@@ -47,3 +47,12 @@ Missing i18n translation added for key `hu.icellmobilsoft.coffee.se.api.exceptio
 ==== Migration
 
 The changes are backwards compatible don't need any migration. It is recommended to remove this key at the project level, if it was previously added as a workaround.
+
+=== coffee-deltaspike-data-extension
+
+Produce all registried Reposiotry with nativeImageProxyDefinitionBuildItemBuildProducer, to work Repository in native image.
+
+==== Migration
+
+Changes are backwards compatible doesnt need any migration.
+
