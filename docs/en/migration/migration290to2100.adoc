@@ -50,7 +50,7 @@ The changes are backwards compatible don't need any migration. It is recommended
 
 === coffee-deltaspike-data-extension
 
-Produce all registried Reposiotry with nativeImageProxyDefinitionBuildItemBuildProducer, to work Repository in native image.
+Produce all registered Repository with nativeImageProxyDefinitionBuildItemBuildProducer, to work Repository in native image.
 
 ==== Migration
 

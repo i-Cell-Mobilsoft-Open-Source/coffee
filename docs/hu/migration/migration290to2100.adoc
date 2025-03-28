@@ -49,7 +49,7 @@ A változtatások nem eredményeznek átállási munkálatokat, visszafelé komp
 
 === coffee-deltaspike-data-extension
 
-Minden regisztrált Reposiotry produce a nativeImageProxyDefinitionBuildItemBuildProducer-rel, hogy a Reposiotry működni tudjon native imageben.
+Minden regisztrált Repository előállítása nativeImageProxyDefinitionBuildItemBuildProducer-rel, hogy a Repository működni tudjon native imageben.
 
 ==== Migration
 
