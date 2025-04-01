@@ -46,3 +46,11 @@ Hiányzó i18n fordítás a `hu.icellmobilsoft.coffee.se.api.exception.enums.Cof
 ==== Migration
 
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis. Ajánlot ennek a kulcsnak az eltávolítás projekt szinten, amennyiben korábban fel lett véve workaround-ként.
+
+=== coffee-deltaspike-data-extension
+
+Minden regisztrált Repository előállítása nativeImageProxyDefinitionBuildItemBuildProducer-rel, hogy a Repository működni tudjon native imageben.
+
+==== Migration
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
