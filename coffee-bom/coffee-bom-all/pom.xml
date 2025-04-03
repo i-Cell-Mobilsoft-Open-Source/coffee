@@ -22,7 +22,7 @@
         <version.commons-beanutils>1.9.4</version.commons-beanutils>
         <version.commons-codec>1.15</version.commons-codec>
         <version.commons-collections>3.2.2</version.commons-collections>
-        <version.commons-io>2.11.0</version.commons-io>
+        <version.commons-io>2.14.0</version.commons-io>
         <version.commons-email2-jakarta>2.0.0-M1</version.commons-email2-jakarta>
         <version.org.jboss.resteasy>6.2.1.Final</version.org.jboss.resteasy>
         <version.org.hibernate>6.2.13.Final</version.org.hibernate>
