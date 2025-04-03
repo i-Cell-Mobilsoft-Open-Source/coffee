@@ -65,4 +65,13 @@ public class EntityIdGenerator implements IdentifierGenerator {
         return RandomUtil.generateId();
     }
 
+    /**
+     * Returns true for backward compatibility. Otherwise, an entity with an assigned ID would be considered a detached representation of an existing row, and could result in a {@link jakarta.persistence.OptimisticLockException}.
+     *
+     * @return true
+     */
+    @Override
+    public boolean allowAssignedIdentifiers() {
+        return true;
+    }
 }
