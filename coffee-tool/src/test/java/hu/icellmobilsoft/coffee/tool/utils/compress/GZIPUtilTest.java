@@ -54,7 +54,7 @@ class GZIPUtilTest {
 
         @Test
         @DisplayName("Testing isCompressed(byte[])")
-        void isCompressedJ16() {
+        void isCompressed() {
             Assertions.assertTrue(GZIPUtil.isCompressed(COMPRESSED));
             Assertions.assertFalse(GZIPUtil.isCompressed(TEST.getBytes()));
         }
@@ -111,7 +111,7 @@ class GZIPUtilTest {
         }
 
         @Test
-        @DisplayName("Testing compressJson() and decompressEx() with XML")
+        @DisplayName("Testing compress() and decompress() with XML")
         void compressDecompressXml() throws BaseException {
             byte[] compressedByte = GZIPUtil.compress(XML.getBytes(StandardCharsets.UTF_8));
             Assertions.assertNotNull(compressedByte);
@@ -144,7 +144,7 @@ class GZIPUtilTest {
 
         @Test
         @DisplayName("Testing decompress(byte[])")
-        void decompressJ16() throws BaseException {
+        void decompress() throws BaseException {
             byte[] actual = GZIPUtil.decompress(COMPRESSED);
             Assertions.assertEquals(new String(actual), TEST);
         }
@@ -163,8 +163,8 @@ class GZIPUtilTest {
     @DisplayName("Testing size()")
     class SizeCheck {
         @Test
-        @DisplayName("Testing decompressedSize(byte[]), JRE >= 16")
-        void decompressedSizeJ16() throws BaseException {
+        @DisplayName("Testing decompressedSize(byte[])")
+        void decompressedSize() throws BaseException {
 
             int actual = GZIPUtil.decompressedSize(COMPRESSED);
 
