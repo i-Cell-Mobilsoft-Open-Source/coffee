@@ -23,6 +23,8 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.charset.StandardCharsets;
@@ -32,7 +34,7 @@ import java.util.zip.GZIPOutputStream;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ArrayUtils;
 
-import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
+import hu.icellmobilsoft.coffee.se.api.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
 import hu.icellmobilsoft.coffee.tool.utils.json.JsonUtil;
@@ -141,7 +143,7 @@ public class GZIPUtil {
     }
 
     /**
-     * Compress JSON DTO object to binary. Input object is parsed with ({@link JsonUtil#toJsonGson(Object, Appendable)}
+     * Compress JSON DTO object to binary. Input object is parsed with ({@link JsonUtil#toJson(Object, Writer)}
      *
      * @param <T>
      *            Input DTO class type
@@ -158,8 +160,7 @@ public class GZIPUtil {
         try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
                 GZIPOutputStream gzipOutputStream = new GZIPOutputStream(outputStream);
                 OutputStreamWriter writer = new OutputStreamWriter(gzipOutputStream, StandardCharsets.UTF_8)) {
-            JsonUtil.toJsonGson(jsonDto, writer);
-            writer.flush();
+            JsonUtil.toJson(jsonDto, writer);
             gzipOutputStream.finish();
             return outputStream.toByteArray();
         } catch (IOException ioe) {
@@ -186,7 +187,7 @@ public class GZIPUtil {
         }
         byte[] jsonByte = GZIPUtil.decompress(data);
         String jsonString = new String(jsonByte, StandardCharsets.UTF_8);
-        return JsonUtil.toObjectGson(jsonString, clazz);
+        return JsonUtil.toObject(jsonString, clazz);
     }
 
     /**
@@ -210,7 +211,7 @@ public class GZIPUtil {
         try (ByteArrayInputStream inputStream = new ByteArrayInputStream(data);
                 GZIPInputStream gzipInputStream = new GZIPInputStream(inputStream);
                 InputStreamReader reader = new InputStreamReader(gzipInputStream, StandardCharsets.UTF_8)) {
-            return JsonUtil.toObjectGson(reader, clazz);
+            return JsonUtil.toObject(reader, clazz);
         } catch (IOException ioe) {
             throw new TechnicalException(CoffeeFaultType.OPERATION_FAILED, "Error at decompressing", ioe);
         }

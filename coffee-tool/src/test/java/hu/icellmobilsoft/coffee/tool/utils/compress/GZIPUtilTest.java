@@ -19,7 +19,14 @@
  */
 package hu.icellmobilsoft.coffee.tool.utils.compress;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+import java.util.Date;
+
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -29,6 +36,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
+import hu.icellmobilsoft.coffee.tool.utils.json.JsonUtil;
+import hu.icellmobilsoft.coffee.tool.utils.json.TestObject;
 
 /**
  * @author balazs.joo
@@ -86,6 +95,43 @@ class GZIPUtilTest {
 
             byte[] compressedByte = GZIPUtil.compress(TEST.getBytes());
             Assertions.assertArrayEquals(COMPRESSEDJ16, compressedByte);
+        }
+    }
+
+    @Nested
+    @DisplayName("Testing compressJson() and decompressEx()")
+    class CompressDecompressJson {
+
+        private TestObject testObject;
+
+        @BeforeEach
+        void setUp() {
+            testObject = new TestObject();
+            testObject.setBytes(new byte[1024]);
+            testObject.setString((new String(new byte[1024])));
+            testObject.setDate(new Date(Long.parseLong("1549898614051")));
+        }
+
+        @Test
+        @DisplayName("Testing compressJson() and decompressEx()")
+        void compressDecompress() throws BaseException {
+            byte[] compressedByte = GZIPUtil.compressJson(testObject);
+            Assertions.assertNotNull(compressedByte);
+
+            TestObject decompressedTestData = GZIPUtil.decompressEx(compressedByte, TestObject.class);
+            Assertions.assertEquals(testObject, decompressedTestData);
+        }
+
+        @Test
+        @DisplayName("Testing compressJson() and decompressToInputStream()")
+        void compressDecompressToInputStream() throws BaseException, IOException {
+            byte[] compressedByte = GZIPUtil.compressJson(testObject);
+            Assertions.assertNotNull(compressedByte);
+
+            try (InputStream gzipInputStream = GZIPUtil.decompressToInputStream(compressedByte);
+                    InputStreamReader reader = new InputStreamReader(gzipInputStream, StandardCharsets.UTF_8)) {
+                Assertions.assertEquals(testObject, JsonUtil.toObject(reader, TestObject.class));
+            }
         }
     }
 

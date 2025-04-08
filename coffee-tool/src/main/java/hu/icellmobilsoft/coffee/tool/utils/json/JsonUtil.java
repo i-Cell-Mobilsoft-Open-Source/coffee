@@ -21,6 +21,7 @@ package hu.icellmobilsoft.coffee.tool.utils.json;
 
 import java.io.Reader;
 import java.io.StringReader;
+import java.io.Writer;
 import java.lang.reflect.Type;
 import java.text.MessageFormat;
 import java.time.LocalDate;
@@ -36,6 +37,7 @@ import javax.xml.datatype.XMLGregorianCalendar;
 import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbException;
 
+import org.apache.commons.io.output.AppendableWriter;
 import org.apache.commons.lang3.StringUtils;
 
 import com.google.gson.Gson;
@@ -126,6 +128,18 @@ public class JsonUtil {
     }
 
     /**
+     * Generate dto to json and appends it to the passed writer
+     *
+     * @param dto
+     *            object to convert to json
+     * @param writer
+     *            the output of the conversion
+     */
+    public static void toJson(Object dto, Writer writer) {
+        getJsonbContext().toJson(dto, writer);
+    }
+
+    /**
      * Converting DTO object to JSON string without throwing exception. In case of any error occurs, an empty optional is returned
      *
      * @param dto
@@ -171,6 +185,29 @@ public class JsonUtil {
      *
      * @param <T>
      *            type of returned object
+     * @param json
+     *            JSON String
+     * @param clazz
+     *            class of returned object
+     * @return object
+     * @throws JsonConversionException
+     *             exception during deserialization process
+     */
+    public static <T> T toObject(String json, Class<T> clazz) throws JsonConversionException {
+        try {
+            T dto = getJsonbContext().fromJson(json, clazz);
+            LOGGER.debug(CONVERTING_TO_OBJECT_SUCCESSFUL_0, dto);
+            return dto;
+        } catch (Exception e) {
+            throw new JsonConversionException(MessageFormat.format(ERROR_JSON_TO_OBJECT, clazz.getClass()), e);
+        }
+    }
+
+    /**
+     * Converting JSON string to DTO object of a given type, throws exception with OPERATION_FAILED fault type if any error occurred
+     *
+     * @param <T>
+     *            type of returned object
      * @param reader
      *            JSON reader
      * @param typeOfT
@@ -186,6 +223,29 @@ public class JsonUtil {
             return dto;
         } catch (Exception e) {
             throw new JsonConversionException(MessageFormat.format(ERROR_JSON_TO_OBJECT, typeOfT.getClass()), e);
+        }
+    }
+
+    /**
+     * Converting JSON string to DTO object of a given type, throws exception with OPERATION_FAILED fault type if any error occurred
+     *
+     * @param <T>
+     *            type of returned object
+     * @param reader
+     *            JSON reader
+     * @param clazz
+     *            class of returned object
+     * @return object
+     * @throws JsonConversionException
+     *             exception during deserialization process
+     */
+    public static <T> T toObject(Reader reader, Class<T> clazz) throws JsonConversionException {
+        try {
+            T dto = getJsonbContext().fromJson(reader, clazz);
+            LOGGER.debug(CONVERTING_TO_OBJECT_SUCCESSFUL_0, dto);
+            return dto;
+        } catch (Exception e) {
+            throw new JsonConversionException(MessageFormat.format(ERROR_JSON_TO_OBJECT, clazz.getClass()), e);
         }
     }
 
