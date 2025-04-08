@@ -13,3 +13,5 @@ Quarkus extension készítés alapok segédlet: https://quarkus.io/guides/buildi
 Quarkus-hoz konkrétan elkészítésett Extensionök listája: https://quarkus.pro/extensions[Link]
 
 include::quarkus-extension/coffee-module-mp-restclient-extension.adoc[leveloffset=+1]
+include::quarkus-extension/coffee-module-etcd-extension.adoc[leveloffset=+1]
+include::quarkus-extension/coffee-tool-extension.adoc[leveloffset=+1]

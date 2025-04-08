@@ -1,0 +1,21 @@
+[#common_coffee-quarkus-extensions-module-etcd]
+= coffee-module-etcd-extension
+
+The purpose of this module is to extend the `coffee-module-etcd` module with Quarkus native runtime support.
+
+The Quarkus native compiler (GraalVM) removes classes at build time that are not directly referenced.
+This extension explicitly registers the classes referenced via reflection in the `coffee-module-etcd` module, to prevent them from being removed by the compiler.
+
+NOTE: currently, version 3.2.x of Quarkus is used in the extensions.
+
+To use this module, you should add the extension dependency instead of `coffee-module-etcd`, as it already includes the `coffee-module-etcd` module.
+
+.pom.xml
+[source,xml]
+----
+    <dependency>
+        <groupId>hu.icellmobilsoft.coffee</groupId>
+        <artifactId>coffee-module-etcd-extension-deployment</artifactId>
+        <version>${version.hu.icellmobilsoft.coffee}</version>
+    </dependency>
+----
