@@ -174,23 +174,19 @@ public class GZIPUtil {
      * @param <T>
      *            destination type
      * @param data
-     *            input byte array
+     *            input byte array which is a compressed json
      * @param clazz
      *            destination class
      * @return unzipped and converted object
      * @throws BaseException
      *             if any error occurs
      */
-    @SuppressWarnings("unchecked")
     public static <T> T decompress(byte[] data, Class<T> clazz) throws BaseException {
         if (data == null || data.length == 0) {
             return null;
         }
         byte[] jsonByte = GZIPUtil.decompress(data);
         String jsonString = new String(jsonByte, StandardCharsets.UTF_8);
-        if (clazz == String.class) {
-            return (T) jsonString;
-        }
         return JsonUtil.toObject(jsonString, clazz);
     }
 
@@ -201,7 +197,7 @@ public class GZIPUtil {
      * @param <T>
      *            the type parameter
      * @param data
-     *            byte array to decompress and parse
+     *            byte array to decompress and parse the json
      * @param clazz
      *            the type of the resulting class
      * @return the t
