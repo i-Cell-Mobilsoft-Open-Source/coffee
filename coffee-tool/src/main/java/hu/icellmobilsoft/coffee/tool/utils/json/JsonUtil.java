@@ -37,7 +37,6 @@ import javax.xml.datatype.XMLGregorianCalendar;
 import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbException;
 
-import org.apache.commons.io.output.AppendableWriter;
 import org.apache.commons.lang3.StringUtils;
 
 import com.google.gson.Gson;

@@ -85,7 +85,7 @@ public class GZIPUtil {
      *            input byte array
      * @return compressed byte array
      * @throws BaseException
-     *             exception
+     *             if any error occurs
      */
     public static byte[] compress(byte[] data) throws BaseException {
         if (data == null || data.length == 0) {
@@ -115,7 +115,7 @@ public class GZIPUtil {
      *            input byte array
      * @return decompressed byte array
      * @throws BaseException
-     *             exception
+     *             if any error occurs
      */
     public static byte[] decompress(byte[] data) throws BaseException {
         if (data == null || data.length == 0) {
@@ -179,14 +179,18 @@ public class GZIPUtil {
      *            destination class
      * @return unzipped and converted object
      * @throws BaseException
-     *             exception
+     *             if any error occurs
      */
+    @SuppressWarnings("unchecked")
     public static <T> T decompress(byte[] data, Class<T> clazz) throws BaseException {
         if (data == null || data.length == 0) {
             return null;
         }
         byte[] jsonByte = GZIPUtil.decompress(data);
         String jsonString = new String(jsonByte, StandardCharsets.UTF_8);
+        if (clazz == String.class) {
+            return (T) jsonString;
+        }
         return JsonUtil.toObject(jsonString, clazz);
     }
 
@@ -227,7 +231,7 @@ public class GZIPUtil {
      *            input byte array
      * @return decompressed inputStream
      * @throws BaseException
-     *             exception
+     *             if any error occurs
      */
     public static InputStream decompressToInputStream(byte[] data) throws BaseException {
         if (data == null || data.length == 0) {
