@@ -38,6 +38,12 @@ public class EvictAction {
     private Instance<Evictable> evictables;
 
     /**
+     * default constructor
+     */
+    public EvictAction() {
+    }
+
+    /**
      * Eviction operation that iterates over implementations of the {@link Evictable} interface. Explicitly invokes the eviction function for known
      * framework-level services.
      *
