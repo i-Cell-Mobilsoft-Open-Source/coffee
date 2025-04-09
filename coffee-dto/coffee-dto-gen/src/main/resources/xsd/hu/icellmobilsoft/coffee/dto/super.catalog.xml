@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
-	<public
-		publicId="http://common.dto.coffee.icellmobilsoft.hu/common"
-		uri="maven:hu.icellmobilsoft.coffee:coffee-dto-xsd:jar::!/xsd/hu/icellmobilsoft/coffee/dto/common/common.xsd" />
-	<public
-		publicId="http://common.dto.coffee.icellmobilsoft.hu/commonservice"
-		uri="maven:hu.icellmobilsoft.coffee:coffee-dto-xsd:jar::!/xsd/hu/icellmobilsoft/coffee/dto/common/commonservice.xsd" />
+    <public
+        publicId="http://common.dto.coffee.icellmobilsoft.hu/common"
+        uri="maven:hu.icellmobilsoft.coffee:coffee-dto-xsd:jar::!/xsd/hu/icellmobilsoft/coffee/dto/common/common.xsd" />
+    <public
+        publicId="http://common.dto.coffee.icellmobilsoft.hu/commonservice"
+        uri="maven:hu.icellmobilsoft.coffee:coffee-dto-xsd:jar::!/xsd/hu/icellmobilsoft/coffee/dto/common/commonservice.xsd" />
     <public
         publicId="http://common.dto.coffee.icellmobilsoft.hu/commonsecurity"
         uri="maven:hu.icellmobilsoft.coffee:coffee-dto-xsd:jar::!/xsd/hu/icellmobilsoft/coffee/dto/common/commonsecurity.xsd" />
