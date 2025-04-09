@@ -29,9 +29,11 @@ import javax.annotation.concurrent.ThreadSafe;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
-import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
+
+import hu.icellmobilsoft.coffee.dto.evict.Evictable;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
+import hu.icellmobilsoft.coffee.se.api.exception.TechnicalException;
 
 /**
  * ETCD Config source intentionally avoids CDI. During MP Config initialization, CDI is not always available. It is a thread-safe singleton.
@@ -40,7 +42,7 @@ import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
  * @since 1.3.0
  */
 @ThreadSafe
-public class EtcdConfigSourceCache {
+public class EtcdConfigSourceCache implements Evictable {
 
     /**
      * Cache write expiration time in minutes
@@ -50,7 +52,8 @@ public class EtcdConfigSourceCache {
     private EtcdConfigSourceCache() {
     }
 
-    private final LoadingCache<String, Optional<String>> cache = CacheBuilder.newBuilder().expireAfterWrite(CACHE_TIME_MINUTES, TimeUnit.MINUTES)
+    private final LoadingCache<String, Optional<String>> cache = CacheBuilder.newBuilder()
+            .expireAfterWrite(CACHE_TIME_MINUTES, TimeUnit.MINUTES)
             .build(new CacheLoader<String, Optional<String>>() {
                 @Override
                 public Optional<String> load(String key) throws Exception {
@@ -74,8 +77,10 @@ public class EtcdConfigSourceCache {
             if (e.getCause() instanceof BaseException) {
                 throw (BaseException) e.getCause();
             } else {
-                throw new TechnicalException(CoffeeFaultType.SERVICE_CALL_FAILED,
-                        MessageFormat.format("Error in getting key [{0}] from ETCD", propertyName), e);
+                throw new TechnicalException(
+                        CoffeeFaultType.SERVICE_CALL_FAILED,
+                        MessageFormat.format("Error in getting key [{0}] from ETCD", propertyName),
+                        e);
             }
         }
     }
@@ -97,6 +102,11 @@ public class EtcdConfigSourceCache {
      * Clear cache values
      */
     public void clear() {
+        cache.invalidateAll();
+    }
+
+    @Override
+    public void evict() {
         cache.invalidateAll();
     }
 }
