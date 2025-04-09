@@ -3,6 +3,7 @@
 coff:ee v2.10.0 -> v2.11.0 migrációs leírás, újdonságok, változások leírása
 
 === coffee-tool
+* GZipUtil kapott néhány új metódust a kisebb memóriahasználatért, valamint DTO/JSON tömörítésre
 * JsonbUtil#getCustomClassInstance implementációja megváltozott, Class.forName helyett Thread.currentThread().getContextClassLoader().loadClass használata
 
 ==== Migration
