@@ -75,9 +75,13 @@ public class EvictAction {
     }
 
     private String getName(Object evictable) {
-        return ProxyUtils.getUnproxiedClass(evictable.getClass()).getName();
+        String name = ProxyUtils.getUnproxiedClass(evictable.getClass()).getName();
+        return name.length() <= 255 ? name : name.substring(name.length() - 255);
     }
 
+    /**
+     * @return default context
+     */
     public ContextType createContext() {
         ContextType context = new ContextType();
         context.setRequestId(RandomUtil.generateId());
