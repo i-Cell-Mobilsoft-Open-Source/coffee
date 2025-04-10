@@ -9,3 +9,10 @@ coff:ee v2.10.0 -> v2.11.0 migrációs leírás, újdonságok, változások leí
  
 ==== Migration
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+=== Hibernate verzió emelés
+Hibernate `6.2.13.Final` -> `6.6.1.Final` emelés (Wildfly 34 támogatás).
+
+==== Migration
+* https://docs.jboss.org/hibernate/orm/6.6/migration-guide/migration-guide.html[Hibernate 6.6 migration guide]
+* Egyébként nem történt olyan válatoztatás coff:ee szinten, ami gátolná dependency exclude-al a korábbi hibernate verzió használatát
