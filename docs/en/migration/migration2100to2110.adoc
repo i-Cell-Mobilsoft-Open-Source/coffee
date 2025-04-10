@@ -6,7 +6,7 @@ coff:ee v2.10.0 -> v2.11.0 migration description, news, changes
 * GZipUtil got some new method for lower memory usage and direct DTO/JSON compression
 * RandomSplitGenerator added
 The EvictAction has been added to allow uniform invocation of classes implementing Evictable for cache clearing purposes
-
+* JsonbUtil#getCustomClassInstance implementation changed, using Thread.currentThread().getContextClassLoader().loadClass instead of Class.forName
 
 ==== Migration
 Changes are backwards compatible doesnt need any migration.
