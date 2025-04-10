@@ -600,12 +600,11 @@ public class DateUtil {
      *            date to
      * @return number of days or 0 if {@code dateFrom} or {@code dateTo} is null
      */
-    public static long daysBetween(LocalDate dateFrom, LocalDate dateTo) {
+    public static long daysBetweenLocalDates(LocalDate dateFrom, LocalDate dateTo) {
         if (dateFrom != null && dateTo != null) {
             return Math.abs(ChronoUnit.DAYS.between(dateFrom, dateTo));
         } else {
             return 0L;
         }
     }
-
 }
