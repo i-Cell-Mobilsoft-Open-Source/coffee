@@ -6,8 +6,16 @@ coff:ee v2.10.0 -> v2.11.0 migration description, news, changes
 * GZipUtil got some new method for lower memory usage and direct DTO/JSON compression
 * RandomSplitGenerator added
 * A new EvictAction class has been added to allow uniform invocation of classes implementing Evictable for cache clearing purposes
+* JsonbUtil#getCustomClassInstance implementation changed, using Thread.currentThread().getContextClassLoader().loadClass instead of Class.forName
 * DateUtil new functions: `daysBetweenLocalDates` and `tryToParseAbsoluteRelativeDate`
 
 ==== Migration
 Changes are backwards compatible doesnt need any migration.
 
+
+=== Hibernate version upgrade
+Hibernate `6.2.13.Final` -> `6.6.1.Final` upgrade (Wildfly 34 support).
+
+==== Migration
+* https://docs.jboss.org/hibernate/orm/6.6/migration-guide/migration-guide.html[Hibernate 6.6 migration guide]
+* Otherwise, no changes were made at coff:ee that would prevent the use of the previous hibernate version with a dependency exclude
