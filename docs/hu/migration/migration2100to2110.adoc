@@ -7,6 +7,7 @@ coff:ee v2.10.0 -> v2.11.0 migrációs leírás, újdonságok, változások leí
 * Hozzáadásra került egy RandomSplitGenerator osztály
 * Hozzáadásra került az EvictAction, hogy az Evictable-t implementáló osztályokat egységesen meg lehessen hívni cache törlés szempontjából.
 * JsonbUtil#getCustomClassInstance implementációja megváltozott, Class.forName helyett Thread.currentThread().getContextClassLoader().loadClass használata
+* DateUtil új metódusokat kapott: `daysBetweenLocalDates` és `tryToParseAbsoluteRelativeDate`
 
 ==== Migration
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
