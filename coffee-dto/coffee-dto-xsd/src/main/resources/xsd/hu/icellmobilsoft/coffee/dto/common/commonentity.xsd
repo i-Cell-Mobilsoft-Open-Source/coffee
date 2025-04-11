@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:commonservice="http://common.dto.coffee.icellmobilsoft.hu/commonservice"
+    xmlns="http://common.dto.coffee.icellmobilsoft.hu/commonentity"
+    targetNamespace="http://common.dto.coffee.icellmobilsoft.hu/commonentity"
+    elementFormDefault="qualified" attributeFormDefault="unqualified">
+
+    <xsd:import namespace="http://common.dto.coffee.icellmobilsoft.hu/common" />
+
+    <xsd:complexType name="EntityProcessorResultType">
+        <xsd:complexContent>
+            <xsd:extension base="commonservice:BaseResultType">
+                <xsd:sequence>
+                    <xsd:element name="processedSizeLimit" type="xsd:int" minOccurs="0">
+                        <xsd:annotation>
+                            <xsd:documentation>Feldolgozásnál használt limit.</xsd:documentation>
+                        </xsd:annotation>
+                    </xsd:element>
+                    <xsd:element name="processedSize" type="xsd:int">
+                        <xsd:annotation>
+                            <xsd:documentation>Ténylegesen feldolgozott entity szám.</xsd:documentation>
+                        </xsd:annotation>
+                    </xsd:element>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+
+    <xsd:complexType name="EntityProcessorResponseType">
+        <xsd:complexContent>
+            <xsd:extension base="EntityProcessorResultType"/>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <!-- REQUEST/RESPONSE ELEMENTS -->
+    <xsd:element name="EntityProcessorResponse">
+        <xsd:annotation>
+            <xsd:documentation>Entity Processor Response</xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+            <xsd:complexContent>
+                <xsd:extension base="EntityProcessorResponseType"/>
+            </xsd:complexContent>
+        </xsd:complexType>
+    </xsd:element>
+</xsd:schema>

@@ -11,6 +11,8 @@
   <xsd:import
       namespace="http://common.dto.coffee.icellmobilsoft.hu/commonsecurity" />
   <xsd:import
+      namespace="http://common.dto.coffee.icellmobilsoft.hu/commonentity" />
+  <xsd:import
       namespace="http://common.dto.coffee.icellmobilsoft.hu/config/evict" />
 
 </xsd:schema>

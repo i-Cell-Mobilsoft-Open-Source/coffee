@@ -8,6 +8,7 @@ coff:ee v2.10.0 -> v2.11.0 migration description, news, changes
 * A new EvictAction class has been added to allow uniform invocation of classes implementing Evictable for cache clearing purposes
 * JsonbUtil#getCustomClassInstance implementation changed, using Thread.currentThread().getContextClassLoader().loadClass instead of Class.forName
 * DateUtil new functions: `daysBetweenLocalDates` and `tryToParseAbsoluteRelativeDate`
+* A new AbstractEntityProcessorAction class has been added for common entity processing
 
 ==== Migration
 Changes are backwards compatible doesnt need any migration.

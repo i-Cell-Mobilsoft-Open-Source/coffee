@@ -10,6 +10,9 @@
         publicId="http://common.dto.coffee.icellmobilsoft.hu/commonsecurity"
         uri="maven:hu.icellmobilsoft.coffee:coffee-dto-xsd:jar::!/xsd/hu/icellmobilsoft/coffee/dto/common/commonsecurity.xsd" />
     <public
+        publicId="http://common.dto.coffee.icellmobilsoft.hu/commonentity"
+        uri="maven:hu.icellmobilsoft.coffee:coffee-dto-xsd:jar::!/xsd/hu/icellmobilsoft/coffee/dto/common/commonentity.xsd" />
+    <public
         publicId="http://common.dto.coffee.icellmobilsoft.hu/config/evict"
         uri="maven:hu.icellmobilsoft.coffee:coffee-dto-xsd:jar::!/xsd/hu/icellmobilsoft/coffee/dto/config/evict.xsd" />
 </catalog>
