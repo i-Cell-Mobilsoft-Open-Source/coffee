@@ -11,6 +11,7 @@ import jakarta.inject.Inject;
 import hu.icellmobilsoft.coffee.cdi.logger.AppLogger;
 import hu.icellmobilsoft.coffee.cdi.logger.ThisLogger;
 import hu.icellmobilsoft.coffee.dto.common.commonentity.EntityProcessorResponse;
+import hu.icellmobilsoft.coffee.dto.common.commonservice.ContextType;
 import hu.icellmobilsoft.coffee.dto.exception.InvalidParameterException;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
@@ -33,6 +34,12 @@ public abstract class AbstractEntityProcessorAction extends AbstractBaseAction {
     @Inject
     @ThisLogger
     private AppLogger log;
+
+    /**
+     * constructor
+     */
+    public AbstractEntityProcessorAction() {
+    }
 
     /**
      * Processes the required records based on the given parameters. Prepares the inputs for the {@link #doProcess} call.
