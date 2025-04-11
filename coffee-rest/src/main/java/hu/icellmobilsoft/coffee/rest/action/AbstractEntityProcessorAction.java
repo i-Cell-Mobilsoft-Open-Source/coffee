@@ -25,6 +25,9 @@ import hu.icellmobilsoft.coffee.tool.utils.date.DateUtil;
  */
 public abstract class AbstractEntityProcessorAction extends AbstractBaseAction {
 
+    /**
+     * log pattern
+     */
     protected static final String LOG_PATTERN = "System call published [{0}] records to [{1}] stream. FromDateTime: [{2}], toDateTime: [{3}], limit: [{4}]";
 
     @Inject
@@ -124,6 +127,15 @@ public abstract class AbstractEntityProcessorAction extends AbstractBaseAction {
         }
     }
 
+    /**
+     * tries to parse the date
+     * 
+     * @param isoDateTime
+     *            the date to parse
+     * @return the date or {@link Optional#empty()}
+     * @throws BaseException
+     *             if any error occurs
+     */
     protected Optional<OffsetDateTime> parseDate(String isoDateTime) throws BaseException {
         return Optional.ofNullable(DateUtil.tryToParseAbsoluteRelativeDate(isoDateTime));
     }
