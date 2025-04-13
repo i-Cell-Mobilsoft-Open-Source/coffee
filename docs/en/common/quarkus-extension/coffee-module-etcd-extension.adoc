@@ -15,7 +15,7 @@ To use this module, you should add the extension dependency instead of `coffee-m
 ----
     <dependency>
         <groupId>hu.icellmobilsoft.coffee</groupId>
-        <artifactId>coffee-module-etcd-extension-deployment</artifactId>
+        <artifactId>coffee-module-etcd-extension</artifactId>
         <version>${version.hu.icellmobilsoft.coffee}</version>
     </dependency>
 ----

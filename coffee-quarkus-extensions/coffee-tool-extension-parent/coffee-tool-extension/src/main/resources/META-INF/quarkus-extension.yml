@@ -1,0 +1,8 @@
+name: "Quarkus Extension for Coffee tool"
+artifact: ${project.groupId}:${project.artifactId}:${project.version}
+metadata:
+  keywords:
+    - "coffee"
+    - "coffee-tool"
+    - "jsonb"
+  status: "experimental"

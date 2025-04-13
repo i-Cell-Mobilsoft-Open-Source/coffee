@@ -16,6 +16,7 @@
     <description>Quarkus Extensions - Coff:ee module etcd extension</description>
 
     <modules>
+        <module>coffee-module-etcd-extension</module>
         <module>coffee-module-etcd-extension-deployment</module>
     </modules>
 

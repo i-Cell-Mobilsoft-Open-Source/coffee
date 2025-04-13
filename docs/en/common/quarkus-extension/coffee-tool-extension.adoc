@@ -15,7 +15,7 @@ To use this module, you should add the extension dependency instead of `coffee-t
 ----
     <dependency>
         <groupId>hu.icellmobilsoft.coffee</groupId>
-        <artifactId>coffee-tool-extension-deployment</artifactId>
+        <artifactId>coffee-tool-extension</artifactId>
         <version>${version.hu.icellmobilsoft.coffee}</version>
     </dependency>
 ----

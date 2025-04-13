@@ -20,7 +20,7 @@
 
         <dependency>
             <groupId>hu.icellmobilsoft.coffee</groupId>
-            <artifactId>coffee-tool</artifactId>
+            <artifactId>coffee-tool-extension</artifactId>
         </dependency>
 
     </dependencies>

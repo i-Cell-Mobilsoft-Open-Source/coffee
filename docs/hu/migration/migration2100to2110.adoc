@@ -18,12 +18,12 @@ Hibernate `6.2.13.Final` -> `6.6.1.Final` emelés (Wildfly 34 támogatás).
 * https://docs.jboss.org/hibernate/orm/6.6/migration-guide/migration-guide.html[Hibernate 6.6 migration guide]
 * Egyébként nem történt olyan válatoztatás coff:ee szinten, ami gátolná dependency exclude-al a korábbi hibernate verzió használatát
 
-=== coffee-module-etcd-extension-deployment
+=== coffee-module-etcd-extension
 
 Új Quarkus extension a coffee-module-etcd modul Quarkus natív kompatibilitás támogatásához.
 Leírás: <<common_coffee-quarkus-extensions-module-etcd, coffee-module-etcd-extension>>
 
-=== coffee-tool-extension-deployment
+=== coffee-tool-extension
 
 Új Quarkus extension a coffee-tool modul Quarkus natív kompatibilitás támogatásához.
 Leírás: <<common_coffee-quarkus-extensions-tool, coffee-module-etcd-extension>>

@@ -27,6 +27,7 @@ import io.etcd.jetcd.api.KeyValue;
 import io.etcd.jetcd.api.RangeResponse;
 import io.etcd.jetcd.api.ResponseHeader;
 import io.quarkus.deployment.annotations.BuildStep;
+import io.quarkus.deployment.builditem.FeatureBuildItem;
 import io.quarkus.deployment.builditem.nativeimage.ReflectiveClassBuildItem;
 
 /**
@@ -38,12 +39,18 @@ import io.quarkus.deployment.builditem.nativeimage.ReflectiveClassBuildItem;
 public class EtcdReflectionProcessor {
 
     private static final Logger log = Logger.getLogger(EtcdReflectionProcessor.class);
+    private static final String FEATURE = "coffee-module-etcd-extension";
+
+    @BuildStep
+    FeatureBuildItem feature() {
+        return new FeatureBuildItem(FEATURE);
+    }
 
     /**
-     * Default constructor
+     * No-arg constructor
      */
     public EtcdReflectionProcessor() {
-        // Default constructor for java 21
+        // No-arg constructor for java 21
     }
 
     /**

@@ -15,6 +15,7 @@
     <description>Quarkus Extensions - Coff:ee tool extension</description>
 
     <modules>
+        <module>coffee-tool-extension</module>
         <module>coffee-tool-extension-deployment</module>
     </modules>
 

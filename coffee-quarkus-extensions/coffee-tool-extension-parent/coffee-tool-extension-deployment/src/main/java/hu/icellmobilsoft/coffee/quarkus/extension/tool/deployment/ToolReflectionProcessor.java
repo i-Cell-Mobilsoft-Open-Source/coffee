@@ -25,6 +25,7 @@ import org.jboss.logging.Logger;
 
 import hu.icellmobilsoft.coffee.tool.jsonb.FieldOnlyVisibilityStrategy;
 import io.quarkus.deployment.annotations.BuildStep;
+import io.quarkus.deployment.builditem.FeatureBuildItem;
 import io.quarkus.deployment.builditem.nativeimage.ReflectiveClassBuildItem;
 
 /**
@@ -36,12 +37,18 @@ import io.quarkus.deployment.builditem.nativeimage.ReflectiveClassBuildItem;
 public class ToolReflectionProcessor {
 
     private static final Logger log = Logger.getLogger(ToolReflectionProcessor.class);
+    private static final String FEATURE = "coffee-tool-extension";
+
+    @BuildStep
+    FeatureBuildItem feature() {
+        return new FeatureBuildItem(FEATURE);
+    }
 
     /**
-     * Default constructor
+     * No-arg constructor
      */
     public ToolReflectionProcessor() {
-        // Default constructor for java 21
+        // Np-arg constructor for java 21
     }
 
     /**

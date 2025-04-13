@@ -15,7 +15,7 @@ A modul használatához a `coffee-tool` helyett az extension függőséget kell 
 ----
     <dependency>
         <groupId>hu.icellmobilsoft.coffee</groupId>
-        <artifactId>coffee-tool-extension-deployment</artifactId>
+        <artifactId>coffee-tool-extension</artifactId>
         <version>${version.hu.icellmobilsoft.coffee}</version>
     </dependency>
 ----

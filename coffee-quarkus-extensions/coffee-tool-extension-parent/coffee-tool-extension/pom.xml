@@ -4,29 +4,45 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>hu.icellmobilsoft.coffee</groupId>
-        <artifactId>coffee-module-etcd-extension-parent</artifactId>
+        <artifactId>coffee-tool-extension-parent</artifactId>
         <version>2.11.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>coffee-module-etcd-extension-deployment</artifactId>
-    <name>Coff:ee module etcd Extension - Deployment</name>
+    <artifactId>coffee-tool-extension</artifactId>
+    <name>Coff:ee tool Extension - Runtime</name>
 
     <dependencies>
 
         <dependency>
             <groupId>io.quarkus</groupId>
-            <artifactId>quarkus-arc-deployment</artifactId>
+            <artifactId>quarkus-arc</artifactId>
         </dependency>
 
         <dependency>
             <groupId>hu.icellmobilsoft.coffee</groupId>
-            <artifactId>coffee-module-etcd-extension</artifactId>
+            <artifactId>coffee-tool</artifactId>
         </dependency>
 
     </dependencies>
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>io.quarkus</groupId>
+                <artifactId>quarkus-extension-maven-plugin</artifactId>
+                <version>${quarkus.version}</version>
+                <executions>
+                    <execution>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>extension-descriptor</goal>
+                        </goals>
+                        <configuration>
+                            <deployment>${project.groupId}:${project.artifactId}-deployment:${project.version}</deployment>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
