@@ -41,16 +41,21 @@ public class EtcdReflectionProcessor {
     private static final Logger log = Logger.getLogger(EtcdReflectionProcessor.class);
     private static final String FEATURE = "coffee-module-etcd-extension";
 
-    @BuildStep
-    FeatureBuildItem feature() {
-        return new FeatureBuildItem(FEATURE);
-    }
-
     /**
      * No-arg constructor
      */
     public EtcdReflectionProcessor() {
         // No-arg constructor for java 21
+    }
+
+    /**
+     * Registers feature name
+     *
+     * @return Feature build item
+     */
+    @BuildStep
+    FeatureBuildItem feature() {
+        return new FeatureBuildItem(FEATURE);
     }
 
     /**

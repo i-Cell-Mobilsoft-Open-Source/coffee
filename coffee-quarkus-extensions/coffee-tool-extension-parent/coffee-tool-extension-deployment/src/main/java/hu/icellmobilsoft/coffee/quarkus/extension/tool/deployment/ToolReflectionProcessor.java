@@ -39,16 +39,21 @@ public class ToolReflectionProcessor {
     private static final Logger log = Logger.getLogger(ToolReflectionProcessor.class);
     private static final String FEATURE = "coffee-tool-extension";
 
-    @BuildStep
-    FeatureBuildItem feature() {
-        return new FeatureBuildItem(FEATURE);
-    }
-
     /**
      * No-arg constructor
      */
     public ToolReflectionProcessor() {
         // Np-arg constructor for java 21
+    }
+
+    /**
+     * Registers feature name
+     *
+     * @return Feature build item
+     */
+    @BuildStep
+    FeatureBuildItem feature() {
+        return new FeatureBuildItem(FEATURE);
     }
 
     /**
