@@ -121,7 +121,7 @@ public class BaseRedisConsumerStarter {
 
     @Inject
     private Event<RedisStreamMetricEventMessage> metricsEvent;
-    
+
     /**
      * Default constructor, constructs a new object.
      */
@@ -133,10 +133,11 @@ public class BaseRedisConsumerStarter {
      * Start Redis consumers in separate long running managed threads
      */
     public void start() {
-        validateConfig();
-
         // get every classes implementing IRedisStreamConsumer
         Set<Bean<?>> beans = beanManager.getBeans(IRedisStreamBaseConsumer.class, RedisStreamConsumer.LITERAL);
+
+        validateConfig(beans);
+
         beans.forEach(this::handleConsumerBean);
 
         log.info("Redis consumers started");
@@ -190,9 +191,8 @@ public class BaseRedisConsumerStarter {
         log.info("consumer class [{0}] started.", bean.getBeanClass());
     }
 
-    private void validateConfig() {
+    private void validateConfig(Collection<Bean<?>> consumerBeans) {
         Integer maxThreadCount = getMaxThreadCount();
-        Collection<Bean<?>> consumerBeans = beanManager.getBeans(IRedisStreamBaseConsumer.class, RedisStreamConsumer.LITERAL);
         Map<String, Integer> consumerThreadCountByStream = getConsumerThreadCountByStream(consumerBeans);
 
         registerMetrics(consumerThreadCountByStream);
