@@ -9,6 +9,7 @@ coff:ee v2.10.0 -> v2.11.0 migrációs leírás, újdonságok, változások leí
 * JsonbUtil#getCustomClassInstance implementációja megváltozott, Class.forName helyett Thread.currentThread().getContextClassLoader().loadClass használata
 * DateUtil új metódusokat kapott: `daysBetweenLocalDates` és `tryToParseAbsoluteRelativeDate`
 * Hozzáadásra került az AbstractEntityProcessorAction osztály, hogy alapot nyújtson az entitások feldolgozásához (pl. Javító folyamatok)
+* BaseRedisConsumerStarter kiegészítésre került threadszám ellenőrzéssel és metrika adat küldéssel CDI async eventen keresztül.
 
 ==== Migration
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
