@@ -12,6 +12,12 @@ public class RedisStreamMetricEventMessage {
     private int count;
 
     /**
+     * Constructor 
+     */
+    public RedisStreamMetricEventMessage() {
+    }
+    
+    /**
      * Get the stream group name
      * 
      * @return the stream group

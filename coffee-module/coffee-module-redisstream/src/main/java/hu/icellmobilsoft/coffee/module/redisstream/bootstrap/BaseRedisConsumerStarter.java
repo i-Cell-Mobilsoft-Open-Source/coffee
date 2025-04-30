@@ -95,17 +95,22 @@ import hu.icellmobilsoft.coffee.tool.utils.annotation.AnnotationUtil;
  */
 public class BaseRedisConsumerStarter {
 
-    private static final int DEFAULT_MAX_THREAD_COUNT = 16;
-    private static final String REDIS_PREFIX = "coffee.redis";
+    /**
+     * The config key for managed executor service core threads variable name, default:
+     * {@value #DEFAULT_MANAGED_EXECUTOR_SERVICE_CORE_THREADS_VARIABLE}
+     */
+    private static final String CONFIG_KEY_MANAGED_EXECUTOR_SERVICE_MAX_THREAD_VARIABLE = "managedExecutorServiceCoreThreadsVariable";
 
     /**
-     * Managed executor service core thread count config string ({@value #MANAGED_EXECUTOR_SERVICE_CORE_THREADS})
+     * The config key for thread safety buffer, default: {@value #DEFAULT_SAFETY_BUFFER}
      */
-    protected static final String MANAGED_EXECUTOR_SERVICE_CORE_THREADS = "MANAGED_EXECUTOR_SERVICE_CORE_THREADS";
-    /**
-     * Safety buffer ({@value #SAFETY_BUFFER})
-     */
-    public static final int SAFETY_BUFFER = 10;
+    private static final String CONFIG_KEY_THREAD_SAFETY_BUFFER = "threadSafetyBuffer";
+
+    private static final String REDIS_PREFIX = "coffee.redis";
+    private static final String DEFAULT_MANAGED_EXECUTOR_SERVICE_CORE_THREADS_VARIABLE = "MANAGED_EXECUTOR_SERVICE_CORE_THREADS";
+    private static final int DEFAULT_SAFETY_BUFFER = 10;
+    private static final int DEFAULT_MAX_THREAD_COUNT = 16;
+
     /**
      * pool default max total value ({@value #POOL_DEFAULT_MAX_TOTAL})
      */
@@ -215,14 +220,15 @@ public class BaseRedisConsumerStarter {
     private void validateThreadCount(Map<String, Integer> consumerThreadCountByStream, Integer maxThreadCount) {
         int redisConsumerThreadCount = consumerThreadCountByStream.values().stream().reduce(0, Integer::sum);
         log.info("Starting redis consumers using [{0}] threads of max thread count [{1}]", redisConsumerThreadCount, maxThreadCount);
+        int safetyBuffer = getThreadSafetyBuffer();
 
-        if (maxThreadCount < redisConsumerThreadCount + SAFETY_BUFFER) {
+        if (maxThreadCount < redisConsumerThreadCount + safetyBuffer) {
             throw new IllegalStateException(
                     MessageFormat.format(
                             "Max thread count [{0}] is less than redis consumer thread count [{1}] + safety buffer [{2}]",
                             maxThreadCount,
                             redisConsumerThreadCount,
-                            SAFETY_BUFFER));
+                            safetyBuffer));
         }
     }
 
@@ -231,15 +237,15 @@ public class BaseRedisConsumerStarter {
         for (Map.Entry<String, Integer> entry : consumerPoolSizeByConfigKey.entrySet()) {
             int poolMaxSize = getRedisConsumerPoolSize(entry.getKey());
             log.info("Redis Consumer Pool [{0}] Max Size: [{1}], currently used: [{2}]", entry.getKey(), poolMaxSize, entry.getValue());
-
-            if (poolMaxSize < entry.getValue() + SAFETY_BUFFER) {
+            int safetyBuffer = getThreadSafetyBuffer();
+            if (poolMaxSize < entry.getValue() + safetyBuffer) {
                 throw new IllegalStateException(
                         MessageFormat.format(
                                 "Max pool size in config [{0}], [{1}] is less than redis consumer pool size [{2}] + safety buffer [{3}]",
                                 entry.getKey(),
                                 poolMaxSize,
                                 entry.getValue(),
-                                SAFETY_BUFFER));
+                                safetyBuffer));
             }
         }
     }
@@ -268,7 +274,9 @@ public class BaseRedisConsumerStarter {
     }
 
     private Integer getMaxThreadCount() {
-        return Optional.ofNullable(System.getenv(MANAGED_EXECUTOR_SERVICE_CORE_THREADS)).map(Integer::valueOf).orElse(DEFAULT_MAX_THREAD_COUNT);
+        return Optional.ofNullable(System.getenv(getManagedExecutorServiceCoreThreadsVariable()))
+                .map(Integer::valueOf)
+                .orElse(DEFAULT_MAX_THREAD_COUNT);
     }
 
     private RedisStreamConsumer getRedisStreamConsumerAnnotation(Bean<?> bean) {
@@ -286,4 +294,15 @@ public class BaseRedisConsumerStarter {
         String poolMaxTotalConfigKey = String.join(StreamGroupConfig.KEY_DELIMITER, REDIS_PREFIX, configKey, POOL_DEFAULT_MAX_TOTAL);
         return config.getOptionalValue(poolMaxTotalConfigKey, Integer.class).orElse(managedRedisConfig.getPoolMaxTotal());
     }
+
+    public String getManagedExecutorServiceCoreThreadsVariable() {
+        String variableName = String.join(StreamGroupConfig.KEY_DELIMITER, REDIS_PREFIX, CONFIG_KEY_MANAGED_EXECUTOR_SERVICE_MAX_THREAD_VARIABLE);
+        return config.getOptionalValue(variableName, String.class).orElse(DEFAULT_MANAGED_EXECUTOR_SERVICE_CORE_THREADS_VARIABLE);
+    }
+
+    public int getThreadSafetyBuffer() {
+        String threadSafetyBufferConfigKey = String.join(StreamGroupConfig.KEY_DELIMITER, REDIS_PREFIX, CONFIG_KEY_THREAD_SAFETY_BUFFER);
+        return config.getOptionalValue(threadSafetyBufferConfigKey, Integer.class).orElse(DEFAULT_SAFETY_BUFFER);
+    }
+
 }
