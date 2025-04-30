@@ -95,11 +95,21 @@ import hu.icellmobilsoft.coffee.tool.utils.annotation.AnnotationUtil;
  */
 public class BaseRedisConsumerStarter {
 
-    protected static final String MANAGED_EXECUTOR_SERVICE_CORE_THREADS = "MANAGED_EXECUTOR_SERVICE_CORE_THREADS";
     private static final int DEFAULT_MAX_THREAD_COUNT = 16;
-    public static final int SAFETY_BUFFER = 10;
-    public static final String POOL_DEFAULT_MAX_TOTAL = "pool.default.maxtotal";
     private static final String REDIS_PREFIX = "coffee.redis";
+
+    /**
+     * Managed executor service core thread count config string ({@value #MANAGED_EXECUTOR_SERVICE_CORE_THREADS})
+     */
+    protected static final String MANAGED_EXECUTOR_SERVICE_CORE_THREADS = "MANAGED_EXECUTOR_SERVICE_CORE_THREADS";
+    /**
+     * Safety buffer ({@value #SAFETY_BUFFER})
+     */
+    public static final int SAFETY_BUFFER = 10;
+    /**
+     * pool default max total value ({@value #POOL_DEFAULT_MAX_TOTAL})
+     */
+    public static final String POOL_DEFAULT_MAX_TOTAL = "pool.default.maxtotal";
 
     @Inject
     private Logger log;
