@@ -295,12 +295,12 @@ public class BaseRedisConsumerStarter {
         return config.getOptionalValue(poolMaxTotalConfigKey, Integer.class).orElse(managedRedisConfig.getPoolMaxTotal());
     }
 
-    public String getManagedExecutorServiceCoreThreadsVariable() {
+    private String getManagedExecutorServiceCoreThreadsVariable() {
         String variableName = String.join(StreamGroupConfig.KEY_DELIMITER, REDIS_PREFIX, CONFIG_KEY_MANAGED_EXECUTOR_SERVICE_MAX_THREAD_VARIABLE);
         return config.getOptionalValue(variableName, String.class).orElse(DEFAULT_MANAGED_EXECUTOR_SERVICE_CORE_THREADS_VARIABLE);
     }
 
-    public int getThreadSafetyBuffer() {
+    private int getThreadSafetyBuffer() {
         String threadSafetyBufferConfigKey = String.join(StreamGroupConfig.KEY_DELIMITER, REDIS_PREFIX, CONFIG_KEY_THREAD_SAFETY_BUFFER);
         return config.getOptionalValue(threadSafetyBufferConfigKey, Integer.class).orElse(DEFAULT_SAFETY_BUFFER);
     }
