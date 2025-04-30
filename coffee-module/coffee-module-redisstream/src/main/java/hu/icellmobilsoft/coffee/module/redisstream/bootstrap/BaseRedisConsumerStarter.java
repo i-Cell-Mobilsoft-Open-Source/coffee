@@ -286,5 +286,4 @@ public class BaseRedisConsumerStarter {
         String poolMaxTotalConfigKey = String.join(StreamGroupConfig.KEY_DELIMITER, REDIS_PREFIX, configKey, POOL_DEFAULT_MAX_TOTAL);
         return config.getOptionalValue(poolMaxTotalConfigKey, Integer.class).orElse(managedRedisConfig.getPoolMaxTotal());
     }
-
 }

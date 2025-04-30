@@ -12,6 +12,8 @@ public class RedisStreamMetricEventMessage {
     private int count;
 
     /**
+     * Get the stream group name
+     * 
      * @return the stream group
      */
     public String getGroup() {
@@ -19,6 +21,8 @@ public class RedisStreamMetricEventMessage {
     }
 
     /**
+     * Set the stream name
+     * 
      * @param group
      *            the group to set
      */
@@ -27,6 +31,8 @@ public class RedisStreamMetricEventMessage {
     }
 
     /**
+     * Get the thread count
+     * 
      * @return the thread count
      */
     public int getCount() {
@@ -34,6 +40,8 @@ public class RedisStreamMetricEventMessage {
     }
 
     /**
+     * Set the thread count
+     * 
      * @param count
      *            the count to set
      */
