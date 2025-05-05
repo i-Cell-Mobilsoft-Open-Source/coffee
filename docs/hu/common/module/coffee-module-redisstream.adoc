@@ -387,3 +387,25 @@ public class ProjectConsumerLifeCycleManager extends ConsumerLifeCycleManager {
 }
 ----
 
+
+== Metrika információ
+
+A `BaseRedisConsumerStarter` osztály induláskor aszinkron CDI evente(ke)t küld, ami tartalmazza a group nevét és a szálak számát, amiből a projekt igény szerint metriká(ka)t készíthet.
+
+.example metric registration with MP metrics
+[source,java]
+----
+@Inject private MetricsRegistry metricyRegistry;
+
+private void onEventRegisterRedisStreamMetrics(@Observes RedisStreamMetricEventMessage message) {
+    metricRegistry.gauge(
+            Metadata.builder()
+                    .withName("redis_stream_consumer_max")
+                    .withDescription("Maximum number of redis stream counters")
+                    .withType(MetricType.GAUGE)
+                    .build(),
+            () -> message.getCount(),
+            new Tag("group", message.getGroup()));
+}
+
+----
