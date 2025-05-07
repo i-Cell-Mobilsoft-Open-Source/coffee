@@ -23,6 +23,8 @@ public class CacheMetricsEvent {
     }
 
     /**
+     * returns the cache name
+     * 
      * @return the cacheName
      */
     public String getCacheName() {
@@ -30,6 +32,8 @@ public class CacheMetricsEvent {
     }
 
     /**
+     * set the cache name
+     * 
      * @param cacheName
      *            the cacheName to set
      */
@@ -38,6 +42,8 @@ public class CacheMetricsEvent {
     }
 
     /**
+     * return the hit count
+     * 
      * @return the hitCount
      */
     public Long getHitCount() {
@@ -45,6 +51,8 @@ public class CacheMetricsEvent {
     }
 
     /**
+     * set the hit count
+     * 
      * @param hitCount
      *            the hitCount to set
      */
@@ -53,6 +61,8 @@ public class CacheMetricsEvent {
     }
 
     /**
+     * return the miss count
+     * 
      * @return the missCount
      */
     public Long getMissCount() {
@@ -60,6 +70,8 @@ public class CacheMetricsEvent {
     }
 
     /**
+     * set the miss count
+     * 
      * @param missCount
      *            the missCount to set
      */
@@ -68,6 +80,8 @@ public class CacheMetricsEvent {
     }
 
     /**
+     * return the cache size
+     * 
      * @return the size
      */
     public Long getSize() {
@@ -75,6 +89,8 @@ public class CacheMetricsEvent {
     }
 
     /**
+     * set the cache size
+     * 
      * @param size
      *            the size to set
      */
@@ -83,6 +99,8 @@ public class CacheMetricsEvent {
     }
 
     /**
+     * return the string {@value #METADATA_HIT_COUNT_NAME}
+     * 
      * @return the metadataHitCountName
      */
     public static String getMetadataHitCountName() {
@@ -90,6 +108,8 @@ public class CacheMetricsEvent {
     }
 
     /**
+     * return the string {@value #METADATA_MISS_COUNT_NAME}
+     * 
      * @return the metadataMissCountName
      */
     public static String getMetadataMissCountName() {
@@ -97,6 +117,8 @@ public class CacheMetricsEvent {
     }
 
     /**
+     * return the string {@value #METADATA_SIZE_NAME}
+     * 
      * @return the metadataSizeName
      */
     public static String getMetadataSizeName() {

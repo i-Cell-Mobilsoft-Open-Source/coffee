@@ -32,6 +32,12 @@ public abstract class AbstractLoadingCache<KEY, VALUE> extends AbstractCache<KEY
     });
 
     /**
+     * constructor
+     */
+    private AbstractLoadingCache() {
+    }
+
+    /**
      * The operation to be cached
      *
      * @param key

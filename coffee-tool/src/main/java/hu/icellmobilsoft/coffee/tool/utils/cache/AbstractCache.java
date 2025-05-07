@@ -45,6 +45,12 @@ public abstract class AbstractCache<KEY, VALUE> implements Evictable {
     @Inject
     private Event<CacheMetricsEvent> metricsEvent;
 
+    /**
+     * constructor
+     */
+    private AbstractCache() {
+    }
+
     private final Config config = ConfigProvider.getConfig();
 
     /**
@@ -75,7 +81,9 @@ public abstract class AbstractCache<KEY, VALUE> implements Evictable {
     }
 
     /**
-     * @return Cache elem törléskor lefutó listenert adja vissza
+     * return the listener for deleting cache key
+     * 
+     * @return the listener which runs on the deletion of the key
      */
     protected RemovalListener<KEY, VALUE> getRemovalListener() {
         if (isMetricsEnabled()) {
