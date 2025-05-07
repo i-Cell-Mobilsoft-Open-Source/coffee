@@ -34,9 +34,9 @@ import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
  * @since 2.11.0
  */
 public abstract class AbstractCache<KEY, VALUE> implements Evictable {
-    protected static final String CONFIG_PATTERN = "coffee.cache.guava.{0}.{1}";
-    protected static final String DISABLE_METRICS = "disableMetrics";
-    protected static final String SPECS = "specs";
+    private static final String CONFIG_PATTERN = "coffee.cache.guava.{0}.{1}";
+    private static final String DISABLE_METRICS = "disableMetrics";
+    private static final String SPECS = "specs";
 
     @Inject
     @ThisLogger
