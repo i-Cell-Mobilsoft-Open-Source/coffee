@@ -10,6 +10,7 @@ coff:ee v2.10.0 -> v2.11.0 migration description, news, changes
 * DateUtil new functions: `daysBetweenLocalDates` and `tryToParseAbsoluteRelativeDate`
 * A new AbstractEntityProcessorAction class has been added for common entity processing
 * BaseRedisConsumerStarter update with thread checking and metrics data propagation with CDI async event
+* New abstract cache implementations: AbstractCache and AbstractLoadingCache
 
 ==== Migration
 Changes are backwards compatible doesnt need any migration.
