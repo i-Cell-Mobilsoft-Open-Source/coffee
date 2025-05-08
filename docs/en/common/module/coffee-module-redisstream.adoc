@@ -394,7 +394,7 @@ The `BaseRedisConsumerStarter` class sends event(s) about the number of threads 
 ----
 @Inject private MetricsRegistry metricyRegistry;
 
-private void onEventRegisterRedisStreamMetrics(@Observes RedisStreamMetricEventMessage message) {
+private void onEventRegisterRedisStreamMetrics(@ObservesAsync RedisStreamMetricEventMessage message) {
     metricRegistry.gauge(
             Metadata.builder()
                     .withName("redis_stream_consumer_max")

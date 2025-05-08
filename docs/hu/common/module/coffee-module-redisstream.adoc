@@ -397,7 +397,7 @@ A `BaseRedisConsumerStarter` osztály induláskor aszinkron CDI evente(ke)t kül
 ----
 @Inject private MetricsRegistry metricyRegistry;
 
-private void onEventRegisterRedisStreamMetrics(@Observes RedisStreamMetricEventMessage message) {
+private void onEventRegisterRedisStreamMetrics(@ObservesAsync RedisStreamMetricEventMessage message) {
     metricRegistry.gauge(
             Metadata.builder()
                     .withName("redis_stream_consumer_max")
