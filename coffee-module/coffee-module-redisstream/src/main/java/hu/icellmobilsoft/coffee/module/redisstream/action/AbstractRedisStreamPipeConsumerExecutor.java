@@ -39,6 +39,12 @@ public abstract class AbstractRedisStreamPipeConsumerExecutor extends RedisStrea
     private Logger log;
 
     /**
+     * constructor 
+     */
+    protected AbstractRedisStreamPipeConsumerExecutor() {
+    }
+
+    /**
      * Handler for the {@code RedisService} that processes a FIFO/LIFO list.
      * 
      * @return The key used to populate {@code RedisConnection#configKey()} in the {@code RedisService} that reads the Redis FIFO/LIFO list.

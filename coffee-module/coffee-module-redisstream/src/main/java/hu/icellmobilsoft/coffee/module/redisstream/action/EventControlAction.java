@@ -44,6 +44,12 @@ public abstract class EventControlAction<T> {
     private AppLogger log;
 
     /**
+     * constructor
+     */
+    protected EventControlAction() {
+    }
+
+    /**
      * Redis service where the FIFO list will be stored.
      * 
      * @return redis manager
