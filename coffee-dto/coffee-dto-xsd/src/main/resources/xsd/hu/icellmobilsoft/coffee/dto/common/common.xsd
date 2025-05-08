@@ -314,12 +314,18 @@
 			<xsd:enumeration value="DESC" />
 		</xsd:restriction>
 	</xsd:simpleType>
-	<xsd:simpleType name="StatusType">
-		<xsd:restriction base="xsd:string">
-			<xsd:enumeration value="ACTIVE" />
-			<xsd:enumeration value="INACTIVE" />
-		</xsd:restriction>
-	</xsd:simpleType>
+    <xsd:simpleType name="StatusType">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="ACTIVE" />
+            <xsd:enumeration value="INACTIVE" />
+        </xsd:restriction>
+    </xsd:simpleType>
+    <xsd:simpleType name="RedisMessageTypeType">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="FIFO" />
+            <xsd:enumeration value="LIFO" />
+        </xsd:restriction>
+    </xsd:simpleType>
 	<xsd:simpleType name="GPSCoordinateLatLongType">
 		<xsd:restriction base="xsd:decimal">
 			<xsd:totalDigits value="20" />

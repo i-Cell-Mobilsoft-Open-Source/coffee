@@ -687,6 +687,15 @@ public class RedisStreamPublisher {
         return PIPELINE_SIZE;
     }
 
+    /**
+     * returns the stream group config
+     * 
+     * @return the stream group config
+     */
+    public final StreamGroupConfig getStreamGroupConfig() {
+        return config;
+    }
+
     private TechnicalException notInitializedException() {
         return new TechnicalException("RedisStreamHandler is not initialized!");
     }

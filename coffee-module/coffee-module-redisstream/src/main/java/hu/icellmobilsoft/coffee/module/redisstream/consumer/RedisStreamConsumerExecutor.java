@@ -48,8 +48,8 @@ import hu.icellmobilsoft.coffee.module.redisstream.service.RedisStreamService;
 import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
 import hu.icellmobilsoft.coffee.se.logging.mdc.MDC;
+import hu.icellmobilsoft.coffee.se.util.string.RandomUtil;
 import hu.icellmobilsoft.coffee.tool.utils.annotation.AnnotationUtil;
-import hu.icellmobilsoft.coffee.tool.utils.string.RandomUtil;
 import redis.clients.jedis.StreamEntryID;
 import redis.clients.jedis.exceptions.JedisDataException;
 import redis.clients.jedis.resps.StreamEntry;
@@ -153,17 +153,29 @@ public class RedisStreamConsumerExecutor implements IRedisStreamConsumerExecutor
                 if (StringUtils.startsWith(message, NOGROUP_PREFIX)) {
                     log.error(
                             "Detected problem on redisConfigKey [{0}] with stream group [{1}] and activating prudentRun on next cycle. Exception: [{2}]",
-                            redisConfigKey, redisStreamService.getGroup(), message);
+                            redisConfigKey,
+                            redisStreamService.getGroup(),
+                            message);
                     prudentRun = true;
                 } else {
-                    log.error(MessageFormat.format("Exception on redisConfigKey [{0}] with stream group [{1}]: [{2}]", redisConfigKey,
-                            redisStreamService.getGroup(), message), cause);
+                    log.error(
+                            MessageFormat.format(
+                                    "Exception on redisConfigKey [{0}] with stream group [{1}]: [{2}]",
+                                    redisConfigKey,
+                                    redisStreamService.getGroup(),
+                                    message),
+                            cause);
                 }
                 redisManager.closeConnection();
                 sleep();
             } catch (Throwable e) {
-                log.error(MessageFormat.format("Exception during consume on redisConfigKey [{0}] with stream group [{1}]: [{2}]", redisConfigKey,
-                        redisStreamService.getGroup(), e.getLocalizedMessage()), e);
+                log.error(
+                        MessageFormat.format(
+                                "Exception during consume on redisConfigKey [{0}] with stream group [{1}]: [{2}]",
+                                redisConfigKey,
+                                redisStreamService.getGroup(),
+                                e.getLocalizedMessage()),
+                        e);
                 redisManager.closeConnection();
                 sleep();
             } finally {
@@ -180,8 +192,13 @@ public class RedisStreamConsumerExecutor implements IRedisStreamConsumerExecutor
             }
             MDC.clear();
         } catch (Throwable e) {
-            log.error(MessageFormat.format("Exception during redisManager cleanup on redisConfigKey [{0}] with stream group [{1}]: [{2}]",
-                    redisConfigKey, redisStreamService.getGroup(), e.getLocalizedMessage()), e);
+            log.error(
+                    MessageFormat.format(
+                            "Exception during redisManager cleanup on redisConfigKey [{0}] with stream group [{1}]: [{2}]",
+                            redisConfigKey,
+                            redisStreamService.getGroup(),
+                            e.getLocalizedMessage()),
+                    e);
         }
     }
 
@@ -238,12 +255,18 @@ public class RedisStreamConsumerExecutor implements IRedisStreamConsumerExecutor
             streamGroupConfig.setConfigKey(redisStreamConsumerAnnotation.group());
             int retryCount = streamGroupConfig.getRetryCount().orElse(redisStreamConsumerAnnotation.retryCount());
             if (counter < retryCount) {
-                String msg = MessageFormat.format("Exception occured on running class [{0}], trying again [{1}]/[{2}]", consumerBean.getBeanClass(),
-                        counter + 1, retryCount);
+                String msg = MessageFormat.format(
+                        "Exception occured on running class [{0}], trying again [{1}]/[{2}]",
+                        consumerBean.getBeanClass(),
+                        counter + 1,
+                        retryCount);
                 if (log.isDebugEnabled()) {
                     log.debug(msg, e);
                 } else {
-                    String info = MessageFormat.format("{0}: [{1}], cause: [{2}]", msg, e.getLocalizedMessage(),
+                    String info = MessageFormat.format(
+                            "{0}: [{1}], cause: [{2}]",
+                            msg,
+                            e.getLocalizedMessage(),
                             Optional.ofNullable(e.getCause()).map(Throwable::getLocalizedMessage).orElse(null));
                     // do not spam the info log
                     log.info(info);
@@ -331,8 +354,8 @@ public class RedisStreamConsumerExecutor implements IRedisStreamConsumerExecutor
 
     private void sleep() {
         try {
-            // fIt's important to pause operations so that, for example, 
-            //a connection failure doesn't flood the logs or lead to unnecessary infinite retry attempts.
+            // fIt's important to pause operations so that, for example,
+            // a connection failure doesn't flood the logs or lead to unnecessary infinite retry attempts.
             TimeUnit.SECONDS.sleep(30);
         } catch (InterruptedException ex) {
             log.warn("Interrupted sleep.", ex);
@@ -353,8 +376,8 @@ public class RedisStreamConsumerExecutor implements IRedisStreamConsumerExecutor
      */
     protected void handleMDC(StreamEntry streamEntry) {
         Map<String, String> fieldMap = streamEntry.getFields();
-        String flowId = fieldMap.getOrDefault(IRedisStreamConstant.Common.DATA_KEY_FLOW_ID,
-                fieldMap.get(IRedisStreamConstant.Common.DATA_KEY_MESSAGE));
+        String flowId = fieldMap
+                .getOrDefault(IRedisStreamConstant.Common.DATA_KEY_FLOW_ID, fieldMap.get(IRedisStreamConstant.Common.DATA_KEY_MESSAGE));
         MDC.put(LogConstants.LOG_SESSION_ID, flowId);
     }
 
@@ -389,5 +412,14 @@ public class RedisStreamConsumerExecutor implements IRedisStreamConsumerExecutor
      */
     public Bean<? super IRedisStreamBaseConsumer> getConsumerBean() {
         return consumerBean;
+    }
+
+    /**
+     * returns the stream group config
+     * 
+     * @return the config
+     */
+    protected StreamGroupConfig getStreamGroupConfig() {
+        return streamGroupConfig;
     }
 }

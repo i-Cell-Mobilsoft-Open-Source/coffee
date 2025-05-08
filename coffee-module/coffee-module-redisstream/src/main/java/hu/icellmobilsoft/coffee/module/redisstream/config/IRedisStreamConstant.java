@@ -36,7 +36,7 @@ public interface IRedisStreamConstant {
      *
      * @since 1.5.0
      */
-    interface Log {
+    public interface Log {
         /**
          * Key for redis stream retry counter
          */
@@ -49,7 +49,7 @@ public interface IRedisStreamConstant {
      * @author imre.scheffer
      * @since 1.3.0
      */
-    interface Common {
+    public interface Common {
         /**
          * Key for redis stream message data
          */
@@ -66,5 +66,30 @@ public interface IRedisStreamConstant {
          * {@code #DATA_KEY_FLOW_ID} message extension for logging searching
          */
         String FLOW_ID_EXTENSION = "flowIdExtension";
+        /**
+         * Key for redis stream message data
+         */
+        String DATA_MESSAGE_TYPE = "messageType";
+    }
+
+    /**
+     * Project PIPE stream values
+     */
+    public interface Pipe {
+        /**
+         * Prefix key for redis stream list key
+         */
+        String ID = "id_";
+    }
+
+    /**
+     * Default values
+     */
+    public interface Defaults {
+        /**
+         * {@link #STREAM_READ_MAXIMUM_LATENCY_SECONDS_DEFAULT} Default value is 5 minutes
+         */
+        long STREAM_READ_MAXIMUM_LATENCY_SECONDS_DEFAULT = 300;
+
     }
 }
