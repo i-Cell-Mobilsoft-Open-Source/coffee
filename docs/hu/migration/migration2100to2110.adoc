@@ -11,6 +11,7 @@ coff:ee v2.10.0 -> v2.11.0 migrációs leírás, újdonságok, változások leí
 * Hozzáadásra került az AbstractEntityProcessorAction osztály, hogy alapot nyújtson az entitások feldolgozásához (pl. Javító folyamatok)
 * BaseRedisConsumerStarter kiegészítésre került threadszám ellenőrzéssel és metrika adat küldéssel CDI async eventen keresztül.
 * Új abstract cache implementációk: AbstractCache és AbstractLoadingCache
+* Új AbstractRedisStreamPipeConsumerExecutor és EventControlAction osztályok kerültek a redisstream modulba
 
 ==== Migration
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.

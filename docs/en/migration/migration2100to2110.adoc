@@ -11,6 +11,7 @@ coff:ee v2.10.0 -> v2.11.0 migration description, news, changes
 * A new AbstractEntityProcessorAction class has been added for common entity processing
 * BaseRedisConsumerStarter update with thread checking and metrics data propagation with CDI async event
 * New abstract cache implementations: AbstractCache and AbstractLoadingCache
+* New AbstractRedisStreamPipeConsumerExecutor and EventControlAction classes added to redisstream module
 
 ==== Migration
 Changes are backwards compatible doesnt need any migration.
