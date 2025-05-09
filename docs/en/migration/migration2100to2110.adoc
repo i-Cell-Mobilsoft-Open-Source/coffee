@@ -1,0 +1,34 @@
+= v2.10.0 → v2.11.0
+
+coff:ee v2.10.0 -> v2.11.0 migration description, news, changes
+
+=== coffee-tool
+* GZipUtil got some new method for lower memory usage and direct DTO/JSON compression
+* RandomSplitGenerator added
+* A new EvictAction class has been added to allow uniform invocation of classes implementing Evictable for cache clearing purposes
+* JsonbUtil#getCustomClassInstance implementation changed, using Thread.currentThread().getContextClassLoader().loadClass instead of Class.forName
+* DateUtil new functions: `daysBetweenLocalDates` and `tryToParseAbsoluteRelativeDate`
+* A new AbstractEntityProcessorAction class has been added for common entity processing
+* BaseRedisConsumerStarter update with thread checking and metrics data propagation with CDI async event
+* New abstract cache implementations: AbstractCache and AbstractLoadingCache
+
+==== Migration
+Changes are backwards compatible doesnt need any migration.
+
+
+=== Hibernate version upgrade
+Hibernate `6.2.13.Final` -> `6.6.1.Final` upgrade (Wildfly 34 support).
+
+==== Migration
+* https://docs.jboss.org/hibernate/orm/6.6/migration-guide/migration-guide.html[Hibernate 6.6 migration guide]
+* Otherwise, no changes were made at coff:ee that would prevent the use of the previous hibernate version with a dependency exclude
+
+=== coffee-module-etcd-extension
+
+New Quarkus extension to support Quarkus native compatibility for the coffee-module-etcd module.
+Description: <<common_coffee-quarkus-extensions-module-etcd, coffee-module-etcd-extension>>
+
+=== coffee-tool-extension
+
+New Quarkus extension to support Quarkus native compatibility for the coffee-tool module.
+Description: <<common_coffee-quarkus-extensions-tool, coffee-tool-extension>>

@@ -278,7 +278,7 @@ public class JsonbUtil {
     @SuppressWarnings("unchecked")
     private static <T> T getCustomClassInstance(String customClassName) {
         try {
-            Class<?> clazz = Class.forName(customClassName);
+            Class<?> clazz = Thread.currentThread().getContextClassLoader().loadClass(customClassName);
             Constructor<?> ctor = clazz.getConstructor();
             return (T) ctor.newInstance();
         } catch (Exception e) {

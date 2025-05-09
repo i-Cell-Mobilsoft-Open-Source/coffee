@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            xmlns="http://common.dto.coffee.icellmobilsoft.hu/config/evict"
+            xmlns:common="http://common.dto.coffee.icellmobilsoft.hu/common"
+            xmlns:commonservice="http://common.dto.coffee.icellmobilsoft.hu/commonservice"
+            targetNamespace="http://common.dto.coffee.icellmobilsoft.hu/config/evict"
+            elementFormDefault="qualified" attributeFormDefault="unqualified">
+
+    <xsd:import namespace="http://common.dto.coffee.icellmobilsoft.hu/common"/>
+    <xsd:import namespace="http://common.dto.coffee.icellmobilsoft.hu/commonservice"/>
+
+    <xsd:complexType name="EvictResponseType">
+        <xsd:complexContent>
+            <xsd:extension base="commonservice:BaseResponseType">
+                <xsd:sequence>
+                    <xsd:element name="evictionStart" type="xsd:dateTime" minOccurs="0">
+                        <xsd:annotation>
+                            <xsd:documentation>Start of the evict function</xsd:documentation>
+                        </xsd:annotation>
+                    </xsd:element>
+                    <xsd:element name="evictionEnd" type="xsd:dateTime" minOccurs="0">
+                        <xsd:annotation>
+                            <xsd:documentation>End of the evict function</xsd:documentation>
+                        </xsd:annotation>
+                    </xsd:element>
+                    <xsd:element name="evicted" type="common:SimpleText255NotBlankType" maxOccurs="unbounded">
+                        <xsd:annotation>
+                            <xsd:documentation>List of evicted services</xsd:documentation>
+                        </xsd:annotation>
+                    </xsd:element>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+
+    <xsd:element name="EvictResponse">
+        <xsd:complexType>
+            <xsd:complexContent>
+                <xsd:extension base="EvictResponseType"/>
+            </xsd:complexContent>
+        </xsd:complexType>
+    </xsd:element>
+
+</xsd:schema>

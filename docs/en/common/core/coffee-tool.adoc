@@ -100,3 +100,45 @@ Type paramListType = new TypeToken<List<ParameterType>>() {}.getType();
 List<ParameterType> list = JsonUtil.toObject(paramString, paramListType);
 System.out.println(list.get(0).getKey());
 ----
+
+`AbstractCache`::
+
+It is recommended to derive the project's cache objects from the `AbstractCache` class, as it highlights methods that no longer need to be implemented repeatedly. It also sends metrics about itself in the form of an asynchronous CDI event (`CacheMetricsEvent`), from which the following data can be extracted:
+hitCount, missCount, cache size, and cache name, so that these can be displayed as a gauge.
+
+Additionally, configuration can be done using keys under coffee.cache.guava.{cacheName}
+
+[source, yaml]
+.configuration
+----
+coffee:
+  cache:
+    guava:
+      templateCache: <1>
+        disableMetrics: false # default <2>
+        specs: expireAfterWrite=12h  # default <3> 
+----
+<1> name of the cache
+<2> enable or disable metrics
+<3> guava cache specification
+
+[source, java]
+.receive metrics
+----
+private final Map<MetricID, Long> metricValueMap = new ConcurrentHashMap<>();
+
+public void onEventCacheMetrics(@ObservesAsync CacheMetricsEvent message) {
+      Tag cacheNameTag = new Tag(NAME_TAG, message.getCacheName());
+
+      updateGauge(message.getMetadataHitCountName(), message.getHitCount(), cacheNameTag);
+      updateGauge(message.getMetadataMissCountName, message.getMissCount(), cacheNameTag);
+      updateGauge(message.getMetadataSizeName, message.getSize(), cacheNameTag);
+}
+
+private void updateGauge(Metadata metadata, long value, Tag... tags) {
+        MetricID metricID = new MetricID(metadata.getName(), tags);
+        metricValueMap.put(metricID, value);
+        metricRegistry.gauge(metadata, metricID, metricValueMap::get, tags);
+}
+
+----

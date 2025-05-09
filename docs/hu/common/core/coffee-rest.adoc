@@ -499,3 +499,35 @@ public class MyBean {
     }
 }
 ----
+
+== Eviktálás
+
+Az EvictAction hívásával kipucolható a cache tartalma, ehhez a projekten létre kell hozni egy REST végpontot, amin keresztül az EvictAction::evict metódust kell meghívni. Ennek hatására az összes Evictable interfészt implementáló beanen, configsource-on meghívódik az evict metódus.
+
+.ISystemRest
+[source,java]
+----
+public interface ISystemRest {
+  ...
+  
+  @GET
+  @Path(SystemPath.EVICT)
+  @Produces(value = { MediaType.APPLICATION_JSON, MediaType.TEXT_XML, MediaType.APPLICATION_XML })
+  EvictResponse evict() throws BaseException;
+----
+
+.SystemRest
+[source,java]
+----
+public class SystemRest extends BaseRestService implements ISystemRest  {
+  ...
+  @Inject private EvictAction evictAction;
+  
+  @Override
+  public EvictResponse evict() throws BaseException {
+      return wrapNoParam(evictAction::evict, "evict");
+  }
+
+}
+----
+

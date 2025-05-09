@@ -46,6 +46,7 @@ import io.quarkus.deployment.annotations.ExecutionTime;
 import io.quarkus.deployment.annotations.Record;
 import io.quarkus.deployment.builditem.CombinedIndexBuildItem;
 import io.quarkus.deployment.builditem.FeatureBuildItem;
+import io.quarkus.deployment.builditem.nativeimage.NativeImageProxyDefinitionBuildItem;
 
 /**
  * Deltaspike data processor
@@ -69,14 +70,14 @@ class DeltaspikeDataProcessor {
     }
 
     /**
-     * Build DeltaspikeDataBuidItem which contains Repository-s
+     * Build deltaspikeDataBuildItem which contains Repository-s
      * 
      * @param combinedIndex
      *            combined index build item, which contains all indexes
      * @return build item which contains Repository-s
      */
     @BuildStep
-    DeltaspikeDataBuidItem buildDeltaspikeDataBuidItem(CombinedIndexBuildItem combinedIndex) {
+    DeltaspikeDataBuildItem builddeltaspikeDataBuildItem(CombinedIndexBuildItem combinedIndex) {
 
         ArrayList<Class<?>> repositoryClasses = new ArrayList<>();
         ArrayList<Class<?>> removeableClasses = new ArrayList<>();
@@ -98,18 +99,18 @@ class DeltaspikeDataProcessor {
                 log.error("Error during get javaClass: [" + annotationInstance.target().asClass().name() + "]...");
             }
         }
-        return new DeltaspikeDataBuidItem(repositoryClasses, removeableClasses);
+        return new DeltaspikeDataBuildItem(repositoryClasses, removeableClasses);
     }
 
     /**
      * Add Vetoed annotation to removeableClasses
      * 
-     * @param deltaspikeDataBuidItem
+     * @param deltaspikeDataBuildItem
      *            build item which contains Repository-s and removeable repositories
      * @return annotation transformer build iter which contains the transformation of add Vetoed annotation.
      */
     @BuildStep
-    public AnnotationsTransformerBuildItem removeAbstractEntityRepositories(DeltaspikeDataBuidItem deltaspikeDataBuidItem) {
+    public AnnotationsTransformerBuildItem removeAbstractEntityRepositories(DeltaspikeDataBuildItem deltaspikeDataBuildItem) {
 
         return new AnnotationsTransformerBuildItem(new AnnotationsTransformer() {
             @Override
@@ -120,7 +121,7 @@ class DeltaspikeDataProcessor {
             @Override
             public void transform(AnnotationsTransformer.TransformationContext ctx) {
                 // Remove the MicrometerDecorator that requires the Micrometer API
-                deltaspikeDataBuidItem.getRemoveableClasses().stream().filter(aClass -> !aClass.equals(QueryHandler.class)).forEach(aClass -> {
+                deltaspikeDataBuildItem.getRemoveableClasses().stream().filter(aClass -> !aClass.equals(QueryHandler.class)).forEach(aClass -> {
                     if (ctx.getTarget().asClass().name().equals(DotName.createSimple(aClass))) {
                         ctx.transform().add(Vetoed.class).done();
                     }
@@ -130,26 +131,43 @@ class DeltaspikeDataProcessor {
     }
 
     /**
+     * Registry proxies for native build
+     * 
+     * @param nativeImageProxyDefinitionBuildItemBuildProducer
+     *            {@link NativeImageProxyDefinitionBuildItem} prducer
+     * @param deltaspikeDataBuildItem
+     *            build item which contains Repository-s and removeable repositories
+     */
+    @BuildStep
+    void registerProxies(BuildProducer<NativeImageProxyDefinitionBuildItem> nativeImageProxyDefinitionBuildItemBuildProducer,
+            DeltaspikeDataBuildItem deltaspikeDataBuildItem) {
+        for (Class<?> repositoryClass : deltaspikeDataBuildItem.getRepositoryClasses()) {
+            nativeImageProxyDefinitionBuildItemBuildProducer.produce(new NativeImageProxyDefinitionBuildItem(repositoryClass.getName()));
+        }
+
+    }
+    
+    /**
      * Create Repository beans
      * 
-     * @param deltaspikeDataBuidItem
-     *            build item which contains Repository-s
+     * @param deltaspikeDataBuildItem
+     *            build item which contains Repository-s and removeable repositories build item which contains Repository-s
      * @param syntheticBeanBuildItemBuildProducer
      *            producer of syncthetic bean
      */
     @BuildStep
     @Record(ExecutionTime.STATIC_INIT)
-    void createBeanForRepositoryClasses(DeltaspikeDataRecorder recorder, DeltaspikeDataBuidItem deltaspikeDataBuidItem,
+    void createBeanForRepositoryClasses(DeltaspikeDataRecorder recorder, DeltaspikeDataBuildItem deltaspikeDataBuildItem,
             BuildProducer<SyntheticBeanBuildItem> syntheticBeanBuildItemBuildProducer) {
 
         syntheticBeanBuildItemBuildProducer.produce(
                 SyntheticBeanBuildItem.configure(RepositoryExtension.class)
                         .scope(ApplicationScoped.class)
                         .unremovable()
-                        .createWith(recorder.createRepositoryExtension(deltaspikeDataBuidItem.getRepositoryClasses()))
+                        .createWith(recorder.createRepositoryExtension(deltaspikeDataBuildItem.getRepositoryClasses()))
                         .done());
 
-        for (Class<?> type : deltaspikeDataBuidItem.getRepositoryClasses()) {
+        for (Class<?> type : deltaspikeDataBuildItem.getRepositoryClasses()) {
 
             syntheticBeanBuildItemBuildProducer.produce(
                     SyntheticBeanBuildItem.configure(type)

@@ -29,7 +29,7 @@ import io.quarkus.builder.item.SimpleBuildItem;
  * @since 2.6.0
  * @author speter555
  */
-public final class DeltaspikeDataBuidItem extends SimpleBuildItem {
+public final class DeltaspikeDataBuildItem extends SimpleBuildItem {
 
     private final ArrayList<Class<?>> repositoryClasses;
     private final ArrayList<Class<?>> removeableClasses;
@@ -43,7 +43,7 @@ public final class DeltaspikeDataBuidItem extends SimpleBuildItem {
      * @param removeableClasses
      *            lisf of removeable classes
      */
-    public DeltaspikeDataBuidItem(ArrayList<Class<?>> repositoryClasses, ArrayList<Class<?>> removeableClasses) {
+    public DeltaspikeDataBuildItem(ArrayList<Class<?>> repositoryClasses, ArrayList<Class<?>> removeableClasses) {
         this.repositoryClasses = repositoryClasses;
         this.removeableClasses = removeableClasses;
     }

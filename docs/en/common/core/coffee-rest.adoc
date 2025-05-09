@@ -497,3 +497,36 @@ public class MyBean {
     }
 }
 ----
+
+== Eviction
+
+By invoking the EvictAction, the cache contents can be cleared.
+To achieve this, a REST endpoint must be created in the project, through which the EvictAction::evict method should be called.
+As a result, the evict method will be invoked on all beans and config sources implementing the Evictable interface.
+
+.ISystemRest
+[source,java]
+----
+public interface ISystemRest {
+  ...
+  
+  @GET
+  @Path(SystemPath.EVICT)
+  @Produces(value = { MediaType.APPLICATION_JSON, MediaType.TEXT_XML, MediaType.APPLICATION_XML })
+  EvictResponse evict() throws BaseException;
+----
+
+.SystemRest
+[source,java]
+----
+public class SystemRest extends BaseRestService implements ISystemRest  {
+  ...
+  @Inject private EvictAction evictAction;
+  
+  @Override
+  public EvictResponse evict() throws BaseException {
+      return wrapNoParam(evictAction::evict, "evict");
+  }
+
+}
+----
