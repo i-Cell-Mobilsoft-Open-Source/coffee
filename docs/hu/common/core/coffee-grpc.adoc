@@ -3,6 +3,32 @@
 
 Modul célja a gRPC kommunikáció és a kezelés támogatása.
 
+[WARNING]
+====
+- Ahhoz, hogy a natív *macOS ARM64* build működjön, hozzá kell adni egy változót a settings.xml-hez:
+
+[source,xml]
+----
+<profile>
+    <id>apple-silicon</id>
+    <properties>
+        <os.detected.classifier>osx-aarch_64</os.detected.classifier>
+        <cpu.arch>aarch_64</cpu.arch>
+    </properties>
+</profile>
+<activeProfiles>
+    <activeProfile>apple-silicon</activeProfile>
+</activeProfiles>
+----
+
+Ez azért szükséges, hogy már a Maven indulásakor is rendelkezésre álljon ez a változó, így a gRPC stub generálás során ennek alapján ki tudjuk választani a megfelelő ARM-specifikus profilt.
+
+- brew hazsnálatával telepíteni kell a native protoc-gen-grpc-java alkalmazást.
+
+    brew install protoc-gen-grpc-java
+    
+====
+
 == coffee-grpc-api
 Általános gRPC kezelés Coff:ee API (annotációk, verzió, ...) gyűjtője.
 

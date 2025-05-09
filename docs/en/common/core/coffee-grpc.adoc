@@ -3,6 +3,32 @@
 
 The purpose of this module is to support gRPC communication and handling.
 
+[WARNING]
+====
+- In order for the native *macOS ARM64* build to work, you need to add a variable to the settings.xml:
+
+[source,xml]
+----
+<profile>
+    <id>apple-silicon</id>
+    <properties>
+        <os.detected.classifier>osx-aarch_64</os.detected.classifier>
+        <cpu.arch>aarch_64</cpu.arch>
+    </properties>
+</profile>
+<activeProfiles>
+    <activeProfile>apple-silicon</activeProfile>
+</activeProfiles>
+----
+
+This is necessary so that the variable is already available when Maven starts up, allowing us to select the appropriate ARM-specific profile during gRPC stub generation.
+
+- You have to install the native protoc-gen-grpc-java via brew:
+
+    brew install protoc-gen-grpc-java
+    
+====
+
 == coffee-grpc-api
 A collector for general gRPC handling of the Coff:ee API (annotations, version, ...).
 
