@@ -25,5 +25,6 @@
 
     <modules>
         <module>testsuite-module-etcd</module>
+        <module>testsuite-logger</module>
     </modules>
 </project>
