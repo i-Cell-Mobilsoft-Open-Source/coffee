@@ -36,7 +36,7 @@ public interface IRedisStreamConstant {
      *
      * @since 1.5.0
      */
-    public interface Log {
+    interface Log {
         /**
          * Key for redis stream retry counter
          */
@@ -49,7 +49,7 @@ public interface IRedisStreamConstant {
      * @author imre.scheffer
      * @since 1.3.0
      */
-    public interface Common {
+    interface Common {
         /**
          * Key for redis stream message data
          */
@@ -75,7 +75,7 @@ public interface IRedisStreamConstant {
     /**
      * Project PIPE stream values
      */
-    public interface Pipe {
+    interface Pipe {
         /**
          * 1. part of key for redis stream list key
          */
@@ -89,7 +89,7 @@ public interface IRedisStreamConstant {
     /**
      * Default values
      */
-    public interface Defaults {
+    interface Defaults {
         /**
          * {@link #STREAM_READ_MAXIMUM_LATENCY_SECONDS_DEFAULT} Default value is 5 minutes
          */
