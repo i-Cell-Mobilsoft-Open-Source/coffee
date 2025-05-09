@@ -12,8 +12,6 @@
 
 	<properties>
 		<version.no.entur.schema2proto-maven-plugin>1.83</version.no.entur.schema2proto-maven-plugin>
-		<version.com.google.protobuf.protobuf-java>3.21.7</version.com.google.protobuf.protobuf-java>
-		<version.com.google.api.grpc.proto-google-common-protos>2.9.0</version.com.google.api.grpc.proto-google-common-protos>
 	</properties>
 
 	<dependencies>
@@ -26,13 +24,11 @@
 		<dependency>
 			<groupId>com.google.protobuf</groupId>
 			<artifactId>protobuf-java</artifactId>
-			<version>${version.com.google.protobuf.protobuf-java}</version>
 		</dependency>
 		<!-- xsd:date and xsd:time equivalents -->
 		<dependency>
 			<groupId>com.google.api.grpc</groupId>
 			<artifactId>proto-google-common-protos</artifactId>
-			<version>${version.com.google.api.grpc.proto-google-common-protos}</version>
 		</dependency>
 
 		<dependency>

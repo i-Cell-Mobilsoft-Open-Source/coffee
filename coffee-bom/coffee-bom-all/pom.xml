@@ -29,8 +29,7 @@
         <version.org.apache.httpcomponents.httpclient>4.5.13</version.org.apache.httpcomponents.httpclient>
         <version.org.apache.httpcomponents.httpcore>4.4.15</version.org.apache.httpcomponents.httpcore>
 
-        <version.io.etcd.jetcd-core>0.7.5</version.io.etcd.jetcd-core>
-        <version.io.grpc.version>1.51.0</version.io.grpc.version>
+        <version.io.etcd.jetcd-core>0.8.5</version.io.etcd.jetcd-core>
 
         <version.io.micrometer>1.9.13</version.io.micrometer>
         <version.org.eclipse.yasson>3.0.3</version.org.eclipse.yasson>
@@ -66,17 +65,15 @@
             </dependency>
             <dependency>
                 <groupId>hu.icellmobilsoft.coffee</groupId>
-                <artifactId>coffee-bom-test</artifactId>
+                <artifactId>coffee-bom-grpc</artifactId>
                 <version>${project.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-
-            <!-- Other bom imports -->
             <dependency>
-                <groupId>io.grpc</groupId>
-                <artifactId>grpc-bom</artifactId>
-                <version>${version.io.grpc.version}</version>
+                <groupId>hu.icellmobilsoft.coffee</groupId>
+                <artifactId>coffee-bom-test</artifactId>
+                <version>${project.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>

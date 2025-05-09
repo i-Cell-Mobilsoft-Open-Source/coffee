@@ -11,7 +11,8 @@
 
 	<modules>
 		<module>coffee-bom-all</module>
-		<module>coffee-bom-jakarta</module>
+        <module>coffee-bom-grpc</module>
+        <module>coffee-bom-jakarta</module>
 		<module>coffee-bom-microprofile</module>
 		<module>coffee-bom-project</module>
 		<module>coffee-bom-test</module>

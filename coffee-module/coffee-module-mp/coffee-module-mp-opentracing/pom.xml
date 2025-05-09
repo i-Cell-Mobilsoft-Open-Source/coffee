@@ -26,10 +26,10 @@
 			<artifactId>opentracing-tracerresolver</artifactId>
 			<version>${opentracing-tracerresolver}</version>
 		</dependency>
-		<dependency>
-			<groupId>io.grpc</groupId>
-			<artifactId>grpc-context</artifactId>
-		</dependency>
+        <dependency>
+            <groupId>io.grpc</groupId>
+            <artifactId>grpc-api</artifactId>
+        </dependency>
 		
 		<!-- TEST -->
 		<dependency>
