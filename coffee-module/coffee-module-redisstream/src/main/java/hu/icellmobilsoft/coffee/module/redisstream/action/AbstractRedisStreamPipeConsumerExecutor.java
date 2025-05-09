@@ -165,7 +165,7 @@ public abstract class AbstractRedisStreamPipeConsumerExecutor extends RedisStrea
     }
 
     private Optional<String> getPipeIdValue(RedisManager redisManager, String listKey) throws BaseException {
-        return redisManager.run(Jedis::get, "get", IRedisStreamConstant.Pipe.ID_PRE + listKey + IRedisStreamConstant.Pipe.ID_PRE);
+        return redisManager.run(Jedis::get, "get", IRedisStreamConstant.Pipe.ID_PRE + listKey + "}");
     }
 
     private boolean hasPipeIdValueChanged(String listKey, RedisManager redisManager, Optional<String> originPipeIdValue) throws BaseException {
