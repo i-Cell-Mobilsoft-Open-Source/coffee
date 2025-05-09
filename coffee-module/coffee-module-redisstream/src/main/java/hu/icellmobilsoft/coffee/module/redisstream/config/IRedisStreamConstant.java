@@ -77,9 +77,13 @@ public interface IRedisStreamConstant {
      */
     public interface Pipe {
         /**
-         * Prefix key for redis stream list key
+         * 1. part of key for redis stream list key
          */
-        String ID = "id_";
+        String ID_PRE = "streampipe:{";
+        /**
+         * 2. part of key for redis stream list key
+         */
+        String ID_POST = "}:id";
     }
 
     /**
