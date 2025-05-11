@@ -87,13 +87,11 @@
 	
     <profiles>
         <profile>
-            <id>arm64-protoc-java-gen-with-preistalled-executable</id>
+            <id>arm64-protoc-java-gen-with-preinstalled-executable</id>
             <activation>
-                <property>
-                    <!-- add this property to settings.xml -->
-                    <name>cpu.arch</name>
-                    <value>aarch_64</value>
-                </property>
+                <os>
+                    <arch>aarch64</arch>
+                </os>
             </activation>
             <build>
                 <plugins>
@@ -117,7 +115,6 @@
                                 </outputTarget>
                                 <outputTarget>
                                     <type>grpc-java</type>
-                                    <pluginPath>/opt/homebrew/bin/protoc-gen-grpc-java</pluginPath>
                                 </outputTarget>
                                 <outputTarget>
                                     <type>grpc-coffee</type>
@@ -141,9 +138,9 @@
         <profile>
             <id>protoc-java-gen-with-downloaded-artifact</id>
             <activation>
-                <property>
-                    <name>!cpu.arch</name>
-                </property>
+                <os>
+                    <arch>x86_64</arch>
+                </os>
             </activation>
             <build>
                 <plugins>
