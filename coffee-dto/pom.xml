@@ -73,13 +73,13 @@
 				<version>${version.org.junit.jupiter}</version>
 				<scope>test</scope>
 			</dependency>
-            <dependency>
-                <groupId>hu.icellmobilsoft.coffee</groupId>
-                <artifactId>coffee-bom-grpc</artifactId>
-                <version>${project.version}</version>
-                <scope>import</scope>
-                <type>pom</type>
-            </dependency>
+		        <dependency>
+				<groupId>hu.icellmobilsoft.coffee</groupId>
+				<artifactId>coffee-bom-grpc</artifactId>
+				<version>${project.version}</version>
+				<scope>import</scope>
+				<type>pom</type>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 
