@@ -3,6 +3,14 @@
 
 Modul célja a gRPC kommunikáció és a kezelés támogatása.
 
+[WARNING]
+====
+- Ahhoz, hogy a natív *macOS ARM64* build működjön, telepíteni kell a protoc-gen-grpc-java alkalmazást:
+ 
+  brew install protoc-gen-grpc-java[@version]
+  
+====
+
 == coffee-grpc-api
 Általános gRPC kezelés Coff:ee API (annotációk, verzió, ...) gyűjtője.
 
