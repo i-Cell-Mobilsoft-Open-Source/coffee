@@ -66,5 +66,34 @@ public interface IRedisStreamConstant {
          * {@code #DATA_KEY_FLOW_ID} message extension for logging searching
          */
         String FLOW_ID_EXTENSION = "flowIdExtension";
+        /**
+         * Key for redis stream message data
+         */
+        String DATA_MESSAGE_TYPE = "messageType";
+    }
+
+    /**
+     * Project PIPE stream values
+     */
+    interface Pipe {
+        /**
+         * 1. part of key for redis stream list key
+         */
+        String ID_PRE = "streampipe:{";
+        /**
+         * 2. part of key for redis stream list key
+         */
+        String ID_POST = "}:id";
+    }
+
+    /**
+     * Default values
+     */
+    interface Defaults {
+        /**
+         * {@link #STREAM_READ_MAXIMUM_LATENCY_SECONDS_DEFAULT} Default value is 5 minutes
+         */
+        long STREAM_READ_MAXIMUM_LATENCY_SECONDS_DEFAULT = 300;
+
     }
 }
