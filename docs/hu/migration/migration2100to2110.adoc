@@ -12,6 +12,7 @@ coff:ee v2.10.0 -> v2.11.0 migrációs leírás, újdonságok, változások leí
 * commons.io version bump 2.11.0 -> 2.16.1
 * httpcomponents-httpclient version bump 4.5.13 -> 4.5.14 
 * httpcomponents-httpcore version bump 4.4.15 -> 4.4.16 
+* eclipse-yasson version bump 3.0.3 -> 3.0.4
 
 === coffee-tool
 * GZipUtil kapott néhány új metódust a kisebb memóriahasználatért, valamint DTO/JSON tömörítésre
