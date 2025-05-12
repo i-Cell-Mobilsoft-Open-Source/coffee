@@ -2,6 +2,12 @@
 
 coff:ee v2.10.0 -> v2.11.0 migration description, news, changes
 
+* A new coffee-bom-grpc module has been added for maintaining grpc versions
+* The coffee-grpc can be built on osx-aarch_64. (see documentation for some extra configuration)
+* ETCD driver version bump to 0.8.5
+* io.grpc version bump to 1.70.0
+* com.google.protobuf version bump to 3.25.5
+
 === coffee-tool
 * GZipUtil got some new method for lower memory usage and direct DTO/JSON compression
 * RandomSplitGenerator added
@@ -9,7 +15,6 @@ coff:ee v2.10.0 -> v2.11.0 migration description, news, changes
 * JsonbUtil#getCustomClassInstance implementation changed, using Thread.currentThread().getContextClassLoader().loadClass instead of Class.forName
 * DateUtil new functions: `daysBetweenLocalDates` and `tryToParseAbsoluteRelativeDate`
 * A new AbstractEntityProcessorAction class has been added for common entity processing
-* BaseRedisConsumerStarter update with thread checking and metrics data propagation with CDI async event
 * New abstract cache implementations: AbstractCache and AbstractLoadingCache
 * New AbstractRedisStreamPipeConsumerExecutor and EventControlAction classes added to redisstream module
 
@@ -33,3 +38,8 @@ Description: <<common_coffee-quarkus-extensions-module-etcd, coffee-module-etcd-
 
 New Quarkus extension to support Quarkus native compatibility for the coffee-tool module.
 Description: <<common_coffee-quarkus-extensions-tool, coffee-tool-extension>>
+
+=== coffee-module-redisstream
+
+BaseRedisConsumerStarter update with thread checking and metrics data propagation with CDI async event
+

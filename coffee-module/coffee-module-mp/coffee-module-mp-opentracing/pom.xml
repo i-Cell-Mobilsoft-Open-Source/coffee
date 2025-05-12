@@ -28,7 +28,7 @@
 		</dependency>
 		<dependency>
 			<groupId>io.grpc</groupId>
-			<artifactId>grpc-context</artifactId>
+			<artifactId>grpc-api</artifactId>
 		</dependency>
 		
 		<!-- TEST -->

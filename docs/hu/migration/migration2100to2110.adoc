@@ -2,6 +2,12 @@
 
 coff:ee v2.10.0 -> v2.11.0 migrációs leírás, újdonságok, változások leírása
 
+* Egy új coffee-bom-grpc modul került bevezetésre a grpc függőség verziók karbantartására
+* A coffee-grpc most már buildelhető osx natív arm64 architektúrán is (lásd dokumentáció)
+* ETCD driver version bump to 0.8.5
+* io.grpc version bump to 1.70.0
+* com.google.protobuf version bump to 3.25.5
+
 === coffee-tool
 * GZipUtil kapott néhány új metódust a kisebb memóriahasználatért, valamint DTO/JSON tömörítésre
 * Hozzáadásra került egy RandomSplitGenerator osztály
@@ -9,7 +15,6 @@ coff:ee v2.10.0 -> v2.11.0 migrációs leírás, újdonságok, változások leí
 * JsonbUtil#getCustomClassInstance implementációja megváltozott, Class.forName helyett Thread.currentThread().getContextClassLoader().loadClass használata
 * DateUtil új metódusokat kapott: `daysBetweenLocalDates` és `tryToParseAbsoluteRelativeDate`
 * Hozzáadásra került az AbstractEntityProcessorAction osztály, hogy alapot nyújtson az entitások feldolgozásához (pl. Javító folyamatok)
-* BaseRedisConsumerStarter kiegészítésre került threadszám ellenőrzéssel és metrika adat küldéssel CDI async eventen keresztül.
 * Új abstract cache implementációk: AbstractCache és AbstractLoadingCache
 * Új AbstractRedisStreamPipeConsumerExecutor és EventControlAction osztályok kerültek a redisstream modulba
 
@@ -32,3 +37,7 @@ Leírás: <<common_coffee-quarkus-extensions-module-etcd, coffee-module-etcd-ext
 
 Új Quarkus extension a coffee-tool modul Quarkus natív kompatibilitás támogatásához.
 Leírás: <<common_coffee-quarkus-extensions-tool, coffee-module-etcd-extension>>
+
+=== coffee-module-redisstream
+
+* BaseRedisConsumerStarter kiegészítésre került threadszám ellenőrzéssel és metrika adat küldéssel CDI async eventen keresztül.
