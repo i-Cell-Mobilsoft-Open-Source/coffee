@@ -324,7 +324,7 @@
 		<xsd:restriction base="xsd:string">
 			<xsd:enumeration value="FIFO" />
 			<xsd:enumeration value="LIFO" />
-	</xsd:restriction>
+		</xsd:restriction>
 	</xsd:simpleType>
 	<xsd:simpleType name="GPSCoordinateLatLongType">
 		<xsd:restriction base="xsd:decimal">
@@ -333,14 +333,14 @@
 			<xsd:maxExclusive value="9999.9999999999999999" />
 		</xsd:restriction>
 	</xsd:simpleType>
-    <xsd:simpleType name="DateType">
-        <xsd:annotation>
-            <xsd:documentation xml:lang="en">Generic local date</xsd:documentation>
-        </xsd:annotation>
-        <xsd:restriction base="xsd:date">
-            <xsd:pattern value="\d{4}-\d{2}-\d{2}"/>
-        </xsd:restriction>
-    </xsd:simpleType>
+	<xsd:simpleType name="DateType">
+        	<xsd:annotation>
+            		<xsd:documentation xml:lang="en">Generic local date</xsd:documentation>
+		</xsd:annotation>
+	        <xsd:restriction base="xsd:date">
+        		<xsd:pattern value="\d{4}-\d{2}-\d{2}"/>
+		</xsd:restriction>
+	</xsd:simpleType>
 	<xsd:simpleType name="TimestampType">
 		<xsd:annotation>
 			<xsd:documentation>Időbélyeg típus ISO "yyyy-MM-dd'T'HH:mm:ss.SSSSSSZ"
@@ -351,14 +351,14 @@
 				value="\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{1,6})?Z" />
 		</xsd:restriction>
 	</xsd:simpleType>
-    <xsd:simpleType name="TimestampWithoutMillisType">
-        <xsd:annotation>
-            <xsd:documentation xml:lang="en">Generic UTC timestamp without milliseconds part</xsd:documentation>
-        </xsd:annotation>
-        <xsd:restriction base="xsd:dateTime">
-            <xsd:pattern value="\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z"/>
-        </xsd:restriction>
-    </xsd:simpleType>
+	<xsd:simpleType name="TimestampWithoutMillisType">
+        	<xsd:annotation>
+	            <xsd:documentation xml:lang="en">Generic UTC timestamp without milliseconds part</xsd:documentation>
+        	</xsd:annotation>
+		<xsd:restriction base="xsd:dateTime">
+	            <xsd:pattern value="\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z"/>
+        	</xsd:restriction>
+	</xsd:simpleType>
 	<!-- GROUPS -->
 	<xsd:group name="BaseAuditDateGroup">
 		<xsd:sequence>
