@@ -502,7 +502,7 @@ public class MyBean {
 
 == Eviktálás
 
-Az EvictAction hívásával kipucolható a cache tartalma, ehhez a projekten létre kell hozni egy EvictAction osztályt (a megfelelő scope-pal) és le kell származtatni a coffee-ban lévő EvictAction-ből. Ezután egy REST végponton keresztül az EvictAction::evict metódust kell meghívni. Ennek hatására az összes Evictable interfészt implementáló beanen, configsource-on meghívódik az evict metódus
+Az EvictAction hívásával kipucolható a cache tartalma, ehhez a projekten létre kell hozni egy EvictAction osztályt (a megfelelő scope-pal) és le kell származtatni a coffee-ban lévő AbstractEvictAction-ből. Ezután egy REST végponton keresztül az EvictAction::evict metódust kell meghívni. Ennek hatására az összes Evictable interfészt implementáló beanen, configsource-on meghívódik az evict metódus
 
 .ISystemRest
 [source,java]

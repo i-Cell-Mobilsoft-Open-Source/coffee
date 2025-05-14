@@ -45,7 +45,7 @@ import hu.icellmobilsoft.coffee.tool.utils.date.DateUtil;
  * @author gyorgy.gassama
  * @since 2.11.0
  */
-public abstract class EvictAction {
+public abstract class AbstractEvictAction {
 
     @Inject
     private ApplicationConfiguration applicationConfiguration;
@@ -57,7 +57,7 @@ public abstract class EvictAction {
     /**
      * default constructor
      */
-    protected EvictAction() {
+    protected AbstractEvictAction() {
         // for java 21
     }
 
