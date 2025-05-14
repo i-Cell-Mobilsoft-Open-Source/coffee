@@ -55,6 +55,13 @@ public abstract class EvictAction {
     private Instance<Evictable> evictables;
 
     /**
+     * default constructor
+     */
+    protected EvictAction() {
+        // for java 21
+    }
+
+    /**
      * Eviction operation that iterates over implementations of the {@link Evictable} interface. Explicitly invokes the eviction function for known
      * framework-level services.
      *
