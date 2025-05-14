@@ -20,7 +20,7 @@
 package hu.icellmobilsoft.coffee.module.etcd.producer;
 
 import java.util.Collections;
-import java.util.HashSet;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
@@ -29,53 +29,59 @@ import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
 /**
  * Cache optimized ETCD Config source
  *
- * @author imre.scheffer
- * @since 1.3.0
+ * @author gyengus
+ * @since ???
  */
-public class CachedEtcdConfigSource extends DefaultEtcdConfigSource {
+public class RuntimeCachedEtcdConfigSource extends CachedEtcdConfigSource {
 
-    /**
-     * It caches configuration keys to avoid repeated querying. There are situations where it might be called multiple times (during runtime, new
-     * configuration keys are not added).)
-     */
-    private static final Set<String> PROPERTY_NAME_CACHE = Collections.synchronizedSet(new HashSet<>());
+    static boolean active = false;
 
     /**
      * Default constructor, constructs a new object.
      */
-    public CachedEtcdConfigSource() {
+    public RuntimeCachedEtcdConfigSource() {
         super();
     }
 
-    /**
-     * It returns the keys available on the config sources. It caches the result of the first call, serving all subsequent calls from the cache.
-     *
-     * <br>
-     * {@inheritDoc}
-     */
+    @Override
+    public Map<String, String> getProperties() {
+        if (!active) {
+            return Collections.emptyMap();
+        }
+        return super.getProperties();
+    }
+
     @Override
     public Set<String> getPropertyNames() {
-        if (!isEnabled()) {
-            // not enabled, dont create cache
+        if (!active) {
             return Collections.emptySet();
         }
+        return super.getPropertyNames();
+    }
 
-        Set<String> propertyNames = new HashSet<>();
-        if (PROPERTY_NAME_CACHE.isEmpty()) {
-            PROPERTY_NAME_CACHE.addAll(super.getPropertyNames());
+    @Override
+    public String getValue(String propertyName) {
+        if (!active) {
+            return null;
         }
-        propertyNames.addAll(PROPERTY_NAME_CACHE);
-        return propertyNames;
+        return super.getValue(propertyName);
     }
 
     @Override
     protected Optional<String> readValue(String propertyName) throws BaseException {
-        return EtcdConfigSourceCache.instance().getValue(propertyName);
+        if (!active) {
+            return Optional.empty();
+        }
+        return super.readValue(propertyName);
     }
 
-    @Override
-    public String getName() {
-        return this.getClass().getSimpleName();
+    /**
+     * Activate property finding in ETCD
+     *
+     * @param active
+     *            true - properties is find on ETCD, false - properties not finding and return default null
+     */
+    public static void setActive(boolean active) {
+        RuntimeCachedEtcdConfigSource.active = active;
     }
-
 }
