@@ -24,7 +24,6 @@ import java.util.List;
 
 import jakarta.enterprise.inject.Any;
 import jakarta.enterprise.inject.Instance;
-import jakarta.enterprise.inject.Model;
 import jakarta.inject.Inject;
 
 import org.eclipse.microprofile.config.ConfigProvider;
@@ -46,8 +45,7 @@ import hu.icellmobilsoft.coffee.tool.utils.date.DateUtil;
  * @author gyorgy.gassama
  * @since 2.11.0
  */
-@Model
-public class EvictAction {
+public abstract class EvictAction {
 
     @Inject
     private ApplicationConfiguration applicationConfiguration;
@@ -55,12 +53,6 @@ public class EvictAction {
     @Any
     @Inject
     private Instance<Evictable> evictables;
-
-    /**
-     * default constructor
-     */
-    public EvictAction() {
-    }
 
     /**
      * Eviction operation that iterates over implementations of the {@link Evictable} interface. Explicitly invokes the eviction function for known
@@ -109,7 +101,7 @@ public class EvictAction {
      * 
      * @return context
      */
-    public ContextType createContext() {
+    protected ContextType createContext() {
         ContextType context = new ContextType();
         context.setRequestId(RandomUtil.generateId());
         context.setTimestamp(DateUtil.nowUTCTruncatedToMillis());
