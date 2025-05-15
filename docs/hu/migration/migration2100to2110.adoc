@@ -17,7 +17,7 @@ coff:ee v2.10.0 -> v2.11.0 migrációs leírás, újdonságok, változások leí
 === coffee-tool
 * GZipUtil kapott néhány új metódust a kisebb memóriahasználatért, valamint DTO/JSON tömörítésre
 * Hozzáadásra került egy RandomSplitGenerator osztály
-* Hozzáadásra került az EvictAction, hogy az Evictable-t implementáló osztályokat egységesen meg lehessen hívni cache törlés szempontjából.
+* Hozzáadásra került egy AbstractEvictAction osztály, hogy az Evictable interface-t implementáló osztályokat egységesen meg lehessen hívni cache törlés szempontjából.
 * JsonbUtil#getCustomClassInstance implementációja megváltozott, Class.forName helyett Thread.currentThread().getContextClassLoader().loadClass használata
 * DateUtil új metódusokat kapott: `daysBetweenLocalDates` és `tryToParseAbsoluteRelativeDate`
 * Hozzáadásra került az AbstractEntityProcessorAction osztály, hogy alapot nyújtson az entitások feldolgozásához (pl. Javító folyamatok)

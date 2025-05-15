@@ -17,7 +17,7 @@ coff:ee v2.10.0 -> v2.11.0 migration description, news, changes
 === coffee-tool
 * GZipUtil got some new method for lower memory usage and direct DTO/JSON compression
 * RandomSplitGenerator added
-* A new EvictAction class has been added to allow uniform invocation of classes implementing Evictable for cache clearing purposes
+* A new AbstractEvictAction class has been added to allow uniform invocation of classes implementing Evictable for cache clearing purposes
 * JsonbUtil#getCustomClassInstance implementation changed, using Thread.currentThread().getContextClassLoader().loadClass instead of Class.forName
 * DateUtil new functions: `daysBetweenLocalDates` and `tryToParseAbsoluteRelativeDate`
 * A new AbstractEntityProcessorAction class has been added for common entity processing

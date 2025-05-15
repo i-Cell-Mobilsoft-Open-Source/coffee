@@ -24,7 +24,6 @@ import java.util.List;
 
 import jakarta.enterprise.inject.Any;
 import jakarta.enterprise.inject.Instance;
-import jakarta.enterprise.inject.Model;
 import jakarta.inject.Inject;
 
 import org.eclipse.microprofile.config.ConfigProvider;
@@ -46,8 +45,7 @@ import hu.icellmobilsoft.coffee.tool.utils.date.DateUtil;
  * @author gyorgy.gassama
  * @since 2.11.0
  */
-@Model
-public class EvictAction {
+public abstract class AbstractEvictAction {
 
     @Inject
     private ApplicationConfiguration applicationConfiguration;
@@ -59,7 +57,8 @@ public class EvictAction {
     /**
      * default constructor
      */
-    public EvictAction() {
+    protected AbstractEvictAction() {
+        // for java 21
     }
 
     /**
@@ -109,7 +108,7 @@ public class EvictAction {
      * 
      * @return context
      */
-    public ContextType createContext() {
+    protected ContextType createContext() {
         ContextType context = new ContextType();
         context.setRequestId(RandomUtil.generateId());
         context.setTimestamp(DateUtil.nowUTCTruncatedToMillis());

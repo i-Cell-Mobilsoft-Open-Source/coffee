@@ -500,9 +500,7 @@ public class MyBean {
 
 == Eviction
 
-By invoking the EvictAction, the cache contents can be cleared.
-To achieve this, a REST endpoint must be created in the project, through which the EvictAction::evict method should be called.
-As a result, the evict method will be invoked on all beans and config sources implementing the Evictable interface.
+By calling EvictAction, the cache content can be cleared. To do this, an EvictAction class must be created in the project (with the appropriate scope) and it should extend the AbstractEvictAction from Coffee. After that, the EvictAction::evict method should be called through a REST endpoint. As a result, the evict method will be invoked on all beans and config sources that implement the Evictable interface.
 
 .ISystemRest
 [source,java]
