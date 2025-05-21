@@ -29,6 +29,7 @@ import java.util.jar.Attributes;
 import java.util.jar.Manifest;
 
 import jakarta.enterprise.inject.Model;
+import jakarta.enterprise.inject.spi.CDI;
 import jakarta.inject.Inject;
 import jakarta.servlet.ServletContext;
 
@@ -60,9 +61,6 @@ public class VersionInfoAction {
     @Inject
     @ConfigProperty(name = "coffee.app.name")
     Optional<String> coffeeAppName;
-
-    @Inject
-    private ServletContext servletContext;
 
     /**
      * Default constructor
@@ -118,10 +116,8 @@ public class VersionInfoAction {
      *             if any error occurs
      */
     private String warVersionInfo() throws BaseException {
-        if (servletContext == null) {
-            return null;
-        }
         try {
+            ServletContext servletContext = CDI.current().select(ServletContext.class).get();
             InputStream inputStream = servletContext.getResourceAsStream(META_INF_MANIFEST_MF);
             StringBuilder version = new StringBuilder();
             if (inputStream != null) {
