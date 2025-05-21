@@ -17,7 +17,6 @@ coff:ee v2.10.0 -> v2.11.0 migration description, news, changes
 === coffee-tool
 * GZipUtil got some new method for lower memory usage and direct DTO/JSON compression
 * RandomSplitGenerator added
-* A new AbstractEvictAction class has been added to allow uniform invocation of classes implementing Evictable for cache clearing purposes
 * JsonbUtil#getCustomClassInstance implementation changed, using Thread.currentThread().getContextClassLoader().loadClass instead of Class.forName
 * DateUtil new functions: `daysBetweenLocalDates` and `tryToParseAbsoluteRelativeDate`
 * A new AbstractEntityProcessorAction class has been added for common entity processing
@@ -27,6 +26,13 @@ coff:ee v2.10.0 -> v2.11.0 migration description, news, changes
 ==== Migration
 Changes are backwards compatible doesnt need any migration.
 
+=== coffee-rest
+* A new AbstractEvictAction class has been added to allow uniform invocation of classes implementing Evictable for cache clearing purposes
+* System Rest Service (with ISystemRest interface) has been added with default endpoint /versionInfo
+
+==== Migration
+Changes are backwards compatible doesnt need any migration.
+However, it's recommended to implement the coffee `ISystemRest` interface in the project's existing SystemRest service.
 
 === Hibernate version upgrade
 Hibernate `6.2.13.Final` -> `6.6.1.Final` upgrade (Wildfly 34 support).

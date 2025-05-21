@@ -17,7 +17,6 @@ coff:ee v2.10.0 -> v2.11.0 migrációs leírás, újdonságok, változások leí
 === coffee-tool
 * GZipUtil kapott néhány új metódust a kisebb memóriahasználatért, valamint DTO/JSON tömörítésre
 * Hozzáadásra került egy RandomSplitGenerator osztály
-* Hozzáadásra került egy AbstractEvictAction osztály, hogy az Evictable interface-t implementáló osztályokat egységesen meg lehessen hívni cache törlés szempontjából.
 * JsonbUtil#getCustomClassInstance implementációja megváltozott, Class.forName helyett Thread.currentThread().getContextClassLoader().loadClass használata
 * DateUtil új metódusokat kapott: `daysBetweenLocalDates` és `tryToParseAbsoluteRelativeDate`
 * Hozzáadásra került az AbstractEntityProcessorAction osztály, hogy alapot nyújtson az entitások feldolgozásához (pl. Javító folyamatok)
@@ -26,6 +25,14 @@ coff:ee v2.10.0 -> v2.11.0 migrációs leírás, újdonságok, változások leí
 
 ==== Migration
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+=== coffee-rest
+* Hozzáadásra került egy AbstractEvictAction osztály, hogy az Evictable interface-t implementáló osztályokat egységesen meg lehessen hívni cache törlés szempontjából.
+* Hozzáadásra került a System Rest Service végpont (és ISystemRest interface) ami a /versionInfo URI-val hívható
+
+==== Migration
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+Érdemes a projekten lévő SystemRest service-ben -ha létezik- implementálni a coffee-ban lévő ISystemRest interfészt.
 
 === Hibernate verzió emelés
 Hibernate `6.2.13.Final` -> `6.6.1.Final` emelés (Wildfly 34 támogatás).
