@@ -19,36 +19,31 @@
  */
 package hu.icellmobilsoft.coffee.rest.system;
 
-import jakarta.enterprise.inject.Model;
-import jakarta.inject.Inject;
-import jakarta.inject.Named;
-
-import hu.icellmobilsoft.coffee.rest.action.versioninfo.VersionInfoAction;
 import hu.icellmobilsoft.coffee.rest.rest.BaseRestService;
-import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
 
 /**
- * System rest endpoint implementations
+ * Astract System rest endpoint
  *
  * @author tamas.cserhati
  * @since 2.11.0
  */
-@Model
-@Named("coffeeSystemRest")
-public class SystemRest extends BaseRestService implements ISystemRest {
-
-    @Inject
-    private VersionInfoAction versionInfoAction;
+public abstract class AbstractSystemRest extends BaseRestService implements ISystemRest {
 
     /**
-     * Default constructor
+     * {@value #NEW_LINE}
      */
-    public SystemRest() {
-        // Default constructor for java 21
-    }
+    protected static final String NEW_LINE = "\n";
+    /**
+     * {@value #META_INF_MANIFEST_MF}
+     */
+    protected static final String META_INF_MANIFEST_MF = "META-INF/MANIFEST.MF";
+    /**
+     * {@value #IMPLEMENTATION_TITLE}
+     */
+    protected static final String IMPLEMENTATION_TITLE = "Implementation-Title";
+    /**
+     * {@value #CLASS_PATH}
+     */
+    protected static final String CLASS_PATH = "Class-Path";
 
-    @Override
-    public String versionInfo() throws BaseException {
-        return versionInfoAction.versionInfo();
-    }
 }

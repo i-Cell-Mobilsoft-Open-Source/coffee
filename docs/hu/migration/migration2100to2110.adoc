@@ -28,7 +28,7 @@ A változtatások nem eredményeznek átállási munkálatokat, visszafelé komp
 
 === coffee-rest
 * Hozzáadásra került egy AbstractEvictAction osztály, hogy az Evictable interface-t implementáló osztályokat egységesen meg lehessen hívni cache törlés szempontjából.
-* Hozzáadásra került a System Rest Service végpont (és ISystemRest interface) ami a /versionInfo URI-val hívható
+* Hozzáadásra került az AbstractWildflySystemRest és AbstractQuarkusSystemRest abstract osztáy a projekten lévő SystemRest osztály ősosztályának szánva
 
 ==== Migration
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.

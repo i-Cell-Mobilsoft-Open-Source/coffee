@@ -17,21 +17,17 @@
  * limitations under the License.
  * #L%
  */
-package hu.icellmobilsoft.coffee.rest.action.versioninfo;
+package hu.icellmobilsoft.coffee.rest.system;
 
-import java.io.BufferedReader;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.URL;
+import java.text.MessageFormat;
 import java.util.Enumeration;
 import java.util.Optional;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
 
-import jakarta.enterprise.inject.Model;
-import jakarta.enterprise.inject.spi.CDI;
 import jakarta.inject.Inject;
-import jakarta.servlet.ServletContext;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
@@ -41,18 +37,12 @@ import hu.icellmobilsoft.coffee.se.api.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.se.api.exception.enums.CoffeeFaultType;
 
 /**
- * Action for reading manifest file
+ * SystemRest endpoint for quarkus
  * 
  * @author tamas.cserhati
  * @since 2.11.0
  */
-@Model
-public class VersionInfoAction {
-
-    private static final String NEW_LINE = "\n";
-    private static final String META_INF_MANIFEST_MF = "META-INF/MANIFEST.MF";
-    private static final String IMPLEMENTATION_TITLE = "Implementation-Title";
-    private static final String CLASS_PATH = "Class-Path";
+public abstract class AbstractQuarkusSystemRest extends AbstractSystemRest {
 
     @Inject
     @ConfigProperty(name = "quarkus.application.name")
@@ -65,17 +55,11 @@ public class VersionInfoAction {
     /**
      * Default constructor
      */
-    public VersionInfoAction() {
+    public AbstractQuarkusSystemRest() {
         // Default constructor for java 21
     }
 
-    /**
-     * read manifest from jar file (quarkus and wildfly)
-     * 
-     * @return the manifest content
-     * @throws BaseException
-     *             if any error occurs
-     */
+    @Override
     public String versionInfo() throws BaseException {
         String appName = getAppName();
         try {
@@ -95,40 +79,12 @@ public class VersionInfoAction {
                             .forEach(entry -> sb.append(entry.getKey()).append(": ").append(entry.getValue()).append(NEW_LINE));
 
                     if (sb.isEmpty()) {
-                        return warVersionInfo();
+                        return MessageFormat.format("cannot find MANIFEST.MF for [{0}]", appName);
                     }
                     return sb.toString();
                 }
             }
             throw new TechnicalException(CoffeeFaultType.OPERATION_FAILED, "MANIFEST.MF not found for " + appName);
-        } catch (Exception e) {
-            throw new TechnicalException(CoffeeFaultType.OPERATION_FAILED, e.getLocalizedMessage(), e);
-        }
-    }
-
-    /**
-     * read manifest from war file (wildfly)
-     * 
-     * @param servletRequest
-     *            the servlet request object
-     * @return the manifest content
-     * @throws BaseException
-     *             if any error occurs
-     */
-    private String warVersionInfo() throws BaseException {
-        try {
-            ServletContext servletContext = CDI.current().select(ServletContext.class).get();
-            InputStream inputStream = servletContext.getResourceAsStream(META_INF_MANIFEST_MF);
-            StringBuilder version = new StringBuilder();
-            if (inputStream != null) {
-                BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
-                String line;
-                while ((line = br.readLine()) != null) {
-                    version.append(line);
-                    version.append(NEW_LINE);
-                }
-            }
-            return version.toString();
         } catch (Exception e) {
             throw new TechnicalException(CoffeeFaultType.OPERATION_FAILED, e.getLocalizedMessage(), e);
         }

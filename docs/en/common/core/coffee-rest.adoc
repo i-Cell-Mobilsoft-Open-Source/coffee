@@ -517,14 +517,16 @@ public interface ISystemRest {
 .SystemRest
 [source,java]
 ----
-public class SystemRest extends BaseRestService implements ISystemRest  {
-  ...
-  @Inject private EvictAction evictAction;
-  
-  @Override
-  public EvictResponse evict() throws BaseException {
-      return wrapNoParam(evictAction::evict, "evict");
-  }
+public class SystemRest extends AbstractWildflySystemRest { <1>
 
+    @Inject
+    private EvictAction evictAction;
+
+    @Override
+    public hu.icellmobilsoft.coffee.dto.common.config.evict.EvictResponse getEvict() throws BaseException {
+        return wrapNoParam(evictAction::evict, "evict");
+    }
 }
 ----
+<1> AbstractWildflySystemRest or AbstractQuarkusSystemRest depends on the appserver
+
