@@ -30,6 +30,13 @@ import hu.icellmobilsoft.coffee.rest.rest.BaseRestService;
 public abstract class AbstractSystemRest extends BaseRestService implements ISystemRest {
 
     /**
+     * Default constructor
+     */
+    public AbstractSystemRest() {
+        // Default constructor for java 21
+    }
+
+    /**
      * {@value #NEW_LINE}
      */
     protected static final String NEW_LINE = "\n";
