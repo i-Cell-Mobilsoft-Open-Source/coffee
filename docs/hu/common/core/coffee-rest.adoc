@@ -532,4 +532,8 @@ public class SystemRest extends AbstractWildflySystemRest { <1>
 ----
 <1> AbstractWildflySystemRest vagy AbstractQuarkusSystemRest attól függően, milyen szerveren fut az alkalmazásunk
 
+[NOTE]
+====
+a `/versionInfo` végpont a `quarkus.application.name`, vagy - ha ez nincs megadva - a `coffee.app.name` változót használja az alkalmazás nevének meghatározásához, valamint a megjelenített META-INF/MANIFEST.MF fájlban is ezt keresi, mint Implementation-Version.
+====
 

@@ -530,3 +530,7 @@ public class SystemRest extends AbstractWildflySystemRest { <1>
 ----
 <1> AbstractWildflySystemRest or AbstractQuarkusSystemRest depends on the appserver
 
+[NOTE]
+====
+The `/versionInfo` endpoint determines the application name using the `quarkus.application.name` property. If this property is not specified, it falls back to the `coffee.app.name` variable. Additionally, it looks for this value as the Implementation-Version in the displayed META-INF/MANIFEST.MF file.
+====
