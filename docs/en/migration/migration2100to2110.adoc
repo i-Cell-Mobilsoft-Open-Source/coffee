@@ -14,6 +14,10 @@ coff:ee v2.10.0 -> v2.11.0 migration description, news, changes
 * httpcomponents-httpcore version bump 4.4.15 -> 4.4.16 
 * eclipse-yasson version bump 3.0.3 -> 3.0.4
 
+=== new modules added
+* `coffee-module-wildfly` for collecting wildfly specific functions
+* `coffee-module-quarkus` for collecting quarkus specific functions
+
 === coffee-tool
 * GZipUtil got some new method for lower memory usage and direct DTO/JSON compression
 * RandomSplitGenerator added

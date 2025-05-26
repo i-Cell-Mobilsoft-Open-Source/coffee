@@ -26,6 +26,7 @@ import hu.icellmobilsoft.coffee.rest.rest.BaseRestService;
  *
  * @author tamas.cserhati
  * @since 2.11.0
+ * @see AbstractQuarkusSystemRest, AbstractWildflySystemRest
  */
 public abstract class AbstractSystemRest extends BaseRestService implements ISystemRest {
 

@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package hu.icellmobilsoft.coffee.rest.system;
+package hu.icellmobilsfoft.coffee.module.quarkus.rest.system;
 
 import java.io.InputStream;
 import java.net.URL;
@@ -34,6 +34,7 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import hu.icellmobilsoft.coffee.cdi.config.IConfigKey;
 import hu.icellmobilsoft.coffee.cdi.config.IQuarkusConfigKey;
+import hu.icellmobilsoft.coffee.rest.system.AbstractSystemRest;
 import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
 import hu.icellmobilsoft.coffee.se.api.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.se.api.exception.enums.CoffeeFaultType;
@@ -43,6 +44,7 @@ import hu.icellmobilsoft.coffee.se.api.exception.enums.CoffeeFaultType;
  * 
  * @author tamas.cserhati
  * @since 2.11.0
+ * @see AbstractSystemRest
  */
 public abstract class AbstractQuarkusSystemRest extends AbstractSystemRest {
 

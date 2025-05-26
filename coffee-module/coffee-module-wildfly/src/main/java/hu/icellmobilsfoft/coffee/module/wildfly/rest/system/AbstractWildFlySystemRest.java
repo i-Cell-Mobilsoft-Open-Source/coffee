@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package hu.icellmobilsoft.coffee.rest.system;
+package hu.icellmobilsfoft.coffee.module.wildfly.rest.system;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -26,6 +26,7 @@ import java.io.InputStreamReader;
 import jakarta.inject.Inject;
 import jakarta.servlet.ServletContext;
 
+import hu.icellmobilsoft.coffee.rest.system.AbstractSystemRest;
 import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
 import hu.icellmobilsoft.coffee.se.api.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.se.api.exception.enums.CoffeeFaultType;
@@ -35,6 +36,7 @@ import hu.icellmobilsoft.coffee.se.api.exception.enums.CoffeeFaultType;
  * 
  * @author tamas.cserhati
  * @since 2.11.0
+ * @see AbstractSystemRest
  */
 public abstract class AbstractWildFlySystemRest extends AbstractSystemRest {
 
