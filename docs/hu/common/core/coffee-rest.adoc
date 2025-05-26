@@ -537,3 +537,16 @@ public class SystemRest extends AbstractWildflySystemRest { <1>
 a `/versionInfo` végpont a `quarkus.application.name`, vagy - ha ez nincs megadva - a `coffee.app.name` változót használja az alkalmazás nevének meghatározásához, valamint a megjelenített META-INF/MANIFEST.MF fájlban is ezt keresi, mint Implementation-Version.
 ====
 
+[IMPORTANT]
+====
+Ahhoz, hogy a quarkus natív módban is múködjön a `/versionInfo` végpont, meg kell tartanunk a MANIFEST.MF fájlunkat a build alatt a következő beállítással:
+
+[source,yaml]
+----
+quarkus:
+  native:
+    resources:
+      includes:
+        - META-INF/MANIFEST.MF
+----
+====

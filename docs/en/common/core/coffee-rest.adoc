@@ -534,3 +534,19 @@ public class SystemRest extends AbstractWildflySystemRest { <1>
 ====
 The `/versionInfo` endpoint determines the application name using the `quarkus.application.name` property. If this property is not specified, it falls back to the `coffee.app.name` variable. Additionally, it looks for this value as the Implementation-Version in the displayed META-INF/MANIFEST.MF file.
 ====
+
+[IMPORTANT]
+====
+In order for the `/versionInfo` endpoint to work in native mode with Quarkus, we need to retain our MANIFEST.MF file during the build by using the following configuration:
+
+
+[source,yaml]
+----
+quarkus:
+  native:
+    resources:
+      includes:
+        - META-INF/MANIFEST.MF
+----
+====
+
