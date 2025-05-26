@@ -32,6 +32,8 @@ import jakarta.inject.Inject;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
+import hu.icellmobilsoft.coffee.cdi.config.IConfigKey;
+import hu.icellmobilsoft.coffee.cdi.config.IQuarkusConfigKey;
 import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
 import hu.icellmobilsoft.coffee.se.api.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.se.api.exception.enums.CoffeeFaultType;
@@ -45,11 +47,11 @@ import hu.icellmobilsoft.coffee.se.api.exception.enums.CoffeeFaultType;
 public abstract class AbstractQuarkusSystemRest extends AbstractSystemRest {
 
     @Inject
-    @ConfigProperty(name = "quarkus.application.name")
+    @ConfigProperty(name = IQuarkusConfigKey.QUARKUS_APPLICATION_NAME)
     Optional<String> quarkusAppName;
 
     @Inject
-    @ConfigProperty(name = "coffee.app.name")
+    @ConfigProperty(name = IConfigKey.COFFEE_APP_NAME)
     Optional<String> coffeeAppName;
 
     /**
