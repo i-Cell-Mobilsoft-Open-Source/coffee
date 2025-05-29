@@ -68,27 +68,27 @@ public abstract class AbstractQuarkusSystemRest extends AbstractSystemRest {
         String appName = getAppName();
         try {
             Enumeration<URL> resources = Thread.currentThread().getContextClassLoader().getResources(META_INF_MANIFEST_MF);
-
+            if (!resources.hasMoreElements()) {
+                throw new TechnicalException(CoffeeFaultType.OPERATION_FAILED, "Cannot find any MANIFEST.MF file");
+            }
+            StringBuilder sb = new StringBuilder();
             while (resources.hasMoreElements()) {
                 URL url = resources.nextElement();
                 try (InputStream is = url.openStream()) {
                     Manifest mf = new Manifest(is);
                     Attributes mainAttributes = mf.getMainAttributes();
-                    StringBuilder sb = new StringBuilder();
                     String implementationTitle = mf.getMainAttributes().getValue(IMPLEMENTATION_TITLE);
                     mainAttributes.entrySet()
                             .stream()
                             .filter(entry -> StringUtils.equals(appName, implementationTitle))
                             .filter(entry -> !CLASS_PATH.equalsIgnoreCase(entry.getKey().toString()))
                             .forEach(entry -> sb.append(entry.getKey()).append(": ").append(entry.getValue()).append(NEW_LINE));
-
-                    if (sb.isEmpty()) {
-                        return MessageFormat.format("cannot find MANIFEST.MF for [{0}]", appName);
+                    if (!sb.isEmpty()) {
+                        return sb.toString();
                     }
-                    return sb.toString();
                 }
             }
-            throw new TechnicalException(CoffeeFaultType.OPERATION_FAILED, "MANIFEST.MF not found for " + appName);
+            return MessageFormat.format("cannot find MANIFEST.MF for [{0}]", appName);
         } catch (Exception e) {
             throw new TechnicalException(CoffeeFaultType.OPERATION_FAILED, e.getLocalizedMessage(), e);
         }
