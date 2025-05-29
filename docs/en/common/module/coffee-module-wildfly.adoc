@@ -1,0 +1,19 @@
+[#common_module_coffee-module-wildfly]
+= coffee-module-wildfly
+
+The purpose of this module is to use wildfly specific functions.
+
+.AbstractWildflySystemRest
+[source,java]
+----
+public class SystemRest extends AbstractWildflySystemRest {
+
+    @Inject
+    private EvictAction evictAction;
+
+    @Override
+    public hu.icellmobilsoft.coffee.dto.common.config.evict.EvictResponse getEvict() throws BaseException {
+        return wrapNoParam(evictAction::evict, "evict");
+    }
+}
+----

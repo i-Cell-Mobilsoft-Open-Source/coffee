@@ -23,7 +23,9 @@
 		<module>coffee-module-ruleng</module>
 		<module>coffee-module-mp</module>
 		<module>coffee-module-totp</module>
-		<module>coffee-module-redispubsub</module>
+        <module>coffee-module-redispubsub</module>
+        <module>coffee-module-wildfly</module>
+        <module>coffee-module-quarkus</module>
 	</modules>
 
 	<dependencyManagement>

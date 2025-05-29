@@ -517,17 +517,8 @@ public interface ISystemRest {
 ----
 
 .SystemRest
-[source,java]
-----
-public class SystemRest extends BaseRestService implements ISystemRest  {
-  ...
-  @Inject private EvictAction evictAction;
-  
-  @Override
-  public EvictResponse evict() throws BaseException {
-      return wrapNoParam(evictAction::evict, "evict");
-  }
 
-}
-----
+Használd a <<common_module_coffee-module-quarkus,AbstractQuarkusSystemRest>> vagy
+ <<common_module_coffee-module-wildfly,AbstractWildflySystemRest>> osztályt a SystemRest implementálásához.
 
+ 

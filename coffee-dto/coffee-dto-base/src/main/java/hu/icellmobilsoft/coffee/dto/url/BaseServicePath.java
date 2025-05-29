@@ -87,6 +87,17 @@ public class BaseServicePath {
     /** Constant <code>INTERNAL="/internal"</code> */
     public static final String INTERNAL = "/internal";
 
+    /** Constant <code>VERSION_INFO="/versionInfo"</code> */
+    public static final String VERSION_INFO = "/versionInfo";
+
+    /** Constant <code>EVICT="/evict"</code> */
+    public static final String EVICT = "/evict";
+
+    /**
+     * {@value #SYSTEM_EVICT}
+     */
+    public static final String SYSTEM_EVICT = SYSTEM + EVICT;
+
     /**
      * Fill, join and append query parameters to path.
      *
