@@ -1,0 +1,39 @@
+[#common_module_coffee-module-quarkus]
+= coffee-module-quarkus
+
+A modul célja a quarkus specifikus funkciók (nem extension-ök) összegyűjtése.
+
+.AbstractQuarkusSystemRest
+[source,java]
+----
+public class SystemRest extends AbstractQuarkusSystemRest {
+
+    @Inject
+    private EvictAction evictAction;
+
+    @Override
+    public hu.icellmobilsoft.coffee.dto.common.config.evict.EvictResponse getEvict() throws BaseException {
+        return wrapNoParam(evictAction::evict, "evict");
+    }
+}
+----
+
+[NOTE]
+====
+a `/versionInfo` végpont a `quarkus.application.name`, vagy - ha ez nincs megadva - a `coffee.app.name` változót használja az alkalmazás nevének meghatározásához, valamint a megjelenített META-INF/MANIFEST.MF fájlban is ezt keresi, mint Implementation-Version.
+====
+
+[IMPORTANT]
+====
+Ahhoz, hogy a quarkus natív módban is működjön a `/versionInfo` végpont, meg kell tartanunk a MANIFEST.MF fájlunkat a build alatt a következő beállítással:
+
+[source,yaml]
+----
+quarkus:
+  native:
+    resources:
+      includes:
+        - META-INF/MANIFEST.MF
+----
+====
+

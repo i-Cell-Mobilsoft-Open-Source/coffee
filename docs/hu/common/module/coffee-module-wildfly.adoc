@@ -1,0 +1,19 @@
+[#common_module_coffee-module-wildfly]
+= coffee-module-wildfly
+
+A modul célja a wildfly specifikus funkciók összegyűjtése.
+
+.AbstractWildflySystemRest
+[source,java]
+----
+public class SystemRest extends AbstractWildflySystemRest {
+
+    @Inject
+    private EvictAction evictAction;
+
+    @Override
+    public hu.icellmobilsoft.coffee.dto.common.config.evict.EvictResponse getEvict() throws BaseException {
+        return wrapNoParam(evictAction::evict, "evict");
+    }
+}
+----

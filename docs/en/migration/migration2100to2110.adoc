@@ -14,10 +14,13 @@ coff:ee v2.10.0 -> v2.11.0 migration description, news, changes
 * httpcomponents-httpcore version bump 4.4.15 -> 4.4.16 
 * eclipse-yasson version bump 3.0.3 -> 3.0.4
 
+=== new modules added
+* `coffee-module-wildfly` for collecting wildfly specific functions
+* `coffee-module-quarkus` for collecting quarkus specific functions
+
 === coffee-tool
 * GZipUtil got some new method for lower memory usage and direct DTO/JSON compression
 * RandomSplitGenerator added
-* A new AbstractEvictAction class has been added to allow uniform invocation of classes implementing Evictable for cache clearing purposes
 * JsonbUtil#getCustomClassInstance implementation changed, using Thread.currentThread().getContextClassLoader().loadClass instead of Class.forName
 * DateUtil new functions: `daysBetweenLocalDates` and `tryToParseAbsoluteRelativeDate`
 * A new AbstractEntityProcessorAction class has been added for common entity processing
@@ -27,6 +30,12 @@ coff:ee v2.10.0 -> v2.11.0 migration description, news, changes
 ==== Migration
 Changes are backwards compatible doesnt need any migration.
 
+=== coffee-rest
+* A new AbstractEvictAction class has been added to allow uniform invocation of classes implementing Evictable for cache clearing purposes
+* AbstractWildflySystemRest and AbstractQuarkusSystemRest have been added as abstract base classes for the SystemRest endpoint on the project
+
+==== Migration
+Changes are backwards compatible doesnt need any migration.
 
 === Hibernate version upgrade
 Hibernate `6.2.13.Final` -> `6.6.1.Final` upgrade (Wildfly 34 support).
