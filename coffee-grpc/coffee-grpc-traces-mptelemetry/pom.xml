@@ -8,11 +8,6 @@
 
   <artifactId>coffee-grpc-traces-mptelemetry</artifactId>
 
-  <properties>
-    <!-- TODO validate the version for gRPC module-->
-    <version.io.opentelemetry.instrumentation>1.29.0-alpha</version.io.opentelemetry.instrumentation>
-  </properties>
-
   <dependencies>
       <dependency>
           <groupId>hu.icellmobilsoft.coffee</groupId>
@@ -29,7 +24,6 @@
       <dependency>
           <groupId>io.opentelemetry.instrumentation</groupId>
           <artifactId>opentelemetry-grpc-1.6</artifactId>
-          <version>${version.io.opentelemetry.instrumentation}</version>
       </dependency>
       <dependency>
           <groupId>org.junit.jupiter</groupId>
