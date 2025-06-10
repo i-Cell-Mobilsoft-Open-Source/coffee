@@ -11,14 +11,20 @@
     <packaging>pom</packaging>
 
     <properties>
-        <version.org.eclipse.microprofile.config>3.0.3</version.org.eclipse.microprofile.config>
+        <version.org.eclipse.microprofile.config>3.1</version.org.eclipse.microprofile.config>
         <version.microprofile-reactive-messaging-api>3.0</version.microprofile-reactive-messaging-api>
         <version.microprofile-reactive-streams-operators-api>3.0</version.microprofile-reactive-streams-operators-api>
         <version.org.eclipse.microprofile.metrics>4.0.1</version.org.eclipse.microprofile.metrics>
-        <version.org.eclipse.microprofile.health>4.0</version.org.eclipse.microprofile.health>
+        <version.org.eclipse.microprofile.health>4.0.1</version.org.eclipse.microprofile.health>
+        <version.org.eclipse.microprofile.openapi>3.1.2</version.org.eclipse.microprofile.openapi>
     </properties>
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>org.eclipse.microprofile.openapi</groupId>
+                <artifactId>microprofile-openapi-api</artifactId>
+                <version>${version.org.eclipse.microprofile.openapi}</version>
+            </dependency>
             <dependency>
                 <groupId>org.eclipse.microprofile.metrics</groupId>
                 <artifactId>microprofile-metrics-api</artifactId>

@@ -13,6 +13,17 @@ coff:ee v2.10.0 -> v2.11.0 migrációs leírás, újdonságok, változások leí
 * httpcomponents-httpclient version bump 4.5.13 -> 4.5.14 
 * httpcomponents-httpcore version bump 4.4.15 -> 4.4.16 
 * eclipse-yasson version bump 3.0.3 -> 3.0.4
+* org.jboss.logging version bump 3.4.3.Final -> 3.6.1.Final (Wildfly 34 támogatás)
+* org.jboss.resteasy version bump 6.2.1.Final -> 6.2.11.Final (Wildfly 34 támogatás)
+* io.micrometer version bump 1.9.13 -> 1.12.4 (Wildfly 34 támogatás)
+* jakarta jaxb-api version bump 4.0.0 -> 4.0.2 (Wildfly 34 támogatás)
+* jakarta activation-api version bump 2.1.0 -> 2.1.3 (Wildfly 34 támogatás)
+* org.eclipse.microprofile version bump 5.0 -> 6.1 (Wildfly 34 támogatás)
+** microprofile-config version bump 3.0.3 -> 3.1 (nincs inkompatibilis változás)
+** microprofile-health version bump 4.0 -> 4.0.1
+** microprofile-openapi version bump 3.0 -> 3.1.2 (nincs inkompatibilis változás)
+** microprofile-metrics-t meghagytuk 4.0-s verzión, mivel az 5.1 sok mindent törne, de újabb wf és quarkus verziókban már micrometer lesz használva
+* io.opentelemetry version bump 1.20.0 -> 1.29.0 (Wildfly 34 támogatás)
 
 === coffee-tool
 * GZipUtil kapott néhány új metódust a kisebb memóriahasználatért, valamint DTO/JSON tömörítésre

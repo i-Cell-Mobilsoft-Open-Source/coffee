@@ -15,6 +15,8 @@
         <version.com.google.api.grpc.proto-google-common-protos>2.56.0</version.com.google.api.grpc.proto-google-common-protos>
         <!-- io grpc: sync with jetcd driver && coffee-dto-stub-gen/pom.xml -->
         <version.io.grpc>1.70.0</version.io.grpc>
+        <!-- wildfly 34 grpc instrumentation support-->
+        <version.io.opentelemetry.instrumentation>1.29.0-alpha</version.io.opentelemetry.instrumentation>
     </properties>
 
     <dependencyManagement>
@@ -29,6 +31,11 @@
                 <groupId>com.google.api.grpc</groupId>
                 <artifactId>proto-google-common-protos</artifactId>
                 <version>${version.com.google.api.grpc.proto-google-common-protos}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.opentelemetry.instrumentation</groupId>
+                <artifactId>opentelemetry-grpc-1.6</artifactId>
+                <version>${version.io.opentelemetry.instrumentation}</version>
             </dependency>
 
             <!-- Other bom imports -->
