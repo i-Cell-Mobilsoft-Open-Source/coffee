@@ -139,7 +139,7 @@
             <id>protoc-java-gen-with-downloaded-artifact</id>
             <activation>
                 <os>
-                    <arch>x86_64</arch>
+                    <arch>!aarch64</arch>
                 </os>
             </activation>
             <build>
