@@ -4,7 +4,7 @@
     <parent>
         <groupId>hu.icellmobilsoft.coffee</groupId>
         <artifactId>coffee</artifactId>
-        <version>2.11.0</version>
+        <version>2.11.1-SNAPSHOT</version>
     </parent>
 
     <artifactId>coffee-quarkus-extensions</artifactId>
