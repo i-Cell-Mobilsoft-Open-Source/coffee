@@ -215,7 +215,17 @@
             </dependency>
             <dependency>
                 <groupId>hu.icellmobilsoft.coffee</groupId>
-                <artifactId>coffee-module-configdoc</artifactId>
+                <artifactId>coffee-module-docgen-common</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>hu.icellmobilsoft.coffee</groupId>
+                <artifactId>coffee-module-docgen-config</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>hu.icellmobilsoft.coffee</groupId>
+                <artifactId>coffee-module-docgen-sqlcatalog</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

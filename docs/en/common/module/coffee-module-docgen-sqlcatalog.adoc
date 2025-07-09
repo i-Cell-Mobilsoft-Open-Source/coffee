@@ -1,0 +1,69 @@
+ifndef::imagesdir[:imagesdir: ../../pic]
+
+[#common_module_coffee-module-docgen-sqlcatalog]
+= coffee-module-docgen-sqlcatalog
+
+The purpose of this module is to generate sql catalog from repository classes
+
+== Usage
+
+To use it, the sub-dependency must be added to `pom.xml`:
+[source,xml]
+----
+<dependency>.
+    <groupId>hu.icellmobilsoft.coffee</groupId>
+    <artifactId>coffee-module-docgen-sqlcatalog</artifactId>
+</dependency>
+----
+
+=== SQL catalog
+SQL catalog will be generated based on the repository methods which are annotated with the `@Query` annotation.
+
+By default, the generated asciidoc will be included in the `.jar` file at compile time as `META-INF/sql_catalog.adoc`.
+The SQL catalog is display in one table which contains repository class name, method name, query in jpql format and an optional comment.
+
+==== Example
+
+[source,java]
+----
+@Repository
+public interface ExampleRepository {
+
+    @Query("SELECT o From Object o WHERE o.id = :id")
+    Object findById(String id);
+
+    @Query(value = "SELECT o From Object o WHERE o.name = :name", hints = { @QueryHint(name = HibernateHints.HINT_COMMENT, value = "EXAMPLE-ID"),
+            @QueryHint(name = HibernateHints.HINT_READ_ONLY, value = true + "") })
+    Object findByName(String name);
+}
+----
+
+.The result of the above example code
+image::coffee-module-docgen-sqlcatalog-example.png[]
+
+== Configuration
+
+Since the generation uses an annotation processor, it can be configured at compile time with `-A`.
+This can be specified via `maven-compiler-plugin` for maven:
+
+.example pom.xml
+[source,xml]
+----
+<build>
+    <plugins>
+        <plugin>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <configuration>
+                <compilerArgs>
+                    <arg>-Acoffee.docgen.sql.catalog.outputDir=${project.basedir}/../docs/</arg> #<1>
+                    <arg>-Acoffee.docgen.sql.catalog.outputFileName=${project.name}_sql_catalog.adoc</arg> #<2>
+                    <arg>-Acoffee.docgen.sql.catalog.outputToClassPath=false</arg> #<3>
+                </compilerArgs>
+            </configuration>
+        </plugin>
+    </plugins>
+</build>
+----
+<1> The folder where the generated file will be placed. Default: `META-INF/`
+<2> Name of the generated file. Default: `sql_catalog.adoc`
+<3> Whether the generated file should be put on the classpath, i.e. whether we want it to be included in the generated jar file. Default: `true`

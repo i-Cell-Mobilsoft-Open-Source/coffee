@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>hu.icellmobilsoft.coffee</groupId>
+        <artifactId>coffee-module</artifactId>
+        <version>2.12.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>coffee-module-docgen</artifactId>
+    <packaging>pom</packaging>
+    <modules>
+        <module>coffee-module-docgen-common</module>
+        <module>coffee-module-docgen-config</module>
+        <module>coffee-module-docgen-sqlcatalog</module>
+    </modules>
+
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>hu.icellmobilsoft.coffee</groupId>
+                <artifactId>coffee-bom-all</artifactId>
+                <version>${project.version}</version>
+                <scope>import</scope>
+                <type>pom</type>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+</project>
