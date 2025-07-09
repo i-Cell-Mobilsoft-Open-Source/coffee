@@ -38,6 +38,13 @@ import hu.icellmobilsoft.coffee.module.docgen.sqlcatalog.data.SqlCatalogData;
  */
 public class SqlCatalogAsciiDocWriter implements IDocWriter<SqlCatalogData> {
 
+    /**
+     * Creates a new sql catalog asciidoc writer
+     */
+    public SqlCatalogAsciiDocWriter() {
+        super();
+    }
+
     @Override
     public void write(List<SqlCatalogData> dataList, Writer writer) throws IOException {
         AsciiDocWriter asciiDocWriter = new AsciiDocWriter(writer);
