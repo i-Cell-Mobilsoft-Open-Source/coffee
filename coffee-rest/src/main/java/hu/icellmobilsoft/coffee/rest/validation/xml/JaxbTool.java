@@ -218,12 +218,12 @@ public class JaxbTool {
         IXsdHelper xsdHelper = null;
         IXsdValidationErrorCollector errorCollector = null;
         try {
+            errorCollectorInstance = CDI.current().select(IXsdValidationErrorCollector.class);
+            errorCollector = createDependentCDIInstance(errorCollectorInstance);
             xsdHelperInstance = CDI.current().select(IXsdHelper.class);
             xsdHelper = createDependentCDIInstance(xsdHelperInstance);
             JAXBContext jaxbContext = xsdHelper.getJAXBContext(type);
             Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
-            errorCollectorInstance = CDI.current().select(IXsdValidationErrorCollector.class);
-            errorCollector = createDependentCDIInstance(errorCollectorInstance);
             unmarshaller.setEventHandler(errorCollector);
             // if schemaPath is empty -> no validation, only conversion
             if (StringUtils.isNotBlank(schemaPath)) {
