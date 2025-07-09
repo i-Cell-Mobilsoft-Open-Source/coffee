@@ -38,10 +38,22 @@ import hu.icellmobilsoft.coffee.module.docgen.common.config.AbstractDocGenConfig
 /**
  * Abstract annotation processor for generating documentation
  *
+ * @param <C>
+ *            the type of configuration object
+ * @param <D>
+ *            the type of documentation data
  * @author janos.boroczki
  * @since 2.12.0
  */
 public abstract class AbstractDocGenProcessor<C extends AbstractDocGenConfig, D> extends AbstractProcessor {
+
+    /**
+     * Creates the abstract doc gen processor
+     */
+    protected AbstractDocGenProcessor() {
+        super();
+    }
+
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
         C config;
