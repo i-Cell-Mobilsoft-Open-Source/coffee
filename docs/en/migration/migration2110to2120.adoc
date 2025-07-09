@@ -1,0 +1,10 @@
+= v2.11.0 → v2.12.0
+
+coff:ee v2.11.0 -> v2.12.0 migration description, news, changes
+
+=== coffee-rest
+* JaxbTool CDI dependent bean destroy fix
+
+==== Migration
+Changes are backwards compatible doesnt need any migration.
+

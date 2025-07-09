@@ -1,0 +1,10 @@
+= v2.11.0 → v2.12.0
+
+coff:ee v2.11.0 -> v2.12.0 migrációs leírás, újdonságok, változások leírása
+
+=== coffee-rest
+* JaxbTool CDI dependent bean destroy fix
+
+==== Migration
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
