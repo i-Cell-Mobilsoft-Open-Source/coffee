@@ -70,8 +70,8 @@ public class JaxbTool {
 
     private static final String ERR_MSG_TYPE_OR_BINARY_IS_NULL_OR_EMPTY = "type or binary is null or empty!";
 
-    Instance<IXsdResourceResolver> resourceResolverInstance;
-    IXsdResourceResolver resourceResolver;
+    private Instance<IXsdResourceResolver> resourceResolverInstance;
+    private IXsdResourceResolver resourceResolver;
 
     /**
      * Default constructor, constructs a new object.
