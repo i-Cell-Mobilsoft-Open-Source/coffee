@@ -97,7 +97,7 @@ public class AsciiDocWriter {
             if (i > 0) {
                 writer.write(',');
             }
-            writer.write(String.valueOf(columns.get(i).width()));
+            writer.write(columns.get(i).style());
         }
         writer.write("\",options=header,stripes=even]\n|===\n");
 

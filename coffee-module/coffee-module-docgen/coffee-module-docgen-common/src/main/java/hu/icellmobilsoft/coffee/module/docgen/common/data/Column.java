@@ -24,11 +24,11 @@ package hu.icellmobilsoft.coffee.module.docgen.common.data;
  * 
  * @param headerName
  *            header name of the column
- * @param width
- *            width of the column
+ * @param style
+ *            style of the column
  * 
  * @author janos.boroczki
  * @since 2.12.0
  */
-public record Column(String headerName, int width) {
+public record Column(String headerName, String style) {
 }

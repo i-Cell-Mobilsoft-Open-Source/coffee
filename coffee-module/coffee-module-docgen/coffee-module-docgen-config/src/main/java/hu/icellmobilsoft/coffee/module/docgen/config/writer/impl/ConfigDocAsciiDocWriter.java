@@ -121,7 +121,7 @@ public class ConfigDocAsciiDocWriter implements IDocWriter<DocData> {
     }
 
     private List<Column> getColumns() {
-        return Arrays.stream(config.getColumns()).map(col -> new Column(getColumnDisplayName(col), getColumnWidth(col))).toList();
+        return Arrays.stream(config.getColumns()).map(col -> new Column(getColumnDisplayName(col), getColumnStyle(col))).toList();
     }
 
     private List<String> getLineValues(DocData docData) {
@@ -166,17 +166,17 @@ public class ConfigDocAsciiDocWriter implements IDocWriter<DocData> {
         }
     }
 
-    private int getColumnWidth(ConfigDocColumn column) {
+    private String getColumnStyle(ConfigDocColumn column) {
         switch (column) {
         case KEY:
         case SOURCE:
         case DEFAULT_VALUE:
         case SINCE:
-            return 1;
+            return "1";
         case DESCRIPTION:
-            return 3;
+            return "3";
         case FEATURES:
-            return 1;
+            return "1";
         default:
             throw newInvalidColumnException(column);
         }

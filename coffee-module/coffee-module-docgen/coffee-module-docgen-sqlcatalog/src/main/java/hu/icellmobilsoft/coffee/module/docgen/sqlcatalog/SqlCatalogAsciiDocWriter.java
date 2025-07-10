@@ -59,7 +59,7 @@ public class SqlCatalogAsciiDocWriter implements IDocWriter<SqlCatalogData> {
     }
 
     private List<Column> getColumns() {
-        return Arrays.stream(SqlCatalogColumn.values()).map(col -> new Column(this.getHeaderName(col), this.getColumnWidth(col))).toList();
+        return Arrays.stream(SqlCatalogColumn.values()).map(col -> new Column(this.getHeaderName(col), this.getColumnStyle(col))).toList();
     }
 
     private String getHeaderName(SqlCatalogColumn sqlCatalogColumn) {
@@ -71,12 +71,12 @@ public class SqlCatalogAsciiDocWriter implements IDocWriter<SqlCatalogData> {
         };
     }
 
-    private int getColumnWidth(SqlCatalogColumn column) {
+    private String getColumnStyle(SqlCatalogColumn column) {
         return switch (column) {
-            case CLASS_NAME -> 1;
-            case METHOD_NAME -> 1;
-            case JPQL -> 3;
-            case COMMENT -> 1;
+            case CLASS_NAME -> "1";
+            case METHOD_NAME -> "1";
+            case JPQL -> "3a";
+            case COMMENT -> "1";
         };
     }
 
@@ -88,7 +88,7 @@ public class SqlCatalogAsciiDocWriter implements IDocWriter<SqlCatalogData> {
         return switch (sqlCatalogColumn) {
             case CLASS_NAME -> data.className();
             case METHOD_NAME -> data.methodName();
-            case JPQL -> data.jpql();
+            case JPQL -> "\n[source,sql]\n----\n" + data.jpql() + "\n----\n";
             case COMMENT -> data.comment();
         };
     }
