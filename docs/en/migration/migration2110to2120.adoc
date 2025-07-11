@@ -8,3 +8,73 @@ coff:ee v2.11.0 -> v2.12.0 migration description, news, changes
 ==== Migration
 Changes are backwards compatible doesnt need any migration.
 
+=== coffee-module-docgen
+
+* A new `coffee-module-docgen` pom module has been added for containing modules for generating documentation
+** `coffee-module-configdoc`
+*** Renamed to `coffee-module-docgen-config` and moved in `coffe-module-docgen`
+*** Some class renames are also occurred
+** General documentation generation functionality extracted to a new `coffee-module-docgen-common` module
+** A new `coffee-module-docgen-sqlcatalog` module has been added for generating sql catalog
+
+=== Migration
+
+Change maven dependency from
+----
+<dependency>
+    <groupId>hu.icellmobilsoft.coffee</groupId>
+    <artifactId>coffee-module-configdoc</artifactId>
+</dependency>
+----
+to
+----
+<dependency>
+    <groupId>hu.icellmobilsoft.coffee</groupId>
+    <artifactId>coffee-module-docgen-config</artifactId>
+</dependency>
+----
+
+---
+
+Change `maven-compiler-plugin` compilerArgs from
+----
+<compilerArgs>
+    <arg>-Acoffee.configDoc.outputDir=${outputDir}</arg>
+    <arg>-Acoffee.configDoc.outputFileName=${outputFileName}</arg>
+    <arg>-Acoffee.configDoc.outputToClassPath=${outputToClassPath}</arg>
+    <arg>-Acoffee.configDoc.dynamicOutputFileName=${dynamicOutputFileName}</arg>
+    <arg>-Acoffee.configDoc.columns=${columns}</arg>
+</compilerArgs>
+----
+
+to
+
+----
+<compilerArgs>
+    <arg>-Acoffee.docgen.config.outputDir=${outputDir}</arg>
+    <arg>-Acoffee.docgen.config.outputFileName=${outputFileName}</arg>
+    <arg>-Acoffee.docgen.config.outputToClassPath=${outputToClassPath}</arg>
+    <arg>-Acoffee.docgen.config.dynamicOutputFileName=${dynamicOutputFileName}</arg>
+    <arg>-Acoffee.docgen.config.columns=${columns}</arg>
+</compilerArgs>
+----
+
+---
+
+As a result of the move and renames, if these classes are also used on the usage project, the imports must be updated:
+
+* `hu.icellmobilsoft.coffee.module.configdoc.ConfigDoc` -> `hu.icellmobilsoft.coffee.module.docgen.config.ConfigDoc`
+* `hu.icellmobilsoft.coffee.module.configdoc.writer.impl.AsciiDocWriter` -> `hu.icellmobilsoft.coffee.module.docgen.config.writer.impl.ConfigDocAsciiDocWriter`
+* `hu.icellmobilsoft.coffee.module.configdoc.config.ConfigDocColumn` -> `hu.icellmobilsoft.coffee.module.docgen.config.config.ConfigDocColumn`
+* `hu.icellmobilsoft.coffee.module.configdoc.config.ConfigDocConfig` -> `hu.icellmobilsoft.coffee.module.docgen.config.config.ConfigDocConfig`
+* `hu.icellmobilsoft.coffee.module.configdoc.processor.ConfigDocProcessor` -> `hu.icellmobilsoft.coffee.module.docgen.config.processor.ConfigDocProcessor`
+* `hu.icellmobilsoft.coffee.module.configdoc.processor.ConfigDocVisitor` -> `hu.icellmobilsoft.coffee.module.docgen.config.processor.ConfigDocVisitor`
+* `hu.icellmobilsoft.coffee.module.configdoc.data.DocData` -> `hu.icellmobilsoft.coffee.module.docgen.config.data.DocData`
+* `hu.icellmobilsoft.coffee.module.configdoc.writer.impl.DynamicAsciiDocWriter` -> `hu.icellmobilsoft.coffee.module.docgen.config.writer.impl.DynamicAsciiDocWriter`
+* `hu.icellmobilsoft.coffee.module.configdoc.DynamicConfigDocs` -> `hu.icellmobilsoft.coffee.module.docgen.config.DynamicConfigDocs`
+*  `hu.icellmobilsoft.coffee.module.configdoc.processor.DynamicConfigDocsProcessor` -> `hu.icellmobilsoft.coffee.module.docgen.config.processor.DynamicConfigDocsProcessor`
+* `hu.icellmobilsoft.coffee.module.configdoc.processor.DynamicConfigDocsVisitor` -> `hu.icellmobilsoft.coffee.module.docgen.config.processor.DynamicConfigDocsVisitor`
+* `hu.icellmobilsoft.coffee.module.configdoc.DynamicConfigTemplate` -> `hu.icellmobilsoft.coffee.module.docgen.config.DynamicConfigTemplate`
+* `hu.icellmobilsoft.coffee.module.configdoc.processor.DynamicConfigTemplateProcessor` -> `hu.icellmobilsoft.coffee.module.docgen.config.processor.DynamicConfigTemplateProcessor`
+* `hu.icellmobilsoft.coffee.module.configdoc.data.DynamicDocData` -> `hu.icellmobilsoft.coffee.module.docgen.config.data.DynamicDocData`
+* `hu.icellmobilsoft.coffee.module.configdoc.writer.IDocWriter` -> `hu.icellmobilsoft.coffee.module.docgen.common.writer.IDocWriter`

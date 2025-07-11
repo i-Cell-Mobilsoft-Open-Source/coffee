@@ -1,0 +1,222 @@
+ifndef::imagesdir[:imagesdir: ../../pic]
+
+[#common_module_coffee-module-docgen-config]
+= coffee-module-docgen-config
+
+A modul célja, hogy a konfigurációs kulcsokat tartalmazó osztályokból dokumentációt generáljon
+
+== Használata
+
+Használatához az alabbi függőséget kell hozzáadni a `pom.xml`-hez:
+[source,xml]
+----
+<dependency>
+    <groupId>hu.icellmobilsoft.coffee</groupId>
+    <artifactId>coffee-module-docgen-config</artifactId>
+</dependency>
+----
+
+=== Statikus konfigurációs kulcsok esetén
+Ez után a konfigurációs kulcsokat tartalmazó osztályokat kell felannotálni a `@ConfigDoc` annotációval.
+
+Ha ezzel megvagyunk alapértelmezetten a fordításkor az elkészült `.jar` fájlba bekerül a generált asciidoc a `META-INF/config_keys.adoc` néven.
+A kulcsok az első pont karakter előtti prefix szerint külön táblázatokban jelennek meg.
+
+==== Példa
+
+[source,java]
+----
+@ConfigDoc // <1>
+public interface ConfigDocExample {
+
+    /**
+     * test prefix
+     */
+    @ConfigDoc(exclude = true) // <2>
+    String PREFIX = "test.";
+
+    /**
+     * test2
+     */
+    String test2 = "test2.xxx";
+
+    /**
+     * Lorem ipsum dolor sit amet, consectetur adipisicing elit. Illo, placeat!
+     */
+    String foo = PREFIX + "foo";
+
+    /**
+     * Lorem ipsum dolor sit amet, consectetur adipisicing elit. Iusto, sapiente?
+     */
+    @ConfigDoc(description = "Override...") // <3>
+    String bar = PREFIX + "bar";
+
+    /**
+     * Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsam, similique?
+     * @since 3.14159 // <4>
+     */
+    @ConfigDoc(defaultValue = "5000") // <5>
+    String baz = PREFIX + "baz";
+
+    /**
+     * Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsam, similique?
+     *
+     * @since 3.14159
+     */
+    @ConfigDoc(defaultValue = "999", isStartupParam = true, isRuntimeOverridable = true) // <6>
+    String features = PREFIX + "features";
+
+    /**
+     * Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsam, similique?
+     *
+     * @since 3.14159
+     */
+    @ConfigDoc(defaultValue = "1234", title = "Title Test") // <7>
+    String titleTest = PREFIX + "title";
+
+    /**
+     * Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsam, similique?
+     *
+     * @since 3.14159
+     */
+    @ConfigDoc(defaultValue = "1234", title = "Title Test", titleHeadingLevel = 1) // <8>
+    String titleHeadingLevelTest = PREFIX + "titleHeadingLevelTest";
+}
+----
+<1> A generálást egy osztályon a `@ConfigDoc` annotációval aktiváljuk
+<2> Az `exclude` mezővel ki lehet hagyni a generálásból mezőket
+<3> Alapértelmezetten a javadoc leírás kerül a generált fájlba, amit felül lehet írni az annotáció `description` mezőjével
+<4> A generált táblázat `since` oszlopa kinyerhető a `@since` javadoc tag-ből
+<5> A konfighoz tartozó default érték is megadható
+<6> Az `isStartupParam`-al jelölhető, hogy indítás idejű a paraméter.
+Az `isRuntimeOverridable`-el jelölhető, hogy futás időben manipulálható a paraméter.
+A két paraméter a `Features` oszlop alatt fog megjelenni emotikonokkal reprezentálva:
+** `isStartupParam` true esetén az emotikon: 🚀
+** `isRuntimeOverridable` true esetén az emotikon: ⏳
+<7> A `title` paraméterrel felülírhatjuk az alapértelmezett generált táblázat címét(opcionális)
+<8> A `titleHeadingLevel` paraméterrel állíthatjuk a generált táblázat címsorának a szintjét(opcionális).
+Note: Ha több paraméteren is megadjuk ugyanannak a címsrnak a legkisebb értéket fogjuk használni a megadottak közül illetve a [0,5] intervallumon kívüli értékeknél visszatérünk az alapértelmezett 3-as értékre.
+
+.A fenti példa kód eredménye
+image::coffee-module-docgen-config-example1.png[]
+
+=== Dinamikus konfigurációs kulcsok esetén
+A dinamikus kulccsal rendelkező konfigok esetén (pl. redis, mongo db),
+a kulcsokat MessageFormat-nak megfelelő formátumban kell felvenni,
+majd a kulcsokat tartalmazó osztályt kell felannotálni a `@DynamicConfigTemplate` annotációval,
+valamint az osztályt vagy változóit a már ismert `@ConfigDoc` annotációval.
+
+A `@DynamicConfigTemplate`-el felannotált osztályokból, a `@ConfigDoc` annotációnak megfelelő template adoc fog készülni,
+a `META-INF/config-templates` mappába, `fully-qualified-class-name.adoc` néven.
+
+Ezek után a config-hoz tartozó qualifier-t és-vagy injection pontot kell felannotálni a `@DynamicConfigDocs`
+annotációval, amiben templateClass-nak a kulcsokat tartalmazó osztályt kell megadni.
+
+A `@DynamicConfigDocs` annotáció feldolgozásakor mind az injection pont-on, mind a qualifier-en
+definiált értékek felolvasásra kerülnek, az injection pont-ot előnybe részesítve.
+
+Ha ezzel megvagyunk alapértelmezetten a fordításkor az elkészült `.jar` fájlba bekerül a generált asciidoc a `META-INF/dynamic_config_keys.adoc` néven.
+
+==== Példa
+
+.Template osztály
+[source,java]
+----
+@ConfigDoc
+@DynamicConfigTemplate //<1>
+public interface DynamicConfigTemplateExample {
+
+    /**
+     * test prefix
+     */
+    @ConfigDoc(exclude = true) //<2>
+    String PREFIX = "test.";
+
+    /**
+     * Lorem ipsum dolor sit amet, consectetur adipisicing elit. Illo, placeat!
+     */
+    String foo = PREFIX + "{0}.foo"; //<3>
+}
+----
+<1> A template generálást egy osztályon a `@ConfigDoc` és `@DynamicConfigTemplate` annotációval aktiváljuk
+<2> A mezőkőn hazsnálható a `@ConfigDoc` a template elkészítéséhez
+<3> A kulcs változó része MessageFormat-nak megfelelő placeholderekkel
+
+.Qualifier
+[source,java]
+----
+@DynamicConfigDocs( // <1>
+        template = DynamicConfigTemplateExample.class, // <2>
+        title = "Dynamic config {0} config keys", // <3>
+        description = "Dyn configuration keys" // <4>
+)
+public @interface DynamicConfigurationQualifierExample {
+
+    /**
+     * Config key of the desired dynamic configuration
+     *
+     * @return config key
+     */
+    String configKey();
+
+}
+----
+<1> Alapértelmezett értékeket tartalmazó @DynamicConfigDocs annotáció a qualifieren
+<2> A dinamikus konfighoz használni kívánt template
+<3> Alapértelmezett cím a konfignak (placeholder-eket tartalmazhat)
+<4> Alapértelmezett leírás a konfigról (placeholder-eket tartalmazhat)
+
+.Injection point
+[source,java]
+----
+public class DynamicConfigInjectionPointExample {
+
+    @Inject
+    @DynamicConfigDocs(templateVariables = "abc") //<1>
+    @DynamicConfigurationQualifierExample(configKey = "abc")
+    private Object injectedConfig;
+
+    @Inject
+    @DynamicConfigDocs(templateVariables = "xyz", title = "Title override for config key {0}") //<2>
+    @DynamicConfigurationQualifierExample(configKey = "xyz")
+    private Object otherConfig;
+}
+
+----
+<1> A qualifieren található template-be behelyettesíteni kívánt konfig kulcs: `abc`
+<2> Második eltérő kulcsú konfig: `xyz`, felülírt címmel
+
+.A fenti példa kód eredménye
+image::coffee-module-docgen-config-dynamic-example1.png[]
+
+== Konfiguráció
+
+Mivel a generálás annotation processor-t használ, ezért konfigurálni a fordítás során a `-A` kapcsolóval lehet.
+Ezt maven esetén a `maven-compiler-plugin`-on keresztül lehet megadni:
+
+.pom.xml példa
+[source,xml]
+----
+<build>
+    <plugins>
+        <plugin>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <configuration>
+                <compilerArgs>
+                    <arg>-Acoffee.docgen.config.outputDir=${project.basedir}/../docs/</arg> #<1>
+                    <arg>-Acoffee.docgen.config.outputFileName=${project.name}_config.adoc</arg> #<2>
+                    <arg>-Acoffee.docgen.config.outputToClassPath=false</arg> #<3>
+                    <arg>-Acoffee.docgen.config.dynamicOutputFileName=dynamic_${project.name}_config.adoc</arg> #<4>
+                    <arg>-Acoffee.docgen.config.columns=key,since,description</arg> #<5>
+                </compilerArgs>
+            </configuration>
+        </plugin>
+    </plugins>
+</build>
+----
+
+<1> A mappa ahova a generált fájlt rakjuk. Default: `META-INF/`
+<2> A generált fájl neve. Default: `config_keys.adoc`
+<3> A generált fájlt a classpath-ra kell-e rakni, azaz szeretnénk-e, hogy az elkészült jar fájlba bekerüljön. Default: `true`
+<4> A generált fájl neve dinamikus konfigurációkra. Default: `dynamic_config_keys.adoc`
+<5> A generált táblázatban megjelenített oszlopok a megadott sorrendben. Default: `key, source, description, default_value, since` (összes oszlop)

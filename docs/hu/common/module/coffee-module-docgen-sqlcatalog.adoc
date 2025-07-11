@@ -1,0 +1,70 @@
+ifndef::imagesdir[:imagesdir: ../../pic]
+
+[#common_module_coffee-module-docgen-sqlcatalog]
+= coffee-module-docgen-sqlcatalog
+
+A modul célja, hogy a repository osztályokból sql katalógust generáljon
+
+== Usage
+
+Használatához az alabbi függőséget kell hozzáadni a `pom.xml`-hez:
+[source,xml]
+----
+<dependency>.
+    <groupId>hu.icellmobilsoft.coffee</groupId>
+    <artifactId>coffee-module-docgen-sqlcatalog</artifactId>
+</dependency>
+----
+
+=== SQL katalógus
+Az SQL katalógus a `@Query` annotációval ellátott repository metódusokból generálódik.
+
+Alapértelmezetten a fordításkor az elkészült `.jar` fájlba bekerül a generált asciidoc a `META-INF/sql_catalog.adoc` néven.
+Az SQL katalógus egy táblázatban jelenik meg, amely tartalmazza a repository osztály nevét, metódus nevét, a query-t jpql formátumban és egy opcionális kommentet.
+
+==== Példa
+
+[source,java]
+----
+@Repository
+public interface ExampleRepository {
+
+    @Query("SELECT o From Object o WHERE o.id = :id")
+    Object findById(String id);
+
+    @Query(value = "SELECT o From Object o WHERE o.name = :name", hints = { @QueryHint(name = HibernateHints.HINT_COMMENT, value = "EXAMPLE-ID"),
+            @QueryHint(name = HibernateHints.HINT_READ_ONLY, value = true + "") })
+    Object findByName(String name);
+}
+----
+
+.A fenti példa kód eredménye
+image::coffee-module-docgen-sqlcatalog-example.png[]
+
+== Konfiguráció
+
+Mivel a generálás annotation processor-t használ, ezért konfigurálni a fordítás során a `-A` kapcsolóval lehet.
+Ezt maven esetén a `maven-compiler-plugin`-on keresztül lehet megadni:
+
+.pom.xml példa
+[source,xml]
+----
+<build>
+    <plugins>
+        <plugin>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <configuration>
+                <compilerArgs>
+                    <arg>-Acoffee.docgen.sql.catalog.outputDir=${project.basedir}/../docs/</arg> #<1>
+                    <arg>-Acoffee.docgen.sql.catalog.outputFileName=${project.name}_sql_catalog.adoc</arg> #<2>
+                    <arg>-Acoffee.docgen.sql.catalog.outputToClassPath=false</arg> #<3>
+                </compilerArgs>
+            </configuration>
+        </plugin>
+    </plugins>
+</build>
+----
+<1> A mappa ahova a generált fájlt rakjuk. Default: `META-INF/`
+<2> A generált fájl neve. Default: `sql_catalog.adoc`
+<3> A generált fájlt a classpath-ra kell-e rakni, azaz szeretnénk-e, hogy az elkészült jar fájlba bekerüljön. Default: `true`
+
