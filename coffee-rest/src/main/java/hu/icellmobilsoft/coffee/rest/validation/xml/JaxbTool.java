@@ -52,6 +52,7 @@ import hu.icellmobilsoft.coffee.rest.validation.xml.exception.XsdProcessingExcep
 import hu.icellmobilsoft.coffee.rest.validation.xml.utils.IXsdHelper;
 import hu.icellmobilsoft.coffee.rest.validation.xml.utils.IXsdResourceResolver;
 import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
+import hu.icellmobilsoft.coffee.se.api.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.tool.utils.annotation.RangeUtil;
 
 /**
@@ -68,6 +69,9 @@ import hu.icellmobilsoft.coffee.tool.utils.annotation.RangeUtil;
 public class JaxbTool {
 
     private static final String ERR_MSG_TYPE_OR_BINARY_IS_NULL_OR_EMPTY = "type or binary is null or empty!";
+
+    private Instance<IXsdResourceResolver> resourceResolverInstance;
+    private IXsdResourceResolver resourceResolver;
 
     /**
      * Default constructor, constructs a new object.
@@ -209,9 +213,15 @@ public class JaxbTool {
         if (type == null || inputStream == null) {
             throw new InvalidParameterException("type or inputStream is null!");
         }
-        IXsdValidationErrorCollector errorCollector = createCDIInstance(IXsdValidationErrorCollector.class);
+        Instance<IXsdValidationErrorCollector> errorCollectorInstance = null;
+        Instance<IXsdHelper> xsdHelperInstance = null;
+        IXsdHelper xsdHelper = null;
+        IXsdValidationErrorCollector errorCollector = null;
         try {
-            IXsdHelper xsdHelper = createCDIInstance(IXsdHelper.class);
+            errorCollectorInstance = CDI.current().select(IXsdValidationErrorCollector.class);
+            errorCollector = createDependentCDIInstance(errorCollectorInstance);
+            xsdHelperInstance = CDI.current().select(IXsdHelper.class);
+            xsdHelper = createDependentCDIInstance(xsdHelperInstance);
             JAXBContext jaxbContext = xsdHelper.getJAXBContext(type);
             Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
             unmarshaller.setEventHandler(errorCollector);
@@ -229,10 +239,21 @@ public class JaxbTool {
         } catch (UnmarshalException e) {
             // The default parser terminates the process on the first FATAL_ERROR with an exception throw.
             // This behavior can be set using spf.setFeature ("http://apache.org/xml/features/continue-after-fatal-error", true)
-            // You can achieve this behavior using the setFeature method, but it currently meets our needs. However, the errors detected so far must be included in the exception.
+            // You can achieve this behavior using the setFeature method, but it currently meets our needs. However, the errors detected so far must
+            // be included in the exception.
             throw new XsdProcessingException(errorCollector.getErrors(), e);
         } catch (JAXBException | SAXException e) {
             throw new XsdProcessingException(CoffeeFaultType.INVALID_INPUT, e.getLocalizedMessage(), e);
+        } finally {
+            if (xsdHelperInstance != null && xsdHelper != null) {
+                xsdHelperInstance.destroy(xsdHelper);
+            }
+            if (errorCollectorInstance != null && errorCollector != null) {
+                errorCollectorInstance.destroy(errorCollector);
+            }
+            if (resourceResolverInstance != null && resourceResolver != null) {
+                resourceResolverInstance.destroy(resourceResolver);
+            }
         }
     }
 
@@ -350,8 +371,13 @@ public class JaxbTool {
         if (obj == null) {
             throw new InvalidParameterException("obj is null!");
         }
+        Instance<IXsdValidationErrorCollector> errorCollectorInstance = null;
+        Instance<IXsdHelper> xsdHelperInstance = null;
+        IXsdHelper xsdHelper = null;
+        IXsdValidationErrorCollector errorCollector = null;
         try {
-            IXsdHelper xsdHelper = createCDIInstance(IXsdHelper.class);
+            xsdHelperInstance = CDI.current().select(IXsdHelper.class);
+            xsdHelper = createDependentCDIInstance(xsdHelperInstance);
             JAXBContext jaxbContext;
             if (additionalClasses != null && additionalClasses.length != 0) {
                 List<Class<?>> contextClasses = new ArrayList<>(Arrays.asList(additionalClasses));
@@ -366,7 +392,8 @@ public class JaxbTool {
                     marshaller.setProperty(entry.getKey(), entry.getValue());
                 }
             }
-            IXsdValidationErrorCollector errorCollector = createCDIInstance(IXsdValidationErrorCollector.class);
+            errorCollectorInstance = CDI.current().select(IXsdValidationErrorCollector.class);
+            errorCollector = createDependentCDIInstance(errorCollectorInstance);
             marshaller.setEventHandler(errorCollector);
             // if schemaPath is empty -> no validation, only conversion
             if (StringUtils.isNotBlank(schemaPath)) {
@@ -380,6 +407,16 @@ public class JaxbTool {
             return stringWriter.getBuffer().toString();
         } catch (JAXBException | SAXException e) {
             throw new XsdProcessingException(CoffeeFaultType.INVALID_INPUT, e.getMessage(), e);
+        } finally {
+            if (xsdHelperInstance != null && xsdHelper != null) {
+                xsdHelperInstance.destroy(xsdHelper);
+            }
+            if (errorCollectorInstance != null && errorCollector != null) {
+                errorCollectorInstance.destroy(errorCollector);
+            }
+            if (resourceResolverInstance != null && resourceResolver != null) {
+                resourceResolverInstance.destroy(resourceResolver);
+            }
         }
     }
 
@@ -393,12 +430,13 @@ public class JaxbTool {
      * @param schemaPath
      *            Schema path
      * @return Instance of a new {@code LSResourceResolver} implementation
+     * @throws BaseException
+     *             if any CDI error occurs
      */
-    protected LSResourceResolver createLSResourceResolverInstance(String schemaPath) {
-        IXsdResourceResolver resourceResolver = createCDIInstance(IXsdResourceResolver.class);
-
+    protected LSResourceResolver createLSResourceResolverInstance(String schemaPath) throws BaseException {
+        resourceResolverInstance = CDI.current().select(IXsdResourceResolver.class);
+        resourceResolver = createDependentCDIInstance(resourceResolverInstance);
         resourceResolver.setXsdDirPath(schemaPath);
-
         return resourceResolver;
     }
 
@@ -431,16 +469,22 @@ public class JaxbTool {
      *
      * @param <I>
      *            class type
-     * @param type
-     *            class
-     * @return class
+     * @param instance
+     *            the instance to use the destroy later on
+     * @return the resolved bean
+     * @throws BaseException
+     *             if any CDI error occurs
      */
-    protected static <I> I createCDIInstance(Class<I> type) {
-        CDI<Object> cdi = CDI.current();
-        Instance<I> instance = cdi.select(type);
-        I result = instance.get();
-        cdi.destroy(instance);
-
-        return result;
+    protected static <I> I createDependentCDIInstance(Instance<I> instance) throws BaseException {
+        if (instance == null) {
+            throw new TechnicalException(
+                    hu.icellmobilsoft.coffee.se.api.exception.enums.CoffeeFaultType.OPERATION_FAILED,
+                    "CDI instance cannot be null");
+        }
+        if (instance.isResolvable()) {
+            return instance.get();
+        }
+        throw new TechnicalException(hu.icellmobilsoft.coffee.se.api.exception.enums.CoffeeFaultType.OPERATION_FAILED, "Bean not resolvable");
     }
+
 }

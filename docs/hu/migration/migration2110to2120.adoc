@@ -2,6 +2,12 @@
 
 coff:ee v2.11.0 -> v2.12.0 migrációs leírás, újdonságok, változások leírása
 
+=== coffee-rest
+* JaxbTool CDI dependent bean destroy fix
+
+==== Migration
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
 === coffee-module-docgen
 
 * Egy új `coffee-module-docgen` pom modul került bevezetésre, amely a dokumentáció generáláshoz szükséges modulokat fogja össze
@@ -74,4 +80,3 @@ Az átmozgatás és átnevezések eredményeképpen, ha a használó project az 
 * `hu.icellmobilsoft.coffee.module.configdoc.processor.DynamicConfigTemplateProcessor` -> `hu.icellmobilsoft.coffee.module.docgen.config.processor.DynamicConfigTemplateProcessor`
 * `hu.icellmobilsoft.coffee.module.configdoc.data.DynamicDocData` -> `hu.icellmobilsoft.coffee.module.docgen.config.data.DynamicDocData`
 * `hu.icellmobilsoft.coffee.module.configdoc.writer.IDocWriter` -> `hu.icellmobilsoft.coffee.module.docgen.common.writer.IDocWriter`
-

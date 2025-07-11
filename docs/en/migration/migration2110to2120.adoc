@@ -2,6 +2,12 @@
 
 coff:ee v2.11.0 -> v2.12.0 migration description, news, changes
 
+=== coffee-rest
+* JaxbTool CDI dependent bean destroy fix
+
+==== Migration
+Changes are backwards compatible doesnt need any migration.
+
 === coffee-module-docgen
 
 * A new `coffee-module-docgen` pom module has been added for containing modules for generating documentation
