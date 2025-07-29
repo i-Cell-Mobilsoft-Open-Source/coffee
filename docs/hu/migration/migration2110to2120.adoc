@@ -80,3 +80,23 @@ Az átmozgatás és átnevezések eredményeképpen, ha a használó project az 
 * `hu.icellmobilsoft.coffee.module.configdoc.processor.DynamicConfigTemplateProcessor` -> `hu.icellmobilsoft.coffee.module.docgen.config.processor.DynamicConfigTemplateProcessor`
 * `hu.icellmobilsoft.coffee.module.configdoc.data.DynamicDocData` -> `hu.icellmobilsoft.coffee.module.docgen.config.data.DynamicDocData`
 * `hu.icellmobilsoft.coffee.module.configdoc.writer.IDocWriter` -> `hu.icellmobilsoft.coffee.module.docgen.common.writer.IDocWriter`
+
+=== coffee-module-redis
+* Bevezetésre került a redis cluster támogatása a modulban
+** lecserélésre került az injektálható Jedis objektum, UnifiedJedis objektumra
+** kiegészült a `cluster` konfigurációs kulccsal a redis konfiguráció, amelynek értéke egy url vagy egy url lista lehet `$(host):$(port)` formátumban, példa a használatra:
+
+[source,yaml]
+----
+coffee:
+    redis:
+        ...
+        auth:
+            ...
+            cluster:
+              - sample-sandbox.icellmobilsoft.hu:6380
+              - sample-sandbox.icellmobilsoft.hu:6381
+----
+
+==== Migration
+A Jedis objektum lecserélésének erdményeképpen, a használó projektben a kapcsolódó Jedis hivatkozásokat UnifiedJedis-re kell cserélni.

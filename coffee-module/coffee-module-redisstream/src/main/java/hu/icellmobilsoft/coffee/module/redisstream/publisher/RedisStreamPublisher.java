@@ -34,7 +34,6 @@ import org.apache.commons.lang3.StringUtils;
 
 import hu.icellmobilsoft.coffee.dto.common.LogConstants;
 import hu.icellmobilsoft.coffee.dto.exception.InvalidParameterException;
-import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 import hu.icellmobilsoft.coffee.module.redis.manager.RedisManager;
 import hu.icellmobilsoft.coffee.module.redis.manager.RedisManagerConnection;
@@ -44,12 +43,14 @@ import hu.icellmobilsoft.coffee.module.redisstream.config.StreamGroupConfig;
 import hu.icellmobilsoft.coffee.module.redisstream.config.StreamMessageParameter;
 import hu.icellmobilsoft.coffee.module.redisstream.service.RedisStreamService;
 import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
+import hu.icellmobilsoft.coffee.se.api.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
 import hu.icellmobilsoft.coffee.se.logging.mdc.MDC;
-import redis.clients.jedis.Jedis;
+import redis.clients.jedis.AbstractPipeline;
 import redis.clients.jedis.Pipeline;
 import redis.clients.jedis.Response;
 import redis.clients.jedis.StreamEntryID;
+import redis.clients.jedis.UnifiedJedis;
 import redis.clients.jedis.params.XAddParams;
 
 /**
@@ -230,7 +231,7 @@ public class RedisStreamPublisher {
 
         try (RedisManagerConnection ignored = redisManager.initConnection()) {
             List<Response<StreamEntryID>> responses = new ArrayList<>(publications.size());
-            Pipeline pipeline = initPipeline();
+            AbstractPipeline pipeline = initPipeline();
             int i = 1;
             for (RedisStreamPublication publication : publications) {
                 Response<StreamEntryID> response;
@@ -438,7 +439,7 @@ public class RedisStreamPublisher {
     protected List<Optional<StreamEntryID>> publishPipelinedInActiveConnection(String streamGroup, List<String> streamMessages,
             Map<String, String> parameters) throws BaseException {
 
-        Pipeline pipeline = initPipeline();
+        AbstractPipeline pipeline = initPipeline();
 
         int i = 1;
         List<Response<StreamEntryID>> responses = new ArrayList<>(streamMessages.size());
@@ -518,7 +519,7 @@ public class RedisStreamPublisher {
      */
     protected Optional<StreamEntryID> publishInActiveConnection(Map<String, String> values, String streamGroup) throws BaseException {
         XAddParams params = getXAddParams();
-        Optional<StreamEntryID> streamEntryID = redisManager.run(Jedis::xadd, "xadd", RedisStreamUtil.streamKey(streamGroup), values, params);
+        Optional<StreamEntryID> streamEntryID = redisManager.run(UnifiedJedis::xadd, "xadd", RedisStreamUtil.streamKey(streamGroup), values, params);
         if (log.isTraceEnabled()) {
             log.trace("Published streamEntryID: [{0}] into [{1}]", streamEntryID, RedisStreamUtil.streamKey(streamGroup));
         }
@@ -615,8 +616,8 @@ public class RedisStreamPublisher {
      * @throws BaseException
      *             if any error occurred while creating pipeline
      */
-    protected Pipeline initPipeline() throws BaseException {
-        return redisManager.run(Jedis::pipelined, "pipelined")
+    protected AbstractPipeline initPipeline() throws BaseException {
+        return redisManager.run(UnifiedJedis::pipelined, "pipelined")
                 .orElseThrow(() -> new BaseException(CoffeeFaultType.REDIS_OPERATION_FAILED, "Error occurred while creating pipeline"));
     }
 
@@ -632,7 +633,7 @@ public class RedisStreamPublisher {
      *
      * @return {@link Pipeline#xadd(String, Map, XAddParams)} response
      */
-    protected Response<StreamEntryID> publishThroughPipeline(Pipeline pipeline, String streamGroup, Map<String, String> jedisMessage) {
+    protected Response<StreamEntryID> publishThroughPipeline(AbstractPipeline pipeline, String streamGroup, Map<String, String> jedisMessage) {
         return pipeline.xadd(RedisStreamUtil.streamKey(streamGroup), jedisMessage, getXAddParams());
     }
 
@@ -669,9 +670,9 @@ public class RedisStreamPublisher {
      * @return The number of sent messages increased
      * 
      */
-    protected int syncPipelineIfNeeded(Pipeline pipeline, int messagesToSend, int messagesSent) {
+    protected int syncPipelineIfNeeded(AbstractPipeline pipeline, int messagesToSend, int messagesSent) {
         if ((messagesSent < messagesToSend && messagesSent % getPipelineSize() == 0)
-                || (messagesSent == messagesToSend && pipeline.hasPipelinedResponse())) {
+                || messagesSent == messagesToSend) {
             pipeline.sync();
         }
         messagesSent++;
@@ -697,6 +698,6 @@ public class RedisStreamPublisher {
     }
 
     private TechnicalException notInitializedException() {
-        return new TechnicalException("RedisStreamHandler is not initialized!");
+        return new TechnicalException(CoffeeFaultType.REPOSITORY_FAILED, "RedisStreamHandler is not initialized!");
     }
 }

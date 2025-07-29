@@ -78,3 +78,23 @@ As a result of the move and renames, if these classes are also used on the usage
 * `hu.icellmobilsoft.coffee.module.configdoc.processor.DynamicConfigTemplateProcessor` -> `hu.icellmobilsoft.coffee.module.docgen.config.processor.DynamicConfigTemplateProcessor`
 * `hu.icellmobilsoft.coffee.module.configdoc.data.DynamicDocData` -> `hu.icellmobilsoft.coffee.module.docgen.config.data.DynamicDocData`
 * `hu.icellmobilsoft.coffee.module.configdoc.writer.IDocWriter` -> `hu.icellmobilsoft.coffee.module.docgen.common.writer.IDocWriter`
+
+=== coffee-module-redis
+* Redis cluster support has been added to module
+** injectable Jedis object is replaced to UnifiedJedis object
+** `cluster` configuration key has been added to redis configuration, which contains an url or url list in `$(host):$(port)` format, example:
+
+[source,yaml]
+----
+coffee:
+    redis:
+        ...
+        auth:
+            ...
+            cluster:
+              - sample-sandbox.icellmobilsoft.hu:6380
+              - sample-sandbox.icellmobilsoft.hu:6381
+----
+
+==== Migration
+As the result of replacing Jedis object, in the usage project must update Jedis usages to UnifiedJedis.

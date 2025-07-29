@@ -21,6 +21,7 @@ package hu.icellmobilsoft.coffee.module.redis.health;
 
 import java.text.MessageFormat;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 import jakarta.enterprise.context.ApplicationScoped;
 
@@ -31,12 +32,11 @@ import org.eclipse.microprofile.health.HealthCheckResponseBuilder;
 import hu.icellmobilsoft.coffee.cdi.health.constants.HealthConstant;
 import hu.icellmobilsoft.coffee.dto.exception.InvalidParameterException;
 import hu.icellmobilsoft.coffee.module.redis.config.ManagedRedisConfig;
+import hu.icellmobilsoft.coffee.module.redis.factory.UnifiedJedisFactory;
 import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
 import hu.icellmobilsoft.coffee.tool.utils.health.HealthUtil;
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPool;
-import redis.clients.jedis.JedisPoolConfig;
+import redis.clients.jedis.UnifiedJedis;
 
 /**
  * To support microprofile-health mechanics, this class can check whether the redis is reachable within a given timeout.
@@ -94,16 +94,10 @@ public class RedisHealth {
         builder.withData(HealthConstant.Common.NODE_NAME, HealthUtil.getNodeId(nodeId));
         builder.withData(HealthConstant.Common.URL, createUrl(managedRedisConfig));
 
-        String host = managedRedisConfig.getHost();
-        int port = managedRedisConfig.getPort();
-        int database = managedRedisConfig.getDatabase();
-
         // we shouldnt wait more than 1 sec, because the probe will get timout before the check finishes
         int timeout = (int) TimeUnit.MILLISECONDS.convert(HealthConstant.Common.DEFAULT_CONNECT_TIMEOUT_SEC, TimeUnit.SECONDS);
 
-        JedisPoolConfig poolConfig = new JedisPoolConfig();
-        try (JedisPool jedisPool = new JedisPool(poolConfig, host, port, timeout, managedRedisConfig.getPassword(), database);
-                Jedis jedis = jedisPool.getResource()) {
+        try (UnifiedJedis jedis = UnifiedJedisFactory.create(managedRedisConfig, timeout)) {
             jedis.ping();
             builder.up();
             return builder.build();
@@ -131,7 +125,15 @@ public class RedisHealth {
         if (managedRedisConfig == null) {
             throw new IllegalArgumentException("ManagedRedisConfig is null!");
         }
-        return managedRedisConfig.getHost() + ":" + managedRedisConfig.getPort() + "/" + managedRedisConfig.getDatabase();
+
+        if (managedRedisConfig.getClusterHostAndPortSet().isEmpty()) {
+            return managedRedisConfig.getHost() + ":" + managedRedisConfig.getPort() + "/" + managedRedisConfig.getDatabase();
+        }
+
+        return managedRedisConfig.getClusterHostAndPortSet()
+                .stream()
+                .map(hap -> hap.toString() + "/" + managedRedisConfig.getDatabase())
+                .collect(Collectors.joining(",\n", "[", "]"));
     }
 
 }

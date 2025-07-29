@@ -39,9 +39,9 @@ import hu.icellmobilsoft.coffee.module.redisstream.consumer.RedisStreamConsumerE
 import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
 import hu.icellmobilsoft.coffee.se.function.BaseExceptionFunction2;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.Pipeline;
+import redis.clients.jedis.AbstractPipeline;
 import redis.clients.jedis.Response;
+import redis.clients.jedis.UnifiedJedis;
 import redis.clients.jedis.args.ListDirection;
 import redis.clients.jedis.resps.StreamEntry;
 
@@ -109,7 +109,7 @@ public abstract class AbstractRedisStreamPipeConsumerExecutor extends RedisStrea
     }
 
     private Optional<String> move(RedisManager redisManager, String listKey, ListDirection from, ListDirection to) throws BaseException {
-        Pipeline pipeline = redisManager.run(Jedis::pipelined, "pipelined move").orElseThrow();
+        AbstractPipeline pipeline = redisManager.run(UnifiedJedis::pipelined, "pipelined move").orElseThrow();
         Response<String> res = pipeline.lmove(listKey, listKey, from, to);
         pipeline.expire(listKey, getTtl());
         pipeline.sync();
@@ -150,7 +150,7 @@ public abstract class AbstractRedisStreamPipeConsumerExecutor extends RedisStrea
         } finally {
             // We started by moving the element to the end of the FIFO (or LIFO), so it must be removed;
             // otherwise, it would result in an infinite loop.
-            redisManager.run(Jedis::lrem, "lrem", listKey, 0, message);
+            redisManager.run(UnifiedJedis::lrem, "lrem", listKey, 0, message);
         }
     }
 
@@ -165,7 +165,7 @@ public abstract class AbstractRedisStreamPipeConsumerExecutor extends RedisStrea
     }
 
     private Optional<String> getPipeIdValue(RedisManager redisManager, String listKey) throws BaseException {
-        return redisManager.run(Jedis::get, "get", IRedisStreamConstant.Pipe.ID_PRE + listKey + "}");
+        return redisManager.run(UnifiedJedis::get, "get", IRedisStreamConstant.Pipe.ID_PRE + listKey + "}");
     }
 
     private boolean hasPipeIdValueChanged(String listKey, RedisManager redisManager, Optional<String> originPipeIdValue) throws BaseException {

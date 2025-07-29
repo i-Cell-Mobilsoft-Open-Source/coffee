@@ -10,7 +10,7 @@ NOTE: a jelenlegi jedis 5.1.2 verzióval Redis kompatibilitás 6.0.x-ig visszame
 == RedisConnection
 
 Bevezetésre került a `@RedisConnection` qualifier.
-Ennek használatával nincs szükség Redis kapcsolatonként külön definiálni/implementálni a Redis konfigurációt, JedisPool-t, Jedis-t, RedisService -t; CDI-on keresztül mindegyik legyártásra kerül és injectelhetó.
+Ennek használatával nincs szükség Redis kapcsolatonként külön definiálni/implementálni a Redis konfigurációt, UnifiedJedis-t, RedisService -t; CDI-on keresztül mindegyik legyártásra kerül és injectelhetó.
 Konfiguráció yaml-ben:
 
 [source,yaml]
@@ -32,11 +32,14 @@ coffee:
                     maxtotal: 12 #default: 64
                     maxidle: 3 #default: 16
             timeout: 5000 #default: 5000
+            cluster: #<5>
+              - sample-sandbox.icellmobilsoft.hu:6380 #default null
 ----
 <1> A thread-pool.max-threads értékét tartalmazó változó neve, default: MANAGED_EXECUTOR_SERVICE_CORE_THREADS
 <2> A Thread safety buffer értéke amit a thread countok ellenőrzésére használ a BaseConsumerRedisStreamStarter, default 10.
 <3> A redis kapcsolat egyedi azonosítója (configKey). Minden mező opcionális.
 <4> A redis kapcsolaton belül pool egyedi azonosítója (poolConfigKey). Minden mező opcionális.
+<5> Redis cluster használata esetén a cluster node url-ek `$(host):$(port)` formátumban. Cluster esetén kötelező, különben tiltott.
 
 [NOTE]
 ====
@@ -62,11 +65,11 @@ a második esetben a "custom" pool beállításokat.
 
 == RedisManager
 
-Bevezetésre került a `RedisManager` osztály és hozzá tartozó `RedisManagerProducer`. A producer legyártja a RedisManager-t a hívott configKey értékkel, ezzel elérhetővé válik a Jedis kikérése a JedisPool-ból, akkor amikor a redis-en valamilyen műveletet szeretnénk végezni.
-RedisManager feladata hogy összefogja a Jedis funkciók használatát, ami közös logolást, hibakezelést, connection használatot kezel.
-A definiált metódusok Jedis funkciókat várnak amiket lefuttatnak, ez megtehető az initConnection() és closeConnection() használatával, vagy a runWithConnection metódusokon keresztül. Ez a megközelítés lehetővé teszi hogy a Redis kapcsolatok addig legyenek használva amíg szükségesek, így sok erőforrást megspórol a használata.
+Bevezetésre került a `RedisManager` osztály és hozzá tartozó `RedisManagerProducer`. A producer legyártja a RedisManager-t a hívott configKey értékkel, ezzel elérhetővé válik a UnifiedJedis amikor a redis-en valamilyen műveletet szeretnénk végezni.
+RedisManager feladata hogy összefogja a UnifiedJedis funkciók használatát, ami közös logolást, hibakezelést, connection használatot kezel.
+A definiált metódusok UnifiedJedis funkciókat várnak amiket lefuttatnak, ez megtehető az initConnection() és closeConnection() használatával, vagy a runWithConnection metódusokon keresztül. Ez a megközelítés lehetővé teszi hogy a Redis kapcsolatok addig legyenek használva amíg szükségesek, így sok erőforrást megspórol a használata.
 
-Példa több redis művelet használatára. Ez jellemzően set/get kombinálva az expire művelettel. Ilyen esetben nem kérünk a pool-ból feleslegesen Jedis példányt és ha végeztünk be is zárjuk.
+Példa több redis művelet használatára. Ez jellemzően set/get kombinálva az expire művelettel. Ilyen esetben nem kérünk a pool-ból feleslegesen UnifiedJedis példányt és ha végeztünk be is zárjuk.
 
 [source,java]
 ----
@@ -75,12 +78,12 @@ Példa több redis művelet használatára. Ez jellemzően set/get kombinálva a
 private RedisManager redisManager;
 
 try (RedisManagerConnection connection = redisManager.initConnection()) { #<1>
-    redisManager.run(Jedis::set, "set", "key", "value");
-    redisManager.run(Jedis::expire, "expire", "key", 300);
+    redisManager.run(UnifiedJedis::set, "set", "key", "value");
+    redisManager.run(UnifiedJedis::expire, "expire", "key", 300);
 }
 
 ----
-<1> Jedis példány inicializálása amin a műveleteket végezzük, try-with-resource használatával automatán lezárhatjuk
+<1> UnifiedJedis példány inicializálása amin a műveleteket végezzük, try-with-resource használatával automatán lezárhatjuk
 
 Példa egy művelet végrehajtására.
 
@@ -90,7 +93,7 @@ Példa egy művelet végrehajtására.
 @RedisConnection(configKey = "auth")
 private RedisManager redisManager;
 
-redisManager.runWithConnection(Jedis::set, "set", "key", "value"); #<1>
+redisManager.runWithConnection(UnifiedJedis::set, "set", "key", "value"); #<1>
 
 ----
 
@@ -108,7 +111,7 @@ Bővebb leírás a korlátokról: https://redis.io/commands/scan
 
 [source,java]
 ----
-redisManager.runWithConnection(Jedis::hscan, "hscan", "key", 10, 100);
+redisManager.runWithConnection(UnifiedJedis::hscan, "hscan", "key", 10, 100);
 ----
 
 === rpush
@@ -120,7 +123,7 @@ Bővebb leírás: https://redis.io/commands/rpush + https://redis.io/commands/ex
 
 [source,java]
 ----
-redisManager.runWithConnection(Jedis::rpush, "rpush", "key", "element", 100);
+redisManager.runWithConnection(UnifiedJedis::rpush, "rpush", "key", "element", 100);
 ----
 
 === lpop/rpop
@@ -133,8 +136,8 @@ Bővebb leírás a korlátokról: https://redis.io/commands/lpop
 
 [source,java]
 ----
-redisManager.runWithConnection(Jedis::lpop, "lpop", "key"); <1>
-redisManager.runWithConnection(Jedis::rpop, "rpop", "key"); <1>
+redisManager.runWithConnection(UnifiedJedis::lpop, "lpop", "key"); <1>
+redisManager.runWithConnection(UnifiedJedis::rpop, "rpop", "key"); <1>
 ----
 <1> Ha nem talál értéket akkor `Optional.empty()`
 
@@ -151,9 +154,9 @@ Bővebb leírás: https://redis.io/commands/lmove + https://redis.io/commands/ex
 [source,java]
 ----
 // sourceListKey elejéről a destinationListKey lista végére
-redisManager.runWithConnection(Jedis::lmove, "lmove", "sourceListKey", "destinationListKey", ListDirection.LEFT, ListDirection.RIGHT);
+redisManager.runWithConnection(UnifiedJedis::lmove, "lmove", "sourceListKey", "destinationListKey", ListDirection.LEFT, ListDirection.RIGHT);
 // végéről az elejére
-redisManager.runWithConnection(Jedis::lmove, "lmove", "sourceListKey", "sourceListKey", ListDirection.RIGHT, ListDirection.LEFT);
+redisManager.runWithConnection(UnifiedJedis::lmove, "lmove", "sourceListKey", "sourceListKey", ListDirection.RIGHT, ListDirection.LEFT);
 ----
 
 === removeValueFromList
@@ -163,7 +166,7 @@ Bővebb leírás: https://redis.io/commands/lrem
 
 [source,java]
 ----
-redisManager.runWithConnection(Jedis::lrem, "removeValueFromList", listKey, 0, "removeValue");
+redisManager.runWithConnection(UnifiedJedis::lrem, "removeValueFromList", listKey, 0, "removeValue");
 ----
 
 == microprofile-health támogatás
@@ -199,7 +202,7 @@ public class RedisHealthCheck {
 [#coffee_module_redis-metrics]
 == microprofile-metrics támogatás
 
-A *JedisConnectionProducer* metrikát szolgáltat a Jedis pool használatáról.
+A *UnifiedJedisProducer* metrikát szolgáltat a UnifiedJedis-hez tartozó pool használatáról.
 
 .metrics minta
 [source,java]

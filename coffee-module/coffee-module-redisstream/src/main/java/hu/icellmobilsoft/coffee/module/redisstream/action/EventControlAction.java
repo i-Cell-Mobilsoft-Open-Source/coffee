@@ -41,8 +41,8 @@ import hu.icellmobilsoft.coffee.module.redisstream.publisher.RedisStreamPublishe
 import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
 import hu.icellmobilsoft.coffee.se.util.string.RandomUtil;
 import hu.icellmobilsoft.coffee.tool.utils.json.JsonUtil;
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.Pipeline;
+import redis.clients.jedis.AbstractPipeline;
+import redis.clients.jedis.UnifiedJedis;
 import redis.clients.jedis.args.ExpiryOption;
 
 /**
@@ -118,12 +118,12 @@ public abstract class EventControlAction<T> {
         try {
             redisManager.initConnection();
 
-            Optional<Long> size = redisManager.run(Jedis::rpush, "rpush", key, JsonUtil.toJson(eventMessage));
+            Optional<Long> size = redisManager.run(UnifiedJedis::rpush, "rpush", key, JsonUtil.toJson(eventMessage));
             log.trace("<< rpush to [{0}]: [{1}]", key, size);
             if (size.isPresent() && size.get() > 1) {
                 // If we are not going to publish, we increase the TTL of the pipe identifier key,
                 // so we know there are no new list items that
-                Pipeline pipeline = redisManager.run(Jedis::pipelined, "pipelined serialStreamEvent expire").orElseThrow();
+                AbstractPipeline pipeline = redisManager.run(UnifiedJedis::pipelined, "pipelined serialStreamEvent expire").orElseThrow();
                 pipeline.expire(createPipeIdKey(key), secondsToExpire);
                 pipeline.expire(key, secondsToExpire, ExpiryOption.NX);
                 pipeline.sync();
@@ -133,7 +133,7 @@ public abstract class EventControlAction<T> {
             // If the list has exactly one element after the rpush operation, we create or update the unique key used by the pipe consumer.
             // This identifier ensures that the pipe consumer can decide whether to continue the processing loop or stop,
             // as a new event is expected to arrive.
-            Pipeline pipeline = redisManager.run(Jedis::pipelined, "pipelined serialStreamEvent setex").orElseThrow();
+            AbstractPipeline pipeline = redisManager.run(UnifiedJedis::pipelined, "pipelined serialStreamEvent setex").orElseThrow();
             pipeline.setex(createPipeIdKey(key), secondsToExpire, RandomUtil.generateToken());
             pipeline.expire(key, secondsToExpire, ExpiryOption.NX);
             pipeline.sync();
