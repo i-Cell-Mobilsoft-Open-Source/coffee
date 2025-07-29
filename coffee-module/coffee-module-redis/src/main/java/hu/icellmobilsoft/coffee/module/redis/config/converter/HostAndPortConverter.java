@@ -35,6 +35,13 @@ public class HostAndPortConverter implements Converter<HostAndPort> {
 
     private static final String DELIMITER = ":";
 
+    /**
+     * Default constructor, constructs a new object.
+     */
+    public HostAndPortConverter() {
+        super();
+    }
+
     @Override
     public HostAndPort convert(String value) throws IllegalArgumentException, NullPointerException {
         String[] hostAndPort = value.split(DELIMITER);
