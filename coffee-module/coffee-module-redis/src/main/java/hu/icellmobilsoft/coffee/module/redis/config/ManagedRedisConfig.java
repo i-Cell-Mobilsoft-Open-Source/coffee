@@ -19,10 +19,16 @@
  */
 package hu.icellmobilsoft.coffee.module.redis.config;
 
+import java.util.Arrays;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import jakarta.enterprise.context.Dependent;
 import jakarta.inject.Inject;
 
 import org.eclipse.microprofile.config.Config;
+
+import redis.clients.jedis.HostAndPort;
 
 /**
  * Helper class for obtaining redis connection settings using microprofile config.<br>
@@ -48,6 +54,9 @@ import org.eclipse.microprofile.config.Config;
  *          custom2:
  *            maxtotal: 256
  *            maxidle: 64
+ *        cluster:
+ *          - sample-sandbox.icellmobilsoft.hu:6379
+ *          - sample-sandbox.icellmobilsoft.hu:6380
  * </pre>
  *
  * The upper configuration is injectable with:
@@ -111,6 +120,8 @@ public class ManagedRedisConfig implements RedisConfig {
      * Constant <code>POOL="pool"</code>
      */
     private static final String POOL = "pool";
+
+    private static final String CLUSTER = "cluster";
 
     @Inject
     private Config config;
@@ -241,5 +252,17 @@ public class ManagedRedisConfig implements RedisConfig {
 
     private String joinKey(String key) {
         return String.join(KEY_DELIMITER, REDIS_PREFIX, configKey, key);
+    }
+
+    /**
+     * Returns {@link HostAndPort} {@link Set} for redis cluster
+     * 
+     * @return HostAndPort set for redis cluster
+     */
+    public Set<HostAndPort> getClusterHostAndPortSet() {
+        return config.getOptionalValue(joinKey(CLUSTER), HostAndPort[].class)
+                .stream()
+                .flatMap(Arrays::stream)
+                .collect(Collectors.toUnmodifiableSet());
     }
 }

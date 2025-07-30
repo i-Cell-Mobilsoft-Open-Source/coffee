@@ -31,17 +31,17 @@ import org.apache.commons.lang3.StringUtils;
 import hu.icellmobilsoft.coffee.cdi.trace.annotation.Traced;
 import hu.icellmobilsoft.coffee.cdi.trace.constants.SpanAttribute;
 import hu.icellmobilsoft.coffee.dto.exception.InvalidParameterException;
-import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 import hu.icellmobilsoft.coffee.module.redis.annotation.RedisConnection;
 import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
+import hu.icellmobilsoft.coffee.se.api.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.se.function.BaseExceptionFunction;
 import hu.icellmobilsoft.coffee.se.function.BaseExceptionFunction2;
 import hu.icellmobilsoft.coffee.se.function.BaseExceptionFunction3;
 import hu.icellmobilsoft.coffee.se.function.BaseExceptionFunction4;
 import hu.icellmobilsoft.coffee.se.function.BaseExceptionFunction5;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
-import redis.clients.jedis.Jedis;
+import redis.clients.jedis.UnifiedJedis;
 
 /**
  * Handle redis operations, jedis connection, exceptions and logging
@@ -60,8 +60,8 @@ public class RedisManager {
 
     private String configKey;
     private String poolConfigKey;
-    private Instance<Jedis> jedisInstance;
-    private Jedis jedis;
+    private Instance<UnifiedJedis> jedisInstance;
+    private UnifiedJedis jedis;
 
     /**
      * Default constructor, constructs a new object.
@@ -154,7 +154,7 @@ public class RedisManager {
      *             in case of any exception caught inside
      */
     @Traced(component = SpanAttribute.Redis.Jedis.COMPONENT, kind = SpanAttribute.Redis.Jedis.KIND, dbType = SpanAttribute.Redis.DB_TYPE)
-    public <R> Optional<R> run(BaseExceptionFunction<Jedis, R> function, String functionName) throws BaseException {
+    public <R> Optional<R> run(BaseExceptionFunction<UnifiedJedis, R> function, String functionName) throws BaseException {
         if (jedis == null) {
             throw new TechnicalException(CoffeeFaultType.REDIS_OPERATION_FAILED, JEDIS_NOT_INITIALIZED_MSG);
         }
@@ -186,7 +186,7 @@ public class RedisManager {
      *             in case of any exception caught inside
      */
     @Traced(component = SpanAttribute.Redis.Jedis.COMPONENT, kind = SpanAttribute.Redis.Jedis.KIND, dbType = SpanAttribute.Redis.DB_TYPE)
-    public <P1, R> Optional<R> run(BaseExceptionFunction2<Jedis, P1, R> function, String functionName, P1 p1) throws BaseException {
+    public <P1, R> Optional<R> run(BaseExceptionFunction2<UnifiedJedis, P1, R> function, String functionName, P1 p1) throws BaseException {
         if (jedis == null) {
             throw new TechnicalException(CoffeeFaultType.REDIS_OPERATION_FAILED, JEDIS_NOT_INITIALIZED_MSG);
         }
@@ -225,7 +225,7 @@ public class RedisManager {
      *             in case of any exception caught inside
      */
     @Traced(component = SpanAttribute.Redis.Jedis.COMPONENT, kind = SpanAttribute.Redis.Jedis.KIND, dbType = SpanAttribute.Redis.DB_TYPE)
-    public <P1, P2, R> Optional<R> run(BaseExceptionFunction3<Jedis, P1, P2, R> function, String functionName, P1 p1, P2 p2) throws BaseException {
+    public <P1, P2, R> Optional<R> run(BaseExceptionFunction3<UnifiedJedis, P1, P2, R> function, String functionName, P1 p1, P2 p2) throws BaseException {
         if (jedis == null) {
             throw new TechnicalException(CoffeeFaultType.REDIS_OPERATION_FAILED, JEDIS_NOT_INITIALIZED_MSG);
         }
@@ -268,7 +268,7 @@ public class RedisManager {
      *             in case of any exception caught inside
      */
     @Traced(component = SpanAttribute.Redis.Jedis.COMPONENT, kind = SpanAttribute.Redis.Jedis.KIND, dbType = SpanAttribute.Redis.DB_TYPE)
-    public <P1, P2, P3, R> Optional<R> run(BaseExceptionFunction4<Jedis, P1, P2, P3, R> function, String functionName, P1 p1, P2 p2, P3 p3)
+    public <P1, P2, P3, R> Optional<R> run(BaseExceptionFunction4<UnifiedJedis, P1, P2, P3, R> function, String functionName, P1 p1, P2 p2, P3 p3)
             throws BaseException {
         if (jedis == null) {
             throw new TechnicalException(CoffeeFaultType.REDIS_OPERATION_FAILED, JEDIS_NOT_INITIALIZED_MSG);
@@ -316,7 +316,7 @@ public class RedisManager {
      *             in case of any exception caught inside
      */
     @Traced(component = SpanAttribute.Redis.Jedis.COMPONENT, kind = SpanAttribute.Redis.Jedis.KIND, dbType = SpanAttribute.Redis.DB_TYPE)
-    public <P1, P2, P3, P4, R> Optional<R> run(BaseExceptionFunction5<Jedis, P1, P2, P3, P4, R> function, String functionName, P1 p1, P2 p2, P3 p3,
+    public <P1, P2, P3, P4, R> Optional<R> run(BaseExceptionFunction5<UnifiedJedis, P1, P2, P3, P4, R> function, String functionName, P1 p1, P2 p2, P3 p3,
             P4 p4) throws BaseException {
         if (jedis == null) {
             throw new TechnicalException(CoffeeFaultType.REDIS_OPERATION_FAILED, JEDIS_NOT_INITIALIZED_MSG);
@@ -348,7 +348,7 @@ public class RedisManager {
      *             in case of any exception caught inside
      */
     @Traced(component = SpanAttribute.Redis.Jedis.COMPONENT, kind = SpanAttribute.Redis.Jedis.KIND, dbType = SpanAttribute.Redis.DB_TYPE)
-    public <R> Optional<R> runWithConnection(BaseExceptionFunction<Jedis, R> function, String functionName) throws BaseException {
+    public <R> Optional<R> runWithConnection(BaseExceptionFunction<UnifiedJedis, R> function, String functionName) throws BaseException {
         try (RedisManagerConnection ignored = initConnection()) {
             return run(function, functionName);
         }
@@ -373,7 +373,7 @@ public class RedisManager {
      *             in case of any exception caught inside
      */
     @Traced(component = SpanAttribute.Redis.Jedis.COMPONENT, kind = SpanAttribute.Redis.Jedis.KIND, dbType = SpanAttribute.Redis.DB_TYPE)
-    public <P1, R> Optional<R> runWithConnection(BaseExceptionFunction2<Jedis, P1, R> function, String functionName, P1 p1) throws BaseException {
+    public <P1, R> Optional<R> runWithConnection(BaseExceptionFunction2<UnifiedJedis, P1, R> function, String functionName, P1 p1) throws BaseException {
         try (RedisManagerConnection ignored = initConnection()) {
             return run(function, functionName, p1);
         }
@@ -402,7 +402,7 @@ public class RedisManager {
      *             in case of any exception caught inside
      */
     @Traced(component = SpanAttribute.Redis.Jedis.COMPONENT, kind = SpanAttribute.Redis.Jedis.KIND, dbType = SpanAttribute.Redis.DB_TYPE)
-    public <P1, P2, R> Optional<R> runWithConnection(BaseExceptionFunction3<Jedis, P1, P2, R> function, String functionName, P1 p1, P2 p2)
+    public <P1, P2, R> Optional<R> runWithConnection(BaseExceptionFunction3<UnifiedJedis, P1, P2, R> function, String functionName, P1 p1, P2 p2)
             throws BaseException {
         try (RedisManagerConnection ignored = initConnection()) {
             return run(function, functionName, p1, p2);
@@ -436,7 +436,7 @@ public class RedisManager {
      *             in case of any exception caught inside
      */
     @Traced(component = SpanAttribute.Redis.Jedis.COMPONENT, kind = SpanAttribute.Redis.Jedis.KIND, dbType = SpanAttribute.Redis.DB_TYPE)
-    public <P1, P2, P3, R> Optional<R> runWithConnection(BaseExceptionFunction4<Jedis, P1, P2, P3, R> function, String functionName, P1 p1, P2 p2,
+    public <P1, P2, P3, R> Optional<R> runWithConnection(BaseExceptionFunction4<UnifiedJedis, P1, P2, P3, R> function, String functionName, P1 p1, P2 p2,
             P3 p3) throws BaseException {
         try (RedisManagerConnection ignored = initConnection()) {
             return run(function, functionName, p1, p2, p3);
@@ -474,7 +474,7 @@ public class RedisManager {
      *             in case of any exception caught inside
      */
     @Traced(component = SpanAttribute.Redis.Jedis.COMPONENT, kind = SpanAttribute.Redis.Jedis.KIND, dbType = SpanAttribute.Redis.DB_TYPE)
-    public <P1, P2, P3, P4, R> Optional<R> runWithConnection(BaseExceptionFunction5<Jedis, P1, P2, P3, P4, R> function, String functionName, P1 p1,
+    public <P1, P2, P3, P4, R> Optional<R> runWithConnection(BaseExceptionFunction5<UnifiedJedis, P1, P2, P3, P4, R> function, String functionName, P1 p1,
             P2 p2, P3 p3, P4 p4) throws BaseException {
         try (RedisManagerConnection ignored = initConnection()) {
             return run(function, functionName, p1, p2, p3, p4);
@@ -488,7 +488,7 @@ public class RedisManager {
      */
     public RedisManagerConnection initConnection() {
         if (jedisInstance == null) {
-            jedisInstance = CDI.current().select(Jedis.class, new RedisConnection.Literal(configKey, poolConfigKey));
+            jedisInstance = CDI.current().select(UnifiedJedis.class, new RedisConnection.Literal(configKey, poolConfigKey));
         }
         if (jedis == null) {
             jedis = jedisInstance.get();
