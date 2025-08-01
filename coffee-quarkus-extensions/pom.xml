@@ -7,6 +7,7 @@
         <version>2.12.0-SNAPSHOT</version>
     </parent>
 
+    <groupId>hu.icellmobilsoft.coffee.quarkus</groupId>
     <artifactId>coffee-quarkus-extensions</artifactId>
     <packaging>pom</packaging>
 
