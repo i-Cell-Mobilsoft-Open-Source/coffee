@@ -98,3 +98,10 @@ coffee:
 
 ==== Migration
 As the result of replacing Jedis object, in the usage project must update Jedis usages to UnifiedJedis.
+
+=== coffee-quarkus-extensions
+* Every groupId has been changed from `hu.icellmobilsoft.coffee` to `hu.icellmobilsoft.coffee.quarkus`
+* Description: <<common_coffee-quarkus-extensions, coffee-quarkus-extensions>>
+
+==== Migration
+In projects using quarkus extensions, the groupIds must be changed from `hu.icellmobilsoft.coffee` to `hu.icellmobilsoft.coffee.quarkus`.

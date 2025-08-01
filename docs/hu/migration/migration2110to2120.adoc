@@ -100,3 +100,10 @@ coffee:
 
 ==== Migration
 A Jedis objektum lecserélésének erdményeképpen, a használó projektben a kapcsolódó Jedis hivatkozásokat UnifiedJedis-re kell cserélni.
+
+=== coffee-quarkus-extensions
+* Minden groupId le lett cserélve `hu.icellmobilsoft.coffee`-ról `hu.icellmobilsoft.coffee.quarkus`-ra
+* Leírás: <<common_coffee-quarkus-extensions, coffee-quarkus-extensions>>
+
+==== Migration
+A quarkus extension-öket használó projektekben a groupId-kat `hu.icellmobilsoft.coffee`-ról `hu.icellmobilsoft.coffee.quarkus`-ra kell cserélni.
