@@ -13,7 +13,7 @@ To use the module, you should not use coffee-module-mp-rest-client in the depend
 [source, xml]
 ----
     <dependency>.
-        <groupId>hu.icellmobilsoft.coffee</groupId>
+        <groupId>hu.icellmobilsoft.coffee.quarkus</groupId>
         <artifactId>coffee-module-mp-restclient-extension</artifactId>
         <version>${version.hu.icellmobilsoft.coffee}</version>
         <type>pom</type>

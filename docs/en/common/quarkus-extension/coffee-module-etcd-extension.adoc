@@ -14,7 +14,7 @@ To use this module, you should add the extension dependency instead of `coffee-m
 [source,xml]
 ----
     <dependency>
-        <groupId>hu.icellmobilsoft.coffee</groupId>
+        <groupId>hu.icellmobilsoft.coffee.quarkus</groupId>
         <artifactId>coffee-module-etcd-extension</artifactId>
         <version>${version.hu.icellmobilsoft.coffee}</version>
     </dependency>
