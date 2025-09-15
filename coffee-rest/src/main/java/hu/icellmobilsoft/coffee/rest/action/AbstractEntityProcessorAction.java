@@ -30,7 +30,6 @@ import jakarta.inject.Inject;
 import hu.icellmobilsoft.coffee.cdi.logger.AppLogger;
 import hu.icellmobilsoft.coffee.cdi.logger.ThisLogger;
 import hu.icellmobilsoft.coffee.dto.common.commonentity.EntityProcessorResponse;
-import hu.icellmobilsoft.coffee.dto.common.commonservice.ContextType;
 import hu.icellmobilsoft.coffee.dto.exception.InvalidParameterException;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
@@ -96,8 +95,10 @@ public abstract class AbstractEntityProcessorAction extends AbstractBaseAction {
      * @param processedSize
      *            Number of items processed
      * @return EntityProcessorResponse
+     * @throws BaseException
+     *             if any error occurs
      */
-    public EntityProcessorResponse createEntityProcessorResponse(Integer processedSizeLimit, int processedSize) {
+    public EntityProcessorResponse createEntityProcessorResponse(Integer processedSizeLimit, int processedSize) throws BaseException {
         EntityProcessorResponse entityProcessorResponse = new EntityProcessorResponse();
         entityProcessorResponse.setProcessedSizeLimit(processedSizeLimit);
         entityProcessorResponse.setProcessedSize(processedSize);

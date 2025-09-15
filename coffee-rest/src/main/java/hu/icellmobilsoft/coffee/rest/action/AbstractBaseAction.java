@@ -21,6 +21,8 @@ package hu.icellmobilsoft.coffee.rest.action;
 
 import jakarta.inject.Inject;
 
+import org.apache.commons.lang3.ObjectUtils;
+
 import hu.icellmobilsoft.coffee.cdi.logger.AppLogger;
 import hu.icellmobilsoft.coffee.cdi.logger.ThisLogger;
 import hu.icellmobilsoft.coffee.dto.common.common.KeyValueBasicType;
@@ -65,7 +67,7 @@ public abstract class AbstractBaseAction {
      *
      * @return {@code BaseResponse} object
      */
-    public BaseResponse createBaseResponse() {
+    public BaseResponse createBaseResponse() throws BaseException {
         BaseResponse baseResponse = new BaseResponse();
         handleSuccessResultType(baseResponse);
         return baseResponse;
@@ -78,7 +80,7 @@ public abstract class AbstractBaseAction {
      *            specific context
      * @return {@code BaseResponse} object
      */
-    public BaseResponse createBaseResponse(ContextType context) {
+    public BaseResponse createBaseResponse(ContextType context) throws BaseException {
         BaseResponse baseResponse = new BaseResponse();
         handleSuccessResultType(baseResponse, context);
         return baseResponse;
@@ -90,8 +92,8 @@ public abstract class AbstractBaseAction {
      * @param baseResultType
      *            object to mark
      */
-    public void handleSuccessResultType(BaseResultType baseResultType) {
-        handleResultType(baseResultType, null, FunctionCodeType.OK);
+    public void handleSuccessResultType(BaseResultType baseResultType) throws BaseException {
+        handleResultType(baseResultType, FunctionCodeType.OK, null);
     }
 
     /**
@@ -102,7 +104,7 @@ public abstract class AbstractBaseAction {
      * @param baseRequestType
      *            request
      */
-    public void handleSuccessResultType(BaseResultType baseResultType, BaseRequestType baseRequestType) {
+    public void handleSuccessResultType(BaseResultType baseResultType, BaseRequestType baseRequestType) throws BaseException {
         baseResultType.setContext(baseRequestType.getContext());
         handleSuccessResultType(baseResultType);
     }
@@ -115,7 +117,7 @@ public abstract class AbstractBaseAction {
      * @param context
      *            specific context
      */
-    public void handleSuccessResultType(BaseResultType baseResultType, ContextType context) {
+    public void handleSuccessResultType(BaseResultType baseResultType, ContextType context) throws BaseException {
         baseResultType.setContext(context);
         handleSuccessResultType(baseResultType);
     }
@@ -128,12 +130,25 @@ public abstract class AbstractBaseAction {
      * @param message
      *            result message
      */
-    public void handleUnsuccessResultType(BaseResultType baseResultType, String message) {
-        handleResultType(baseResultType, message, FunctionCodeType.ERROR);
+    public void handleUnsuccessResultType(BaseResultType baseResultType, String message) throws BaseException {
+        handleResultType(baseResultType, FunctionCodeType.ERROR, message);
 
     }
 
-    private void handleResultType(BaseResultType baseResultType, String message, FunctionCodeType functionCodeType) {
+    /**
+     * Marks given {@link BaseResultType} with specific function code type and message. If context does not exist, creates a new one.
+     * 
+     * @param baseResultType
+     *            the result type
+     * @param functionCodeType
+     *            the function code type
+     * @param message
+     *            the result message
+     */
+    public void handleResultType(BaseResultType baseResultType, FunctionCodeType functionCodeType, String message) throws BaseException {
+        if (ObjectUtils.anyNull(baseResultType, functionCodeType)) {
+            throw new InvalidParameterException("baseResultType and/or functionCodeType is null");
+        }
         if (baseResultType.getContext() == null) {
             baseResultType.setContext(createContext());
         }
