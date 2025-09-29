@@ -11,6 +11,7 @@ The commons-lang3 version update introduces some deprecated methods, which will 
 
 === coffee-rest
 * JaxbTool CDI dependent bean destroy fix
+* The `DefaultGeneralExceptionMapper` handles the new `IBaseExceptionWrapper` instead of the `BaseExceptionWrapper`. For more info check the `coffee-dto-base` and `coffee-se-api`.
 
 ==== Migration
 Changes are backwards compatible doesnt need any migration.
@@ -112,3 +113,16 @@ As the result of replacing Jedis object, in the usage project must update Jedis 
 
 ==== Migration
 In projects using quarkus extensions, the groupIds must be changed from `hu.icellmobilsoft.coffee` to `hu.icellmobilsoft.coffee.quarkus`.
+
+=== coffee-dto-base
+`BaseExceptionWrapper` interface has been deprecated and a new alternative is introduced in `coffee-se-api`: 
+`hu.icellmobilsoft.coffee.se.api.exception.wrapper.IBaseExceptionWrapper`.
+
+==== Migration
+The changes are backwards compatible and do not require any migration. However, it is recommended to use the new `IBaseExceptionWrapper` at the project level.
+
+=== coffee-se-api
+A new `IBaseExceptionWrapper` has been introduced as a replacement for `BaseExceptionWrapper`.
+
+==== Migration
+The changes are backwards compatible and do not require any migration. It is recommended to use this new interface instead of `BaseExceptionWrapper`.

@@ -12,6 +12,7 @@ A commons-lang3 verzió frissítése magával hozza, hogy néhány metódus depr
 
 === coffee-rest
 * JaxbTool CDI dependent bean destroy fix
+* A `DefaultGeneralExceptionMapper` a `BaseExceptionWrapper` helyett az új `IBaseExceptionWrapper`-t kezeli. Lásd `coffee-dto-base` és `coffee-se-api`.
 
 ==== Migration
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
@@ -115,3 +116,18 @@ A Jedis objektum lecserélésének erdményeképpen, a használó projektben a k
 
 ==== Migration
 A quarkus extension-öket használó projektekben a groupId-kat `hu.icellmobilsoft.coffee`-ról `hu.icellmobilsoft.coffee.quarkus`-ra kell cserélni.
+
+=== coffee-dto-base
+A `BaseExceptionWrapper` interfész avultatása és ezzel egyidőben az utódjának létrehozása a `coffee-se-api` modulban: 
+`hu.icellmobilsoft.coffee.se.api.exception.wrapper.IBaseExceptionWrapper`.
+
+==== Migration
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis. Javasolt átállni a projektekben az
+`IBaseExceptionWrapper` használatára.
+
+=== coffee-se-api
+A `IBaseExceptionWrapper` bevezetése a `BaseExceptionWrapper` mintájára.
+
+==== Migration
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis. Használata javasolt a projektekben a
+`BaseExceptionWrapper` helyett.

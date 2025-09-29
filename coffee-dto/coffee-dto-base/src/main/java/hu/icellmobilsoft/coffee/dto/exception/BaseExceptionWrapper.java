@@ -76,6 +76,8 @@ import hu.icellmobilsoft.coffee.se.api.exception.wrapper.IBaseExceptionWrapper;
  * @author attila.nyers
  * @author ferenc.lutischan
  * @since 1.0.0
+ *
+ * @deprecated Use {@link IBaseExceptionWrapper} instead.
  */
 @Deprecated(since = "2.12.0")
 public interface BaseExceptionWrapper<E extends BaseException> extends IBaseExceptionWrapper<E> {
