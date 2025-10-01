@@ -11,6 +11,8 @@
     <artifactId>coffee-quarkus-extensions</artifactId>
     <packaging>pom</packaging>
 
+    <name>Coff:ee Quarkus Extensions - Parent</name>
+
     <properties>
         <quarkus.version>3.2.5.Final</quarkus.version>
     </properties>

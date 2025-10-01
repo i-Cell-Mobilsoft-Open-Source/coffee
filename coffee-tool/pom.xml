@@ -8,6 +8,8 @@
 
 	<artifactId>coffee-tool</artifactId>
 
+	<name>Coff:ee Tool</name>
+
 	<dependencyManagement>
 		<dependencies>
 			<dependency>

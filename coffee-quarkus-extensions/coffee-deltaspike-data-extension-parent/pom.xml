@@ -12,7 +12,7 @@
     <packaging>pom</packaging>
 
     <name>Coff:ee deltaspike data Extension - Parent</name>
-    <description>Quarkus Extensions - Coff:ee deltaspike data  extension</description>
+    <description>Quarkus Extensions - Coff:ee deltaspike data extension</description>
 
     <modules>
         <module>coffee-deltaspike-data-extension-deployment</module>

@@ -7,4 +7,7 @@
 	</parent>
 
 	<artifactId>coffee-dto-xsd</artifactId>
+
+	<name>Coff:ee DTO - XSD</name>
+
 </project>

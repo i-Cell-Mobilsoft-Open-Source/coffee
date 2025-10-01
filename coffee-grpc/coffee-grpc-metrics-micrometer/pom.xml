@@ -8,6 +8,8 @@
 
     <artifactId>coffee-grpc-metrics-micrometer</artifactId>
 
+    <name>Coff:ee GRPC - Metrics Micrometer</name>
+
     <dependencies>
         <dependency>
             <groupId>hu.icellmobilsoft.coffee</groupId>

@@ -9,6 +9,8 @@
     <artifactId>coffee-grpc</artifactId>
     <packaging>pom</packaging>
 
+    <name>Coff:ee GRPC - Parent</name>
+
     <dependencyManagement>
         <dependencies>
             <dependency>

@@ -8,6 +8,8 @@
 
 	<artifactId>coffee-configuration</artifactId>
 
+	<name>Coff:ee Configuration</name>
+
 	<dependencyManagement>
 		<dependencies>
 			<dependency>

@@ -8,6 +8,8 @@
 
 	<artifactId>coffee-module-localization</artifactId>
 
+	<name>Coff:ee Module - Localization</name>
+
 	<dependencies>
 		<dependency>
 			<groupId>jakarta.platform</groupId>

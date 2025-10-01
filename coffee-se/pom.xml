@@ -10,6 +10,8 @@
 	<artifactId>coffee-se</artifactId>
 	<packaging>pom</packaging>
 
+	<name>Coff:ee SE - Parent</name>
+
 	<dependencyManagement>
 		<dependencies>
 			<dependency>

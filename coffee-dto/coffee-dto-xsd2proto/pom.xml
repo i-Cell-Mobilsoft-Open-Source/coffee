@@ -8,6 +8,7 @@
 
 	<artifactId>coffee-dto-xsd2proto</artifactId>
 
+	<name>Coff:ee DTO - XSD-TO-PROTO</name>
 	<description>Generating proto files from coffee xsd files</description>
 
 	<properties>

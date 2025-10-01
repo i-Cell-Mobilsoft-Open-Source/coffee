@@ -9,6 +9,8 @@
 	<artifactId>coffee-module-mp</artifactId>
 	<packaging>pom</packaging>
 
+	<name>Coff:ee Module - MP - Parent</name>
+
 	<modules>
 		<module>coffee-module-mp-restclient</module>
 		<module>coffee-module-mp-opentracing</module>

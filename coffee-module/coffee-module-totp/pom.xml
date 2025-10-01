@@ -8,6 +8,8 @@
 
 	<artifactId>coffee-module-totp</artifactId>
 
+	<name>Coff:ee Module - Totp</name>
+
 	<dependencies>
 		<dependency>
 			<groupId>hu.icellmobilsoft.coffee</groupId>

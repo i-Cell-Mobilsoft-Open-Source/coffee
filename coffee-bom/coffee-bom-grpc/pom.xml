@@ -10,6 +10,8 @@
     <artifactId>coffee-bom-grpc</artifactId>
     <packaging>pom</packaging>
 
+    <name>Coff:ee BOM - GRPC</name>
+
     <properties>
         <version.com.google.protobuf>3.25.5</version.com.google.protobuf>
         <version.com.google.api.grpc.proto-google-common-protos>2.56.0</version.com.google.api.grpc.proto-google-common-protos>

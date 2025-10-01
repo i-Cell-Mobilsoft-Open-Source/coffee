@@ -8,6 +8,8 @@
 
 	<artifactId>coffee-cdi</artifactId>
 
+	<name>Coff:ee CDI</name>
+
 	<dependencyManagement>
 		<dependencies>
 			<dependency>

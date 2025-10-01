@@ -8,6 +8,8 @@
 
 	<artifactId>coffee-dto-base</artifactId>
 
+	<name>Coff:ee DTO - Base</name>
+
 	<properties>
 		<version.jakarta.xml.bind.jaxb-api>4.0.0</version.jakarta.xml.bind.jaxb-api>
 		<!-- Test dependency versions -->
