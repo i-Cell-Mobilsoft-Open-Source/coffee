@@ -8,6 +8,8 @@
 
   <artifactId>coffee-grpc-protoc</artifactId>
 
+    <name>Coff:ee GRPC - Protoc</name>
+
     <dependencies>
         <dependency>
             <groupId>com.google.protobuf</groupId>

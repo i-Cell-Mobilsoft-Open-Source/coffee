@@ -8,6 +8,8 @@
 
     <artifactId>coffee-grpc-api</artifactId>
 
+    <name>Coff:ee GRPC - API</name>
+
     <dependencies>
         <dependency>
             <groupId>io.grpc</groupId>

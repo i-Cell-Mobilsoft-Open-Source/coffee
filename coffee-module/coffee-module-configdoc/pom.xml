@@ -9,6 +9,8 @@
 
     <artifactId>coffee-module-configdoc</artifactId>
 
+    <name>Coff:ee Module - Docgen - Config</name>
+
     <dependencies>
         <dependency>
             <groupId>commons-io</groupId>

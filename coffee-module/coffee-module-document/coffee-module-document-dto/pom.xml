@@ -8,6 +8,8 @@
 
 	<artifactId>coffee-module-document-dto</artifactId>
 
+	<name>Coff:ee Module - Document - DTO</name>
+
 	<dependencies>
 		<dependency>
 			<groupId>hu.icellmobilsoft.coffee</groupId>

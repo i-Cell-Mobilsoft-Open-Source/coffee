@@ -7,6 +7,8 @@
 	</parent>
 
 	<artifactId>coffee-module-ruleng</artifactId>
+
+	<name>Coff:ee Module - Ruleng</name>
 	<description>Rule engine module</description>
 
 	<dependencyManagement>

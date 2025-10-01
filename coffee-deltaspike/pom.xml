@@ -9,6 +9,8 @@
 	<artifactId>coffee-deltaspike</artifactId>
 	<packaging>pom</packaging>
 
+	<name>Coff:ee Deltaspike - Parent</name>
+
 	<modules>
 		<module>coffee-deltaspike-message</module>
 		<module>coffee-deltaspike-data</module>

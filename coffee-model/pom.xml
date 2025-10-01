@@ -9,6 +9,8 @@
 	<artifactId>coffee-model</artifactId>
 	<packaging>pom</packaging>
 
+	<name>Coff:ee Model - Parent</name>
+
 	<dependencyManagement>
 		<dependencies>
 			<dependency>

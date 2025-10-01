@@ -8,6 +8,8 @@
 
 	<artifactId>coffee-module-notification-action</artifactId>
 
+	<name>Coff:ee Module - Notification - Action</name>
+
 	<dependencies>
 		<dependency>
 			<groupId>hu.icellmobilsoft.coffee</groupId>

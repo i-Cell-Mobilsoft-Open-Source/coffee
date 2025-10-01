@@ -13,6 +13,8 @@
 
     <name>Coff:ee Module - Config watcher</name>
 
+    <name>Coff:ee Module - Docgen - SQL Catalog</name>
+
     <dependencies>
         <dependency>
             <groupId>org.eclipse.microprofile.config</groupId>

@@ -28,14 +28,14 @@ jobs:
         uses: speter555/gh-action-mvn-release-main@v0.32.0
         with:
           GITHUB_TOKEN: '${{ secrets.GH_TOKEN_TECHUSER_JAVA }}'
-          ARTIFACT_STORE_SERVER_ID: 'ossrh'
+          ARTIFACT_STORE_SERVER_ID: 'central'
           SETTINGS_XML_PATH: '.github/.m2/settings.xml'
           GPG_KEY_ID_GITHUB_TECHUSER: '${{ secrets.GPG_KEY_ID_GITHUB_TECHUSER }}'
           GPG_SIGNING_KEY_GITHUB_TECHUSER: '${{ secrets.GPG_SIGNING_KEY_GITHUB_TECHUSER }}'
           SSH_PRIVATE_KEY_GITHUB_TECHUSER: '${{ secrets.SSH_PRIVATE_KEY_GITHUB_TECHUSER }}'
           TECH_USER_USERNAME: 'icellmobilsoft-robot'
           TECH_USER_EMAIL: 'github_techuser@icellmobilsoft.hu'
-          NEXUS_USER: '${{ secrets.OSS_SONATYPE_ORG_USER }}'
-          NEXUS_PASSWORD: '${{ secrets.OSS_SONATYPE_ORG_PASSWORD }}'
+          NEXUS_USER: '${{ secrets.CENTRAL_SONATYPE_ORG_USER }}'
+          NEXUS_PASSWORD: '${{ secrets.CENTRAL_SONATYPE_ORG_PASSWORD }}'
           JAVA_VERSION: '17'
           JAVA_DISTRIBUTION: 'temurin'

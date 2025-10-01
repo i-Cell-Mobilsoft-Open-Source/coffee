@@ -9,6 +9,8 @@
 	<artifactId>coffee-dto</artifactId>
 	<packaging>pom</packaging>
 
+	<name>Coff:ee DTO - Parent</name>
+
 	<properties>
 		<version.org.junit.jupiter>5.8.1</version.org.junit.jupiter>
 	</properties>
