@@ -17,10 +17,9 @@
  * limitations under the License.
  * #L%
  */
-package hu.icellmobilsoft.coffee.dto.exception;
+package hu.icellmobilsoft.coffee.se.api.exception.wrapper;
 
 import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
-import hu.icellmobilsoft.coffee.se.api.exception.wrapper.IBaseExceptionWrapper;
 
 /**
  * Non-company exceptions that do not inherit from BaseException can connect to the corporate exception handling system through this interface.
@@ -31,23 +30,15 @@ import hu.icellmobilsoft.coffee.se.api.exception.wrapper.IBaseExceptionWrapper;
  *
  * <pre>
  * <code>
- * public class SpecialProcessingException extends ProcessingException implements BaseExceptionWrapper&lt;MyException&gt; {
+ * public class SpecialProcessingException extends ProcessingException implements IBaseExceptionWrapper&lt;MyException&gt; {
  *
- *     private MyException myException;
- *
- *     public SpecialProcessingException(String message, MyException myException) {
- *         super(message);
- *         this.myException = myException;
+ *     public SpecialProcessingException(String message, MyException e) {
+ *         this(message, e);
  *     }
  *
  *     &#64;Override
- *     public void setException(MyException myException) {
- *         this.myException = myException;
- *     }
- *
- *     &#64;Override
- *     public MyException getException() {
- *         return myException;
+ *     public MyException getWrappedBaseException() {
+ *         return (MyException) getCause();
  *     }
  * }
  * </code>
@@ -75,31 +66,16 @@ import hu.icellmobilsoft.coffee.se.api.exception.wrapper.IBaseExceptionWrapper;
  * @author attila.gluck
  * @author attila.nyers
  * @author ferenc.lutischan
- * @since 1.0.0
- *
- * @deprecated Use {@link IBaseExceptionWrapper} instead.
+ * @author attila-kiss-it
+ * @since 2.12.0
  */
-@Deprecated(since = "2.12.0")
-public interface BaseExceptionWrapper<E extends BaseException> extends IBaseExceptionWrapper<E> {
+public interface IBaseExceptionWrapper<E extends BaseException> {
 
     /**
-     * setException.
-     *
-     * @param exception
-     *            exception
-     */
-    void setException(final E exception);
-
-    /**
-     * getException.
+     * Returns the wrapped {@link BaseException}.
      *
      * @return E
      */
-    E getException();
-
-    @Override
-    default E getWrappedBaseException() {
-        return getException();
-    }
+    E getWrappedBaseException();
 
 }

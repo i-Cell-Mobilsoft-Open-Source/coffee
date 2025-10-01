@@ -45,14 +45,14 @@ import hu.icellmobilsoft.coffee.cdi.logger.AppLogger;
 import hu.icellmobilsoft.coffee.cdi.logger.ThisLogger;
 import hu.icellmobilsoft.coffee.dto.common.LogConstants;
 import hu.icellmobilsoft.coffee.dto.common.commonservice.TechnicalFault;
-import hu.icellmobilsoft.coffee.dto.exception.BaseExceptionWrapper;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 import hu.icellmobilsoft.coffee.rest.cdi.BaseApplicationContainer;
 import hu.icellmobilsoft.coffee.rest.log.RequestResponseLogger;
 import hu.icellmobilsoft.coffee.rest.projectstage.ProjectStage;
 import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
+import hu.icellmobilsoft.coffee.se.api.exception.wrapper.IBaseExceptionWrapper;
 import hu.icellmobilsoft.coffee.se.logging.mdc.MDC;
-import hu.icellmobilsoft.coffee.tool.utils.string.RandomUtil;
+import hu.icellmobilsoft.coffee.se.util.string.RandomUtil;
 
 /**
  * Exception mapper for non-handled exception throwing
@@ -96,8 +96,8 @@ public class DefaultGeneralExceptionMapper implements ExceptionMapper<Exception>
     @Override
     public Response toResponse(Exception e) {
         Response result = null;
-        if (e instanceof BaseExceptionWrapper<?>) {
-            Exception unwrappedException = unwrapException((Exception & BaseExceptionWrapper<?>) e);
+        if (e instanceof IBaseExceptionWrapper<?>) {
+            Exception unwrappedException = unwrapException((Exception & IBaseExceptionWrapper<?>) e);
             if (unwrappedException instanceof BaseException) {
                 result = handleWrappedException((BaseException) unwrappedException);
             } else {
@@ -108,26 +108,26 @@ public class DefaultGeneralExceptionMapper implements ExceptionMapper<Exception>
     }
 
     /**
-     * Tries to unwrap the given exception. I.e. the exception in the parameter has a BaseException case, then it returns the BaseException
+     * Tries to unwrap the given exception. I.e. the exception in the parameter has a BaseException cause, then it returns the BaseException
      *
-     * @param wrappedException
+     * @param exceptionWrapper
      *            the exception to unwrap
-     * @param <WRAPPED>
-     *            the type of the wrapped exception
+     * @param <WRAPPER>
+     *            the type of the wrapper exception
      * @return the unwrapped exception
      */
-    protected <WRAPPED extends Exception & BaseExceptionWrapper<?>> Exception unwrapException(WRAPPED wrappedException) {
+    protected <WRAPPER extends Exception & IBaseExceptionWrapper<?>> Exception unwrapException(WRAPPER exceptionWrapper) {
         Exception unwrapped;
-        if (wrappedException.getException() != null) {
-            log.trace("Wrapped exception.");
-            unwrapped = wrappedException.getException();
-        } else if (wrappedException.getCause() instanceof BaseException) {
+        if (exceptionWrapper.getWrappedBaseException() != null) {
             log.trace("Wrapped BaseException.");
-            unwrapped = (BaseException) wrappedException.getCause();
+            unwrapped = exceptionWrapper.getWrappedBaseException();
+        } else if (exceptionWrapper.getCause() instanceof BaseException) {
+            log.trace("Wrapped BaseException.");
+            unwrapped = (BaseException) exceptionWrapper.getCause();
         } else {
-            log.error("Unknown error in cause: ", wrappedException);
+            log.error("Unknown error in cause: ", exceptionWrapper);
             log.writeLogToError();
-            unwrapped = wrappedException;
+            unwrapped = exceptionWrapper;
         }
         return unwrapped;
     }
@@ -142,10 +142,16 @@ public class DefaultGeneralExceptionMapper implements ExceptionMapper<Exception>
     protected Response handleException(Exception e) {
         ResponseBuilder responseBuilder = null;
         if (e instanceof NotAcceptableException) {
-            responseBuilder = createResponseBuilder(e, Response.Status.INTERNAL_SERVER_ERROR, CoffeeFaultType.NOT_ACCEPTABLE_EXCEPTION,
+            responseBuilder = createResponseBuilder(
+                    e,
+                    Response.Status.INTERNAL_SERVER_ERROR,
+                    CoffeeFaultType.NOT_ACCEPTABLE_EXCEPTION,
                     this::handleProductionStage);
         } else if (e instanceof NotAllowedException) {
-            responseBuilder = createResponseBuilder(e, Response.Status.INTERNAL_SERVER_ERROR, CoffeeFaultType.NOT_ALLOWED_EXCEPTION,
+            responseBuilder = createResponseBuilder(
+                    e,
+                    Response.Status.INTERNAL_SERVER_ERROR,
+                    CoffeeFaultType.NOT_ALLOWED_EXCEPTION,
                     this::handleProductionStage);
         } else if (e instanceof NotAuthorizedException) {
             responseBuilder = createResponseBuilder(e, Response.Status.UNAUTHORIZED, CoffeeFaultType.NOT_AUTHORIZED, this::handleProductionStage);
@@ -159,7 +165,10 @@ public class DefaultGeneralExceptionMapper implements ExceptionMapper<Exception>
         } else if (e instanceof InternalServerErrorException) {
             responseBuilder = createResponseBuilder(e, Response.Status.BAD_REQUEST, CoffeeFaultType.INVALID_REQUEST, this::handleProductionStage);
         } else if (e.getCause() instanceof IllegalArgumentException) {
-            responseBuilder = createResponseBuilder(e, Response.Status.INTERNAL_SERVER_ERROR, CoffeeFaultType.ILLEGAL_ARGUMENT_EXCEPTION,
+            responseBuilder = createResponseBuilder(
+                    e,
+                    Response.Status.INTERNAL_SERVER_ERROR,
+                    CoffeeFaultType.ILLEGAL_ARGUMENT_EXCEPTION,
                     this::handleProductionStage);
         } else if (e instanceof ClientErrorException) {
             responseBuilder = createResponseBuilder(e, Response.Status.INTERNAL_SERVER_ERROR, CoffeeFaultType.OPERATION_FAILED, (dto, faultType) -> {
@@ -183,7 +192,10 @@ public class DefaultGeneralExceptionMapper implements ExceptionMapper<Exception>
         } else {
             log.error("Unknown error: ", e);
             log.writeLogToError();
-            responseBuilder = createResponseBuilder(e, Response.Status.INTERNAL_SERVER_ERROR, CoffeeFaultType.GENERIC_EXCEPTION,
+            responseBuilder = createResponseBuilder(
+                    e,
+                    Response.Status.INTERNAL_SERVER_ERROR,
+                    CoffeeFaultType.GENERIC_EXCEPTION,
                     this::handleProductionStage);
 
         }
@@ -258,7 +270,8 @@ public class DefaultGeneralExceptionMapper implements ExceptionMapper<Exception>
         @SuppressWarnings("unchecked")
         ExceptionMapper<E> mapper = (ExceptionMapper<E>) providers.getExceptionMapper(exception.getClass());
         if (mapper == null) {
-            log.info("Failed to map the wrapped exception. Falling back to the generic mapper. Oringnal Exception: [{0}]",
+            log.info(
+                    "Failed to map the wrapped exception. Falling back to the generic mapper. Oringnal Exception: [{0}]",
                     exception.getClass().getSimpleName());
             return null;
         }
