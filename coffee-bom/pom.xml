@@ -9,7 +9,7 @@
 	<artifactId>coffee-bom</artifactId>
 	<packaging>pom</packaging>
 
-	<name>Coff:ee BOM Parent</name>
+	<name>Coff:ee BOM - Parent</name>
 
 	<modules>
 		<module>coffee-bom-all</module>
