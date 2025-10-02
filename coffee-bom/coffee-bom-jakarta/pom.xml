@@ -10,13 +10,14 @@
     <artifactId>coffee-bom-jakarta</artifactId>
     <packaging>pom</packaging>
 
+    <name>Coff:ee BOM - Jakarta</name>
+
     <properties>
         <version.jakartaee>10.0.0</version.jakartaee>
         <version.jakarta.xml.bind.jaxb-api>4.0.2</version.jakarta.xml.bind.jaxb-api>
         <version.jakarta.enterprise.cdi-api>4.0.1</version.jakarta.enterprise.cdi-api>
         <version.jakarta.activation-api>2.1.3</version.jakarta.activation-api>
     </properties>
-
 
     <dependencyManagement>
         <dependencies>

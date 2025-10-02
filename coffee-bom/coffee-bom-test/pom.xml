@@ -10,6 +10,8 @@
     <artifactId>coffee-bom-test</artifactId>
     <packaging>pom</packaging>
 
+    <name>Coff:ee BOM - Test</name>
+
     <properties>
         <version.commons-logging>1.2</version.commons-logging>
         <version.junit.jupiter>5.9.1</version.junit.jupiter>

@@ -8,6 +8,8 @@
 
     <artifactId>coffee-module-mp-metrics</artifactId>
 
+    <name>Coff:ee Module - MP - Metrics</name>
+
     <dependencies>
         <dependency>
             <groupId>hu.icellmobilsoft.coffee</groupId>

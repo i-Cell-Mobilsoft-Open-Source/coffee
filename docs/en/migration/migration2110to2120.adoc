@@ -5,6 +5,8 @@ coff:ee v2.11.0 -> v2.12.0 migration description, news, changes
 === Global
 
 * Apache commons-lang3 version bump 3.15.0 -> 3.18.0
+* parent-oss-pom upgraded from `1.4.0` to `1.5.0`
+* The `oss.sonatype.org` snapshot repository was replaced by `central.sonatype.com`, and module names were added for validations.
 
 ==== Migration
 The commons-lang3 version update introduces some deprecated methods, which will need to be updated across the projects. The list can be found here: https://commons.apache.org/proper/commons-lang/apidocs/deprecated-list.html

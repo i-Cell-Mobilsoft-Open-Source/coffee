@@ -8,6 +8,8 @@
 
     <artifactId>coffee-grpc-traces-api</artifactId>
 
+    <name>Coff:ee GRPC - Traces API</name>
+
     <dependencies>
         <dependency>
             <groupId>hu.icellmobilsoft.coffee</groupId>

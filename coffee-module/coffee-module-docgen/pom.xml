@@ -11,6 +11,9 @@
 
     <artifactId>coffee-module-docgen</artifactId>
     <packaging>pom</packaging>
+
+    <name>Coff:ee Module - Docgen - Parent</name>
+
     <modules>
         <module>coffee-module-docgen-common</module>
         <module>coffee-module-docgen-config</module>

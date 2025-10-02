@@ -8,6 +8,8 @@
 
 	<artifactId>coffee-model-security</artifactId>
 
+	<name>Coff:ee Model - Security</name>
+
 	<properties>
 		<hibernate.jpamodelgen.version>6.6.1.Final</hibernate.jpamodelgen.version>
 	</properties>

@@ -8,6 +8,8 @@
 
 	<artifactId>coffee-dto-impl</artifactId>
 
+	<name>Coff:ee DTO - Impl</name>
+
 	<dependencies>
 		<dependency>
 			<groupId>hu.icellmobilsoft.coffee</groupId>

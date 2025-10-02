@@ -10,8 +10,9 @@
     <artifactId>coffee-bom-all</artifactId>
     <packaging>pom</packaging>
 
-    <properties>
+    <name>Coff:ee BOM - All</name>
 
+    <properties>
 
         <version.com.google.code.findbugs.jsr305>3.0.2</version.com.google.code.findbugs.jsr305>
         <version.google.code.gson>2.8.9</version.google.code.gson>

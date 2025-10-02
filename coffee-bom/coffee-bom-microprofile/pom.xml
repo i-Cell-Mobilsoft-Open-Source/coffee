@@ -10,6 +10,8 @@
     <artifactId>coffee-bom-microprofile</artifactId>
     <packaging>pom</packaging>
 
+    <name>Coff:ee BOM - Microprofile</name>
+
     <properties>
         <version.org.eclipse.microprofile.config>3.1</version.org.eclipse.microprofile.config>
         <version.microprofile-reactive-messaging-api>3.0</version.microprofile-reactive-messaging-api>

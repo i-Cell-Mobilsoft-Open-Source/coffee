@@ -11,6 +11,8 @@
 
     <artifactId>coffee-module-docgen-common</artifactId>
 
+    <name>Coff:ee Module - Docgen - Common</name>
+
     <dependencies>
         <dependency>
             <groupId>org.junit.jupiter</groupId>

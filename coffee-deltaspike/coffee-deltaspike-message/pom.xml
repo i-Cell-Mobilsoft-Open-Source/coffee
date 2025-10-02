@@ -8,6 +8,8 @@
 
     <artifactId>coffee-deltaspike-message</artifactId>
 
+    <name>Coff:ee Deltaspike - Message</name>
+
     <dependencies>
         <dependency>
             <groupId>hu.icellmobilsoft.coffee</groupId>

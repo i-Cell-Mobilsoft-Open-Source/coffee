@@ -9,6 +9,8 @@
 	<artifactId>coffee-module-notification</artifactId>
 	<packaging>pom</packaging>
 
+	<name>Coff:ee Module - Notification - Parent</name>
+
 	<modules>
 		<module>coffee-module-notification-dto</module>
 		<module>coffee-module-notification-action</module>

@@ -31,7 +31,7 @@ jobs:
       with:
         java-version: 17
         distribution: 'temurin'
-        server-id: ossrh # Value of the distributionManagement/repository/id field of the pom.xml
+        server-id: central # Value of the distributionManagement/repository/id field of the pom.xml
         settings-path: ${{ github.workspace }} # location for the settings.xml file
 
     - name: Build with Maven
@@ -41,5 +41,5 @@ jobs:
       run: mvn deploy -s $GITHUB_WORKSPACE/.github/.m2/settings.xml
       env:
         GITHUB_TOKEN: '${{ secrets.GH_TOKEN_TECHUSER_JAVA }}'
-        USERNAME: '${{ secrets.OSS_SONATYPE_ORG_USER }}'
-        PASSWORD: '${{ secrets.OSS_SONATYPE_ORG_PASSWORD }}'
+        USERNAME: '${{ secrets.CENTRAL_SONATYPE_ORG_USER }}'
+        PASSWORD: '${{ secrets.CENTRAL_SONATYPE_ORG_PASSWORD }}'

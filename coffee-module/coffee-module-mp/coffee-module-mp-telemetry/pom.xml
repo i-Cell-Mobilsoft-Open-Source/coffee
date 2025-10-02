@@ -8,6 +8,8 @@
 
 	<artifactId>coffee-module-mp-telemetry</artifactId>
 
+	<name>Coff:ee Module - MP - Telemetry</name>
+
 	<properties>
 		<version.io.opentelemetry>1.29.0</version.io.opentelemetry>
 	</properties>

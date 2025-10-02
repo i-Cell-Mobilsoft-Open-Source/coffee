@@ -8,6 +8,8 @@
 
 	<artifactId>coffee-module-activemq</artifactId>
 
+	<name>Coff:ee Module - Active MQ</name>
+
 	<dependencies>
 		<dependency>
 			<groupId>hu.icellmobilsoft.coffee</groupId>

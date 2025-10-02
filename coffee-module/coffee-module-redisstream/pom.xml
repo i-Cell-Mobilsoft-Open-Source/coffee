@@ -8,6 +8,8 @@
 
 	<artifactId>coffee-module-redisstream</artifactId>
 
+	<name>Coff:ee Module - Redis Stream</name>
+
 	<dependencies>
 		<dependency>
 			<groupId>hu.icellmobilsoft.coffee</groupId>
