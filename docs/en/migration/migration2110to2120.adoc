@@ -128,3 +128,10 @@ A new `IBaseExceptionWrapper` has been introduced as a replacement for `BaseExce
 
 ==== Migration
 The changes are backwards compatible and do not require any migration. It is recommended to use this new interface instead of `BaseExceptionWrapper`.
+
+=== coffee-cdi
+`hu.icellmobilsoft.coffee.cdi.trace.annotation.Traced.LITERAL` type changed so it can be used with `ITraceHandler`,
+and initialized with default values.
+
+==== Migration
+The changes are backwards compatible and do not require any migration.
