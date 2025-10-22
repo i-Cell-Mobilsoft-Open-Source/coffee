@@ -133,3 +133,10 @@ A `IBaseExceptionWrapper` bevezetése a `BaseExceptionWrapper` mintájára.
 ==== Migration
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis. Használata javasolt a projektekben a
 `BaseExceptionWrapper` helyett.
+
+=== coffee-cdi
+`hu.icellmobilsoft.coffee.cdi.trace.annotation.Traced.LITERAL` típusa megváltozott, hogy használható lehessen `ITraceHandler`-rel,
+és inicializálva lett a default értékekkel.
+
+==== Migration
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
