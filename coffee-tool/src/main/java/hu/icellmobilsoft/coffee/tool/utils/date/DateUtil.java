@@ -471,10 +471,10 @@ public class DateUtil {
     }
 
     /**
-     * Actual date + time in UTC. When it is serialized, the local 2020-08-26 10:34:28 "2020-08-26T08:34:28.955024Z" format takes place instead of the
-     * default "2020-08-26T10:34:28.955024+02:00"
+     * Actual date + time in UTC. When it is serialized, the local 2020-08-26 10:34:28 "2020-08-26T08:34:28.955024123Z" format takes place instead of the
+     * default "2020-08-26T10:34:28.955024123+02:00"
      *
-     * @return {@code OffsetDateTime}, example: "2020-08-26T08:34:28.955024Z"
+     * @return {@code OffsetDateTime}, example: "2020-08-26T08:34:28.955024123Z"
      */
     public static OffsetDateTime nowUTC() {
         return OffsetDateTime.now(ZoneOffset.UTC);
