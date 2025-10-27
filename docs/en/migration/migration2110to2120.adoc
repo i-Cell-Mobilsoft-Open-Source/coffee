@@ -11,6 +11,7 @@ The commons-lang3 version update introduces some deprecated methods, which will 
 
 === coffee-rest
 * JaxbTool CDI dependent bean destroy fix
+* ResponseUtil extended, in case of getFileResponse the filename is also sent back in the header with UTF-8 encoding (filename*=UTF-8''...)
 
 ==== Migration
 Changes are backwards compatible doesnt need any migration.

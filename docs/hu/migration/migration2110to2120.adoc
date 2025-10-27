@@ -12,6 +12,7 @@ A commons-lang3 verzió frissítése magával hozza, hogy néhány metódus depr
 
 === coffee-rest
 * JaxbTool CDI dependent bean destroy fix
+* ResponseUtil bővítése, getFileResponse esetén a header-ben UTF-8 kódolással is visszaküldjük a filenevet (filename*=UTF-8''...)
 
 ==== Migration
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
