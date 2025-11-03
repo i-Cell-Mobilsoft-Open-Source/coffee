@@ -135,8 +135,9 @@ A változtatások nem eredményeznek átállási munkálatokat, visszafelé komp
 `BaseExceptionWrapper` helyett.
 
 === coffee-cdi
-`hu.icellmobilsoft.coffee.cdi.trace.annotation.Traced.LITERAL` típusa megváltozott, hogy használható lehessen `ITraceHandler`-rel,
+* `hu.icellmobilsoft.coffee.cdi.trace.annotation.Traced.LITERAL` típusa megváltozott, hogy használható lehessen `ITraceHandler`-rel,
 és inicializálva lett a default értékekkel.
+* A `LogContainer` most már limitált darab log üzeneteket tárol. A korlát a `coffee.logger.logContainer.maxSize` konfigurációs kulccsal állítható. (default: `1000`)
 
 ==== Migration
-A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+Ha a régi `LogContainer` viselkedést szeretnénk visszakapni, a `coffee.logger.logContainer.maxSize` konfigurációs kulcsot kell `2147483647`-re beállítani. De ezt inkább nem javasoljuk.

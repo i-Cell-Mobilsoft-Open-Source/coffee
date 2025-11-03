@@ -223,7 +223,7 @@ public class AppLoggerImpl implements AppLogger {
      * </p>
      */
     public void writeLogToInfo() {
-        logger().log(JulLevel.INFO, toString());
+        log(JulLevel.INFO);
     }
 
     /**
@@ -232,32 +232,24 @@ public class AppLoggerImpl implements AppLogger {
      * </p>
      */
     public void writeLogToError() {
-        logger().log(JulLevel.ERROR, toString());
+        log(JulLevel.ERROR);
     }
 
     @Override
     public void writeLog() {
-        LogLevel logLevel = logContainer.getHighestLogLevel();
-        switch (logLevel) {
-        case CUSTOM:
-        case TRACE:
-            logger().log(JulLevel.TRACE, toString());
-            break;
-        case DEBUG:
-            logger().log(JulLevel.DEBUG, toString());
-            break;
-        case INFO:
-            logger().log(JulLevel.INFO, toString());
-            break;
-        case WARN:
-            logger().log(JulLevel.WARN, toString());
-            break;
-        case ERROR:
-            logger().log(JulLevel.ERROR, toString());
-            break;
-        default:
-            logger().log(JulLevel.ERROR, toString());
-            break;
+        switch (logContainer.getHighestLogLevel()) {
+        case CUSTOM, TRACE -> log(JulLevel.TRACE);
+        case DEBUG -> log(JulLevel.DEBUG);
+        case INFO -> log(JulLevel.INFO);
+        case WARN -> log(JulLevel.WARN);
+        default -> log(JulLevel.ERROR);
+        }
+    }
+
+    private void log(JulLevel level) {
+        Logger loggerInstance = logger();
+        if (loggerInstance.isLoggable(level)) {
+            loggerInstance.log(level, toString());
         }
     }
 

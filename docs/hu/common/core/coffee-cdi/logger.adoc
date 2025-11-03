@@ -58,3 +58,5 @@ log.trace("Generált azonosító: [{0}]", id);
 ----
 
 Ennek a célja, hogy a log nézegetésnél egyből azonosítani lehet a változó értéket, valamit azt is, ha az "" (üres String) vagy null értéke van.
+
+A `LogContainer` limitált darab log üzeneteket tárol. A korlát a `coffee.logger.logContainer.maxSize` konfigurációs kulccsal állítható. (default: `1000`)

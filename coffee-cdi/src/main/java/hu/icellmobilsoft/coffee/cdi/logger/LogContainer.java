@@ -24,10 +24,10 @@ import java.io.StringWriter;
 import java.text.MessageFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
+import java.util.ArrayDeque;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 
 import jakarta.enterprise.inject.Model;
 
@@ -50,14 +50,14 @@ public class LogContainer {
     /**
      * Default log maximum size
      */
-    private final int DEFAULT_LOG_MAX_SIZE = 10_000;
+    private static final int DEFAULT_LOG_MAX_SIZE = 1000;
 
     /**
      * Log maximum size
      */
-    private final int LOG_MAX_SIZE = ConfigProvider.getConfig().getOptionalValue(LOG_MAX_SIZE_CONFIG_KEY, Integer.class).orElse(DEFAULT_LOG_MAX_SIZE);
+    private final int logMaxSize = ConfigProvider.getConfig().getOptionalValue(LOG_MAX_SIZE_CONFIG_KEY, Integer.class).orElse(DEFAULT_LOG_MAX_SIZE);
 
-    private final List<LogContainer.Log> logs = new ArrayList<>();
+    private final Queue<Log> logs = new ArrayDeque<>();
     private final Map<String, Object> customParam = new HashMap<>();
 
     /**
@@ -385,14 +385,10 @@ public class LogContainer {
         ERROR,
     }
 
-    private void cleanOlderLogs() {
-        if (logs.size() > LOG_MAX_SIZE) {
-            logs.subList(0, logs.size() - LOG_MAX_SIZE).clear();
-        }
-    }
-
     private void addLog(LogContainer.Log log) {
+        if (logs.size() >= logMaxSize) {
+            logs.remove();
+        }
         logs.add(log);
-        cleanOlderLogs();
     }
 }
