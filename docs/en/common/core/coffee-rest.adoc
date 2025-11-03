@@ -497,3 +497,25 @@ public class MyBean {
     }
 }
 ----
+
+== Eviction
+
+By calling EvictAction, the cache content can be cleared. To do this, an EvictAction class must be created in the project (with the appropriate scope) and it should extend the AbstractEvictAction from Coffee. After that, the EvictAction::evict method should be called through a REST endpoint. As a result, the evict method will be invoked on all beans and config sources that implement the Evictable interface.
+
+.ISystemRest
+[source,java]
+----
+public interface ISystemRest {
+  ...
+  
+  @GET
+  @Path(SystemPath.EVICT)
+  @Produces(value = { MediaType.APPLICATION_JSON, MediaType.TEXT_XML, MediaType.APPLICATION_XML })
+  EvictResponse evict() throws BaseException;
+----
+
+.SystemRest
+
+Use <<common_module_coffee-module-quarkus,AbstractQuarkusSystemRest>> or
+ <<common_module_coffee-module-wildfly,AbstractWildflySystemRest>> to implement SystemRest on the project.
+ 

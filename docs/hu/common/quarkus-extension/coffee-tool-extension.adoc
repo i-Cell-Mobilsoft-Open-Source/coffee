@@ -1,0 +1,21 @@
+[#common_coffee-quarkus-extensions-tool]
+= coffee-tool-extension
+
+A modul céja a `coffee-tool` modul kiterjesztése Quarkus natív futtatás támogatással.
+
+A Quarkus natív fordító (GraalVM) fordítási időben eltávolítja azokat az osztályokat, amelyekre nincs közvetlen hivatkozás.
+Az extension a `coffee-tool` modulban található reflection-nel hivatkozott osztályokat explicit regisztrálja, hogy ne kerüljenek törlésre a fordító által.
+
+NOTE: jelenleg a Quarkus 3.2.x verziója van használva az extension-ökben.
+
+A modul használatához a `coffee-tool` helyett az extension függőséget kell hozzáadni, ez már tartalmazza magát a `coffee-tool` modult is.
+
+.pom.xml
+[source,xml]
+----
+    <dependency>
+        <groupId>hu.icellmobilsoft.coffee.quarkus</groupId>
+        <artifactId>coffee-tool-extension</artifactId>
+        <version>${version.hu.icellmobilsoft.coffee}</version>
+    </dependency>
+----

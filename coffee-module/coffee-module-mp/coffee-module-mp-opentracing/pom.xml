@@ -3,10 +3,12 @@
 	<parent>
 		<groupId>hu.icellmobilsoft.coffee</groupId>
 		<artifactId>coffee-module-mp</artifactId>
-		<version>2.10.0-SNAPSHOT</version>
+		<version>2.12.0-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>coffee-module-mp-opentracing</artifactId>
+
+	<name>Coff:ee Module - MP - Opentracing</name>
 
 	<properties>
 		<opentracing-tracerresolver>0.1.8</opentracing-tracerresolver>
@@ -28,7 +30,7 @@
 		</dependency>
 		<dependency>
 			<groupId>io.grpc</groupId>
-			<artifactId>grpc-context</artifactId>
+			<artifactId>grpc-api</artifactId>
 		</dependency>
 		
 		<!-- TEST -->

@@ -19,7 +19,7 @@
  */
 package hu.icellmobilsoft.coffee.cdi.config;
 
-import hu.icellmobilsoft.coffee.module.configdoc.ConfigDoc;
+import hu.icellmobilsoft.coffee.module.docgen.config.ConfigDoc;
 
 /**
  * Collector of configuration keys at the Coffee level

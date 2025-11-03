@@ -3,7 +3,54 @@
 coff:ee v2.9.0 -> v2.10.0 migrációs leírás, újdonságok, változások leírása
 
 === coffee-configuration
+
 Pontosításra került egy félrevezető hibaüzenet az ApplicationConfiguration osztályban.
 
 ==== Migration
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+=== coffee-redisstream
+
+A RedisStreamPublisher ki lett egészítve egy új funkcióval, ami lehetővé teszi egyszerre több üzenet Redis streamre küldését pipeline-on keresztül.
+
+==== Migration
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+=== Java11 támogatás eltávolítása
+A ci build folyamatból el lett távolítva a java11 támogatás, és az alapértelmezett java verzió a 17 lett.
+
+==== Migration
+A legkisebb támogatott java verzió a 17-es.
+
+=== coffee-tool
+Az alapértelmezett egyedi jsob adapterek null safe-ek lettek.
+
+==== Migration
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+=== coffee-model-base
+
+Az `AbstractIdentifiedEntity` implementálja az `IIdentifiedEntity` interfészt az `AbstractIdentifiedAuditEntity`-hez hasonlóan.
+Így érvényesül ezen entitások esetén is a `hu.icellmobilsoft.coffee.model.base.generator.EntityIdGenerator`-ban implmentált logika.
+
+==== Migration
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+=== coffee-rest
+
+Hiányzó i18n fordítás a `hu.icellmobilsoft.coffee.se.api.exception.enums.CoffeeFaultType.OPERATION_FAILED` kulcshoz.
+
+==== Migration
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis. Ajánlot ennek a kulcsnak az eltávolítás projekt szinten, amennyiben korábban fel lett véve workaround-ként.
+
+=== coffee-deltaspike-data-extension
+
+Minden regisztrált Repository előállítása nativeImageProxyDefinitionBuildItemBuildProducer-rel, hogy a Repository működni tudjon native imageben.
+
+==== Migration
+
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.

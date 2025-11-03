@@ -36,16 +36,17 @@ import jakarta.inject.Inject;
 import org.apache.commons.lang3.StringUtils;
 
 import hu.icellmobilsoft.coffee.dto.exception.InvalidParameterException;
-import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.module.redis.manager.RedisManager;
 import hu.icellmobilsoft.coffee.module.redis.manager.RedisManagerConnection;
 import hu.icellmobilsoft.coffee.module.redisstream.common.RedisStreamUtil;
 import hu.icellmobilsoft.coffee.module.redisstream.config.IStreamGroupConfig;
 import hu.icellmobilsoft.coffee.module.redisstream.config.StreamGroupConfig;
 import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
+import hu.icellmobilsoft.coffee.se.api.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.StreamEntryID;
+import redis.clients.jedis.UnifiedJedis;
 import redis.clients.jedis.exceptions.JedisDataException;
 import redis.clients.jedis.params.XPendingParams;
 import redis.clients.jedis.params.XReadGroupParams;
@@ -114,7 +115,7 @@ public class RedisStreamService {
      *             Exception
      */
     public Long count() throws BaseException {
-        Long count = getRedisManager().runWithConnection(Jedis::xlen, "xlen", streamKey()).orElse(0L);
+        Long count = getRedisManager().runWithConnection(UnifiedJedis::xlen, "xlen", streamKey()).orElse(0L);
         if (log.isTraceEnabled()) {
             log.trace("[{0}] stream have [{1}] elements", streamKey(), count);
         }
@@ -158,7 +159,8 @@ public class RedisStreamService {
                 log.trace("Group [{0}] already exist", getGroup());
             }
         } else {
-            Optional<String> createGroupResult = getRedisManager().run(Jedis::xgroupCreate, "xgroupCreate", streamKey(), getGroup(),
+            Optional<String> createGroupResult = getRedisManager().run(
+                    UnifiedJedis::xgroupCreate, "xgroupCreate", streamKey(), getGroup(),
                     new StreamEntryID(), true);
             log.info("Stream group [{0}] on stream [{1}] created with result: [{2}]", getGroup(), streamKey(), createGroupResult);
         }
@@ -166,7 +168,7 @@ public class RedisStreamService {
 
     private boolean existsGroupInActiveConnection() throws BaseException {
         try {
-            Optional<List<StreamGroupInfo>> info = getRedisManager().run(Jedis::xinfoGroups, "xinfoGroups", streamKey());
+            Optional<List<StreamGroupInfo>> info = getRedisManager().run(UnifiedJedis::xinfoGroups, "xinfoGroups", streamKey());
             return info.isPresent() && info.get().stream().map(StreamGroupInfo::getName).anyMatch(name -> StringUtils.equals(getGroup(), name));
         } catch (TechnicalException e) {
             if (!(e.getCause() instanceof JedisDataException)) {
@@ -197,7 +199,7 @@ public class RedisStreamService {
             throw new InvalidParameterException("consumerIdentifier is null");
         }
         Map<String, StreamEntryID> streamQuery = Map.of(streamKey(), StreamEntryID.UNRECEIVED_ENTRY);
-        Optional<List<Entry<String, List<StreamEntry>>>> result = getRedisManager().run(Jedis::xreadGroup, "xreadGroup", getGroup(),
+        Optional<List<Entry<String, List<StreamEntry>>>> result = getRedisManager().run(UnifiedJedis::xreadGroup, "xreadGroup", getGroup(),
                 consumerIdentifier, createXReadGroupParams(), streamQuery);
         if (result.isEmpty() || result.get().isEmpty()) {
             // There are no new messages
@@ -282,7 +284,7 @@ public class RedisStreamService {
         if (Objects.isNull(streamEntryID)) {
             return 0;
         }
-        long successCount = getRedisManager().run(Jedis::xack, "xack", streamKey(), getGroup(), streamEntryID).orElse(0L);
+        long successCount = getRedisManager().run(UnifiedJedis::xack, "xack", streamKey(), getGroup(), streamEntryID).orElse(0L);
         if (log.isTraceEnabled()) {
             if (successCount > 0) {
                 log.trace("StreamEntryID [{0}] successfully ACKed", streamEntryID);
@@ -319,7 +321,7 @@ public class RedisStreamService {
     private Optional<List<StreamPendingEntry>> pendingInCurrentConnection(int pendingCount, StreamEntryID from, StreamEntryID to)
             throws BaseException {
         XPendingParams params = new XPendingParams(from, to, pendingCount);
-        return getRedisManager().run(Jedis::xpending, "xpending", streamKey(), getGroup(), params);
+        return getRedisManager().run(UnifiedJedis::xpending, "xpending", streamKey(), getGroup(), params);
     }
 
     /**

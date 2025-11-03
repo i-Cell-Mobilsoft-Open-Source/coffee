@@ -1,0 +1,219 @@
+ifndef::imagesdir[:imagesdir: ../../pic]
+
+[#common_module_coffee-module-docgen-config]
+= coffee-module-docgen-config
+
+The purpose of this module is to generate documentation from classes containing configuration keys
+
+== Usage
+
+To use it, the sub-dependency must be added to `pom.xml`:
+[source,xml]
+----
+<dependency>.
+    <groupId>hu.icellmobilsoft.coffee</groupId>
+    <artifactId>coffee-module-docgen-config</artifactId>
+</dependency>
+----
+
+=== For static configuration keys
+Next, the classes containing the configuration keys must be annotated with the `@ConfigDoc` annotation.
+
+If this is done by default, the generated asciidoc will be included in the `.jar` file at compile time as `META-INF/config_keys.adoc`.
+The keys are displayed in separate tables according to the prefix before the first dot character.
+
+==== Example
+
+[source,java]
+----
+@ConfigDoc // <1>
+public interface ConfigDocExample {
+
+    /**
+     * test prefix
+     */
+    @ConfigDoc(exclude = true) // <2>
+    String PREFIX = "test.";
+
+    /**
+     * test2
+     */
+    String test2 = "test2.xxx";
+
+    /**
+     * Lorem ipsum dolor sit amet, consectetur adipisicing elit. Illo, placeat!
+     */
+    String foo = PREFIX + "foo";
+
+    /**
+     * Lorem ipsum dolor sit amet, consectetur adipisicing elit. Iusto, sapiente?
+     */
+    @ConfigDoc(description = "Override...") // <3>
+    String bar = PREFIX + "bar";
+
+    /**
+     * Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsam, similique?
+     * @since 3.14159 // <4>
+     */
+    @ConfigDoc(defaultValue = "5000") // <5>
+    String baz = PREFIX + "baz";
+
+    /**
+     * Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsam, similique?
+     *
+     * @since 3.14159
+     */
+    @ConfigDoc(defaultValue = "999", isStartupParam = true, isRuntimeOverridable = true) // <6>
+    String features = PREFIX + "features";
+
+    /**
+     * Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsam, similique?
+     *
+     * @since 3.14159
+     */
+    @ConfigDoc(defaultValue = "1234", title = "Title Test") // <7>
+    String titleTest = PREFIX + "title";
+
+    /**
+     * Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsam, similique?
+     *
+     * @since 3.14159
+     */
+    @ConfigDoc(defaultValue = "1234", title = "Title Test", titleHeadingLevel = 1) // <8>
+    String titleHeadingLevelTest = PREFIX + "titleHeadingLevelTest";
+}
+----
+<1> Generation is activated on a class with the annotation `@ConfigDoc`
+<2> The `exclude` field can be used to exclude fields from the generation
+<3> By default, the javadoc description is included in the generated file, which can be overwritten with the `description` field of the annotation
+<4> The `since` column of the generated table can be retrieved from the `@since` javadoc tag
+<5> The default value for the configuration can be specified
+<6> The `isStartupParam` marks if the parameter is for startup.
+The `isRuntimeOverridable` marks if the parameter can be overridden at runtime.
+Both of the parameters are going to be shown under the `Features`column represented as emojis:
+** For `isStartupParam` true the emoji is: 🚀
+** For `isRuntimeOverridable` true the emoji is: ⏳
+<7> With the `title` parameter we can overwrite the default title for the generated tables(optional).
+<8> With the `titleHeadingLevel` parameter we can set the heading level for the title of the generated table(optional).
+Note that if multiple values are given for the same title on multiple parameters the smallest value will be selected and it also needs to be in the range of [0,5] if not we use the value of 3 as fallback.
+
+.The result of the above example code
+image::coffee-module-docgen-config-example1.png[]
+
+=== For dynamic configuration keys
+For configs with dynamic keys (e.g. redis, mongo db),
+the keys must be included in a MessageFormat format,
+then the class containing the keys must be annotated with the `@DynamicConfigTemplate` annotation,
+and the class or its variables with the already known `@ConfigDoc` annotation.
+
+From the classes annotated with `@DynamicConfigTemplate`, a template adoc corresponding to the `@ConfigDoc` annotation will be created,
+in the `META-INF/config-templates` folder, under the name `fully-qualified-class-name.adoc`.
+
+After that, the qualifier and/or injection point for the config must be annotated in the `@DynamicConfigDocs`
+annotation, where templateClass is the class containing the keys.
+
+When processing the `@DynamicConfigDocs` annotation, both the injection point and the qualifier
+are read, with preference given to the injection point.
+
+If this is done by default, the compiled `.jar` file will include the generated asciidoc in the `META-INF/
+
+.Template class
+[source,java]
+----
+@ConfigDoc
+@DynamicConfigTemplate //<1>
+public interface DynamicConfigTemplateExample {
+
+    /**
+     * test prefix
+     */
+    @ConfigDoc(exclude = true) //<2>
+    String PREFIX = "test.";
+
+    /**
+     * Lorem ipsum dolor sit amet, consectetur adipisicing elit. Illo, placeat!
+     */
+    String foo = PREFIX + "{0}.foo"; //<3>
+}
+----
+<1> Template generation is activated on a class with the annotation `@ConfigDoc` and `@DynamicConfigTemplate`
+<2> On the fields, `@ConfigDoc` can be used to generate the template
+<3> Part of the key variable with MessageFormat placeholders
+
+.qualifier
+[source,java]
+----
+@DynamicConfigDocs( // <1>
+        template = DynamicConfigTemplateExample.class, // <2>
+        title = "Dynamic config {0} config keys", // <3>
+        description = "Dyn configuration keys" // <4>
+)
+public @interface DynamicConfigurationQualifierExample {
+
+    /**
+     * Config key of the desired dynamic configuration
+     *
+     * @return config key
+     */
+    String configKey();
+
+}
+----
+<1> @DynamicConfigDocs annotation containing default values for qualifier
+<2> The template to use for dynamic config
+<3> Default address for the config (may contain placeholders)
+<4> Default description of the config (may contain placeholders)
+
+.Injection point
+[source,java]
+----
+public class DynamicConfigInjectionPointExample {
+
+    @Inject
+    @DynamicConfigDocs(templateVariables = "abc") //<1>
+    @DynamicConfigurationQualifierExample(configKey = "abc")
+    private Object injectedConfig;
+
+    @Inject
+    @DynamicConfigDocs(templateVariables = "xyz", title = "Title override for config key {0}") //<2>
+    @DynamicConfigurationQualifierExample(configKey = "xyz")
+    private Object otherConfig;
+}
+
+----
+<1> The config key to insert into the template in the qualifier is `abc`
+<2> Second config with different key: `xyz`, with overwritten address
+
+.result of the above example code
+image::coffee-module-docgen-config-dynamic-example1.png[]
+
+== Configuration
+
+Since the generation uses an annotation processor, it can be configured at compile time with `-A`.
+This can be specified via `maven-compiler-plugin` for maven:
+
+.example pom.xml
+[source,xml]
+----
+<build>
+    <plugins>
+        <plugin>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <configuration>
+                <compilerArgs>
+                    <arg>-Acoffee.docgen.config.outputDir=${project.basedir}/../docs/</arg> #<1>
+                    <arg>-Acoffee.docgen.config.outputFileName=${project.name}_config.adoc</arg> #<2>
+                    <arg>-Acoffee.docgen.config.outputToClassPath=false</arg> #<3>
+                    <arg>-Acoffee.docgen.config.dynamicOutputFileName=dynamic_${project.name}_config.adoc</arg> #<4>
+                    <arg>-Acoffee.docgen.config.columns=key,since,description</arg> #<5>
+                </compilerArgs>
+            </configuration>
+        </plugin>
+    </plugins>
+</build>
+----
+<1> The folder where the generated file will be placed. Default: `META-INF/`
+<2> Name of the generated file. Default: `config_keys.adoc`
+<3> Whether the generated file should be put on the classpath, i.e. whether we want it to be included in the generated jar file. Default: `true`
+<4> Name of the generated file for dynamic configurations. Default: `dynamic_config_keys.adoc`
+<5> The columns displayed in the generated table in the order specified. Default: `key, source, description, default_value, since` (all columns)

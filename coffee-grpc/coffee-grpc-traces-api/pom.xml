@@ -3,10 +3,12 @@
     <parent>
         <groupId>hu.icellmobilsoft.coffee</groupId>
         <artifactId>coffee-grpc</artifactId>
-        <version>2.10.0-SNAPSHOT</version>
+        <version>2.12.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>coffee-grpc-traces-api</artifactId>
+
+    <name>Coff:ee GRPC - Traces API</name>
 
     <dependencies>
         <dependency>

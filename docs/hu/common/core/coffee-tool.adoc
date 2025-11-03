@@ -100,3 +100,43 @@ Type paramListType = new TypeToken<List<ParameterType>>() {}.getType();
 List<ParameterType> list = JsonUtil.toObject(paramString, paramListType);
 System.out.println(list.get(0).getKey());
 ----
+
+`AbstractCache`::
+
+Az `AbstractCache` ősosztályból érdemes származtatni a projekt cache objektumait, mert ki lettek emelve benne olyan metódusok, amiket így nem kell mindenhol megírni. Metrikát is küld magáról egy aszinkron CDI event formájában (`CacheMetricsEvent`), melyből a következő adatokat tudjuk kinyerni:
+hitCount, missCount, a cache mérete, valamint a cache neve, hogy meg tudjuk jeleníteni egy gauge formájában.
+[source, yaml]
+.konfiguráció
+----
+coffee:
+  cache:
+    guava:
+      templateCache: <1>
+        disableMetrics: false # default <2>
+        specs: expireAfterWrite=12h  # default <3> 
+----
+<1> a cache neve
+<2> metrika engedélyezése vagy tiltása
+<3> guava cache specifikáció
+
+[source, java]
+.metrikák fogadása
+----
+private final Map<MetricID, Long> metricValueMap = new ConcurrentHashMap<>();
+
+public void onEventCacheMetrics(@ObservesAsync CacheMetricsEvent message) {
+      Tag cacheNameTag = new Tag(NAME_TAG, message.getCacheName());
+
+      updateGauge(message.getMetadataHitCountName(), message.getHitCount(), cacheNameTag);
+      updateGauge(message.getMetadataMissCountName, message.getMissCount(), cacheNameTag);
+      updateGauge(message.getMetadataSizeName, message.getSize(), cacheNameTag);
+}
+
+private void updateGauge(Metadata metadata, long value, Tag... tags) {
+        MetricID metricID = new MetricID(metadata.getName(), tags);
+        metricValueMap.put(metricID, value);
+        metricRegistry.gauge(metadata, metricID, metricValueMap::get, tags);
+}
+
+----
+

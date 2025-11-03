@@ -1,0 +1,21 @@
+[#common_coffee-quarkus-extensions-module-etcd]
+= coffee-module-etcd-extension
+
+A modul céja a `coffee-module-etcd` modul kiterjesztése Quarkus natív futtatás támogatással.
+
+A Quarkus natív fordító (GraalVM) fordítási időben eltávolítja azokat az osztályokat, amelyekre nincs közvetlen hivatkozás.
+Az extension a `coffee-module-etcd` modulban található reflection-nel hivatkozott osztályokat explicit regisztrálja, hogy ne kerüljenek törlésre a fordító által.
+
+NOTE: jelenleg a Quarkus 3.2.x verziója van használva az extension-ökben.
+
+A modul használatához a `coffee-module-etcd` helyett az extension függőséget kell hozzáadni, ez már tartalmazza magát a `coffee-module-etcd` modult is.
+
+.pom.xml
+[source,xml]
+----
+    <dependency>
+        <groupId>hu.icellmobilsoft.coffee.quarkus</groupId>
+        <artifactId>coffee-module-etcd-extension</artifactId>
+        <version>${version.hu.icellmobilsoft.coffee}</version>
+    </dependency>
+----

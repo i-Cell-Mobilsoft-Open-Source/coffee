@@ -34,7 +34,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import hu.icellmobilsoft.coffee.dto.common.LogConstants;
 import hu.icellmobilsoft.coffee.dto.exception.InvalidParameterException;
-import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
+import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 import hu.icellmobilsoft.coffee.module.redis.manager.RedisManager;
 import hu.icellmobilsoft.coffee.module.redis.manager.RedisManagerConnection;
 import hu.icellmobilsoft.coffee.module.redisstream.common.RedisStreamUtil;
@@ -43,10 +43,14 @@ import hu.icellmobilsoft.coffee.module.redisstream.config.StreamGroupConfig;
 import hu.icellmobilsoft.coffee.module.redisstream.config.StreamMessageParameter;
 import hu.icellmobilsoft.coffee.module.redisstream.service.RedisStreamService;
 import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
+import hu.icellmobilsoft.coffee.se.api.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
 import hu.icellmobilsoft.coffee.se.logging.mdc.MDC;
-import redis.clients.jedis.Jedis;
+import redis.clients.jedis.AbstractPipeline;
+import redis.clients.jedis.Pipeline;
+import redis.clients.jedis.Response;
 import redis.clients.jedis.StreamEntryID;
+import redis.clients.jedis.UnifiedJedis;
 import redis.clients.jedis.params.XAddParams;
 
 /**
@@ -58,6 +62,8 @@ import redis.clients.jedis.params.XAddParams;
  */
 @Dependent
 public class RedisStreamPublisher {
+
+    private static final int PIPELINE_SIZE = 1000;
 
     @Inject
     private Logger log;
@@ -198,12 +204,55 @@ public class RedisStreamPublisher {
                     validateGroup(streamGroup);
                     id = publishInActiveConnection(createJedisMessage(publication.getStreamMessage(), publication.getParameters()), streamGroup);
                 } else {
-                    id = publishInActiveConnection(createJedisMessage(publication.getStreamMessage(), publication.getParameters()),
+                    id = publishInActiveConnection(
+                            createJedisMessage(publication.getStreamMessage(), publication.getParameters()),
                             publication.getStreamGroup());
                 }
                 ids.add(id);
             }
             return ids;
+        }
+    }
+
+    /**
+     * Publish (send) multiple messages through pipeline to stream calculated by input publication streamGroup name.
+     *
+     * @param publications
+     *            stream publication data list
+     * @return Created Redis Stream messages identifiers from Redis server
+     * @throws BaseException
+     *             exception on sending
+     */
+    public List<Optional<StreamEntryID>> publishPublicationsPipelined(List<RedisStreamPublication> publications) throws BaseException {
+        if (publications == null) {
+            throw new InvalidParameterException("publications is null!");
+        }
+        checkRedisManager();
+
+        try (RedisManagerConnection ignored = redisManager.initConnection()) {
+            List<Response<StreamEntryID>> responses = new ArrayList<>(publications.size());
+            AbstractPipeline pipeline = initPipeline();
+            int i = 1;
+            for (RedisStreamPublication publication : publications) {
+                Response<StreamEntryID> response;
+                if (StringUtils.isBlank(publication.getStreamGroup())) {
+                    validateGroup(streamGroup);
+                    response = publishThroughPipeline(
+                            pipeline,
+                            streamGroup,
+                            createJedisMessage(publication.getStreamMessage(), publication.getParameters()));
+                } else {
+                    validateGroup(publication.getStreamGroup());
+                    response = publishThroughPipeline(
+                            pipeline,
+                            publication.getStreamGroup(),
+                            createJedisMessage(publication.getStreamMessage(), publication.getParameters()));
+                }
+                responses.add(response);
+                i = syncPipelineIfNeeded(pipeline, publications.size(), i);
+            }
+            syncPipelineIfNeeded(pipeline, publications.size(), i);
+            return getStreamEntryIds(responses);
         }
     }
 
@@ -232,9 +281,7 @@ public class RedisStreamPublisher {
      *             exception on sending
      */
     public List<Optional<StreamEntryID>> publish(List<String> streamMessages, Map<String, String> parameters) throws BaseException {
-        if (streamMessages == null) {
-            throw new InvalidParameterException("streamMessages is null!");
-        }
+        validateStreamMessages(streamMessages);
         checkInitialization();
 
         try (RedisManagerConnection ignored = redisManager.initConnection()) {
@@ -272,9 +319,7 @@ public class RedisStreamPublisher {
      */
     public List<Optional<StreamEntryID>> publish(String streamGroup, List<String> streamMessages, Map<String, String> parameters)
             throws BaseException {
-        if (streamMessages == null) {
-            throw new InvalidParameterException("streamMessages is null!");
-        }
+        validateStreamMessages(streamMessages);
         validateGroup(streamGroup);
         checkRedisManager();
 
@@ -304,6 +349,107 @@ public class RedisStreamPublisher {
             ids.add(id);
         }
         return ids;
+    }
+
+    /**
+     * Publish (send) multiple messages through pipeline to stream calculated by input streamGroup name.
+     *
+     * @param streamMessages
+     *            Messages in stream. Can be String or JSON List
+     * @return Created Redis Stream messages identifiers from Redis server
+     * @throws BaseException
+     *             exception on sending
+     */
+    public List<Optional<StreamEntryID>> publishPipelined(List<String> streamMessages) throws BaseException {
+        return publishPipelined(streamMessages, null);
+    }
+
+    /**
+     * Publish (send) multiple messages through pipeline to stream with pipeline calculated by input streamGroup name.
+     *
+     * @param streamMessages
+     *            Messages in stream. Can be String or JSON List
+     * @param parameters
+     *            Messages parameters, nullable. Map key value is standardized in {@link StreamMessageParameter} enum value
+     * @return Created Redis Stream messages identifiers from Redis server
+     * @throws BaseException
+     *             exception on sending
+     */
+    public List<Optional<StreamEntryID>> publishPipelined(List<String> streamMessages, Map<String, String> parameters) throws BaseException {
+        validateStreamMessages(streamMessages);
+        checkInitialization();
+
+        try (RedisManagerConnection ignored = redisManager.initConnection()) {
+            return publishPipelinedInActiveConnection(streamGroup, streamMessages, parameters);
+        }
+    }
+
+    /**
+     * Publish (send) multiple messages through pipeline to stream with pipeline calculated by input streamGroup name.
+     *
+     * @param streamGroup
+     *            stream group to send (another than initialized)
+     * @param streamMessages
+     *            Messages in stream. Can be String or JSON List
+     * @return Created Redis Stream message identifier from Redis server
+     * @throws BaseException
+     *             exception on sending
+     */
+    public List<Optional<StreamEntryID>> publishPipelined(String streamGroup, List<String> streamMessages) throws BaseException {
+        return publishPipelined(streamGroup, streamMessages, null);
+    }
+
+    /**
+     * Publish (send) multiple messages through pipeline to stream with pipeline calculated by input streamGroup name.
+     *
+     * @param streamGroup
+     *            stream group to send (another than initialized)
+     * @param streamMessages
+     *            Messages in stream. Can be String or JSON List
+     * @param parameters
+     *            Messages parameters, nullable. Map key value is standardized in {@link StreamMessageParameter} enum value
+     * @return Created Redis Stream messages identifiers from Redis server
+     * @throws BaseException
+     *             exception on sending
+     */
+    public List<Optional<StreamEntryID>> publishPipelined(String streamGroup, List<String> streamMessages, Map<String, String> parameters)
+            throws BaseException {
+        validateStreamMessages(streamMessages);
+        validateGroup(streamGroup);
+        checkRedisManager();
+
+        try (RedisManagerConnection ignored = redisManager.initConnection()) {
+            return publishPipelinedInActiveConnection(streamGroup, streamMessages, parameters);
+        }
+    }
+
+    /**
+     * Publish (send) multiple messages through pipeline to stream
+     *
+     * @param streamGroup
+     *            Stream group to send (another than initialized)
+     * @param streamMessages
+     *            Messages in stream. Can be String or JSON List
+     * @param parameters
+     *            Messages parameters, nullable. Map key value is standardized in {@link StreamMessageParameter} enum value
+     * @return Created Redis Stream messages identifiers from Redis server
+     * @throws BaseException
+     *             exception on sending
+     */
+    protected List<Optional<StreamEntryID>> publishPipelinedInActiveConnection(String streamGroup, List<String> streamMessages,
+            Map<String, String> parameters) throws BaseException {
+
+        AbstractPipeline pipeline = initPipeline();
+
+        int i = 1;
+        List<Response<StreamEntryID>> responses = new ArrayList<>(streamMessages.size());
+        for (String streamMessage : streamMessages) {
+            Response<StreamEntryID> response = publishThroughPipeline(pipeline, streamGroup, createJedisMessage(streamMessage, parameters));
+            responses.add(response);
+            i = syncPipelineIfNeeded(pipeline, streamMessages.size(), i);
+        }
+        syncPipelineIfNeeded(pipeline, streamMessages.size(), i);
+        return getStreamEntryIds(responses);
     }
 
     /**
@@ -352,7 +498,8 @@ public class RedisStreamPublisher {
             return flowIdMessage;
         }
         return Optional.ofNullable(parameters.get(StreamMessageParameter.FLOW_ID_EXTENSION.getMessageKey()))
-                .map(extension -> flowIdMessage + "_" + extension).orElse(flowIdMessage);
+                .map(extension -> flowIdMessage + "_" + extension)
+                .orElse(flowIdMessage);
     }
 
     /**
@@ -371,10 +518,8 @@ public class RedisStreamPublisher {
      *             Exception
      */
     protected Optional<StreamEntryID> publishInActiveConnection(Map<String, String> values, String streamGroup) throws BaseException {
-        XAddParams params = XAddParams.xAddParams();
-        config.getProducerMaxLen().ifPresent(params::maxLen);
-        config.getProducerTTL().ifPresent(ttl -> params.minId(new StreamEntryID(Instant.now().minusMillis(ttl).toEpochMilli(), 0).toString()));
-        Optional<StreamEntryID> streamEntryID = redisManager.run(Jedis::xadd, "xadd", RedisStreamUtil.streamKey(streamGroup), values, params);
+        XAddParams params = getXAddParams();
+        Optional<StreamEntryID> streamEntryID = redisManager.run(UnifiedJedis::xadd, "xadd", RedisStreamUtil.streamKey(streamGroup), values, params);
         if (log.isTraceEnabled()) {
             log.trace("Published streamEntryID: [{0}] into [{1}]", streamEntryID, RedisStreamUtil.streamKey(streamGroup));
         }
@@ -437,7 +582,122 @@ public class RedisStreamPublisher {
         }
     }
 
+    /**
+     * Validates streamMessages
+     * 
+     * @param streamMessages
+     *            streamMessages
+     * @throws BaseException
+     *             if validation fails
+     */
+    protected void validateStreamMessages(List<String> streamMessages) throws BaseException {
+        if (streamMessages == null) {
+            throw new InvalidParameterException("streamMessages is null!");
+        }
+    }
+
+    /**
+     * Returns the default XAddParams
+     * 
+     * @return the default XAdd params
+     */
+    protected XAddParams getXAddParams() {
+        XAddParams params = XAddParams.xAddParams();
+        config.getProducerMaxLen().ifPresent(params::maxLen);
+        config.getProducerTTL().ifPresent(ttl -> params.minId(new StreamEntryID(Instant.now().minusMillis(ttl).toEpochMilli(), 0).toString()));
+        return params;
+    }
+
+    /**
+     * Initializes a new pipeline<br/>
+     * Requires active connection
+     * 
+     * @return pipeline instance
+     * @throws BaseException
+     *             if any error occurred while creating pipeline
+     */
+    protected AbstractPipeline initPipeline() throws BaseException {
+        return redisManager.run(UnifiedJedis::pipelined, "pipelined")
+                .orElseThrow(() -> new BaseException(CoffeeFaultType.REDIS_OPERATION_FAILED, "Error occurred while creating pipeline"));
+    }
+
+    /**
+     * Publish (send) message to stream through pipeline
+     *
+     * @param pipeline
+     *            The pipeline instance
+     * @param streamGroup
+     *            Stream group to send
+     * @param jedisMessage
+     *            Redis Stream message structure, ready to publish
+     *
+     * @return {@link Pipeline#xadd(String, Map, XAddParams)} response
+     */
+    protected Response<StreamEntryID> publishThroughPipeline(AbstractPipeline pipeline, String streamGroup, Map<String, String> jedisMessage) {
+        return pipeline.xadd(RedisStreamUtil.streamKey(streamGroup), jedisMessage, getXAddParams());
+    }
+
+    /**
+     * Gets StreamEntryIds-s from pipeline responses
+     * 
+     * @param responses
+     *            {@link Pipeline#xadd(String, Map, XAddParams)} response list
+     * @return list of optional StreamEntryIds
+     */
+    protected List<Optional<StreamEntryID>> getStreamEntryIds(List<Response<StreamEntryID>> responses) {
+        List<Optional<StreamEntryID>> streamEntryIds = responses.stream().map(Response::get).map(Optional::ofNullable).toList();
+        if (log.isTraceEnabled()) {
+            log.trace(
+                    "Published [{0}] streamEntries into [{1}]",
+                    streamEntryIds.stream().filter(Optional::isPresent).count(),
+                    RedisStreamUtil.streamKey(streamGroup));
+        }
+        return streamEntryIds;
+    }
+
+    /**
+     * Syncs pipeline if needed and increases the counter<br/>
+     * If pipelined responses reach {@link RedisStreamPublisher#PIPELINE_SIZE},<br/>
+     * or if all messages have been sent, and there are pipelined responses,<br/>
+     * then {@link Pipeline#sync()} is called<br/>
+     *
+     * @param pipeline
+     *            the Pipeline instance
+     * @param messagesToSend
+     *            The number of messages to be sent
+     * @param messagesSent
+     *            The number of sent messages
+     * @return The number of sent messages increased
+     * 
+     */
+    protected int syncPipelineIfNeeded(AbstractPipeline pipeline, int messagesToSend, int messagesSent) {
+        if ((messagesSent < messagesToSend && messagesSent % getPipelineSize() == 0)
+                || messagesSent == messagesToSend) {
+            pipeline.sync();
+        }
+        messagesSent++;
+        return messagesSent;
+    }
+
+    /**
+     * Returns the size of the pipeline
+     *
+     * @return the size of the pipeline
+     */
+    protected int getPipelineSize() {
+        return PIPELINE_SIZE;
+    }
+
+    /**
+     * returns the stream group config
+     * 
+     * @return the stream group config
+     */
+    public final StreamGroupConfig getStreamGroupConfig() {
+        return config;
+    }
+
     private TechnicalException notInitializedException() {
-        return new TechnicalException("RedisStreamHandler is not initialized!");
+        return new TechnicalException(CoffeeFaultType.REPOSITORY_FAILED, "RedisStreamHandler is not initialized!");
     }
 }

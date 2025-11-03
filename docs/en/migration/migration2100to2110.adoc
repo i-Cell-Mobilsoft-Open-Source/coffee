@@ -1,0 +1,71 @@
+= v2.10.0 → v2.11.0
+
+coff:ee v2.10.0 -> v2.11.0 migration description, news, changes
+
+* A new coffee-bom-grpc module has been added for maintaining grpc versions
+* The coffee-grpc can be built on osx-aarch_64. (see documentation for some extra configuration)
+* ETCD driver version bump to 0.8.5
+* io.grpc version bump to 1.70.0
+* com.google.protobuf version bump to 3.25.5
+* commons-lang3 version bump 3.12.0 -> 3.15.0 
+* commons-codec version bump 1.15 -> 1.17.1
+* commons.io version bump 2.11.0 -> 2.16.1
+* httpcomponents-httpclient version bump 4.5.13 -> 4.5.14 
+* httpcomponents-httpcore version bump 4.4.15 -> 4.4.16 
+* eclipse-yasson version bump 3.0.3 -> 3.0.4
+* org.jboss.logging version bump 3.4.3.Final -> 3.6.1.Final (Wildfly 34 support)
+* org.jboss.resteasy version bump 6.2.1.Final -> 6.2.11.Final (Wildfly 34 support)
+* io.micrometer version bump 1.9.13 -> 1.12.4 (Wildfly 34 support)
+* jakarta jaxb-api version bump 4.0.0 -> 4.0.2 (Wildfly 34 support)
+* jakarta activation-api version bump 2.1.0 -> 2.1.3 (Wildfly 34 support)
+* org.eclipse.microprofile version bump 5.0 -> 6.1 (Wildfly 34 support)
+** microprofile-config version bump 3.0.3 -> 3.1 (no incompatible changes)
+** microprofile-health version bump 4.0 -> 4.0.1
+** microprofile-openapi version bump 3.0 -> 3.1.2 (no incompatible changes)
+** microprofile-metrics is kept at version 4.0, as 5.1 would introduce breaking changes, but newer wf and quarkus versions will use micrometer
+* io.opentelemetry version bump 1.20.0 -> 1.29.0 (Wildfly 34 support)
+
+=== new modules added
+* `coffee-module-wildfly` for collecting wildfly specific functions
+* `coffee-module-quarkus` for collecting quarkus specific functions
+
+=== coffee-tool
+* GZipUtil got some new method for lower memory usage and direct DTO/JSON compression
+* RandomSplitGenerator added
+* JsonbUtil#getCustomClassInstance implementation changed, using Thread.currentThread().getContextClassLoader().loadClass instead of Class.forName
+* DateUtil new functions: `daysBetweenLocalDates` and `tryToParseAbsoluteRelativeDate`
+* A new AbstractEntityProcessorAction class has been added for common entity processing
+* New abstract cache implementations: AbstractCache and AbstractLoadingCache
+* New AbstractRedisStreamPipeConsumerExecutor and EventControlAction classes added to redisstream module
+
+==== Migration
+Changes are backwards compatible doesnt need any migration.
+
+=== coffee-rest
+* A new AbstractEvictAction class has been added to allow uniform invocation of classes implementing Evictable for cache clearing purposes
+* AbstractWildflySystemRest and AbstractQuarkusSystemRest have been added as abstract base classes for the SystemRest endpoint on the project
+
+==== Migration
+Changes are backwards compatible doesnt need any migration.
+
+=== Hibernate version upgrade
+Hibernate `6.2.13.Final` -> `6.6.1.Final` upgrade (Wildfly 34 support).
+
+==== Migration
+* https://docs.jboss.org/hibernate/orm/6.6/migration-guide/migration-guide.html[Hibernate 6.6 migration guide]
+* Otherwise, no changes were made at coff:ee that would prevent the use of the previous hibernate version with a dependency exclude
+
+=== coffee-module-etcd-extension
+
+New Quarkus extension to support Quarkus native compatibility for the coffee-module-etcd module.
+Description: <<common_coffee-quarkus-extensions-module-etcd, coffee-module-etcd-extension>>
+
+=== coffee-tool-extension
+
+New Quarkus extension to support Quarkus native compatibility for the coffee-tool module.
+Description: <<common_coffee-quarkus-extensions-tool, coffee-tool-extension>>
+
+=== coffee-module-redisstream
+
+BaseRedisConsumerStarter update with thread checking and metrics data propagation with CDI async event
+

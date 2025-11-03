@@ -31,4 +31,10 @@ include::module/coffee-module-mp-restclient.adoc[leveloffset=+1]
 
 include::module/coffee-module-totp.adoc[leveloffset=+1]
 
-include::module/coffee-module-configdoc.adoc[leveloffset=+1]
+include::module/coffee-module-docgen-config.adoc[leveloffset=+1]
+
+include::module/coffee-module-docgen-sqlcatalog.adoc[leveloffset=+1]
+
+include::module/coffee-module-wildfly.adoc[leveloffset=+1]
+
+include::module/coffee-module-quarkus.adoc[leveloffset=+1]

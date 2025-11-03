@@ -183,6 +183,17 @@ redisStreamPublisher.publish("message", parameters); //<3>
 // or
 RedisStreamPublication publication = RedisStreamPublication.of(id).withTTL(defaultTTL).withParameter(StreamMessageParameter.FLOW_ID_EXTENSION, id))
 redisStreamPublisher.publishPublication(publication); //<4>
+
+// In case of many records, it might be a better option to publish messages through pipeline
+List<RedisStreamPublication> redisStreamPublicationsPipelined = new ArrayList<>();
+for (int i = 0; i < 1000; i++) {
+    redisStreamPublicationsPipelined.add(RedisStreamPublication.of("alternativeGroup", "pipelined - " + i, parameters));
+}
+publisher.publishPublicationsPipelined(redisStreamPublicationsPipelined);
+// or
+List<String> ids = IntStream.range(0, 1000).mapToObj(i -> RandomUtil.generateId()).toList();
+publisher.publishPipelined(ids); //<5>
+
 ----
 <1> "group" is not mandatory in all cases
 <2> The "message" content itself will be stored in a kind of coffee stream message structure,
@@ -372,4 +383,26 @@ public class ProjectConsumerLifeCycleManager extends ConsumerLifeCycleManager {
         //
     }
 }
+----
+
+== Metric information
+
+The `BaseRedisConsumerStarter` class sends event(s) about the number of threads associated with the stream group name, which can be used to create metrics in the project.
+
+.example metric registration with MP metrics
+[source,java]
+----
+@Inject private MetricsRegistry metricyRegistry;
+
+private void onEventRegisterRedisStreamMetrics(@ObservesAsync RedisStreamMetricEventMessage message) {
+    metricRegistry.gauge(
+            Metadata.builder()
+                    .withName("redis_stream_consumer_max")
+                    .withDescription("Maximum number of redis stream counters")
+                    .withType(MetricType.GAUGE)
+                    .build(),
+            () -> message.getCount(),
+            new Tag("group", message.getGroup()));
+}
+
 ----

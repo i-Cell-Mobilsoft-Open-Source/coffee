@@ -3,17 +3,20 @@
 	<parent>
 		<groupId>hu.icellmobilsoft.coffee</groupId>
 		<artifactId>coffee-dto</artifactId>
-		<version>2.10.0-SNAPSHOT</version>
+		<version>2.12.0-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>coffee-dto-stub-gen</artifactId>
 
+	<name>Coff:ee DTO - Stub Gen</name>
 	<description>Generating classes from coffee proto files</description>
 
 	<properties>
-		<version.io.grpc.version>1.52.1</version.io.grpc.version>
-		<version.protoc.version>3.21.7</version.protoc.version>
 		<version.os-maven-plugin.version>1.7.1</version.os-maven-plugin.version>
+		<version.protoc.maven.plugin>3.11.4</version.protoc.maven.plugin>
+		<!-- should be sync with the io.grpc version in coffee-bom-grpc -->
+		<version.protoc.java.stub.gen>1.70.0</version.protoc.java.stub.gen>
+		<version.protoc>3.25.5</version.protoc>
 	</properties>
 
 	<dependencies>
@@ -34,6 +37,10 @@
 		<dependency>
 			<groupId>hu.icellmobilsoft.coffee</groupId>
 			<artifactId>coffee-dto-xsd2proto</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>io.grpc</groupId>
+			<artifactId>grpc-stub</artifactId>
 		</dependency>
 
 		<dependency>
@@ -76,44 +83,109 @@
 					</execution>
 				</executions>
 			</plugin>
-			<plugin>
-				<groupId>com.github.os72</groupId>
-				<artifactId>protoc-jar-maven-plugin</artifactId>
-				<version>3.11.4</version>
-				<configuration>
-					<protocArtifact>com.google.protobuf:protoc:${version.protoc.version}:exe:${os.detected.classifier}</protocArtifact>
-					<inputDirectories>
-						<!-- only own coffee proto files generate -->
-						<include>${project.build.directory}/proto-external</include>
-					</inputDirectories>
-					<includeMavenTypes>transitive</includeMavenTypes>
-					<includeDirectories>
-						<directory>${project.build.directory}/proto-external</directory>
-					</includeDirectories>
-					<outputTargets>
-						<outputTarget>
-							<type>java</type>
-						</outputTarget>
-						<outputTarget>
-							<type>grpc-java</type>
-							<pluginArtifact>io.grpc:protoc-gen-grpc-java:${version.io.grpc.version}:exe:${os.detected.classifier}</pluginArtifact>
-						</outputTarget>
-						<outputTarget>
-							<type>grpc-coffee</type>
-							<pluginArtifact>hu.icellmobilsoft.coffee:coffee-grpc-protoc:${project.version}</pluginArtifact>
-						</outputTarget>
-					</outputTargets>
-				</configuration>
-				<executions>
-					<execution>
-						<phase>generate-sources</phase>
-						<goals>
-							<goal>run</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
 		</plugins>
 	</build>
+	
+    <profiles>
+        <profile>
+            <id>arm64-protoc-java-gen-with-preinstalled-executable</id>
+            <activation>
+                <os>
+                    <arch>aarch64</arch>
+                </os>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.github.os72</groupId>
+                        <artifactId>protoc-jar-maven-plugin</artifactId>
+                        <version>${version.protoc.maven.plugin}</version>
+                        <configuration>
+                            <protocArtifact>com.google.protobuf:protoc:${version.protoc}:exe:${os.detected.classifier}</protocArtifact>
+                            <inputDirectories>
+                                <!-- only own coffee proto files generate -->
+                                <include>${project.build.directory}/proto-external</include>
+                            </inputDirectories>
+                            <includeMavenTypes>transitive</includeMavenTypes>
+                            <includeDirectories>
+                                <directory>${project.build.directory}/proto-external</directory>
+                            </includeDirectories>
+                            <outputTargets>
+                                <outputTarget>
+                                    <type>java</type>
+                                </outputTarget>
+                                <outputTarget>
+                                    <type>grpc-java</type>
+                                </outputTarget>
+                                <outputTarget>
+                                    <type>grpc-coffee</type>
+                                    <pluginArtifact>hu.icellmobilsoft.coffee:coffee-grpc-protoc:${project.version}</pluginArtifact>
+                                </outputTarget>
+                            </outputTargets>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <phase>generate-sources</phase>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <profile>
+            <id>protoc-java-gen-with-downloaded-artifact</id>
+            <activation>
+                <os>
+                    <arch>!aarch64</arch>
+                </os>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.github.os72</groupId>
+                        <artifactId>protoc-jar-maven-plugin</artifactId>
+                        <version>${version.protoc.maven.plugin}</version>
+                        <configuration>
+                            <protocArtifact>com.google.protobuf:protoc:${version.protoc}:exe:${os.detected.classifier}</protocArtifact>
+                            <inputDirectories>
+                                <!-- only own coffee proto files generate -->
+                                <include>${project.build.directory}/proto-external</include>
+                            </inputDirectories>
+                            <includeMavenTypes>transitive</includeMavenTypes>
+                            <includeDirectories>
+                                <directory>${project.build.directory}/proto-external</directory>
+                            </includeDirectories>
+                            <outputTargets>
+                                <outputTarget>
+                                    <type>java</type>
+                                </outputTarget>
+                                <outputTarget>
+                                    <type>grpc-java</type>
+                                    <pluginArtifact>io.grpc:protoc-gen-grpc-java:${version.protoc.java.stub.gen}:exe:${os.detected.classifier}</pluginArtifact>
+                                </outputTarget>
+                                <outputTarget>
+                                    <type>grpc-coffee</type>
+                                    <pluginArtifact>hu.icellmobilsoft.coffee:coffee-grpc-protoc:${project.version}</pluginArtifact>
+                                </outputTarget>
+                            </outputTargets>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <phase>generate-sources</phase>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
 
 </project>

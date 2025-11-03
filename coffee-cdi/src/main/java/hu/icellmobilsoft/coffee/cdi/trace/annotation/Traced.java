@@ -76,7 +76,7 @@ public @interface Traced {
     /**
      * Default empty literal
      */
-    AnnotationLiteral<Traced> LITERAL = new Literal("", "", "");
+    Literal LITERAL = new Literal("", SpanAttribute.INTERNAL, "");
 
     /**
      * AnnotationLiteral for Traced annotation
@@ -102,7 +102,7 @@ public @interface Traced {
         final String dbType;
 
         /**
-         * Instantiates the literal with component, kind and dbType
+         * Instantiates the literal with a component, kind, and dbType
          * 
          * @param component
          *            trace component, e.g. jetcd, jedis, database

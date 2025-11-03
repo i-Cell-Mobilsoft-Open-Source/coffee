@@ -35,6 +35,7 @@ import org.apache.commons.lang3.StringUtils;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
+
 import hu.icellmobilsoft.coffee.cdi.logger.AppLogger;
 import hu.icellmobilsoft.coffee.cdi.logger.ThisLogger;
 import hu.icellmobilsoft.coffee.dto.common.Envelope;
@@ -46,7 +47,7 @@ import hu.icellmobilsoft.coffee.module.redis.manager.RedisManagerConnection;
 import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
 import hu.icellmobilsoft.coffee.tool.gson.ClassTypeAdapter;
 import hu.icellmobilsoft.coffee.tool.utils.json.JsonUtil;
-import redis.clients.jedis.Jedis;
+import redis.clients.jedis.UnifiedJedis;
 
 /**
  * <p>
@@ -94,7 +95,7 @@ public class RedisCachingInterceptor {
         final String key = getKey(ctx.getMethod(), ctx.getParameters());
 
         try (RedisManagerConnection ignored = redisManager.initConnection()) {
-            Optional<String> json = redisManager.run(Jedis::get, "get", key);
+            Optional<String> json = redisManager.run(UnifiedJedis::get, "get", key);
 
             if (json.isEmpty()) {
                 log.debug("Data is not cached in Redis, caching key: [{0}]", key);
@@ -103,7 +104,7 @@ public class RedisCachingInterceptor {
                 long timeToExpire = getTime(ctx.getMethod());
                 Envelope envelope = new Envelope(gson.toJson(objectToReturn), objectToReturn.getClass());
 
-                Optional<String> statusCode = redisManager.run(Jedis::setex, "setex", key, timeToExpire, JsonUtil.toJson(envelope));
+                Optional<String> statusCode = redisManager.run(UnifiedJedis::setex, "setex", key, timeToExpire, JsonUtil.toJson(envelope));
 
                 if (statusCode.isPresent() && !StringUtils.equals(statusCode.get(), "OK")) {
                     log.warn("Problems in recording cache - status code [{0}]", statusCode);
@@ -125,7 +126,7 @@ public class RedisCachingInterceptor {
             }
         } catch (JsonSyntaxException e) {
             log.error("Syntax problem, removing the key!", e);
-            redisManager.run(Jedis::del, "del", key);
+            redisManager.run(UnifiedJedis::del, "del", key);
             return ctx.proceed();
         } catch (Exception e) {
             log.error("Exception on Redis [{0}]", e.getMessage(), e);

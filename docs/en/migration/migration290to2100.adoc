@@ -3,7 +3,56 @@
 coff:ee v2.9.0 -> v2.10.0 migration description, news, changes
 
 === coffee-configuration
+
 A misleading exception message has been clarified in ApplicationConfiguration class.
 
 ==== Migration
+
 Changes are backwards compatible doesnt need any migration.
+
+=== coffee-redisstream
+
+A new function has been added to RedisStreamPublisher, which makes it possible to send multiple messages at once to Redis stream through pipeline.
+
+==== Migration
+
+Changes are backwards compatible doesnt need any migration.
+
+=== Java11 support remove
+Java11 support has been removed from the ci build process, and the default Java version has been changed to 17.
+
+==== Migration
+The minimum supported Java version is 17.
+
+=== coffee-tool
+* The default custom jsonb adapters have become null safe.
+* The order of adding custom json adapters have changed to ensure the possibility to change the default behavior.
+
+==== Migration
+Changes are backwards compatible doesnt need any migration.
+
+=== coffee-model-base
+
+The `AbstractIdentifiedEntity` implements the `IIdentifiedEntity` interface in the same way as the `AbstractIdentifiedAuditEntity` does.
+The `hu.icellmobilsoft.coffee.model.base.generator.EntityIdGenerator` works for this entity as well.
+
+==== Migration
+
+Changes are backwards compatible doesnt need any migration.
+
+=== coffee-rest
+
+Missing i18n translation added for key `hu.icellmobilsoft.coffee.se.api.exception.enums.CoffeeFaultType.OPERATION_FAILED`.
+
+==== Migration
+
+The changes are backwards compatible don't need any migration. It is recommended to remove this key at the project level, if it was previously added as a workaround.
+
+=== coffee-deltaspike-data-extension
+
+Produce all registered Repository with nativeImageProxyDefinitionBuildItemBuildProducer, to work Repository in native image.
+
+==== Migration
+
+Changes are backwards compatible doesnt need any migration.
+

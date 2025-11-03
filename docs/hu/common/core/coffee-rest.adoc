@@ -499,3 +499,26 @@ public class MyBean {
     }
 }
 ----
+
+== Eviktálás
+
+Az EvictAction hívásával kipucolható a cache tartalma, ehhez a projekten létre kell hozni egy EvictAction osztályt (a megfelelő scope-pal) és le kell származtatni a coffee-ban lévő AbstractEvictAction-ből. Ezután egy REST végponton keresztül az EvictAction::evict metódust kell meghívni. Ennek hatására az összes Evictable interfészt implementáló beanen, configsource-on meghívódik az evict metódus
+
+.ISystemRest
+[source,java]
+----
+public interface ISystemRest {
+  ...
+  
+  @GET
+  @Path(SystemPath.EVICT)
+  @Produces(value = { MediaType.APPLICATION_JSON, MediaType.TEXT_XML, MediaType.APPLICATION_XML })
+  EvictResponse evict() throws BaseException;
+----
+
+.SystemRest
+
+Használd a <<common_module_coffee-module-quarkus,AbstractQuarkusSystemRest>> vagy
+ <<common_module_coffee-module-wildfly,AbstractWildflySystemRest>> osztályt a SystemRest implementálásához.
+
+ 

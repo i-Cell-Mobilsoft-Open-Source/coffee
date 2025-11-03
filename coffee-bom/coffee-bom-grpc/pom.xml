@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>hu.icellmobilsoft.coffee</groupId>
+        <artifactId>coffee-bom</artifactId>
+        <version>2.12.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>coffee-bom-grpc</artifactId>
+    <packaging>pom</packaging>
+
+    <name>Coff:ee BOM - GRPC</name>
+
+    <properties>
+        <version.com.google.protobuf>3.25.5</version.com.google.protobuf>
+        <version.com.google.api.grpc.proto-google-common-protos>2.56.0</version.com.google.api.grpc.proto-google-common-protos>
+        <!-- io grpc: sync with jetcd driver && coffee-dto-stub-gen/pom.xml -->
+        <version.io.grpc>1.70.0</version.io.grpc>
+        <!-- wildfly 34 grpc instrumentation support-->
+        <version.io.opentelemetry.instrumentation>1.29.0-alpha</version.io.opentelemetry.instrumentation>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.google.protobuf</groupId>
+                <artifactId>protobuf-java</artifactId>
+                <version>${version.com.google.protobuf}</version>
+            </dependency>
+            <!-- xsd:date and xsd:time equivalents -->
+            <dependency>
+                <groupId>com.google.api.grpc</groupId>
+                <artifactId>proto-google-common-protos</artifactId>
+                <version>${version.com.google.api.grpc.proto-google-common-protos}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.opentelemetry.instrumentation</groupId>
+                <artifactId>opentelemetry-grpc-1.6</artifactId>
+                <version>${version.io.opentelemetry.instrumentation}</version>
+            </dependency>
+
+            <!-- Other bom imports -->
+            <dependency>
+                <groupId>io.grpc</groupId>
+                <artifactId>grpc-bom</artifactId>
+                <version>${version.io.grpc}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+        </dependencies>
+    </dependencyManagement>
+</project>

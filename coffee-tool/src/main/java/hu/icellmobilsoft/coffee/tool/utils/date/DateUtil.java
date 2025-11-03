@@ -22,11 +22,13 @@ package hu.icellmobilsoft.coffee.tool.utils.date;
 import java.text.MessageFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.Month;
 import java.time.OffsetDateTime;
+import java.time.Period;
 import java.time.Year;
 import java.time.YearMonth;
 import java.time.ZoneId;
@@ -469,10 +471,10 @@ public class DateUtil {
     }
 
     /**
-     * Actual date + time in UTC. When it is serialized, the local 2020-08-26 10:34:28 "2020-08-26T08:34:28.955024Z" format takes place instead of the
-     * default "2020-08-26T10:34:28.955024+02:00"
+     * Actual date + time in UTC. When it is serialized, the local 2020-08-26 10:34:28 "2020-08-26T08:34:28.955024123Z" format takes place instead of the
+     * default "2020-08-26T10:34:28.955024123+02:00"
      *
-     * @return {@code OffsetDateTime}, example: "2020-08-26T08:34:28.955024Z"
+     * @return {@code OffsetDateTime}, example: "2020-08-26T08:34:28.955024123Z"
      */
     public static OffsetDateTime nowUTC() {
         return OffsetDateTime.now(ZoneOffset.UTC);
@@ -555,6 +557,54 @@ public class DateUtil {
             return OffsetDateTime.parse(isoDateTime, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
         } catch (DateTimeParseException e) {
             throw new BaseException(CoffeeFaultType.INVALID_INPUT, MessageFormat.format("Invalid ISO date time format: [{0}]", isoDateTime));
+        }
+    }
+
+    /**
+     * Parses a date using the {@link DateTimeFormatter#ISO_OFFSET_DATE_TIME} format, {@link Duration#parse}, or {@link Period#parse}. Throws an
+     * exception if the format is invalid.
+     *
+     * @param isoDateTime
+     *            the date string to be parsed
+     * @return date-time object
+     * @throws BaseException
+     *             if the date format is invalid
+     */
+    public static OffsetDateTime tryToParseAbsoluteRelativeDate(String isoDateTime) throws BaseException {
+        if (StringUtils.isBlank(isoDateTime)) {
+            return null;
+        }
+
+        try {
+            if (isoDateTime.startsWith("P")) {
+                OffsetDateTime now = OffsetDateTime.now();
+                if (isoDateTime.startsWith("PT")) {
+                    return (OffsetDateTime) Duration.parse(isoDateTime).addTo(now);
+                } else {
+                    return (OffsetDateTime) Period.parse(isoDateTime).addTo(now);
+                }
+            }
+            return OffsetDateTime.parse(isoDateTime, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+        } catch (DateTimeParseException e) {
+            throw new BaseException(CoffeeFaultType.INVALID_INPUT, MessageFormat.format("Invalid ISO date time format: [{0}]", isoDateTime));
+        }
+    }
+
+    /**
+     * Returns the number of calendar days between 2 dates. Independent of summer time change. For example: 2020.01.01 23:59:59 - 2020.01.02 00:00:01.
+     * The result is 1 day.
+     *
+     * @param dateFrom
+     *            date from
+     * @param dateTo
+     *            date to
+     * @return number of days or 0 if {@code dateFrom} or {@code dateTo} is null
+     */
+    public static long daysBetweenLocalDates(LocalDate dateFrom, LocalDate dateTo) {
+        if (dateFrom != null && dateTo != null) {
+            return Math.abs(ChronoUnit.DAYS.between(dateFrom, dateTo));
+        } else {
+            return 0L;
         }
     }
 }

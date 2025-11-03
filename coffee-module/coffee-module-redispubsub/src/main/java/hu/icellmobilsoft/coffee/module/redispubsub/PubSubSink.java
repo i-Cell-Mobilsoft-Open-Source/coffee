@@ -36,7 +36,7 @@ import hu.icellmobilsoft.coffee.module.redispubsub.bundle.PubSubMessage;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
 import hu.icellmobilsoft.coffee.se.logging.mdc.MDC;
 import hu.icellmobilsoft.coffee.tool.utils.json.JsonUtil;
-import redis.clients.jedis.Jedis;
+import redis.clients.jedis.UnifiedJedis;
 
 /**
  * Sink for redis pubsub. Used by connector to consume emitted messages and publish them to redis. Messages can be emitted via
@@ -72,12 +72,12 @@ public class PubSubSink {
         }
         String messagePayload = getPubSubMessage(msg);
         String channel = outConfig.getPubSubChannel().orElseGet(outConfig::getChannel);
-        Instance<RedisManager> redisManagerInstance = CDI.current().select(RedisManager.class,
-                new RedisConnection.Literal(outConfig.getConnectionKey(), outConfig.getPoolKey()));
+        Instance<RedisManager> redisManagerInstance = CDI.current()
+                .select(RedisManager.class, new RedisConnection.Literal(outConfig.getConnectionKey(), outConfig.getPoolKey()));
         RedisManager redisManager = null;
         try {
             redisManager = redisManagerInstance.get();
-            Optional<Long> published = redisManager.runWithConnection(Jedis::publish, "publish", channel, messagePayload);
+            Optional<Long> published = redisManager.runWithConnection(UnifiedJedis::publish, "publish", channel, messagePayload);
             log.trace("Message published to [{0}] clients!", published.orElse(0L));
             // Redis pub/sub does not handle ack/nack, but MP Reactive Streams does.
             // Messages arriving here can come from sources like Kafka where ack/nack is needed.

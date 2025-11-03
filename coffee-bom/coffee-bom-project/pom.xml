@@ -4,11 +4,13 @@
     <parent>
         <groupId>hu.icellmobilsoft.coffee</groupId>
         <artifactId>coffee-bom</artifactId>
-        <version>2.10.0-SNAPSHOT</version>
+        <version>2.12.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>coffee-bom-project</artifactId>
     <packaging>pom</packaging>
+
+    <name>Coff:ee BOM - Project</name>
 
     <dependencyManagement>
         <dependencies>
@@ -110,6 +112,16 @@
             </dependency>
             <dependency>
                 <groupId>hu.icellmobilsoft.coffee</groupId>
+                <artifactId>coffee-module-wildfly</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>hu.icellmobilsoft.coffee</groupId>
+                <artifactId>coffee-module-quarkus</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>hu.icellmobilsoft.coffee</groupId>
                 <artifactId>coffee-rest</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -205,7 +217,17 @@
             </dependency>
             <dependency>
                 <groupId>hu.icellmobilsoft.coffee</groupId>
-                <artifactId>coffee-module-configdoc</artifactId>
+                <artifactId>coffee-module-docgen-common</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>hu.icellmobilsoft.coffee</groupId>
+                <artifactId>coffee-module-docgen-config</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>hu.icellmobilsoft.coffee</groupId>
+                <artifactId>coffee-module-docgen-sqlcatalog</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -287,27 +309,51 @@
             <!-- Coff:ee quarkus extensions -->
 
             <dependency>
-                <groupId>hu.icellmobilsoft.coffee</groupId>
+                <groupId>hu.icellmobilsoft.coffee.quarkus</groupId>
                 <artifactId>coffee-module-mp-restclient-extension</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
             <dependency>
-                <groupId>hu.icellmobilsoft.coffee</groupId>
+                <groupId>hu.icellmobilsoft.coffee.quarkus</groupId>
                 <artifactId>coffee-module-mp-restclient-extension-deployment</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
 
             <dependency>
-                <groupId>hu.icellmobilsoft.coffee</groupId>
+                <groupId>hu.icellmobilsoft.coffee.quarkus</groupId>
                 <artifactId>coffee-deltaspike-data-extension</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
             <dependency>
-                <groupId>hu.icellmobilsoft.coffee</groupId>
+                <groupId>hu.icellmobilsoft.coffee.quarkus</groupId>
                 <artifactId>coffee-deltaspike-data-extension-deployment</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>hu.icellmobilsoft.coffee.quarkus</groupId>
+                <artifactId>coffee-module-etcd-extension</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>hu.icellmobilsoft.coffee.quarkus</groupId>
+                <artifactId>coffee-module-etcd-extension-deployment</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>hu.icellmobilsoft.coffee.quarkus</groupId>
+                <artifactId>coffee-tool-extension</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>hu.icellmobilsoft.coffee.quarkus</groupId>
+                <artifactId>coffee-tool-extension-deployment</artifactId>
                 <version>${project.version}</version>
             </dependency>
         </dependencies>

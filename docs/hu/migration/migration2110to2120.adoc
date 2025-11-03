@@ -1,0 +1,142 @@
+= v2.11.0 → v2.12.0
+
+coff:ee v2.11.0 -> v2.12.0 migrációs leírás, újdonságok, változások leírása
+
+=== Global
+
+* Apache commons-lang3 verzió frissítése 3.15.0 -> 3.18.0
+* parent-oss-pom frissítés `1.4.0` --> `1.5.0`
+* Az `oss.sonatype.org` snapshot repository cseréje `central.sonatype.com`-ra, és hiányzó modul nevek pótlása.
+
+==== Migration
+
+A commons-lang3 verzió frissítése magával hozza, hogy néhány metódus deprecated-de vált, amit át kell majd vezetni a kapcsolódó projekteken. A lista itt található: https://commons.apache.org/proper/commons-lang/apidocs/deprecated-list.html
+
+=== coffee-rest
+* JaxbTool CDI dependent bean destroy fix
+* A `DefaultGeneralExceptionMapper` a `BaseExceptionWrapper` helyett az új `IBaseExceptionWrapper`-t kezeli. Lásd `coffee-dto-base` és `coffee-se-api`.
+
+==== Migration
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+=== coffee-module-docgen
+
+* Egy új `coffee-module-docgen` pom modul került bevezetésre, amely a dokumentáció generáláshoz szükséges modulokat fogja össze
+** `coffee-module-configdoc`
+*** Átnevezésre került `coffee-module-docgen-config`-ra és a `coffe-module-docgen` alá lett mozgatva
+*** Néhány osztály átnevezésre került
+** Az általános dokumentáció generáláshoz szükséges funkcionalitás kiemelésre került egy új `coffee-module-docgen-common` modulba
+** Egy új `coffee-module-docgen-sqlcatalog` modul került bevezetésre sql katalógus generáláshoz
+
+=== Migration
+
+A következő maven dependency
+----
+<dependency>
+    <groupId>hu.icellmobilsoft.coffee</groupId>
+    <artifactId>coffee-module-configdoc</artifactId>
+</dependency>
+----
+
+megváltoztatása szükséges a következőre:
+
+----
+<dependency>
+    <groupId>hu.icellmobilsoft.coffee</groupId>
+    <artifactId>coffee-module-docgen-config</artifactId>
+</dependency>
+----
+
+---
+
+A `maven-compiler-plugin` alábbi compilerArgs
+----
+<compilerArgs>
+    <arg>-Acoffee.configDoc.outputDir=${outputDir}</arg>
+    <arg>-Acoffee.configDoc.outputFileName=${outputFileName}</arg>
+    <arg>-Acoffee.configDoc.outputToClassPath=${outputToClassPath}</arg>
+    <arg>-Acoffee.configDoc.dynamicOutputFileName=${dynamicOutputFileName}</arg>
+    <arg>-Acoffee.configDoc.columns=${columns}</arg>
+</compilerArgs>
+----
+
+megváltoztatása szükséges a következőre:
+
+----
+<compilerArgs>
+    <arg>-Acoffee.docgen.config.outputDir=${outputDir}</arg>
+    <arg>-Acoffee.docgen.config.outputFileName=${outputFileName}</arg>
+    <arg>-Acoffee.docgen.config.outputToClassPath=${outputToClassPath}</arg>
+    <arg>-Acoffee.docgen.config.dynamicOutputFileName=${dynamicOutputFileName}</arg>
+    <arg>-Acoffee.docgen.config.columns=${columns}</arg>
+</compilerArgs>
+----
+
+---
+
+Az átmozgatás és átnevezések eredményeképpen, ha a használó project az alábbi osztályok bármelyikét használja, az importokat frissíteni kell:
+
+* `hu.icellmobilsoft.coffee.module.configdoc.ConfigDoc` -> `hu.icellmobilsoft.coffee.module.docgen.config.ConfigDoc`
+* `hu.icellmobilsoft.coffee.module.configdoc.writer.impl.AsciiDocWriter` -> `hu.icellmobilsoft.coffee.module.docgen.config.writer.impl.ConfigDocAsciiDocWriter`
+* `hu.icellmobilsoft.coffee.module.configdoc.config.ConfigDocColumn` -> `hu.icellmobilsoft.coffee.module.docgen.config.config.ConfigDocColumn`
+* `hu.icellmobilsoft.coffee.module.configdoc.config.ConfigDocConfig` -> `hu.icellmobilsoft.coffee.module.docgen.config.config.ConfigDocConfig`
+* `hu.icellmobilsoft.coffee.module.configdoc.processor.ConfigDocProcessor` -> `hu.icellmobilsoft.coffee.module.docgen.config.processor.ConfigDocProcessor`
+* `hu.icellmobilsoft.coffee.module.configdoc.processor.ConfigDocVisitor` -> `hu.icellmobilsoft.coffee.module.docgen.config.processor.ConfigDocVisitor`
+* `hu.icellmobilsoft.coffee.module.configdoc.data.DocData` -> `hu.icellmobilsoft.coffee.module.docgen.config.data.DocData`
+* `hu.icellmobilsoft.coffee.module.configdoc.writer.impl.DynamicAsciiDocWriter` -> `hu.icellmobilsoft.coffee.module.docgen.config.writer.impl.DynamicAsciiDocWriter`
+* `hu.icellmobilsoft.coffee.module.configdoc.DynamicConfigDocs` -> `hu.icellmobilsoft.coffee.module.docgen.config.DynamicConfigDocs`
+*  `hu.icellmobilsoft.coffee.module.configdoc.processor.DynamicConfigDocsProcessor` -> `hu.icellmobilsoft.coffee.module.docgen.config.processor.DynamicConfigDocsProcessor`
+* `hu.icellmobilsoft.coffee.module.configdoc.processor.DynamicConfigDocsVisitor` -> `hu.icellmobilsoft.coffee.module.docgen.config.processor.DynamicConfigDocsVisitor`
+* `hu.icellmobilsoft.coffee.module.configdoc.DynamicConfigTemplate` -> `hu.icellmobilsoft.coffee.module.docgen.config.DynamicConfigTemplate`
+* `hu.icellmobilsoft.coffee.module.configdoc.processor.DynamicConfigTemplateProcessor` -> `hu.icellmobilsoft.coffee.module.docgen.config.processor.DynamicConfigTemplateProcessor`
+* `hu.icellmobilsoft.coffee.module.configdoc.data.DynamicDocData` -> `hu.icellmobilsoft.coffee.module.docgen.config.data.DynamicDocData`
+* `hu.icellmobilsoft.coffee.module.configdoc.writer.IDocWriter` -> `hu.icellmobilsoft.coffee.module.docgen.common.writer.IDocWriter`
+
+=== coffee-module-redis
+* Bevezetésre került a redis cluster támogatása a modulban
+** lecserélésre került az injektálható Jedis objektum, UnifiedJedis objektumra
+** kiegészült a `cluster` konfigurációs kulccsal a redis konfiguráció, amelynek értéke egy url vagy egy url lista lehet `$(host):$(port)` formátumban, példa a használatra:
+
+[source,yaml]
+----
+coffee:
+    redis:
+        ...
+        auth:
+            ...
+            cluster:
+              - sample-sandbox.icellmobilsoft.hu:6380
+              - sample-sandbox.icellmobilsoft.hu:6381
+----
+
+==== Migration
+A Jedis objektum lecserélésének erdményeképpen, a használó projektben a kapcsolódó Jedis hivatkozásokat UnifiedJedis-re kell cserélni.
+
+=== coffee-quarkus-extensions
+* Minden groupId le lett cserélve `hu.icellmobilsoft.coffee`-ról `hu.icellmobilsoft.coffee.quarkus`-ra
+* Leírás: <<common_coffee-quarkus-extensions, coffee-quarkus-extensions>>
+
+==== Migration
+A quarkus extension-öket használó projektekben a groupId-kat `hu.icellmobilsoft.coffee`-ról `hu.icellmobilsoft.coffee.quarkus`-ra kell cserélni.
+
+=== coffee-dto-base
+A `BaseExceptionWrapper` interfész avultatása és ezzel egyidőben az utódjának létrehozása a `coffee-se-api` modulban: 
+`hu.icellmobilsoft.coffee.se.api.exception.wrapper.IBaseExceptionWrapper`.
+
+==== Migration
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis. Javasolt átállni a projektekben az
+`IBaseExceptionWrapper` használatára.
+
+=== coffee-se-api
+A `IBaseExceptionWrapper` bevezetése a `BaseExceptionWrapper` mintájára.
+
+==== Migration
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis. Használata javasolt a projektekben a
+`BaseExceptionWrapper` helyett.
+
+=== coffee-cdi
+`hu.icellmobilsoft.coffee.cdi.trace.annotation.Traced.LITERAL` típusa megváltozott, hogy használható lehessen `ITraceHandler`-rel,
+és inicializálva lett a default értékekkel.
+
+==== Migration
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.

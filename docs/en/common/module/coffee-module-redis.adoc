@@ -10,29 +10,43 @@ NOTE: with the current jedis version 5.1.2, Redis compatibility is backwards to 
 == RedisConnection
 
 The `@RedisConnection` qualifier has been introduced.
-Using this, there is no need to define/implement Redis configuration, JedisPool, Jedis, RedisService separately per Redis connection; they are all built and injected via CDI.
+Using this, there is no need to define/implement Redis configuration, UnifiedJedis, RedisService separately per Redis connection; they are all built and injected via CDI.
 Configuration in yaml:
 
 [source,yaml]
 ----
 coffee:
     redis:
-        auth: #<1>
+        managedExecutorServiceCoreThreadsVariable: MANAGED_EXECUTOR_SERVICE_CORE_THREADS #default <1>
+        threadSafetyBuffer: 10 #default <2>
+        auth: #<3>
             host: sample-sandbox.icellmobilsoft.hu #default: localhost
             port: 6380 #default: 6380
             password: pass1234 #default: null
             database: 1 #default: 0
             pool:
-                default: #<2>
+                default: #<4>
                     maxtotal: 128 #default: 64
                     maxidle: 32 #default: 16
-                custom: #<2>
+                custom: #<4>
                     maxtotal: 12 #default: 64
                     maxidle: 3 #default: 16
             timeout: 5000 #default: 5000
+            cluster: #<5>
+              - sample-sandbox.icellmobilsoft.hu:6380 #default null
 ----
-<1> Unique identifier of the redis connection (configKey). All fields are optional.
-<2> Unique identifier of the pool within the redis connection (poolConfigKey). All fields are optional.
+<1> The variable name of the thread-pool.max-threads to read the appservers thread pool max thread count. Default is MANAGED_EXECUTOR_SERVICE_CORE_THREADS
+<2> Thread safety buffer count which is used for consumer thread count checking. Default is 10
+<3> Unique identifier of the redis connection (configKey). All fields are optional.
+<4> Unique identifier of the pool within the redis connection (poolConfigKey). All fields are optional.
+<5> In case of using redis cluster the cluster node urls in `$(host):$(port)` format. In case of cluster field is required, otherwise it is forbidden.
+
+[NOTE]
+====
+The value of thread-pool.max-threads must be greater than redis consumer thread count + safety buffer
+
+====
+
 
 Use the RedisManager associated with the above config:
 
@@ -51,11 +65,11 @@ in the second case, the "custom" pool settings.
 
 == RedisManager
 
-The class `RedisManager` and its associated `RedisManagerProducer` are introduced. The producer will produce the RedisManager with the called configKey value, making it available to retrieve Jedis from the JedisPool when we want to perform some action on redis.
-RedisManager's job is to federate the use of Jedis functions, which handles common logging, error handling, connection usage.
-The defined methods expect Jedis functions to be run, this can be done using initConnection() and closeConnection(), or through the runWithConnection methods. This approach allows Redis connections to be used as long as they are needed, saving a lot of resources.
+The class `RedisManager` and its associated `RedisManagerProducer` are introduced. The producer will produce the RedisManager with the called configKey value, making it available UnifiedJedis when we want to perform some action on redis.
+RedisManager's job is to federate the use of UnifiedJedis functions, which handles common logging, error handling, connection usage.
+The defined methods expect UnifiedJedis functions to be run, this can be done using initConnection() and closeConnection(), or through the runWithConnection methods. This approach allows Redis connections to be used as long as they are needed, saving a lot of resources.
 
-Example of using multiple redis operations. This is typically set/get combined with expire. In such a case, no Jedis instance is requested from the pool unnecessarily and when done, it is closed.
+Example of using multiple redis operations. This is typically set/get combined with expire. In such a case, no UnifiedJedis instance is requested from the pool unnecessarily and when done, it is closed.
 
 [source,java]
 ----
@@ -64,12 +78,12 @@ Example of using multiple redis operations. This is typically set/get combined w
 private RedisManager redisManager;
 
 try (RedisManagerConnection connection = redisManager.initConnection()) { #<1>
-    redisManager.run(Jedis::set, "set", "key", "value");
-    redisManager.run(Jedis::expire, "expire", "key", 300);
+    redisManager.run(UnifiedJedis::set, "set", "key", "value");
+    redisManager.run(UnifiedJedis::expire, "expire", "key", 300);
 }
 
 ----
-<1> Initialize the Jedis instance on which the operations are performed, use try-with-resource to automatically close it
+<1> Initialize the UnifiedJedis instance on which the operations are performed, use try-with-resource to automatically close it
 
 Example of performing an operation.
 
@@ -79,7 +93,7 @@ Example of performing an operation.
 @RedisConnection(configKey = "auth")
 private RedisManager redisManager;
 
-redisManager.runWithConnection(Jedis::set, "set", "key", "value"); #<1>
+redisManager.runWithConnection(UnifiedJedis::set, "set", "key", "value"); #<1>
 
 ----
 
@@ -97,7 +111,7 @@ For more information about limits: https://redis.io/commands/scan
 
 [source,java]
 ----
-redisManager.runWithConnection(Jedis::hscan, "hscan", "key", 10, 100);
+redisManager.runWithConnection(UnifiedJedis::hscan, "hscan", "key", 10, 100);
 ----
 
 === rpush
@@ -109,7 +123,7 @@ More information: https://redis.io/commands/rpush + https://redis.io/commands/ex
 
 [source,java]
 ----
-redisManager.runWithConnection(Jedis::rpush, "rpush", "key", "element", 100);
+redisManager.runWithConnection(UnifiedJedis::rpush, "rpush", "key", "element", 100);
 ----
 
 === lpop/rpop
@@ -122,8 +136,8 @@ For more information about the limits: https://redis.io/commands/lpop
 
 [source,java]
 ----
-redisManager.runWithConnection(Jedis::lpop, "lpop", "key"); <1>
-redisManager.runWithConnection(Jedis::rpop, "rpop", "key"); <1>
+redisManager.runWithConnection(UnifiedJedis::lpop, "lpop", "key"); <1>
+redisManager.runWithConnection(UnifiedJedis::rpop, "rpop", "key"); <1>
 ----
 <1> If no value is found then `Optional.empty()`
 
@@ -140,9 +154,9 @@ For more information: https://redis.io/commands/lmove + https://redis.io/command
 [source,java]
 ----
 // from the beginning of the sourceListKey to the end of the destinationListKey
-redisManager.runWithConnection(Jedis::lmove, "lmove", "sourceListKey", "destinationListKey", ListDirection.LEFT, ListDirection.RIGHT);
+redisManager.runWithConnection(UnifiedJedis::lmove, "lmove", "sourceListKey", "destinationListKey", ListDirection.LEFT, ListDirection.RIGHT);
 // from the end to the beginning
-redisManager.runWithConnection(Jedis::lmove, "lmove", "sourceListKey", "sourceListKey", ListDirection.RIGHT, ListDirection.LEFT);
+redisManager.runWithConnection(UnifiedJedis::lmove, "lmove", "sourceListKey", "sourceListKey", ListDirection.RIGHT, ListDirection.LEFT);
 ----
 
 === removeValueFromList
@@ -152,7 +166,7 @@ For more information see: https://redis.io/commands/lrem
 
 [source,java]
 ----
-redisManager.runWithConnection(Jedis::lrem, "removeValueFromList", listKey, 0, "removeValue");
+redisManager.runWithConnection(UnifiedJedis::lrem, "removeValueFromList", listKey, 0, "removeValue");
 ----
 
 == microprofile-health support
@@ -188,7 +202,7 @@ public class RedisHealthCheck {
 [#coffee_module_redis-metrics]
 == microprofile-metrics support
 
-The JedisConnectionProducer provides metrics about the usage of the Jedis pool.
+The *UnifiedJedisProducer* provides metrics about the usage of the pool of UnifiedJedis.
 
 .metrics example
 [source,java]

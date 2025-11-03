@@ -3,6 +3,14 @@
 
 The purpose of this module is to support gRPC communication and handling.
 
+[WARNING]
+====
+- In order for the native *macOS ARM64* build to work, you need to install the native protoc-gen-grpc-java:
+
+  brew install protoc-gen-grpc-java[@version]
+    
+====
+
 == coffee-grpc-api
 A collector for general gRPC handling of the Coff:ee API (annotations, version, ...).
 

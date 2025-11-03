@@ -46,9 +46,18 @@ public class DurationJsonbAdapter implements JsonbAdapter<Duration, String> {
         return String.valueOf(duration);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * Converts a {@link String} into a {@link Duration} object
+     *
+     * @param duration
+     *         string to convert or {@code null}.
+     * @return the converted object or {@code null}, if the given {@code duration} param is null
+     */
     @Override
     public Duration adaptFromJson(String duration) {
+        if (duration == null) {
+            return null;
+        }
         return DateXmlUtil.getDatatypeFactory().newDuration(duration);
     }
 }

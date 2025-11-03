@@ -13,7 +13,7 @@ A modul használata annyi, hogy a dependency-k közt nem a coffee-module-mp-rest
 [source, xml]
 ----
     <dependency>
-        <groupId>hu.icellmobilsoft.coffee</groupId>
+        <groupId>hu.icellmobilsoft.coffee.quarkus</groupId>
         <artifactId>coffee-module-mp-restclient-extension</artifactId>
         <version>${version.hu.icellmobilsoft.coffee}</version>
         <type>pom</type>

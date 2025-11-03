@@ -3,13 +3,15 @@
 	<parent>
 		<groupId>hu.icellmobilsoft.coffee</groupId>
 		<artifactId>coffee-module-mp</artifactId>
-		<version>2.10.0-SNAPSHOT</version>
+		<version>2.12.0-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>coffee-module-mp-telemetry</artifactId>
 
+	<name>Coff:ee Module - MP - Telemetry</name>
+
 	<properties>
-		<version.io.opentelemetry>1.20.0</version.io.opentelemetry>
+		<version.io.opentelemetry>1.29.0</version.io.opentelemetry>
 	</properties>
 
 	<dependencies>
