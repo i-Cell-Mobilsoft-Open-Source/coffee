@@ -21,22 +21,41 @@ package hu.icellmobilsoft.coffee.cdi.logger;
 
 import java.util.regex.Pattern;
 
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
+
+import org.jboss.weld.junit5.EnableWeld;
+import org.jboss.weld.junit5.WeldInitiator;
+import org.jboss.weld.junit5.WeldJunit5Extension;
+import org.jboss.weld.junit5.WeldSetup;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 /**
  * LogContainer logging tests
  * 
  * @author peter.szabo
  */
+@EnableWeld
+@Tag("weld")
+@ExtendWith(WeldJunit5Extension.class)
 @DisplayName("LogContainer logging tests")
 public class LogContainerLogTests {
+
+    @Inject
+    private LogContainer logContainer;
+
+    @WeldSetup
+    public WeldInitiator weld = WeldInitiator.from(WeldInitiator.createWeld().addBeanClass(LogContainer.class)
+    // start request scope + build
+    ).activate(RequestScoped.class).build();
 
     @Test
     @DisplayName("Test Trace level logs")
     public void testTraceLogs() {
-        LogContainer logContainer = new LogContainer();
         String logLevel = "Trace";
         try {
             logContainer.trace(logLevel + " message");
@@ -51,7 +70,6 @@ public class LogContainerLogTests {
     @Test
     @DisplayName("Test Debug level logs")
     public void testDebugLogs() {
-        LogContainer logContainer = new LogContainer();
         String logLevel = "Debug";
         try {
             logContainer.debug(logLevel + " message");
@@ -66,7 +84,6 @@ public class LogContainerLogTests {
     @Test
     @DisplayName("Test Info level logs")
     public void testInfoLogs() {
-        LogContainer logContainer = new LogContainer();
         String logLevel = "Info";
         try {
             logContainer.info(logLevel + " message");
@@ -81,7 +98,6 @@ public class LogContainerLogTests {
     @Test
     @DisplayName("Test Warn level logs")
     public void testWarnLogs() {
-        LogContainer logContainer = new LogContainer();
         String logLevel = "Warn";
         try {
             logContainer.warn(logLevel + " message");
@@ -96,7 +112,6 @@ public class LogContainerLogTests {
     @Test
     @DisplayName("Test Error level logs")
     public void testErrorLogs() {
-        LogContainer logContainer = new LogContainer();
         String logLevel = "Error";
         try {
             logContainer.error(logLevel + " message");
