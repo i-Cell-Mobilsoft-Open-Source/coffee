@@ -8,6 +8,8 @@
 
     <artifactId>coffee-grpc-metrics-api</artifactId>
 
+    <name>Coff:ee GRPC - Metrics API</name>
+
     <dependencies>
         <dependency>
             <groupId>hu.icellmobilsoft.coffee</groupId>

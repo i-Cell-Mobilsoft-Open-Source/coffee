@@ -8,6 +8,8 @@
 
 	<artifactId>coffee-module-csv</artifactId>
 
+	<name>Coff:ee Module - CSV</name>
+
 	<dependencies>
 		<dependency>
 			<groupId>jakarta.platform</groupId>

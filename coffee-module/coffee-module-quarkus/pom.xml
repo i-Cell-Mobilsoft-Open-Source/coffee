@@ -8,6 +8,8 @@
 
 	<artifactId>coffee-module-quarkus</artifactId>
 
+	<name>Coff:ee Module - Quarkus</name>
+
 	<dependencies>
 		<dependency>
 			<groupId>hu.icellmobilsoft.coffee</groupId>

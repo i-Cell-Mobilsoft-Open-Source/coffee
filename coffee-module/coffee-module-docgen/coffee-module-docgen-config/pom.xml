@@ -11,6 +11,8 @@
 
     <artifactId>coffee-module-docgen-config</artifactId>
 
+    <name>Coff:ee Module - Docgen - Config</name>
+
     <dependencies>
         <dependency>
             <groupId>hu.icellmobilsoft.coffee</groupId>

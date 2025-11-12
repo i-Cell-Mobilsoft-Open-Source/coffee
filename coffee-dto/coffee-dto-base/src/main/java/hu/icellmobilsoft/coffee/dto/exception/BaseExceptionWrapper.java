@@ -20,6 +20,7 @@
 package hu.icellmobilsoft.coffee.dto.exception;
 
 import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
+import hu.icellmobilsoft.coffee.se.api.exception.wrapper.IBaseExceptionWrapper;
 
 /**
  * Non-company exceptions that do not inherit from BaseException can connect to the corporate exception handling system through this interface.
@@ -31,16 +32,22 @@ import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
  * <pre>
  * <code>
  * public class SpecialProcessingException extends ProcessingException implements BaseExceptionWrapper&lt;MyException&gt; {
- *     private MyException baseException;
  *
- *     &#64;Override
- *     public void setBaseException(final MyException baseException) {
- *         this.baseException = baseException;
+ *     private MyException myException;
+ *
+ *     public SpecialProcessingException(String message, MyException myException) {
+ *         super(message);
+ *         this.myException = myException;
  *     }
  *
  *     &#64;Override
- *     public MyException getBaseException() {
- *         return getBaseException();
+ *     public void setException(MyException myException) {
+ *         this.myException = myException;
+ *     }
+ *
+ *     &#64;Override
+ *     public MyException getException() {
+ *         return myException;
  *     }
  * }
  * </code>
@@ -69,8 +76,12 @@ import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
  * @author attila.nyers
  * @author ferenc.lutischan
  * @since 1.0.0
+ *
+ * @deprecated Use {@link IBaseExceptionWrapper} instead.
  */
-public interface BaseExceptionWrapper<E extends BaseException> {
+@Deprecated(since = "2.12.0")
+public interface BaseExceptionWrapper<E extends BaseException> extends IBaseExceptionWrapper<E> {
+
     /**
      * setException.
      *
@@ -85,4 +96,10 @@ public interface BaseExceptionWrapper<E extends BaseException> {
      * @return E
      */
     E getException();
+
+    @Override
+    default E getWrappedBaseException() {
+        return getException();
+    }
+
 }

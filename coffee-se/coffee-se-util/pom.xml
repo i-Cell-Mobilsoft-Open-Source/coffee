@@ -11,6 +11,8 @@
 
 	<artifactId>coffee-se-util</artifactId>
 
+	<name>Coff:ee SE - Util</name>
+
 	<dependencies>
 
 		<dependency>

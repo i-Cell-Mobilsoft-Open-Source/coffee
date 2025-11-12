@@ -9,6 +9,8 @@
 	<artifactId>coffee-module-document</artifactId>
 	<packaging>pom</packaging>
 
+	<name>Coff:ee Module - Document - Parent</name>
+
 	<modules>
 		<module>coffee-module-document-dto</module>
 		<module>coffee-module-document-action</module>

@@ -9,6 +9,8 @@
 	<artifactId>coffee-module</artifactId>
 	<packaging>pom</packaging>
 
+	<name>Coff:ee Module - Parent</name>
+
 	<modules>
 		<module>coffee-module-localization</module>
 		<module>coffee-module-mongodb</module>

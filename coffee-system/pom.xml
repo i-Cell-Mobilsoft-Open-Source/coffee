@@ -9,6 +9,8 @@
 	<artifactId>coffee-system</artifactId>
 	<packaging>pom</packaging>
 
+	<name>Coff:ee System - Parent</name>
+
 	<dependencyManagement>
 		<dependencies>
 			<dependency>

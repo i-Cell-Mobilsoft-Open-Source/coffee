@@ -5,6 +5,8 @@ coff:ee v2.11.0 -> v2.12.0 migration description, news, changes
 === Global
 
 * Apache commons-lang3 version bump 3.15.0 -> 3.18.0
+* parent-oss-pom upgraded from `1.4.0` to `1.5.0`
+* The `oss.sonatype.org` snapshot repository was replaced by `central.sonatype.com`, and module names were added for validations.
 
 ==== Migration
 The commons-lang3 version update introduces some deprecated methods, which will need to be updated across the projects. The list can be found here: https://commons.apache.org/proper/commons-lang/apidocs/deprecated-list.html
@@ -12,6 +14,7 @@ The commons-lang3 version update introduces some deprecated methods, which will 
 === coffee-rest
 * JaxbTool CDI dependent bean destroy fix
 * ResponseUtil extended, in case of getFileResponse the filename is also sent back in the header with UTF-8 encoding (filename*=UTF-8''...)
+* The `DefaultGeneralExceptionMapper` handles the new `IBaseExceptionWrapper` instead of the `BaseExceptionWrapper`. For more info check the `coffee-dto-base` and `coffee-se-api`.
 
 ==== Migration
 Changes are backwards compatible doesnt need any migration.
@@ -113,3 +116,24 @@ As the result of replacing Jedis object, in the usage project must update Jedis 
 
 ==== Migration
 In projects using quarkus extensions, the groupIds must be changed from `hu.icellmobilsoft.coffee` to `hu.icellmobilsoft.coffee.quarkus`.
+
+=== coffee-dto-base
+`BaseExceptionWrapper` interface has been deprecated and a new alternative is introduced in `coffee-se-api`:
+`hu.icellmobilsoft.coffee.se.api.exception.wrapper.IBaseExceptionWrapper`.
+
+==== Migration
+The changes are backwards compatible and do not require any migration. However, it is recommended to use the new `IBaseExceptionWrapper` at the project level.
+
+=== coffee-se-api
+A new `IBaseExceptionWrapper` has been introduced as a replacement for `BaseExceptionWrapper`.
+
+==== Migration
+The changes are backwards compatible and do not require any migration. It is recommended to use this new interface instead of `BaseExceptionWrapper`.
+
+=== coffee-cdi
+* `hu.icellmobilsoft.coffee.cdi.trace.annotation.Traced.LITERAL` type changed so it can be used with `ITraceHandler`,
+and initialized with default values.
+* The `LogContainer` now only stores a limited number of log messages. The limit can be configured with the `coffee.logger.logContainer.maxSize` config key. (default: `1000`)
+
+==== Migration
+* If you want the old `LogContainer` behaviour back, set the `coffee.logger.logContainer.maxSize` konfig to `2147483647`. But this is highly discouraged.

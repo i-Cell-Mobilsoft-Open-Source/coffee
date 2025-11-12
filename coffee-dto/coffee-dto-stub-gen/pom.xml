@@ -8,6 +8,7 @@
 
 	<artifactId>coffee-dto-stub-gen</artifactId>
 
+	<name>Coff:ee DTO - Stub Gen</name>
 	<description>Generating classes from coffee proto files</description>
 
 	<properties>

@@ -8,6 +8,8 @@
 
 	<artifactId>coffee-system-jpa</artifactId>
 
+	<name>Coff:ee System - JPA</name>
+
 	<dependencies>
 		<dependency>
 			<groupId>hu.icellmobilsoft.coffee</groupId>
