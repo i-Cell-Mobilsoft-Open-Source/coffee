@@ -13,6 +13,7 @@ The commons-lang3 version update introduces some deprecated methods, which will 
 
 === coffee-rest
 * JaxbTool CDI dependent bean destroy fix
+* ResponseUtil extended, in case of getFileResponse the filename is also sent back in the header with UTF-8 encoding (filename*=UTF-8''...)
 * The `DefaultGeneralExceptionMapper` handles the new `IBaseExceptionWrapper` instead of the `BaseExceptionWrapper`. For more info check the `coffee-dto-base` and `coffee-se-api`.
 
 ==== Migration
@@ -117,7 +118,7 @@ As the result of replacing Jedis object, in the usage project must update Jedis 
 In projects using quarkus extensions, the groupIds must be changed from `hu.icellmobilsoft.coffee` to `hu.icellmobilsoft.coffee.quarkus`.
 
 === coffee-dto-base
-`BaseExceptionWrapper` interface has been deprecated and a new alternative is introduced in `coffee-se-api`: 
+`BaseExceptionWrapper` interface has been deprecated and a new alternative is introduced in `coffee-se-api`:
 `hu.icellmobilsoft.coffee.se.api.exception.wrapper.IBaseExceptionWrapper`.
 
 ==== Migration
