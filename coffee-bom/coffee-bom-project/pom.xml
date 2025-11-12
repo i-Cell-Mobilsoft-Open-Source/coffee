@@ -305,6 +305,16 @@
                 <artifactId>coffee-module-mp-micrometer</artifactId>
                 <version>${project.version}</version>
             </dependency>
+            <dependency>
+                <groupId>hu.icellmobilsoft.coffee</groupId>
+                <artifactId>coffee-module-repserv-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>hu.icellmobilsoft.coffee</groupId>
+                <artifactId>coffee-module-repserv-action</artifactId>
+                <version>${project.version}</version>
+            </dependency>
 
             <!-- Coff:ee quarkus extensions -->
 

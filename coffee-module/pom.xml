@@ -28,7 +28,8 @@
         <module>coffee-module-wildfly</module>
         <module>coffee-module-quarkus</module>
         <module>coffee-module-docgen</module>
-    </modules>
+		<module>coffee-module-repserv</module>
+	</modules>
 
 	<dependencyManagement>
 		<dependencies>
