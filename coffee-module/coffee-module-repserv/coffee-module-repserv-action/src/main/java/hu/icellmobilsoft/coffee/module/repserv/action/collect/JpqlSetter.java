@@ -27,8 +27,6 @@ import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Name;
 
-import org.apache.commons.lang3.Strings;
-
 import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MemberReferenceTree;
@@ -160,7 +158,7 @@ public class JpqlSetter extends SimpleTreeVisitor<Void, ClassData> {
      */
     @Override
     public Void visitMemberReference(MemberReferenceTree node, ClassData classData) {
-        if (Strings.CS.equals(classData.getRepositoryName(), node.getQualifierExpression().toString())) {
+        if (node.getQualifierExpression().toString().equals(classData.getRepositoryName())) {
             repositoryType = classData.getRepositoryType();
             repositoryMethodName = node.getName();
         }
@@ -173,14 +171,14 @@ public class JpqlSetter extends SimpleTreeVisitor<Void, ClassData> {
      */
     @Override
     public Void visitMemberSelect(MemberSelectTree node, ClassData classData) {
-        if (Strings.CS.equals(classData.getRepositoryName(), node.getExpression().toString())) {
+        if (node.getExpression().toString().equals(classData.getRepositoryName())) {
             repositoryType = classData.getRepositoryType();
             repositoryMethodName = node.getIdentifier();
         } else {
             classData.getLatestMethodData()
                     .getParams()
                     .stream()
-                    .filter(p -> Strings.CS.equals(node.getExpression().toString(), p.getParameterName()))
+                    .filter(p -> node.getExpression().toString().equals(p.getParameterName()))
                     .map(ParamData::getNestedProps)
                     .map(np -> np.get(String.valueOf(node.getIdentifier())))
                     .findFirst()
@@ -197,7 +195,7 @@ public class JpqlSetter extends SimpleTreeVisitor<Void, ClassData> {
         classData.getLatestMethodData()
                 .getParams()
                 .stream()
-                .filter(p -> Strings.CS.equals(p.getParameterName(), node.getName().toString()))
+                .filter(p -> node.getName().toString().equals(p.getParameterName()))
                 .map(ParamData::getParameterType)
                 .findFirst()
                 .ifPresent(repositoryMethodParamTypes::add);

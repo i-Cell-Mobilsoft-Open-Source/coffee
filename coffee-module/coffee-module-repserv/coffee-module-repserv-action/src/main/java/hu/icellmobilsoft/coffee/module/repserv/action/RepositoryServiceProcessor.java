@@ -65,13 +65,6 @@ import hu.icellmobilsoft.coffee.module.repserv.api.annotation.RepositoryService;
 @AutoService(Processor.class)
 public class RepositoryServiceProcessor extends AbstractProcessor {
     /**
-     * Creates a new {@code RepositoryServiceProcessor} instance.
-     */
-    public RepositoryServiceProcessor() {
-        super();
-    }
-
-    /**
      * Processes annotations handled by this processor.
      * <p>
      * Collects metadata for all classes annotated with {@link RepositoryService}, builds internal representations ({@link ClassData}), and generates
@@ -84,8 +77,13 @@ public class RepositoryServiceProcessor extends AbstractProcessor {
      *            the environment for the current processing round
      * @return {@code false} to allow other processors to handle the same annotations
      */
+    @SuppressWarnings("java:S1872")
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
+        if (!processingEnv.getClass().getName().equals("com.sun.tools.javac.processing.JavacProcessingEnvironment")) {
+            return false;
+        }
+
         try {
             RepositoryServiceConfig config = new RepositoryServiceConfig(processingEnv.getOptions());
             List<ClassData> dataList = collectData(config, annotations, roundEnv);
@@ -108,6 +106,13 @@ public class RepositoryServiceProcessor extends AbstractProcessor {
             return false;
         }
         return false;
+    }
+
+    /**
+     * Creates a new {@code RepositoryServiceProcessor} instance.
+     */
+    public RepositoryServiceProcessor() {
+        super();
     }
 
     private List<ClassData> collectData(RepositoryServiceConfig config, Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {

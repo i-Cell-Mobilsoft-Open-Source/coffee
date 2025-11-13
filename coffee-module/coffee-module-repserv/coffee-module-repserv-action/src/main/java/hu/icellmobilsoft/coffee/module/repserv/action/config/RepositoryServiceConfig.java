@@ -33,7 +33,10 @@ public class RepositoryServiceConfig {
     private static final String PROJECT_NAME_KEY = "coffee.repserv.config.project.name";
     private static final String DEFAULT_PROJECT_NAME = "";
     private static final String GENERATED_JSON_FOLDER_KEY = "coffee.repserv.config.generated.json.folder";
-    private static final String DEFAULT_GENERATED_JSON_FOLDER = "repository-service/json/";
+    /**
+     * Default path value for JSON catalog file
+     */
+    public static final String DEFAULT_GENERATED_JSON_PATH = "repository-service/json/";
 
     private final Map<String, String> properties;
 
@@ -62,6 +65,6 @@ public class RepositoryServiceConfig {
      * @return the folder which is used to generate json files
      */
     public String getGeneratedJsonFolder() {
-        return Optional.ofNullable(properties.get(GENERATED_JSON_FOLDER_KEY)).orElse(DEFAULT_GENERATED_JSON_FOLDER);
+        return Optional.ofNullable(properties.get(GENERATED_JSON_FOLDER_KEY)).orElse(DEFAULT_GENERATED_JSON_PATH);
     }
 }
