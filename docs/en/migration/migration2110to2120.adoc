@@ -137,3 +137,12 @@ and initialized with default values.
 
 ==== Migration
 * If you want the old `LogContainer` behaviour back, set the `coffee.logger.logContainer.maxSize` konfig to `2147483647`. But this is highly discouraged.
+
+=== coffee-tool
+`JsonbConfigBuilder` introduce to create `JsonbConfig`.
+
+==== Migration
+The changes are backwards compatible and do not require any migration.
+
+=== coffee-module-repserv
+* New module, more info in the description.

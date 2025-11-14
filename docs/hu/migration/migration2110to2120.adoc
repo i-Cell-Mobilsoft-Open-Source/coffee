@@ -142,3 +142,12 @@ A változtatások nem eredményeznek átállási munkálatokat, visszafelé komp
 
 ==== Migration
 Ha a régi `LogContainer` viselkedést szeretnénk visszakapni, a `coffee.logger.logContainer.maxSize` konfigurációs kulcsot kell `2147483647`-re beállítani. De ezt inkább nem javasoljuk.
+
+=== coffee-tool
+`JsonbConfigBuilder` bevezetése `JsonbConfig` előállítására.
+
+==== Migration
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+=== coffee-module-repserv
+* Új modul, bővebb infó a leírásban.
