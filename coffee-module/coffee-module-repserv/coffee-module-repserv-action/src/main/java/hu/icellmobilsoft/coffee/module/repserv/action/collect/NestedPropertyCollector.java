@@ -60,6 +60,14 @@ import hu.icellmobilsoft.coffee.module.repserv.action.data.ParamData;
  */
 @SuppressWarnings("java:S110")
 public class NestedPropertyCollector extends AbstractTypeVisitor14<TypeMirror, ParamData> {
+
+    /**
+     * Creates a new {@code NestedPropertyCollector} instance.
+     */
+    public NestedPropertyCollector() {
+        super();
+    }
+
     /**
      * Visits declared types (classes or interfaces) and collects all their public method return types as nested properties into the given
      * {@link ParamData}.

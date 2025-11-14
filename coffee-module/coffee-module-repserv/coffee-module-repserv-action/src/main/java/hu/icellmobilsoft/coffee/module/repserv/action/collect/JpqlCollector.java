@@ -64,6 +64,12 @@ import hu.icellmobilsoft.coffee.module.repserv.action.data.RepositoryMethod;
  */
 @SuppressWarnings("java:S110")
 public class JpqlCollector extends ElementKindVisitor14<List<RepositoryMethod>, TypeMirror> {
+    /**
+     * Prevent instantiation.
+     */
+    private JpqlCollector() {
+        super();
+    }
 
     /**
      * Collects JPQL strings from {@link Query} annotations into a {@link Map}, keyed by method identifier data represented as
