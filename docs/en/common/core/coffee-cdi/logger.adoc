@@ -58,3 +58,5 @@ log.trace("Generated id: [{0}]", id);
 ----
 
 The purpose of this is to be able to immediately identify the variable value when looking at the log, and also if it has a value of "" (empty String) or null.
+
+The `LogContainer` only stores a limited number of log messages. The limit can be configured with the `coffee.logger.logContainer.maxSize` config key. (default: `1000`)

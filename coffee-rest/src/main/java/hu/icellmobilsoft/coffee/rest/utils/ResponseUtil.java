@@ -19,6 +19,9 @@
  */
 package hu.icellmobilsoft.coffee.rest.utils;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.ResponseBuilder;
@@ -112,8 +115,12 @@ public class ResponseUtil {
      * @return {@code Response}
      */
     public static Response getFileResponse(Object entity, String fileName, String contentType) {
+        //URLEncoder.encode() encodes space to +, but it should be %20
+        String encodedFileName = URLEncoder.encode(fileName, StandardCharsets.UTF_8).replace("+", "%20");
+        String contentDisposition = "attachment; filename=\"" + fileName + "\"; filename*=UTF-8''" + encodedFileName;
+
         return Response.ok(entity).header(HttpHeaders.CONTENT_TYPE, contentType)
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"")
+                .header(HttpHeaders.CONTENT_DISPOSITION, contentDisposition)
                 .header(CorsHeaders.ACCESS_CONTROL_EXPOSE_HEADERS, HttpHeaders.CONTENT_DISPOSITION).build();
     }
 

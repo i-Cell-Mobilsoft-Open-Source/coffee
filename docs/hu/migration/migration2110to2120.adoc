@@ -14,6 +14,7 @@ A commons-lang3 verzió frissítése magával hozza, hogy néhány metódus depr
 
 === coffee-rest
 * JaxbTool CDI dependent bean destroy fix
+* ResponseUtil bővítése, getFileResponse esetén a header-ben UTF-8 kódolással is visszaküldjük a filenevet (filename*=UTF-8''...)
 * A `DefaultGeneralExceptionMapper` a `BaseExceptionWrapper` helyett az új `IBaseExceptionWrapper`-t kezeli. Lásd `coffee-dto-base` és `coffee-se-api`.
 
 ==== Migration
@@ -120,7 +121,7 @@ A Jedis objektum lecserélésének erdményeképpen, a használó projektben a k
 A quarkus extension-öket használó projektekben a groupId-kat `hu.icellmobilsoft.coffee`-ról `hu.icellmobilsoft.coffee.quarkus`-ra kell cserélni.
 
 === coffee-dto-base
-A `BaseExceptionWrapper` interfész avultatása és ezzel egyidőben az utódjának létrehozása a `coffee-se-api` modulban: 
+A `BaseExceptionWrapper` interfész avultatása és ezzel egyidőben az utódjának létrehozása a `coffee-se-api` modulban:
 `hu.icellmobilsoft.coffee.se.api.exception.wrapper.IBaseExceptionWrapper`.
 
 ==== Migration
@@ -135,11 +136,12 @@ A változtatások nem eredményeznek átállási munkálatokat, visszafelé komp
 `BaseExceptionWrapper` helyett.
 
 === coffee-cdi
-`hu.icellmobilsoft.coffee.cdi.trace.annotation.Traced.LITERAL` típusa megváltozott, hogy használható lehessen `ITraceHandler`-rel,
+* `hu.icellmobilsoft.coffee.cdi.trace.annotation.Traced.LITERAL` típusa megváltozott, hogy használható lehessen `ITraceHandler`-rel,
 és inicializálva lett a default értékekkel.
+* A `LogContainer` most már limitált darab log üzeneteket tárol. A korlát a `coffee.logger.logContainer.maxSize` konfigurációs kulccsal állítható. (default: `1000`)
 
 ==== Migration
-A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+Ha a régi `LogContainer` viselkedést szeretnénk visszakapni, a `coffee.logger.logContainer.maxSize` konfigurációs kulcsot kell `2147483647`-re beállítani. De ezt inkább nem javasoljuk.
 
 === coffee-tool
 `JsonbConfigBuilder` bevezetése `JsonbConfig` előállítására.
