@@ -65,6 +65,13 @@ import hu.icellmobilsoft.coffee.module.repserv.api.annotation.RepositoryService;
 @AutoService(Processor.class)
 public class RepositoryServiceProcessor extends AbstractProcessor {
     /**
+     * Creates a new {@code RepositoryServiceProcessor} instance.
+     */
+    public RepositoryServiceProcessor() {
+        super();
+    }
+
+    /**
      * Processes annotations handled by this processor.
      * <p>
      * Collects metadata for all classes annotated with {@link RepositoryService}, builds internal representations ({@link ClassData}), and generates
@@ -106,13 +113,6 @@ public class RepositoryServiceProcessor extends AbstractProcessor {
             return false;
         }
         return false;
-    }
-
-    /**
-     * Creates a new {@code RepositoryServiceProcessor} instance.
-     */
-    public RepositoryServiceProcessor() {
-        super();
     }
 
     private List<ClassData> collectData(RepositoryServiceConfig config, Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {

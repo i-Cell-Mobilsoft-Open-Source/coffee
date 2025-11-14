@@ -1,0 +1,126 @@
+[#common_module_coffee-module-repserv]
+
+= coffee-module-repserv
+
+The goal of the module is to provide a way to identify database queries.
+
+== Usage
+
+To use it, add the following dependency to your pom.xml:
+[source,xml]
+----
+<dependency>.
+    <groupId>hu.icellmobilsoft.coffee</groupId>
+    <artifactId>coffee-module-repserv</artifactId>
+</dependency>
+----
+
+=== Method identification
+For classes annotated with `@RepositoryService`, it overrides all public non-static methods and generates a request-scoped descendant annotated with `@Model`. In this descendant, a request-scoped `SqlContext` object is injected. It sets a unique identifier for each method, executes the original instructions, and then clears the identifier.
+
+`SqlContext` can be used anywhere within the given process, for example in comments attached to queries sent to the database engine.
+
+=== JSON catalog
+
+For each class annotated with `@RepositoryService`, a JSON catalog file is generated containing:
+
+* data required for identifying public methods
+* the generated identifier
+* optional JPQL, determined for each method from the value parameter of the `@Query` annotation on the corresponding method of the called `@Repository` interface
+
+==== Example:
+Class annotated with `@RepositoryService`:
+[source,java]
+----
+@RepositoryService
+public class ExampleService {
+    @Inject
+    private ExampleRepository repository;
+    public List<Object> findAll() {
+        return repository.findAll();
+    }
+}
+----
+
+Corresponding interface annotated with `@Repository`:
+
+[source,java]
+----
+@Repository
+public interface ExampleRepository {
+    @Query("SELECT t FROM Test t")
+    List<Object> findAll();
+}
+----
+
+Generated descendant:
+
+[source,java]
+----
+@jakarta.enterprise.inject.Model
+public class ExampleServiceImpl extends hu.icellmobilsoft.coffee.module.repserv.action.data.ExampleService {
+    @jakarta.inject.Inject
+    private hu.icellmobilsoft.coffee.module.repserv.api.SqlContext context;
+
+    public ExampleServiceImpl() {
+        super();
+    }
+
+    @java.lang.Override
+    public java.util.List<java.lang.Object> findAll() {
+        context.setId("18ee7cb7");
+        try {
+            return super.findAll();
+        } finally {
+            context.clear();
+        }
+    }
+}
+----
+
+Generated JSON:
+[source,json]
+----
+{
+  "className": "hu.icellmobilsoft.coffee.module.repserv.action.data.ExampleService",
+  "inheritorName": "ExampleServiceImpl",
+  "methodDataList": [
+    {
+      "id": "18ee7cb7",
+      "jpql": "SELECT t FROM Test t",
+      "methodName": "findAll",
+      "params": [],
+      "returnType": "java.util.List<java.lang.Object>",
+      "thrownTypes": [],
+      "typeParams": []
+    }
+  ],
+  "packageName": "hu.icellmobilsoft.coffee.module.repserv.action.data",
+  "repositoryName": "repository",
+  "repositoryType": "hu.icellmobilsoft.coffee.module.repserv.action.data.ExampleRepository"
+}
+----
+
+=== Configuration
+Since generation uses an annotation processor, configuration is done during compilation using the -A flag.
+In Maven, this can be set through the `maven-compiler-plugin`:
+
+.pom.xml example
+[source,xml]
+----
+<build>
+    <plugins>
+        <plugin>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <configuration>
+                <compilerArgs>
+                    <arg>-Acoffee.repserv.config.project.name=test</arg> #<1>
+                    <arg>-Acoffee.repserv.config.generated.json.folder=json/</arg> #<2>
+                </compilerArgs>
+            </configuration>
+        </plugin>
+    </plugins>
+</build>
+----
+<1> Name of the consuming project, used as an ID prefix. Default: empty string
+<2> Folder where the generated JSON files are placed. Default: `repository-service/json/`

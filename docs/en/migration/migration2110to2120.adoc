@@ -135,3 +135,12 @@ and initialized with default values.
 
 ==== Migration
 The changes are backwards compatible and do not require any migration.
+
+=== coffee-tool
+`JsonbConfigBuilder` introduce to create `JsonbConfig`.
+
+==== Migration
+The changes are backwards compatible and do not require any migration.
+
+=== coffee-module-repserv
+* New module, more info in the description.

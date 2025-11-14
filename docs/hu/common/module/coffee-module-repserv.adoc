@@ -1,0 +1,125 @@
+[#common_module_coffee-module-repserv]
+
+= coffee-module-repserv
+
+A modul célja, hogy lehetőséget biztosítson az adatbázis lekérdezések beazonosítására.
+
+== Usage
+
+Használatához az alábbi függőséget kell hozzáadni a `pom.xml`-hez:
+[source,xml]
+----
+<dependency>.
+    <groupId>hu.icellmobilsoft.coffee</groupId>
+    <artifactId>coffee-module-repserv</artifactId>
+</dependency>
+----
+
+=== Metódus azonosítás
+A `@RepositoryService` annotációval ellátott osztályok publikus nem statikus metódusait felülírva generál egy `@Model` annotációval ellátott request scope-ú leszármazottat. Amelyben egy request scope-ú `SqlContext` objektumot injektálva beállít azon egy-egy metódusonkénti egyedi azonosítót, végrehajtja az eredeti utasításokat, majd kitröli a beállított azonosítót.
+
+Az `SqlContext` az adott folyamaton belül bárhol felhasználható, például az adatbázis motor felé küldött lekérdezéshez csatolt commentben.
+
+=== JSON katalógus
+A `@RepositoryService` annotációval ellátott osztályokhoz generál egy-egy JSON katalógus fájlt, amely a következő adatokat tartalmazza:
+
+* a publikus metódusok beazonosíthatóságához szükséges adatok
+* a generált azonosítót
+* opcionális JPQL-t, amelyet minden metódushoz a belőle hivott `@Repository` interface metódusának `@Query` annotációjának `value` paraméteréből határoz meg
+
+==== Példa:
+`@RepositoryService` annotációval ellátott osztály:
+[source,java]
+----
+@RepositoryService
+public class ExampleService {
+    @Inject
+    private ExampleRepository repository;
+    public List<Object> findAll() {
+        return repository.findAll();
+    }
+}
+----
+
+Hozzá tartozó `@Repository` annotációval ellátott interface:
+
+[source,java]
+----
+@Repository
+public interface ExampleRepository {
+    @Query("SELECT t FROM Test t")
+    List<Object> findAll();
+}
+----
+
+Generált leszármazott:
+
+[source,java]
+----
+@jakarta.enterprise.inject.Model
+public class ExampleServiceImpl extends hu.icellmobilsoft.coffee.module.repserv.action.data.ExampleService {
+    @jakarta.inject.Inject
+    private hu.icellmobilsoft.coffee.module.repserv.api.SqlContext context;
+
+    public ExampleServiceImpl() {
+        super();
+    }
+
+    @java.lang.Override
+    public java.util.List<java.lang.Object> findAll() {
+        context.setId("18ee7cb7");
+        try {
+            return super.findAll();
+        } finally {
+            context.clear();
+        }
+    }
+}
+----
+
+Generált JSON:
+[source,json]
+----
+{
+  "className": "hu.icellmobilsoft.coffee.module.repserv.action.data.ExampleService",
+  "inheritorName": "ExampleServiceImpl",
+  "methodDataList": [
+    {
+      "id": "18ee7cb7",
+      "jpql": "SELECT t FROM Test t",
+      "methodName": "findAll",
+      "params": [],
+      "returnType": "java.util.List<java.lang.Object>",
+      "thrownTypes": [],
+      "typeParams": []
+    }
+  ],
+  "packageName": "hu.icellmobilsoft.coffee.module.repserv.action.data",
+  "repositoryName": "repository",
+  "repositoryType": "hu.icellmobilsoft.coffee.module.repserv.action.data.ExampleRepository"
+}
+----
+
+=== Konfiguráció
+Mivel a generálás annotation processor-t használ, ezért konfigurálni a fordítás során a `-A` kapcsolóval lehet.
+Ezt maven esetén a `maven-compiler-plugin`-on keresztül lehet megadni:
+
+.pom.xml példa
+[source,xml]
+----
+<build>
+    <plugins>
+        <plugin>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <configuration>
+                <compilerArgs>
+                    <arg>-Acoffee.repserv.config.project.name=test</arg> #<1>
+                    <arg>-Acoffee.repserv.config.generated.json.folder=json/</arg> #<2>
+                </compilerArgs>
+            </configuration>
+        </plugin>
+    </plugins>
+</build>
+----
+<1> A használó projekt neve, az ID prefixeként használjuk. Default: üres string
+<2> A mappa ahova a generált JSON fájlokat rakjuk. Default: `repository-service/json/`

@@ -140,3 +140,12 @@ A változtatások nem eredményeznek átállási munkálatokat, visszafelé komp
 
 ==== Migration
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+=== coffee-tool
+`JsonbConfigBuilder` bevezetése `JsonbConfig` előállítására.
+
+==== Migration
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
+
+=== coffee-module-repserv
+* Új modul, bővebb infó a leírásban.
