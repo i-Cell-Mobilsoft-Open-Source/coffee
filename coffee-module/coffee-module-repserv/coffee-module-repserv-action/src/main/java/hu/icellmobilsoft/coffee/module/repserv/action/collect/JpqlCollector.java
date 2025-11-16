@@ -60,7 +60,7 @@ import hu.icellmobilsoft.coffee.module.repserv.action.data.RepositoryMethod;
  *
  *
  * @author janos.boroczki
- * @since 2.12.0
+ * @since 2.13.0
  */
 @SuppressWarnings("java:S110")
 public class JpqlCollector extends ElementKindVisitor14<List<RepositoryMethod>, TypeMirror> {

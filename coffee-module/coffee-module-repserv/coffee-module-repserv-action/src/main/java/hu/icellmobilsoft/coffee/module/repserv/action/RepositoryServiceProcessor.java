@@ -60,7 +60,7 @@ import hu.icellmobilsoft.coffee.module.repserv.api.annotation.RepositoryService;
  * </p>
  *
  * @author janos.boroczki
- * @since 2.12.0
+ * @since 2.13.0
  */
 @AutoService(Processor.class)
 public class RepositoryServiceProcessor extends AbstractProcessor {
@@ -128,6 +128,7 @@ public class RepositoryServiceProcessor extends AbstractProcessor {
 
     private ClassData createData(RepositoryServiceConfig config, Element element, Map<RepositoryMethod, String> jpqlByRepositoryMethod) {
         ClassData data = new ClassData();
+        data.setCustomValues(config.getCustomValues());
         RepositoryServiceVisitor visitor = new RepositoryServiceVisitor(config, processingEnv, jpqlByRepositoryMethod);
         visitor.visit(element, data);
 

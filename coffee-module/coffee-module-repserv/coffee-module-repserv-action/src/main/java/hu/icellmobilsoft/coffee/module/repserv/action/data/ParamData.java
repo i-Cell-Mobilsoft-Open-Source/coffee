@@ -35,7 +35,7 @@ import jakarta.json.bind.annotation.JsonbTransient;
  * </p>
  *
  * @author janos.boroczki
- * @since 2.12.0
+ * @since 2.13.0
  */
 public class ParamData {
 

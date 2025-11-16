@@ -33,7 +33,7 @@ import javax.lang.model.element.Name;
  * </p>
  *
  * @author janos.boroczki
- * @since 2.12.0
+ * @since 2.13.0
  */
 public class RepositoryMethod {
 

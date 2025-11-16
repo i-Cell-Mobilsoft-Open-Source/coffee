@@ -45,7 +45,7 @@ import hu.icellmobilsoft.coffee.tool.utils.json.JsonUtil;
  * {@link RepositoryService} file generation test
  *
  * @author janos.boroczki
- * @since 2.12.0
+ * @since 2.13.0
  */
 class RepositoryServiceTest {
 

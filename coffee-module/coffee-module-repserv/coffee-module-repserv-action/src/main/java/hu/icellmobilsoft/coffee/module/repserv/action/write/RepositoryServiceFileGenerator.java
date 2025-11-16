@@ -28,7 +28,7 @@ import hu.icellmobilsoft.coffee.module.repserv.api.annotation.RepositoryService;
  * source or resource files based on collected metadata.
  *
  * @author janos.boroczki
- * @since 2.12.0
+ * @since 2.13.0
  */
 public interface RepositoryServiceFileGenerator extends AutoCloseable {
 

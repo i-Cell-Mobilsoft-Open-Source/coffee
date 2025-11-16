@@ -58,7 +58,7 @@ import hu.icellmobilsoft.coffee.module.repserv.api.annotation.RepositoryService;
  * </p>
  *
  * @author janos.boroczki
- * @since 2.12.0
+ * @since 2.13.0
  */
 @SuppressWarnings("java:S110")
 public class RepositoryServiceVisitor extends ElementKindVisitor14<Void, ClassData> {

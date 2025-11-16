@@ -45,7 +45,7 @@ import hu.icellmobilsoft.coffee.module.repserv.api.annotation.RepositoryService;
  * </p>
  *
  * @author janos.boroczki
- * @since 2.12.0
+ * @since 2.13.0
  */
 public class JavaFileGenerator implements RepositoryServiceFileGenerator {
 

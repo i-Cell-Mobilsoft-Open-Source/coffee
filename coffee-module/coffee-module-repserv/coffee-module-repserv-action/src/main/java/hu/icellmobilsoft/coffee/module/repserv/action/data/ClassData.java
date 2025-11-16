@@ -20,22 +20,25 @@
 package hu.icellmobilsoft.coffee.module.repserv.action.data;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import hu.icellmobilsoft.coffee.module.repserv.action.config.RepositoryServiceConfig;
 
 /**
  * Represents metadata for a generated or analyzed Java class.
  * <p>
- * This class stores information such as the package name, class name,
- * superclass name, repository reference, and method-level metadata.
- * It is primarily used during code generation or annotation processing
- * to accumulate structural information about the current class.
+ * This class stores information such as the package name, class name, superclass name, repository reference, and method-level metadata. It is
+ * primarily used during code generation or annotation processing to accumulate structural information about the current class.
  * </p>
  *
- * <p>Each {@link MethodData} entry in {@code methodDataList} represents
- * a single method belonging to this class.</p>
+ * <p>
+ * Each {@link MethodData} entry in {@code methodDataList} represents a single method belonging to this class.
+ * </p>
  *
  * @author janos.boroczki
- * @since 2.12.0
+ * @since 2.13.0
  */
 public class ClassData {
 
@@ -57,6 +60,9 @@ public class ClassData {
     /** The type of the associated repository, if applicable. */
     private String repositoryType;
 
+    /** The custom values which are configured in {@link RepositoryServiceConfig} */
+    private Map<String, String> customValues;
+
     /**
      * Creates a new, empty {@code ClassData} instance.
      */
@@ -76,7 +82,8 @@ public class ClassData {
     /**
      * Sets the package name of this class.
      *
-     * @param packageName the package name to set
+     * @param packageName
+     *            the package name to set
      */
     public void setPackageName(String packageName) {
         this.packageName = packageName;
@@ -94,7 +101,8 @@ public class ClassData {
     /**
      * Sets the class name.
      *
-     * @param inheritorName the class name to set
+     * @param inheritorName
+     *            the class name to set
      */
     public void setInheritorName(String inheritorName) {
         this.inheritorName = inheritorName;
@@ -112,7 +120,8 @@ public class ClassData {
     /**
      * Sets the name of the superclass (ancestor).
      *
-     * @param className the ancestor name to set
+     * @param className
+     *            the ancestor name to set
      */
     public void setClassName(String className) {
         this.className = className;
@@ -120,7 +129,9 @@ public class ClassData {
 
     /**
      * Returns the list of method metadata entries.
-     * <p>If the list has not been initialized yet, a new one will be created.</p>
+     * <p>
+     * If the list has not been initialized yet, a new one will be created.
+     * </p>
      *
      * @return the list of {@link MethodData} objects
      */
@@ -134,7 +145,8 @@ public class ClassData {
     /**
      * Sets the method metadata list.
      *
-     * @param methodDataList the list of {@link MethodData} objects to set
+     * @param methodDataList
+     *            the list of {@link MethodData} objects to set
      */
     public void setMethodDataList(List<MethodData> methodDataList) {
         this.methodDataList = methodDataList;
@@ -143,7 +155,8 @@ public class ClassData {
     /**
      * Adds a new {@link MethodData} entry to the method list.
      *
-     * @param methodData the {@link MethodData} object to add
+     * @param methodData
+     *            the {@link MethodData} object to add
      */
     public void addMethodData(MethodData methodData) {
         getMethodDataList().add(methodData);
@@ -151,7 +164,9 @@ public class ClassData {
 
     /**
      * Returns the most recently added {@link MethodData} entry.
-     * <p>Used to access the method currently being processed or generated.</p>
+     * <p>
+     * Used to access the method currently being processed or generated.
+     * </p>
      *
      * @return the latest {@link MethodData} object
      */
@@ -171,7 +186,8 @@ public class ClassData {
     /**
      * Sets the repository name associated with this class.
      *
-     * @param repositoryName the repository name to set
+     * @param repositoryName
+     *            the repository name to set
      */
     public void setRepositoryName(String repositoryName) {
         this.repositoryName = repositoryName;
@@ -189,9 +205,32 @@ public class ClassData {
     /**
      * Sets the repository type associated with this class.
      *
-     * @param repositoryType the repository type to set
+     * @param repositoryType
+     *            the repository type to set
      */
     public void setRepositoryType(String repositoryType) {
         this.repositoryType = repositoryType;
+    }
+
+    /**
+     * Returns the custom values which are configured in {@link RepositoryServiceConfig}.
+     *
+     * @return the custom values
+     */
+    public Map<String, String> getCustomValues() {
+        if (customValues == null) {
+            customValues = new HashMap<>();
+        }
+        return customValues;
+    }
+
+    /**
+     * Sets the custom values which are configured in {@link RepositoryServiceConfig}.
+     *
+     * @param customValues
+     *            the custom values
+     */
+    public void setCustomValues(Map<String, String> customValues) {
+        this.customValues = customValues;
     }
 }

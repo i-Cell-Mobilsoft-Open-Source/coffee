@@ -25,7 +25,7 @@ import jakarta.enterprise.inject.Model;
  * Represents a request-scoped context that stores the generated SQL method ID.
  *
  * @author janos.boroczki
- * @since 2.12.0
+ * @since 2.13.0
  */
 @Model
 public class SqlContext {

@@ -34,7 +34,7 @@ import java.util.List;
  *
  *
  * @author janos.boroczki
- * @since 2.12.0
+ * @since 2.13.0
  */
 public class TypeParamData {
 

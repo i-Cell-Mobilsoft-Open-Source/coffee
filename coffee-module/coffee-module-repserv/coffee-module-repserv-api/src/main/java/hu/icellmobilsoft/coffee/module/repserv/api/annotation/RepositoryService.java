@@ -32,7 +32,7 @@ import hu.icellmobilsoft.coffee.module.repserv.api.SqlContext;
  * IDs into a request-scoped {@link SqlContext}.
  *
  * @author janos.boroczki
- * @since 2.12.0
+ * @since 2.13.0
  */
 @Documented
 @Target({ ElementType.TYPE })

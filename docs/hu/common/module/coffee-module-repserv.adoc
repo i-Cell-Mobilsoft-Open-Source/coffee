@@ -82,6 +82,7 @@ Generált JSON:
 ----
 {
   "className": "hu.icellmobilsoft.coffee.module.repserv.action.data.ExampleService",
+  "customValues": {},
   "inheritorName": "ExampleServiceImpl",
   "methodDataList": [
     {
@@ -115,6 +116,7 @@ Ezt maven esetén a `maven-compiler-plugin`-on keresztül lehet megadni:
                 <compilerArgs>
                     <arg>-Acoffee.repserv.config.project.name=test</arg> #<1>
                     <arg>-Acoffee.repserv.config.generated.json.folder=json/</arg> #<2>
+                    <arg>-Acoffee.repserv.config.generated.json.customValues=key1=value1;key2=value2</arg> #<3>
                 </compilerArgs>
             </configuration>
         </plugin>
@@ -123,3 +125,4 @@ Ezt maven esetén a `maven-compiler-plugin`-on keresztül lehet megadni:
 ----
 <1> A használó projekt neve, az ID prefixeként használjuk. Default: üres string
 <2> A mappa ahova a generált JSON fájlokat rakjuk. Default: `repository-service/json/`
+<3> A generált JSON `customValues` értékeit tartalmazza. Formátuma: `KEY=VALUE; [KEY=VALUE...]`. DEFAULT: üres

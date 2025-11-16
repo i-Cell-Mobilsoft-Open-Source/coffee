@@ -56,7 +56,7 @@ import hu.icellmobilsoft.coffee.module.repserv.action.data.ParamData;
  *
  * @see ParamData
  * @author janos.boroczki
- * @since 2.12.0
+ * @since 2.13.0
  */
 @SuppressWarnings("java:S110")
 public class NestedPropertyCollector extends AbstractTypeVisitor14<TypeMirror, ParamData> {
