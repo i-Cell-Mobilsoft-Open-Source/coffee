@@ -21,6 +21,9 @@ package hu.icellmobilsoft.coffee.module.repserv.action.write;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.tools.StandardLocation;
@@ -85,9 +88,17 @@ public class JsonFileGenerator implements RepositoryServiceFileGenerator {
     private Writer createWriter(ProcessingEnvironment processingEnv, ClassData classData) throws IOException {
         int i = classData.getClassName().lastIndexOf('.');
         String fileName = i == -1 ? classData.getClassName() : classData.getClassName().substring(i + 1);
-        return processingEnv.getFiler()
+        return config.isGeneratedJsonOutputToClasspath()
+                ? processingEnv.getFiler()
                 .createResource(StandardLocation.CLASS_OUTPUT, "", config.getGeneratedJsonFolder() + fileName + JSON_POSTFIX)
-                .openWriter();
+                .openWriter()
+                : createNonClasspathWriter(fileName);
+    }
+
+    private Writer createNonClasspathWriter(String fileName) throws IOException {
+        Path filePath = Paths.get(config.getGeneratedJsonFolder(), fileName + JSON_POSTFIX);
+        Files.createDirectories(filePath.getParent());
+        return Files.newBufferedWriter(filePath);
     }
 
     /**

@@ -118,6 +118,7 @@ In Maven, this can be set through the `maven-compiler-plugin`:
                     <arg>-Acoffee.repserv.config.project.name=test</arg> #<1>
                     <arg>-Acoffee.repserv.config.generated.json.folder=json/</arg> #<2>
                     <arg>-Acoffee.repserv.config.generated.json.customValues=key1=value1;key2=value2</arg> #<3>
+                    <arg>-Acoffee.repserv.config.generated.outputToClasspath=false</arg> #<4>
                 </compilerArgs>
             </configuration>
         </plugin>
@@ -127,3 +128,4 @@ In Maven, this can be set through the `maven-compiler-plugin`:
 <1> Name of the consuming project, used as an ID prefix. Default: empty string
 <2> Folder where the generated JSON files are placed. Default: `repository-service/json/`
 <3> The generated JSON `customValues` are contained in. Format: `KEY=VALUE; [KEY=VALUE...]`. DEFAULT: empty
+<4> Whether the generated JSON should be put on the classpath, i.e. whether we want it to be included in the generated jar file. Default: `true`

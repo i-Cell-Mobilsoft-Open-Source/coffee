@@ -40,6 +40,8 @@ public class RepositoryServiceConfig {
     private static final String DEFAULT_PROJECT_NAME = "";
     private static final String GENERATED_JSON_FOLDER_KEY = "coffee.repserv.config.generated.json.folder";
     private static final String GENERATED_JSON_CUSTOM_VALUES_KEY = "coffee.repserv.config.generated.json.customValues";
+    private static final String GENERATED_JSON_OUTPUT_TO_CLASSPATH_KEY = "coffee.repserv.config.generated.outputToClasspath";
+    private static final boolean DEFAULT_GENERATED_JSON_OUTPUT_TO_CLASSPATH = true;
     private static final String CUSTOM_VALUE_ELEMENT_SEPARATOR = ";";
     private static final String CUSTOM_VALUE_KEY_VALUE_SEPARATOR = "=";
 
@@ -113,5 +115,16 @@ public class RepositoryServiceConfig {
      */
     public Map<String, String> getCustomValues() {
         return customValues;
+    }
+
+    /**
+     * Returns {@literal true} if the generated JSON files should be on the classpath
+     *
+     * @return {@literal true} if the generated JSON files should be on the classpath
+     */
+    public boolean isGeneratedJsonOutputToClasspath() {
+        return Optional.ofNullable(properties.get(GENERATED_JSON_OUTPUT_TO_CLASSPATH_KEY))
+                .map(Boolean::valueOf)
+                .orElse(DEFAULT_GENERATED_JSON_OUTPUT_TO_CLASSPATH);
     }
 }
