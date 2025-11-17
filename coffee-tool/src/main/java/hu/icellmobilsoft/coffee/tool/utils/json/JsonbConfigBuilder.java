@@ -68,7 +68,7 @@ import hu.icellmobilsoft.coffee.tool.jsonb.adapter.YearMonthJsonbAdapter;
  * }</pre>
  * 
  * @author janos.boroczki
- * @since 2.12.0
+ * @since 2.13.0
  */
 public class JsonbConfigBuilder {
 
