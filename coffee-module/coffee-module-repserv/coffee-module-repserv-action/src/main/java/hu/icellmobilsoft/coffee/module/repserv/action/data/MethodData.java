@@ -36,8 +36,8 @@ import hu.icellmobilsoft.coffee.module.repserv.action.write.JavaFileWriter;
  * Instances of this class are aggregated within {@link ClassData}.
  * </p>
  *
- * @author xy
- * @since 0.0.1
+ * @author janos.boroczki
+ * @since 2.13.0
  */
 public class MethodData {
 
