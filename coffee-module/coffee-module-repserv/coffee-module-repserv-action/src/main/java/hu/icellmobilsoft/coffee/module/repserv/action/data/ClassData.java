@@ -63,6 +63,9 @@ public class ClassData {
     /** The custom values which are configured in {@link RepositoryServiceConfig} */
     private Map<String, String> customValues;
 
+    /** The type argument map for inherited classes. */
+    private Map<String, String> typeArgumentMap;
+
     /**
      * Creates a new, empty {@code ClassData} instance.
      */
@@ -90,38 +93,38 @@ public class ClassData {
     }
 
     /**
-     * Returns the class name.
+     * Returns the inheritor class name.
      *
-     * @return the class name
+     * @return the inheritor class name
      */
     public String getInheritorName() {
         return inheritorName;
     }
 
     /**
-     * Sets the class name.
+     * Sets the inheritor class name.
      *
      * @param inheritorName
-     *            the class name to set
+     *            the inheritor class name to set
      */
     public void setInheritorName(String inheritorName) {
         this.inheritorName = inheritorName;
     }
 
     /**
-     * Returns the name of the superclass (ancestor).
+     * Returns the class name.
      *
-     * @return the ancestor name
+     * @return the class name
      */
     public String getClassName() {
         return className;
     }
 
     /**
-     * Sets the name of the superclass (ancestor).
+     * Sets the class name.
      *
      * @param className
-     *            the ancestor name to set
+     *            the class name to set
      */
     public void setClassName(String className) {
         this.className = className;
@@ -233,4 +236,17 @@ public class ClassData {
     public void setCustomValues(Map<String, String> customValues) {
         this.customValues = customValues;
     }
+
+    /**
+     * Returns the type argument map for inherited classes.
+     *
+     * @return the type argument map for inherited classes
+     */
+    public Map<String, String> getTypeArgumentMap() {
+        if (typeArgumentMap == null) {
+            typeArgumentMap = new HashMap<>();
+        }
+        return typeArgumentMap;
+    }
+
 }

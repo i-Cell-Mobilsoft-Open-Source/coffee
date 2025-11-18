@@ -23,19 +23,20 @@ import java.nio.charset.Charset;
 
 import com.google.common.hash.Hashing;
 
+import hu.icellmobilsoft.coffee.module.repserv.action.data.ClassData;
 import hu.icellmobilsoft.coffee.module.repserv.action.data.MethodData;
 
 /**
  * Utility class for generating stable IDs for methods based on their signature.
  * <p>
- * The generated ID is computed from the method name, type parameters and parameter list, and is produced using a Murmur3 32-bit hash to yield a
- * compact identifier.
+ * The generated ID is computed from the class name, the method name, type parameters and parameter list, and is produced using a Murmur3 32-bit hash
+ * to yield a compact identifier.
  * </p>
  *
  * @author janos.boroczki
  * @since 2.13.0
  */
-public class IdGenerator {
+public final class IdGenerator {
 
     /**
      * Prevent instantiation.
@@ -45,15 +46,16 @@ public class IdGenerator {
     }
 
     /**
-     * Generates a deterministic ID for the supplied {@link MethodData} by hashing the combined method signature string (name + type parameters +
-     * parameter list).
+     * Generates a deterministic ID by hashing the class name and the full method signature (method name + type parameters + parameter list).
      *
+     * @param classData
+     *            the class metadata contributing the class name
      * @param methodData
      *            the method metadata used to build the signature
-     * @return a hashed identifier string representing the method signature
+     * @return a hashed identifier string representing the combined class and method signature
      */
-    public static String generateId(MethodData methodData) {
-        String s = methodData.getMethodName() + methodData.getTypeParamsString() + methodData.getParamsString();
+    public static String generateId(ClassData classData, MethodData methodData) {
+        String s = classData.getClassName() + methodData.getMethodName() + methodData.getTypeParamsString() + methodData.getParamsString();
         return Hashing.murmur3_32_fixed().hashString(s, Charset.defaultCharset()).toString();
     }
 }

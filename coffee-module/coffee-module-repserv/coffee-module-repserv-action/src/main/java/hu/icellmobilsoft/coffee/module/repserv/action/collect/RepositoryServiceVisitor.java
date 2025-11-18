@@ -21,6 +21,8 @@ package hu.icellmobilsoft.coffee.module.repserv.action.collect;
 
 import java.text.MessageFormat;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.ElementKind;
@@ -66,6 +68,9 @@ public class RepositoryServiceVisitor extends ElementKindVisitor14<Void, ClassDa
     private final NestedPropertyCollector nestedPropertyCollector;
     private final JpqlSetter jpqlSetter;
     private final RepositoryServiceConfig config;
+    private final SuperclassVisitor superclassVisitor;
+    private final Set<String> repositoryTypes;
+    private final TypeParameterVisitor typeParameterVisitor;
 
     /**
      * Creates a visitor instance initialized with the processing environment and JPQL mapping data.
@@ -83,6 +88,9 @@ public class RepositoryServiceVisitor extends ElementKindVisitor14<Void, ClassDa
         this.config = config;
         this.nestedPropertyCollector = new NestedPropertyCollector();
         this.jpqlSetter = new JpqlSetter(processingEnv, jpqlByRepositoryMethod);
+        this.superclassVisitor = new SuperclassVisitor(this);
+        this.repositoryTypes = jpqlByRepositoryMethod.keySet().stream().map(RepositoryMethod::getRepositoryType).collect(Collectors.toSet());
+        this.typeParameterVisitor = new TypeParameterVisitor();
     }
 
     /**
@@ -104,11 +112,14 @@ public class RepositoryServiceVisitor extends ElementKindVisitor14<Void, ClassDa
                             e.getQualifiedName()));
         }
 
-        classData.setInheritorName(e.getSimpleName() + "Impl");
-        classData.setClassName(String.valueOf(e.getQualifiedName()));
-        classData.setPackageName(String.valueOf(e.getEnclosingElement().asType()));
+        if (classData.getInheritorName() == null) {
+            classData.setInheritorName(e.getSimpleName() + "Impl");
+            classData.setClassName(String.valueOf(e.getQualifiedName()));
+            classData.setPackageName(String.valueOf(e.getEnclosingElement().asType()));
+        }
 
         e.getEnclosedElements().forEach(ee -> visit(ee, classData));
+        e.getSuperclass().accept(superclassVisitor, classData);
 
         return super.visitType(e, classData);
     }
@@ -130,7 +141,7 @@ public class RepositoryServiceVisitor extends ElementKindVisitor14<Void, ClassDa
 
         MethodData methodData = new MethodData();
         methodData.setMethodName(String.valueOf(e.getSimpleName()));
-        methodData.setReturnType(String.valueOf(e.getReturnType()));
+        methodData.setReturnType(e.getReturnType().accept(typeParameterVisitor, classData.getTypeArgumentMap()));
         methodData.setThrownTypes(e.getThrownTypes().stream().map(String::valueOf).toList());
 
         classData.addMethodData(methodData);
@@ -140,7 +151,7 @@ public class RepositoryServiceVisitor extends ElementKindVisitor14<Void, ClassDa
 
         jpqlSetter.setJpql(e, classData);
 
-        methodData.setId(config.getProjectName() + IdGenerator.generateId(methodData));
+        methodData.setId(config.getProjectName() + IdGenerator.generateId(classData, methodData));
 
         return super.visitExecutableAsMethod(e, classData);
     }
@@ -158,7 +169,7 @@ public class RepositoryServiceVisitor extends ElementKindVisitor14<Void, ClassDa
     public Void visitVariableAsParameter(VariableElement e, ClassData classData) {
         ParamData paramData = new ParamData();
         paramData.setParameterName(String.valueOf(e.getSimpleName()));
-        paramData.setParameterType(String.valueOf(e.asType()));
+        paramData.setParameterType(e.asType().accept(typeParameterVisitor, classData.getTypeArgumentMap()));
         e.asType().accept(nestedPropertyCollector, paramData);
 
         classData.getLatestMethodData().addParam(paramData);
@@ -196,8 +207,11 @@ public class RepositoryServiceVisitor extends ElementKindVisitor14<Void, ClassDa
      */
     @Override
     public Void visitVariableAsField(VariableElement e, ClassData classData) {
-        classData.setRepositoryName(String.valueOf(e.getSimpleName()));
-        classData.setRepositoryType(String.valueOf(e.asType()));
+        String repositoryType = String.valueOf(e.asType());
+        if (repositoryTypes.contains(repositoryType)) {
+            classData.setRepositoryName(String.valueOf(e.getSimpleName()));
+            classData.setRepositoryType(repositoryType);
+        }
         return super.visitVariableAsField(e, classData);
     }
 
