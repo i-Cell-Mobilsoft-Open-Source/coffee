@@ -28,6 +28,7 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Name;
 
 import com.sun.source.tree.BlockTree;
+import com.sun.source.tree.ExpressionStatementTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MemberReferenceTree;
 import com.sun.source.tree.MemberSelectTree;
@@ -141,6 +142,12 @@ public class JpqlSetter extends SimpleTreeVisitor<Void, ClassData> {
         repositoryType = null;
         repositoryMethodName = null;
         repositoryMethodParamTypes = new ArrayList<>();
+    }
+
+    @Override
+    public Void visitExpressionStatement(ExpressionStatementTree node, ClassData classData) {
+        node.getExpression().accept(this, classData);
+        return super.visitExpressionStatement(node, classData);
     }
 
     @Override
