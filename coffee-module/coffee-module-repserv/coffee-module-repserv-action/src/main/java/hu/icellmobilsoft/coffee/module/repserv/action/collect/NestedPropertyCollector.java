@@ -23,6 +23,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.type.ArrayType;
@@ -80,8 +81,8 @@ public class NestedPropertyCollector extends AbstractTypeVisitor14<TypeMirror, P
      */
     @Override
     public TypeMirror visitDeclared(DeclaredType t, ParamData paramData) {
-        Map<String, String> nestedProps = t.asElement()
-                .getEnclosedElements()
+        Element element = t.asElement();
+        Map<String, String> nestedProps = element.getEnclosedElements()
                 .stream()
                 .filter(e -> e.getModifiers().contains(Modifier.PUBLIC))
                 .filter(e -> e.getKind() == ElementKind.METHOD)
@@ -89,6 +90,9 @@ public class NestedPropertyCollector extends AbstractTypeVisitor14<TypeMirror, P
                 .map(pair -> Pair.of(String.valueOf(pair.getKey()), String.valueOf(pair.getValue().accept(this, paramData))))
                 .filter(pair -> Objects.nonNull(pair.getValue()))
                 .collect(Collectors.toMap(Pair::getKey, Pair::getValue, (tm1, tm2) -> tm1));
+        if (element.getKind() == ElementKind.ENUM) {
+            nestedProps.put("name", String.class.getName());
+        }
         paramData.setNestedProps(nestedProps);
         return null;
     }

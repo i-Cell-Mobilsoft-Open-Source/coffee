@@ -19,6 +19,8 @@
  */
 package hu.icellmobilsoft.coffee.module.repserv.action.collect;
 
+import java.util.Optional;
+
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.ArrayType;
 import javax.lang.model.type.DeclaredType;
@@ -45,9 +47,9 @@ import hu.icellmobilsoft.coffee.module.repserv.action.data.ClassData;
  * @author janos.boroczki
  * @since 3.3.0
  */
+@SuppressWarnings("java:S110")
 public class SuperclassVisitor extends AbstractTypeVisitor14<Void, ClassData> {
 
-    private static final String JAVA_LANG_OBJECT = "java.lang.Object";
     private final RepositoryServiceVisitor repositoryServiceVisitor;
 
     /**
@@ -62,7 +64,7 @@ public class SuperclassVisitor extends AbstractTypeVisitor14<Void, ClassData> {
 
     @Override
     public Void visitDeclared(DeclaredType t, ClassData classData) {
-        if (JAVA_LANG_OBJECT.equals(String.valueOf(t))) {
+        if (Object.class.getName().equals(String.valueOf(t))) {
             return null;
         }
 
@@ -75,6 +77,7 @@ public class SuperclassVisitor extends AbstractTypeVisitor14<Void, ClassData> {
         if (t.asElement() instanceof TypeElement e) {
             for (int i = 0; i < t.getTypeArguments().size(); i++) {
                 String value = t.getTypeArguments().get(i).toString();
+                value = Optional.ofNullable(classData.getTypeArgumentMap().get(value)).orElse(value);
 
                 if (e.getTypeParameters().size() >= i + 1) {
                     String key = e.getTypeParameters().get(i).toString();
