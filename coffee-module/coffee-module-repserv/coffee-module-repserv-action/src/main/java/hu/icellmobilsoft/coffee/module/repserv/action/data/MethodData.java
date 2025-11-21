@@ -21,6 +21,7 @@ package hu.icellmobilsoft.coffee.module.repserv.action.data;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import hu.icellmobilsoft.coffee.module.repserv.action.write.JavaFileWriter;
@@ -289,5 +290,20 @@ public class MethodData {
         retVal += getParams().stream().map(param -> param.getParameterType() + " " + param.getParameterName()).collect(Collectors.joining(","));
         retVal += ")";
         return retVal;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+        MethodData that = (MethodData) o;
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
     }
 }

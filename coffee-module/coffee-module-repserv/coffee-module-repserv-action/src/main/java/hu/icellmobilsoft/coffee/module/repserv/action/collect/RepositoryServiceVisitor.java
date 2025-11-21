@@ -149,9 +149,13 @@ public class RepositoryServiceVisitor extends ElementKindVisitor14<Void, ClassDa
         e.getTypeParameters().forEach(typeParameter -> visit(typeParameter, classData));
         e.getParameters().forEach(p -> visit(p, classData));
 
-        jpqlSetter.setJpql(e, classData);
-
         methodData.setId(config.getProjectName() + IdGenerator.generateId(classData, methodData));
+
+        if (classData.getMethodDataList().stream().filter(methodData::equals).count() > 1) {
+            classData.removeMethodData(methodData);
+        }
+
+        jpqlSetter.setJpql(e, classData);
 
         return super.visitExecutableAsMethod(e, classData);
     }

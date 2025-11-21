@@ -166,6 +166,16 @@ public class ClassData {
     }
 
     /**
+     * Removes an existing {@link MethodData} entry from the method list.
+     *
+     * @param methodData
+     *            the {@link MethodData} object to remove
+     */
+    public void removeMethodData(MethodData methodData) {
+        getMethodDataList().remove(methodData);
+    }
+
+    /**
      * Returns the most recently added {@link MethodData} entry.
      * <p>
      * Used to access the method currently being processed or generated.
