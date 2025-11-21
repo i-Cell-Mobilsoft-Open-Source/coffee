@@ -144,4 +144,9 @@ public class JpqlCollector extends ElementKindVisitor14<List<RepositoryMethod>, 
         repositoryMethod.setJpql(query.get().value());
         return List.of(repositoryMethod);
     }
+
+    @Override
+    protected List<RepositoryMethod> defaultAction(Element e, TypeMirror typeMirror) {
+        return List.of();
+    }
 }
