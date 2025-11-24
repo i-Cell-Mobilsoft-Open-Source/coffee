@@ -26,6 +26,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import jakarta.json.spi.JsonProvider;
+
 import hu.icellmobilsoft.coffee.dto.exception.InvalidParameterException;
 
 /**
@@ -44,6 +46,8 @@ public class RepositoryServiceConfig {
     private static final boolean DEFAULT_GENERATED_JSON_OUTPUT_TO_CLASSPATH = true;
     private static final String CUSTOM_VALUE_ELEMENT_SEPARATOR = ";";
     private static final String CUSTOM_VALUE_KEY_VALUE_SEPARATOR = "=";
+    private static final String JSON_PROVIDER = "coffee.repserv.config.json.provider";
+    private static final String DEFAULT_JSON_PROVIDER = "org.eclipse.parsson.JsonProviderImpl";
 
     /**
      * Default path value for JSON catalog file
@@ -126,5 +130,14 @@ public class RepositoryServiceConfig {
         return Optional.ofNullable(properties.get(GENERATED_JSON_OUTPUT_TO_CLASSPATH_KEY))
                 .map(Boolean::valueOf)
                 .orElse(DEFAULT_GENERATED_JSON_OUTPUT_TO_CLASSPATH);
+    }
+
+    /**
+     * Returns {@link JsonProvider} class name which is used for json serialization.
+     * 
+     * @return {@link JsonProvider} class name which is used for json serialization
+     */
+    public String getJsonProviderClass() {
+        return Optional.ofNullable(properties.get(JSON_PROVIDER)).orElse(DEFAULT_JSON_PROVIDER);
     }
 }

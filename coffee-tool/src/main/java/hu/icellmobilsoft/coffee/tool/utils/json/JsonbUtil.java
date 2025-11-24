@@ -22,6 +22,7 @@ package hu.icellmobilsoft.coffee.tool.utils.json;
 import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbBuilder;
 import jakarta.json.bind.JsonbConfig;
+import jakarta.json.spi.JsonProvider;
 
 import org.eclipse.microprofile.config.Config;
 
@@ -91,10 +92,23 @@ public class JsonbUtil {
      * @return a configured {@link Jsonb} instance
      */
     public static Jsonb getContext(JsonbConfigBuilder jsonbConfigBuilder) {
+        return getContext(jsonbConfigBuilder, null);
+    }
+
+    /**
+     * Creates a new {@link Jsonb} instance using the provided {@link JsonbConfigBuilder} and {@link JsonProvider}.
+     *
+     * @param jsonbConfigBuilder
+     *            the configuration builder used to construct {@link JsonbConfig}
+     * @param jsonProvider
+     *            the json provider used to construct {@link Jsonb}
+     * @return a configured {@link Jsonb} instance
+     */
+    public static Jsonb getContext(JsonbConfigBuilder jsonbConfigBuilder, JsonProvider jsonProvider) {
         Config config = ConfigUtil.getInstance().defaultConfig();
         JsonbConfig jsonbConfig = jsonbConfigBuilder.withConfig(config).build();
 
-        return JsonbBuilder.newBuilder().withConfig(jsonbConfig).build();
+        return JsonbBuilder.newBuilder().withConfig(jsonbConfig).withProvider(jsonProvider).build();
     }
 
 }

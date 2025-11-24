@@ -28,6 +28,8 @@ import java.nio.file.Paths;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.tools.StandardLocation;
 
+import jakarta.json.spi.JsonProvider;
+
 import hu.icellmobilsoft.coffee.module.repserv.action.config.RepositoryServiceConfig;
 import hu.icellmobilsoft.coffee.module.repserv.action.data.ClassData;
 import hu.icellmobilsoft.coffee.module.repserv.api.annotation.RepositoryService;
@@ -66,6 +68,7 @@ public class JsonFileGenerator implements RepositoryServiceFileGenerator {
     private final Writer writer;
     private final ClassData classData;
     private final RepositoryServiceConfig config;
+    private final JsonProvider jsonProvider;
 
     /**
      * Creates a new {@code JsonFileGenerator} instance.
@@ -79,10 +82,11 @@ public class JsonFileGenerator implements RepositoryServiceFileGenerator {
      * @throws IOException
      *             if the output file cannot be created or written
      */
-    public JsonFileGenerator(RepositoryServiceConfig config, ProcessingEnvironment processingEnv, ClassData classData) throws IOException {
+    public JsonFileGenerator(RepositoryServiceConfig config, ProcessingEnvironment processingEnv, ClassData classData) throws Exception {
         this.config = config;
         this.writer = createWriter(processingEnv, classData);
         this.classData = classData;
+        this.jsonProvider = createJsonProvider();
     }
 
     private Writer createWriter(ProcessingEnvironment processingEnv, ClassData classData) throws IOException {
@@ -90,9 +94,13 @@ public class JsonFileGenerator implements RepositoryServiceFileGenerator {
         String fileName = i == -1 ? classData.getClassName() : classData.getClassName().substring(i + 1);
         return config.isGeneratedJsonOutputToClasspath()
                 ? processingEnv.getFiler()
-                .createResource(StandardLocation.CLASS_OUTPUT, "", config.getGeneratedJsonFolder() + fileName + JSON_POSTFIX)
-                .openWriter()
+                        .createResource(StandardLocation.CLASS_OUTPUT, "", config.getGeneratedJsonFolder() + fileName + JSON_POSTFIX)
+                        .openWriter()
                 : createNonClasspathWriter(fileName);
+    }
+
+    private JsonProvider createJsonProvider() throws Exception {
+        return (JsonProvider) Class.forName(config.getJsonProviderClass()).getDeclaredConstructor().newInstance();
     }
 
     private Writer createNonClasspathWriter(String fileName) throws IOException {
@@ -111,7 +119,7 @@ public class JsonFileGenerator implements RepositoryServiceFileGenerator {
     @Override
     public void generate() {
         JsonbConfigBuilder jsonbConfigBuilder = new JsonbConfigBuilder().withPropertyVisibilityStrategy(new FieldOnlyVisibilityStrategy());
-        JsonbUtil.getContext(jsonbConfigBuilder).toJson(classData, writer);
+        JsonbUtil.getContext(jsonbConfigBuilder, jsonProvider).toJson(classData, writer);
     }
 
     @Override
