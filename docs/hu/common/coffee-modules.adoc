@@ -38,3 +38,5 @@ include::module/coffee-module-docgen-sqlcatalog.adoc[leveloffset=+1]
 include::module/coffee-module-wildfly.adoc[leveloffset=+1]
 
 include::module/coffee-module-quarkus.adoc[leveloffset=+1]
+
+include::module/coffee-module-repserv.adoc[leveloffset=+1]

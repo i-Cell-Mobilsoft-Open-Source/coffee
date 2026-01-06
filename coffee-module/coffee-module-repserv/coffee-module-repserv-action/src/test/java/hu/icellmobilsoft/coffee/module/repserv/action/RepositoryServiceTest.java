@@ -1,0 +1,109 @@
+/*-
+ * #%L
+ * Coffee
+ * %%
+ * Copyright (C) 2020 - 2025 i-Cell Mobilsoft Zrt.
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
+package hu.icellmobilsoft.coffee.module.repserv.action;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+
+import hu.icellmobilsoft.coffee.module.repserv.action.config.RepositoryServiceConfig;
+import hu.icellmobilsoft.coffee.module.repserv.action.data.ClassData;
+import hu.icellmobilsoft.coffee.module.repserv.action.data.ExampleService;
+import hu.icellmobilsoft.coffee.module.repserv.action.data.ExampleServiceImpl;
+import hu.icellmobilsoft.coffee.module.repserv.action.data.Param;
+import hu.icellmobilsoft.coffee.module.repserv.action.data.ParamRecord;
+import hu.icellmobilsoft.coffee.module.repserv.api.annotation.RepositoryService;
+import hu.icellmobilsoft.coffee.se.api.exception.JsonConversionException;
+import hu.icellmobilsoft.coffee.tool.utils.json.JsonUtil;
+
+/**
+ * {@link RepositoryService} file generation test
+ *
+ * @author janos.boroczki
+ * @since 2.13.0
+ */
+class RepositoryServiceTest {
+
+    @Test
+    @DisplayName("generated implementation should exists")
+    void generatedImplementationShouldExists() throws NoSuchMethodException {
+        assertTrue(ExampleService.class.isAssignableFrom(ExampleServiceImpl.class));
+        assertNotNull(ExampleServiceImpl.class.getDeclaredMethod("test", Param.class, ParamRecord.class));
+        assertNotNull(ExampleServiceImpl.class.getDeclaredMethod("getBigDecimal", String.class, BigDecimal.class, Object.class));
+        assertNotNull(ExampleServiceImpl.class.getDeclaredMethod("findAll"));
+        assertNotNull(ExampleServiceImpl.class.getDeclaredMethod("findCustom"));
+        assertNotNull(ExampleServiceImpl.class.getDeclaredMethod("method1", String.class, String.class));
+        assertNotNull(ExampleServiceImpl.class.getDeclaredMethod("method2", String.class, String.class));
+        assertNotNull(ExampleServiceImpl.class.getDeclaredMethod("method3", String.class, String.class));
+    }
+
+    @Test
+    @DisplayName("generated json should contain classData properties")
+    void generatedJsonShouldContainClassDataProperties() throws URISyntaxException, IOException, JsonConversionException {
+        URL generatedFileUrl = getClass().getResource("/" + RepositoryServiceConfig.DEFAULT_GENERATED_JSON_PATH + ExampleService.class.getSimpleName() + ".json");
+        assertNotNull(generatedFileUrl);
+
+        String json = Files.readString(Paths.get(generatedFileUrl.toURI()));
+        ClassData classData = JsonUtil.toObject(json, ClassData.class);
+
+        assertEquals("hu.icellmobilsoft.coffee.module.repserv.action.data.ExampleService", classData.getClassName());
+        assertEquals(7, classData.getMethodDataList().size());
+
+        assertEquals("b549df94", classData.getMethodDataList().get(0).getId());
+        assertEquals("SELECT t FROM Test t\nWHERE t.param = :param\nAND t.p = :p\n", classData.getMethodDataList().get(0).getJpql());
+        assertEquals("test", classData.getMethodDataList().get(0).getMethodName());
+
+        assertEquals("0958a848", classData.getMethodDataList().get(1).getId());
+        assertEquals("SELECT count(t) FROM Test t\nWHERE t.param1 = :param1\nAND t.param2 = :param2\n", classData.getMethodDataList().get(1).getJpql());
+        assertEquals("getBigDecimal", classData.getMethodDataList().get(1).getMethodName());
+
+        assertEquals("b807110e", classData.getMethodDataList().get(2).getId());
+        assertEquals("SELECT t FROM Test t", classData.getMethodDataList().get(2).getJpql());
+        assertEquals("findAll", classData.getMethodDataList().get(2).getMethodName());
+
+        assertEquals("bea9f89c", classData.getMethodDataList().get(3).getId());
+        assertNull(classData.getMethodDataList().get(3).getJpql());
+        assertEquals("findCustom", classData.getMethodDataList().get(3).getMethodName());
+
+        assertEquals("b56c0f87", classData.getMethodDataList().get(4).getId());
+        assertEquals("SELECT t FROM Test t\nWHERE t.param1 = :param1\nAND t.param2 = :param2\n", classData.getMethodDataList().get(4).getJpql());
+        assertEquals("method1", classData.getMethodDataList().get(4).getMethodName());
+
+        assertEquals("e4e13810", classData.getMethodDataList().get(5).getId());
+        assertEquals("SELECT t FROM Test t\nWHERE t.param1 = :param1\nOR t.param2 = :param2\n", classData.getMethodDataList().get(5).getJpql());
+        assertEquals("method2", classData.getMethodDataList().get(5).getMethodName());
+
+        assertEquals("10ba6212", classData.getMethodDataList().get(6).getId());
+        assertEquals("SELECT t.name FROM Test t\nWHERE t.param1 = :param1\nAND t.param2 = :param2\n", classData.getMethodDataList().get(6).getJpql());
+        assertEquals("method3", classData.getMethodDataList().get(6).getMethodName());
+    }
+
+}
