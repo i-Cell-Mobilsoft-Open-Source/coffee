@@ -99,6 +99,10 @@ public class JpqlSetter extends SimpleTreeVisitor<Void, ClassData> {
      *            the {@link ClassData} object containing method metadata
      */
     public void setJpql(ExecutableElement element, ClassData classData) {
+        if (classData.getLatestMethodData().getJpql() != null) {
+            return;
+        }
+
         Trees trees = Trees.instance(processingEnv);
         MethodTree methodTree = trees.getTree(element);
         if (methodTree == null) {

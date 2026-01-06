@@ -46,4 +46,25 @@ public interface ExampleRepository {
 
     @Query("SELECT t FROM Test t")
     List<Object> findAll();
+
+    @Query("""
+            SELECT t FROM Test t
+            WHERE t.param1 = :param1
+            AND t.param2 = :param2
+            """)
+    Object method1(@QueryParam("param1") String param1, @QueryParam("param2") String param2);
+
+    @Query("""
+            SELECT t FROM Test t
+            WHERE t.param1 = :param1
+            OR t.param2 = :param2
+            """)
+    Object method2(@QueryParam("param1") String param1, @QueryParam("param2") String param2);
+
+    @Query("""
+            SELECT t.name FROM Test t
+            WHERE t.param1 = :param1
+            AND t.param2 = :param2
+            """)
+    String method3(@QueryParam("param1") String param1, @QueryParam("param2") String param2);
 }

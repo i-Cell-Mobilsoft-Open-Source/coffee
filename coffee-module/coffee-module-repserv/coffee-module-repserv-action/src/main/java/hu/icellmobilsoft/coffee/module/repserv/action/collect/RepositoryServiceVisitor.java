@@ -20,7 +20,9 @@
 package hu.icellmobilsoft.coffee.module.repserv.action.collect;
 
 import java.text.MessageFormat;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -151,7 +153,9 @@ public class RepositoryServiceVisitor extends ElementKindVisitor14<Void, ClassDa
 
         methodData.setId(config.getProjectName() + IdGenerator.generateId(classData, methodData));
 
-        if (classData.getMethodDataList().stream().filter(methodData::equals).count() > 1) {
+        List<MethodData> sameMethodDataList = classData.getMethodDataList().stream().filter(methodData::equals).toList();
+        if (sameMethodDataList.size() > 1) {
+            Optional.ofNullable(sameMethodDataList.get(0).getJpql()).ifPresent(methodData::setJpql);
             classData.removeMethodData(methodData);
         }
 

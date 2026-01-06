@@ -25,6 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
@@ -37,6 +38,8 @@ import hu.icellmobilsoft.coffee.module.repserv.action.config.RepositoryServiceCo
 import hu.icellmobilsoft.coffee.module.repserv.action.data.ClassData;
 import hu.icellmobilsoft.coffee.module.repserv.action.data.ExampleService;
 import hu.icellmobilsoft.coffee.module.repserv.action.data.ExampleServiceImpl;
+import hu.icellmobilsoft.coffee.module.repserv.action.data.Param;
+import hu.icellmobilsoft.coffee.module.repserv.action.data.ParamRecord;
 import hu.icellmobilsoft.coffee.module.repserv.api.annotation.RepositoryService;
 import hu.icellmobilsoft.coffee.se.api.exception.JsonConversionException;
 import hu.icellmobilsoft.coffee.tool.utils.json.JsonUtil;
@@ -51,8 +54,15 @@ class RepositoryServiceTest {
 
     @Test
     @DisplayName("generated implementation should exists")
-    void generatedImplementationShouldExists() {
+    void generatedImplementationShouldExists() throws NoSuchMethodException {
         assertTrue(ExampleService.class.isAssignableFrom(ExampleServiceImpl.class));
+        assertNotNull(ExampleServiceImpl.class.getDeclaredMethod("test", Param.class, ParamRecord.class));
+        assertNotNull(ExampleServiceImpl.class.getDeclaredMethod("getBigDecimal", String.class, BigDecimal.class, Object.class));
+        assertNotNull(ExampleServiceImpl.class.getDeclaredMethod("findAll"));
+        assertNotNull(ExampleServiceImpl.class.getDeclaredMethod("findCustom"));
+        assertNotNull(ExampleServiceImpl.class.getDeclaredMethod("method1", String.class, String.class));
+        assertNotNull(ExampleServiceImpl.class.getDeclaredMethod("method2", String.class, String.class));
+        assertNotNull(ExampleServiceImpl.class.getDeclaredMethod("method3", String.class, String.class));
     }
 
     @Test
@@ -65,7 +75,7 @@ class RepositoryServiceTest {
         ClassData classData = JsonUtil.toObject(json, ClassData.class);
 
         assertEquals("hu.icellmobilsoft.coffee.module.repserv.action.data.ExampleService", classData.getClassName());
-        assertEquals(4, classData.getMethodDataList().size());
+        assertEquals(7, classData.getMethodDataList().size());
 
         assertEquals("b549df94", classData.getMethodDataList().get(0).getId());
         assertEquals("SELECT t FROM Test t\nWHERE t.param = :param\nAND t.p = :p\n", classData.getMethodDataList().get(0).getJpql());
@@ -82,6 +92,18 @@ class RepositoryServiceTest {
         assertEquals("bea9f89c", classData.getMethodDataList().get(3).getId());
         assertNull(classData.getMethodDataList().get(3).getJpql());
         assertEquals("findCustom", classData.getMethodDataList().get(3).getMethodName());
+
+        assertEquals("b56c0f87", classData.getMethodDataList().get(4).getId());
+        assertEquals("SELECT t FROM Test t\nWHERE t.param1 = :param1\nAND t.param2 = :param2\n", classData.getMethodDataList().get(4).getJpql());
+        assertEquals("method1", classData.getMethodDataList().get(4).getMethodName());
+
+        assertEquals("e4e13810", classData.getMethodDataList().get(5).getId());
+        assertEquals("SELECT t FROM Test t\nWHERE t.param1 = :param1\nOR t.param2 = :param2\n", classData.getMethodDataList().get(5).getJpql());
+        assertEquals("method2", classData.getMethodDataList().get(5).getMethodName());
+
+        assertEquals("10ba6212", classData.getMethodDataList().get(6).getId());
+        assertEquals("SELECT t.name FROM Test t\nWHERE t.param1 = :param1\nAND t.param2 = :param2\n", classData.getMethodDataList().get(6).getJpql());
+        assertEquals("method3", classData.getMethodDataList().get(6).getMethodName());
     }
 
 }

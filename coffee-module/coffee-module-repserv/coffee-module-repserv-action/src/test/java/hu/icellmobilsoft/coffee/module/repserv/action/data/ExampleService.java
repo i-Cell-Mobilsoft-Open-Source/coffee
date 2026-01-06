@@ -22,14 +22,13 @@ package hu.icellmobilsoft.coffee.module.repserv.action.data;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.function.BiFunction;
 
 import jakarta.inject.Inject;
 
 import hu.icellmobilsoft.coffee.module.repserv.api.annotation.RepositoryService;
 
 @RepositoryService
-public class ExampleService {
+public class ExampleService extends AbstractExampleService<String> {
 
     @Inject
     private ExampleRepository repository;
@@ -45,11 +44,6 @@ public class ExampleService {
         return wrap(repository::test, param.getProp(), paramRecord.p(), "test", "prop", "p");
     }
 
-    private Object wrap(BiFunction<String, String, Object> function, String param1, String param2, String methodName, String p1Name, String p2Name) {
-        System.out.println(methodName + " " + " " + p1Name + " " + p2Name + " " + param1 + " " + param2);
-        return function.apply(param1, param2);
-    }
-
     public <T extends BigDecimal&Serializable, R> long getBigDecimal(String param1, T param2, R param3) throws NumberFormatException, NullPointerException {
         System.out.println(param3);
         return repository.count(param1, param2);
@@ -63,4 +57,15 @@ public class ExampleService {
         return List.of();
     }
 
+    @Override
+    public Object method1(String param1, String param2) {
+        Object result = super.method1(param1, param2);
+        System.out.println(result);
+        return result;
+    }
+
+    @Override
+    public String method3(String param1, String param2) {
+        return wrap(repository::method3, param1, param2, "method3", "param1", "param2");
+    }
 }
