@@ -63,7 +63,7 @@ public class OpenAPIFilter implements OASFilter {
     public Schema filterSchema(Schema schema) {
         if (schema != null && StringUtils.isNotBlank(schema.getPattern())) {
             // If there is a pattern, then at the request/response level it should be a string (even if the DTO has an object like XmlGregorianCalendar)
-            schema.setType(Schema.SchemaType.STRING);
+            schema.setType(List.of(Schema.SchemaType.STRING));
         }
         return schema;
     }
