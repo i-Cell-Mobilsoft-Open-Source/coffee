@@ -1,0 +1,28 @@
+= v2.12.0 → v2.13.0
+
+coff:ee v2.12.0 -> v2.13.0 migration description, news, changes
+
+== WildFly 38 support
+
+Due to WildFly 38 compatibility, the MicroProfile platform and several related dependency versions have been upgraded.
+
+* MicroProfile BOM `6.1` -> `7.1`
+** https://microprofile.io/2025/06/17/microprofile-7-1-released/
+* Micrometer: `1.12.4` -> `1.15.0`
+* OpenTelemetry: `1.29.0` -> `1.48.0`
+* OpenTelemetry gRPC instrumentation: `1.29.0-alpha` -> `2.14.0-alpha`
+* Jakarta XML Binding API: `4.0.2` -> `4.0.4`
+* Jakarta Activation API: `2.1.3` -> `2.1.4`
+* RESTEasy: `6.2.11.Final` -> `6.2.14.Final`
+* Hibernate ORM: `6.6.1.Final` -> `6.6.31.Final`
+* Gson: `2.8.9` -> `2.13.1`
+* Guava: `32.1.1-jre` -> `33.0.0-jre`
+* Commons BeanUtils: `1.9.4` -> `1.11.0`
+* Commons Codec: `1.17.1` -> `1.17.2`
+
+== Migration
+
+Expected breakpoints when upgrading to WildFly 38:
+
+* In OpenAPI filters and custom schema handling: `Schema#setType` API change (single -> list).
+* MP Metrics API: using explicit `MetricType` in `Metadata` may cause compilation errors.
