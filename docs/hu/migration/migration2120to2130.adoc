@@ -1,0 +1,7 @@
+= v2.12.0 → v2.13.0
+
+coff:ee v2.12.0 -> v2.13.0 migrációs leírás, újdonságok, változások leírása
+
+=== Global
+
+* ETCD driver verzió frissítése 0.8.5 -> 0.8.6
