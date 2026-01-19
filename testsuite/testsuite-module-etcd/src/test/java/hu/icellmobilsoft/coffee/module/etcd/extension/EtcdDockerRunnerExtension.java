@@ -40,8 +40,9 @@ public class EtcdDockerRunnerExtension implements BeforeAllCallback, ExtensionCo
 
     private static boolean started = false;
 
-    public static final GenericContainer<?> ETCD_SERVER = new GenericContainer<>(DockerImageName.parse("bitnami/etcd:3.4.29")).withExposedPorts(2379)
-            .withEnv("ALLOW_NONE_AUTHENTICATION", "yes").withAccessToHost(true);
+    public static final GenericContainer<?> ETCD_SERVER = new GenericContainer<>(DockerImageName.parse("rancher/etcd:v3.4.13-k3s1"))
+            .withExposedPorts(2379)
+            .withCommand("/usr/local/bin/etcd", "--advertise-client-urls=http://0.0.0.0:2379", "--listen-client-urls=http://0.0.0.0:2379");
 
     private static Logger log = Logger.getLogger(EtcdDockerRunnerExtension.class.getName());
 
