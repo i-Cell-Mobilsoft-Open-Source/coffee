@@ -34,6 +34,13 @@ public class RedisExtensionProcessor {
 
     private static final String FEATURE = "coffee-module-redis-extension";
 
+    /**
+     * No-arg constructor
+     */
+    public RedisExtensionProcessor() {
+        // Np-arg constructor for java 21
+    }
+
     @BuildStep
     FeatureBuildItem feature() {
         return new FeatureBuildItem(FEATURE);
