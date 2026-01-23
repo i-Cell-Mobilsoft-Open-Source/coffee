@@ -15,7 +15,7 @@
 		<version.os-maven-plugin.version>1.7.1</version.os-maven-plugin.version>
 		<version.protoc.maven.plugin>3.11.4</version.protoc.maven.plugin>
 		<!-- should be sync with the io.grpc version in coffee-bom-grpc -->
-		<version.protoc.java.stub.gen>1.70.0</version.protoc.java.stub.gen>
+		<version.protoc.java.stub.gen>1.76.0</version.protoc.java.stub.gen>
 		<version.protoc>3.25.5</version.protoc>
 	</properties>
 
