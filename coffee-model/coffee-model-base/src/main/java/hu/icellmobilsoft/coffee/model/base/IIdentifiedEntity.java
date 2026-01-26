@@ -29,7 +29,7 @@ import java.io.Serializable;
  * @author arnold.bucher
  * @since 1.8.1
  */
-public interface IIdentifiedEntity<ID extends Serializable> extends IVersionable {
+public interface IIdentifiedEntity<ID extends Serializable> {
 
     /**
      * Returns the id of the entity
