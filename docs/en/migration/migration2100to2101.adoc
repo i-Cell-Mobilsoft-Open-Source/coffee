@@ -1,0 +1,67 @@
+= v2.10.0 → v2.10.1
+
+coff:ee v2.10.0 -> v2.10.1 migration description, news, changes
+
+=== coffee-module-redis
+
+* Jedis upgraded from 5.1.2 to 7.2.1
+* Removed the deprecated `JedisPool` class, and `Jedis` class was changed to the more generic `UnifiedJedis` class
+
+Notable bugfixes:
+
+* Ensure closing connection in Pipeline even if there is an error in sync method. https://github.com/redis/jedis/pull/3865[#3865]
+
+Jedis changelog with breaking changes:
+
+* https://github.com/redis/jedis/releases/tag/v5.2.0[v5.2.0]
+** JedisConnectionException contains HostAndPort from DefaultJedisSocketFactory (#3896)
+** Address change in JSON.GET command without path (#3858)
+** Modify and fail-fast GeoSearchParam (#3827)
+** Support transaction from UnifiedJedis without calling multi first (#3804)
+** Reduce the log level of validateObject to WARN (#3750)
+* https://github.com/redis/jedis/releases/tag/v6.0.0[v6.0.0]
+** Make default client side search dialect to 2 (#4060)
+** Remove Graph module support (#4073)
+** Change FT.PROFILE to return generic object (#4067)
+** Remove Triggers and Functions feature (#3969)
+** COMMAND INFO reply contains subcommand detail (#4022)
+* https://github.com/redis/jedis/releases/tag/v6.1.0[v6.1.0]
+* https://github.com/redis/jedis/releases/tag/v6.2.0[v6.2.0]
+* https://github.com/redis/jedis/releases/tag/v7.0.0[v7.0.0]
+** Removed deprecated constructors, classes, and JedisSharding (#4311)
+** Automatic Failover and Failback API changes (#4317, #4310, #4308, #4306, #4297, #4228)
+** MultiCluster* classes and methods have been renamed and improved.
+** Users upgrading from v6.x should consult the Automatic Failover and Failback Migration Guide.
+** https://redis.github.io/jedis/migration-guides/v6-to-v7/#breaking-changes[More details on breaking changes]
+* https://github.com/redis/jedis/releases/tag/v7.1.0[v7.1.0]
+* https://github.com/redis/jedis/releases/tag/v7.2.0[v7.2.0]
+* https://github.com/redis/jedis/releases/tag/v7.2.1[v7.2.1]
+
+==== Migration
+
+Replace imports from:
+[source,java]
+----
+import redis.clients.jedis.Jedis;
+----
+to:
+[source,java]
+----
+import redis.clients.jedis.UnifiedJedis;
+----
+
+In the `RedisManager` calls replace the `Jedis::` to `UnifiedJedis::`
+
+If you use `RedisManager` with pipeline, then the returned class changed from `Pipeline` to `AbstractPipeline`.
+Old:
+[source,java]
+----
+Pipeline pipeline = redisManager.run(Jedis::pipelined, "pipelined move").orElseThrow();
+----
+
+New:
+[source,java]
+----
+AbstractPipeline pipeline = redisManager.run(UnifiedJedis::pipelined, "pipelined move").orElseThrow();
+----
+

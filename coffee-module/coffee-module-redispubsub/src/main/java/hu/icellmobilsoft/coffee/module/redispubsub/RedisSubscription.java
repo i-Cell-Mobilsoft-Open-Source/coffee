@@ -31,7 +31,7 @@ import org.reactivestreams.Subscription;
 
 import hu.icellmobilsoft.coffee.module.redis.annotation.RedisConnection;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
-import redis.clients.jedis.Jedis;
+import redis.clients.jedis.UnifiedJedis;
 
 /**
  * Microprofile reactive subscription - Connects Redis subscribe with mp Streams.
@@ -45,8 +45,8 @@ public class RedisSubscription implements Subscription, Closeable {
 
     private final Logger log = Logger.getLogger(RedisSubscription.class);
 
-    private Instance<Jedis> jedisInstance;
-    private Jedis jedis;
+    private Instance<UnifiedJedis> jedisInstance;
+    private UnifiedJedis jedis;
     private ReactiveJedisPubSub pubSub;
 
     /**
@@ -80,7 +80,7 @@ public class RedisSubscription implements Subscription, Closeable {
             String channel = config.getPubSubChannel().orElseGet(config::getChannel);
             String connectionKey = config.getConnectionKey();
             String poolKey = config.getPoolKey();
-            jedisInstance = CDI.current().select(Jedis.class, new RedisConnection.Literal(connectionKey, poolKey));
+            jedisInstance = CDI.current().select(UnifiedJedis.class, new RedisConnection.Literal(connectionKey, poolKey));
             jedis = jedisInstance.get();
             jedis.subscribe(pubSub, channel);
         } catch (Exception e) {

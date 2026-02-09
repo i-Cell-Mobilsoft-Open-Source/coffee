@@ -64,8 +64,8 @@ Példa több redis művelet használatára. Ez jellemzően set/get kombinálva a
 private RedisManager redisManager;
 
 try (RedisManagerConnection connection = redisManager.initConnection()) { #<1>
-    redisManager.run(Jedis::set, "set", "key", "value");
-    redisManager.run(Jedis::expire, "expire", "key", 300);
+    redisManager.run(UnifiedJedis::set, "set", "key", "value");
+    redisManager.run(UnifiedJedis::expire, "expire", "key", 300);
 }
 
 ----
@@ -79,7 +79,7 @@ Példa egy művelet végrehajtására.
 @RedisConnection(configKey = "auth")
 private RedisManager redisManager;
 
-redisManager.runWithConnection(Jedis::set, "set", "key", "value"); #<1>
+redisManager.runWithConnection(UnifiedJedis::set, "set", "key", "value"); #<1>
 
 ----
 
@@ -97,7 +97,7 @@ Bővebb leírás a korlátokról: https://redis.io/commands/scan
 
 [source,java]
 ----
-redisManager.runWithConnection(Jedis::hscan, "hscan", "key", 10, 100);
+redisManager.runWithConnection(UnifiedJedis::hscan, "hscan", "key", 10, 100);
 ----
 
 === rpush
@@ -109,7 +109,7 @@ Bővebb leírás: https://redis.io/commands/rpush + https://redis.io/commands/ex
 
 [source,java]
 ----
-redisManager.runWithConnection(Jedis::rpush, "rpush", "key", "element", 100);
+redisManager.runWithConnection(UnifiedJedis::rpush, "rpush", "key", "element", 100);
 ----
 
 === lpop/rpop
@@ -122,8 +122,8 @@ Bővebb leírás a korlátokról: https://redis.io/commands/lpop
 
 [source,java]
 ----
-redisManager.runWithConnection(Jedis::lpop, "lpop", "key"); <1>
-redisManager.runWithConnection(Jedis::rpop, "rpop", "key"); <1>
+redisManager.runWithConnection(UnifiedJedis::lpop, "lpop", "key"); <1>
+redisManager.runWithConnection(UnifiedJedis::rpop, "rpop", "key"); <1>
 ----
 <1> Ha nem talál értéket akkor `Optional.empty()`
 
@@ -140,9 +140,9 @@ Bővebb leírás: https://redis.io/commands/lmove + https://redis.io/commands/ex
 [source,java]
 ----
 // sourceListKey elejéről a destinationListKey lista végére
-redisManager.runWithConnection(Jedis::lmove, "lmove", "sourceListKey", "destinationListKey", ListDirection.LEFT, ListDirection.RIGHT);
+redisManager.runWithConnection(UnifiedJedis::lmove, "lmove", "sourceListKey", "destinationListKey", ListDirection.LEFT, ListDirection.RIGHT);
 // végéről az elejére
-redisManager.runWithConnection(Jedis::lmove, "lmove", "sourceListKey", "sourceListKey", ListDirection.RIGHT, ListDirection.LEFT);
+redisManager.runWithConnection(UnifiedJedis::lmove, "lmove", "sourceListKey", "sourceListKey", ListDirection.RIGHT, ListDirection.LEFT);
 ----
 
 === removeValueFromList
@@ -152,7 +152,7 @@ Bővebb leírás: https://redis.io/commands/lrem
 
 [source,java]
 ----
-redisManager.runWithConnection(Jedis::lrem, "removeValueFromList", listKey, 0, "removeValue");
+redisManager.runWithConnection(UnifiedJedis::lrem, "removeValueFromList", listKey, 0, "removeValue");
 ----
 
 == microprofile-health támogatás

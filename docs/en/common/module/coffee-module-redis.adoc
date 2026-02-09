@@ -64,8 +64,8 @@ Example of using multiple redis operations. This is typically set/get combined w
 private RedisManager redisManager;
 
 try (RedisManagerConnection connection = redisManager.initConnection()) { #<1>
-    redisManager.run(Jedis::set, "set", "key", "value");
-    redisManager.run(Jedis::expire, "expire", "key", 300);
+    redisManager.run(UnifiedJedis::set, "set", "key", "value");
+    redisManager.run(UnifiedJedis::expire, "expire", "key", 300);
 }
 
 ----
@@ -79,7 +79,7 @@ Example of performing an operation.
 @RedisConnection(configKey = "auth")
 private RedisManager redisManager;
 
-redisManager.runWithConnection(Jedis::set, "set", "key", "value"); #<1>
+redisManager.runWithConnection(UnifiedJedis::set, "set", "key", "value"); #<1>
 
 ----
 
@@ -97,7 +97,7 @@ For more information about limits: https://redis.io/commands/scan
 
 [source,java]
 ----
-redisManager.runWithConnection(Jedis::hscan, "hscan", "key", 10, 100);
+redisManager.runWithConnection(UnifiedJedis::hscan, "hscan", "key", 10, 100);
 ----
 
 === rpush
@@ -109,7 +109,7 @@ More information: https://redis.io/commands/rpush + https://redis.io/commands/ex
 
 [source,java]
 ----
-redisManager.runWithConnection(Jedis::rpush, "rpush", "key", "element", 100);
+redisManager.runWithConnection(UnifiedJedis::rpush, "rpush", "key", "element", 100);
 ----
 
 === lpop/rpop
@@ -122,8 +122,8 @@ For more information about the limits: https://redis.io/commands/lpop
 
 [source,java]
 ----
-redisManager.runWithConnection(Jedis::lpop, "lpop", "key"); <1>
-redisManager.runWithConnection(Jedis::rpop, "rpop", "key"); <1>
+redisManager.runWithConnection(UnifiedJedis::lpop, "lpop", "key"); <1>
+redisManager.runWithConnection(UnifiedJedis::rpop, "rpop", "key"); <1>
 ----
 <1> If no value is found then `Optional.empty()`
 
@@ -140,9 +140,9 @@ For more information: https://redis.io/commands/lmove + https://redis.io/command
 [source,java]
 ----
 // from the beginning of the sourceListKey to the end of the destinationListKey
-redisManager.runWithConnection(Jedis::lmove, "lmove", "sourceListKey", "destinationListKey", ListDirection.LEFT, ListDirection.RIGHT);
+redisManager.runWithConnection(UnifiedJedis::lmove, "lmove", "sourceListKey", "destinationListKey", ListDirection.LEFT, ListDirection.RIGHT);
 // from the end to the beginning
-redisManager.runWithConnection(Jedis::lmove, "lmove", "sourceListKey", "sourceListKey", ListDirection.RIGHT, ListDirection.LEFT);
+redisManager.runWithConnection(UnifiedJedis::lmove, "lmove", "sourceListKey", "sourceListKey", ListDirection.RIGHT, ListDirection.LEFT);
 ----
 
 === removeValueFromList
@@ -152,7 +152,7 @@ For more information see: https://redis.io/commands/lrem
 
 [source,java]
 ----
-redisManager.runWithConnection(Jedis::lrem, "removeValueFromList", listKey, 0, "removeValue");
+redisManager.runWithConnection(UnifiedJedis::lrem, "removeValueFromList", listKey, 0, "removeValue");
 ----
 
 == microprofile-health support

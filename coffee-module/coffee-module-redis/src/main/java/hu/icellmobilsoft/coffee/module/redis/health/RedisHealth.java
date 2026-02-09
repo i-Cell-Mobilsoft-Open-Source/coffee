@@ -34,9 +34,9 @@ import hu.icellmobilsoft.coffee.module.redis.config.ManagedRedisConfig;
 import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
 import hu.icellmobilsoft.coffee.tool.utils.health.HealthUtil;
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPool;
-import redis.clients.jedis.JedisPoolConfig;
+import redis.clients.jedis.DefaultJedisClientConfig;
+import redis.clients.jedis.RedisClient;
+import redis.clients.jedis.UnifiedJedis;
 
 /**
  * To support microprofile-health mechanics, this class can check whether the redis is reachable within a given timeout.
@@ -94,16 +94,10 @@ public class RedisHealth {
         builder.withData(HealthConstant.Common.NODE_NAME, HealthUtil.getNodeId(nodeId));
         builder.withData(HealthConstant.Common.URL, createUrl(managedRedisConfig));
 
-        String host = managedRedisConfig.getHost();
-        int port = managedRedisConfig.getPort();
-        int database = managedRedisConfig.getDatabase();
-
         // we shouldnt wait more than 1 sec, because the probe will get timout before the check finishes
         int timeout = (int) TimeUnit.MILLISECONDS.convert(HealthConstant.Common.DEFAULT_CONNECT_TIMEOUT_SEC, TimeUnit.SECONDS);
 
-        JedisPoolConfig poolConfig = new JedisPoolConfig();
-        try (JedisPool jedisPool = new JedisPool(poolConfig, host, port, timeout, managedRedisConfig.getPassword(), database);
-                Jedis jedis = jedisPool.getResource()) {
+        try (UnifiedJedis jedis = createClient(managedRedisConfig, timeout)) {
             jedis.ping();
             builder.up();
             return builder.build();
@@ -118,6 +112,25 @@ public class RedisHealth {
             builder.down();
             return builder.build();
         }
+    }
+
+    /**
+     * Creates jedis client for the given config and timeout
+     * 
+     * @param managedRedisConfig
+     *            config containing redis host, port and password
+     * @param timeoutMillis
+     *            redis client timeout in milliseconds
+     * @return the created jedis client
+     */
+    protected UnifiedJedis createClient(ManagedRedisConfig managedRedisConfig, int timeoutMillis) {
+        String host = managedRedisConfig.getHost();
+        int port = managedRedisConfig.getPort();
+
+        return RedisClient.builder()
+                .hostAndPort(host, port)
+                .clientConfig(DefaultJedisClientConfig.builder().timeoutMillis(timeoutMillis).password(managedRedisConfig.getPassword()).build())
+                .build();
     }
 
     /**
