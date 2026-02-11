@@ -20,9 +20,18 @@ Due to WildFly 38 compatibility, the MicroProfile platform and several related d
 * Commons BeanUtils: `1.9.4` -> `1.11.0`
 * Commons Codec: `1.17.1` -> `1.17.2`
 
-== Migration
+=== Migration
 
 Expected breakpoints when upgrading to WildFly 38:
 
 * In OpenAPI filters and custom schema handling: `Schema#setType` API change (single -> list).
 * MP Metrics API: using explicit `MetricType` in `Metadata` may cause compilation errors.
+
+== coffee-module-redisstream
+
+`BaseRedisConsumerStarter` update with overridable `getRedisStreamConsumerBeans` method for the ability to control
+which consumer beans should be started.
+
+=== Migration
+
+Changes are backwards compatible doesn't need any migration.
