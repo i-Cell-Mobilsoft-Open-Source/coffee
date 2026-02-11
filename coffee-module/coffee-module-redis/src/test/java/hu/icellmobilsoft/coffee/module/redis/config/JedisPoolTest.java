@@ -33,7 +33,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import hu.icellmobilsoft.coffee.module.redis.annotation.RedisConnection;
-import redis.clients.jedis.JedisPool;
+import redis.clients.jedis.Connection;
+import redis.clients.jedis.RedisClient;
+import redis.clients.jedis.UnifiedJedis;
+import redis.clients.jedis.util.Pool;
 
 /**
  * Test for Redis pool config producer
@@ -54,43 +57,49 @@ class JedisPoolTest {
 
     @Inject
     @RedisConnection(configKey = CONFIG_KEY)
-    private JedisPool jedisPool;
+    private UnifiedJedis jedisPool;
 
     @Inject
     @RedisConnection(configKey = CONFIG_KEY_YML)
-    private JedisPool ymlDefaultJedisPool;
+    private UnifiedJedis ymlDefaultJedisPool;
 
     @Inject
     @RedisConnection(configKey = CONFIG_KEY_YML, poolConfigKey = POOL_CONFIG_KEY_CUSTOM1)
-    private JedisPool ymlCustom1PoolJedisPool;
+    private UnifiedJedis ymlCustom1PoolJedisPool;
 
     @WeldSetup
-    public WeldInitiator weld = WeldInitiator.from(WeldInitiator.createWeld()
-            // beans.xml scan
-            .enableDiscovery())
+    public WeldInitiator weld = WeldInitiator.from(
+            WeldInitiator.createWeld()
+                    // beans.xml scan
+                    .enableDiscovery())
             // start request scope + build
-            .activate(RequestScoped.class).build();
+            .activate(RequestScoped.class)
+            .build();
 
     @Test
     @DisplayName("default pool test")
     void defaultValues() {
         // Unfortunately, we cannot extract more from it
         // But it logs information as a producer
-        Assertions.assertEquals(16, jedisPool.getMaxIdle());
-        Assertions.assertEquals(64, jedisPool.getMaxTotal());
+        Assertions.assertEquals(16, getPool(jedisPool).getMaxIdle());
+        Assertions.assertEquals(64, getPool(jedisPool).getMaxTotal());
     }
 
     @Test
     @DisplayName("yml default pool test")
     void yamlDefaultPoolValues() {
-        Assertions.assertEquals(2, ymlDefaultJedisPool.getMaxIdle());
-        Assertions.assertEquals(1, ymlDefaultJedisPool.getMaxTotal());
+        Assertions.assertEquals(2, getPool(ymlDefaultJedisPool).getMaxIdle());
+        Assertions.assertEquals(1, getPool(ymlDefaultJedisPool).getMaxTotal());
     }
 
     @Test
     @DisplayName("yml custom1 pool test")
     void yamlCustom1PoolValues() {
-        Assertions.assertEquals(4, ymlCustom1PoolJedisPool.getMaxIdle());
-        Assertions.assertEquals(3, ymlCustom1PoolJedisPool.getMaxTotal());
+        Assertions.assertEquals(4, getPool(ymlCustom1PoolJedisPool).getMaxIdle());
+        Assertions.assertEquals(3, getPool(ymlCustom1PoolJedisPool).getMaxTotal());
+    }
+
+    private Pool<Connection> getPool(UnifiedJedis jedis) {
+        return ((RedisClient) jedis).getPool();
     }
 }

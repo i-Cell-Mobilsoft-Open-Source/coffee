@@ -23,6 +23,7 @@ import java.util.Optional;
 
 import hu.icellmobilsoft.coffee.module.redisstream.annotation.RedisStreamConsumer;
 import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
+import redis.clients.jedis.UnifiedJedis;
 
 /**
  * Redis stream group configuration interface
@@ -95,7 +96,7 @@ public interface IStreamGroupConfig {
     /**
      * Enable/Disable automatic redis xack call
      *
-     * @return {@code true} if explicit {@link redis.clients.jedis.Jedis#xack} call is required, default false
+     * @return {@code true} if explicit {@link UnifiedJedis#xack} call is required, default false
      */
     boolean isManualAck();
 

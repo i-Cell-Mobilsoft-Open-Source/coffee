@@ -46,10 +46,10 @@ import hu.icellmobilsoft.coffee.module.redisstream.service.RedisStreamService;
 import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
 import hu.icellmobilsoft.coffee.se.logging.mdc.MDC;
-import redis.clients.jedis.Jedis;
 import redis.clients.jedis.Pipeline;
 import redis.clients.jedis.Response;
 import redis.clients.jedis.StreamEntryID;
+import redis.clients.jedis.UnifiedJedis;
 import redis.clients.jedis.params.XAddParams;
 
 /**
@@ -518,7 +518,7 @@ public class RedisStreamPublisher {
      */
     protected Optional<StreamEntryID> publishInActiveConnection(Map<String, String> values, String streamGroup) throws BaseException {
         XAddParams params = getXAddParams();
-        Optional<StreamEntryID> streamEntryID = redisManager.run(Jedis::xadd, "xadd", RedisStreamUtil.streamKey(streamGroup), values, params);
+        Optional<StreamEntryID> streamEntryID = redisManager.run(UnifiedJedis::xadd, "xadd", RedisStreamUtil.streamKey(streamGroup), values, params);
         if (log.isTraceEnabled()) {
             log.trace("Published streamEntryID: [{0}] into [{1}]", streamEntryID, RedisStreamUtil.streamKey(streamGroup));
         }
@@ -616,7 +616,7 @@ public class RedisStreamPublisher {
      *             if any error occurred while creating pipeline
      */
     protected Pipeline initPipeline() throws BaseException {
-        return redisManager.run(Jedis::pipelined, "pipelined")
+        return (Pipeline) redisManager.run(UnifiedJedis::pipelined, "pipelined")
                 .orElseThrow(() -> new BaseException(CoffeeFaultType.REDIS_OPERATION_FAILED, "Error occurred while creating pipeline"));
     }
 
