@@ -19,7 +19,7 @@
  */
 package hu.icellmobilsoft.coffee.module.repserv.action.util;
 
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 import com.google.common.hash.Hashing;
 
@@ -55,7 +55,13 @@ public final class IdGenerator {
      * @return a hashed identifier string representing the combined class and method signature
      */
     public static String generateId(ClassData classData, MethodData methodData) {
-        String s = classData.getClassName() + methodData.getMethodName() + methodData.getTypeParamsString() + methodData.getParamsString();
-        return Hashing.murmur3_32_fixed().hashString(s, Charset.defaultCharset()).toString();
+        return Hashing.murmur3_32_fixed()
+                .newHasher()
+                .putString(classData.getClassName(), StandardCharsets.UTF_8)
+                .putString(methodData.getMethodName(), StandardCharsets.UTF_8)
+                .putString(methodData.getTypeParamsString(), StandardCharsets.UTF_8)
+                .putString(methodData.getParamsString(), StandardCharsets.UTF_8)
+                .hash()
+                .toString();
     }
 }
