@@ -20,9 +20,18 @@ WildFly 38 kompatibilitás miatt frissült a MicroProfile platform és több kap
 * Commons BeanUtils: `1.9.4` -> `1.11.0`
 * Commons Codec: `1.17.1` -> `1.17.2`
 
-== Átállás
+=== Átállás
 
 WildFly 38 upgrade esetén várható töréspontok:
 
 * OpenAPI filterekben és egyedi sémakezelésnél: `Schema#setType` API változás (single -> list).
 * MP Metrics API: explicit `MetricType` használata `Metadata`-ban fordítási hibához vezethet.
+
+== coffee-module-redisstream
+
+`BaseRedisConsumerStarter` update egy felülírható `getRedisStreamConsumerBeans` metódussal,
+hogy lehessen kontrollálni, mely consumer bean-ek induljanak el.
+
+=== Átállás
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
