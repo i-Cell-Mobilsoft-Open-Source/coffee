@@ -1,0 +1,32 @@
+[#common_module_coffee-module-config-watcher]
+= coffee-module-config-watcher
+
+== Goal
+
+There is a new microprofile config source in this module.
+This one very similar to the already existing `io.smallrye.config.PropertiesConfigSource`,
+the only addition is that the `ReloadingPropertiesConfigSource` will start a file watcher,
+and if the config file is modified, the whole config source will be updated.
+This can be useful if you use kubernetes with config maps mounted as files.
+
+== Usage
+
+You can use this config source via a `ConfigSourceProvider`.
+There are two implementations in the module, but you can use your own with the `ReloadingPropertiesConfigSource` class.
+You only have to write one (or more) implementation class name to the
+`META-INF/services/org.eclipse.microprofile.config.spi.ConfigSourceProvider` file.
+
+* `hu.icellmobilsoft.coffee.module.config.watcher.provider.ReloadingPropertiesConfigSourceProvider`
+
+This implementation watches only one config file.
+The file can be specified with the `RELOADING_PROPERTIES_FILE` env var,
+or the `/app/config.properties` file will be used.
+
+* `hu.icellmobilsoft.coffee.module.config.watcher.provider.DirectoryReloadingPropertiesConfigSourceProvider`
+
+This implementation watches a whole config directory (only the `.properties` files).
+The directory can be specified with the `RELOADING_PROPERTIES_FILE_DIR` env var,
+or the `/app/config` dir will be used.
+
+TIP: If you inject @ConfigProperty inside @ApplicationScope-d classes, you have to reload this field manually,
+or inject them as `jakarta.enterprise.inject.Instance`
