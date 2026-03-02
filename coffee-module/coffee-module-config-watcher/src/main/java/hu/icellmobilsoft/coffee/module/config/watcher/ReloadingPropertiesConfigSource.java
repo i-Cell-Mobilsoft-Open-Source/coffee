@@ -22,6 +22,7 @@ package hu.icellmobilsoft.coffee.module.config.watcher;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Path;
 import java.util.HashMap;
@@ -81,7 +82,11 @@ public class ReloadingPropertiesConfigSource implements ConfigSource, AutoClosea
         this.ordinal = ordinal;
         this.url = url;
         properties = read(url);
-        configFileWatcher = new ConfigFileWatcher(Path.of(url.getPath()));
+        try {
+            configFileWatcher = new ConfigFileWatcher(Path.of(url.toURI()));
+        } catch (URISyntaxException e) {
+            throw new IllegalArgumentException("Invalid config file URI: " + url, e);
+        }
         configFileWatcher.addListener(path -> reloadConfig());
     }
 
