@@ -39,6 +39,14 @@ import hu.icellmobilsoft.coffee.module.config.watcher.ReloadingPropertiesConfigS
  * @since 2.13.0
  */
 public class ReloadingPropertiesConfigSourceProvider implements ConfigSourceProvider {
+
+    /**
+     * Default constructor
+     */
+    public ReloadingPropertiesConfigSourceProvider() {
+        // empty constructor
+    }
+
     @Override
     public Iterable<ConfigSource> getConfigSources(ClassLoader classLoader) {
         Path path = Paths.get(Optional.ofNullable(System.getenv("RELOADING_PROPERTIES_FILE")).orElse("/app/config.properties"));
