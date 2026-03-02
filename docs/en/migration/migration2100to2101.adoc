@@ -65,3 +65,9 @@ New:
 AbstractPipeline pipeline = redisManager.run(UnifiedJedis::pipelined, "pipelined move").orElseThrow();
 ----
 
+=== new config-watcher module
+
+* Introduced a config source with file watcher. See doc: xref:#common_module_coffee-module-config-watcher[]
+
+==== Migration
+The changes are backwards compatible and do not require any migration.

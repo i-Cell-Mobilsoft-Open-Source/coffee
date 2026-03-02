@@ -12,8 +12,9 @@
 
     <properties>
         <version.commons-logging>1.2</version.commons-logging>
-        <version.junit.jupiter>5.9.1</version.junit.jupiter>
-        <version.org.jboss.weld.weld-junit5>4.0.0.Final</version.org.jboss.weld.weld-junit5>
+        <version.junit.jupiter>6.0.3</version.junit.jupiter>
+        <version.awaitility>4.3.0</version.awaitility>
+        <version.org.jboss.weld.weld-junit5>4.0.5.Final</version.org.jboss.weld.weld-junit5>
         <version.org.mockito>4.9.0</version.org.mockito>
         <version.smallrye-config>3.0.0</version.smallrye-config>
         <version.org.glassfish.jaxb.jaxb-runtime>4.0.1</version.org.glassfish.jaxb.jaxb-runtime>
@@ -42,6 +43,13 @@
                 <groupId>org.jboss.weld</groupId>
                 <artifactId>weld-junit5</artifactId>
                 <version>${version.org.jboss.weld.weld-junit5}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.awaitility</groupId>
+                <artifactId>awaitility</artifactId>
+                <version>${version.awaitility}</version>
                 <scope>test</scope>
             </dependency>
 
