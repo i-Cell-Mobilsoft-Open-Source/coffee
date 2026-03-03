@@ -20,6 +20,7 @@
 package hu.icellmobilsoft.coffee.module.config.watcher;
 
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardWatchEventKinds;
 import java.nio.file.WatchEvent;
@@ -86,7 +87,9 @@ public class ConfigFileWatcher implements AutoCloseable {
 
             for (WatchEvent<?> event : key.pollEvents()) {
                 try {
-                    listeners.forEach(listener -> listener.onFileChange(path));
+                    if (Files.isSameFile(path, path.getParent().resolve((Path) event.context()))) {
+                        listeners.forEach(listener -> listener.onFileChange(path));
+                    }
                 } catch (Exception e) {
                     log.error("Error occurred while notifying listeners for path change: " + path, e);
                 }

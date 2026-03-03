@@ -15,6 +15,7 @@ You can use this config source via a `ConfigSourceProvider`.
 There are two implementations in the module, but you can use your own with the `ReloadingPropertiesConfigSource` class.
 You only have to write one (or more) implementation class name to the
 `META-INF/services/org.eclipse.microprofile.config.spi.ConfigSourceProvider` file.
+The default ordinal is 120, but you can also override that with a custom implementation.
 
 * `hu.icellmobilsoft.coffee.module.config.watcher.provider.ReloadingPropertiesConfigSourceProvider`
 
@@ -30,3 +31,6 @@ or the `/app/config` dir will be used.
 
 TIP: If you inject @ConfigProperty inside @ApplicationScope-d classes, you have to reload this field manually,
 or inject them as `jakarta.enterprise.inject.Instance`
+
+The file modifications are watched with the `hu.icellmobilsoft.coffee.module.config.watcher.ConfigFileWatcher` class
+which can also be used to watch other files too. e.g. json configs

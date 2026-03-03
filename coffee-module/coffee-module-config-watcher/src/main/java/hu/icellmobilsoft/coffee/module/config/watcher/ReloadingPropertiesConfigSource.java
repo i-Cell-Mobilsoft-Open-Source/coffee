@@ -53,7 +53,7 @@ public class ReloadingPropertiesConfigSource implements ConfigSource, AutoClosea
 
     /**
      * Constructs a {@code ReloadingPropertiesConfigSource} with a specified URL as the source of the configuration properties. This constructor uses
-     * a default ordinal value of 100 and initializes the necessary resources for monitoring changes in the underlying properties file, allowing
+     * a default ordinal value of 120 and initializes the necessary resources for monitoring changes in the underlying properties file, allowing
      * automatic reloading of the configuration.
      *
      * @param url
@@ -62,7 +62,7 @@ public class ReloadingPropertiesConfigSource implements ConfigSource, AutoClosea
      *             if an error occurs while reading the properties file from the specified URL
      */
     public ReloadingPropertiesConfigSource(URL url) throws IOException {
-        this(url, 100);
+        this(url, 120);
     }
 
     /**
