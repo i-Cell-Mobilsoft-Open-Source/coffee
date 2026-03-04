@@ -20,6 +20,7 @@
 package hu.icellmobilsoft.coffee.module.config.watcher;
 
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardWatchEventKinds;
@@ -58,7 +59,7 @@ public class ConfigFileWatcher implements AutoCloseable {
             watchService = path.getFileSystem().newWatchService();
             path.getParent().register(watchService, StandardWatchEventKinds.ENTRY_MODIFY);
         } catch (IOException e) {
-            throw new IllegalStateException("Cannot create watch service for path: " + path, e);
+            throw new UncheckedIOException("Cannot create watch service for path: " + path, e);
         }
 
         thread = new Thread(() -> {
@@ -66,7 +67,7 @@ public class ConfigFileWatcher implements AutoCloseable {
             try {
                 watchService.close();
             } catch (IOException e) {
-                throw new IllegalStateException("Cannot close watch service for path: " + path, e);
+                throw new UncheckedIOException("Cannot close watch service for path: " + path, e);
             }
             log.info("Watch service closed for path: " + path);
         }, "ConfigFileWatcher[" + path + "]");

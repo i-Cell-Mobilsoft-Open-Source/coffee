@@ -20,6 +20,7 @@
 package hu.icellmobilsoft.coffee.module.config.watcher.provider;
 
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -68,7 +69,7 @@ public class DirectoryReloadingPropertiesConfigSourceProvider implements ConfigS
             }
             return configSources;
         } catch (IOException e) {
-            throw new IllegalStateException("Could not read properties files from directory: " + dir, e);
+            throw new UncheckedIOException("Could not read properties files from directory: " + dir, e);
         }
     }
 }
