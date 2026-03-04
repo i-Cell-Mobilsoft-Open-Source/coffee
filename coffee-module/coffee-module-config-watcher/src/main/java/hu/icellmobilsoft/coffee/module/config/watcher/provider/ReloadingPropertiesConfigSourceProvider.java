@@ -20,6 +20,7 @@
 package hu.icellmobilsoft.coffee.module.config.watcher.provider;
 
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
@@ -54,7 +55,7 @@ public class ReloadingPropertiesConfigSourceProvider implements ConfigSourceProv
         try {
             return List.of(new ReloadingPropertiesConfigSource(path.toUri().toURL()));
         } catch (IOException e) {
-            throw new IllegalStateException("Could not read properties file: " + path, e);
+            throw new UncheckedIOException("Could not read properties file: " + path, e);
         }
     }
 }

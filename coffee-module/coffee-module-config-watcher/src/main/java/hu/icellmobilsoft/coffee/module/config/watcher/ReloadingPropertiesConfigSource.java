@@ -22,6 +22,7 @@ package hu.icellmobilsoft.coffee.module.config.watcher;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UncheckedIOException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Path;
@@ -97,7 +98,7 @@ public class ReloadingPropertiesConfigSource implements ConfigSource, AutoClosea
         try {
             properties = read(url);
         } catch (IOException e) {
-            throw new IllegalStateException("Could not read from properties file: " + url, e);
+            throw new UncheckedIOException("Could not read from properties file: " + url, e);
         }
         log.info("Reloaded config from: [{0}]", url);
     }
