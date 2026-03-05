@@ -48,7 +48,7 @@ import redis.clients.jedis.UnifiedJedis;
  * API,
  * without static mocking or package-private test hooks.
  *
- * @author martin.nagy
+ * @author gabor.balazs
  * @since 2.13.0
  */
 class RedisManagerTelemetryTest {
