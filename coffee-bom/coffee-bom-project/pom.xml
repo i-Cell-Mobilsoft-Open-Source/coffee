@@ -356,6 +356,18 @@
                 <artifactId>coffee-tool-extension-deployment</artifactId>
                 <version>${project.version}</version>
             </dependency>
+
+            <dependency>
+                <groupId>hu.icellmobilsoft.coffee.quarkus</groupId>
+                <artifactId>coffee-module-redis-health-check-extension</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>hu.icellmobilsoft.coffee.quarkus</groupId>
+                <artifactId>coffee-module-redis-health-check-extension-deployment</artifactId>
+                <version>${project.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 </project>

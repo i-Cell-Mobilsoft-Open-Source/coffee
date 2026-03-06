@@ -1,0 +1,29 @@
+[#common_coffee-quarkus-extensions-module-redis-health-check]
+= coffee-module-redis-health-check-extension
+
+A modul célja, hogy *startup* health check probe-ot biztosítson Redis kapcsolatokhoz Quarkus alkalmazásokban.
+
+== Motiváció
+
+Az eredeti Quarkus Redis health check implementáció
+(https://github.com/quarkusio/quarkus/blob/3.27/extensions/redis-client/runtime/src/main/java/io/quarkus/redis/runtime/client/health/RedisHealthCheck.java[`io.quarkus.redis.runtime.client.health.RedisHealthCheck`])
+*nem alkalmazható* erre a célra az alábbi okok miatt:
+
+IMPORTANT: Az eredeti Quarkus `RedisHealthCheck` csak *readiness* probe-ot regisztrál, *startup* probe-ot nem. Ezen felül *package-private*, így nem bővíthető és nem használható fel a saját csomagján kívülről.
+
+Ez az extension egy `@Startup` annotációval ellátott health check-et (`StartupRedisHealthCheck`) biztosít, amely az alkalmazás induláskor ellenőrzi, hogy az összes konfigurált Redis kapcsolat elérhető-e.
+Minden konfigurált Redis kliensnek `PING` parancsot küld, és az eredményt jelenti.
+
+NOTE: Jelenleg a Quarkus 3.2.x verziója van használva az extension-ökben.
+
+== Használat
+
+.pom.xml
+[source,xml]
+----
+    <dependency>
+        <groupId>hu.icellmobilsoft.coffee.quarkus</groupId>
+        <artifactId>coffee-module-redis-health-check-extension</artifactId>
+        <version>${version.hu.icellmobilsoft.coffee}</version>
+    </dependency>
+----

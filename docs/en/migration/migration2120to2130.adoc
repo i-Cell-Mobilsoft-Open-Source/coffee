@@ -40,3 +40,8 @@ Jedis changelog with breaking changes:
 ==== Migration
 
 * Address the jedis changelog breaking changes. Other migration steps not needed.
+
+=== coffee-module-redis-health-check-extension [NEW]
+
+* New Quarkus extension providing a *startup* health check probe for Redis connections.
+* The original Quarkus https://github.com/quarkusio/quarkus/blob/3.27/extensions/redis-client/runtime/src/main/java/io/quarkus/redis/runtime/client/health/RedisHealthCheck.java[`RedisHealthCheck`] only provides a *readiness* probe and is *package-private*, therefore it cannot be reused or extended. This extension fills that gap with a `@Startup` annotated health check.
