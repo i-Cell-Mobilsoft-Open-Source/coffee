@@ -69,6 +69,16 @@ public interface SpanAttribute {
     String DB_TYPE_KEY = "db.type";
 
     /**
+     * server address key for telemetry
+     */
+    String SERVER_ADDRESS = "server.address";
+
+    /**
+     * server port key for telemetry
+     */
+    String SERVER_PORT = "server.port";
+
+    /**
      * Default redis span attribute
      */
     interface Redis {
@@ -86,10 +96,16 @@ public interface SpanAttribute {
              * Redis trace kind span attribute ({@value})
              */
             String KIND = CONSUMER;
+
             /**
              * Redis trace component span attribute ({@value})
              */
             String COMPONENT = "redis-stream";
+
+            /**
+             * Redis stream name span attribute ({@value})
+             */
+            String REDIS_STREAM_NAME = "db.redis.stream.name";
         }
 
         /**

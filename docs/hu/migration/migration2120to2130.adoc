@@ -1,0 +1,24 @@
+= v2.12.0 → v2.13.0
+
+coff:ee v2.12.0 -> v2.13.0 migrációs leírás, újdonságok, változások leírása
+
+=== coffee-module-redis
+
+* OpenTelemetry span attribútum tagelés bevezetése a Redis `xadd` műveletekhez a `RedisManager`-ben:
+** `server.address` és `server.port` tag-ek beállítása a Redis kapcsolat konfiguráció alapján
+** `db.redis.stream.name` tag beállítása a cél stream névvel
+** A Redis cím cache-elve van (lazy-init), hogy elkerüljük az ismételt CDI lookup-okat minden Redis hívásnál
+** `io.opentelemetry:opentelemetry-api` hozzáadva optional dependency-ként
+
+==== Migration
+A változtatások visszafelé kompatibilisek, nem igényelnek migrációt.
+
+=== coffee-cdi
+
+* Új span attribútum konstansok a `SpanAttribute`-ban:
+** `SpanAttribute.SERVER_ADDRESS` (`server.address`)
+** `SpanAttribute.SERVER_PORT` (`server.port`)
+** `SpanAttribute.Redis.Stream.REDIS_STREAM_NAME` (`db.redis.stream.name`)
+
+==== Migration
+A változtatások visszafelé kompatibilisek, nem igényelnek migrációt.

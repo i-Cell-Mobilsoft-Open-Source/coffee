@@ -6,6 +6,11 @@ coff:ee v2.12.0 -> v2.13.0 migration description, news, changes
 
 * Jedis upgraded from 5.1.2 to 7.2.1
 * Replaced the deprecated `JedisPooled` and `JedisCluster` class
+* Added OpenTelemetry span attribute tagging for Redis `xadd` operations in `RedisManager`:
+** `server.address` and `server.port` tags are set from the Redis connection configuration
+** `db.redis.stream.name` tag is set with the target stream name
+** The Redis address is cached (lazy-init) to avoid repeated CDI lookups on every Redis call
+** Added `io.opentelemetry:opentelemetry-api` as an optional dependency
 
 Notable bugfixes:
 
@@ -40,3 +45,13 @@ Jedis changelog with breaking changes:
 ==== Migration
 
 * Address the jedis changelog breaking changes. Other migration steps not needed.
+
+=== coffee-cdi
+
+* New span attribute constants added to `SpanAttribute`:
+** `SpanAttribute.SERVER_ADDRESS` (`server.address`)
+** `SpanAttribute.SERVER_PORT` (`server.port`)
+** `SpanAttribute.Redis.Stream.REDIS_STREAM_NAME` (`db.redis.stream.name`)
+
+==== Migration
+The changes are backwards compatible and do not require any migration.
