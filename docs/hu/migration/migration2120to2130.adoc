@@ -1,0 +1,8 @@
+= v2.12.0 → v2.13.0
+
+coff:ee v2.12.0 -> v2.13.0 migrációs leírás, újdonságok, változások leírása
+
+=== coffee-module-redis-health-check-extension [NEW]
+
+* Új Quarkus extension, amely *startup* health check probe-ot biztosít Redis kapcsolatokhoz.
+* Az eredeti Quarkus https://github.com/quarkusio/quarkus/blob/3.27/extensions/redis-client/runtime/src/main/java/io/quarkus/redis/runtime/client/health/RedisHealthCheck.java[`RedisHealthCheck`] csak *readiness* probe-ot biztosít és *package-private*, ezért nem használható fel és nem bővíthető. Ez az extension ezt a hiányt pótolja egy `@Startup` annotációval ellátott health check-kel.
