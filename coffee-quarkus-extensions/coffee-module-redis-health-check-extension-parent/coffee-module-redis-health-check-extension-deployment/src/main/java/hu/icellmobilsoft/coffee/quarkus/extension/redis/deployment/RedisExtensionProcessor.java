@@ -32,7 +32,7 @@ import io.quarkus.arc.deployment.AdditionalBeanBuildItem;
  */
 public class RedisExtensionProcessor {
 
-    private static final String FEATURE = "coffee-module-redis-extension";
+    private static final String FEATURE = "coffee-module-redis-health-check-extension";
 
     /**
      * No-arg constructor

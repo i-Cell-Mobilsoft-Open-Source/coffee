@@ -22,7 +22,7 @@
         <module>coffee-deltaspike-data-extension-parent</module>
         <module>coffee-module-etcd-extension-parent</module>
         <module>coffee-tool-extension-parent</module>
-        <module>coffee-module-redis-extension-parent</module>
+        <module>coffee-module-redis-health-check-extension-parent</module>
     </modules>
 
     <dependencyManagement>
