@@ -27,6 +27,7 @@ import jakarta.enterprise.inject.spi.CDI;
 import jakarta.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 
 import hu.icellmobilsoft.coffee.cdi.trace.annotation.Traced;
 import hu.icellmobilsoft.coffee.cdi.trace.constants.SpanAttribute;
@@ -64,7 +65,8 @@ public class RedisManager {
     private String poolConfigKey;
     private Instance<UnifiedJedis> jedisInstance;
     private UnifiedJedis jedis;
-    private String cachedRedisAddress;
+    private String cachedHost;
+    private Integer cachedPort;
 
     /**
      * Default constructor, constructs a new object.
@@ -73,19 +75,14 @@ public class RedisManager {
         super();
     }
 
-    /**
-     * Returns the configured redis address (host:port)
-     *
-     * @return redis address
-     */
-    public String getRedisAddress() {
-        if (cachedRedisAddress == null) {
+    private void initRedisConnectionCache() {
+        if (cachedHost == null) {
             ManagedRedisConfig redisConfig = CDI.current()
                     .select(ManagedRedisConfig.class, new RedisConnection.Literal(configKey, poolConfigKey))
                     .get();
-            cachedRedisAddress = redisConfig.getHost() + ":" + redisConfig.getPort();
+            cachedHost = redisConfig.getHost();
+            cachedPort = redisConfig.getPort();
         }
-        return cachedRedisAddress;
     }
 
     /**
@@ -570,14 +567,16 @@ public class RedisManager {
     private void appendTelemetry(String functionName, Object p1) {
         try {
             Span span = Span.current();
-            if (span != null && span.getSpanContext().isValid() && StringUtils.equals(functionName, "xadd")) {
+            if (span != null && span.getSpanContext().isValid() && Strings.CS.equals(functionName, "xadd")) {
                 if (p1 != null) {
                     span.setAttribute(SpanAttribute.Redis.Stream.REDIS_STREAM_NAME, String.valueOf(p1));
                 }
-                String address = getRedisAddress();
-                if (address != null && address.contains(":")) {
-                    span.setAttribute(SpanAttribute.SERVER_ADDRESS, StringUtils.substringBefore(address, ":"));
-                    span.setAttribute(SpanAttribute.SERVER_PORT, Long.parseLong(StringUtils.substringAfter(address, ":")));
+                initRedisConnectionCache();
+                if (cachedHost != null) {
+                    span.setAttribute(SpanAttribute.SERVER_ADDRESS, cachedHost);
+                }
+                if (cachedPort != null) {
+                    span.setAttribute(SpanAttribute.SERVER_PORT, cachedPort.longValue());
                 }
             }
         } catch (Exception e) {

@@ -43,10 +43,8 @@ import io.opentelemetry.sdk.trace.export.SimpleSpanProcessor;
 import redis.clients.jedis.UnifiedJedis;
 
 /**
- * Unit test for RedisManager telemetry (appendTelemetry).
- * Uses OpenTelemetry SDK testing to verify span attributes through the public
- * API,
- * without static mocking or package-private test hooks.
+ * Unit test for RedisManager telemetry (appendTelemetry). Uses OpenTelemetry SDK testing to verify span attributes through the public API, without
+ * static mocking or package-private test hooks.
  *
  * @author gabor.balazs
  * @since 2.13.0
@@ -60,9 +58,7 @@ class RedisManagerTelemetryTest {
     @BeforeEach
     void setUp() {
         spanExporter = InMemorySpanExporter.create();
-        tracerProvider = SdkTracerProvider.builder()
-                .addSpanProcessor(SimpleSpanProcessor.create(spanExporter))
-                .build();
+        tracerProvider = SdkTracerProvider.builder().addSpanProcessor(SimpleSpanProcessor.create(spanExporter)).build();
         tracer = tracerProvider.get("test");
     }
 
@@ -74,7 +70,7 @@ class RedisManagerTelemetryTest {
     @Test
     void testXaddSetsSpanAttributes() throws Exception {
         // given
-        RedisManager redisManager = createRedisManager("localhost:6379");
+        RedisManager redisManager = createRedisManager("localhost", 6379);
 
         Span parentSpan = tracer.spanBuilder("test-parent").startSpan();
         try (Scope scope = parentSpan.makeCurrent()) {
@@ -88,18 +84,15 @@ class RedisManagerTelemetryTest {
         List<SpanData> spans = spanExporter.getFinishedSpanItems();
         SpanData spanData = spans.get(0);
 
-        assertEquals("test-stream",
-                spanData.getAttributes().get(AttributeKey.stringKey(SpanAttribute.Redis.Stream.REDIS_STREAM_NAME)));
-        assertEquals("localhost",
-                spanData.getAttributes().get(AttributeKey.stringKey(SpanAttribute.SERVER_ADDRESS)));
-        assertEquals(6379L,
-                spanData.getAttributes().get(AttributeKey.longKey(SpanAttribute.SERVER_PORT)));
+        assertEquals("test-stream", spanData.getAttributes().get(AttributeKey.stringKey(SpanAttribute.Redis.Stream.REDIS_STREAM_NAME)));
+        assertEquals("localhost", spanData.getAttributes().get(AttributeKey.stringKey(SpanAttribute.SERVER_ADDRESS)));
+        assertEquals(6379L, spanData.getAttributes().get(AttributeKey.longKey(SpanAttribute.SERVER_PORT)));
     }
 
     @Test
     void testNonXaddSkipsSpanAttributes() throws Exception {
         // given
-        RedisManager redisManager = createRedisManager("localhost:6379");
+        RedisManager redisManager = createRedisManager("localhost", 6379);
 
         Span parentSpan = tracer.spanBuilder("test-parent").startSpan();
         try (Scope scope = parentSpan.makeCurrent()) {
@@ -113,16 +106,14 @@ class RedisManagerTelemetryTest {
         List<SpanData> spans = spanExporter.getFinishedSpanItems();
         SpanData spanData = spans.get(0);
 
-        assertNull(spanData.getAttributes().get(
-                AttributeKey.stringKey(SpanAttribute.Redis.Stream.REDIS_STREAM_NAME)));
-        assertNull(spanData.getAttributes().get(
-                AttributeKey.stringKey(SpanAttribute.SERVER_ADDRESS)));
+        assertNull(spanData.getAttributes().get(AttributeKey.stringKey(SpanAttribute.Redis.Stream.REDIS_STREAM_NAME)));
+        assertNull(spanData.getAttributes().get(AttributeKey.stringKey(SpanAttribute.SERVER_ADDRESS)));
     }
 
     @Test
     void testXaddWithInvalidSpanSkips() throws Exception {
         // given
-        RedisManager redisManager = createRedisManager("localhost:6379");
+        RedisManager redisManager = createRedisManager("localhost", 6379);
 
         // when - no active span context, Span.current() returns invalid span
         redisManager.run((jedis, streamName) -> "OK", "xadd", "test-stream");
@@ -132,12 +123,13 @@ class RedisManagerTelemetryTest {
         assertEquals(0, spans.size());
     }
 
-    private RedisManager createRedisManager(String address) throws Exception {
+    private RedisManager createRedisManager(String host, int port) throws Exception {
         RedisManager redisManager = new RedisManager();
 
         setField(redisManager, "log", Logger.getLogger(RedisManagerTelemetryTest.class));
         setField(redisManager, "jedis", mock(UnifiedJedis.class));
-        setField(redisManager, "cachedRedisAddress", address);
+        setField(redisManager, "cachedHost", host);
+        setField(redisManager, "cachedPort", port);
 
         return redisManager;
     }
