@@ -1,0 +1,12 @@
+= v2.12.0 → v2.13.0
+
+coff:ee v2.12.0 -> v2.13.0 migrációs leírás, újdonságok, változások leírása
+
+=== coffee-cdi
+
+A `jakarta.jakartaee-api` függőség lecserélésre került a `coffee-cdi` modulban.
+Az egyetlen nagy függőség helyett a konkrétan szükséges `jakarta.*` API függőségeket használjuk.
+
+==== Migration
+
+Ha a projekted a `coffee-cdi`-ból származó tranzitív `jakarta.jakartaee-api` függőségre támaszkodott, most manuálisan kell felvenned a szükséges egyedi API függőségeket (pl. `jakarta.servlet-api`, `jakarta.ws.rs-api` stb.) a saját `pom.xml` fájlodba.

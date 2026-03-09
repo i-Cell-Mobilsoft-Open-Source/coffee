@@ -40,3 +40,12 @@ Jedis changelog with breaking changes:
 ==== Migration
 
 * Address the jedis changelog breaking changes. Other migration steps not needed.
+
+=== coffee-cdi
+
+The generic `jakarta.jakartaee-api` dependency is being replaced in the `coffee-cdi` module.
+Instead of the single large API dependency, the specific required `jakarta.*` API dependencies are used.
+
+==== Migration
+
+If your project relied on the transitive `jakarta.jakartaee-api` dependency from `coffee-cdi`, you must now add the specific API dependencies (e.g. `jakarta.servlet-api`, `jakarta.ws.rs-api`, etc.) to your own `pom.xml` explicitly as needed.
