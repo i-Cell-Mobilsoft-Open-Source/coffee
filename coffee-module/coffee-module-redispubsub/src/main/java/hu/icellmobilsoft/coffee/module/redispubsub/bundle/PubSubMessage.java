@@ -21,6 +21,9 @@ package hu.icellmobilsoft.coffee.module.redispubsub.bundle;
 
 import java.util.Map;
 
+import jakarta.json.bind.annotation.JsonbCreator;
+import jakarta.json.bind.annotation.JsonbProperty;
+
 import org.eclipse.microprofile.reactive.messaging.Message;
 
 /**
@@ -54,7 +57,8 @@ public class PubSubMessage implements Message<String> {
      *            the contextual metadata
      * @return PubSubMessage instance
      */
-    public static PubSubMessage of(String payload, Map<String, String> context) {
+    @JsonbCreator
+    public static PubSubMessage of(@JsonbProperty("payload") String payload, @JsonbProperty("context") Map<String, String> context) {
         return new PubSubMessage(payload, context);
     }
 
