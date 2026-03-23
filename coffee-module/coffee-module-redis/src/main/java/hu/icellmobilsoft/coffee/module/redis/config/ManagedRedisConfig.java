@@ -120,8 +120,18 @@ public class ManagedRedisConfig implements RedisConfig {
      * Constant <code>POOL="pool"</code>
      */
     private static final String POOL = "pool";
-
+    /**
+     * Constant <code>CLUSTER="cluster"</code>
+     */
     private static final String CLUSTER = "cluster";
+    /**
+     * Constant <code>SENTINEL="sentinel"</code>
+     */
+    private static final String SENTINEL = "sentinel";
+    /**
+     * Constant <code>MASTER="master"</code>
+     */
+    private static final String MASTER = "master";
 
     @Inject
     private Config config;
@@ -264,5 +274,26 @@ public class ManagedRedisConfig implements RedisConfig {
                 .stream()
                 .flatMap(Arrays::stream)
                 .collect(Collectors.toUnmodifiableSet());
+    }
+
+    /**
+     * Returns {@link HostAndPort} {@link Set} for redis sentinel
+     *
+     * @return HostAndPort set for redis sentinel
+     */
+    public Set<HostAndPort> getSentinelHostAndPortSet() {
+        return config.getOptionalValue(joinKey(SENTINEL), HostAndPort[].class)
+                .stream()
+                .flatMap(Arrays::stream)
+                .collect(Collectors.toUnmodifiableSet());
+    }
+
+    /**
+     * The password of the selected redis to connect with.
+     *
+     * @return Master name of redis sentinel
+     */
+    public String getSentinelMaster() {
+        return config.getOptionalValue(joinKey(MASTER), String.class).orElse(null);
     }
 }
