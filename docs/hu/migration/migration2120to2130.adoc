@@ -1,0 +1,23 @@
+= v2.12.0 -> v2.13.0
+
+coff:ee v2.12.0 -> v2.13.0 migrációs leírás, újdonságok, változások
+
+=== coffee-rest
+
+* Az Apache HttpClient dependencia átállt 4.x-ről 5.x-re
+* `org.apache.httpcomponents:httpclient:4.5.14` -> `org.apache.httpcomponents.client5:httpclient5:5.5.2`
+* `org.apache.httpcomponents:httpcore:4.4.16` -> `org.apache.httpcomponents.core5:httpcore5:5.4.2`
+* A `coffee-rest` modulból a `org.apache.httpcomponents:httpmime` dependencia kikerült
+* A `BaseApacheHttpClient` `org.apache.hc.*` API-kra állt át (`HttpUriRequestBase`, `CloseableHttpResponse`, `Timeout`, `ConnectionConfig`)
+
+Figyelembe vett pontok a `RELEASE_NOTES-5.5.x.txt` alapján:
+
+* Az 5.5.2 javítja a kompatibilitást a HttpCore 5.4 ággal
+* Az 5.5.2 korlátozza az automatikusan feldolgozható content codec lista hosszát
+* Az 5.5 sorozat szigorítja az automatikus redirect viselkedést, ha az eredeti kérelem érzékeny headereket állít be
+
+==== Migration
+
+* Ha a projekt kiterjeszti vagy közvetlenül használja a `BaseApacheHttpClient` osztályt, akkor az importokat `org.apache.http.*`-ról `org.apache.hc.*`-ra kell cserélni, és a módosult metódus szignatúrákat igazítani kell.
+* Ha a projekt a korábbi transitive `httpmime` dependenciára épített, akkor a szükséges helyettesítő dependenciát explicit módon fel kell venni.
+* Redirect-intenzív integrációknál érdemes ellenőrizni a működést, különösen érzékeny headerekkel küldött kérelmek esetén.

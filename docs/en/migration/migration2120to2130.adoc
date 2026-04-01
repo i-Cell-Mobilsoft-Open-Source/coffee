@@ -40,3 +40,17 @@ Jedis changelog with breaking changes:
 ==== Migration
 
 * Address the jedis changelog breaking changes. Other migration steps not needed.
+
+=== coffee-rest
+
+* Apache HttpClient dependency was migrated from HttpClient 4.x to HttpClient 5.x
+* `org.apache.httpcomponents:httpclient:4.5.14` -> `org.apache.httpcomponents.client5:httpclient5:5.5.2`
+* `org.apache.httpcomponents:httpcore:4.4.16` -> `org.apache.httpcomponents.core5:httpcore5:5.4.2`
+* `org.apache.httpcomponents:httpmime` dependency was removed from `coffee-rest`
+* `BaseApacheHttpClient` has been migrated to `org.apache.hc.*` APIs (`HttpUriRequestBase`, `CloseableHttpResponse`, `Timeout`, `ConnectionConfig`)
+
+==== Migration
+
+* If your project extends or uses `BaseApacheHttpClient`, update imports from `org.apache.http.*` to `org.apache.hc.*` and adapt method signatures (response type and timeout type).
+* If your project directly used `httpmime` from coff:ee dependency transitives, declare an explicit replacement dependency where needed.
+* For redirect-heavy integrations, verify behavior when sending requests with sensitive headers and relying on automatic redirects.
