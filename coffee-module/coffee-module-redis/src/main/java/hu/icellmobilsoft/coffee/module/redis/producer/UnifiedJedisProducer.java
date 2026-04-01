@@ -26,6 +26,13 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.Supplier;
 
+import hu.icellmobilsoft.coffee.cdi.metric.spi.IJedisMetricsHandler;
+import hu.icellmobilsoft.coffee.module.redis.annotation.RedisConnection;
+import hu.icellmobilsoft.coffee.module.redis.config.ManagedRedisConfig;
+import hu.icellmobilsoft.coffee.module.redis.config.RedisConfig;
+import hu.icellmobilsoft.coffee.module.redis.factory.UnifiedJedisFactory;
+import hu.icellmobilsoft.coffee.se.logging.Logger;
+import hu.icellmobilsoft.coffee.tool.utils.annotation.AnnotationUtil;
 import jakarta.annotation.PreDestroy;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.context.Dependent;
@@ -34,18 +41,11 @@ import jakarta.enterprise.inject.Produces;
 import jakarta.enterprise.inject.spi.CDI;
 import jakarta.enterprise.inject.spi.InjectionPoint;
 import jakarta.inject.Inject;
-
-import hu.icellmobilsoft.coffee.cdi.metric.spi.IJedisMetricsHandler;
-import hu.icellmobilsoft.coffee.module.redis.annotation.RedisConnection;
-import hu.icellmobilsoft.coffee.module.redis.config.ManagedRedisConfig;
-import hu.icellmobilsoft.coffee.module.redis.config.RedisConfig;
-import hu.icellmobilsoft.coffee.module.redis.factory.UnifiedJedisFactory;
-import hu.icellmobilsoft.coffee.se.logging.Logger;
-import hu.icellmobilsoft.coffee.tool.utils.annotation.AnnotationUtil;
 import redis.clients.jedis.ConnectionPool;
 import redis.clients.jedis.HostAndPort;
 import redis.clients.jedis.RedisClient;
 import redis.clients.jedis.RedisClusterClient;
+import redis.clients.jedis.RedisSentinelClient;
 import redis.clients.jedis.UnifiedJedis;
 
 /**
@@ -109,6 +109,10 @@ public class UnifiedJedisProducer {
             return jedisCluster.getClusterNodes().values().stream().mapToInt(ConnectionPool::getNumActive)::sum;
         }
 
+        if (unifiedJedis instanceof RedisSentinelClient) {
+            return () -> 0; // TODO: Getting pool's active number after: https://github.com/redis/jedis/issues/4469, https://github.com/redis/jedis/pull/4470
+        }
+
         throw new IllegalArgumentException(MessageFormat.format(NOT_SUPPORTED_UNIFIED_JEDIS, unifiedJedis.getClass()));
     }
 
@@ -119,6 +123,10 @@ public class UnifiedJedisProducer {
 
         if (unifiedJedis instanceof RedisClusterClient jedisCluster) {
             return jedisCluster.getClusterNodes().values().stream().mapToInt(ConnectionPool::getNumIdle)::sum;
+        }
+
+        if (unifiedJedis instanceof RedisSentinelClient) {
+            return () -> 0; // TODO: Getting pool's idle number after: https://github.com/redis/jedis/issues/4469, https://github.com/redis/jedis/pull/4470
         }
 
         throw new IllegalArgumentException(MessageFormat.format(NOT_SUPPORTED_UNIFIED_JEDIS, unifiedJedis.getClass()));
@@ -148,13 +156,15 @@ public class UnifiedJedisProducer {
             int port = managedRedisConfig.getPort();
             int database = managedRedisConfig.getDatabase();
             Set<HostAndPort> clusterHostAndPortSet = managedRedisConfig.getClusterHostAndPortSet();
+            Set<HostAndPort> sentinelHostAndPortSet = managedRedisConfig.getSentinelHostAndPortSet();
             log.info(
-                    "Redis host [{0}], port: [{1}], database: [{2}], poolConfigKey: [{3}], cluster: [{4}]",
+                    "Redis host [{0}], port: [{1}], database: [{2}], poolConfigKey: [{3}], cluster: [{4}], sentinel: [{5}]",
                     host,
                     port,
                     database,
                     poolConfigKey,
-                    clusterHostAndPortSet);
+                    clusterHostAndPortSet,
+                    sentinelHostAndPortSet);
             return UnifiedJedisFactory.create(managedRedisConfig);
         } catch (Exception e) {
             log.error(

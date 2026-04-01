@@ -34,13 +34,17 @@ coffee:
             timeout: 5000 #default: 5000
             cluster: #<5>
               - sample-sandbox.icellmobilsoft.hu:6380 #default null
+            sentinel: #<6>
+              - sample-sandbox.icellmobilsoft.hu:26379 #default null
+            master: stream #<7>
 ----
 <1> A thread-pool.max-threads értékét tartalmazó változó neve, default: MANAGED_EXECUTOR_SERVICE_CORE_THREADS
 <2> A Thread safety buffer értéke amit a thread countok ellenőrzésére használ a BaseConsumerRedisStreamStarter, default 10.
 <3> A redis kapcsolat egyedi azonosítója (configKey). Minden mező opcionális.
 <4> A redis kapcsolaton belül pool egyedi azonosítója (poolConfigKey). Minden mező opcionális.
 <5> Redis cluster használata esetén a cluster node url-ek `$(host):$(port)` formátumban. Cluster esetén kötelező, különben tiltott.
-
+<6> Redis sentinel használata esetén a master lekérő node url-ek `$(host):$(port)` formátumban. In case of sentinel field is required, otherwise it is forbidden.
+<7> A master neve, amivel az aktuális master node (amivel közvetlen kommunikálunk) lekérhető a következő parancs mintával "redis-cli -h <host> -p <port> SENTINEL get-master-addr-by-name <master>". Mivel több sentinel is működhet egymás mellett pl. "stream" vagy "cache". Sentinel esetén kötelező, különben tiltott.
 [NOTE]
 ====
 A thread-pool.max-threads értékének meg kell haladnia a Redis consumer szálak számát + a safety puffer értékét.

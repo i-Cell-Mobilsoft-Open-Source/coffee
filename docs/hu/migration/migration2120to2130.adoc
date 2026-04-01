@@ -1,17 +1,17 @@
 = v2.12.0 → v2.13.0
 
-coff:ee v2.12.0 -> v2.13.0 migration description, news, changes
+coff:ee v2.12.0 -> v2.13.0 migrációs leírás, újdonságok, változások leírása
 
 === coffee-module-redis
 
-* Jedis upgraded from 5.1.2 to 7.2.1
-* Replaced the deprecated `JedisPooled` and `JedisCluster` class
+* Jedis upgradelve 5.1.2-ről  7.2.1-re
+* A deprecated `JedisPooled` és `JedisCluster` osztályok lecserélve
 
-Notable bugfixes:
+Említésre méltó hibajavítások:
 
-* Ensure closing connection in Pipeline even if there is an error in sync method. https://github.com/redis/jedis/pull/3865[#3865]
+* Biztosítva lett a záró kapcsolatot a Pipeline-ban, még akkor is, ha hiba van a szinkronizálási metódusban. https://github.com/redis/jedis/pull/3865[#3865]
 
-Jedis changelog with breaking changes:
+Jedis változásnapló a visszafelé nem kompatibilis módosításokkal:
 
 * https://github.com/redis/jedis/releases/tag/v5.2.0[v5.2.0]
 ** JedisConnectionException contains HostAndPort from DefaultJedisSocketFactory (#3896)
@@ -37,8 +37,8 @@ Jedis changelog with breaking changes:
 * https://github.com/redis/jedis/releases/tag/v7.2.0[v7.2.0]
 * https://github.com/redis/jedis/releases/tag/v7.2.1[v7.2.1]
 
-* Redis sentinel support has been introduced in the module
-** the redis configuration has been supplemented with the `sentinel` and 'master' configuration keys, the value of which can be a url or a url list in the format `$(host):$(port)` and the name of the master, an example of usage:
+* Bevezetésre került a redis sentinel támogatása a modulban
+** kiegészült a `sentinel` és 'master' konfigurációs kulccsal a redis konfiguráció, amelynek értéke egy url vagy egy url lista lehet `$(host):$(port)` formátumban valamint a master neve, példa a használatra:
 
 [source,yaml]
 ----
@@ -56,4 +56,4 @@ coffee:
 
 ==== Migration
 
-* Address the jedis changelog breaking changes. Other migration steps not needed.
+* A jedis changelog törési változásait kell figyelembe. Egyéb migrációs lépésekre nincs szükség.
