@@ -32,9 +32,6 @@ import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
  */
 public interface IExceptionMessageTranslator {
 
-    /** Constant <code>HTTP_STATUS_I_AM_A_TEAPOT=418</code> */
-    final int HTTP_STATUS_I_AM_A_TEAPOT = 418;
-
     /**
      * Fill Coffee DTO with data from exception
      *
