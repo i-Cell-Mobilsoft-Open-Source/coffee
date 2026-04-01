@@ -27,7 +27,7 @@ import jakarta.ws.rs.container.ContainerResponseContext;
 import jakarta.ws.rs.container.ContainerResponseFilter;
 import jakarta.ws.rs.ext.Provider;
 
-import org.apache.http.HttpStatus;
+import org.apache.hc.core5.http.HttpStatus;
 
 import hu.icellmobilsoft.coffee.cdi.logger.AppLogger;
 import hu.icellmobilsoft.coffee.cdi.logger.ThisLogger;
@@ -62,8 +62,7 @@ public class OpenTraceErrorResponseFilter implements ContainerResponseFilter {
     /**
      * {@inheritDoc}
      * <p>
-     * Add error tag if http status &gt;= 500
-     * Now working only on async rest calls.
+     * Add error tag if http status &gt;= 500 Now working only on async rest calls.
      * https://github.com/opentracing-contrib/java-jaxrs/blob/master/opentracing-jaxrs2/src/main/java/io/opentracing/contrib/jaxrs2/server/SpanFinishingFilter.java#L90
      */
     @Override

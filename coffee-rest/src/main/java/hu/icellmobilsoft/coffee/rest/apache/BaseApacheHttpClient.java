@@ -20,8 +20,8 @@
 package hu.icellmobilsoft.coffee.rest.apache;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
@@ -30,26 +30,29 @@ import java.util.concurrent.TimeUnit;
 import jakarta.enterprise.context.Dependent;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.http.Consts;
-import org.apache.http.Header;
-import org.apache.http.HttpHeaders;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.config.RequestConfig;
-import org.apache.http.client.methods.HttpDelete;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpPut;
-import org.apache.http.client.methods.HttpRequestBase;
-import org.apache.http.entity.ByteArrayEntity;
-import org.apache.http.entity.ContentType;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.hc.client5.http.ClientProtocolException;
+import org.apache.hc.client5.http.classic.methods.HttpDelete;
+import org.apache.hc.client5.http.classic.methods.HttpGet;
+import org.apache.hc.client5.http.classic.methods.HttpPost;
+import org.apache.hc.client5.http.classic.methods.HttpPut;
+import org.apache.hc.client5.http.classic.methods.HttpUriRequestBase;
+import org.apache.hc.client5.http.config.ConnectionConfig;
+import org.apache.hc.client5.http.config.RequestConfig;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
+import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
+import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager;
+import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManagerBuilder;
+import org.apache.hc.core5.http.ContentType;
+import org.apache.hc.core5.http.Header;
+import org.apache.hc.core5.http.HttpHeaders;
+import org.apache.hc.core5.http.io.entity.ByteArrayEntity;
+import org.apache.hc.core5.http.io.entity.StringEntity;
+import org.apache.hc.core5.util.Timeout;
 
-import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
+import hu.icellmobilsoft.coffee.se.api.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
 import hu.icellmobilsoft.coffee.tool.utils.json.JsonUtil;
 
@@ -68,7 +71,7 @@ public class BaseApacheHttpClient {
     public static final int CONNECTION_TIMEOUT_MILLIS = (int) TimeUnit.MINUTES.toMillis(1);
 
     /** Constant <code>CONTENT_TYPE_TEXT_PLAIN_UTF8</code> */
-    public static final ContentType CONTENT_TYPE_TEXT_PLAIN_UTF8 = ContentType.create("text/plain", Consts.UTF_8);
+    public static final ContentType CONTENT_TYPE_TEXT_PLAIN_UTF8 = ContentType.create("text/plain", StandardCharsets.UTF_8);
 
     /** "application/xml" */
     public final static String APPLICATION_XML = "application/xml";
@@ -92,7 +95,7 @@ public class BaseApacheHttpClient {
      * @throws BaseException
      *             if any exception occurs
      */
-    protected void beforeAll(HttpRequestBase request) throws BaseException {
+    protected void beforeAll(HttpUriRequestBase request) throws BaseException {
     }
 
     /**
@@ -113,7 +116,7 @@ public class BaseApacheHttpClient {
      * @return {@code RequestConfig.Builder}
      */
     protected RequestConfig.Builder createRequestConfig() {
-        return RequestConfig.custom().setConnectionRequestTimeout(getTimeOut()).setConnectTimeout(getTimeOut()).setSocketTimeout(getTimeOut());
+        return RequestConfig.custom().setConnectionRequestTimeout(getTimeOut()).setResponseTimeout(getTimeOut());
     }
 
     /**
@@ -126,7 +129,11 @@ public class BaseApacheHttpClient {
      *             if any exception occurs
      */
     protected HttpClientBuilder createHttpClientBuilder(RequestConfig requestConfig) throws BaseException {
-        return HttpClientBuilder.create().setDefaultRequestConfig(requestConfig);
+        ConnectionConfig connectionConfig = ConnectionConfig.custom().setConnectTimeout(getTimeOut()).build();
+        PoolingHttpClientConnectionManager connectionManager = PoolingHttpClientConnectionManagerBuilder.create()
+                .setDefaultConnectionConfig(connectionConfig)
+                .build();
+        return HttpClientBuilder.create().setConnectionManager(connectionManager).setDefaultRequestConfig(requestConfig);
     }
 
     /**
@@ -134,11 +141,13 @@ public class BaseApacheHttpClient {
      *
      * @param url
      *            URL
-     * @return {@link HttpResponse}
+     * @return {@link CloseableHttpResponse}
      * @throws BaseException
      *             if any exception occurs
+     * @throws URISyntaxException
+     *             if URL is not correct
      */
-    public HttpResponse sendClientBaseGet(String url) throws BaseException {
+    public CloseableHttpResponse sendClientBaseGet(String url) throws BaseException, URISyntaxException {
         HttpGet get = new HttpGet(url);
         // HttpClient client = new ContentEncodingHttpClient();
 
@@ -146,7 +155,7 @@ public class BaseApacheHttpClient {
         CloseableHttpClient client = createHttpClientBuilder(config).build();
 
         // SSL handling
-        handleSSL(client, get.getURI());
+        handleSSL(client, get.getUri());
 
         try {
             // Modification option
@@ -184,11 +193,14 @@ public class BaseApacheHttpClient {
      *            content type
      * @param entityObject
      *            entity to POST
-     * @return {@link HttpResponse}
+     * @return {@link CloseableHttpResponse}
      * @throws BaseException
      *             if any exception occurs
+     * @throws URISyntaxException
+     *             if URL is not correct
      */
-    public HttpResponse sendClientBasePost(String url, ContentType contentType, Object entityObject) throws BaseException {
+    public CloseableHttpResponse sendClientBasePost(String url, ContentType contentType, Object entityObject)
+            throws BaseException, URISyntaxException {
 
         HttpPost post = new HttpPost(url);
         // HttpClient client = new ContentEncodingHttpClient();
@@ -197,7 +209,7 @@ public class BaseApacheHttpClient {
         CloseableHttpClient client = createHttpClientBuilder(config).build();
 
         // SSL handling
-        handleSSL(client, post.getURI());
+        handleSSL(client, post.getUri());
 
         // add header
         post.setHeader(HttpHeaders.CONTENT_TYPE, contentType.getMimeType() + ";charset=" + contentType.getCharset());
@@ -229,11 +241,13 @@ public class BaseApacheHttpClient {
      *            content type
      * @param request
      *            http request
-     * @return {@link HttpResponse}
+     * @return {@link CloseableHttpResponse}
      * @throws BaseException
      *             if any exception occurs
+     * @throws URISyntaxException
+     *             if URL is not correct
      */
-    public HttpResponse sendClientBasePost(String url, ContentType contentType, byte[] request) throws BaseException {
+    public CloseableHttpResponse sendClientBasePost(String url, ContentType contentType, byte[] request) throws BaseException, URISyntaxException {
 
         HttpPost post = new HttpPost(url);
         // HttpClient client = new ContentEncodingHttpClient();
@@ -242,13 +256,13 @@ public class BaseApacheHttpClient {
         CloseableHttpClient client = createHttpClientBuilder(config).build();
 
         // SSL handling
-        handleSSL(client, post.getURI());
+        handleSSL(client, post.getUri());
 
         // add header
         post.setHeader(HttpHeaders.CONTENT_TYPE, contentType.getMimeType());
 
         try {
-            ByteArrayEntity byteEntityRequest = new ByteArrayEntity(request);
+            ByteArrayEntity byteEntityRequest = new ByteArrayEntity(request, contentType);
             post.setEntity(byteEntityRequest);
             // Modification option
             beforePost(post);
@@ -284,11 +298,14 @@ public class BaseApacheHttpClient {
      *            content type
      * @param entityObject
      *            entity to PUT
-     * @return {@link HttpResponse}
+     * @return {@link CloseableHttpResponse}
      * @throws BaseException
      *             if any exception occurs
+     * @throws URISyntaxException
+     *             if URL is not correct
      */
-    public HttpResponse sendClientBasePut(String url, ContentType contentType, Object entityObject) throws BaseException {
+    public CloseableHttpResponse sendClientBasePut(String url, ContentType contentType, Object entityObject)
+            throws BaseException, URISyntaxException {
 
         HttpPut put = new HttpPut(url);
         // HttpClient client = new ContentEncodingHttpClient();
@@ -297,7 +314,7 @@ public class BaseApacheHttpClient {
         CloseableHttpClient client = createHttpClientBuilder(config).build();
 
         // SSL handling
-        handleSSL(client, put.getURI());
+        handleSSL(client, put.getUri());
 
         // add header
         put.setHeader(HttpHeaders.CONTENT_TYPE, contentType.getMimeType() + ";charset=" + contentType.getCharset());
@@ -329,11 +346,13 @@ public class BaseApacheHttpClient {
      *            content type
      * @param request
      *            http request
-     * @return {@link HttpResponse}
+     * @return {@link CloseableHttpResponse}
      * @throws BaseException
      *             if any exception occurs
+     * @throws URISyntaxException
+     *             if URL is not correct
      */
-    public HttpResponse sendClientBasePut(String url, ContentType contentType, byte[] request) throws BaseException {
+    public CloseableHttpResponse sendClientBasePut(String url, ContentType contentType, byte[] request) throws BaseException, URISyntaxException {
 
         HttpPut put = new HttpPut(url);
         // HttpClient client = new ContentEncodingHttpClient();
@@ -342,13 +361,13 @@ public class BaseApacheHttpClient {
         CloseableHttpClient client = createHttpClientBuilder(config).build();
 
         // SSL handling
-        handleSSL(client, put.getURI());
+        handleSSL(client, put.getUri());
 
         // add header
         put.setHeader(HttpHeaders.CONTENT_TYPE, contentType.getMimeType());
 
         try {
-            ByteArrayEntity byteEntityRequest = new ByteArrayEntity(request);
+            ByteArrayEntity byteEntityRequest = new ByteArrayEntity(request, contentType);
             put.setEntity(byteEntityRequest);
             // Modification option
             beforePut(put);
@@ -380,11 +399,13 @@ public class BaseApacheHttpClient {
      *
      * @param url
      *            URL
-     * @return {@link HttpResponse}
+     * @return {@link CloseableHttpResponse}
      * @throws BaseException
      *             if any exception occurs
+     * @throws URISyntaxException
+     *             if URL is not correct
      */
-    public HttpResponse sendClientBaseDelete(String url) throws BaseException {
+    public CloseableHttpResponse sendClientBaseDelete(String url) throws BaseException, URISyntaxException {
 
         HttpDelete delete = new HttpDelete(url);
         // HttpClient client = new ContentEncodingHttpClient();
@@ -393,7 +414,7 @@ public class BaseApacheHttpClient {
         CloseableHttpClient client = createHttpClientBuilder(config).build();
 
         // SSL handling
-        handleSSL(client, delete.getURI());
+        handleSSL(client, delete.getUri());
 
         try {
             // Modification option
@@ -433,13 +454,7 @@ public class BaseApacheHttpClient {
      * @return URL encoded {@code String} or null if encoding error
      */
     public String urlEncodeUTF8(String s) {
-        try {
-            return URLEncoder.encode(s, StandardCharsets.UTF_8.name());
-        } catch (UnsupportedEncodingException e) {
-            // NOTE TK: Impossible case
-            LOGGER.error("Unsupported encoding: ", e);
-            return null;
-        }
+        return URLEncoder.encode(s, StandardCharsets.UTF_8);
     }
 
     /**
@@ -469,11 +484,13 @@ public class BaseApacheHttpClient {
      * Logs http request.
      *
      * @param request
-     *            {@link HttpRequestBase}, could be extended to its parent object
+     *            {@link HttpUriRequestBase}, could be extended to its parent object
      * @param entity
      *            instead of using input stream
+     * @throws URISyntaxException
+     *             if URL is not correct
      */
-    protected void logRequest(HttpRequestBase request, String entity) {
+    protected void logRequest(HttpUriRequestBase request, String entity) throws URISyntaxException {
         StringBuffer msg = createLogRequest(request);
         msg.append("> entity: [").append(entity).append("]\n");
         LOGGER.info(msg.toString());
@@ -483,9 +500,11 @@ public class BaseApacheHttpClient {
      * Logs http request.
      *
      * @param request
-     *            http request
+     *            {@link HttpUriRequestBase}, could be extended to its parent object
+     * @throws URISyntaxException
+     *             if URL is not correct
      */
-    protected void logRequest(HttpRequestBase request) {
+    protected void logRequest(HttpUriRequestBase request) throws URISyntaxException {
         LOGGER.info(createLogRequest(request).toString());
     }
 
@@ -493,15 +512,17 @@ public class BaseApacheHttpClient {
      * Creates log request.
      *
      * @param request
-     *            {@link HttpRequestBase}, could be extended to its parent object
+     *            {@link HttpUriRequestBase}, could be extended to its parent object
      * @return log request {@link StringBuffer}
+     * @throws URISyntaxException
+     *             if URL is not correct
      */
-    protected StringBuffer createLogRequest(HttpRequestBase request) {
+    protected StringBuffer createLogRequest(HttpUriRequestBase request) throws URISyntaxException {
         StringBuffer msg = new StringBuffer();
         msg.append(">> ApacheHttpClient.request ->\n");
-        msg.append("> url: [").append(request.getMethod()).append(" ").append(request.getURI()).append("]\n");
+        msg.append("> url: [").append(request.getMethod()).append(" ").append(request.getUri()).append("]\n");
         msg.append("> headers: [");
-        for (Header header : request.getAllHeaders()) {
+        for (Header header : request.getHeaders()) {
             msg.append("\n>    ").append(header.getName()).append(":").append(header.getValue());
         }
         msg.append("]\n");
@@ -512,25 +533,25 @@ public class BaseApacheHttpClient {
      * Logs http response info.
      *
      * @param response
-     *            {@link HttpResponse}
+     *            {@link CloseableHttpResponse}
      * @param byteEntity
      *            byte array
      *
      */
-    public void logResponse(HttpResponse response, byte[] byteEntity) {
+    public void logResponse(CloseableHttpResponse response, byte[] byteEntity) {
         StringBuffer msg = new StringBuffer();
         msg.append("<< ApacheHttpClient.response ->\n");
         msg.append("< status: [");
-        if (response.getStatusLine() != null) {
-            msg.append(response.getStatusLine().getStatusCode()).append(" ");
-            msg.append(response.getStatusLine().getReasonPhrase()).append("; ");
-            msg.append(response.getStatusLine().getProtocolVersion());
+        if (response.getCode() > 0) {
+            msg.append(response.getCode()).append(" ");
+            msg.append(response.getReasonPhrase()).append("; ");
+            msg.append(response.getVersion());
         }
         msg.append("]\n");
         msg.append("< locale: [").append(response.getLocale()).append("]\n");
-        msg.append("< protocol: [").append(response.getProtocolVersion()).append("]\n");
+        msg.append("< protocol: [").append(response.getVersion()).append("]\n");
         msg.append("< headers: [");
-        for (Header header : response.getAllHeaders()) {
+        for (Header header : response.getHeaders()) {
             msg.append("\n<    ").append(header.getName()).append(":").append(header.getValue());
         }
         msg.append("]\n");
@@ -556,8 +577,8 @@ public class BaseApacheHttpClient {
      *
      * @return time-out milliseconds
      */
-    public int getTimeOut() {
-        return CONNECTION_TIMEOUT_MILLIS;
+    public Timeout getTimeOut() {
+        return Timeout.ofMilliseconds(CONNECTION_TIMEOUT_MILLIS);
     }
 
     /**

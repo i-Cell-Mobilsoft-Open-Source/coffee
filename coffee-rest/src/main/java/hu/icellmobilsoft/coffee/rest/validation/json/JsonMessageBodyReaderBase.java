@@ -34,8 +34,7 @@ import jakarta.ws.rs.core.MultivaluedMap;
 import jakarta.ws.rs.ext.MessageBodyReader;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.apache.http.ParseException;
-import org.apache.http.entity.ContentType;
+import org.apache.hc.core5.http.ContentType;
 
 import hu.icellmobilsoft.coffee.cdi.annotation.xml.ValidateXML;
 import hu.icellmobilsoft.coffee.cdi.logger.LogProducer;
@@ -130,7 +129,7 @@ public abstract class JsonMessageBodyReaderBase<T> implements MessageBodyReader<
                 return contentType.getCharset();
             }
             LogProducer.logToAppLogger(log -> log.trace("Content-Type charset is not set - returning UTF-8 by default"), getClass());
-        } catch (ParseException | IllegalArgumentException e) {
+        } catch (IllegalArgumentException e) {
             LogProducer.logToAppLogger(log -> log.warn("Unknown charset in Content-Type! Returning UTF-8 by default", e), getClass());
         }
         return StandardCharsets.UTF_8;
@@ -149,23 +148,25 @@ public abstract class JsonMessageBodyReaderBase<T> implements MessageBodyReader<
         try {
             return requestVersionReader.readVersion(object);
         } catch (TechnicalException e) {
-            throw new XsdProcessingException(CoffeeFaultType.INVALID_INPUT,
-                    MessageFormat.format("Error in reading object [class: {0}]: [{1}]", object.getClass(), e.getLocalizedMessage()), e);
+            throw new XsdProcessingException(
+                    CoffeeFaultType.INVALID_INPUT,
+                    MessageFormat.format("Error in reading object [class: {0}]: [{1}]", object.getClass(), e.getLocalizedMessage()),
+                    e);
         }
     }
 
     /**
-     * Creates object from json inputStream.
+     * Creates object from JSON inputStream.
      *
      * @param type
      *            type to deserialize into
      * @param charSet
-     *            the character set of the json
+     *            the character set of the JSON
      * @param entityStream
      *            input stream of entity
      * @return deserialized object
      * @throws XsdProcessingException
-     *             if the json can not be deserialized
+     *             if the JSON can not be deserialized
      */
     protected T deserializeJson(Class<T> type, Charset charSet, InputStream entityStream) throws XsdProcessingException {
         try {
