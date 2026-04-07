@@ -145,6 +145,7 @@ public class RedisStreamConsumerExecutor implements IRedisStreamConsumerExecutor
                 log.error(MessageFormat.format("Exception on consume streamEntry [{0}]: [{1}]", streamEntry, e.getLocalizedMessage()), e);
                 var cause = e.getCause();
                 if (!(cause instanceof JedisDataException)) {
+                    sleep();
                     continue;
                 }
                 String message = cause.getLocalizedMessage();
