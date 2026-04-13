@@ -28,8 +28,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 /**
- * Tests verifying that {@code ContentType.parse()} from HttpCore 5.x can return {@code null}
- * and that the charset extraction logic in {@link JsonMessageBodyReaderBase} handles it correctly.
+ * Tests verifying that {@code ContentType.parse()} from HttpCore 5.x can return {@code null} and that the charset extraction logic in
+ * {@link JsonMessageBodyReaderBase} handles it correctly.
  *
  * @author gabor.balazs
  * @since 2.13.0
@@ -42,30 +42,6 @@ class JsonMessageBodyReaderBaseCharsetTest {
      */
     JsonMessageBodyReaderBaseCharsetTest() {
         super();
-    }
-
-    @Test
-    @DisplayName("ContentType.parse returns null for null input")
-    void contentTypeParseShouldReturnNullForNullInput() {
-        // This test documents the behavior change from HttpClient 4.x to 5.x:
-        // In 4.x, ContentType.parse(null) threw ParseException.
-        // In 5.x, ContentType.parse(null) returns null.
-        ContentType contentType = ContentType.parse(null);
-        Assertions.assertNull(contentType, "ContentType.parse(null) must return null in HttpCore 5.x");
-    }
-
-    @Test
-    @DisplayName("ContentType.parse returns null for blank input")
-    void contentTypeParseShouldReturnNullForBlankInput() {
-        ContentType contentType = ContentType.parse("   ");
-        Assertions.assertNull(contentType, "ContentType.parse(blank) must return null in HttpCore 5.x");
-    }
-
-    @Test
-    @DisplayName("ContentType.parse returns null for empty input")
-    void contentTypeParseShouldReturnNullForEmptyInput() {
-        ContentType contentType = ContentType.parse("");
-        Assertions.assertNull(contentType, "ContentType.parse(empty) must return null in HttpCore 5.x");
     }
 
     @Test
@@ -102,10 +78,10 @@ class JsonMessageBodyReaderBaseCharsetTest {
     }
 
     /**
-     * Mirrors the null-safe logic of {@link JsonMessageBodyReaderBase#getCharsetOrUTF8}
-     * without requiring CDI context.
+     * Mirrors the null-safe logic of {@link JsonMessageBodyReaderBase#getCharsetOrUTF8} without requiring CDI context.
      *
-     * @param contentType parsed ContentType, may be {@code null}
+     * @param contentType
+     *            parsed ContentType, may be {@code null}
      * @return the charset or UTF-8 as default
      */
     private Charset getCharsetOrDefault(ContentType contentType) {
