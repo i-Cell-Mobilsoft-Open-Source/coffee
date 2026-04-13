@@ -50,9 +50,9 @@ import org.apache.hc.core5.http.io.entity.ByteArrayEntity;
 import org.apache.hc.core5.http.io.entity.StringEntity;
 import org.apache.hc.core5.util.Timeout;
 
+import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
-import hu.icellmobilsoft.coffee.se.api.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
 import hu.icellmobilsoft.coffee.tool.utils.json.JsonUtil;
 
@@ -129,7 +129,7 @@ public class BaseApacheHttpClient {
      *             if any exception occurs
      */
     protected HttpClientBuilder createHttpClientBuilder(RequestConfig requestConfig) throws BaseException {
-        ConnectionConfig connectionConfig = ConnectionConfig.custom().setConnectTimeout(getTimeOut()).build();
+        ConnectionConfig connectionConfig = ConnectionConfig.custom().setConnectTimeout(getTimeOut()).setSocketTimeout(getTimeOut()).build();
         PoolingHttpClientConnectionManager connectionManager = PoolingHttpClientConnectionManagerBuilder.create()
                 .setDefaultConnectionConfig(connectionConfig)
                 .build();

@@ -125,7 +125,7 @@ public abstract class JsonMessageBodyReaderBase<T> implements MessageBodyReader<
     private Charset getCharsetOrUTF8(MultivaluedMap<String, String> httpHeaders) {
         try {
             ContentType contentType = ContentType.parse(httpHeaders.getFirst(HttpHeaders.CONTENT_TYPE));
-            if (contentType.getCharset() != null) {
+            if (contentType != null && contentType.getCharset() != null) {
                 return contentType.getCharset();
             }
             LogProducer.logToAppLogger(log -> log.trace("Content-Type charset is not set - returning UTF-8 by default"), getClass());
