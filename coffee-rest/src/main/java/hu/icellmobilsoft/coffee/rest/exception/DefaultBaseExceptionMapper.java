@@ -88,13 +88,12 @@ public class DefaultBaseExceptionMapper implements ExceptionMapper<BaseException
         if (e instanceof AccessDeniedException) {
             return createResponse(e, Response.Status.UNAUTHORIZED, new BusinessFault());
         } else if (e instanceof BONotFoundException) {
-            return createResponse(e, IExceptionMessageTranslator.HTTP_STATUS_I_AM_A_TEAPOT, new BONotFound());
+            return createResponse(e, HttpStatus.ENTITY_NOT_FOUND.getStatusCode(), new BONotFound());
         } else if (e instanceof DtoConversionException) {
             return createResponse(e, Response.Status.BAD_REQUEST, new BusinessFault());
         } else if (e instanceof ServiceUnavailableException) {
             return createResponse(e, Response.Status.SERVICE_UNAVAILABLE, new BusinessFault());
-        } else if (e instanceof XsdProcessingException) {
-            XsdProcessingException xsdProcessingException = (XsdProcessingException) e;
+        } else if (e instanceof XsdProcessingException xsdProcessingException) {
             return createValidationErrorResponse(e, xsdProcessingException.getErrors());
         } else if (e instanceof BusinessException || e instanceof hu.icellmobilsoft.coffee.dto.exception.BusinessException) {
             return createResponse(e, HttpStatus.UNPROCESSABLE_ENTITY.getStatusCode(), new BusinessFault());
