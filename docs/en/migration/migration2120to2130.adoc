@@ -40,3 +40,13 @@ Jedis changelog with breaking changes:
 ==== Migration
 
 * Address the jedis changelog breaking changes. Other migration steps not needed.
+
+=== coffee-rest
+
+* A new `ENTITY_NOT_FOUND(418, "Entity not found")` enum value has been added to `hu.icellmobilsoft.coffee.rest.exception.enums.HttpStatus`.
+* The `DefaultBaseExceptionMapper` now uses the new `HttpStatus.ENTITY_NOT_FOUND` constant instead of the previously hardcoded `IExceptionMessageTranslator.HTTP_STATUS_I_AM_A_TEAPOT` (418) value when handling `BONotFoundException`.
+* The `HTTP_STATUS_I_AM_A_TEAPOT` constant has been removed from `IExceptionMessageTranslator`. Use `HttpStatus.ENTITY_NOT_FOUND.getStatusCode()` instead.
+
+==== Migration
+
+If your project directly references `IExceptionMessageTranslator.HTTP_STATUS_I_AM_A_TEAPOT`, replace it with `HttpStatus.ENTITY_NOT_FOUND.getStatusCode()`. Otherwise the changes are backwards compatible and do not require any migration.

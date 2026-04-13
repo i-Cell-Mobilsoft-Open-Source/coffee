@@ -1,0 +1,14 @@
+= v2.12.0 → v2.13.0
+
+coff:ee v2.12.0 -> v2.13.0 migrációs leírás, újdonságok, változások leírása
+
+=== coffee-rest
+
+* Egy új `ENTITY_NOT_FOUND(418, "Entity not found")` enum érték került hozzáadásra a `hu.icellmobilsoft.coffee.rest.exception.enums.HttpStatus` enumhoz.
+* A `DefaultBaseExceptionMapper` mostantól az új `HttpStatus.ENTITY_NOT_FOUND` konstanst használja a korábbi `IExceptionMessageTranslator.HTTP_STATUS_I_AM_A_TEAPOT` (418) érték helyett a `BONotFoundException` kezelésénél.
+* A `HTTP_STATUS_I_AM_A_TEAPOT` konstans eltávolításra került az `IExceptionMessageTranslator` interfészből. Helyette a `HttpStatus.ENTITY_NOT_FOUND.getStatusCode()` használandó.
+
+==== Migration
+
+Ha a projekt közvetlenül hivatkozik az `IExceptionMessageTranslator.HTTP_STATUS_I_AM_A_TEAPOT` konstansra, azt le kell cserélni `HttpStatus.ENTITY_NOT_FOUND.getStatusCode()`-ra. Egyéb esetben a változtatások visszafelé kompatibilisek, migrációs lépés nem szükséges.
+
