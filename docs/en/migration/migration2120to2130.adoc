@@ -40,3 +40,10 @@ Jedis changelog with breaking changes:
 ==== Migration
 
 * Address the jedis changelog breaking changes. Other migration steps not needed.
+
+=== new config-watcher module
+
+* Introduced a config source with file watcher. See doc: xref:#common_module_coffee-module-config-watcher[]
+
+==== Migration
+The changes are backwards compatible and do not require any migration.
