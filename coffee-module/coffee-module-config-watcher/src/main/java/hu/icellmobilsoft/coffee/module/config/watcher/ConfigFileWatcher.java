@@ -38,7 +38,7 @@ import hu.icellmobilsoft.coffee.se.logging.Logger;
  * {@link #close()} method can be used to stop the thread.
  *
  * @author martin.nagy
- * @since 2.13.0
+ * @since 2.10.1
  */
 public class ConfigFileWatcher implements AutoCloseable {
     private static final Logger log = Logger.getLogger(ConfigFileWatcher.class);

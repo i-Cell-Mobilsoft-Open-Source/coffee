@@ -45,7 +45,7 @@ import hu.icellmobilsoft.coffee.module.config.watcher.ReloadingPropertiesConfigS
  * are modified.
  *
  * @author martin.nagy
- * @since 2.13.0
+ * @since 2.10.1
  */
 public class DirectoryReloadingPropertiesConfigSourceProvider implements ConfigSourceProvider {
 

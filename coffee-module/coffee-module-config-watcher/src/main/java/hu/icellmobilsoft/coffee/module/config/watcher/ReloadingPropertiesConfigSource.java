@@ -40,7 +40,7 @@ import hu.icellmobilsoft.coffee.se.logging.Logger;
  * file changes. This class is designed for use cases where configuration needs to be dynamically updated during runtime without application restart.
  *
  * @author martin.nagy
- * @since 2.13.0
+ * @since 2.10.1
  */
 public class ReloadingPropertiesConfigSource implements ConfigSource, AutoCloseable {
     private static final String NAME_PREFIX = "ReloadingPropertiesConfigSource[source=";

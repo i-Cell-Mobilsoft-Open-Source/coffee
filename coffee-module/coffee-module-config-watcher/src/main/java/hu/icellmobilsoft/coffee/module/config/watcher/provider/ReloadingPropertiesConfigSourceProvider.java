@@ -37,7 +37,7 @@ import hu.icellmobilsoft.coffee.module.config.watcher.ReloadingPropertiesConfigS
  * not set, it defaults to `/app/config.properties`.
  *
  * @author martin.nagy
- * @since 2.13.0
+ * @since 2.10.1
  */
 public class ReloadingPropertiesConfigSourceProvider implements ConfigSourceProvider {
 

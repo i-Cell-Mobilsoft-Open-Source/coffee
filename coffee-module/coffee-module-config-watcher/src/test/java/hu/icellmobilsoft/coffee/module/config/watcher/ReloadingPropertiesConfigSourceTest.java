@@ -35,7 +35,7 @@ import org.junit.jupiter.api.io.TempDir;
  * {@link ReloadingPropertiesConfigSource} unit test
  *
  * @author martin.nagy
- * @since 2.13.0
+ * @since 2.10.1
  */
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 class ReloadingPropertiesConfigSourceTest {
