@@ -60,7 +60,6 @@ Jelentős változások:
 
 MongoDB Java Driver changelog breaking change-ek:
 
-* https://www.mongodb.com/docs/drivers/java/sync/current/upgrade/[Teljes frissítési útmutató]
 * https://github.com/mongodb/mongo-java-driver/releases/tag/r5.0.0[v5.0.0]
 ** `SocketSettings` timeout paraméterek `int`-ről `long`-ra változtak
 ** `BsonDecimal128` mostantól számként viselkedik
@@ -75,4 +74,4 @@ MongoDB Java Driver changelog breaking change-ek:
 
 ==== Migration
 
-* A fenti MongoDB Java Driver changelog breaking change-ek kezelése szükséges. Egyéb migrációs lépés nem szükséges.
+* A MongoDB Java Driver changelog breaking change-ek kezelése szükséges: https://www.mongodb.com/docs/drivers/java/sync/current/upgrade/[Teljes frissítési útmutató]. Egyéb migrációs lépés nem szükséges.

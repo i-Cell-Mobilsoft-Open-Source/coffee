@@ -60,7 +60,6 @@ Notable changes:
 
 MongoDB Java Driver changelog with breaking changes:
 
-* https://www.mongodb.com/docs/drivers/java/sync/current/upgrade/[Full upgrade guide]
 * https://github.com/mongodb/mongo-java-driver/releases/tag/r5.0.0[v5.0.0]
 ** `SocketSettings` timeout parameters changed from `int` to `long`
 ** `BsonDecimal128` now behaves as a number
@@ -75,4 +74,4 @@ MongoDB Java Driver changelog with breaking changes:
 
 ==== Migration
 
-* Address the MongoDB Java Driver changelog breaking changes listed above. Other migration steps aren’t needed.
+* Address the MongoDB Java Driver changelog breaking changes listed above: https://www.mongodb.com/docs/drivers/java/sync/current/upgrade/[Full upgrade guide]. Other migration steps aren’t needed.
