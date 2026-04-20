@@ -51,7 +51,7 @@ class GZIPUtilTest {
 
         @Test
         @DisplayName("Testing isCompressed(byte[]), JRE < 16")
-        @EnabledForJreRange(max = JRE.JAVA_15)
+        @EnabledForJreRange(min = JRE.JAVA_11, max = JRE.JAVA_15)
         void isCompressed() {
             Assertions.assertTrue(GZIPUtil.isCompressed(COMPRESSED));
             Assertions.assertFalse(GZIPUtil.isCompressed(TEST.getBytes()));
@@ -72,7 +72,7 @@ class GZIPUtilTest {
 
         @Test
         @DisplayName("Testing compress(byte[]), JRE < 16")
-        @EnabledForJreRange(max = JRE.JAVA_15)
+        @EnabledForJreRange(min = JRE.JAVA_11, max = JRE.JAVA_15)
         void compressBellowJ16() throws BaseException {
 
             byte[] compressedByte = GZIPUtil.compress(TEST.getBytes());
@@ -95,7 +95,7 @@ class GZIPUtilTest {
 
         @Test
         @DisplayName("Testing decompress(byte[]), JRE < 16")
-        @EnabledForJreRange(max = JRE.JAVA_15)
+        @EnabledForJreRange(min = JRE.JAVA_11, max = JRE.JAVA_15)
         void decompress() throws BaseException {
 
             byte[] actual = GZIPUtil.decompress(COMPRESSED);
@@ -105,7 +105,7 @@ class GZIPUtilTest {
 
         @Test
         @DisplayName("Testing decompress(byte[]), JRE < 16")
-        @EnabledForJreRange(max = JRE.JAVA_15)
+        @EnabledForJreRange(min = JRE.JAVA_11, max = JRE.JAVA_15)
         void decompressWithClass() throws BaseException {
 
             String actual = GZIPUtil.decompress(COMPRESSED, String.class);
@@ -140,7 +140,7 @@ class GZIPUtilTest {
 
         @Test
         @DisplayName("Testing decompressedSize(byte[]), JRE < 16")
-        @EnabledForJreRange(max = JRE.JAVA_15)
+        @EnabledForJreRange(min = JRE.JAVA_11, max = JRE.JAVA_15)
         void decompressedSize() throws BaseException {
 
             int actual = GZIPUtil.decompressedSize(COMPRESSED);
