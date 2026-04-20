@@ -1,0 +1,77 @@
+= v2.12.0 → v2.13.0
+
+coff:ee v2.12.0 -> v2.13.0 migrációs leírás, újdonságok, változások leírása
+
+=== coffee-module-redis
+
+* Jedis verzió frissítése 5.1.2 -> 7.2.1
+* A deprecated `JedisPooled` és `JedisCluster` osztályok lecserélésre kerültek
+
+Jelentős hibajavítások:
+
+* Pipeline connection lezárásának biztosítása hiba esetén is a sync metódusban. https://github.com/redis/jedis/pull/3865[#3865]
+
+Jedis changelog breaking change-ek:
+
+* https://github.com/redis/jedis/releases/tag/v5.2.0[v5.2.0]
+** JedisConnectionException tartalmazza a HostAndPort-ot a DefaultJedisSocketFactory-ból (#3896)
+** JSON.GET parancs változás path nélkül (#3858)
+** GeoSearchParam módosítás és fail-fast (#3827)
+** Tranzakció támogatás UnifiedJedis-ből multi hívás nélkül (#3804)
+** A validateObject log szintjének csökkentése WARN-ra (#3750)
+* https://github.com/redis/jedis/releases/tag/v6.0.0[v6.0.0]
+** Alapértelmezett kliens oldali keresési dialektus 2-re változott (#4060)
+** Graph modul támogatás eltávolítása (#4073)
+** FT.PROFILE visszatérési típusa generic object-re változott (#4067)
+** Triggers and Functions funkció eltávolítása (#3969)
+** COMMAND INFO válasz tartalmazza a subcommand részleteket (#4022)
+* https://github.com/redis/jedis/releases/tag/v6.1.0[v6.1.0]
+* https://github.com/redis/jedis/releases/tag/v6.2.0[v6.2.0]
+* https://github.com/redis/jedis/releases/tag/v7.0.0[v7.0.0]
+** Deprecated konstruktorok, osztályok és JedisSharding eltávolítása (#4311)
+** Automatic Failover és Failback API változások (#4317, #4310, #4308, #4306, #4297, #4228)
+** MultiCluster* osztályok és metódusok átnevezésre és fejlesztésre kerültek.
+** A v6.x-ről frissítőknek ajánlott az Automatic Failover and Failback Migration Guide áttekintése.
+** https://redis.github.io/jedis/migration-guides/v6-to-v7/#breaking-changes[Részletek a törékenységi változásokról]
+* https://github.com/redis/jedis/releases/tag/v7.1.0[v7.1.0]
+* https://github.com/redis/jedis/releases/tag/v7.2.0[v7.2.0]
+* https://github.com/redis/jedis/releases/tag/v7.2.1[v7.2.1]
+
+==== Migration
+
+* A fenti Jedis changelog breaking change-ek kezelése szükséges. Egyéb migrációs lépés nem szükséges.
+
+=== Új config-watcher modul
+
+* Bevezetésre került egy konfigurációs forrás fájl figyelővel. Lásd dokumentáció: xref:#common_module_coffee-module-config-watcher[]
+
+==== Migration
+A változtatások visszafelé kompatibilisek, migrációs lépés nem szükséges.
+
+=== coffee-module-mongodb
+
+* MongoDB Java Driver (mongodb-driver-sync) verzió frissítése 4.5.1 -> 5.5.2
+
+Jelentős változások:
+
+* `BsonDecimal128.isNumber()` mostantól `true`-t ad vissza, és a `BsonDecimal128.asNumber()` a megfelelő `BsonNumber`-t adja vissza (v5.0 óta).
+* `ClusterSettings` a `ClusterConnectionMode`-ot konzisztensen a replica set név alapján számítja, függetlenül a konfiguráció módjától (v5.0 óta).
+* MongoDB szerver támogatás megszűnt: MongoDB 3.4 és korábbi (v4.8 óta), MongoDB 3.6 (v5.2 óta), MongoDB 4.0 (v5.5 óta).
+
+MongoDB Java Driver changelog breaking change-ek:
+
+* https://github.com/mongodb/mongo-java-driver/releases/tag/r5.0.0[v5.0.0]
+** `SocketSettings` timeout paraméterek `int`-ről `long`-ra változtak
+** `BsonDecimal128` mostantól számként viselkedik
+** `ClusterConnectionMode` számítás megváltozott
+** Deprecated `ServerAddress.getSocketAddress()` / `getSocketAddresses()` eltávolítása
+** `Parameterizable` interfész eltávolítása
+** `MapCodec` és `IterableCodec` osztályok eltávolítása
+** `StreamFactoryFactory` és kapcsolódó osztályok eltávolítása
+* https://github.com/mongodb/mongo-java-driver/releases/tag/r5.5.0[v5.5.0]
+** MongoDB 4.0 támogatás megszűnt
+** BSON codec keresés és dekódolás teljesítmény optimalizáció
+
+==== Migration
+
+* A MongoDB Java Driver changelog breaking change-ek kezelése szükséges: https://www.mongodb.com/docs/drivers/java/sync/current/upgrade/[Teljes frissítési útmutató]. Egyéb migrációs lépés nem szükséges.
