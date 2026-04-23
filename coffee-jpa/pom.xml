@@ -8,6 +8,8 @@
 
 	<artifactId>coffee-jpa</artifactId>
 
+	<name>Coff:ee JPA</name>
+
 	<dependencyManagement>
 		<dependencies>
 			<dependency>

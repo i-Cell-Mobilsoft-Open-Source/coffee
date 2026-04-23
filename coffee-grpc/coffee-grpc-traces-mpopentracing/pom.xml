@@ -8,6 +8,8 @@
 
   <artifactId>coffee-grpc-traces-mpopentracing</artifactId>
 
+    <name>Coff:ee GRPC - Traces MP Opentracing</name>
+
     <dependencies>
         <dependency>
             <groupId>hu.icellmobilsoft.coffee</groupId>

@@ -8,6 +8,8 @@
 
   <artifactId>coffee-grpc-traces-mptelemetry</artifactId>
 
+  <name>Coff:ee GRPC - Traces MP Telemetry</name>
+
   <properties>
     <version.io.opentelemetry.instrumentation>2.0.0-alpha</version.io.opentelemetry.instrumentation>
   </properties>

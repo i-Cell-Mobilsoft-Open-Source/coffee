@@ -8,6 +8,8 @@
 
 	<artifactId>coffee-module-notification-dto</artifactId>
 
+	<name>Coff:ee Module - Notification - DTO</name>
+
 	<dependencies>
 		<dependency>
 			<groupId>hu.icellmobilsoft.coffee</groupId>

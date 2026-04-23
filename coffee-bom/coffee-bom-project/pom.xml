@@ -10,6 +10,8 @@
     <artifactId>coffee-bom-project</artifactId>
     <packaging>pom</packaging>
 
+    <name>Coff:ee BOM - Project</name>
+
     <dependencyManagement>
         <dependencies>
 

@@ -8,6 +8,8 @@
 
 	<artifactId>coffee-module-mp-opentracing</artifactId>
 
+	<name>Coff:ee Module - MP - Opentracing</name>
+
 	<properties>
 		<opentracing-tracerresolver>0.1.8</opentracing-tracerresolver>
 	</properties>

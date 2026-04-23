@@ -8,6 +8,8 @@
 
 	<artifactId>coffee-module-mongodb</artifactId>
 
+	<name>Coff:ee Module - MongoDB</name>
+
 	<dependencies>
 		<dependency>
 			<groupId>hu.icellmobilsoft.coffee</groupId>

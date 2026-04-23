@@ -8,6 +8,8 @@
 
 	<artifactId>coffee-rest</artifactId>
 
+	<name>Coff:ee REST</name>
+
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
