@@ -75,3 +75,10 @@ MongoDB Java Driver changelog with breaking changes:
 ==== Migration
 
 * Address the MongoDB Java Driver changelog breaking changes listed above: https://www.mongodb.com/docs/drivers/java/sync/current/upgrade/[Full upgrade guide]. Other migration steps aren’t needed.
+
+=== coffee-se-util
+
+* `RandomUtil.generateId` got optimized, now runs a third amount the time it used to
+
+==== Migration
+The changes are backwards compatible and do not require any migration.

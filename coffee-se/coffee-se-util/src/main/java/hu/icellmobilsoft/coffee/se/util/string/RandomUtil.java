@@ -20,7 +20,6 @@
 package hu.icellmobilsoft.coffee.se.util.string;
 
 import java.lang.management.ManagementFactory;
-import java.util.Date;
 import java.util.Random;
 import java.util.UUID;
 
@@ -36,10 +35,10 @@ import hu.icellmobilsoft.coffee.se.logging.Logger;
  */
 public class RandomUtil {
 
-    private static Logger LOGGER = Logger.getLogger(RandomUtil.class);
+    private static final Logger LOGGER = Logger.getLogger(RandomUtil.class);
 
     /** Constant <code>DATE_2013_01_01=1356998400000l</code> */
-    public static long DATE_2013_01_01 = 1356998400000l;
+    public static final long DATE_2013_01_01 = 1356998400000L;
 
     private static final int RADIX = 36;
     // [0-9a-zA-Z]
@@ -104,32 +103,34 @@ public class RandomUtil {
     }
 
     /**
-     * Generates fix 16 length id.
-     * 
-     * @return generated id
+     * Generates a unique identifier containing a combination of time, nanoseconds, random values,
+     * and a sequential index. The identifier is padded with {@code 0} to ensure a fixed length.
+     * <p>
+     * The generated identifier is a 16-character string consisting of the following parts:
+     * <ul>
+     * <li>time part: 8 characters, milliseconds since 2013-01-01</li>
+     * <li>nanosecond part: 4 digits, {@link System#nanoTime()}-s last 4 characters in radix {@value RADIX}</li>
+     * <li>random part: 2 digits</li>
+     * <li>sequential part: 2 digits, auto incrementing value</li>
+     * </ul>
+     *
+     * @return a 16-character string representing the generated unique identifier
      */
     public static String generateId() {
-        int xInd = getNextIndex();
-        Date xDate = new Date();
-        xDate.setTime(xDate.getTime() - DATE_2013_01_01);
-        /* time based */
-        String xRes = convertToRadix(xDate.getTime(), RADIX);
-        // 8888 is sufficient with 8 characters :) 7 characters are enough for up to 2081.
-        xRes = paddL(xRes, 8, '0');
+        StringBuilder builder = new StringBuilder(StringUtils.repeat('0', 16));
 
-        StringBuilder builder = new StringBuilder();
-        builder.append(xRes);
+        // time part - 8 chars
+        // 8888 is sufficient with 8 characters :) 7 characters are enough for up to 2081.
+        long time = System.currentTimeMillis() - DATE_2013_01_01;
+        appendRadixConvertedNumber(time, builder, 7);
 
         // nano, we truncate the last 4 characters because they change within milliseconds
-        Long nano = System.nanoTime();
-        String xNano = convertToRadix(nano, RADIX);
-        builder.append(xNano.substring(xNano.length() - 4, xNano.length()));
+        appendRadixConvertedNumber(System.nanoTime() % (RADIX * RADIX * RADIX * RADIX), builder, 11);
 
-        /* random */
-        // 2
-        builder.append(paddL(convertToRadix(RANDOM.nextInt(RADIX * RADIX), RADIX), 2, '0'));
-        /* generation index */
-        builder.append(paddL(convertToRadix(xInd, RADIX), 2, '0'));
+        // random part - 2 chars
+        appendRadixConvertedNumber(RANDOM.nextInt(RADIX * RADIX), builder, 13);
+        // generation index - 2 chars
+        appendRadixConvertedNumber(getNextIndex(), builder, 15);
 
         return builder.toString();
     }
@@ -190,6 +191,14 @@ public class RandomUtil {
             num = numDivRadix;
         } while (num != 0);
         return result;
+    }
+
+    private static void appendRadixConvertedNumber(long value, StringBuilder stringBuilder, int startIndex) {
+        do {
+            long digit = value % RADIX;
+            stringBuilder.setCharAt(startIndex--, ALL_LETTER[(int) digit]);
+            value = value / RADIX;
+        } while (value != 0);
     }
 
     /**
