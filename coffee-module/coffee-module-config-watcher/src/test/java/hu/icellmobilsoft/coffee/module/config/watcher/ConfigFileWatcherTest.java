@@ -25,7 +25,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.MessageFormat;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.time.Instant;
 
 import org.awaitility.Awaitility;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -47,23 +47,26 @@ class ConfigFileWatcherTest {
         // GIVEN
         int writeCount = 10;
         Path tempFile = Files.createTempFile(tempDir, getClass().getCanonicalName() + "-", "");
-        AtomicInteger notificationCounter = new AtomicInteger(0);
+        Instant[] lastNotificationTime = new Instant[1];
 
         // WHEN
         try (ConfigFileWatcher configFileWatcher = new ConfigFileWatcher(tempFile)) {
             configFileWatcher.addListener(path -> {
-                notificationCounter.incrementAndGet();
+                lastNotificationTime[0] = Instant.now();
             });
 
+            Instant[] lastModificationTime = new Instant[1];
             for (int i = 0; i < writeCount; i++) {
+                lastModificationTime[0] = Instant.now();
                 Files.write(tempFile, (i + "").getBytes());
             }
 
             // THEN
             Awaitility.await().untilAsserted(() -> {
                 assertTrue(
-                        notificationCounter.get() >= writeCount,
-                        MessageFormat.format("notification count [{0}] >= write count [{1}]", notificationCounter.get(), writeCount));
+                        lastModificationTime[0].compareTo(lastNotificationTime[0]) <= 0,
+                        MessageFormat
+                                .format("last notification time [{0}] >= last write time [{1}]", lastNotificationTime[0], lastModificationTime[0]));
             });
         }
     }
