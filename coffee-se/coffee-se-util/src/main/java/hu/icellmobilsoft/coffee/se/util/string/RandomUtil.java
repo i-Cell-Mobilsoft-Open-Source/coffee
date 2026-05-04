@@ -41,6 +41,8 @@ public class RandomUtil {
     public static final long DATE_2013_01_01 = 1356998400000L;
 
     private static final int RADIX = 36;
+    private static final String ID_BASE = StringUtils.repeat('0', 16);
+
     // [0-9a-zA-Z]
     /** Constant <code>MAX_NUM_SYS=62</code> */
     public static final int MAX_NUM_SYS = 62;
@@ -117,7 +119,7 @@ public class RandomUtil {
      * @return a 16-character string representing the generated unique identifier
      */
     public static String generateId() {
-        StringBuilder builder = new StringBuilder(StringUtils.repeat('0', 16));
+        StringBuilder builder = new StringBuilder(ID_BASE);
 
         // time part - 8 chars
         // 8888 is sufficient with 8 characters :) 7 characters are enough for up to 2081.
