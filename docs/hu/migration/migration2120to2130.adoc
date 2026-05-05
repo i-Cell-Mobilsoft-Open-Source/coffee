@@ -75,3 +75,10 @@ MongoDB Java Driver changelog breaking change-ek:
 ==== Migration
 
 * A MongoDB Java Driver changelog breaking change-ek kezelése szükséges: https://www.mongodb.com/docs/drivers/java/sync/current/upgrade/[Teljes frissítési útmutató]. Egyéb migrációs lépés nem szükséges.
+
+=== coffee-se-util
+
+* `RandomUtil.generateId` optimalizálva lett, most harmad annyi idő alat fut le, mint előtte
+
+==== Migration
+A változtatások visszafelé kompatibilisek, migrációs lépés nem szükséges.
