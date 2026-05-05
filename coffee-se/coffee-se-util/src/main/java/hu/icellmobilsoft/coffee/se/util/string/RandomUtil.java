@@ -105,8 +105,8 @@ public class RandomUtil {
     }
 
     /**
-     * Generates a unique identifier containing a combination of time, nanoseconds, random values,
-     * and a sequential index. The identifier is padded with {@code 0} to ensure a fixed length.
+     * Generates a unique identifier containing a combination of time, nanoseconds, random values, and a sequential index. The identifier is padded
+     * with {@code 0} to ensure a fixed length.
      * <p>
      * The generated identifier is a 16-character string consisting of the following parts:
      * <ul>
@@ -127,7 +127,7 @@ public class RandomUtil {
         appendRadixConvertedNumber(time, builder, 7);
 
         // nano, we truncate the last 4 characters because they change within milliseconds
-        appendRadixConvertedNumber(System.nanoTime() % (RADIX * RADIX * RADIX * RADIX), builder, 11);
+        appendRadixConvertedNumber(Math.floorMod(System.nanoTime(), RADIX * RADIX * RADIX * RADIX), builder, 11);
 
         // random part - 2 chars
         appendRadixConvertedNumber(RANDOM.nextInt(RADIX * RADIX), builder, 13);
@@ -197,7 +197,7 @@ public class RandomUtil {
 
     private static void appendRadixConvertedNumber(long value, StringBuilder stringBuilder, int startIndex) {
         while (value != 0) {
-            long digit = Math.floorMod(value, RADIX);
+            long digit = value % RADIX;
             stringBuilder.setCharAt(startIndex--, ALL_LETTER[(int) digit]);
             value = value / RADIX;
         }
