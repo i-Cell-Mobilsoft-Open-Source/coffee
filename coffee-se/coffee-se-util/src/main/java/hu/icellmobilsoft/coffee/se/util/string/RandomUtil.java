@@ -197,7 +197,7 @@ public class RandomUtil {
 
     private static void appendRadixConvertedNumber(long value, StringBuilder stringBuilder, int startIndex) {
         while (value != 0) {
-            long digit = value % RADIX;
+            long digit = Math.floorMod(value, RADIX);
             stringBuilder.setCharAt(startIndex--, ALL_LETTER[(int) digit]);
             value = value / RADIX;
         }
