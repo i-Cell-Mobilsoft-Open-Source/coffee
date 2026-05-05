@@ -26,6 +26,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.MessageFormat;
 import java.time.Instant;
+import java.util.concurrent.atomic.AtomicReference;
 
 import org.awaitility.Awaitility;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -43,30 +44,32 @@ import org.junit.jupiter.api.io.TempDir;
 class ConfigFileWatcherTest {
 
     @Test
-    void should_notify_for_file_changes(@TempDir Path tempDir) throws IOException {
+    void should_notify_after_batched_file_modifications(@TempDir Path tempDir) throws IOException {
         // GIVEN
         int writeCount = 10;
         Path tempFile = Files.createTempFile(tempDir, getClass().getCanonicalName() + "-", "");
-        Instant[] lastNotificationTime = new Instant[1];
+        AtomicReference<Instant> lastNotificationTime = new AtomicReference<>();
 
         // WHEN
         try (ConfigFileWatcher configFileWatcher = new ConfigFileWatcher(tempFile)) {
             configFileWatcher.addListener(path -> {
-                lastNotificationTime[0] = Instant.now();
+                lastNotificationTime.set(Instant.now());
             });
 
-            Instant[] lastModificationTime = new Instant[1];
+            AtomicReference<Instant> lastModificationTime = new AtomicReference<>();
             for (int i = 0; i < writeCount; i++) {
-                lastModificationTime[0] = Instant.now();
+                lastModificationTime.set(Instant.now());
                 Files.write(tempFile, (i + "").getBytes());
             }
 
             // THEN
             Awaitility.await().untilAsserted(() -> {
                 assertTrue(
-                        lastModificationTime[0].compareTo(lastNotificationTime[0]) <= 0,
-                        MessageFormat
-                                .format("last notification time [{0}] >= last write time [{1}]", lastNotificationTime[0], lastModificationTime[0]));
+                        lastModificationTime.get().compareTo(lastNotificationTime.get()) <= 0,
+                        MessageFormat.format(
+                                "last notification time [{0}] >= last write time [{1}]",
+                                lastNotificationTime.get(),
+                                lastModificationTime.get()));
             });
         }
     }
