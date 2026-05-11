@@ -127,7 +127,7 @@ class DateXmlUtilTest {
 
         @Test
         @DisplayName("Testing toXMLGregorianCalendar() from non GregorianCalendar, JRE <= 8")
-        @EnabledForJreRange(max = JRE.JAVA_8)
+        @EnabledForJreRange(min = JRE.JAVA_8, max = JRE.JAVA_8)
         void fromJapaneseCalendarJ8() {
             // given
             Calendar source = Calendar.getInstance(TimeZone.getTimeZone("UTC"), new Locale("ja", "JP", "JP"));

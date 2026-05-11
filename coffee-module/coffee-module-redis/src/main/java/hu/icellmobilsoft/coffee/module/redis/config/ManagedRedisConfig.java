@@ -289,7 +289,7 @@ public class ManagedRedisConfig implements RedisConfig {
     }
 
     /**
-     * The password of the selected redis to connect with.
+     * The master name of redis sentinel.
      *
      * @return Master name of redis sentinel
      */

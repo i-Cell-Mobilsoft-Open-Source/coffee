@@ -28,6 +28,7 @@
         <module>coffee-module-wildfly</module>
         <module>coffee-module-quarkus</module>
         <module>coffee-module-docgen</module>
+		<module>coffee-module-config-watcher</module>
     </modules>
 
 	<dependencyManagement>
