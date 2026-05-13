@@ -26,13 +26,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.Supplier;
 
-import hu.icellmobilsoft.coffee.cdi.metric.spi.IJedisMetricsHandler;
-import hu.icellmobilsoft.coffee.module.redis.annotation.RedisConnection;
-import hu.icellmobilsoft.coffee.module.redis.config.ManagedRedisConfig;
-import hu.icellmobilsoft.coffee.module.redis.config.RedisConfig;
-import hu.icellmobilsoft.coffee.module.redis.factory.UnifiedJedisFactory;
-import hu.icellmobilsoft.coffee.se.logging.Logger;
-import hu.icellmobilsoft.coffee.tool.utils.annotation.AnnotationUtil;
 import jakarta.annotation.PreDestroy;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.context.Dependent;
@@ -41,6 +34,14 @@ import jakarta.enterprise.inject.Produces;
 import jakarta.enterprise.inject.spi.CDI;
 import jakarta.enterprise.inject.spi.InjectionPoint;
 import jakarta.inject.Inject;
+
+import hu.icellmobilsoft.coffee.cdi.metric.spi.IJedisMetricsHandler;
+import hu.icellmobilsoft.coffee.module.redis.annotation.RedisConnection;
+import hu.icellmobilsoft.coffee.module.redis.config.ManagedRedisConfig;
+import hu.icellmobilsoft.coffee.module.redis.config.RedisConfig;
+import hu.icellmobilsoft.coffee.module.redis.factory.UnifiedJedisFactory;
+import hu.icellmobilsoft.coffee.se.logging.Logger;
+import hu.icellmobilsoft.coffee.tool.utils.annotation.AnnotationUtil;
 import redis.clients.jedis.ConnectionPool;
 import redis.clients.jedis.HostAndPort;
 import redis.clients.jedis.RedisClient;
