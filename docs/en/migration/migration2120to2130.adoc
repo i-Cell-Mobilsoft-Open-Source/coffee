@@ -2,6 +2,80 @@
 
 coff:ee v2.12.0 -> v2.13.0 migration description, news, changes
 
+== coffee-module-redis
+
+* Jedis upgraded from 5.1.2 to 7.2.1
+* Replaced the deprecated `JedisPooled` and `JedisCluster` class
+
+Notable bugfixes:
+
+* Ensure closing connection in Pipeline even if there is an error in sync method. https://github.com/redis/jedis/pull/3865[#3865]
+
+Jedis changelog with breaking changes:
+
+* https://github.com/redis/jedis/releases/tag/v5.2.0[v5.2.0]
+** JedisConnectionException contains HostAndPort from DefaultJedisSocketFactory (#3896)
+** Address change in JSON.GET command without path (#3858)
+** Modify and fail-fast GeoSearchParam (#3827)
+** Support transaction from UnifiedJedis without calling multi first (#3804)
+** Reduce the log level of validateObject to WARN (#3750)
+* https://github.com/redis/jedis/releases/tag/v6.0.0[v6.0.0]
+** Make default client side search dialect to 2 (#4060)
+** Remove Graph module support (#4073)
+** Change FT.PROFILE to return generic object (#4067)
+** Remove Triggers and Functions feature (#3969)
+** COMMAND INFO reply contains subcommand detail (#4022)
+* https://github.com/redis/jedis/releases/tag/v6.1.0[v6.1.0]
+* https://github.com/redis/jedis/releases/tag/v6.2.0[v6.2.0]
+* https://github.com/redis/jedis/releases/tag/v7.0.0[v7.0.0]
+** Removed deprecated constructors, classes, and JedisSharding (#4311)
+** Automatic Failover and Failback API changes (#4317, #4310, #4308, #4306, #4297, #4228)
+** MultiCluster* classes and methods have been renamed and improved.
+** Users upgrading from v6.x should consult the Automatic Failover and Failback Migration Guide.
+** https://redis.github.io/jedis/migration-guides/v6-to-v7/#breaking-changes[More details on breaking changes]
+* https://github.com/redis/jedis/releases/tag/v7.1.0[v7.1.0]
+* https://github.com/redis/jedis/releases/tag/v7.2.0[v7.2.0]
+* https://github.com/redis/jedis/releases/tag/v7.2.1[v7.2.1]
+
+=== Migration
+
+* Address the jedis changelog breaking changes. Other migration steps not needed.
+
+== new config-watcher module
+
+* Introduced a config source with file watcher. See doc: xref:#common_module_coffee-module-config-watcher[]
+
+=== Migration
+The changes are backwards compatible and do not require any migration.
+
+== coffee-module-mongodb
+
+* MongoDB Java Driver (mongodb-driver-sync) upgraded from 4.5.1 to 5.5.2
+
+Notable changes:
+
+* `BsonDecimal128.isNumber()` now returns `true` and `BsonDecimal128.asNumber()` returns the equivalent `BsonNumber` (since v5.0).
+* `ClusterSettings` computes `ClusterConnectionMode` consistently using the replica set name regardless of how it is configured (since v5.0).
+* Dropped server support for MongoDB 3.4 and earlier (since v4.8), MongoDB 3.6 (since v5.2), and MongoDB 4.0 (since v5.5).
+
+MongoDB Java Driver changelog with breaking changes:
+
+* https://github.com/mongodb/mongo-java-driver/releases/tag/r5.0.0[v5.0.0]
+** `SocketSettings` timeout parameters changed from `int` to `long`
+** `BsonDecimal128` now behaves as a number
+** `ClusterConnectionMode` computation changed
+** Removed deprecated `ServerAddress.getSocketAddress()` / `getSocketAddresses()`
+** Removed `Parameterizable` interface
+** Removed `MapCodec` and `IterableCodec` classes
+** Removed `StreamFactoryFactory` and related classes
+* https://github.com/mongodb/mongo-java-driver/releases/tag/r5.5.0[v5.5.0]
+** Dropped support for MongoDB 4.0
+** BSON codec lookup and decoding performance optimizations
+
+=== Migration
+
+* Address the MongoDB Java Driver changelog breaking changes listed above: https://www.mongodb.com/docs/drivers/java/sync/current/upgrade/[Full upgrade guide]. Other migration steps aren’t needed.
+
 == WildFly 38 support
 
 Due to WildFly 38 compatibility, the MicroProfile platform and several related dependency versions have been upgraded.

@@ -44,8 +44,8 @@ import hu.icellmobilsoft.coffee.se.logging.Logger;
 import hu.icellmobilsoft.coffee.tool.utils.annotation.AnnotationUtil;
 import redis.clients.jedis.ConnectionPool;
 import redis.clients.jedis.HostAndPort;
-import redis.clients.jedis.JedisCluster;
-import redis.clients.jedis.JedisPooled;
+import redis.clients.jedis.RedisClient;
+import redis.clients.jedis.RedisClusterClient;
 import redis.clients.jedis.UnifiedJedis;
 
 /**
@@ -70,7 +70,7 @@ public class UnifiedJedisProducer {
     @Inject
     private IJedisMetricsHandler jedisMetricsHandler;
 
-    private Map<String, UnifiedJedis> unifiedJedisInstances = new HashMap<>();
+    private final Map<String, UnifiedJedis> unifiedJedisInstances = new HashMap<>();
 
     /**
      * Default constructor, constructs a new object.
@@ -80,7 +80,7 @@ public class UnifiedJedisProducer {
     }
 
     /**
-     * Creates or gets {@link JedisPooled} for the given configKey
+     * Creates or gets {@link UnifiedJedis} for the given configKey
      *
      * @param injectionPoint
      *            injection metadata
@@ -101,11 +101,11 @@ public class UnifiedJedisProducer {
     }
 
     private Supplier<Number> getNumActiveSupplier(UnifiedJedis unifiedJedis) {
-        if (unifiedJedis instanceof JedisPooled jedisPooled) {
+        if (unifiedJedis instanceof RedisClient jedisPooled) {
             return jedisPooled.getPool()::getNumActive;
         }
 
-        if (unifiedJedis instanceof JedisCluster jedisCluster) {
+        if (unifiedJedis instanceof RedisClusterClient jedisCluster) {
             return jedisCluster.getClusterNodes().values().stream().mapToInt(ConnectionPool::getNumActive)::sum;
         }
 
@@ -113,11 +113,11 @@ public class UnifiedJedisProducer {
     }
 
     private Supplier<Number> getNumIdleSupplier(UnifiedJedis unifiedJedis) {
-        if (unifiedJedis instanceof JedisPooled jedisPooled) {
+        if (unifiedJedis instanceof RedisClient jedisPooled) {
             return jedisPooled.getPool()::getNumIdle;
         }
 
-        if (unifiedJedis instanceof JedisCluster jedisCluster) {
+        if (unifiedJedis instanceof RedisClusterClient jedisCluster) {
             return jedisCluster.getClusterNodes().values().stream().mapToInt(ConnectionPool::getNumIdle)::sum;
         }
 
@@ -133,7 +133,7 @@ public class UnifiedJedisProducer {
      *            config key
      * @param poolConfigKey
      *            config key for jedis pool
-     * @return {@link JedisPooled}
+     * @return {@link RedisClient}
      */
     private synchronized UnifiedJedis getInstance(String configKey, String poolConfigKey) {
         return unifiedJedisInstances.computeIfAbsent(configKey + DELIMITER + poolConfigKey, v -> createUnifiedJedis(configKey, poolConfigKey));
@@ -148,7 +148,13 @@ public class UnifiedJedisProducer {
             int port = managedRedisConfig.getPort();
             int database = managedRedisConfig.getDatabase();
             Set<HostAndPort> clusterHostAndPortSet = managedRedisConfig.getClusterHostAndPortSet();
-            log.info("Redis host [{0}], port: [{1}], database: [{2}], poolConfigKey: [{3}], cluster: [{4}]", host, port, database, poolConfigKey, clusterHostAndPortSet);
+            log.info(
+                    "Redis host [{0}], port: [{1}], database: [{2}], poolConfigKey: [{3}], cluster: [{4}]",
+                    host,
+                    port,
+                    database,
+                    poolConfigKey,
+                    clusterHostAndPortSet);
             return UnifiedJedisFactory.create(managedRedisConfig);
         } catch (Exception e) {
             log.error(

@@ -23,9 +23,10 @@ import java.util.Set;
 
 import hu.icellmobilsoft.coffee.module.redis.config.ManagedRedisConfig;
 import redis.clients.jedis.ConnectionPoolConfig;
+import redis.clients.jedis.DefaultJedisClientConfig;
 import redis.clients.jedis.HostAndPort;
-import redis.clients.jedis.JedisCluster;
-import redis.clients.jedis.JedisPooled;
+import redis.clients.jedis.RedisClient;
+import redis.clients.jedis.RedisClusterClient;
 import redis.clients.jedis.UnifiedJedis;
 
 /**
@@ -40,8 +41,8 @@ public class UnifiedJedisFactory {
     }
 
     /**
-     * Creates a {@link UnifiedJedis} instance based on managedRedisConfig. {@link JedisCluster} instance will be created in case of
-     * {@link ManagedRedisConfig#getClusterHostAndPortSet()} set is not empty, otherwise {@link JedisPooled} instance will be created.
+     * Creates a {@link UnifiedJedis} instance based on managedRedisConfig. {@link RedisClusterClient} instance will be created in case of
+     * {@link ManagedRedisConfig#getClusterHostAndPortSet()} set is not empty, otherwise {@link RedisClient} instance will be created.
      * 
      * @param managedRedisConfig
      *            Configuration object for redis connection.
@@ -52,8 +53,8 @@ public class UnifiedJedisFactory {
     }
 
     /**
-     * Creates a {@link UnifiedJedis} instance based on managedRedisConfig. {@link JedisCluster} instance will be created in case of
-     * {@link ManagedRedisConfig#getClusterHostAndPortSet()} set is not empty, otherwise {@link JedisPooled} instance will be created.
+     * Creates a {@link UnifiedJedis} instance based on managedRedisConfig. {@link RedisClusterClient} instance will be created in case of
+     * {@link ManagedRedisConfig#getClusterHostAndPortSet()} set is not empty, otherwise {@link RedisClient} instance will be created.
      *
      * @param managedRedisConfig
      *            Configuration object for redis connection.
@@ -62,22 +63,30 @@ public class UnifiedJedisFactory {
      * @return Created {@link UnifiedJedis} object
      */
     public static UnifiedJedis create(ManagedRedisConfig managedRedisConfig, int timeout) {
+        Set<HostAndPort> clusterHostAndPortList = managedRedisConfig.getClusterHostAndPortSet();
+        ConnectionPoolConfig poolConfig = createPoolConfig(managedRedisConfig);
+        DefaultJedisClientConfig clientConfig = createClientConfig(managedRedisConfig, managedRedisConfig.getDatabase(), timeout);
+
+        if (clusterHostAndPortList.isEmpty()) {
+            return RedisClient.builder()
+                    .clientConfig(clientConfig)
+                    .poolConfig(poolConfig)
+                    .hostAndPort(managedRedisConfig.getHost(), managedRedisConfig.getPort())
+                    .build();
+        }
+
+        return RedisClusterClient.builder().clientConfig(clientConfig).poolConfig(poolConfig).nodes(clusterHostAndPortList).maxAttempts(3).build();
+    }
+
+    private static DefaultJedisClientConfig createClientConfig(ManagedRedisConfig managedRedisConfig, int database, int timeout) {
+        return DefaultJedisClientConfig.builder().timeoutMillis(timeout).password(managedRedisConfig.getPassword()).database(database).build();
+    }
+
+    private static ConnectionPoolConfig createPoolConfig(ManagedRedisConfig managedRedisConfig) {
         ConnectionPoolConfig poolConfig = new ConnectionPoolConfig();
         poolConfig.setMaxTotal(managedRedisConfig.getPoolMaxTotal());
         poolConfig.setMaxIdle(managedRedisConfig.getPoolMaxIdle());
-        Set<HostAndPort> clusterHostAndPortList = managedRedisConfig.getClusterHostAndPortSet();
-
-        if (clusterHostAndPortList.isEmpty()) {
-            return new JedisPooled(
-                    poolConfig,
-                    managedRedisConfig.getHost(),
-                    managedRedisConfig.getPort(),
-                    timeout,
-                    managedRedisConfig.getPassword(),
-                    managedRedisConfig.getDatabase());
-        }
-
-        return new JedisCluster(clusterHostAndPortList, timeout, timeout, 3, managedRedisConfig.getPassword(), poolConfig);
+        return poolConfig;
     }
 
 }
