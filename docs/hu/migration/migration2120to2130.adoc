@@ -106,6 +106,6 @@ WildFly 38 upgrade esetén várható töréspontok:
 `BaseRedisConsumerStarter` update egy felülírható `getRedisStreamConsumerBeans` metódussal,
 hogy lehessen kontrollálni, mely consumer bean-ek induljanak el.
 
-=== Átállás
+=== Migration
 
 A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.
