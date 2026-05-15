@@ -100,3 +100,12 @@ Expected breakpoints when upgrading to WildFly 38:
 
 * In OpenAPI filters and custom schema handling: `Schema#setType` API change (single -> list).
 * MP Metrics API: using explicit `MetricType` in `Metadata` may cause compilation errors.
+
+== coffee-module-redisstream
+
+`BaseRedisConsumerStarter` update with overridable `getRedisStreamConsumerBeans` method for the ability to control
+which consumer beans should be started.
+
+=== Migration
+
+Changes are backwards compatible doesn't need any migration.

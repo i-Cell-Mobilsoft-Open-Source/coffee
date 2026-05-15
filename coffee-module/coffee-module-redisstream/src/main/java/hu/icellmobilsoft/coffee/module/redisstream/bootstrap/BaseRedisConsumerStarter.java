@@ -145,17 +145,26 @@ public class BaseRedisConsumerStarter {
     }
 
     /**
-     * Start Redis consumers in separate long running managed threads
+     * Start Redis consumers in separate long-running managed threads
      */
     public void start() {
-        // get every classes implementing IRedisStreamConsumer
-        Set<Bean<?>> beans = beanManager.getBeans(IRedisStreamBaseConsumer.class, RedisStreamConsumer.LITERAL);
+        // get every class implementing IRedisStreamConsumer
+        Set<Bean<?>> beans = getRedisStreamConsumerBeans();
 
         validateConfig(beans);
 
         beans.forEach(this::handleConsumerBean);
 
         log.info("Redis consumers started");
+    }
+
+    /**
+     * Retrieves the beans implementing the {@link IRedisStreamBaseConsumer} interface and annotated with {@link RedisStreamConsumer}.
+     *
+     * @return a set of beans representing the Redis stream consumers
+     */
+    protected Set<Bean<?>> getRedisStreamConsumerBeans() {
+        return beanManager.getBeans(IRedisStreamBaseConsumer.class, RedisStreamConsumer.LITERAL);
     }
 
     /**
