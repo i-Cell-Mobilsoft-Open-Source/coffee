@@ -37,6 +37,23 @@ Jedis changelog with breaking changes:
 * https://github.com/redis/jedis/releases/tag/v7.2.0[v7.2.0]
 * https://github.com/redis/jedis/releases/tag/v7.2.1[v7.2.1]
 
+* Redis sentinel support has been introduced in the module
+** the redis configuration has been supplemented with the `sentinel` and 'master' configuration keys, the value of which can be a url or a url list in the format `$(host):$(port)` and the name of the master, an example of usage:
+
+[source,yaml]
+----
+coffee:
+    redis:
+        ...
+        auth:
+            ...
+            sentinel:
+              - sample-sandbox1.icellmobilsoft.hu:26379
+              - sample-sandbox2.icellmobilsoft.hu:26379
+              - sample-sandbox3.icellmobilsoft.hu:26379
+            master: stream
+----
+
 === Migration
 
 * Address the jedis changelog breaking changes. Other migration steps not needed.

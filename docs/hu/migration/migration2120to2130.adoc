@@ -37,6 +37,23 @@ Jedis changelog breaking change-ek:
 * https://github.com/redis/jedis/releases/tag/v7.2.0[v7.2.0]
 * https://github.com/redis/jedis/releases/tag/v7.2.1[v7.2.1]
 
+* Bevezetésre került a redis sentinel támogatása a modulban
+** kiegészült a `sentinel` és 'master' konfigurációs kulccsal a redis konfiguráció, amelynek értéke egy url vagy egy url lista lehet `$(host):$(port)` formátumban valamint a master neve, példa a használatra:
+
+[source,yaml]
+----
+coffee:
+    redis:
+        ...
+        auth:
+            ...
+            sentinel:
+              - sample-sandbox1.icellmobilsoft.hu:26379
+              - sample-sandbox2.icellmobilsoft.hu:26379
+              - sample-sandbox3.icellmobilsoft.hu:26379
+            master: stream
+----
+
 === Migration
 
 * A fenti Jedis changelog breaking change-ek kezelése szükséges. Egyéb migrációs lépés nem szükséges.
