@@ -2,7 +2,7 @@
 
 coff:ee v2.12.0 -> v2.13.0 migrációs leírás, újdonságok, változások leírása
 
-=== coffee-module-redis
+== coffee-module-redis
 
 * Jedis verzió frissítése 5.1.2 -> 7.2.1
 * A deprecated `JedisPooled` és `JedisCluster` osztályok lecserélésre kerültek
@@ -54,18 +54,18 @@ coffee:
             master: stream
 ----
 
-==== Migration
+=== Migration
 
 * A fenti Jedis changelog breaking change-ek kezelése szükséges. Egyéb migrációs lépés nem szükséges.
 
-=== Új config-watcher modul
+== Új config-watcher modul
 
 * Bevezetésre került egy konfigurációs forrás fájl figyelővel. Lásd dokumentáció: xref:#common_module_coffee-module-config-watcher[]
 
-==== Migration
+=== Migration
 A változtatások visszafelé kompatibilisek, migrációs lépés nem szükséges.
 
-=== coffee-module-mongodb
+== coffee-module-mongodb
 
 * MongoDB Java Driver (mongodb-driver-sync) verzió frissítése 4.5.1 -> 5.5.2
 
@@ -89,6 +89,40 @@ MongoDB Java Driver changelog breaking change-ek:
 ** MongoDB 4.0 támogatás megszűnt
 ** BSON codec keresés és dekódolás teljesítmény optimalizáció
 
-==== Migration
+=== Migration
 
 * A MongoDB Java Driver changelog breaking change-ek kezelése szükséges: https://www.mongodb.com/docs/drivers/java/sync/current/upgrade/[Teljes frissítési útmutató]. Egyéb migrációs lépés nem szükséges.
+
+== WildFly 38 támogatás
+
+WildFly 38 kompatibilitás miatt frissült a MicroProfile platform és több kapcsolódó dependency verzió.
+
+* MicroProfile BOM `6.1` -> `7.1`
+** https://microprofile.io/2025/06/17/microprofile-7-1-released/
+* Micrometer: `1.12.4` -> `1.15.0`
+* OpenTelemetry: `1.29.0` -> `1.48.0`
+* OpenTelemetry gRPC instrumentation: `1.29.0-alpha` -> `2.14.0-alpha`
+* Jakarta XML Binding API: `4.0.2` -> `4.0.4`
+* Jakarta Activation API: `2.1.3` -> `2.1.4`
+* RESTEasy: `6.2.11.Final` -> `6.2.14.Final`
+* Hibernate ORM: `6.6.1.Final` -> `6.6.31.Final`
+* Gson: `2.8.9` -> `2.13.1`
+* Guava: `32.1.1-jre` -> `33.0.0-jre`
+* Commons BeanUtils: `1.9.4` -> `1.11.0`
+* Commons Codec: `1.17.1` -> `1.17.2`
+
+=== Migration
+
+WildFly 38 upgrade esetén várható töréspontok:
+
+* OpenAPI filterekben és egyedi sémakezelésnél: `Schema#setType` API változás (single -> list).
+* MP Metrics API: explicit `MetricType` használata `Metadata`-ban fordítási hibához vezethet.
+
+== coffee-module-redisstream
+
+`BaseRedisConsumerStarter` update egy felülírható `getRedisStreamConsumerBeans` metódussal,
+hogy lehessen kontrollálni, mely consumer bean-ek induljanak el.
+
+=== Migration
+
+A változtatások nem eredményeznek átállási munkálatokat, visszafelé kompatibilis.

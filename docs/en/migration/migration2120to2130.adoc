@@ -2,7 +2,7 @@
 
 coff:ee v2.12.0 -> v2.13.0 migration description, news, changes
 
-=== coffee-module-redis
+== coffee-module-redis
 
 * Jedis upgraded from 5.1.2 to 7.2.1
 * Replaced the deprecated `JedisPooled` and `JedisCluster` class
@@ -54,18 +54,18 @@ coffee:
             master: stream
 ----
 
-==== Migration
+=== Migration
 
 * Address the jedis changelog breaking changes. Other migration steps not needed.
 
-=== new config-watcher module
+== new config-watcher module
 
 * Introduced a config source with file watcher. See doc: xref:#common_module_coffee-module-config-watcher[]
 
-==== Migration
+=== Migration
 The changes are backwards compatible and do not require any migration.
 
-=== coffee-module-mongodb
+== coffee-module-mongodb
 
 * MongoDB Java Driver (mongodb-driver-sync) upgraded from 4.5.1 to 5.5.2
 
@@ -89,6 +89,40 @@ MongoDB Java Driver changelog with breaking changes:
 ** Dropped support for MongoDB 4.0
 ** BSON codec lookup and decoding performance optimizations
 
-==== Migration
+=== Migration
 
 * Address the MongoDB Java Driver changelog breaking changes listed above: https://www.mongodb.com/docs/drivers/java/sync/current/upgrade/[Full upgrade guide]. Other migration steps aren’t needed.
+
+== WildFly 38 support
+
+Due to WildFly 38 compatibility, the MicroProfile platform and several related dependency versions have been upgraded.
+
+* MicroProfile BOM `6.1` -> `7.1`
+** https://microprofile.io/2025/06/17/microprofile-7-1-released/
+* Micrometer: `1.12.4` -> `1.15.0`
+* OpenTelemetry: `1.29.0` -> `1.48.0`
+* OpenTelemetry gRPC instrumentation: `1.29.0-alpha` -> `2.14.0-alpha`
+* Jakarta XML Binding API: `4.0.2` -> `4.0.4`
+* Jakarta Activation API: `2.1.3` -> `2.1.4`
+* RESTEasy: `6.2.11.Final` -> `6.2.14.Final`
+* Hibernate ORM: `6.6.1.Final` -> `6.6.31.Final`
+* Gson: `2.8.9` -> `2.13.1`
+* Guava: `32.1.1-jre` -> `33.0.0-jre`
+* Commons BeanUtils: `1.9.4` -> `1.11.0`
+* Commons Codec: `1.17.1` -> `1.17.2`
+
+=== Migration
+
+Expected breakpoints when upgrading to WildFly 38:
+
+* In OpenAPI filters and custom schema handling: `Schema#setType` API change (single -> list).
+* MP Metrics API: using explicit `MetricType` in `Metadata` may cause compilation errors.
+
+== coffee-module-redisstream
+
+`BaseRedisConsumerStarter` update with overridable `getRedisStreamConsumerBeans` method for the ability to control
+which consumer beans should be started.
+
+=== Migration
+
+Changes are backwards compatible doesn't need any migration.
