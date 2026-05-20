@@ -34,13 +34,17 @@ coffee:
             timeout: 5000 #default: 5000
             cluster: #<5>
               - sample-sandbox.icellmobilsoft.hu:6380 #default null
+            sentinel: #<6>
+              - sample-sandbox.icellmobilsoft.hu:26379 #default null
+            master: stream #<7>
 ----
 <1> The variable name of the thread-pool.max-threads to read the appservers thread pool max thread count. Default is MANAGED_EXECUTOR_SERVICE_CORE_THREADS
 <2> Thread safety buffer count which is used for consumer thread count checking. Default is 10
 <3> Unique identifier of the redis connection (configKey). All fields are optional.
 <4> Unique identifier of the pool within the redis connection (poolConfigKey). All fields are optional.
 <5> In case of using redis cluster the cluster node urls in `$(host):$(port)` format. In case of cluster field is required, otherwise it is forbidden.
-
+<6> In case of using redis sentinel the master asking node urls in `$(host):$(port)` format. In case of sentinel field is required, otherwise it is forbidden.
+<7> The name of the master with which we retrieve the current master node with the following command pattern "redis-cli -h <host> -p <port> SENTINEL get-master-addr-by-name <master>". As there could be more sentinels e.g. "stream" or "cache". In case of sentinel field is required, otherwise it is forbidden.
 [NOTE]
 ====
 The value of thread-pool.max-threads must be greater than redis consumer thread count + safety buffer
