@@ -21,12 +21,15 @@ package hu.icellmobilsoft.coffee.module.redis.factory;
 
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
+
 import hu.icellmobilsoft.coffee.module.redis.config.ManagedRedisConfig;
 import redis.clients.jedis.ConnectionPoolConfig;
 import redis.clients.jedis.DefaultJedisClientConfig;
 import redis.clients.jedis.HostAndPort;
 import redis.clients.jedis.RedisClient;
 import redis.clients.jedis.RedisClusterClient;
+import redis.clients.jedis.RedisSentinelClient;
 import redis.clients.jedis.UnifiedJedis;
 
 /**
@@ -53,8 +56,11 @@ public class UnifiedJedisFactory {
     }
 
     /**
-     * Creates a {@link UnifiedJedis} instance based on managedRedisConfig. {@link RedisClusterClient} instance will be created in case of
-     * {@link ManagedRedisConfig#getClusterHostAndPortSet()} set is not empty, otherwise {@link RedisClient} instance will be created.
+     * Creates a {@link UnifiedJedis} instance based on managedRedisConfig.
+     * {@link RedisClusterClient} instance will be created in case of {@link ManagedRedisConfig#getClusterHostAndPortSet()} set is not empty,
+     * {@link RedisSentinelClient} instance will be created in case of {@link ManagedRedisConfig#getSentinelHostAndPortSet()} set is not empty
+     * and {@link ManagedRedisConfig#getSentinelMaster()} is set,
+     * otherwise {@link RedisClient} instance will be created.
      *
      * @param managedRedisConfig
      *            Configuration object for redis connection.
@@ -64,18 +70,22 @@ public class UnifiedJedisFactory {
      */
     public static UnifiedJedis create(ManagedRedisConfig managedRedisConfig, int timeout) {
         Set<HostAndPort> clusterHostAndPortList = managedRedisConfig.getClusterHostAndPortSet();
+        Set<HostAndPort> sentinelHostAndPortList = managedRedisConfig.getSentinelHostAndPortSet();
+        String sentinelMaster = managedRedisConfig.getSentinelMaster();
         ConnectionPoolConfig poolConfig = createPoolConfig(managedRedisConfig);
         DefaultJedisClientConfig clientConfig = createClientConfig(managedRedisConfig, managedRedisConfig.getDatabase(), timeout);
 
-        if (clusterHostAndPortList.isEmpty()) {
-            return RedisClient.builder()
-                    .clientConfig(clientConfig)
-                    .poolConfig(poolConfig)
-                    .hostAndPort(managedRedisConfig.getHost(), managedRedisConfig.getPort())
-                    .build();
+        if (!clusterHostAndPortList.isEmpty()) {
+            return RedisClusterClient.builder().clientConfig(clientConfig).poolConfig(poolConfig).nodes(clusterHostAndPortList).maxAttempts(3).build();
+        } else if (!sentinelHostAndPortList.isEmpty() && StringUtils.isNoneBlank(sentinelMaster)) {
+            return RedisSentinelClient.builder().clientConfig(clientConfig).poolConfig(poolConfig).masterName(sentinelMaster).sentinels(sentinelHostAndPortList).build();
         }
 
-        return RedisClusterClient.builder().clientConfig(clientConfig).poolConfig(poolConfig).nodes(clusterHostAndPortList).maxAttempts(3).build();
+        return RedisClient.builder()
+                .clientConfig(clientConfig)
+                .poolConfig(poolConfig)
+                .hostAndPort(managedRedisConfig.getHost(), managedRedisConfig.getPort())
+                .build();
     }
 
     private static DefaultJedisClientConfig createClientConfig(ManagedRedisConfig managedRedisConfig, int database, int timeout) {

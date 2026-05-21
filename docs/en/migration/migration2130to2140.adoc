@@ -1,0 +1,11 @@
+= v2.13.0 → v2.14.0
+
+coff:ee v2.13.0 -> v2.14.0 migration description, news, changes
+
+
+== coffee-se-util
+
+* `RandomUtil.generateId` got optimized, now runs a third amount the time it used to
+
+=== Migration
+The changes are backwards compatible and do not require any migration.

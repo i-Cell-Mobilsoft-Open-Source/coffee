@@ -1,0 +1,10 @@
+= v2.13.0 → v2.14.0
+
+coff:ee v2.13.0 -> v2.14.0 migrációs leírás, újdonságok, változások leírása
+
+== coffee-se-util
+
+* `RandomUtil.generateId` optimalizálva lett, most harmad annyi idő alat fut le, mint előtte
+
+=== Migration
+A változtatások visszafelé kompatibilisek, migrációs lépés nem szükséges.
