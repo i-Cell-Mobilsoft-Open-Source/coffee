@@ -25,7 +25,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.MessageFormat;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.time.Instant;
+import java.util.concurrent.atomic.AtomicReference;
 
 import org.awaitility.Awaitility;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -43,27 +44,32 @@ import org.junit.jupiter.api.io.TempDir;
 class ConfigFileWatcherTest {
 
     @Test
-    void should_notify_for_file_changes(@TempDir Path tempDir) throws IOException {
+    void should_notify_after_batched_file_modifications(@TempDir Path tempDir) throws IOException {
         // GIVEN
         int writeCount = 10;
         Path tempFile = Files.createTempFile(tempDir, getClass().getCanonicalName() + "-", "");
-        AtomicInteger notificationCounter = new AtomicInteger(0);
+        AtomicReference<Instant> lastNotificationTime = new AtomicReference<>();
 
         // WHEN
         try (ConfigFileWatcher configFileWatcher = new ConfigFileWatcher(tempFile)) {
             configFileWatcher.addListener(path -> {
-                notificationCounter.incrementAndGet();
+                lastNotificationTime.set(Instant.now());
             });
 
+            AtomicReference<Instant> lastModificationTime = new AtomicReference<>();
             for (int i = 0; i < writeCount; i++) {
+                lastModificationTime.set(Instant.now());
                 Files.write(tempFile, (i + "").getBytes());
             }
 
             // THEN
             Awaitility.await().untilAsserted(() -> {
                 assertTrue(
-                        notificationCounter.get() >= writeCount,
-                        MessageFormat.format("notification count [{0}] >= write count [{1}]", notificationCounter.get(), writeCount));
+                        lastModificationTime.get().compareTo(lastNotificationTime.get()) <= 0,
+                        MessageFormat.format(
+                                "last notification time [{0}] >= last write time [{1}]",
+                                lastNotificationTime.get(),
+                                lastModificationTime.get()));
             });
         }
     }
