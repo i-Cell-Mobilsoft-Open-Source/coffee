@@ -19,15 +19,13 @@
  */
 package hu.icellmobilsoft.coffee.module.mp.opentracing.filter;
 
-import java.io.IOException;
-
 import jakarta.inject.Inject;
 import jakarta.ws.rs.container.ContainerRequestContext;
 import jakarta.ws.rs.container.ContainerResponseContext;
 import jakarta.ws.rs.container.ContainerResponseFilter;
 import jakarta.ws.rs.ext.Provider;
 
-import org.apache.http.HttpStatus;
+import org.apache.hc.core5.http.HttpStatus;
 
 import hu.icellmobilsoft.coffee.cdi.logger.AppLogger;
 import hu.icellmobilsoft.coffee.cdi.logger.ThisLogger;
@@ -62,12 +60,11 @@ public class OpenTraceErrorResponseFilter implements ContainerResponseFilter {
     /**
      * {@inheritDoc}
      * <p>
-     * Add error tag if http status &gt;= 500
-     * Now working only on async rest calls.
-     * https://github.com/opentracing-contrib/java-jaxrs/blob/master/opentracing-jaxrs2/src/main/java/io/opentracing/contrib/jaxrs2/server/SpanFinishingFilter.java#L90
+     * Add error tag if http status &gt;= 500 Now working only on async rest calls.
+     * <a href="https://github.com/opentracing-contrib/java-jaxrs/blob/master/opentracing-jaxrs2/src/main/java/io/opentracing/contrib/jaxrs2/server/SpanFinishingFilter.java#L90">...</a>
      */
     @Override
-    public void filter(ContainerRequestContext requestContext, ContainerResponseContext responseContext) throws IOException {
+    public void filter(ContainerRequestContext requestContext, ContainerResponseContext responseContext) {
         if (requestContext == null || responseContext == null) {
             return;
         }
