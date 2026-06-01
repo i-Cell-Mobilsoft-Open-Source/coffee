@@ -2,7 +2,7 @@
 
 coff:ee v2.12.0 -> v2.13.0 migration description, news, changes
 
-=== coffee-module-redis
+== coffee-module-redis
 
 * Jedis upgraded from 5.1.2 to 7.2.1
 * Replaced the deprecated `JedisPooled` and `JedisCluster` class
@@ -37,20 +37,92 @@ Jedis changelog with breaking changes:
 * https://github.com/redis/jedis/releases/tag/v7.2.0[v7.2.0]
 * https://github.com/redis/jedis/releases/tag/v7.2.1[v7.2.1]
 
-==== Migration
+* Redis sentinel support has been introduced in the module
+** the redis configuration has been supplemented with the `sentinel` and 'master' configuration keys, the value of which can be a url or a url list in the format `$(host):$(port)` and the name of the master, an example of usage:
+
+[source,yaml]
+----
+coffee:
+    redis:
+        ...
+        auth:
+            ...
+            sentinel:
+              - sample-sandbox1.icellmobilsoft.hu:26379
+              - sample-sandbox2.icellmobilsoft.hu:26379
+              - sample-sandbox3.icellmobilsoft.hu:26379
+            master: stream
+----
+
+=== Migration
 
 * Address the jedis changelog breaking changes. Other migration steps not needed.
 
-=== coffee-rest
+== new config-watcher module
 
-* Apache HttpClient dependency was migrated from HttpClient 4.x to HttpClient 5.x
-* `org.apache.httpcomponents:httpclient:4.5.14` -> `org.apache.httpcomponents.client5:httpclient5:5.5.2`
-* `org.apache.httpcomponents:httpcore:4.4.16` -> `org.apache.httpcomponents.core5:httpcore5:5.4.2`
-* `org.apache.httpcomponents:httpmime` dependency was removed from `coffee-rest`
-* `BaseApacheHttpClient` has been migrated to `org.apache.hc.*` APIs (`HttpUriRequestBase`, `CloseableHttpResponse`, `Timeout`, `ConnectionConfig`)
+* Introduced a config source with file watcher. See doc: xref:#common_module_coffee-module-config-watcher[]
 
-==== Migration
+=== Migration
+The changes are backwards compatible and do not require any migration.
 
-* If your project extends or uses `BaseApacheHttpClient`, update imports from `org.apache.http.*` to `org.apache.hc.*` and adapt method signatures (response type and timeout type).
-* If your project directly used `httpmime` from coff:ee dependency transitives, declare an explicit replacement dependency where needed.
-* For redirect-heavy integrations, verify behavior when sending requests with sensitive headers and relying on automatic redirects.
+== coffee-module-mongodb
+
+* MongoDB Java Driver (mongodb-driver-sync) upgraded from 4.5.1 to 5.5.2
+
+Notable changes:
+
+* `BsonDecimal128.isNumber()` now returns `true` and `BsonDecimal128.asNumber()` returns the equivalent `BsonNumber` (since v5.0).
+* `ClusterSettings` computes `ClusterConnectionMode` consistently using the replica set name regardless of how it is configured (since v5.0).
+* Dropped server support for MongoDB 3.4 and earlier (since v4.8), MongoDB 3.6 (since v5.2), and MongoDB 4.0 (since v5.5).
+
+MongoDB Java Driver changelog with breaking changes:
+
+* https://github.com/mongodb/mongo-java-driver/releases/tag/r5.0.0[v5.0.0]
+** `SocketSettings` timeout parameters changed from `int` to `long`
+** `BsonDecimal128` now behaves as a number
+** `ClusterConnectionMode` computation changed
+** Removed deprecated `ServerAddress.getSocketAddress()` / `getSocketAddresses()`
+** Removed `Parameterizable` interface
+** Removed `MapCodec` and `IterableCodec` classes
+** Removed `StreamFactoryFactory` and related classes
+* https://github.com/mongodb/mongo-java-driver/releases/tag/r5.5.0[v5.5.0]
+** Dropped support for MongoDB 4.0
+** BSON codec lookup and decoding performance optimizations
+
+=== Migration
+
+* Address the MongoDB Java Driver changelog breaking changes listed above: https://www.mongodb.com/docs/drivers/java/sync/current/upgrade/[Full upgrade guide]. Other migration steps aren’t needed.
+
+== WildFly 38 support
+
+Due to WildFly 38 compatibility, the MicroProfile platform and several related dependency versions have been upgraded.
+
+* MicroProfile BOM `6.1` -> `7.1`
+** https://microprofile.io/2025/06/17/microprofile-7-1-released/
+* Micrometer: `1.12.4` -> `1.15.0`
+* OpenTelemetry: `1.29.0` -> `1.48.0`
+* OpenTelemetry gRPC instrumentation: `1.29.0-alpha` -> `2.14.0-alpha`
+* Jakarta XML Binding API: `4.0.2` -> `4.0.4`
+* Jakarta Activation API: `2.1.3` -> `2.1.4`
+* RESTEasy: `6.2.11.Final` -> `6.2.14.Final`
+* Hibernate ORM: `6.6.1.Final` -> `6.6.31.Final`
+* Gson: `2.8.9` -> `2.13.1`
+* Guava: `32.1.1-jre` -> `33.0.0-jre`
+* Commons BeanUtils: `1.9.4` -> `1.11.0`
+* Commons Codec: `1.17.1` -> `1.17.2`
+
+=== Migration
+
+Expected breakpoints when upgrading to WildFly 38:
+
+* In OpenAPI filters and custom schema handling: `Schema#setType` API change (single -> list).
+* MP Metrics API: using explicit `MetricType` in `Metadata` may cause compilation errors.
+
+== coffee-module-redisstream
+
+`BaseRedisConsumerStarter` update with overridable `getRedisStreamConsumerBeans` method for the ability to control
+which consumer beans should be started.
+
+=== Migration
+
+Changes are backwards compatible doesn't need any migration.
