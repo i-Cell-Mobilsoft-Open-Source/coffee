@@ -2,6 +2,11 @@
 
 coff:ee v2.13.0 -> v2.14.0 migrációs leírás, újdonságok, változások leírása
 
+== Global
+
+* ETCD driver verzió frissítése 0.8.5 -> 0.8.6
+* io.grpc verzió frissítés 1.70.0 -> 1.76.0
+
 == coffee-se-util
 
 * `RandomUtil.generateId` optimalizálva lett, most harmad annyi idő alat fut le, mint előtte
