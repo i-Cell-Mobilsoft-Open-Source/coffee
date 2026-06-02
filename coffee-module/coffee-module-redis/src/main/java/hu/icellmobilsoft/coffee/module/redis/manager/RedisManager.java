@@ -27,12 +27,14 @@ import jakarta.enterprise.inject.spi.CDI;
 import jakarta.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 
 import hu.icellmobilsoft.coffee.cdi.trace.annotation.Traced;
 import hu.icellmobilsoft.coffee.cdi.trace.constants.SpanAttribute;
 import hu.icellmobilsoft.coffee.dto.exception.InvalidParameterException;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 import hu.icellmobilsoft.coffee.module.redis.annotation.RedisConnection;
+import hu.icellmobilsoft.coffee.module.redis.config.ManagedRedisConfig;
 import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
 import hu.icellmobilsoft.coffee.se.api.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.se.function.BaseExceptionFunction;
@@ -41,6 +43,7 @@ import hu.icellmobilsoft.coffee.se.function.BaseExceptionFunction3;
 import hu.icellmobilsoft.coffee.se.function.BaseExceptionFunction4;
 import hu.icellmobilsoft.coffee.se.function.BaseExceptionFunction5;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
+import io.opentelemetry.api.trace.Span;
 import redis.clients.jedis.UnifiedJedis;
 
 /**
@@ -62,12 +65,24 @@ public class RedisManager {
     private String poolConfigKey;
     private Instance<UnifiedJedis> jedisInstance;
     private UnifiedJedis jedis;
+    private String cachedHost;
+    private Integer cachedPort;
 
     /**
      * Default constructor, constructs a new object.
      */
     public RedisManager() {
         super();
+    }
+
+    private void initRedisConnectionCache() {
+        if (cachedHost == null) {
+            ManagedRedisConfig redisConfig = CDI.current()
+                    .select(ManagedRedisConfig.class, new RedisConnection.Literal(configKey, poolConfigKey))
+                    .get();
+            cachedHost = redisConfig.getHost();
+            cachedPort = redisConfig.getPort();
+        }
     }
 
     /**
@@ -165,6 +180,8 @@ public class RedisManager {
             return Optional.ofNullable(response);
         } catch (Exception e) {
             throw repositoryFailed(e, functionName);
+        } finally {
+            appendTelemetry(functionName, null);
         }
     }
 
@@ -200,6 +217,8 @@ public class RedisManager {
             return Optional.ofNullable(response);
         } catch (Exception e) {
             throw repositoryFailed(e, functionName);
+        } finally {
+            appendTelemetry(functionName, p1);
         }
     }
 
@@ -239,6 +258,8 @@ public class RedisManager {
             return Optional.ofNullable(response);
         } catch (Exception e) {
             throw repositoryFailed(e, functionName);
+        } finally {
+            appendTelemetry(functionName, p1);
         }
     }
 
@@ -283,6 +304,8 @@ public class RedisManager {
             return Optional.ofNullable(response);
         } catch (Exception e) {
             throw repositoryFailed(e, functionName);
+        } finally {
+            appendTelemetry(functionName, p1);
         }
     }
 
@@ -331,6 +354,8 @@ public class RedisManager {
             return Optional.ofNullable(response);
         } catch (Exception e) {
             throw repositoryFailed(e, functionName);
+        } finally {
+            appendTelemetry(functionName, p1);
         }
     }
 
@@ -537,6 +562,26 @@ public class RedisManager {
             }
         }
         return false;
+    }
+
+    private void appendTelemetry(String functionName, Object p1) {
+        try {
+            Span span = Span.current();
+            if (span != null && span.getSpanContext().isValid() && Strings.CS.equals(functionName, "xadd")) {
+                if (p1 != null) {
+                    span.setAttribute(SpanAttribute.Redis.Stream.REDIS_STREAM_NAME, String.valueOf(p1));
+                }
+                initRedisConnectionCache();
+                if (cachedHost != null) {
+                    span.setAttribute(SpanAttribute.SERVER_ADDRESS, cachedHost);
+                }
+                if (cachedPort != null) {
+                    span.setAttribute(SpanAttribute.SERVER_PORT, cachedPort.longValue());
+                }
+            }
+        } catch (Exception e) {
+            log.warn("Could not append redis telemetry data", e);
+        }
     }
 
 }
