@@ -15,3 +15,4 @@ Quarkus-hoz konkrétan elkészítésett Extensionök listája: https://quarkus.p
 include::quarkus-extension/coffee-module-mp-restclient-extension.adoc[leveloffset=+1]
 include::quarkus-extension/coffee-module-etcd-extension.adoc[leveloffset=+1]
 include::quarkus-extension/coffee-tool-extension.adoc[leveloffset=+1]
+include::quarkus-extension/coffee-module-redis-health-check-extension.adoc[leveloffset=+1]

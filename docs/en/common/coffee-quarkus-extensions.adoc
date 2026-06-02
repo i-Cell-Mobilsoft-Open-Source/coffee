@@ -15,3 +15,4 @@ List of extensions built specifically for Quarkus: https://quarkus.pro/extension
 include::quarkus-extension/coffee-module-mp-restclient-extension.adoc[leveloffset=+1]
 include::quarkus-extension/coffee-module-etcd-extension.adoc[leveloffset=+1]
 include::quarkus-extension/coffee-tool-extension.adoc[leveloffset=+1]
+include::quarkus-extension/coffee-module-redis-health-check-extension.adoc[leveloffset=+1]
