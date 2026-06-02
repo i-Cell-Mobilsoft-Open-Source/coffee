@@ -20,6 +20,10 @@
             <artifactId>microprofile-health-api</artifactId>
         </dependency>
         <dependency>
+            <groupId>jakarta.enterprise.concurrent</groupId>
+            <artifactId>jakarta.enterprise.concurrent-api</artifactId>
+        </dependency>
+        <dependency>
             <groupId>hu.icellmobilsoft.coffee</groupId>
             <artifactId>coffee-dto-impl</artifactId>
         </dependency>
