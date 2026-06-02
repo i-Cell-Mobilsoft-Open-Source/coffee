@@ -9,3 +9,13 @@ coff:ee v2.13.0 -> v2.14.0 migration description, news, changes
 
 === Migration
 The changes are backwards compatible and do not require any migration.
+
+== coffee-rest
+
+* A new `ENTITY_NOT_FOUND(418, "Entity not found")` enum value has been added to `hu.icellmobilsoft.coffee.rest.exception.enums.HttpStatus`.
+* The `DefaultBaseExceptionMapper` now uses the new `HttpStatus.ENTITY_NOT_FOUND` constant instead of the previously hardcoded `IExceptionMessageTranslator.HTTP_STATUS_I_AM_A_TEAPOT` (418) value when handling `BONotFoundException`.
+* The `HTTP_STATUS_I_AM_A_TEAPOT` constant has been removed from `IExceptionMessageTranslator`. Use `HttpStatus.ENTITY_NOT_FOUND.getStatusCode()` instead.
+
+=== Migration
+
+If your project directly references `IExceptionMessageTranslator.HTTP_STATUS_I_AM_A_TEAPOT`, replace it with `HttpStatus.ENTITY_NOT_FOUND.getStatusCode()`. Otherwise the changes are backwards compatible and do not require any migration.

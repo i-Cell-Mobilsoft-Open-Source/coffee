@@ -37,6 +37,11 @@ public enum HttpStatus implements StatusType {
     OPTIMISTIC_LOCK(409, "Optimistic Lock"),
 
     /**
+     * 418 Entity not found.
+     */
+    ENTITY_NOT_FOUND(418, "Entity not found"),
+
+    /**
      * 422 Unprocessable Entity.
      */
     UNPROCESSABLE_ENTITY(422, "Unprocessable Entity");
