@@ -25,7 +25,6 @@ import jakarta.enterprise.inject.spi.CDI;
 
 import org.eclipse.microprofile.metrics.Metadata;
 import org.eclipse.microprofile.metrics.MetricRegistry;
-import org.eclipse.microprofile.metrics.MetricType;
 import org.eclipse.microprofile.metrics.Tag;
 
 import hu.icellmobilsoft.coffee.grpc.metrics.api.constants.IGrpcMetricConstant;
@@ -67,20 +66,17 @@ public abstract class AbstractMetricsInterceptor {
         Tag method = new Tag(IGrpcMetricConstant.Tag.TAG_METHOD, methodDescriptor.getBareMethodName());
         Tag methodType = new Tag(IGrpcMetricConstant.Tag.TAG_METHOD_TYPE, methodDescriptor.getType().name());
         Tag serviceName = new Tag(IGrpcMetricConstant.Tag.TAG_SERVICE, methodDescriptor.getServiceName());
-        Metadata requestMeta = Metadata.builder().withName(getRequestMetadataName()).withDescription(getRequestMetadataName())
-                .withType(MetricType.COUNTER).build();
+        Metadata requestMeta = Metadata.builder().withName(getRequestMetadataName()).withDescription(getRequestMetadataName()).build();
         metricBundle.setRequestCounter(metricRegistry.counter(requestMeta, method, methodType, serviceName));
 
         // response counter
-        Metadata responseMeta = Metadata.builder().withName(getResponseMetadataName()).withDescription(getResponseMetadataName())
-                .withType(MetricType.COUNTER).build();
+        Metadata responseMeta = Metadata.builder().withName(getResponseMetadataName()).withDescription(getResponseMetadataName()).build();
         metricBundle.setResponseCounter(metricRegistry.counter(responseMeta, method, methodType, serviceName));
 
         // timer
-        Metadata timerMeta = Metadata.builder().withName(getTimerMetadataName()).withDescription(getTimerMetadataName()).withType(MetricType.TIMER)
-                .build();
+        Metadata timerMeta = Metadata.builder().withName(getTimerMetadataName()).withDescription(getTimerMetadataName()).build();
         metricBundle.setTimerCodeFunction(
-                (code) -> metricRegistry.timer(timerMeta, method, methodType, serviceName, new Tag(IGrpcMetricConstant.Tag.TAG_STATUS, code.name())));
+                code -> metricRegistry.timer(timerMeta, method, methodType, serviceName, new Tag(IGrpcMetricConstant.Tag.TAG_STATUS, code.name())));
 
         return metricBundle;
 
