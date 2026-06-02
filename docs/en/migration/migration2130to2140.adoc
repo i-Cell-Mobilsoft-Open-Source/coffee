@@ -9,3 +9,21 @@ coff:ee v2.13.0 -> v2.14.0 migration description, news, changes
 
 === Migration
 The changes are backwards compatible and do not require any migration.
+
+== coffee-module-redis
+
+* Added OpenTelemetry span attribute tagging for Redis `xadd` operations in `RedisManager`:
+** `server.address` and `server.port` tags are set from the Redis connection configuration
+** `db.redis.stream.name` tag is set with the target stream name
+** The Redis address is cached (lazy-init) to avoid repeated CDI lookups on every Redis call
+** Added `io.opentelemetry:opentelemetry-api` as an optional dependency
+
+== coffee-cdi
+
+* New span attribute constants added to `SpanAttribute`:
+** `SpanAttribute.SERVER_ADDRESS` (`server.address`)
+** `SpanAttribute.SERVER_PORT` (`server.port`)
+** `SpanAttribute.Redis.Stream.REDIS_STREAM_NAME` (`db.redis.stream.name`)
+
+=== Migration
+The changes are backwards compatible and do not require any migration.
