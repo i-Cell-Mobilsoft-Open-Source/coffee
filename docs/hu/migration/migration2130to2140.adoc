@@ -8,3 +8,12 @@ coff:ee v2.13.0 -> v2.14.0 migrációs leírás, újdonságok, változások leí
 
 === Migration
 A változtatások visszafelé kompatibilisek, migrációs lépés nem szükséges.
+
+== coffee-tool
+
+* `GZIPUtil` metódusok overload-old verziót kaptak `initialBufferSize` paraméterrel,
+így ha van egy becsült kimeneti méreted, nagymértékben csökkentheted a heap garbage keletkezését nagy fájlok esetén.
+Valamint a régi metódusok a bemeneti adatokon alapuló heurisztikákat használtak az `initialBufferSize` kiszámításához.
+
+=== Migration
+A változtatások visszafelé kompatibilisek, migrációs lépés nem szükséges.
