@@ -119,7 +119,7 @@ public class GZIPUtil {
      *             if any error occurs
      */
     public static byte[] decompress(byte[] data) throws BaseException {
-        return decompress(data, data.length << 1);
+        return decompress(data, data == null ? 0 : data.length << 1);
     }
 
     /**
