@@ -14,7 +14,7 @@ The changes are backwards compatible and do not require any migration.
 
 * `GZIPUtil` methods got overloaded versions with `initialBufferSize`, so if you have an estimated output size,
 you can greatly reduce heap garbage generation for large files.
-Also, the old methods use heuristics based on the intput data, to calculate the `initialBufferSize`.
+Also, the old methods use heuristics based on the input data, to calculate the `initialBufferSize`.
 
 === Migration
 The changes are backwards compatible and do not require any migration.
