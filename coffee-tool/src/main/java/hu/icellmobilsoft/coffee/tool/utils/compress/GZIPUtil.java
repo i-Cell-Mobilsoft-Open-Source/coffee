@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.charset.StandardCharsets;
@@ -34,9 +35,9 @@ import java.util.zip.GZIPOutputStream;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ArrayUtils;
 
-import hu.icellmobilsoft.coffee.se.api.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
+import hu.icellmobilsoft.coffee.se.api.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.tool.utils.json.JsonUtil;
 
 /**
@@ -92,7 +93,7 @@ public class GZIPUtil {
             return null;
         }
         ByteArrayInputStream inputStream = new ByteArrayInputStream(data);
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream(Math.max(data.length >> 3, 32));
         GZIPOutputStream gzipOutputStream = null;
         try {
             gzipOutputStream = new GZIPOutputStream(outputStream);
@@ -118,6 +119,27 @@ public class GZIPUtil {
      *             if any error occurs
      */
     public static byte[] decompress(byte[] data) throws BaseException {
+        return decompress(data, data.length << 1);
+    }
+
+    /**
+     * Decompress the compressed byte array content
+     * <p>
+     * If the compressed data comes from a trusted source, you can even do this:
+     * 
+     * <pre>{@code
+     * GZIPUtil.decompress(data, GZIPUtil.decompressedSize(data));
+     * }</pre>
+     *
+     * @param data
+     *            input byte array
+     * @param initialBufferSize
+     *            initial buffer size of the {@link ByteArrayOutputStream}
+     * @return decompressed byte array
+     * @throws BaseException
+     *             if any error occurs
+     */
+    public static byte[] decompress(byte[] data, int initialBufferSize) throws BaseException {
         if (data == null || data.length == 0) {
             return null;
         }
@@ -125,7 +147,7 @@ public class GZIPUtil {
             throw new TechnicalException(CoffeeFaultType.GZIP_DECOMPRESSION_ERROR, "Input data is not GZIP (does not have GZIP header)");
         }
         ByteArrayInputStream inputStream = new ByteArrayInputStream(data);
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream(initialBufferSize);
         GZIPInputStream gzipInputStream = null;
         try {
             gzipInputStream = new GZIPInputStream(inputStream);
@@ -154,10 +176,27 @@ public class GZIPUtil {
      *             json parse or GZIP compile errors
      */
     public static <T> byte[] compressJson(T jsonDto) throws BaseException {
+        return compressJson(jsonDto, 32);
+    }
+
+    /**
+     * Compress JSON DTO object to binary. Input object is parsed with ({@link JsonUtil#toJson(Object, Writer)}
+     *
+     * @param <T>
+     *            Input DTO class type
+     * @param jsonDto
+     *            dto object, expected to json serialize
+     * @param initialBufferSize
+     *            initial buffer size of the {@link ByteArrayOutputStream}
+     * @return GZIP compressed binary
+     * @throws BaseException
+     *             json parse or GZIP compile errors
+     */
+    public static <T> byte[] compressJson(T jsonDto, int initialBufferSize) throws BaseException {
         if (jsonDto == null) {
             return new byte[0];
         }
-        try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream(initialBufferSize);
                 GZIPOutputStream gzipOutputStream = new GZIPOutputStream(outputStream);
                 OutputStreamWriter writer = new OutputStreamWriter(gzipOutputStream, StandardCharsets.UTF_8)) {
             JsonUtil.toJson(jsonDto, writer);

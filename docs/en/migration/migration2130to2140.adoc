@@ -9,3 +9,12 @@ coff:ee v2.13.0 -> v2.14.0 migration description, news, changes
 
 === Migration
 The changes are backwards compatible and do not require any migration.
+
+== coffee-tool
+
+* `GZIPUtil` methods got overloaded versions with `initialBufferSize`, so if you have an estimated output size,
+you can greatly reduce heap garbage generation for large files.
+Also, the old methods use heuristics based on the intput data, to calculate the `initialBufferSize`.
+
+=== Migration
+The changes are backwards compatible and do not require any migration.
