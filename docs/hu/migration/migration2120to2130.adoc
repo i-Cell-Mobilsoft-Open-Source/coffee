@@ -75,3 +75,157 @@ MongoDB Java Driver changelog breaking change-ek:
 ==== Migration
 
 * A MongoDB Java Driver changelog breaking change-ek kezelése szükséges: https://www.mongodb.com/docs/drivers/java/sync/current/upgrade/[Teljes frissítési útmutató]. Egyéb migrációs lépés nem szükséges.
+
+=== coffee-model
+💥 ***BREAKING CHANGE*** 💥
+
+A pom maven modul megszűnt és átmozgatásra került a frapp:ee projektbe a
+az almoduljaival együtt, úgy mint `coffee-model-base` és `coffee-model-security`.
+
+==== Migration
+* A következőkben leírtak szerint szükséges cserélni a pom.xml dependency-ket:
+
+[source,xml]
+----
+<dependency>
+    <groupId>hu.icellmobilsoft.coffee</groupId>
+    <artifactId>coffee-model-base</artifactId>
+</dependency>
+----
+->
+[source,xml]
+----
+<dependency>
+    <groupId>hu.icellmobilsoft.frappee</groupId>
+    <artifactId>frappee-model-base</artifactId>
+</dependency>
+----
+
+[source,xml]
+----
+<dependency>
+    <groupId>hu.icellmobilsoft.coffee</groupId>
+    <artifactId>coffee-model-security</artifactId>
+</dependency>
+----
+->
+[source,xml]
+----
+<dependency>
+    <groupId>hu.icellmobilsoft.frappee</groupId>
+    <artifactId>frappee-model-security</artifactId>
+</dependency>
+----
+
+
+* A következőkben leírtak szerint szükséges cserélni az importokat
+** `hu.icellmobilsoft.coffee.model.base.AbstractAuditEntity` -> `hu.icellmobilsoft.frappee.model.base.AbstractAuditEntity`
+** `hu.icellmobilsoft.coffee.model.base.AbstractEntity` -> `hu.icellmobilsoft.frappee.model.base.AbstractEntity`
+** `hu.icellmobilsoft.coffee.model.base.AbstractIdentifiedAuditEntity` -> `hu.icellmobilsoft.frappee.model.base.AbstractIdentifiedAuditEntity`
+** `hu.icellmobilsoft.coffee.model.base.AbstractIdentifiedEntity` -> `hu.icellmobilsoft.frappee.model.base.AbstractIdentifiedEntity`
+** `hu.icellmobilsoft.coffee.model.base.AbstractProvider` -> `hu.icellmobilsoft.frappee.model.base.AbstractProvider`
+** `hu.icellmobilsoft.coffee.model.base.ClassFieldsAndMethodsCache` -> `hu.icellmobilsoft.frappee.model.base.ClassFieldsAndMethodsCache`
+** `hu.icellmobilsoft.coffee.model.base.IAuditEntity` -> `hu.icellmobilsoft.frappee.model.base.IAuditEntity`
+** `hu.icellmobilsoft.coffee.model.base.IIdentifiedEntity` -> `hu.icellmobilsoft.frappee.model.base.IIdentifiedEntity`
+** `hu.icellmobilsoft.coffee.model.base.IVersionable` -> `hu.icellmobilsoft.frappee.model.base.IVersionable`
+** `hu.icellmobilsoft.coffee.model.base.annotation.CreatedBy` -> `hu.icellmobilsoft.frappee.model.base.annotation.CreatedBy`
+** `hu.icellmobilsoft.coffee.model.base.annotation.CurrentUser` -> `hu.icellmobilsoft.frappee.model.base.annotation.CurrentUser`
+** `hu.icellmobilsoft.coffee.model.base.annotation.Dictionary` -> `hu.icellmobilsoft.frappee.model.base.annotation.Dictionary`
+** `hu.icellmobilsoft.coffee.model.base.annotation.DictionaryType` -> `hu.icellmobilsoft.frappee.model.base.annotation.DictionaryType`
+** `hu.icellmobilsoft.coffee.model.base.annotation.ModifiedBy` -> `hu.icellmobilsoft.frappee.model.base.annotation.ModifiedBy`
+** `hu.icellmobilsoft.coffee.model.base.audit.AuditProvider` -> `hu.icellmobilsoft.frappee.model.base.audit.AuditProvider`
+** `hu.icellmobilsoft.coffee.model.base.exception.ProviderException` -> `hu.icellmobilsoft.frappee.model.base.exception.ProviderException`
+** `hu.icellmobilsoft.coffee.model.base.generator.EntityIdGenerator` -> `hu.icellmobilsoft.frappee.model.base.generator.EntityIdGenerator`
+** `hu.icellmobilsoft.coffee.model.base.history.AbstractHistoryEntity` -> `hu.icellmobilsoft.frappee.model.base.history.AbstractHistoryEntity`
+** `hu.icellmobilsoft.coffee.model.base.history.HistoryPk` -> `hu.icellmobilsoft.frappee.model.base.history.HistoryPk`
+** `hu.icellmobilsoft.coffee.model.base.history.enums.State` -> `hu.icellmobilsoft.frappee.model.base.history.enums.State`
+** `hu.icellmobilsoft.coffee.model.base.javatime.AbstractAuditEntity` -> `hu.icellmobilsoft.frappee.model.base.javatime.AbstractAuditEntity`
+** `hu.icellmobilsoft.coffee.model.base.javatime.AbstractIdentifiedAuditEntity` -> `hu.icellmobilsoft.frappee.model.base.javatime.AbstractIdentifiedAuditEntity`
+** `hu.icellmobilsoft.coffee.model.base.javatime.annotation.CreatedOn` -> `hu.icellmobilsoft.frappee.model.base.javatime.annotation.CreatedOn`
+** `hu.icellmobilsoft.coffee.model.base.javatime.annotation.ModifiedOn` -> `hu.icellmobilsoft.frappee.model.base.javatime.annotation.ModifiedOn`
+** `hu.icellmobilsoft.coffee.model.base.javatime.history.AbstractHistoryEntity` -> `hu.icellmobilsoft.frappee.model.base.javatime.history.AbstractHistoryEntity`
+** `hu.icellmobilsoft.coffee.model.base.javatime.listener.TimestampsProvider` -> `hu.icellmobilsoft.frappee.model.base.javatime.listener.TimestampsProvider`
+** `hu.icellmobilsoft.coffee.model.security.SecurityGroup` -> `hu.icellmobilsoft.frappee.model.security.SecurityGroup`
+** `hu.icellmobilsoft.coffee.model.security.SecurityPermission` -> `hu.icellmobilsoft.frappee.model.security.SecurityPermission`
+** `hu.icellmobilsoft.coffee.model.security.SecurityRole` -> `hu.icellmobilsoft.frappee.model.security.SecurityRole`
+** `hu.icellmobilsoft.coffee.model.security.SecurityRoleSecurityGroup` -> `hu.icellmobilsoft.frappee.model.security.SecurityRoleSecurityGroup`
+** `hu.icellmobilsoft.coffee.model.security.SecurityRoleSecurityPermission` -> `hu.icellmobilsoft.frappee.model.security.SecurityRoleSecurityPermission`
+** `hu.icellmobilsoft.coffee.model.security.SecurityUser` -> `hu.icellmobilsoft.frappee.model.security.SecurityUser`
+** `hu.icellmobilsoft.coffee.model.security.SecurityUserSecurityGroup` -> `hu.icellmobilsoft.frappee.model.security.SecurityUserSecurityGroup`
+** `hu.icellmobilsoft.coffee.model.security.SecurityUserSecurityRole` -> `hu.icellmobilsoft.frappee.model.security.SecurityUserSecurityRole`
+** `hu.icellmobilsoft.coffee.model.security.enums.UserStatus` -> `hu.icellmobilsoft.frappee.model.security.enums.UserStatus`
+
+=== coffee-jpa
+💥 ***BREAKING CHANGE*** 💥
+
+A maven modul megszűnt és átmozgatásra került a frapp:ee projektbe.
+
+==== Migration
+* A következőkben leírtak szerint szükséges cserélni a pom.xml dependency-ket:
+
+[source,xml]
+----
+<dependency>
+    <groupId>hu.icellmobilsoft.coffee</groupId>
+    <artifactId>coffee-jpa</artifactId>
+</dependency>
+----
+->
+[source,xml]
+----
+<dependency>
+    <groupId>hu.icellmobilsoft.frappee</groupId>
+    <artifactId>frappee-jpa-util</artifactId>
+</dependency>
+----
+
+* A következőkben leírtak szerint szükséges cserélni az importokat
+** `hu.icellmobilsoft.coffee.jpa.annotation.Transactional` -> `hu.icellmobilsoft.frappee.jpa.util.annotation.Transactional`
+** `hu.icellmobilsoft.coffee.jpa.health.DatabaseHealth` -> `hu.icellmobilsoft.frappee.jpa.util.health.DatabaseHealth`
+** `hu.icellmobilsoft.coffee.jpa.health.DatabaseHealthConstant` -> `hu.icellmobilsoft.frappee.jpa.util.health.DatabaseHealthConstant`
+** `hu.icellmobilsoft.coffee.jpa.health.DatabaseHealthResourceConfig` -> `hu.icellmobilsoft.frappee.jpa.util.health.DatabaseHealthResourceConfig`
+** `hu.icellmobilsoft.coffee.jpa.health.DatabasePoolHealth` -> `hu.icellmobilsoft.frappee.jpa.util.health.DatabasePoolHealth`
+** `hu.icellmobilsoft.coffee.jpa.helper.TransactionHelper` -> `hu.icellmobilsoft.frappee.jpa.util.helper.TransactionHelper`
+** `hu.icellmobilsoft.coffee.jpa.service.BaseService` -> `hu.icellmobilsoft.frappee.jpa.util.service.BaseService`
+** `hu.icellmobilsoft.coffee.jpa.sql.entity.EntityHelper` -> `hu.icellmobilsoft.frappee.jpa.util.sql.entity.EntityHelper`
+** `hu.icellmobilsoft.coffee.jpa.sql.paging.PagingResult` -> `hu.icellmobilsoft.frappee.jpa.util.sql.paging.PagingResult`
+** `hu.icellmobilsoft.coffee.jpa.sql.paging.PagingUtil` -> `hu.icellmobilsoft.frappee.jpa.util.sql.paging.PagingUtil`
+** `hu.icellmobilsoft.coffee.jpa.sql.paging.QueryMetaData` -> `hu.icellmobilsoft.frappee.jpa.util.sql.paging.QueryMetaData`
+** `hu.icellmobilsoft.coffee.jpa.util.JpaUtil` -> `hu.icellmobilsoft.frappee.jpa.util.JpaUtil`
+** `hu.icellmobilsoft.coffee.jpa.util.ReflectionUtils` -> `hu.icellmobilsoft.frappee.jpa.util.ReflectionUtils`
+** `hu.icellmobilsoft.coffee.jpa.service.BaseServiceTest` -> `hu.icellmobilsoft.frappee.jpa.util.service.BaseServiceTest`
+
+=== coffee-system
+💥 ***BREAKING CHANGE*** 💥
+
+A pom maven modul megszűnt és átmozgatásra került a frapp:ee projektbe a
+az almoduljával együtt, úgy mint `coffee-system-jpa`.
+
+==== Migration
+* A következőkben leírtak szerint szükséges cserélni a pom.xml dependency-t:
+
+[source,xml]
+----
+<dependency>
+    <groupId>hu.icellmobilsoft.coffee</groupId>
+    <artifactId>coffee-system-jpa</artifactId>
+</dependency>
+----
+->
+[source,xml]
+----
+<dependency>
+    <groupId>hu.icellmobilsoft.frappee</groupId>
+    <artifactId>frappee-system-jpa</artifactId>
+</dependency>
+----
+
+* A következőkben leírtak szerint szükséges cserélni az importokat
+
+** `hu.icellmobilsoft.coffee.system.jpa.converter.Converter` -> `hu.icellmobilsoft.frappee.system.jpa.converter.Converter`
+** `hu.icellmobilsoft.coffee.system.jpa.converter.DtoAuditConverter` -> `hu.icellmobilsoft.frappee.system.jpa.converter.DtoAuditConverter`
+** `hu.icellmobilsoft.coffee.system.jpa.converter.DtoConverter` -> `hu.icellmobilsoft.frappee.system.jpa.converter.DtoConverter`
+** `hu.icellmobilsoft.coffee.system.jpa.converter.IEntityConverter` -> `hu.icellmobilsoft.frappee.system.jpa.converter.IEntityConverter`
+** `hu.icellmobilsoft.coffee.system.jpa.converter.IRequestConverter` -> `hu.icellmobilsoft.frappee.system.jpa.converter.IRequestConverter`
+** `hu.icellmobilsoft.coffee.system.jpa.converter.IResponseConverter` -> `hu.icellmobilsoft.frappee.system.jpa.converter.IResponseConverter`
+** `hu.icellmobilsoft.coffee.system.jpa.converter.list.CommonIdListTypeConverter` -> `hu.icellmobilsoft.frappee.system.jpa.converter.list.CommonIdListTypeConverter`

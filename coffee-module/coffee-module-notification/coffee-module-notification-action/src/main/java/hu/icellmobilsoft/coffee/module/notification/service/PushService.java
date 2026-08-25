@@ -24,9 +24,9 @@ import java.io.Serializable;
 import jakarta.enterprise.context.Dependent;
 import jakarta.inject.Inject;
 
-import hu.icellmobilsoft.coffee.jpa.service.BaseService;
 import hu.icellmobilsoft.coffee.module.notification.model.Push;
 import hu.icellmobilsoft.coffee.module.notification.repository.PushRepository;
+import hu.icellmobilsoft.frappee.jpa.util.service.BaseService;
 
 /**
  * Service for {@link Push} functionality. Represents only DB operations

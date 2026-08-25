@@ -11,9 +11,11 @@
 	<name>Coff:ee Module - Notification - Action</name>
 
 	<dependencies>
+<!--		TODO -->
 		<dependency>
-			<groupId>hu.icellmobilsoft.coffee</groupId>
-			<artifactId>coffee-model-base</artifactId>
+			<groupId>hu.icellmobilsoft.frappee</groupId>
+			<artifactId>frappee-model-base</artifactId>
+			<version>2.1.0-SNAPSHOT</version>
 		</dependency>
 
 		<!-- If the DTO generation occurs at the project level, then this dependency 
@@ -27,9 +29,11 @@
 			<artifactId>coffee-module-document-dto</artifactId>
 		</dependency>
 
+<!--		TODO -->
 		<dependency>
-			<groupId>hu.icellmobilsoft.coffee</groupId>
-			<artifactId>coffee-jpa</artifactId>
+			<groupId>hu.icellmobilsoft.frappee</groupId>
+			<artifactId>frappee-jpa-util</artifactId>
+			<version>2.1.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>hu.icellmobilsoft.coffee</groupId>

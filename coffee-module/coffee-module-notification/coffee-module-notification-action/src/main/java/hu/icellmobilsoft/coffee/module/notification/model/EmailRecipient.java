@@ -28,8 +28,8 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
-import hu.icellmobilsoft.coffee.model.base.AbstractIdentifiedAuditEntity;
 import hu.icellmobilsoft.coffee.module.notification.model.enums.RecipientType;
+import hu.icellmobilsoft.frappee.model.base.AbstractIdentifiedAuditEntity;
 
 /**
  * email recipient table entity

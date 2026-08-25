@@ -34,12 +34,12 @@ import hu.icellmobilsoft.coffee.dto.exception.BONotFoundException;
 import hu.icellmobilsoft.coffee.dto.exception.InvalidParameterException;
 import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
-import hu.icellmobilsoft.coffee.jpa.service.BaseService;
 import hu.icellmobilsoft.coffee.module.document.model.TemplateData;
 import hu.icellmobilsoft.coffee.module.document.model.enums.TemplateDataType;
 import hu.icellmobilsoft.coffee.module.document.repository.TemplateDataRepository;
 import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
 import hu.icellmobilsoft.coffee.tool.utils.date.DateUtil;
+import hu.icellmobilsoft.frappee.jpa.util.service.BaseService;
 
 /**
  * Service for TemplateData functionality. Represents only DB operations

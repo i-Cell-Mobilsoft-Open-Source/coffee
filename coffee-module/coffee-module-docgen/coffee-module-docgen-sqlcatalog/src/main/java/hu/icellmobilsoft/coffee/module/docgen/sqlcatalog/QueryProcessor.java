@@ -32,7 +32,6 @@ import javax.lang.model.element.TypeElement;
 import jakarta.persistence.QueryHint;
 
 import org.apache.deltaspike.data.api.Query;
-import org.hibernate.jpa.HibernateHints;
 
 import com.google.auto.service.AutoService;
 
@@ -72,7 +71,7 @@ public class QueryProcessor extends AbstractDocGenProcessor<SqlCatalogConfig, Sq
         String methodName = String.valueOf(element.getSimpleName());
         String jpql = element.getAnnotation(Query.class).value();
         String comment = Arrays.stream(element.getAnnotation(Query.class).hints())
-                .filter(hint -> hint.name().equals(HibernateHints.HINT_COMMENT))
+                .filter(hint -> hint.name().equals("org.hibernate.comment"))
                 .map(QueryHint::value)
                 .findFirst()
                 .orElse("");

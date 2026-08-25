@@ -184,9 +184,6 @@
 		<module>coffee-tool</module>
 		<module>coffee-configuration</module>
 		<module>coffee-rest</module>
-		<module>coffee-model</module>
-		<module>coffee-jpa</module>
-		<module>coffee-system</module>
 		<module>coffee-deltaspike</module>
 		<module>coffee-grpc</module>
 		<module>coffee-quarkus-extensions</module>

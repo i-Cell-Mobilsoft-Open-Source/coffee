@@ -27,11 +27,6 @@
             <artifactId>coffee-deltaspike-data</artifactId>
             <scope>provided</scope>
         </dependency>
-        <dependency>
-            <groupId>org.hibernate.orm</groupId>
-            <artifactId>hibernate-core</artifactId>
-            <scope>provided</scope>
-        </dependency>
 
         <dependency>
             <groupId>org.junit.jupiter</groupId>

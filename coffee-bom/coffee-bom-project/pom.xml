@@ -47,27 +47,12 @@
             </dependency>
             <dependency>
                 <groupId>hu.icellmobilsoft.coffee</groupId>
-                <artifactId>coffee-model-base</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>hu.icellmobilsoft.coffee</groupId>
-                <artifactId>coffee-model-security</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>hu.icellmobilsoft.coffee</groupId>
                 <artifactId>coffee-deltaspike-message</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>hu.icellmobilsoft.coffee</groupId>
                 <artifactId>coffee-deltaspike-data</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>hu.icellmobilsoft.coffee</groupId>
-                <artifactId>coffee-jpa</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -153,11 +138,6 @@
             <dependency>
                 <groupId>hu.icellmobilsoft.coffee</groupId>
                 <artifactId>coffee-se-io</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>hu.icellmobilsoft.coffee</groupId>
-                <artifactId>coffee-system-jpa</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

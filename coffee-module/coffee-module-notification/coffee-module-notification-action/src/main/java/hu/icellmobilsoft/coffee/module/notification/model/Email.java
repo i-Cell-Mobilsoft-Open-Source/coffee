@@ -29,7 +29,7 @@ import jakarta.persistence.TemporalType;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
-import hu.icellmobilsoft.coffee.model.base.AbstractIdentifiedAuditEntity;
+import hu.icellmobilsoft.frappee.model.base.AbstractIdentifiedAuditEntity;
 
 /**
  * email table entity

@@ -23,7 +23,6 @@ import jakarta.persistence.QueryHint;
 
 import org.apache.deltaspike.data.api.Query;
 import org.apache.deltaspike.data.api.Repository;
-import org.hibernate.jpa.HibernateHints;
 
 @Repository
 public interface ExampleRepository {
@@ -31,7 +30,7 @@ public interface ExampleRepository {
     @Query("SELECT o From Object o WHERE o.id = :id")
     Object findById(String id);
 
-    @Query(value = "SELECT o From Object o WHERE o.name = :name", hints = { @QueryHint(name = HibernateHints.HINT_COMMENT, value = "EXAMPLE-ID"),
-            @QueryHint(name = HibernateHints.HINT_READ_ONLY, value = true + "") })
+    @Query(value = "SELECT o From Object o WHERE o.name = :name", hints = { @QueryHint(name = "org.hibernate.comment", value = "EXAMPLE-ID"),
+            @QueryHint(name = "org.hibernate.readOnly", value = true + "") })
     Object findByName(String name);
 }

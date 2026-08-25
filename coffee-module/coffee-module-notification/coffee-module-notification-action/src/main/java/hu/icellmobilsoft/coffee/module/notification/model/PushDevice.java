@@ -30,8 +30,8 @@ import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import jakarta.validation.constraints.Size;
 
-import hu.icellmobilsoft.coffee.model.base.AbstractIdentifiedAuditEntity;
 import hu.icellmobilsoft.coffee.module.notification.model.enums.DeviceType;
+import hu.icellmobilsoft.frappee.model.base.AbstractIdentifiedAuditEntity;
 
 /**
  * push device table entity
