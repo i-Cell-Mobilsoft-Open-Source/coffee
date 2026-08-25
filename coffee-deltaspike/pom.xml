@@ -14,6 +14,7 @@
 	<modules>
 		<module>coffee-deltaspike-message</module>
 		<module>coffee-deltaspike-data</module>
+		<module>coffee-deltaspike-api</module>
 	</modules>
 
 	<dependencyManagement>
