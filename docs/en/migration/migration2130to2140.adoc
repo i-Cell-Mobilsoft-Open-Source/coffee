@@ -18,3 +18,10 @@ Also, the old methods use heuristics based on the input data, to calculate the `
 
 === Migration
 The changes are backwards compatible and do not require any migration.
+
+== coffee-deltaspike-api
+
+* API classes have been extracted from `coffee-deltaspike-data` module to new `coffee-deltaspike-api` module.
+
+=== Migration
+The changes are backwards compatible and do not require any migration.
