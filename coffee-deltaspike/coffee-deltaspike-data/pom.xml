@@ -13,6 +13,10 @@
     <dependencies>
         <dependency>
             <groupId>hu.icellmobilsoft.coffee</groupId>
+            <artifactId>coffee-deltaspike-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>hu.icellmobilsoft.coffee</groupId>
             <artifactId>coffee-cdi</artifactId>
         </dependency>
         <dependency>

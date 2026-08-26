@@ -17,3 +17,10 @@ Valamint a régi metódusok a bemeneti adatokon alapuló heurisztikákat haszná
 
 === Migration
 A változtatások visszafelé kompatibilisek, migrációs lépés nem szükséges.
+
+== coffee-deltaspike-api
+
+* API osztályok ki lettek emelve a `coffee-deltaspike-data` modulból az új `coffee-deltaspike-api` modulba.
+
+=== Migration
+A változtatások visszafelé kompatibilisek, migrációs lépés nem szükséges.
