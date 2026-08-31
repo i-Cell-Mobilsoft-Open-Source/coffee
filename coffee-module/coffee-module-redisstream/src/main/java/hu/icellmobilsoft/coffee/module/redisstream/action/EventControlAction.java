@@ -123,20 +123,22 @@ public abstract class EventControlAction<T> {
             if (size.isPresent() && size.get() > 1) {
                 // If we are not going to publish, we increase the TTL of the pipe identifier key,
                 // so we know there are no new list items that
-                AbstractPipeline pipeline = redisManager.run(UnifiedJedis::pipelined, "pipelined serialStreamEvent expire").orElseThrow();
-                pipeline.expire(createPipeIdKey(key), secondsToExpire);
-                pipeline.expire(key, secondsToExpire, ExpiryOption.NX);
-                pipeline.sync();
-                return false;
+                try (AbstractPipeline pipeline = redisManager.run(UnifiedJedis::pipelined, "pipelined serialStreamEvent expire").orElseThrow()) {
+                    pipeline.expire(createPipeIdKey(key), secondsToExpire);
+                    pipeline.expire(key, secondsToExpire, ExpiryOption.NX);
+                    pipeline.sync();
+                    return false;
+                }
             }
 
             // If the list has exactly one element after the rpush operation, we create or update the unique key used by the pipe consumer.
             // This identifier ensures that the pipe consumer can decide whether to continue the processing loop or stop,
             // as a new event is expected to arrive.
-            AbstractPipeline pipeline = redisManager.run(UnifiedJedis::pipelined, "pipelined serialStreamEvent setex").orElseThrow();
-            pipeline.setex(createPipeIdKey(key), secondsToExpire, RandomUtil.generateToken());
-            pipeline.expire(key, secondsToExpire, ExpiryOption.NX);
-            pipeline.sync();
+            try (AbstractPipeline pipeline = redisManager.run(UnifiedJedis::pipelined, "pipelined serialStreamEvent setex").orElseThrow()) {
+                pipeline.setex(createPipeIdKey(key), secondsToExpire, RandomUtil.generateToken());
+                pipeline.expire(key, secondsToExpire, ExpiryOption.NX);
+                pipeline.sync();
+            }
         } finally {
             redisManager.closeConnection();
         }
