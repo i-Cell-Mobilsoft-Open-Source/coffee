@@ -32,7 +32,7 @@
 
         <version.io.etcd.jetcd-core>0.8.5</version.io.etcd.jetcd-core>
 
-        <version.io.micrometer>1.15.0</version.io.micrometer>
+        <version.io.micrometer>1.15.12</version.io.micrometer>
         <version.org.eclipse.yasson>3.0.4</version.org.eclipse.yasson>
         <version.jedis>7.2.1</version.jedis>
         <version.org.mongodb.driver.sync>5.5.2</version.org.mongodb.driver.sync>
