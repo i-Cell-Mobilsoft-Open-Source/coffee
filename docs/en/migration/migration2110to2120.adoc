@@ -137,3 +137,9 @@ and initialized with default values.
 
 ==== Migration
 * If you want the old `LogContainer` behaviour back, set the `coffee.logger.logContainer.maxSize` konfig to `2147483647`. But this is highly discouraged.
+
+=== coffee-module-redisstream
+To close `AbstractPipeline` objects became required with usage of `UnifiedJedis` to avoid running out of redis connections.
+
+==== Migration
+On projects should check `redis.clients.jedis.AbstractPipeline` is closed after usage.
