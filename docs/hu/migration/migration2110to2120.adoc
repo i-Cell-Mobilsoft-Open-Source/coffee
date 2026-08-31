@@ -142,3 +142,9 @@ A változtatások nem eredményeznek átállási munkálatokat, visszafelé komp
 
 ==== Migration
 Ha a régi `LogContainer` viselkedést szeretnénk visszakapni, a `coffee.logger.logContainer.maxSize` konfigurációs kulcsot kell `2147483647`-re beállítani. De ezt inkább nem javasoljuk.
+
+=== coffee-module-redisstream
+`UnifiedJedis` bevezetésével szükségessé vált az `AbstractPipeline` objektumok lezárása, a redis connection-ök elfogyásának megakadályozására.
+
+==== Migration
+Projekteken ellenőrizni kell, hogy a `redis.clients.jedis.AbstractPipeline` használat után lezárásra kerüljön.
