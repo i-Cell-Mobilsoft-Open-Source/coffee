@@ -109,11 +109,12 @@ public abstract class AbstractRedisStreamPipeConsumerExecutor extends RedisStrea
     }
 
     private Optional<String> move(RedisManager redisManager, String listKey, ListDirection from, ListDirection to) throws BaseException {
-        AbstractPipeline pipeline = redisManager.run(UnifiedJedis::pipelined, "pipelined move").orElseThrow();
-        Response<String> res = pipeline.lmove(listKey, listKey, from, to);
-        pipeline.expire(listKey, getTtl());
-        pipeline.sync();
-        return Optional.ofNullable(res.get());
+        try (AbstractPipeline pipeline = redisManager.run(UnifiedJedis::pipelined, "pipelined move").orElseThrow()) {
+            Response<String> res = pipeline.lmove(listKey, listKey, from, to);
+            pipeline.expire(listKey, getTtl());
+            pipeline.sync();
+            return Optional.ofNullable(res.get());
+        }
     }
 
     private void xExecuteOnStream(StreamEntry streamEntry, BaseExceptionFunction2<RedisManager, String, Optional<String>> function)

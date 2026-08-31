@@ -229,9 +229,8 @@ public class RedisStreamPublisher {
         }
         checkRedisManager();
 
-        try (RedisManagerConnection ignored = redisManager.initConnection()) {
+        try (RedisManagerConnection ignored = redisManager.initConnection(); AbstractPipeline pipeline = initPipeline()) {
             List<Response<StreamEntryID>> responses = new ArrayList<>(publications.size());
-            AbstractPipeline pipeline = initPipeline();
             int i = 1;
             for (RedisStreamPublication publication : publications) {
                 Response<StreamEntryID> response;
@@ -439,17 +438,17 @@ public class RedisStreamPublisher {
     protected List<Optional<StreamEntryID>> publishPipelinedInActiveConnection(String streamGroup, List<String> streamMessages,
             Map<String, String> parameters) throws BaseException {
 
-        AbstractPipeline pipeline = initPipeline();
-
-        int i = 1;
-        List<Response<StreamEntryID>> responses = new ArrayList<>(streamMessages.size());
-        for (String streamMessage : streamMessages) {
-            Response<StreamEntryID> response = publishThroughPipeline(pipeline, streamGroup, createJedisMessage(streamMessage, parameters));
-            responses.add(response);
-            i = syncPipelineIfNeeded(pipeline, streamMessages.size(), i);
+        try (AbstractPipeline pipeline = initPipeline()) {
+            int i = 1;
+            List<Response<StreamEntryID>> responses = new ArrayList<>(streamMessages.size());
+            for (String streamMessage : streamMessages) {
+                Response<StreamEntryID> response = publishThroughPipeline(pipeline, streamGroup, createJedisMessage(streamMessage, parameters));
+                responses.add(response);
+                i = syncPipelineIfNeeded(pipeline, streamMessages.size(), i);
+            }
+            syncPipelineIfNeeded(pipeline, streamMessages.size(), i);
+            return getStreamEntryIds(responses);
         }
-        syncPipelineIfNeeded(pipeline, streamMessages.size(), i);
-        return getStreamEntryIds(responses);
     }
 
     /**
@@ -671,8 +670,7 @@ public class RedisStreamPublisher {
      * 
      */
     protected int syncPipelineIfNeeded(AbstractPipeline pipeline, int messagesToSend, int messagesSent) {
-        if ((messagesSent < messagesToSend && messagesSent % getPipelineSize() == 0)
-                || messagesSent == messagesToSend) {
+        if ((messagesSent < messagesToSend && messagesSent % getPipelineSize() == 0) || messagesSent == messagesToSend) {
             pipeline.sync();
         }
         messagesSent++;
