@@ -25,3 +25,8 @@ The changes are backwards compatible and do not require any migration.
 
 === Migration
 The changes are backwards compatible and do not require any migration.
+
+== maintenance
+
+* The code can be compiled with JDK 25
+* Upgraded github actions to latest versions

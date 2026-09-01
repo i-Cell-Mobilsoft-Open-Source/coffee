@@ -22,6 +22,7 @@
 		<project.scm.id>icell-github-server</project.scm.id>
 		<sonar.junit.reportPaths>${surefire.reportsDir}, ${failsafe.reportsDir}</sonar.junit.reportPaths>
 		<sonar.jacoco.reportPaths>${jacoco.ut.execution.data.file}, ${jacoco.it.execution.data.file}</sonar.jacoco.reportPaths>
+		<maven.compiler.release>17</maven.compiler.release>
 	</properties>
 
 	<scm>
