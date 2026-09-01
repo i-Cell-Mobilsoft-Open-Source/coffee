@@ -2,6 +2,10 @@
 
 coff:ee v2.13.0 -> v2.14.0 migration description, news, changes
 
+== Global
+
+* ETCD driver version bump 0.8.5 -> 0.8.6
+* io.grpc version bump 1.70.0 -> 1.76.0
 
 == coffee-se-util
 
