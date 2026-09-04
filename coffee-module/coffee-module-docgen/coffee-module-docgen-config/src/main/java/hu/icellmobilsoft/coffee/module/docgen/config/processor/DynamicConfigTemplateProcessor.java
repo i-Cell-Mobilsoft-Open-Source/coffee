@@ -61,6 +61,8 @@ import hu.icellmobilsoft.coffee.module.docgen.config.writer.impl.ConfigDocAsciiD
 @AutoService(Processor.class)
 public class DynamicConfigTemplateProcessor extends AbstractProcessor {
 
+    private static final List<String> generatedTemplates = new ArrayList<>();
+
     /**
      * Default constructor, constructs a new object.
      */
@@ -99,6 +101,8 @@ public class DynamicConfigTemplateProcessor extends AbstractProcessor {
         try {
             FileObject fileObject = processingEnv.getFiler().createResource(StandardLocation.CLASS_OUTPUT, "", fileName);
 
+            generatedTemplates.add(fileObject.getName());
+
             try (Writer writer = fileObject.openWriter()) {
                 docWriter.write(lDataList, writer);
             }
@@ -134,4 +138,12 @@ public class DynamicConfigTemplateProcessor extends AbstractProcessor {
         return Set.of(DynamicConfigTemplate.class.getCanonicalName());
     }
 
+    /**
+     * Returns the list of the generated template file paths
+     * 
+     * @return the list of the generated template file paths
+     */
+    public static List<String> getGeneratedTemplates() {
+        return generatedTemplates;
+    }
 }

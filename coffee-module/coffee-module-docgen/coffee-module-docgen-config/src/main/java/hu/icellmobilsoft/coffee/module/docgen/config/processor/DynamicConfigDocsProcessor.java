@@ -24,6 +24,7 @@ import java.io.InputStream;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -66,8 +67,8 @@ import hu.icellmobilsoft.coffee.module.docgen.config.writer.impl.DynamicAsciiDoc
 @AutoService(Processor.class)
 public class DynamicConfigDocsProcessor extends AbstractProcessor {
 
-    private Set<DynamicDocData> docHeaders = new HashSet<>();
-    private Map<String, String> templateMap = new HashMap<>();
+    private final Set<DynamicDocData> docHeaders = new HashSet<>();
+    private final Map<String, String> templateMap = new HashMap<>();
 
     /**
      * Default constructor, constructs a new object.
@@ -81,13 +82,13 @@ public class DynamicConfigDocsProcessor extends AbstractProcessor {
         // @DynamicConfigDocs processing annotations
         docHeaders.addAll(processDynamicConfigDocsAnnotations(annotations, roundEnv));
 
-        // Reading referenced templates
-        for (DynamicDocData header : docHeaders) {
-            templateMap.computeIfAbsent(header.getTemplateClassName(), this::readTemplate);
-        }
         // We write out the file in the last round, as sometimes the template and the dynamic documentation might compile together.
         // Thus, in a given round, reading the template might fail, but by the last round, all should be available.
         if (roundEnv.processingOver()) {
+            // Reading referenced templates
+            for (DynamicDocData header : docHeaders) {
+                templateMap.computeIfAbsent(header.getTemplateClassName(), this::readTemplate);
+            }
             // We collect the templates and sort them
             List<DynamicDocData> dataToWrite = collectDataToWrite(docHeaders, templateMap);
 
@@ -138,7 +139,7 @@ public class DynamicConfigDocsProcessor extends AbstractProcessor {
 
     private String readTemplate(String templateClass) {
         String templateFileName = DynamicConfigTemplate.TEMPLATE_DIR + templateClass + DynamicConfigTemplate.TEMPLATE_TYPE;
-        InputStream resourceAsStream = templateClassLoader(templateClass).getResourceAsStream(templateFileName);
+        InputStream resourceAsStream = getClass().getClassLoader().getResourceAsStream(templateFileName);
         if (resourceAsStream != null) {
             try {
                 return IOUtils.toString(resourceAsStream, StandardCharsets.UTF_8);
@@ -146,19 +147,21 @@ public class DynamicConfigDocsProcessor extends AbstractProcessor {
                 String msg = MessageFormat.format("Could not read template for class:[{0}], error: [{1}]", templateClass, e.getMessage());
                 processingEnv.getMessager().printMessage(Diagnostic.Kind.WARNING, msg);
             }
+        } else {
+            // File not in the classpath -> should be in current module
+            for (String generatedTemplate : DynamicConfigTemplateProcessor.getGeneratedTemplates()) {
+                if (generatedTemplate.endsWith(templateFileName)) {
+                    Path path = Paths.get(generatedTemplate);
+                    try {
+                        return Files.readString(path);
+                    } catch (IOException e) {
+                        String msg = MessageFormat.format("Could not read template for class:[{0}], error: [{1}]", templateClass, e.getMessage());
+                        processingEnv.getMessager().printMessage(Diagnostic.Kind.WARNING, msg);
+                    }
+                }
+            }
         }
         return null;
-    }
-
-    private ClassLoader templateClassLoader(String templateClass) {
-        if (StringUtils.isBlank(templateClass)) {
-            return getClass().getClassLoader();
-        }
-        try {
-            return ClassUtils.getClass(templateClass).getClassLoader();
-        } catch (ClassNotFoundException e) {
-            return getClass().getClassLoader();
-        }
     }
 
     private void writeConfigDocFile(List<DynamicDocData> dataList, IDocWriter<DynamicDocData> docWriter, ConfigDocConfig config) {

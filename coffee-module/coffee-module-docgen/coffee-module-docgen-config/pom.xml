@@ -10,6 +10,7 @@
     <artifactId>coffee-module-docgen-config</artifactId>
 
     <name>Coff:ee Module - Docgen - Config</name>
+
     <properties>
         <version.google.auto-service>1.0.1</version.google.auto-service>
     </properties>
