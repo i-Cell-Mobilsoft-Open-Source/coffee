@@ -24,3 +24,8 @@ A változtatások visszafelé kompatibilisek, migrációs lépés nem szüksége
 
 === Migration
 A változtatások visszafelé kompatibilisek, migrációs lépés nem szükséges.
+
+== karbantartás
+
+* A kód már fordítható JDK 25-tel
+* github action-ök upgrade-elve lettek a legfrissebb verzióra

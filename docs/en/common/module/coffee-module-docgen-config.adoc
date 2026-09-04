@@ -7,13 +7,24 @@ The purpose of this module is to generate documentation from classes containing 
 
 == Usage
 
-To use it, the sub-dependency must be added to `pom.xml`:
+To use it, the annotation processor must be added to `pom.xml`:
 [source,xml]
 ----
-<dependency>.
-    <groupId>hu.icellmobilsoft.coffee</groupId>
-    <artifactId>coffee-module-docgen-config</artifactId>
-</dependency>
+<build>
+    <plugins>
+        <plugin>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <configuration>
+                <annotationProcessorPaths>
+                    <path>
+                        <groupId>hu.icellmobilsoft.coffee</groupId>
+                        <artifactId>coffee-module-docgen-config</artifactId>
+                    </path>
+                </annotationProcessorPaths>
+            </configuration>
+        </plugin>
+    </plugins>
+</build>
 ----
 
 === For static configuration keys
@@ -200,6 +211,9 @@ This can be specified via `maven-compiler-plugin` for maven:
         <plugin>
             <artifactId>maven-compiler-plugin</artifactId>
             <configuration>
+                <annotationProcessorPaths>
+                    ...
+                </annotationProcessorPaths>
                 <compilerArgs>
                     <arg>-Acoffee.docgen.config.outputDir=${project.basedir}/../docs/</arg> #<1>
                     <arg>-Acoffee.docgen.config.outputFileName=${project.name}_config.adoc</arg> #<2>

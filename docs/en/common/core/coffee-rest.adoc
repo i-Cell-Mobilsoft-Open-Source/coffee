@@ -196,6 +196,28 @@ Since in the above example the size of the REST response should be 100 for the f
 [ERROR] .../project-sample-service/src/main/java/hu/icellmobilsoft/project/sample/service/rest/ISampleTestRest.java:[43,23] Multiple LogSpecifiers are defined for the [RESPONSE] of [postValidatorTest]! Conflicting LogSpecifiers:[[@hu.icellmobilsoft.coffee.rest.log.annotation.LogSpecifier(noLog=false, maxEntityLogSize=100, target={REQUEST, RESPONSE, CLIENT_REQUEST, CLIENT_RESPONSE}), @hu. icellmobilsoft.coffee.rest.log.annotation.LogSpecifier(noLog=false, maxEntityLogSize=5000, target={RESPONSE})]]
 ----
 
+==== Usage
+
+To use it, the annotation processor must be added to `pom.xml`:
+[source,xml]
+----
+<build>
+    <plugins>
+        <plugin>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <configuration>
+                <annotationProcessorPaths>
+                    <path>
+                        <groupId>hu.icellmobilsoft.coffee</groupId>
+                        <artifactId>coffee-rest</artifactId>
+                    </path>
+                </annotationProcessorPaths>
+            </configuration>
+        </plugin>
+    </plugins>
+</build>
+----
+
 [#common_core_coffee-rest_JaxbTool]
 == JaxbTool
 The purpose of this class is to summarize the transformations and manipulations related to XML objects.
