@@ -24,3 +24,11 @@ A változtatások visszafelé kompatibilisek, migrációs lépés nem szüksége
 
 === Migration
 A változtatások visszafelé kompatibilisek, migrációs lépés nem szükséges.
+
+
+== coffee-module-config-watcher
+
+* `reloading.properties.enableMissingFile` és `reloading.properties.watchWholeDir` konfig opció hozzáadásra került
+
+=== Migration
+* `reloading.properties.watchWholeDir`-t false-ra kell állítani a régi viselkedéshez.
