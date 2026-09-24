@@ -45,6 +45,7 @@ public class ConfigFileWatcher implements AutoCloseable {
 
     private final Thread thread;
     private final WatchService watchService;
+    private final boolean watchWholeDirectory;
     private final Collection<FileChangeListener> listeners = new ArrayList<>();
     private final AtomicBoolean running = new AtomicBoolean(true);
 
@@ -55,6 +56,24 @@ public class ConfigFileWatcher implements AutoCloseable {
      *            the file path to be monitored for changes
      */
     public ConfigFileWatcher(Path path) {
+        this(path, null);
+    }
+
+    /**
+     * Constructs a ConfigFileWatcher for the specified file path. A new thread is created to monitor file changes continuously.
+     *
+     * @param path
+     *            the file path to be monitored for changes
+     * @param config
+     *            watch options
+     */
+    public ConfigFileWatcher(Path path, Config config) {
+        if (config == null) {
+            watchWholeDirectory = false;
+        } else {
+            watchWholeDirectory = config.watchWholeDirectory;
+        }
+
         try {
             watchService = path.getFileSystem().newWatchService();
             path.getParent().register(watchService, StandardWatchEventKinds.ENTRY_MODIFY);
@@ -88,7 +107,7 @@ public class ConfigFileWatcher implements AutoCloseable {
 
             for (WatchEvent<?> event : key.pollEvents()) {
                 try {
-                    if (Files.isSameFile(path, path.getParent().resolve((Path) event.context()))) {
+                    if (watchWholeDirectory || Files.isSameFile(path, path.getParent().resolve((Path) event.context()))) {
                         listeners.forEach(listener -> listener.onFileChange(path));
                     }
                 } catch (Exception e) {
@@ -134,5 +153,30 @@ public class ConfigFileWatcher implements AutoCloseable {
          *            the file path of the modified file that triggered the event
          */
         void onFileChange(Path path);
+    }
+
+    /**
+     * Configuration options for the ConfigFileWatcher.
+     */
+    public static class Config {
+        private boolean watchWholeDirectory;
+
+        /**
+         * Default constructor
+         */
+        public Config() {
+        }
+
+        /**
+         * Sets watchWholeDirectory flag
+         * 
+         * @param watchWholeDirectory
+         *            when true, all the files in the directory are watched for changes, otherwise only the file itself is watched
+         * @return this
+         */
+        public Config withWatchWholeDirectory(boolean watchWholeDirectory) {
+            this.watchWholeDirectory = watchWholeDirectory;
+            return this;
+        }
     }
 }
