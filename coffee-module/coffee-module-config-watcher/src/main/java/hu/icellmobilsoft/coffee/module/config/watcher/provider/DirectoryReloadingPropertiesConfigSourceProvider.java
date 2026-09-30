@@ -30,10 +30,14 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+import org.eclipse.microprofile.config.Config;
+import org.eclipse.microprofile.config.ConfigProvider;
 import org.eclipse.microprofile.config.spi.ConfigSource;
 import org.eclipse.microprofile.config.spi.ConfigSourceProvider;
 
+import hu.icellmobilsoft.coffee.module.config.watcher.ConfigFileWatcher;
 import hu.icellmobilsoft.coffee.module.config.watcher.ReloadingPropertiesConfigSource;
+import hu.icellmobilsoft.coffee.se.logging.Logger;
 
 /**
  * A configuration source provider that dynamically loads and provides multiple {@link ConfigSource} instances from property files located in a
@@ -48,6 +52,7 @@ import hu.icellmobilsoft.coffee.module.config.watcher.ReloadingPropertiesConfigS
  * @since 2.13.0
  */
 public class DirectoryReloadingPropertiesConfigSourceProvider implements ConfigSourceProvider {
+    private static final Logger log = Logger.getLogger(DirectoryReloadingPropertiesConfigSourceProvider.class);
 
     /**
      * Default constructor
@@ -58,7 +63,18 @@ public class DirectoryReloadingPropertiesConfigSourceProvider implements ConfigS
 
     @Override
     public Iterable<ConfigSource> getConfigSources(ClassLoader classLoader) {
-        Path dir = Paths.get(Optional.ofNullable(System.getenv("RELOADING_PROPERTIES_FILE_DIR")).orElse("/app/config"));
+        Config config = ConfigProvider.getConfig();
+
+        Path dir = config.getOptionalValue("reloading.properties.file.dir", Path.class).orElseGet(() -> Paths.get("/app/config"));
+        boolean enableMissingFile = config.getOptionalValue("reloading.properties.enableMissingFile", boolean.class).orElse(false);
+
+        if (!Files.exists(dir)) {
+            if (enableMissingFile) {
+                log.warn("Properties dir not found: [{0}]", dir);
+                return List.of();
+            }
+            throw new IllegalArgumentException("Properties dir not found: " + dir);
+        }
 
         try (Stream<Path> fileStream = Files.list(dir)) {
             List<Path> files = fileStream.filter(path -> path.toString().endsWith(".properties")).toList();

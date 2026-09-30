@@ -31,6 +31,8 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
+import org.eclipse.microprofile.config.Config;
+import org.eclipse.microprofile.config.ConfigProvider;
 import org.eclipse.microprofile.config.spi.ConfigSource;
 
 import hu.icellmobilsoft.coffee.se.logging.Logger;
@@ -84,11 +86,32 @@ public class ReloadingPropertiesConfigSource implements ConfigSource, AutoClosea
         this.url = url;
         properties = read(url);
         try {
-            configFileWatcher = new ConfigFileWatcher(Path.of(url.toURI()));
+            configFileWatcher = createConfigFileWatcher(url);
         } catch (URISyntaxException e) {
             throw new IllegalArgumentException("Invalid config file URI: " + url, e);
         }
         configFileWatcher.addListener(path -> reloadConfig());
+    }
+
+    /**
+     * Created a config file watcher for the specified URL.
+     * 
+     * @param url
+     *            the url of the file to watch
+     * @return the created config file watcher
+     * @throws URISyntaxException
+     *             if this URL is not formatted strictly according to RFC2396 and cannot be converted to a URI.
+     */
+    protected ConfigFileWatcher createConfigFileWatcher(URL url) throws URISyntaxException {
+        Config config = ConfigProvider.getConfig();
+        ConfigFileWatcher.Config configWatcherConfig = new ConfigFileWatcher.Config();
+
+        boolean watchWholeDir = config.getOptionalValue("reloading.properties.watchWholeDir", boolean.class).orElse(true);
+        if (watchWholeDir) {
+            configWatcherConfig.withWatchWholeDirectory(true);
+        }
+
+        return new ConfigFileWatcher(Path.of(url.toURI()), configWatcherConfig);
     }
 
     /**

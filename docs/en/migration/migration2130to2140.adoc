@@ -2,7 +2,6 @@
 
 coff:ee v2.13.0 -> v2.14.0 migration description, news, changes
 
-
 == coffee-se-util
 
 * `RandomUtil.generateId` got optimized, now runs a third amount the time it used to
@@ -25,3 +24,10 @@ The changes are backwards compatible and do not require any migration.
 
 === Migration
 The changes are backwards compatible and do not require any migration.
+
+== coffee-module-config-watcher
+
+* Added `reloading.properties.enableMissingFile` and `reloading.properties.watchWholeDir` config properties
+
+=== Migration
+* `reloading.properties.watchWholeDir` should be set to false for old behavior.
