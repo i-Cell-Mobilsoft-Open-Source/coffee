@@ -31,3 +31,9 @@ The changes are backwards compatible and do not require any migration.
 
 === Migration
 * `reloading.properties.watchWholeDir` should be set to false for old behavior.
+
+== coffee-module-redisstream
+* `RedisStreamProducer` now can be applied to a method parameter, so it can be used to inject a `RedisStreamPublisher` as a constructor parameter.
+
+=== Migration
+The changes are backwards compatible and do not require any migration.
