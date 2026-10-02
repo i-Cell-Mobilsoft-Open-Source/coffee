@@ -32,3 +32,9 @@ A változtatások visszafelé kompatibilisek, migrációs lépés nem szüksége
 
 === Migration
 * `reloading.properties.watchWholeDir`-t false-ra kell állítani a régi viselkedéshez.
+
+== coffee-module-redisstream
+* A `RedisStreamProducer` mostantól metódus paraméterre is alkalmazható, így használható `RedisStreamPublisher` injektálására konstruktor paraméterként.
+
+=== Migration
+A változtatások visszafelé kompatibilisek, migrációs lépés nem szükséges.
