@@ -20,13 +20,13 @@ The default ordinal is 120, but you can also override that with a custom impleme
 * `hu.icellmobilsoft.coffee.module.config.watcher.provider.ReloadingPropertiesConfigSourceProvider`
 
 This implementation watches only one config file.
-The file can be specified with the `RELOADING_PROPERTIES_FILE` env var,
+The file can be specified with the `reloading.properties.file` config,
 or the `/app/config.properties` file will be used.
 
 * `hu.icellmobilsoft.coffee.module.config.watcher.provider.DirectoryReloadingPropertiesConfigSourceProvider`
 
 This implementation watches a whole config directory (only the `.properties` files).
-The directory can be specified with the `RELOADING_PROPERTIES_FILE_DIR` env var,
+The directory can be specified with the `reloading.properties.file.dir` config
 or the `/app/config` dir will be used.
 
 TIP: If you inject @ConfigProperty inside @ApplicationScope-d classes, you have to reload this field manually,
@@ -34,3 +34,20 @@ or inject them as `jakarta.enterprise.inject.Instance`
 
 The file modifications are watched with the `hu.icellmobilsoft.coffee.module.config.watcher.ConfigFileWatcher` class
 which can also be used to watch other files too. e.g. json configs
+
+== Config
+
+|===
+|Key |Description |Default
+
+|reloading.properties.enableMissingFile
+|If the given file is missing and this config is true, the code doesn't throw an exception, only logs a warning
+|false
+
+|reloading.properties.watchWholeDir
+|If this is false, the watcher only reloads the config when the given file modified.
+If this is true, then it reloads on any file change on the same directory.
+This is useful when used with kubernetes automatic config map file updates: https://oneuptime.com/blog/post/2026-02-02-kubernetes-configmap-hot-reload/view
+|true
+
+|===

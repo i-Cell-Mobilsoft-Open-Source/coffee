@@ -21,15 +21,19 @@ package hu.icellmobilsoft.coffee.module.config.watcher.provider;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
 
+import org.eclipse.microprofile.config.Config;
+import org.eclipse.microprofile.config.ConfigProvider;
 import org.eclipse.microprofile.config.spi.ConfigSource;
 import org.eclipse.microprofile.config.spi.ConfigSourceProvider;
 
 import hu.icellmobilsoft.coffee.module.config.watcher.ReloadingPropertiesConfigSource;
+import hu.icellmobilsoft.coffee.se.logging.Logger;
 
 /**
  * Provides an implementation of the {@link ConfigSourceProvider} interface that loads a single properties file as a configuration source. The
@@ -40,6 +44,7 @@ import hu.icellmobilsoft.coffee.module.config.watcher.ReloadingPropertiesConfigS
  * @since 2.13.0
  */
 public class ReloadingPropertiesConfigSourceProvider implements ConfigSourceProvider {
+    private static final Logger log = Logger.getLogger(ReloadingPropertiesConfigSourceProvider.class);
 
     /**
      * Default constructor
@@ -50,7 +55,18 @@ public class ReloadingPropertiesConfigSourceProvider implements ConfigSourceProv
 
     @Override
     public Iterable<ConfigSource> getConfigSources(ClassLoader classLoader) {
-        Path path = Paths.get(Optional.ofNullable(System.getenv("RELOADING_PROPERTIES_FILE")).orElse("/app/config.properties"));
+        Config config = ConfigProvider.getConfig();
+
+        Path path = config.getOptionalValue("reloading.properties.file", Path.class).orElseGet(() -> Paths.get("/app/config.properties"));
+        boolean enableMissingFile = config.getOptionalValue("reloading.properties.enableMissingFile", boolean.class).orElse(false);
+
+        if (!Files.exists(path)) {
+            if (enableMissingFile) {
+                log.warn("Properties file not found: [{0}]", path);
+                return List.of();
+            }
+            throw new IllegalArgumentException("Properties file not found: " + path);
+        }
 
         try {
             return List.of(new ReloadingPropertiesConfigSource(path.toUri().toURL()));
