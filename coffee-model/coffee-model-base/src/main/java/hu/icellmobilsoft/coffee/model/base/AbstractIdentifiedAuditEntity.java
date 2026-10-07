@@ -20,12 +20,10 @@
 package hu.icellmobilsoft.coffee.model.base;
 
 import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
 
-import org.hibernate.annotations.GenericGenerator;
+import hu.icellmobilsoft.coffee.model.base.generator.CoffeeIdGenerator;
 
 /**
  * Abstract AbstractIdentifiedAuditEntity class.
@@ -48,9 +46,8 @@ public abstract class AbstractIdentifiedAuditEntity extends AbstractAuditEntity<
      * Primary key of the entity
      */
     @Id
+    @CoffeeIdGenerator
     @Column(name = "X__ID", length = 30)
-    @GenericGenerator(name = "entity-id-generator", strategy = "hu.icellmobilsoft.coffee.model.base.generator.EntityIdGenerator")
-    @GeneratedValue(generator = "entity-id-generator", strategy = GenerationType.IDENTITY)
     private String id;
 
     /**

@@ -13,10 +13,9 @@
     <name>Coff:ee BOM - Jakarta</name>
 
     <properties>
-        <version.jakartaee>10.0.0</version.jakartaee>
-        <version.jakarta.xml.bind.jaxb-api>4.0.4</version.jakarta.xml.bind.jaxb-api>
-        <version.jakarta.enterprise.cdi-api>4.0.1</version.jakarta.enterprise.cdi-api>
-        <version.jakarta.activation-api>2.1.4</version.jakarta.activation-api>
+        <version.jakartaee>11.0.0</version.jakartaee>
+        <version.jakarta.data-api>1.0.1</version.jakarta.data-api>
+        <version.jakarta.enterprise.cdi-api>4.1.0</version.jakarta.enterprise.cdi-api>
     </properties>
 
     <dependencyManagement>
@@ -29,24 +28,16 @@
                 <scope>provided</scope>
             </dependency>
             <dependency>
-                <groupId>jakarta.xml.bind</groupId>
-                <artifactId>jakarta.xml.bind-api</artifactId>
-                <version>${version.jakarta.xml.bind.jaxb-api}</version>
+                <groupId>jakarta.data</groupId>
+                <artifactId>jakarta.data-api</artifactId>
+                <version>${version.jakarta.data-api}</version>
+                <scope>provided</scope>
             </dependency>
             <dependency>
                 <groupId>jakarta.enterprise</groupId>
                 <artifactId>jakarta.enterprise.cdi-api</artifactId>
                 <version>${version.jakarta.enterprise.cdi-api}</version>
             </dependency>
-
-            <!-- it is in the ee package
-                        <dependency>
-                            <groupId>jakarta.activation</groupId>
-                            <artifactId>jakarta.activation-api</artifactId>
-                            <version>${version.jakarta.activation-api}</version>
-                            <scope>provided</scope>
-                        </dependency>
-            -->
         </dependencies>
     </dependencyManagement>
 </project>

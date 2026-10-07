@@ -161,49 +161,6 @@ DummyResponse helloResponse = GrpcClientWrapper.call(stub::getDummy, dummyReques
 <3> Add custom header
 <4> gRPC service call + exception handling
 
-== gRPC Metrics
-The gRPC server and client can optionally activate interceptors to provide metric data.
-For this, only the inclusion of the Maven dependency is required:
-
-.enable gRPC server https://github.com/eclipse/microprofile-metrics[microprofile-metrics] implementation
-[source,xml]
-----
-<dependency>
-    <groupId>hu.icellmobilsoft.coffee</groupId>
-    <artifactId>coffee-grpc-server-extension</artifactId>
-</dependency>
-<dependency>
-    <groupId>hu.icellmobilsoft.coffee</groupId>
-    <artifactId>coffee-grpc-metrics-mpmetrics</artifactId>
-</dependency>
-----
-
-.enable gRPC client https://github.com/eclipse/microprofile-metrics[microprofile-metrics] implementation
-[source,xml]
-----
-<dependency>
-    <groupId>hu.icellmobilsoft.coffee</groupId>
-    <artifactId>coffee-grpc-client-extension</artifactId>
-</dependency>
-<dependency>
-    <groupId>hu.icellmobilsoft.coffee</groupId>
-    <artifactId>coffee-grpc-metrics-mpmetrics</artifactId>
-</dependency>
-----
-
-If the metric module is not included at the dependency level, the server/client operation remains unchanged, only metric data is not provided.
-
-Provided metrics: 
-
-* gRPC server
-** Received request counter
-** Responded response counter
-** Request-response processing per second
-* gRPC Client
-** Sent request counter
-** Responded response counter
-** Request-response processing per second
-
 == gRPC Tracing
 The gRPC server and client can optionally activate interceptors to provide tracing data.
 For this, only the inclusion of the Maven dependency is required:

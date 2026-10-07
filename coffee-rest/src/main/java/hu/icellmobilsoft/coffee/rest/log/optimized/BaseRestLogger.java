@@ -22,12 +22,12 @@ package hu.icellmobilsoft.coffee.rest.log.optimized;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import hu.icellmobilsoft.coffee.tool.utils.date.DateUtil;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.ws.rs.container.ContainerRequestContext;
 import jakarta.ws.rs.container.ContainerRequestFilter;
+import jakarta.ws.rs.container.ContainerResponseContext;
+import jakarta.ws.rs.container.ContainerResponseFilter;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.MultivaluedMap;
@@ -46,9 +46,10 @@ import hu.icellmobilsoft.coffee.rest.log.annotation.LogSpecifier;
 import hu.icellmobilsoft.coffee.rest.log.annotation.enumeration.LogSpecifierTarget;
 import hu.icellmobilsoft.coffee.rest.utils.RestLoggerUtil;
 import hu.icellmobilsoft.coffee.se.logging.mdc.MDC;
+import hu.icellmobilsoft.coffee.se.util.string.RandomUtil;
+import hu.icellmobilsoft.coffee.tool.utils.date.DateUtil;
 import hu.icellmobilsoft.coffee.tool.utils.stream.RequestLoggerInputStream;
 import hu.icellmobilsoft.coffee.tool.utils.stream.ResponseEntityCollectorOutputStream;
-import hu.icellmobilsoft.coffee.tool.utils.string.RandomUtil;
 
 /**
  * Base class for REST logging
@@ -57,7 +58,8 @@ import hu.icellmobilsoft.coffee.tool.utils.string.RandomUtil;
  * @author mate.biro
  * @since 2.4.0
  */
-public abstract class BaseRestLogger implements ContainerRequestFilter, WriterInterceptor {
+public abstract class BaseRestLogger implements ContainerRequestFilter, WriterInterceptor, ContainerResponseFilter {
+    private static final String STATUS_PROPERTY = "response.status";
 
     @Inject
     @ThisLogger
@@ -71,9 +73,6 @@ public abstract class BaseRestLogger implements ContainerRequestFilter, WriterIn
 
     @Context
     private UriInfo uriInfo;
-
-    @Context
-    private HttpServletResponse httpServletResponse;
 
     /**
      * Default constructor, constructs a new object.
@@ -221,11 +220,16 @@ public abstract class BaseRestLogger implements ContainerRequestFilter, WriterIn
      */
     protected void printResponseLine(StringBuilder b, WriterInterceptorContext context) {
         String fullPath = uriInfo.getAbsolutePath().toASCIIString();
-        int status = httpServletResponse.getStatus();
+        int status = (int) context.getProperty(STATUS_PROPERTY);
         Status statusEnum = Status.fromStatusCode(status);
         String statusInfo = statusEnum != null ? statusEnum.getReasonPhrase() : null;
         MediaType mediaType = context.getMediaType();
         b.append(requestResponseLogger.printResponseLine(fullPath, status, String.valueOf(statusInfo), String.valueOf(mediaType)));
+    }
+
+    @Override
+    public void filter(ContainerRequestContext requestContext, ContainerResponseContext responseContext) throws IOException {
+        requestContext.setProperty(STATUS_PROPERTY, responseContext.getStatus());
     }
 
     /**

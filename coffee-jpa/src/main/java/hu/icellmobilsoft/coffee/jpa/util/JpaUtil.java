@@ -24,16 +24,18 @@ import java.util.function.Supplier;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 
+import org.hibernate.internal.util.MutableObject;
 import org.hibernate.query.spi.DomainQueryExecutionContext;
 import org.hibernate.query.spi.QueryImplementor;
 import org.hibernate.query.spi.QueryInterpretationCache;
 import org.hibernate.query.spi.SelectQueryPlan;
 import org.hibernate.query.sqm.internal.ConcreteSqmSelectQueryPlan;
 import org.hibernate.query.sqm.internal.DomainParameterXref;
-import org.hibernate.query.sqm.internal.QuerySqmImpl;
 import org.hibernate.query.sqm.internal.SqmInterpretationsKey;
+import org.hibernate.query.sqm.internal.SqmQueryImpl;
+import org.hibernate.query.sqm.spi.InterpretationsKeySource;
 import org.hibernate.query.sqm.tree.select.SqmSelectStatement;
-import org.hibernate.sql.exec.spi.JdbcOperationQuerySelect;
+import org.hibernate.sql.exec.internal.JdbcOperationQuerySelect;
 
 import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
@@ -124,37 +126,43 @@ public class JpaUtil {
             return null;
         }
         QueryImplementor query = criteriaQuery.unwrap(QueryImplementor.class);
-        if (query instanceof SqmInterpretationsKey.InterpretationsKeySource && query instanceof QuerySqmImpl) {
-            QueryInterpretationCache.Key cacheKey = SqmInterpretationsKey
-                    .createInterpretationsKey((SqmInterpretationsKey.InterpretationsKeySource) query);
-            QuerySqmImpl<?> querySqm = (QuerySqmImpl<?>) query;
+        if (query instanceof SqmQueryImpl) {
+            QueryInterpretationCache.Key cacheKey = SqmInterpretationsKey.createInterpretationsKey((InterpretationsKeySource) query);
             Supplier buildSelectQueryPlan = () -> {
                 try {
-                    return ReflectionUtils.invokeMethod(querySqm, "buildSelectQueryPlan", ConcreteSqmSelectQueryPlan.class);
+                    return ReflectionUtils.invokeMethod(query, "buildSelectQueryPlan", ConcreteSqmSelectQueryPlan.class);
                 } catch (BaseException e) {
                     Logger.getLogger(JpaUtil.class).warn("Exception on calling buildSelectQueryPlan()!", e);
                     return null;
                 }
             };
             SelectQueryPlan plan = cacheKey != null
-                    ? ((QueryImplementor<?>) query).getSession().getFactory().getQueryEngine().getInterpretationCache()
+                    ? ((QueryImplementor<?>) query).getSession()
+                            .getFactory()
+                            .getQueryEngine()
+                            .getInterpretationCache()
                             .resolveSelectQueryPlan(cacheKey, buildSelectQueryPlan)
                     : (SelectQueryPlan<?>) buildSelectQueryPlan.get();
             if (plan instanceof ConcreteSqmSelectQueryPlan) {
-                ConcreteSqmSelectQueryPlan<?> selectQueryPlan = (ConcreteSqmSelectQueryPlan<?>) plan;
-                Object cacheableSqmInterpretation = ReflectionUtils.getFieldValueOrNull(selectQueryPlan, "cacheableSqmInterpretation", Object.class);
+                Object cacheableSqmInterpretation = ReflectionUtils.getFieldValueOrNull(plan, "cacheableSqmInterpretation", Object.class);
                 if (cacheableSqmInterpretation == null) {
-                    DomainQueryExecutionContext domainQueryExecutionContext = DomainQueryExecutionContext.class.cast(querySqm);
                     cacheableSqmInterpretation = ReflectionUtils.invokeStaticMethod(
-                            ReflectionUtils.getMethod(ConcreteSqmSelectQueryPlan.class, "buildCacheableSqmInterpretation", SqmSelectStatement.class,
-                                    DomainParameterXref.class, DomainQueryExecutionContext.class),
-                            Object.class, ReflectionUtils.getFieldValueOrNull(selectQueryPlan, "sqm", SqmSelectStatement.class),
-                            ReflectionUtils.getFieldValueOrNull(selectQueryPlan, "domainParameterXref", DomainParameterXref.class),
-                            domainQueryExecutionContext);
+                            ReflectionUtils.getMethod(
+                                    ConcreteSqmSelectQueryPlan.class,
+                                    "buildInterpretation",
+                                    SqmSelectStatement.class,
+                                    DomainParameterXref.class,
+                                    DomainQueryExecutionContext.class,
+                                    MutableObject.class),
+                            Object.class,
+                            ReflectionUtils.getFieldValueOrNull(plan, "sqm", SqmSelectStatement.class),
+                            ReflectionUtils.getFieldValueOrNull(plan, "domainParameterXref", DomainParameterXref.class),
+                            query,
+                            new MutableObject<>());
                 }
                 if (cacheableSqmInterpretation != null) {
                     JdbcOperationQuerySelect jdbcSelect = ReflectionUtils
-                            .getFieldValueOrNull(cacheableSqmInterpretation, "jdbcSelect", JdbcOperationQuerySelect.class);
+                            .invokeMethod(cacheableSqmInterpretation, "jdbcOperation", JdbcOperationQuerySelect.class);
                     if (jdbcSelect != null) {
                         return jdbcSelect.getSqlString();
                     }
