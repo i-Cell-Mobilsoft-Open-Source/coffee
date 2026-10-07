@@ -26,8 +26,9 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-import hu.icellmobilsoft.coffee.se.util.string.RandomUtil;
 import org.hibernate.annotations.IdGeneratorType;
+
+import hu.icellmobilsoft.coffee.se.util.string.RandomUtil;
 
 /**
  * {@link String} entity id generator using {@link RandomUtil#generateId()}
