@@ -11,6 +11,10 @@
 
     <name>Coff:ee Module - Docgen - SQL Catalog</name>
 
+    <properties>
+        <version.google.auto-service>1.0.1</version.google.auto-service>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>hu.icellmobilsoft.coffee</groupId>
@@ -19,13 +23,22 @@
         <dependency>
             <groupId>com.google.auto.service</groupId>
             <artifactId>auto-service</artifactId>
-            <version>1.0.1</version>
+            <version>${version.google.auto-service}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>hu.icellmobilsoft.coffee</groupId>
             <artifactId>coffee-deltaspike-data</artifactId>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>hu.icellmobilsoft.coffee</groupId>
+            <artifactId>coffee-deltaspike-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.platform</groupId>
+            <artifactId>jakarta.jakartaee-api</artifactId>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.hibernate.orm</groupId>
@@ -38,4 +51,37 @@
             <artifactId>junit-jupiter</artifactId>
         </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>com.google.auto.service</groupId>
+                            <artifactId>auto-service</artifactId>
+                            <version>${version.google.auto-service}</version>
+                        </path>
+                    </annotationProcessorPaths>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>default-testCompile</id>
+                        <configuration>
+                            <annotationProcessorPaths>
+                                <!-- Only for tests -->
+                                <path>
+                                    <groupId>${project.groupId}</groupId>
+                                    <artifactId>${project.artifactId}</artifactId>
+                                    <version>${project.version}</version>
+                                </path>
+                            </annotationProcessorPaths>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>

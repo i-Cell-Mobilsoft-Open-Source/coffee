@@ -7,13 +7,25 @@ A modul célja, hogy a repository osztályokból sql katalógust generáljon
 
 == Usage
 
-Használatához az alabbi függőséget kell hozzáadni a `pom.xml`-hez:
+Használatához az alabbi annotation processor-t kell hozzáadni a `pom.xml`-hez:
 [source,xml]
 ----
-<dependency>.
-    <groupId>hu.icellmobilsoft.coffee</groupId>
-    <artifactId>coffee-module-docgen-sqlcatalog</artifactId>
-</dependency>
+
+<build>
+    <plugins>
+        <plugin>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <configuration>
+                <annotationProcessorPaths>
+                    <path>
+                        <groupId>hu.icellmobilsoft.coffee</groupId>
+                        <artifactId>coffee-module-docgen-sqlcatalog</artifactId>
+                    </path>
+                </annotationProcessorPaths>
+            </configuration>
+        </plugin>
+    </plugins>
+</build>
 ----
 
 === SQL katalógus
@@ -54,6 +66,9 @@ Ezt maven esetén a `maven-compiler-plugin`-on keresztül lehet megadni:
         <plugin>
             <artifactId>maven-compiler-plugin</artifactId>
             <configuration>
+                <annotationProcessorPaths>
+                    ...
+                </annotationProcessorPaths>
                 <compilerArgs>
                     <arg>-Acoffee.docgen.sql.catalog.outputDir=${project.basedir}/../docs/</arg> #<1>
                     <arg>-Acoffee.docgen.sql.catalog.outputFileName=${project.name}_sql_catalog.adoc</arg> #<2>

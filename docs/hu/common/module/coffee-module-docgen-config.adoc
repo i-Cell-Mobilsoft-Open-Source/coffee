@@ -7,13 +7,24 @@ A modul célja, hogy a konfigurációs kulcsokat tartalmazó osztályokból doku
 
 == Használata
 
-Használatához az alabbi függőséget kell hozzáadni a `pom.xml`-hez:
+Használatához az alabbi annotation processor-t kell hozzáadni a `pom.xml`-hez:
 [source,xml]
 ----
-<dependency>
-    <groupId>hu.icellmobilsoft.coffee</groupId>
-    <artifactId>coffee-module-docgen-config</artifactId>
-</dependency>
+<build>
+    <plugins>
+        <plugin>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <configuration>
+                <annotationProcessorPaths>
+                    <path>
+                        <groupId>hu.icellmobilsoft.coffee</groupId>
+                        <artifactId>coffee-module-docgen-config</artifactId>
+                    </path>
+                </annotationProcessorPaths>
+            </configuration>
+        </plugin>
+    </plugins>
+</build>
 ----
 
 === Statikus konfigurációs kulcsok esetén
@@ -202,6 +213,9 @@ Ezt maven esetén a `maven-compiler-plugin`-on keresztül lehet megadni:
         <plugin>
             <artifactId>maven-compiler-plugin</artifactId>
             <configuration>
+                <annotationProcessorPaths>
+                    ...
+                </annotationProcessorPaths>
                 <compilerArgs>
                     <arg>-Acoffee.docgen.config.outputDir=${project.basedir}/../docs/</arg> #<1>
                     <arg>-Acoffee.docgen.config.outputFileName=${project.name}_config.adoc</arg> #<2>

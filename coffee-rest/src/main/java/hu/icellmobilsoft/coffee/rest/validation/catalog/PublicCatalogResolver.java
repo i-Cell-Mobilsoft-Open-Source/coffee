@@ -38,7 +38,7 @@ import hu.icellmobilsoft.coffee.rest.validation.xml.utils.IXsdResourceResolver;
 /**
  * Implements CatalogResolver. <br>
  * This class implements a SAX EntityResolver, StAX XMLResolver, Schema Validation LSResourceResolver and Transform URIResolver.
- * See {@link javax.xml.catalog.Util} {@link javax.xml.catalog.CatalogResolverImpl}
+ * See {@code javax.xml.catalog.Util} {@code javax.xml.catalog.CatalogResolverImpl}
  *
  * @author imre.scheffer
  * @author mark.petrenyi

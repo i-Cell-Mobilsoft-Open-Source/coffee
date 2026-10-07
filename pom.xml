@@ -22,6 +22,7 @@
 		<project.scm.id>icell-github-server</project.scm.id>
 		<sonar.junit.reportPaths>${surefire.reportsDir}, ${failsafe.reportsDir}</sonar.junit.reportPaths>
 		<sonar.jacoco.reportPaths>${jacoco.ut.execution.data.file}, ${jacoco.it.execution.data.file}</sonar.jacoco.reportPaths>
+		<maven.compiler.release>17</maven.compiler.release>
 	</properties>
 
 	<scm>
@@ -156,6 +157,7 @@
 			<plugin>
 				<groupId>org.jacoco</groupId>
 				<artifactId>jacoco-maven-plugin</artifactId>
+				<version>0.8.15</version>
 			</plugin>
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
