@@ -14,6 +14,7 @@
 
     <properties>
         <version.jakartaee>11.0.0</version.jakartaee>
+        <version.jakarta.data-api>1.0.1</version.jakarta.data-api>
         <version.jakarta.enterprise.cdi-api>4.1.0</version.jakarta.enterprise.cdi-api>
     </properties>
 
@@ -24,6 +25,12 @@
                 <groupId>jakarta.platform</groupId>
                 <artifactId>jakarta.jakartaee-api</artifactId>
                 <version>${version.jakartaee}</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>jakarta.data</groupId>
+                <artifactId>jakarta.data-api</artifactId>
+                <version>${version.jakarta.data-api}</version>
                 <scope>provided</scope>
             </dependency>
             <dependency>
