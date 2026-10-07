@@ -1,0 +1,26 @@
+= v3.0.0
+
+== Changes
+
+=== General
+* https://jakarta.ee/release/11/[Jakarta EE 11] introducing Jakarta Data 1.0
+* WildFly 41+ support
+** https://www.wildfly.org/news/2026/05/21/WildFly-40-is-released/
+** https://www.wildfly.org/news/2026/07/16/WildFly-41-is-released/
+* Hibernate 7.x
+
+.Migration
+* Upgrade Jakarta EE api versions
+* Follow the Hibernate https://hibernate.org/orm/documentation/migrate/[migration guide]
+
+=== coffee-grpc-metrics-mpmetrics
+* Module removed
+
+.Migration
+Before upgrading to this Coffee version, migrate to OpenTelemetry
+
+=== coffee-deltaspike
+* Module deprecated and will be removed in the future.
+
+.Migration
+Will be removed in the future, but for now the changes are backwards compatible doesn't need any migration.
