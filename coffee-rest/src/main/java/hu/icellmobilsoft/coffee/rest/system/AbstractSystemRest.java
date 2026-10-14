@@ -39,11 +39,11 @@ public abstract class AbstractSystemRest extends BaseRestService implements ISys
     /**
      * {@value #NEW_LINE}
      */
-    protected static final String NEW_LINE = "\n";
+    public static final String NEW_LINE = "\n";
     /**
      * {@value #META_INF_MANIFEST_MF}
      */
-    protected static final String META_INF_MANIFEST_MF = "META-INF/MANIFEST.MF";
+    public static final String META_INF_MANIFEST_MF = "META-INF/MANIFEST.MF";
     /**
      * {@value #IMPLEMENTATION_TITLE}
      */

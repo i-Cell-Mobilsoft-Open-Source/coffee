@@ -1,0 +1,73 @@
+[#common_module_coffee-module-wildfly-management]
+= coffee-module-wildfly-management
+
+This optional module integrates with the WildFly HTTP management interface.
+Manifest reading is provided by `coffee-module-wildfly`, which has no WildFly server API dependencies.
+Add the following dependency to enable the integration (the Coffee BOM manages its version):
+
+[source,xml]
+----
+<dependency>
+    <groupId>hu.icellmobilsoft.coffee</groupId>
+    <artifactId>coffee-module-wildfly-management</artifactId>
+</dependency>
+----
+
+Server API dependencies are confined to this optional module.
+The compilation baseline is WildFly Core 26.0.0.Final (WildFly 34); with `provided`
+scope, runtime APIs come from the target server. This does not imply support only
+for version 34, but other server versions require deployment testing.
+
+== Version information on the management interface
+
+With this module, version information is available at `GET /version` on the management
+interface (by default, `http://localhost:9990/version`). Enable it with an application CDI bean:
+
+[source,java]
+----
+import jakarta.enterprise.context.ApplicationScoped;
+
+import hu.icellmobilsfoft.coffee.module.wildfly.management.AbstractWildFlyManagementVersionInfo;
+
+@ApplicationScoped
+public class ManagementVersionInfo extends AbstractWildFlyManagementVersionInfo {
+}
+----
+
+Expose the server-provided APIs in the WAR's `WEB-INF/jboss-deployment-structure.xml`.
+Merge these dependencies into `deployment/dependencies` if the descriptor already exists:
+
+[source,xml]
+----
+<jboss-deployment-structure xmlns="urn:jboss:deployment-structure:1.2">
+    <deployment>
+        <dependencies>
+            <module name="org.jboss.as.server"/>
+            <module name="org.jboss.msc"/>
+            <module name="io.undertow.core"/>
+        </dependencies>
+    </deployment>
+</jboss-deployment-structure>
+----
+
+The Maven dependencies have `provided` scope; do not package the server API JARs in the WAR.
+The bean registers the route on startup and removes it before shutdown or redeployment.
+
+The response contains the complete contents of the WAR's own `/META-INF/MANIFEST.MF`
+as `text/plain; charset=UTF-8`, using the same reader as the legacy REST endpoint.
+Line order, continuation lines, blank lines and named sections are preserved;
+line endings are normalized to LF, matching the legacy behavior.
+The management endpoint reads the manifest at startup, independently of
+the management request thread's classloader. A missing manifest produces an empty
+response; a read failure returns HTTP 500. Other methods return 405 and nested paths return 404.
+
+Like the reference, the endpoint does not require authentication; network access
+is determined by the WildFly management interface configuration. The path is
+server-wide, so only one deployment per server can register it. A conflicting
+registration fails without removing the existing context.
+
+`AbstractWildFlySystemRest.versionInfo()` and the `/versionInfo` REST endpoint are retained
+for compatibility; the Java method is deprecated. Add the management bean above to expose
+the same version information on the management interface as well.
+The Quarkus module's endpoint is unaffected.
+

@@ -3,10 +3,16 @@
 
 The purpose of this module is to use wildfly specific functions.
 
-.AbstractWildflySystemRest
+`VersionInfoUtil` reads the WAR manifest using the legacy response format.
+`AbstractWildFlySystemRest.versionInfo()` and the `/versionInfo` REST endpoint are
+retained for compatibility; the Java method is deprecated.
+The management endpoint is provided by the separate optional
+<<common_module_coffee-module-wildfly-management,coffee-module-wildfly-management>> module.
+
+.AbstractWildFlySystemRest
 [source,java]
 ----
-public class SystemRest extends AbstractWildflySystemRest {
+public class SystemRest extends AbstractWildFlySystemRest {
 
     @Inject
     private EvictAction evictAction;

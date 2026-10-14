@@ -1,0 +1,78 @@
+[#common_module_coffee-module-wildfly-management]
+= coffee-module-wildfly-management
+
+A modul opcionális integrációt biztosít a WildFly management HTTP interfészéhez.
+A manifest kiolvasását a `coffee-module-wildfly` modul biztosítja, amelynek nincs
+WildFly szerver API-függősége. Az új modul használatához adjuk hozzá a függőséget
+(a verziót a Coffee BOM kezeli):
+
+[source,xml]
+----
+<dependency>
+    <groupId>hu.icellmobilsoft.coffee</groupId>
+    <artifactId>coffee-module-wildfly-management</artifactId>
+</dependency>
+----
+
+A szerver API-függőségek kizárólag ebben az opcionális modulban találhatók.
+A fordítási alap WildFly Core 26.0.0.Final (WildFly 34); a `provided` scope miatt
+futáskor a cél WildFly saját API-jai használatosak. Ez nem állít kizárólagos 34-es
+támogatást, de más szerververziókon deploymentteszt szükséges.
+
+== Verzióinformáció a management interfészen
+
+A modul használatával az alkalmazás verzióinformációja a management interfész
+`GET /version` végpontján érhető el (alapértelmezetten `http://localhost:9990/version`).
+A végpont bekapcsolásához az alkalmazásban hozzunk létre egy CDI beant:
+
+[source,java]
+----
+import jakarta.enterprise.context.ApplicationScoped;
+
+import hu.icellmobilsfoft.coffee.module.wildfly.management.AbstractWildFlyManagementVersionInfo;
+
+@ApplicationScoped
+public class ManagementVersionInfo extends AbstractWildFlyManagementVersionInfo {
+}
+----
+
+A WAR `WEB-INF/jboss-deployment-structure.xml` fájljában tegyük elérhetővé
+a WildFly által biztosított szerver API-kat. Meglévő descriptor esetén a függőségeket
+a meglévő `deployment/dependencies` elemhez adjuk hozzá:
+
+[source,xml]
+----
+<jboss-deployment-structure xmlns="urn:jboss:deployment-structure:1.2">
+    <deployment>
+        <dependencies>
+            <module name="org.jboss.as.server"/>
+            <module name="org.jboss.msc"/>
+            <module name="io.undertow.core"/>
+        </dependencies>
+    </deployment>
+</jboss-deployment-structure>
+----
+
+A Maven-függőségek `provided` scope-úak, a szerver API JAR-okat nem kell a WAR-ba csomagolni.
+A bean az alkalmazás indulásakor regisztrálja az útvonalat, leállításakor pedig törli,
+így az alkalmazás újratelepíthető.
+
+A válasz a WAR saját `/META-INF/MANIFEST.MF` fájljának teljes tartalmát adja vissza,
+a régi REST végponttal közös kiolvasással, `text/plain; charset=UTF-8` formátumban.
+A sorok sorrendje, a folytatósorok, az üres sorok és a név szerinti szekciók megmaradnak;
+a sorvégek a régi működés szerint `\n` karakterre normalizálódnak.
+A management végpont beolvasása induláskor történik,
+függetlenül a management kérést kezelő szál classloaderétől.
+Hiányzó manifest esetén a válasz üres; olvasási hiba esetén HTTP 500-at ad vissza.
+Csak a `GET /version` kérés támogatott: más HTTP-metódusra 405, alútvonalra 404 a válasz.
+
+A management végpont a referenciamegoldáshoz hasonlóan nem kér hitelesítést;
+elérhetőségét a WildFly management interfészének hálózati beállításai határozzák meg.
+Mivel az útvonal szerver szintű, szerverenként egyetlen deployment regisztrálhatja.
+Ütközés esetén a második regisztráció hibával leáll, és nem törli az első útvonalát.
+
+Az `AbstractWildFlySystemRest.versionInfo()` Java-metódus és a `/versionInfo` REST végpont
+kompatibilitási okból megmaradt; a Java-metódus deprecated jelölést kapott.
+A fenti management bean hozzáadásával a verzióinformáció a management interfészen is elérhető.
+A Quarkus modul végpontját ez a változás nem érinti.
+
