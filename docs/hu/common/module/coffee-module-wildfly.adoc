@@ -3,10 +3,16 @@
 
 A modul célja a wildfly specifikus funkciók összegyűjtése.
 
-.AbstractWildflySystemRest
+A `VersionInfoUtil` a WAR manifestjét a régi válaszformátumban olvassa ki.
+Az `AbstractWildFlySystemRest.versionInfo()` és a `/versionInfo` REST végpont
+kompatibilitási okból megmaradt; a Java-metódus deprecated jelölést kapott.
+A management végpontot a külön, opcionális
+<<common_module_coffee-module-wildfly-management,coffee-module-wildfly-management>> modul biztosítja.
+
+.AbstractWildFlySystemRest
 [source,java]
 ----
-public class SystemRest extends AbstractWildflySystemRest {
+public class SystemRest extends AbstractWildFlySystemRest {
 
     @Inject
     private EvictAction evictAction;
