@@ -23,10 +23,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 
 import jakarta.servlet.ServletContext;
-
-import hu.icellmobilsoft.coffee.rest.system.AbstractSystemRest;
 
 /**
  * Reads version information from the deployed WAR, rather than a dependency's manifest.
@@ -35,6 +34,9 @@ import hu.icellmobilsoft.coffee.rest.system.AbstractSystemRest;
  * @since 3.0.0
  */
 public final class VersionInfoUtil {
+
+    private static final String META_INF_MANIFEST_MF = "META-INF/MANIFEST.MF";
+    private static final String NEW_LINE = "\n";
 
     private VersionInfoUtil() {
     }
@@ -50,15 +52,15 @@ public final class VersionInfoUtil {
      *             if the manifest cannot be read
      */
     public static String getVersionInfo(ServletContext servletContext) throws IOException {
-        InputStream inputStream = servletContext.getResourceAsStream(AbstractSystemRest.META_INF_MANIFEST_MF);
+        InputStream inputStream = servletContext.getResourceAsStream(META_INF_MANIFEST_MF);
         if (inputStream == null) {
             return "";
         }
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
             StringBuilder version = new StringBuilder();
             String line;
             while ((line = reader.readLine()) != null) {
-                version.append(line).append(AbstractSystemRest.NEW_LINE);
+                version.append(line).append(NEW_LINE);
             }
             return version.toString();
         }

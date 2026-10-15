@@ -36,6 +36,25 @@ public class ManagementVersionInfo extends AbstractWildFlyManagementVersionInfo 
 }
 ----
 
+Az alapértelmezett útvonal `/version`. Ha több deployment használja a modult ugyanazon
+a szerveren, az alkalmazás beanben felülírhatjuk a `getPath()` metódust, például:
+
+[source,java]
+----
+@ApplicationScoped
+public class ManagementVersionInfo extends AbstractWildFlyManagementVersionInfo {
+    @Override
+    protected String getPath() {
+        return "/version/contextRoot";
+    }
+}
+----
+
+Ekkor a végpont `http://localhost:9990/version/hugo-hd-public` címen érhető el.
+Az útvonal `/` karakterrel kezdődjön, és ne végződjön `/` karakterrel.
+A context root nem kerül automatikusan az útvonalba; deploymentenként egyedi útvonalat adjunk meg.
+Ha az alapértelmezett útvonal megfelelő, nem kell felülírni a metódust.
+
 A WAR `WEB-INF/jboss-deployment-structure.xml` fájljában tegyük elérhetővé
 a WildFly által biztosított szerver API-kat. Meglévő descriptor esetén a függőségeket
 a meglévő `deployment/dependencies` elemhez adjuk hozzá:
@@ -57,18 +76,18 @@ A Maven-függőségek `provided` scope-úak, a szerver API JAR-okat nem kell a W
 A bean az alkalmazás indulásakor regisztrálja az útvonalat, leállításakor pedig törli,
 így az alkalmazás újratelepíthető.
 
-A válasz a WAR saját `/META-INF/MANIFEST.MF` fájljának teljes tartalmát adja vissza,
+A válasz a WAR saját `/META-INF/MANIFEST.MF` fájljának UTF-8-ként beolvasott teljes tartalmát adja vissza,
 a régi REST végponttal közös kiolvasással, `text/plain; charset=UTF-8` formátumban.
 A sorok sorrendje, a folytatósorok, az üres sorok és a név szerinti szekciók megmaradnak;
 a sorvégek a régi működés szerint `\n` karakterre normalizálódnak.
 A management végpont beolvasása induláskor történik,
 függetlenül a management kérést kezelő szál classloaderétől.
 Hiányzó manifest esetén a válasz üres; olvasási hiba esetén HTTP 500-at ad vissza.
-Csak a `GET /version` kérés támogatott: más HTTP-metódusra 405, alútvonalra 404 a válasz.
+Csak a beállított útvonalra küldött `GET` kérés támogatott: más HTTP-metódusra 405, alútvonalra 404 a válasz.
 
 A management végpont a referenciamegoldáshoz hasonlóan nem kér hitelesítést;
 elérhetőségét a WildFly management interfészének hálózati beállításai határozzák meg.
-Mivel az útvonal szerver szintű, szerverenként egyetlen deployment regisztrálhatja.
+Mivel az útvonal szerver szintű, ugyanazt az útvonalat szerverenként egyetlen deployment regisztrálhatja.
 Ütközés esetén a második regisztráció hibával leáll, és nem törli az első útvonalát.
 
 Az `AbstractWildFlySystemRest.versionInfo()` Java-metódus és a `/versionInfo` REST végpont

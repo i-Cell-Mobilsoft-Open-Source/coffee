@@ -38,9 +38,9 @@ import io.undertow.util.Methods;
 import io.undertow.util.StatusCodes;
 
 /**
- * Registers the WAR's manifest at {@code /version} on the WildFly HTTP management interface.
+ * Registers the WAR's manifest on the WildFly HTTP management interface, at {@code /version} by default.
  * Applications enable this endpoint by extending this class with an {@link ApplicationScoped} CDI bean.
- * Only one deployment per server can register the {@code /version} context.
+ * Applications can override {@link #getPath()} to use distinct paths for multiple deployments on the same server.
  *
  * @author balazs.bakos
  * @since 3.0.0
@@ -51,12 +51,22 @@ public abstract class AbstractWildFlyManagementVersionInfo {
     private static final ServiceName HTTP_MANAGEMENT_SERVICE = ServiceName.parse("org.wildfly.management.http.extensible");
 
     private ExtensibleHttpManagement registeredManagement;
+    private String registeredPath;
 
     /**
      * Default constructor.
      */
     public AbstractWildFlyManagementVersionInfo() {
         // Default constructor for java 21
+    }
+
+    /**
+     * Returns the management endpoint path. Override in the application bean to avoid conflicts with other deployments.
+     *
+     * @return absolute context path starting with {@code /}, without a trailing slash; defaults to {@code /version}
+     */
+    protected String getPath() {
+        return VERSION_PATH;
     }
 
     /**
@@ -79,9 +89,11 @@ public abstract class AbstractWildFlyManagementVersionInfo {
 
         String response = content;
         int responseStatus = status;
+        String path = getPath();
         ExtensibleHttpManagement management = getHttpManagement();
-        management.addManagementHandler(VERSION_PATH, false, exchange -> handleRequest(exchange, response, responseStatus));
+        management.addManagementHandler(path, false, exchange -> handleRequest(exchange, path, response, responseStatus));
         registeredManagement = management;
+        registeredPath = path;
     }
 
     /**
@@ -92,8 +104,9 @@ public abstract class AbstractWildFlyManagementVersionInfo {
      */
     public void unregisterManagementRoutes(@Observes @BeforeDestroyed(ApplicationScoped.class) Object destroy) {
         if (registeredManagement != null) {
-            registeredManagement.removeContext(VERSION_PATH);
+            registeredManagement.removeContext(registeredPath);
             registeredManagement = null;
+            registeredPath = null;
         }
     }
 
@@ -108,8 +121,8 @@ public abstract class AbstractWildFlyManagementVersionInfo {
         return (ExtensibleHttpManagement) CurrentServiceContainer.getServiceContainer().getRequiredService(HTTP_MANAGEMENT_SERVICE).getValue();
     }
 
-    private void handleRequest(HttpServerExchange exchange, String content, int status) {
-        if (!VERSION_PATH.equals(exchange.getRequestPath())) {
+    private void handleRequest(HttpServerExchange exchange, String path, String content, int status) {
+        if (!path.equals(exchange.getRequestPath())) {
             exchange.setStatusCode(StatusCodes.NOT_FOUND);
             exchange.endExchange();
         } else if (!Methods.GET.equals(exchange.getRequestMethod())) {

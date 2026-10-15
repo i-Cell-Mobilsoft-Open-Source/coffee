@@ -40,7 +40,6 @@ import org.jboss.resteasy.spi.metadata.ResourceBuilder;
 import org.jboss.resteasy.spi.metadata.ResourceMethod;
 import org.junit.jupiter.api.Test;
 
-import hu.icellmobilsoft.coffee.rest.system.AbstractSystemRest;
 
 /**
  * Tests the legacy manifest response and registration of the deprecated WildFly REST endpoint.
@@ -52,11 +51,11 @@ class AbstractWildFlySystemRestTest {
 
     @Test
     void preservesLegacyManifestResponse() throws Exception {
-        String manifestText = "Manifest-Version: 1.0\r\nBuild-Description: first\r\n second\r\n\r\n"
+        String manifestText = "Manifest-Version: 1.0\r\nBuild-Description: \u00e1rv\u00edzt\u0171r\u0151\r\n second\r\n\r\n"
                 + "Name: sample.txt\r\nSHA-256-Digest: example-digest";
         StringBuilder legacyResponse = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(
-                new ByteArrayInputStream(manifestText.getBytes(StandardCharsets.UTF_8))))) {
+                new ByteArrayInputStream(manifestText.getBytes(StandardCharsets.UTF_8)), StandardCharsets.UTF_8))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 legacyResponse.append(line).append("\n");
@@ -64,7 +63,7 @@ class AbstractWildFlySystemRestTest {
         }
 
         ServletContext context = mock(ServletContext.class);
-        when(context.getResourceAsStream(AbstractSystemRest.META_INF_MANIFEST_MF))
+        when(context.getResourceAsStream("META-INF/MANIFEST.MF"))
                 .thenReturn(new ByteArrayInputStream(manifestText.getBytes(StandardCharsets.UTF_8)));
         TestSystemRest rest = new TestSystemRest();
         Field field = AbstractWildFlySystemRest.class.getDeclaredField("servletContext");

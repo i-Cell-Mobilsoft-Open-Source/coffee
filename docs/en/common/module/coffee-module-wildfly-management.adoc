@@ -34,6 +34,25 @@ public class ManagementVersionInfo extends AbstractWildFlyManagementVersionInfo 
 }
 ----
 
+The default path is `/version`. If multiple deployments use the module on the same
+server, override `getPath()` in the application bean, for example:
+
+[source,java]
+----
+@ApplicationScoped
+public class ManagementVersionInfo extends AbstractWildFlyManagementVersionInfo {
+    @Override
+    protected String getPath() {
+        return "/version/contextRoot";
+    }
+}
+----
+
+The endpoint is then available at `http://localhost:9990/version/hugo-hd-public`.
+The path must start with `/` and must not end with `/`.
+The context root is not appended automatically; choose a unique path for each deployment.
+There is no need to override the method when the default path is suitable.
+
 Expose the server-provided APIs in the WAR's `WEB-INF/jboss-deployment-structure.xml`.
 Merge these dependencies into `deployment/dependencies` if the descriptor already exists:
 
@@ -53,17 +72,18 @@ Merge these dependencies into `deployment/dependencies` if the descriptor alread
 The Maven dependencies have `provided` scope; do not package the server API JARs in the WAR.
 The bean registers the route on startup and removes it before shutdown or redeployment.
 
-The response contains the complete contents of the WAR's own `/META-INF/MANIFEST.MF`
+The response contains the complete contents of the WAR's own `/META-INF/MANIFEST.MF`, read as UTF-8,
 as `text/plain; charset=UTF-8`, using the same reader as the legacy REST endpoint.
 Line order, continuation lines, blank lines and named sections are preserved;
 line endings are normalized to LF, matching the legacy behavior.
 The management endpoint reads the manifest at startup, independently of
 the management request thread's classloader. A missing manifest produces an empty
-response; a read failure returns HTTP 500. Other methods return 405 and nested paths return 404.
+response; a read failure returns HTTP 500. Only GET requests to the configured path are supported;
+other methods return 405 and nested paths return 404.
 
 Like the reference, the endpoint does not require authentication; network access
 is determined by the WildFly management interface configuration. The path is
-server-wide, so only one deployment per server can register it. A conflicting
+server-wide, so only one deployment per server can register the same path. A conflicting
 registration fails without removing the existing context.
 
 `AbstractWildFlySystemRest.versionInfo()` and the `/versionInfo` REST endpoint are retained

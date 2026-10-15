@@ -29,6 +29,7 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -66,7 +67,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 
-import hu.icellmobilsoft.coffee.rest.system.AbstractSystemRest;
 import hu.icellmobilsfoft.coffee.module.wildfly.rest.system.AbstractWildFlySystemRest;
 import io.undertow.Undertow;
 import io.undertow.server.HttpHandler;
@@ -120,9 +120,9 @@ class AbstractWildFlyManagementVersionInfoTest {
     void servesWarManifestAndClosesStreamBeforeRequests() throws Exception {
         AtomicReference<Boolean> closed = new AtomicReference<>(false);
         String manifestText = "Manifest-Version: 1.0\r\nImplementation-Version: 1.2.3\r\nImplementation-Title: deployed-war\r\n"
-                + "Class-Path: dependency.jar\r\nBuild-Description: first\r\n second\r\n\r\n"
+                + "Class-Path: dependency.jar\r\nBuild-Description: \u00e1rv\u00edzt\u0171r\u0151\r\n second\r\n\r\n"
                 + "Name: sample.txt\r\nSHA-256-Digest: example-digest\r\n\r\n";
-        when(servletContext.getResourceAsStream(AbstractSystemRest.META_INF_MANIFEST_MF)).thenAnswer(invocation -> new ByteArrayInputStream(
+        when(servletContext.getResourceAsStream("META-INF/MANIFEST.MF")).thenAnswer(invocation -> new ByteArrayInputStream(
                 manifestText.getBytes(StandardCharsets.UTF_8)) {
             @Override
             public void close() throws IOException {
@@ -141,13 +141,13 @@ class AbstractWildFlyManagementVersionInfoTest {
         contextField.setAccessible(true);
         contextField.set(legacy, servletContext);
         assertEquals(response.body(), legacy.versionInfo());
-        verify(servletContext, times(2)).getResourceAsStream(AbstractSystemRest.META_INF_MANIFEST_MF);
+        verify(servletContext, times(2)).getResourceAsStream("META-INF/MANIFEST.MF");
     }
 
     @Test
     void normalizesLineEndingsAndAddsLfAfterUnterminatedFinalLine() throws Exception {
         String manifestText = "Manifest-Version: 1.0\r\nCustom-Field: first\r continuation\n\nName: sample.txt\r\nCustom-Value: last";
-        when(servletContext.getResourceAsStream(AbstractSystemRest.META_INF_MANIFEST_MF))
+        when(servletContext.getResourceAsStream("META-INF/MANIFEST.MF"))
                 .thenReturn(new ByteArrayInputStream(manifestText.getBytes(StandardCharsets.UTF_8)));
         assertEquals("Manifest-Version: 1.0\nCustom-Field: first\n continuation\n\nName: sample.txt\nCustom-Value: last\n",
                 request(register(), "/version", "GET").body());
@@ -164,7 +164,7 @@ class AbstractWildFlyManagementVersionInfoTest {
     void readFailureReturnsServerErrorAndClosesStream() throws Exception {
         InputStream manifest = mock(InputStream.class);
         when(manifest.read(any(byte[].class), anyInt(), anyInt())).thenThrow(new IOException("unreadable"));
-        when(servletContext.getResourceAsStream(AbstractSystemRest.META_INF_MANIFEST_MF)).thenReturn(manifest);
+        when(servletContext.getResourceAsStream("META-INF/MANIFEST.MF")).thenReturn(manifest);
         HttpResponse<String> response = request(register(), "/version", "GET");
         assertEquals(StatusCodes.INTERNAL_SERVER_ERROR, response.statusCode());
         assertEquals("Error reading manifest: unreadable\n", response.body());
@@ -192,6 +192,26 @@ class AbstractWildFlyManagementVersionInfoTest {
     }
 
     @Test
+    void usesOverriddenPathForRequestsAndRemovesTheOriginallyRegisteredPath() throws Exception {
+        AbstractWildFlyManagementVersionInfo customEndpoint = spy(endpoint);
+        doReturn("/version/hugo-hd-public").when(customEndpoint).getPath();
+        customEndpoint.registerManagementRoutes(servletContext);
+        ArgumentCaptor<HttpHandler> handler = ArgumentCaptor.forClass(HttpHandler.class);
+        verify(management).addManagementHandler(eq("/version/hugo-hd-public"), eq(false), handler.capture());
+
+        doReturn("/version/changed").when(customEndpoint).getPath();
+        HttpResponse<String> response = request(handler.getValue(), "/version/hugo-hd-public", "GET");
+        assertEquals(StatusCodes.OK, response.statusCode());
+        assertEquals("", response.body());
+        assertEquals(StatusCodes.NOT_FOUND, request(handler.getValue(), "/version/hugo-hd-public/other", "GET").statusCode());
+
+        customEndpoint.unregisterManagementRoutes(new Object());
+        customEndpoint.unregisterManagementRoutes(new Object());
+        verify(management).removeContext("/version/hugo-hd-public");
+        verify(management, never()).removeContext("/version/changed");
+    }
+
+    @Test
     void failedRegistrationDoesNotRemoveAnotherDeploymentsContext() throws Exception {
         doThrow(new IllegalStateException("context already exists")).when(management).addManagementHandler(eq("/version"), eq(false), any());
         assertThrows(IllegalStateException.class, this::register);
@@ -206,12 +226,12 @@ class AbstractWildFlyManagementVersionInfoTest {
             verify(management, never()).addManagementHandler(any(), eq(false), any());
             ServletContext requestScopedProxy = container.select(ServletContext.class).get();
             assertThrows(ContextNotActiveException.class,
-                    () -> requestScopedProxy.getResourceAsStream(AbstractSystemRest.META_INF_MANIFEST_MF));
+                    () -> requestScopedProxy.getResourceAsStream("META-INF/MANIFEST.MF"));
             container.getBeanManager().getEvent()
                     .select(ServletContext.class, Initialized.Literal.of(ApplicationScoped.class))
                     .fire(lifecycleServletContext);
             verify(management).addManagementHandler(eq("/version"), eq(false), any());
-            verify(lifecycleServletContext).getResourceAsStream(AbstractSystemRest.META_INF_MANIFEST_MF);
+            verify(lifecycleServletContext).getResourceAsStream("META-INF/MANIFEST.MF");
         }
         verify(management).removeContext("/version");
     }
