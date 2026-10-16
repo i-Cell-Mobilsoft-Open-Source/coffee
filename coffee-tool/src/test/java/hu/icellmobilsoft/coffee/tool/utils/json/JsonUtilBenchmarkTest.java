@@ -117,11 +117,11 @@ public class JsonUtilBenchmarkTest {
 
         for (String rawJson : rawJsonData) {
             try {
-                TestObject dto = JsonUtil.toObjectGson(rawJson, TestObject.class);
+                TestObject dto = GsonUtil.toObjectGson(rawJson, TestObject.class);
 
-                String dtoJson = JsonUtil.toJsonGson(dto);
+                String dtoJson = GsonUtil.toJsonGson(dto);
 
-                TestObject dto2 = JsonUtil.toObjectGson(dtoJson, TestObject.class);
+                TestObject dto2 = GsonUtil.toObjectGson(dtoJson, TestObject.class);
 
                 dto2Deserialized.add(dto2);
                 gsonOk++;
