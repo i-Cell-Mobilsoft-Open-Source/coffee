@@ -370,7 +370,7 @@ public class EmailBase {
      *             exception
      */
     public String emailString(Email email) throws BaseException {
-        StringBuffer msg = new StringBuffer();
+        StringBuilder msg = new StringBuilder();
         // java 1.7
         // String lineSeparator = System.lineSeparator();
         String lineSeparator = System.getProperty("line.separator");

@@ -67,12 +67,11 @@ public class DefaultLoggerClientRequestFilter implements ClientRequestFilter {
         if (RestLoggerUtil.logDisabled(requestContext, LogSpecifierTarget.CLIENT_REQUEST)) {
             return;
         }
-        StringBuilder msg = new StringBuilder();
-        msg.append(">> ").append(getClass().getName()).append(" request ->\n");
-        msg.append(logUrl(requestContext));
-        msg.append(logHeader(requestContext));
-        msg.append(logEntity(requestContext));
-        LogProducer.logToAppLogger((AppLogger appLogger) -> appLogger.info(msg.toString()), DefaultLoggerClientRequestFilter.class);
+        String msg = ">> " + getClass().getName() + " request ->\n" + //
+                logUrl(requestContext) + //
+                logHeader(requestContext) + //
+                logEntity(requestContext);
+        LogProducer.logToAppLogger((AppLogger appLogger) -> appLogger.info(msg), DefaultLoggerClientRequestFilter.class);
     }
 
     /**
@@ -85,9 +84,7 @@ public class DefaultLoggerClientRequestFilter implements ClientRequestFilter {
      *             exception
      */
     protected String logUrl(ClientRequestContext requestContext) throws IOException {
-        StringBuilder msg = new StringBuilder();
-        msg.append("> url: [").append(requestContext.getMethod()).append(" ").append(requestContext.getUri()).append("]\n");
-        return msg.toString();
+        return "> url: [" + requestContext.getMethod() + " " + requestContext.getUri() + "]\n";
     }
 
     /**
@@ -100,7 +97,7 @@ public class DefaultLoggerClientRequestFilter implements ClientRequestFilter {
      *             exception
      */
     protected String logHeader(ClientRequestContext requestContext) throws IOException {
-        StringBuilder msg = new StringBuilder();
+        StringBuilder msg = new StringBuilder(32);
         msg.append("> headers: [");
         for (Entry<String, List<Object>> header : requestContext.getHeaders().entrySet()) {
             msg.append("\n>    ").append(header.getKey()).append(":").append(StringHelper.maskPropertyValue(header.getKey(), header.getValue()));
