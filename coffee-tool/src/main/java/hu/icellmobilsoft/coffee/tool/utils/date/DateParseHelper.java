@@ -79,7 +79,7 @@ public class DateParseHelper {
 
     private static OffsetDateTime parseOffsetDateTime(String from) {
         try {
-            Long timeInMillis = Long.parseLong(from);
+            long timeInMillis = Long.parseLong(from);
             Instant instant = Instant.ofEpochMilli(timeInMillis);
             return OffsetDateTime.ofInstant(instant, ZoneOffset.UTC);
         } catch (NumberFormatException e) {
@@ -156,7 +156,7 @@ public class DateParseHelper {
 
     private static LocalDate parseLocalDate(String from) {
         try {
-            Long timeInMillis = Long.parseLong(from);
+            long timeInMillis = Long.parseLong(from);
             Instant instant = Instant.ofEpochMilli(timeInMillis);
             return LocalDateTime.ofInstant(instant, ZoneOffset.UTC).toLocalDate();
         } catch (NumberFormatException e) {

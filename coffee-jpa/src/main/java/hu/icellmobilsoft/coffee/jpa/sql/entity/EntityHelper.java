@@ -120,7 +120,7 @@ public class EntityHelper {
         List<List<String>> lists = Lists.partition(copy, MAX_PARAMETER_COUNT);
         // memory optimalization
         copy = null;
-        List<T> results = new ArrayList<>();
+        List<T> results = new ArrayList<>(ids.size());
         for (List<String> sub : lists) {
             results.addAll(function.apply(sub));
         }
@@ -154,7 +154,7 @@ public class EntityHelper {
         List<List<String>> lists = Lists.partition(copy, MAX_PARAMETER_COUNT);
         // memory optimalization
         copy = null;
-        List<T> results = new ArrayList<>();
+        List<T> results = new ArrayList<>(ids.size());
         for (List<String> sub : lists) {
             results.addAll(function.apply(sub, param1));
         }
@@ -192,7 +192,7 @@ public class EntityHelper {
         List<List<String>> lists = Lists.partition(copy, MAX_PARAMETER_COUNT);
         // memory optimalization
         copy = null;
-        List<T> results = new ArrayList<>();
+        List<T> results = new ArrayList<>(ids.size());
         for (List<String> sub : lists) {
             results.addAll(function.apply(sub, param1, param2));
         }

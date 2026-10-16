@@ -101,7 +101,7 @@ public abstract class BaseRestLogger implements ContainerRequestFilter, WriterIn
             return null;
         }
 
-        StringBuffer message = new StringBuffer();
+        StringBuffer message = new StringBuffer(64);
         printRequestLine(message, requestContext);
         printRequestHeaders(message, requestContext);
         printRequestEntity(message, requestContext);
@@ -126,7 +126,7 @@ public abstract class BaseRestLogger implements ContainerRequestFilter, WriterIn
             return null;
         }
 
-        StringBuffer message = new StringBuffer();
+        StringBuffer message = new StringBuffer(64);
         try {
 
             printResponseLine(message, context);

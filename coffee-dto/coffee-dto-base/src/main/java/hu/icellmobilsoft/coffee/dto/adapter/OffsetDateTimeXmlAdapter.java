@@ -55,7 +55,7 @@ public class OffsetDateTimeXmlAdapter extends XmlAdapter<String, OffsetDateTime>
          * ISO_OFFSET_DATE_TIME or ISO_LOCAL_DATE_TIME ('2011-12-03T10:15:30+01:00' or '2011-12-03T10:15:30') representation of date as {@link String}
          */
         try {
-            Long timeInMillis = Long.parseLong(v);
+            long timeInMillis = Long.parseLong(v);
             return parseLong(timeInMillis);
         } catch (NumberFormatException e) {
             return parseString(v);

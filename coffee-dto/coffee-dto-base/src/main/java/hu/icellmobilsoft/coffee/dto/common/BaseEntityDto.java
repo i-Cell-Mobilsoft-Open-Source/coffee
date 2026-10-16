@@ -80,12 +80,6 @@ public class BaseEntityDto<E extends Serializable, CONTEXT extends Serializable>
     /** {@inheritDoc} */
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("BaseEntityDto [context=");
-        builder.append(context);
-        builder.append(", entity=");
-        builder.append(entity);
-        builder.append("]");
-        return builder.toString();
+        return "BaseEntityDto [context=" + context + ", entity=" + entity + "]";
     }
 }
