@@ -15,6 +15,10 @@
             <groupId>hu.icellmobilsoft.coffee</groupId>
             <artifactId>coffee-tool</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>org.eclipse.microprofile.health</groupId>
