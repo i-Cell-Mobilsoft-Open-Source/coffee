@@ -34,7 +34,8 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import hu.icellmobilsoft.coffee.cdi.config.IConfigKey;
 import hu.icellmobilsoft.coffee.cdi.config.IQuarkusConfigKey;
-import hu.icellmobilsoft.coffee.rest.system.AbstractSystemRest;
+import hu.icellmobilsoft.coffee.rest.rest.BaseRestService;
+import hu.icellmobilsoft.coffee.rest.system.ISystemRest;
 import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
 import hu.icellmobilsoft.coffee.se.api.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.se.api.exception.enums.CoffeeFaultType;
@@ -44,9 +45,25 @@ import hu.icellmobilsoft.coffee.se.api.exception.enums.CoffeeFaultType;
  * 
  * @author tamas.cserhati
  * @since 2.11.0
- * @see AbstractSystemRest
  */
-public abstract class AbstractQuarkusSystemRest extends AbstractSystemRest {
+public abstract class AbstractQuarkusSystemRest extends BaseRestService implements ISystemRest {
+
+    /**
+     * {@value #NEW_LINE}
+     */
+    protected static final String NEW_LINE = "\n";
+    /**
+     * {@value #META_INF_MANIFEST_MF}
+     */
+    protected static final String META_INF_MANIFEST_MF = "META-INF/MANIFEST.MF";
+    /**
+     * {@value #IMPLEMENTATION_TITLE}
+     */
+    protected static final String IMPLEMENTATION_TITLE = "Implementation-Title";
+    /**
+     * {@value #CLASS_PATH}
+     */
+    protected static final String CLASS_PATH = "Class-Path";
 
     @Inject
     @ConfigProperty(name = IQuarkusConfigKey.QUARKUS_APPLICATION_NAME)
