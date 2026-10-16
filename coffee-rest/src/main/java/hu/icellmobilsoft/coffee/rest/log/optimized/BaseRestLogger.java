@@ -106,7 +106,7 @@ public abstract class BaseRestLogger implements ContainerRequestFilter, WriterIn
             return;
         }
 
-        var logMessage = new StringBuilder();
+        var logMessage = new StringBuilder(64);
         appendRequestLine(logMessage, requestContext);
         appendRequestHeaders(logMessage, requestContext);
 
@@ -141,7 +141,7 @@ public abstract class BaseRestLogger implements ContainerRequestFilter, WriterIn
             return;
         }
 
-        StringBuilder message = new StringBuilder();
+        StringBuilder message = new StringBuilder(64);
         try {
             printResponseLine(message, context);
             printResponseHeaders(message, context);

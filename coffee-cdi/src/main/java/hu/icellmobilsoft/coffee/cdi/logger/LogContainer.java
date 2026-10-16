@@ -286,9 +286,9 @@ public class LogContainer {
     /** {@inheritDoc} */
     @Override
     public String toString() {
-        StringBuffer msg = new StringBuffer();
+        StringBuilder msg = new StringBuilder(logs.size() * 16);
         for (Log log : logs) {
-            if (msg.length() > 0) {
+            if (!msg.isEmpty()) {
                 msg.append("\n");
             }
             msg.append(log.toString());

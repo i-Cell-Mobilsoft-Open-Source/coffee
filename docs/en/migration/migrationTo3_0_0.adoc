@@ -8,6 +8,7 @@
 ** https://www.wildfly.org/news/2026/05/21/WildFly-40-is-released/
 ** https://www.wildfly.org/news/2026/07/16/WildFly-41-is-released/
 * Hibernate 7.x
+* minor optimizations
 
 .Migration
 * Upgrade Jakarta EE api versions

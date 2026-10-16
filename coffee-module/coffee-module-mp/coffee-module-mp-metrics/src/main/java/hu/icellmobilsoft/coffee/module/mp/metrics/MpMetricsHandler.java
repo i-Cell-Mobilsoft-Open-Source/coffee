@@ -62,9 +62,9 @@ public class MpMetricsHandler implements IMetricsHandler {
     @Override
     public Double searchGauge(String name, MetricTag... metricTags) {
         try {
-            MetricID metricID = null;
-            Collection<Tag> tags = new ArrayList<>();
+            MetricID metricID;
             if (metricTags != null && metricTags.length > 0) {
+                Collection<Tag> tags = new ArrayList<>(metricTags.length);
                 for (MetricTag metricTag : metricTags) {
                     tags.add(new Tag(metricTag.getKey(), metricTag.getValue()));
                 }
