@@ -49,9 +49,12 @@ import hu.icellmobilsoft.coffee.se.util.string.RandomUtil;
 /**
  * Base class for REST logging
  *
+ * @deprecated use {@link hu.icellmobilsoft.coffee.rest.log.optimized.BaseRestLogger} instead
+ *
  * @author ischeffer
  * @since 1.0.0
  */
+@Deprecated
 public abstract class BaseRestLogger implements ContainerRequestFilter, WriterInterceptor, ContainerResponseFilter {
     private static final String STATUS_PROPERTY = "response.status";
 

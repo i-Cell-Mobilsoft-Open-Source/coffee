@@ -55,10 +55,13 @@ import hu.icellmobilsoft.coffee.tool.utils.string.StringHelper;
 
 /**
  * Request - Response logger class
+ * 
+ * @deprecated use {@link hu.icellmobilsoft.coffee.rest.log.optimized.RequestResponseLogger} instead
  *
  * @author imre.scheffer
  * @since 1.0.0
  */
+@Deprecated
 @Dependent
 public class RequestResponseLogger {
 
@@ -216,7 +219,10 @@ public class RequestResponseLogger {
             return null;
         }
         UriInfo uriInfo = requestContext.getUriInfo();
-        return printRequestLine(requestContext.getMethod(), uriInfo.getAbsolutePath().toASCIIString(), uriInfo.getPathParameters(),
+        return printRequestLine(
+                requestContext.getMethod(),
+                uriInfo.getAbsolutePath().toASCIIString(),
+                uriInfo.getPathParameters(),
                 uriInfo.getQueryParameters());
     }
 
@@ -367,8 +373,11 @@ public class RequestResponseLogger {
         if (requestContext == null || responseContext == null) {
             return null;
         }
-        return printResponseLine(requestContext.getUriInfo().getAbsolutePath().toASCIIString(), responseContext.getStatus(),
-                String.valueOf(responseContext.getStatusInfo()), String.valueOf(responseContext.getMediaType()));
+        return printResponseLine(
+                requestContext.getUriInfo().getAbsolutePath().toASCIIString(),
+                responseContext.getStatus(),
+                String.valueOf(responseContext.getStatusInfo()),
+                String.valueOf(responseContext.getMediaType()));
     }
 
     /**
@@ -480,19 +489,15 @@ public class RequestResponseLogger {
         if (writerInterceptorContext == null) {
             return "";
         }
-        StringBuilder sb = new StringBuilder();
         MediaType mediaType = writerInterceptorContext.getMediaType();
         if (skipLoggingForPathOrMediaType(fullPath, mediaType)) {
-            sb.append(RequestResponseLogger.RESPONSE_PREFIX)
-                    .append("Response outputstream logging disabled, because MediaType: [" + mediaType + "]\n");
+            return RequestResponseLogger.RESPONSE_PREFIX + "Response outputstream logging disabled, because MediaType: [" + mediaType + "]\n";
         } else {
             String responseText = new String(entityCopy, StandardCharsets.UTF_8);
-            sb.append(
-                    printResponseEntity(
-                            responseText,
-                            RestLoggerUtil.getMaxEntityLogSize(writerInterceptorContext, LogSpecifierTarget.RESPONSE),
-                            mediaType));
+            return printResponseEntity(
+                    responseText,
+                    RestLoggerUtil.getMaxEntityLogSize(writerInterceptorContext, LogSpecifierTarget.RESPONSE),
+                    mediaType);
         }
-        return sb.toString();
     }
 }
