@@ -31,3 +31,8 @@ The changes are backwards compatible and do not require any migration.
 
 === Migration
 * `reloading.properties.watchWholeDir` should be set to false for old behavior.
+
+== maintenance
+
+* The code can be compiled with JDK 25
+* Upgraded github actions to latest versions
