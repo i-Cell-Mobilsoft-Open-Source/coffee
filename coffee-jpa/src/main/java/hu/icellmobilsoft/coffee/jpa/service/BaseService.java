@@ -28,6 +28,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import jakarta.data.exceptions.EmptyResultException;
+import jakarta.data.exceptions.OptimisticLockingFailureException;
 import jakarta.enterprise.context.Dependent;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
@@ -206,7 +208,7 @@ public class BaseService<T> {
             getEntityManager().refresh(savedEntity);
             log.debug("[{0}] entity has been saved", entityName);
             return savedEntity;
-        } catch (OptimisticLockException e) {
+        } catch (OptimisticLockException | OptimisticLockingFailureException e) {
             String msg = MessageFormat.format("Optimistic Lock Error in saving [{0}]: [{1}]", entityName, e.getLocalizedMessage());
             log.error(msg, e);
             throw new hu.icellmobilsoft.coffee.dto.exception.OptimisticLockException(CoffeeFaultType.OPTIMISTIC_LOCK_EXCEPTION, msg, e);
@@ -267,7 +269,7 @@ public class BaseService<T> {
             getEntityManager().remove(entity);
             getEntityManager().flush();
             log.debug("[{0}] entity has been deleted", entityName);
-        } catch (OptimisticLockException e) {
+        } catch (OptimisticLockException | OptimisticLockingFailureException e) {
             String msg = MessageFormat.format("Optimistic Lock Error in deleting [{0}]: [{1}]", entityName, e.getLocalizedMessage());
             log.error(msg, e);
             throw new hu.icellmobilsoft.coffee.dto.exception.OptimisticLockException(CoffeeFaultType.OPTIMISTIC_LOCK_EXCEPTION, msg, e);
@@ -297,9 +299,7 @@ public class BaseService<T> {
      * @return the input completed to a like parameter
      */
     public static String likeParameter(String string) {
-        StringBuffer sb = new StringBuffer();
-        sb.append("%").append(string).append("%");
-        return sb.toString();
+        return "%" + string + "%";
     }
 
     /**
@@ -310,9 +310,7 @@ public class BaseService<T> {
      * @return the input completed to an after like parameter
      */
     public static String afterLikeParameter(String string) {
-        StringBuffer sb = new StringBuffer();
-        sb.append(string).append("%");
-        return sb.toString();
+        return string + "%";
     }
 
     /**
@@ -346,7 +344,7 @@ public class BaseService<T> {
         logEnter(methodInfo);
         try {
             return function.get();
-        } catch (NoResultException e) {
+        } catch (NoResultException | EmptyResultException e) {
             throw notFound(methodInfo);
         } catch (Exception e) {
             throw repositoryFailed(e, methodInfo);
@@ -373,7 +371,7 @@ public class BaseService<T> {
         logEnter(methodInfo);
         try {
             return Optional.ofNullable(function.get());
-        } catch (NoResultException e) {
+        } catch (NoResultException | EmptyResultException e) {
             return Optional.empty();
         } catch (Exception e) {
             throw repositoryFailed(e, methodInfo);
@@ -393,7 +391,7 @@ public class BaseService<T> {
         }
         try {
             return function.apply(p1);
-        } catch (NoResultException e) {
+        } catch (NoResultException | EmptyResultException e) {
             throw notFound(methodInfo, p1);
         } catch (Exception e) {
             throw repositoryFailed(e, methodInfo, p1);
@@ -413,7 +411,7 @@ public class BaseService<T> {
         }
         try {
             return Optional.ofNullable(function.apply(p1));
-        } catch (NoResultException e) {
+        } catch (NoResultException | EmptyResultException e) {
             return Optional.empty();
         } catch (Exception e) {
             throw repositoryFailed(e, methodInfo, p1);
@@ -451,7 +449,7 @@ public class BaseService<T> {
         }
         try {
             return function.apply(p1, p2);
-        } catch (NoResultException e) {
+        } catch (NoResultException | EmptyResultException e) {
             throw notFound(methodInfo, p1, p2);
         } catch (Exception e) {
             throw repositoryFailed(e, methodInfo, p1, p2);
@@ -471,7 +469,7 @@ public class BaseService<T> {
         }
         try {
             return Optional.ofNullable(function.apply(p1, p2));
-        } catch (NoResultException e) {
+        } catch (NoResultException | EmptyResultException e) {
             return Optional.empty();
         } catch (Exception e) {
             throw repositoryFailed(e, methodInfo, p1, p2);
@@ -509,7 +507,7 @@ public class BaseService<T> {
         }
         try {
             return function.apply(p1, p2, p3);
-        } catch (NoResultException e) {
+        } catch (NoResultException | EmptyResultException e) {
             throw notFound(methodInfo, p1, p2, p3);
         } catch (Exception e) {
             throw repositoryFailed(e, methodInfo, p1, p2, p3);
@@ -529,7 +527,7 @@ public class BaseService<T> {
         }
         try {
             return Optional.ofNullable(function.apply(p1, p2, p3));
-        } catch (NoResultException e) {
+        } catch (NoResultException | EmptyResultException e) {
             return Optional.empty();
         } catch (Exception e) {
             throw repositoryFailed(e, methodInfo, p1, p2, p3);
@@ -567,7 +565,7 @@ public class BaseService<T> {
         }
         try {
             return function.apply(p1, p2, p3, p4);
-        } catch (NoResultException e) {
+        } catch (NoResultException | EmptyResultException e) {
             throw notFound(methodInfo, p1, p2, p3, p4);
         } catch (Exception e) {
             throw repositoryFailed(e, methodInfo, p1, p2, p3, p4);
@@ -587,7 +585,7 @@ public class BaseService<T> {
         }
         try {
             return Optional.ofNullable(function.apply(p1, p2, p3, p4));
-        } catch (NoResultException e) {
+        } catch (NoResultException | EmptyResultException e) {
             return Optional.empty();
         } catch (Exception e) {
             throw repositoryFailed(e, methodInfo, p1, p2, p3, p4);
@@ -626,7 +624,7 @@ public class BaseService<T> {
         }
         try {
             return function.apply(p1, p2, p3, p4, p5);
-        } catch (NoResultException e) {
+        } catch (NoResultException | EmptyResultException e) {
             throw notFound(methodInfo, p1, p2, p3, p4, p5);
         } catch (Exception e) {
             throw repositoryFailed(e, methodInfo, p1, p2, p3, p4, p5);
@@ -647,7 +645,7 @@ public class BaseService<T> {
         }
         try {
             return Optional.ofNullable(function.apply(p1, p2, p3, p4, p5));
-        } catch (NoResultException e) {
+        } catch (NoResultException | EmptyResultException e) {
             return Optional.empty();
         } catch (Exception e) {
             throw repositoryFailed(e, methodInfo, p1, p2, p3, p4, p5);

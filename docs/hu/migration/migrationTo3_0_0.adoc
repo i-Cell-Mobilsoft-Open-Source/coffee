@@ -1,0 +1,26 @@
+= v3.0.0
+
+== Változások
+
+=== Általános
+* https://jakarta.ee/release/11/[Jakarta EE 11] introducing Jakarta Data 1.0
+* WildFly 41+ támogatás
+** https://www.wildfly.org/news/2026/05/21/WildFly-40-is-released/
+** https://www.wildfly.org/news/2026/07/16/WildFly-41-is-released/
+* Hibernate 7.x
+
+.Migration
+* Jakarta EE api verziók lekövetése
+* Hibernate https://hibernate.org/orm/documentation/migrate/[migration guide] lekövetése
+
+=== coffee-grpc-metrics-mpmetrics
+* Module törlésre került
+
+.Migration
+Mielőtt erre a Coffee-verzióra frissítene, migráljon OpenTelemetryre.
+
+=== coffee-deltaspike
+* A modul deprecated, és a jövőben el lesz távolítva..
+
+.Migration
+A jövőben el lesz távolítva, de a jelenlegi változtatások visszafelé kompatibilisek, és nincs szükség migrációra.
