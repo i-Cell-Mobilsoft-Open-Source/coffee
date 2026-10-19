@@ -8,6 +8,9 @@
 ** https://www.wildfly.org/news/2026/05/21/WildFly-40-is-released/
 ** https://www.wildfly.org/news/2026/07/16/WildFly-41-is-released/
 * Hibernate 7.x
+* Kisebb optimalizációk
+* `hu.icellmobilsoft.coffee.rest.log.BaseRestLogger` deprecated lett,
+`hu.icellmobilsoft.coffee.rest.log.optimized.BaseRestLogger`-t érdemes használni helyette
 
 .Migration
 * Jakarta EE api verziók lekövetése

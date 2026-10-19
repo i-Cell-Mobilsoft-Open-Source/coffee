@@ -112,13 +112,14 @@ public class BaseService<T> {
             try {
                 entity = getEntityManager().find(clazz, id);
             } catch (Exception e) {
-                String msg = MessageFormat.format("Error occured in finding class: [{0}] by id: [{1}]: [{2}]", clazz.getCanonicalName(), id,
-                        e.getLocalizedMessage());
+                String msg = MessageFormat
+                        .format("Error occured in finding class: [{0}] by id: [{1}]: [{2}]", clazz.getCanonicalName(), id, e.getLocalizedMessage());
                 log.error(msg, e);
                 throw new TechnicalException(CoffeeFaultType.REPOSITORY_FAILED, msg, e);
             }
             if (entity == null) {
-                throw new BONotFoundException(getDefaultNotFoundFaultTypeEnum(),
+                throw new BONotFoundException(
+                        getDefaultNotFoundFaultTypeEnum(),
                         MessageFormat.format("Entity id: [{0}] for class: [{1}] not found", id, clazz.getCanonicalName()));
             }
             return entity;
@@ -149,8 +150,8 @@ public class BaseService<T> {
             try {
                 entity = getEntityManager().find(clazz, id);
             } catch (Exception e) {
-                String msg = MessageFormat.format("Error occured in finding class: [{0}] by id: [{1}]: [{2}]", clazz.getCanonicalName(), id,
-                        e.getLocalizedMessage());
+                String msg = MessageFormat
+                        .format("Error occured in finding class: [{0}] by id: [{1}]: [{2}]", clazz.getCanonicalName(), id, e.getLocalizedMessage());
                 log.error(msg, e);
                 throw new TechnicalException(CoffeeFaultType.REPOSITORY_FAILED, msg, e);
             }
@@ -175,8 +176,8 @@ public class BaseService<T> {
             try {
                 return getEntityManager().createQuery("SELECT e FROM " + clazz.getSimpleName() + " e", clazz).getResultList();
             } catch (Exception e) {
-                String msg = MessageFormat.format("Error occured in finding all class: [{0}] : [{1}]", clazz.getCanonicalName(),
-                        e.getLocalizedMessage());
+                String msg = MessageFormat
+                        .format("Error occured in finding all class: [{0}] : [{1}]", clazz.getCanonicalName(), e.getLocalizedMessage());
                 log.error(msg, e);
                 throw new TechnicalException(CoffeeFaultType.REPOSITORY_FAILED, msg, e);
             }
@@ -1829,15 +1830,16 @@ public class BaseService<T> {
                 continue;
             }
             if (copy[i] instanceof Collection<?>) {
-                copy[i] = new StringBuilder().append("Collection[")
-                        .append(((Collection<?>) copy[i]).stream().map(String::valueOf).collect(Collectors.joining(","))).append("]").toString();
+                copy[i] = ((Collection<?>) copy[i]).stream().map(String::valueOf).collect(Collectors.joining(",", "Collection[", "]"));
             }
             if (copy[i] instanceof Map<?, ?>) {
-                copy[i] = new StringBuilder().append("Map[").append(((Map<?, ?>) copy[i]).entrySet().stream()
-                        .map(e -> "[" + e.getKey() + "," + e.getValue() + "]").collect(Collectors.joining(","))).append("]").toString();
+                copy[i] = ((Map<?, ?>) copy[i]).entrySet()
+                        .stream()
+                        .map(e -> "[" + e.getKey() + "," + e.getValue() + "]")
+                        .collect(Collectors.joining(",", "Map[", "]"));
             }
             if (copy[i].getClass().isArray()) {
-                copy[i] = new StringBuilder().append("Array").append(Arrays.toString((Object[]) copy[i])).toString();
+                copy[i] = "Array" + Arrays.toString((Object[]) copy[i]);
             }
         }
         return copy;
@@ -1853,7 +1855,8 @@ public class BaseService<T> {
      * @return {@link BONotFoundException} with message from methodInfo.
      */
     protected BONotFoundException notFound(String methodInfo, Object... params) {
-        return new BONotFoundException(getDefaultNotFoundFaultTypeEnum(),
+        return new BONotFoundException(
+                getDefaultNotFoundFaultTypeEnum(),
                 MessageFormat.format("Entry for " + methodInfo + " not found!", prepareParametersToLog(params)));
     }
 
@@ -1872,9 +1875,8 @@ public class BaseService<T> {
         List<Object> paramsList = new ArrayList<>(Arrays.asList(params));
         paramsList.add(e.getLocalizedMessage());
 
-        StringBuilder sb = new StringBuilder();
-        sb.append("Error occurred in ").append(methodInfo).append(" : [{").append(params.length).append("}]");
-        String msg = MessageFormat.format(sb.toString(), prepareParametersToLog(paramsList.toArray()));
+        String pattern = "Error occurred in " + methodInfo + " : [{" + params.length + "}]";
+        String msg = MessageFormat.format(pattern, prepareParametersToLog(paramsList.toArray()));
         return new TechnicalException(CoffeeFaultType.REPOSITORY_FAILED, msg, e);
     }
 

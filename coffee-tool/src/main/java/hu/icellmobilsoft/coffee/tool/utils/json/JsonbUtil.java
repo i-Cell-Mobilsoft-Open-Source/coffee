@@ -226,26 +226,28 @@ public class JsonbUtil {
 
     @SuppressWarnings("rawtypes")
     private static JsonbSerializer[] getSerializers(Config config) {
-        List<JsonbSerializer> jsonbSerializers = new ArrayList<>();
         Optional<List<String>> customClassNames = config.getOptionalValues(CUSTOM_SERIALIZERS, String.class);
-        if (customClassNames.isPresent()) {
-            // add custom serializers from config
-            for (String customAdapterClass : customClassNames.get()) {
-                jsonbSerializers.add(getCustomClassInstance(customAdapterClass));
-            }
+        if (customClassNames.isEmpty()) {
+            return new JsonbSerializer[0];
+        }
+        // add custom serializers from config
+        List<JsonbSerializer> jsonbSerializers = new ArrayList<>(customClassNames.get().size());
+        for (String customAdapterClass : customClassNames.get()) {
+            jsonbSerializers.add(getCustomClassInstance(customAdapterClass));
         }
         return jsonbSerializers.toArray(new JsonbSerializer[0]);
     }
 
     @SuppressWarnings("rawtypes")
     private static JsonbDeserializer[] getDeserializers(Config config) {
-        List<JsonbDeserializer> jsonbDeserializers = new ArrayList<>();
         Optional<List<String>> customClassNames = config.getOptionalValues(CUSTOM_DESERIALIZERS, String.class);
-        if (customClassNames.isPresent()) {
-            // add custom serializers from config
-            for (String customAdapterClass : customClassNames.get()) {
-                jsonbDeserializers.add(getCustomClassInstance(customAdapterClass));
-            }
+        if (customClassNames.isEmpty()) {
+            return new JsonbDeserializer[0];
+        }
+        // add custom serializers from config
+        List<JsonbDeserializer> jsonbDeserializers = new ArrayList<>(customClassNames.get().size());
+        for (String customAdapterClass : customClassNames.get()) {
+            jsonbDeserializers.add(getCustomClassInstance(customAdapterClass));
         }
         return jsonbDeserializers.toArray(new JsonbDeserializer[0]);
     }

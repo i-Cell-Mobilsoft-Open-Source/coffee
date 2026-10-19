@@ -49,9 +49,12 @@ import hu.icellmobilsoft.coffee.se.util.string.RandomUtil;
 /**
  * Base class for REST logging
  *
+ * @deprecated use {@link hu.icellmobilsoft.coffee.rest.log.optimized.BaseRestLogger} instead
+ *
  * @author ischeffer
  * @since 1.0.0
  */
+@Deprecated
 public abstract class BaseRestLogger implements ContainerRequestFilter, WriterInterceptor, ContainerResponseFilter {
     private static final String STATUS_PROPERTY = "response.status";
 
@@ -101,7 +104,7 @@ public abstract class BaseRestLogger implements ContainerRequestFilter, WriterIn
             return null;
         }
 
-        StringBuffer message = new StringBuffer();
+        StringBuffer message = new StringBuffer(64);
         printRequestLine(message, requestContext);
         printRequestHeaders(message, requestContext);
         printRequestEntity(message, requestContext);
@@ -126,7 +129,7 @@ public abstract class BaseRestLogger implements ContainerRequestFilter, WriterIn
             return null;
         }
 
-        StringBuffer message = new StringBuffer();
+        StringBuffer message = new StringBuffer(64);
         try {
 
             printResponseLine(message, context);

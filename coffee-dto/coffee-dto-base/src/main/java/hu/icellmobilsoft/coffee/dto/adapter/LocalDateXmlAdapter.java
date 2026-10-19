@@ -54,7 +54,7 @@ public class LocalDateXmlAdapter extends XmlAdapter<String, LocalDate> {
          * ('2011-12-03' or '2011-12-03+01:00') representation of date as {@link String}
          */
         try {
-            Long timeInMillis = Long.parseLong(v);
+            long timeInMillis = Long.parseLong(v);
             Instant instant = Instant.ofEpochMilli(timeInMillis);
             return LocalDateTime.ofInstant(instant, ZoneOffset.UTC).toLocalDate();
         } catch (NumberFormatException e) {
