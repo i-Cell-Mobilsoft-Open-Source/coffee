@@ -46,7 +46,7 @@ import hu.icellmobilsoft.coffee.module.redisstream.config.StreamGroupConfig;
  * @since 1.3.0
  *
  */
-@Target({ ElementType.FIELD, ElementType.METHOD })
+@Target({ ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER })
 @Retention(RetentionPolicy.RUNTIME)
 @Qualifier
 public @interface RedisStreamProducer {
