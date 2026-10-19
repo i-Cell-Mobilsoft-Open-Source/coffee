@@ -1,21 +1,45 @@
-= v2.x → v3.0.0
+= v3.0.0
 
-coff:ee v2.x -> v3.0.0 migration description, news, changes
+== Changes
+
+=== General
+* https://jakarta.ee/release/11/[Jakarta EE 11] introducing Jakarta Data 1.0
+* WildFly 41+ support
+** https://www.wildfly.org/news/2026/05/21/WildFly-40-is-released/
+** https://www.wildfly.org/news/2026/07/16/WildFly-41-is-released/
+* Hibernate 7.x
+* minor optimizations
+* `hu.icellmobilsoft.coffee.rest.log.BaseRestLogger` became deprecated,
+`hu.icellmobilsoft.coffee.rest.log.optimized.BaseRestLogger` should be used instead
+
+.Migration
+* Upgrade Jakarta EE api versions
+* Follow the Hibernate https://hibernate.org/orm/documentation/migrate/[migration guide]
+
+=== coffee-grpc-metrics-mpmetrics
+* Module removed
+
+.Migration
+Before upgrading to this Coffee version, migrate to OpenTelemetry
+
+=== coffee-deltaspike
+* Module deprecated and will be removed in the future.
+
+.Migration
+Will be removed in the future, but for now the changes are backwards compatible doesn't need any migration.
 
 [#migration_to_3_0_0_gson]
-== coffee-tool: separating JsonUtil and GsonUtil
-
-`hu.icellmobilsoft.coffee.tool.utils.json.JsonUtil` now contains only JSON-B-based conversions
-and can be used without Gson. Gson-based operations have moved to
-`hu.icellmobilsoft.coffee.tool.utils.json.GsonUtil`, which remains in the `coffee-tool` module.
-
-The `com.google.code.gson:gson` dependency is optional (`optional=true`) in the `coffee-tool` POM.
+=== coffee-tool
+* `hu.icellmobilsoft.coffee.tool.utils.json.JsonUtil` now contains only JSON-B-based conversions
+and can be used without Gson.
+* Gson-based operations have moved to `hu.icellmobilsoft.coffee.tool.utils.json.GsonUtil`,
+which remains in the `coffee-tool` module.
+* The `com.google.code.gson:gson` dependency is optional (`optional=true`) in the `coffee-tool` POM.
 It remains available when compiling and testing `coffee-tool`, but is no longer added automatically
 to a consuming application's classpath through this dependency.
 Other dependencies, such as `coffee-module-redis` or `coffee-module-mongodb`, may still bring in Gson.
 
-=== Migration
-
+.Migration
 The previous Gson-based methods, including the already deprecated methods, have been removed from `JsonUtil`.
 This is a breaking API change: code using these methods must be updated and recompiled.
 Method names and parameters are preserved in `GsonUtil`; the following replacements also apply to overloads.

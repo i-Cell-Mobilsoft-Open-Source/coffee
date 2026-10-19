@@ -165,10 +165,10 @@ public class ExceptionHandler {
     }
 
     private ImmutableList<Bean<?>> resolveParameterizedBeans(Class<?> beanClass, Class<?> parameterClass) {
-        List<Bean<?>> beansFound = new ArrayList<>();
         if (Object.class == parameterClass) {
             return ImmutableList.of();
         }
+        List<Bean<?>> beansFound = new ArrayList<>();
         ParameterizedType parameterizedType = TypeUtils.parameterize(beanClass, parameterClass);
         Set<Bean<?>> beans = CDI.current().getBeanManager().getBeans(parameterizedType);
         if (beans != null && !beans.isEmpty()) {

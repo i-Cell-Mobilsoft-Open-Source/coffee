@@ -28,6 +28,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import jakarta.data.exceptions.EmptyResultException;
+import jakarta.data.exceptions.OptimisticLockingFailureException;
 import jakarta.enterprise.context.Dependent;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
@@ -110,13 +112,14 @@ public class BaseService<T> {
             try {
                 entity = getEntityManager().find(clazz, id);
             } catch (Exception e) {
-                String msg = MessageFormat.format("Error occured in finding class: [{0}] by id: [{1}]: [{2}]", clazz.getCanonicalName(), id,
-                        e.getLocalizedMessage());
+                String msg = MessageFormat
+                        .format("Error occured in finding class: [{0}] by id: [{1}]: [{2}]", clazz.getCanonicalName(), id, e.getLocalizedMessage());
                 log.error(msg, e);
                 throw new TechnicalException(CoffeeFaultType.REPOSITORY_FAILED, msg, e);
             }
             if (entity == null) {
-                throw new BONotFoundException(getDefaultNotFoundFaultTypeEnum(),
+                throw new BONotFoundException(
+                        getDefaultNotFoundFaultTypeEnum(),
                         MessageFormat.format("Entity id: [{0}] for class: [{1}] not found", id, clazz.getCanonicalName()));
             }
             return entity;
@@ -147,8 +150,8 @@ public class BaseService<T> {
             try {
                 entity = getEntityManager().find(clazz, id);
             } catch (Exception e) {
-                String msg = MessageFormat.format("Error occured in finding class: [{0}] by id: [{1}]: [{2}]", clazz.getCanonicalName(), id,
-                        e.getLocalizedMessage());
+                String msg = MessageFormat
+                        .format("Error occured in finding class: [{0}] by id: [{1}]: [{2}]", clazz.getCanonicalName(), id, e.getLocalizedMessage());
                 log.error(msg, e);
                 throw new TechnicalException(CoffeeFaultType.REPOSITORY_FAILED, msg, e);
             }
@@ -173,8 +176,8 @@ public class BaseService<T> {
             try {
                 return getEntityManager().createQuery("SELECT e FROM " + clazz.getSimpleName() + " e", clazz).getResultList();
             } catch (Exception e) {
-                String msg = MessageFormat.format("Error occured in finding all class: [{0}] : [{1}]", clazz.getCanonicalName(),
-                        e.getLocalizedMessage());
+                String msg = MessageFormat
+                        .format("Error occured in finding all class: [{0}] : [{1}]", clazz.getCanonicalName(), e.getLocalizedMessage());
                 log.error(msg, e);
                 throw new TechnicalException(CoffeeFaultType.REPOSITORY_FAILED, msg, e);
             }
@@ -206,7 +209,7 @@ public class BaseService<T> {
             getEntityManager().refresh(savedEntity);
             log.debug("[{0}] entity has been saved", entityName);
             return savedEntity;
-        } catch (OptimisticLockException e) {
+        } catch (OptimisticLockException | OptimisticLockingFailureException e) {
             String msg = MessageFormat.format("Optimistic Lock Error in saving [{0}]: [{1}]", entityName, e.getLocalizedMessage());
             log.error(msg, e);
             throw new hu.icellmobilsoft.coffee.dto.exception.OptimisticLockException(CoffeeFaultType.OPTIMISTIC_LOCK_EXCEPTION, msg, e);
@@ -267,7 +270,7 @@ public class BaseService<T> {
             getEntityManager().remove(entity);
             getEntityManager().flush();
             log.debug("[{0}] entity has been deleted", entityName);
-        } catch (OptimisticLockException e) {
+        } catch (OptimisticLockException | OptimisticLockingFailureException e) {
             String msg = MessageFormat.format("Optimistic Lock Error in deleting [{0}]: [{1}]", entityName, e.getLocalizedMessage());
             log.error(msg, e);
             throw new hu.icellmobilsoft.coffee.dto.exception.OptimisticLockException(CoffeeFaultType.OPTIMISTIC_LOCK_EXCEPTION, msg, e);
@@ -297,9 +300,7 @@ public class BaseService<T> {
      * @return the input completed to a like parameter
      */
     public static String likeParameter(String string) {
-        StringBuffer sb = new StringBuffer();
-        sb.append("%").append(string).append("%");
-        return sb.toString();
+        return "%" + string + "%";
     }
 
     /**
@@ -310,9 +311,7 @@ public class BaseService<T> {
      * @return the input completed to an after like parameter
      */
     public static String afterLikeParameter(String string) {
-        StringBuffer sb = new StringBuffer();
-        sb.append(string).append("%");
-        return sb.toString();
+        return string + "%";
     }
 
     /**
@@ -346,7 +345,7 @@ public class BaseService<T> {
         logEnter(methodInfo);
         try {
             return function.get();
-        } catch (NoResultException e) {
+        } catch (NoResultException | EmptyResultException e) {
             throw notFound(methodInfo);
         } catch (Exception e) {
             throw repositoryFailed(e, methodInfo);
@@ -373,7 +372,7 @@ public class BaseService<T> {
         logEnter(methodInfo);
         try {
             return Optional.ofNullable(function.get());
-        } catch (NoResultException e) {
+        } catch (NoResultException | EmptyResultException e) {
             return Optional.empty();
         } catch (Exception e) {
             throw repositoryFailed(e, methodInfo);
@@ -393,7 +392,7 @@ public class BaseService<T> {
         }
         try {
             return function.apply(p1);
-        } catch (NoResultException e) {
+        } catch (NoResultException | EmptyResultException e) {
             throw notFound(methodInfo, p1);
         } catch (Exception e) {
             throw repositoryFailed(e, methodInfo, p1);
@@ -413,7 +412,7 @@ public class BaseService<T> {
         }
         try {
             return Optional.ofNullable(function.apply(p1));
-        } catch (NoResultException e) {
+        } catch (NoResultException | EmptyResultException e) {
             return Optional.empty();
         } catch (Exception e) {
             throw repositoryFailed(e, methodInfo, p1);
@@ -451,7 +450,7 @@ public class BaseService<T> {
         }
         try {
             return function.apply(p1, p2);
-        } catch (NoResultException e) {
+        } catch (NoResultException | EmptyResultException e) {
             throw notFound(methodInfo, p1, p2);
         } catch (Exception e) {
             throw repositoryFailed(e, methodInfo, p1, p2);
@@ -471,7 +470,7 @@ public class BaseService<T> {
         }
         try {
             return Optional.ofNullable(function.apply(p1, p2));
-        } catch (NoResultException e) {
+        } catch (NoResultException | EmptyResultException e) {
             return Optional.empty();
         } catch (Exception e) {
             throw repositoryFailed(e, methodInfo, p1, p2);
@@ -509,7 +508,7 @@ public class BaseService<T> {
         }
         try {
             return function.apply(p1, p2, p3);
-        } catch (NoResultException e) {
+        } catch (NoResultException | EmptyResultException e) {
             throw notFound(methodInfo, p1, p2, p3);
         } catch (Exception e) {
             throw repositoryFailed(e, methodInfo, p1, p2, p3);
@@ -529,7 +528,7 @@ public class BaseService<T> {
         }
         try {
             return Optional.ofNullable(function.apply(p1, p2, p3));
-        } catch (NoResultException e) {
+        } catch (NoResultException | EmptyResultException e) {
             return Optional.empty();
         } catch (Exception e) {
             throw repositoryFailed(e, methodInfo, p1, p2, p3);
@@ -567,7 +566,7 @@ public class BaseService<T> {
         }
         try {
             return function.apply(p1, p2, p3, p4);
-        } catch (NoResultException e) {
+        } catch (NoResultException | EmptyResultException e) {
             throw notFound(methodInfo, p1, p2, p3, p4);
         } catch (Exception e) {
             throw repositoryFailed(e, methodInfo, p1, p2, p3, p4);
@@ -587,7 +586,7 @@ public class BaseService<T> {
         }
         try {
             return Optional.ofNullable(function.apply(p1, p2, p3, p4));
-        } catch (NoResultException e) {
+        } catch (NoResultException | EmptyResultException e) {
             return Optional.empty();
         } catch (Exception e) {
             throw repositoryFailed(e, methodInfo, p1, p2, p3, p4);
@@ -626,7 +625,7 @@ public class BaseService<T> {
         }
         try {
             return function.apply(p1, p2, p3, p4, p5);
-        } catch (NoResultException e) {
+        } catch (NoResultException | EmptyResultException e) {
             throw notFound(methodInfo, p1, p2, p3, p4, p5);
         } catch (Exception e) {
             throw repositoryFailed(e, methodInfo, p1, p2, p3, p4, p5);
@@ -647,7 +646,7 @@ public class BaseService<T> {
         }
         try {
             return Optional.ofNullable(function.apply(p1, p2, p3, p4, p5));
-        } catch (NoResultException e) {
+        } catch (NoResultException | EmptyResultException e) {
             return Optional.empty();
         } catch (Exception e) {
             throw repositoryFailed(e, methodInfo, p1, p2, p3, p4, p5);
@@ -1831,15 +1830,16 @@ public class BaseService<T> {
                 continue;
             }
             if (copy[i] instanceof Collection<?>) {
-                copy[i] = new StringBuilder().append("Collection[")
-                        .append(((Collection<?>) copy[i]).stream().map(String::valueOf).collect(Collectors.joining(","))).append("]").toString();
+                copy[i] = ((Collection<?>) copy[i]).stream().map(String::valueOf).collect(Collectors.joining(",", "Collection[", "]"));
             }
             if (copy[i] instanceof Map<?, ?>) {
-                copy[i] = new StringBuilder().append("Map[").append(((Map<?, ?>) copy[i]).entrySet().stream()
-                        .map(e -> "[" + e.getKey() + "," + e.getValue() + "]").collect(Collectors.joining(","))).append("]").toString();
+                copy[i] = ((Map<?, ?>) copy[i]).entrySet()
+                        .stream()
+                        .map(e -> "[" + e.getKey() + "," + e.getValue() + "]")
+                        .collect(Collectors.joining(",", "Map[", "]"));
             }
             if (copy[i].getClass().isArray()) {
-                copy[i] = new StringBuilder().append("Array").append(Arrays.toString((Object[]) copy[i])).toString();
+                copy[i] = "Array" + Arrays.toString((Object[]) copy[i]);
             }
         }
         return copy;
@@ -1855,7 +1855,8 @@ public class BaseService<T> {
      * @return {@link BONotFoundException} with message from methodInfo.
      */
     protected BONotFoundException notFound(String methodInfo, Object... params) {
-        return new BONotFoundException(getDefaultNotFoundFaultTypeEnum(),
+        return new BONotFoundException(
+                getDefaultNotFoundFaultTypeEnum(),
                 MessageFormat.format("Entry for " + methodInfo + " not found!", prepareParametersToLog(params)));
     }
 
@@ -1874,9 +1875,8 @@ public class BaseService<T> {
         List<Object> paramsList = new ArrayList<>(Arrays.asList(params));
         paramsList.add(e.getLocalizedMessage());
 
-        StringBuilder sb = new StringBuilder();
-        sb.append("Error occurred in ").append(methodInfo).append(" : [{").append(params.length).append("}]");
-        String msg = MessageFormat.format(sb.toString(), prepareParametersToLog(paramsList.toArray()));
+        String pattern = "Error occurred in " + methodInfo + " : [{" + params.length + "}]";
+        String msg = MessageFormat.format(pattern, prepareParametersToLog(paramsList.toArray()));
         return new TechnicalException(CoffeeFaultType.REPOSITORY_FAILED, msg, e);
     }
 

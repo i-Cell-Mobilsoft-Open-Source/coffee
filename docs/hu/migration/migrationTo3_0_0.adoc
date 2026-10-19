@@ -1,21 +1,45 @@
-= v2.x → v3.0.0
+= v3.0.0
 
-coff:ee v2.x -> v3.0.0 migrációs leírás, újdonságok, változások leírása
+== Változások
+
+=== Általános
+* https://jakarta.ee/release/11/[Jakarta EE 11] introducing Jakarta Data 1.0
+* WildFly 41+ támogatás
+** https://www.wildfly.org/news/2026/05/21/WildFly-40-is-released/
+** https://www.wildfly.org/news/2026/07/16/WildFly-41-is-released/
+* Hibernate 7.x
+* Kisebb optimalizációk
+* `hu.icellmobilsoft.coffee.rest.log.BaseRestLogger` deprecated lett,
+`hu.icellmobilsoft.coffee.rest.log.optimized.BaseRestLogger`-t érdemes használni helyette
+
+.Migration
+* Jakarta EE api verziók lekövetése
+* Hibernate https://hibernate.org/orm/documentation/migrate/[migration guide] lekövetése
+
+=== coffee-grpc-metrics-mpmetrics
+* Module törlésre került
+
+.Migration
+Mielőtt erre a Coffee-verzióra frissítene, migráljon OpenTelemetryre.
+
+=== coffee-deltaspike
+* A modul deprecated, és a jövőben el lesz távolítva..
+
+.Migration
+A jövőben el lesz távolítva, de a jelenlegi változtatások visszafelé kompatibilisek, és nincs szükség migrációra.
 
 [#migration_to_3_0_0_gson]
-== coffee-tool: JsonUtil és GsonUtil szétválasztása
-
-A `hu.icellmobilsoft.coffee.tool.utils.json.JsonUtil` kizárólag JSON-B-alapú konverziókat tartalmaz,
-így Gson nélkül is használható. A Gson-alapú műveletek a szintén `coffee-tool` modulban található
+=== coffee-tool
+* A `hu.icellmobilsoft.coffee.tool.utils.json.JsonUtil` kizárólag JSON-B-alapú konverziókat tartalmaz,
+így Gson nélkül is használható.
+* A Gson-alapú műveletek a szintén `coffee-tool` modulban található
 `hu.icellmobilsoft.coffee.tool.utils.json.GsonUtil` osztályba kerültek.
-
-A `com.google.code.gson:gson` függőség a `coffee-tool` POM-jában opcionális (`optional=true`).
+* A `com.google.code.gson:gson` függőség a `coffee-tool` POM-jában opcionális (`optional=true`).
 A `coffee-tool` fordításához és tesztjeihez továbbra is elérhető, de ezen a függőségen keresztül
 nem kerül automatikusan a felhasználó alkalmazás classpathjára.
 Más függőség, például a `coffee-module-redis` vagy a `coffee-module-mongodb`, továbbra is behozhatja a Gsont.
 
-=== Migration
-
+.Migration
 A korábbi Gson-alapú metódusok, köztük a már deprecated metódusok, eltűntek a `JsonUtil` osztályból.
 A változás nem visszafelé kompatibilis: az ezeket használó kódot át kell állítani és újra kell fordítani.
 A metódusnevek és paraméterek a `GsonUtil` osztályban megmaradtak; az alábbi átállás az overloadokra is vonatkozik.

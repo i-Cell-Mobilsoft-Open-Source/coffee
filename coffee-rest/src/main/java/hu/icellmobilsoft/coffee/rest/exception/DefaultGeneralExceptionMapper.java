@@ -244,12 +244,11 @@ public class DefaultGeneralExceptionMapper implements ExceptionMapper<Exception>
         String sessionId = servletRequest.getHeader(LogConstants.LOG_SESSION_ID);
         MDC.put(LogConstants.LOG_SESSION_ID, StringUtils.defaultIfBlank(sessionId, RandomUtil.generateId()));
         // kiloggoljuk a request-et
-        StringBuilder sb = new StringBuilder();
-        sb.append("Exception occured on REST input, original request is:\n");
-        sb.append(requestResponseLogger.printRequestLine(servletRequest));
-        sb.append(requestResponseLogger.printRequestHeaders(servletRequest));
-        sb.append(requestResponseLogger.printRequestEntity(servletRequest));
-        log.info(sb.toString());
+        String sb = "Exception occured on REST input, original request is:\n" + //
+                requestResponseLogger.printRequestLine(servletRequest) + //
+                requestResponseLogger.printRequestHeaders(servletRequest) + //
+                requestResponseLogger.printRequestEntity(servletRequest);
+        log.info(sb);
     }
 
     /**

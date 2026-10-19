@@ -47,24 +47,13 @@
 						</configuration>
 					</execution>
 				</executions>
-				<!-- https://hibernate.atlassian.net/browse/HHH-12991 -->
 				<configuration>
 					<annotationProcessorPaths>
 						<annotationProcessorPath>
 							<groupId>org.hibernate.orm</groupId>
-							<artifactId>hibernate-jpamodelgen</artifactId>
-							<version>${hibernate.jpamodelgen.version}</version>
+							<artifactId>hibernate-processor</artifactId>
+							<version>7.4.5.Final</version>
 						</annotationProcessorPath>
-						<path>
-							<groupId>jakarta.xml.bind</groupId>
-							<artifactId>jakarta.xml.bind-api</artifactId>
-							<version>4.0.0</version>
-						</path>
-						<path>
-							<groupId>jakarta.annotation</groupId>
-							<artifactId>jakarta.annotation-api</artifactId>
-							<version>2.1.0</version>
-						</path>
 					</annotationProcessorPaths>
 				</configuration>
 			</plugin>
