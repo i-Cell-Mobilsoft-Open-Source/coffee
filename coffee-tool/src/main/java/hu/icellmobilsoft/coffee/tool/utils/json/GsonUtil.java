@@ -19,10 +19,25 @@
  */
 package hu.icellmobilsoft.coffee.tool.utils.json;
 
+import java.io.Reader;
+import java.io.StringReader;
+import java.lang.reflect.Type;
+import java.time.LocalDate;
+import java.time.OffsetDateTime;
+import java.time.OffsetTime;
+import java.time.YearMonth;
+import java.util.Date;
+
+import javax.xml.datatype.Duration;
+import javax.xml.datatype.XMLGregorianCalendar;
+
+import org.apache.commons.lang3.StringUtils;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.stream.JsonReader;
+
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
@@ -35,17 +50,6 @@ import hu.icellmobilsoft.coffee.tool.gson.OffsetDateTimeConverter;
 import hu.icellmobilsoft.coffee.tool.gson.OffsetTimeConverter;
 import hu.icellmobilsoft.coffee.tool.gson.XMLGregorianCalendarConverter;
 import hu.icellmobilsoft.coffee.tool.gson.YearMonthConverter;
-import java.io.Reader;
-import java.io.StringReader;
-import java.lang.reflect.Type;
-import java.time.LocalDate;
-import java.time.OffsetDateTime;
-import java.time.OffsetTime;
-import java.time.YearMonth;
-import java.util.Date;
-import javax.xml.datatype.Duration;
-import javax.xml.datatype.XMLGregorianCalendar;
-import org.apache.commons.lang3.StringUtils;
 
 /**
  * Gson based json util. Gson is an optional dependency, this class must be used only if Gson is on the classpath, otherwise use {@link JsonUtil}.
