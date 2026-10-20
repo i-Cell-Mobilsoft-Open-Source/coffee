@@ -194,20 +194,20 @@ class AbstractWildFlyManagementVersionInfoTest {
     @Test
     void usesOverriddenPathForRequestsAndRemovesTheOriginallyRegisteredPath() throws Exception {
         AbstractWildFlyManagementVersionInfo customEndpoint = spy(endpoint);
-        doReturn("/version/hugo-hd-public").when(customEndpoint).getPath();
+        doReturn("/version/myService").when(customEndpoint).getPath();
         customEndpoint.registerManagementRoutes(servletContext);
         ArgumentCaptor<HttpHandler> handler = ArgumentCaptor.forClass(HttpHandler.class);
-        verify(management).addManagementHandler(eq("/version/hugo-hd-public"), eq(false), handler.capture());
+        verify(management).addManagementHandler(eq("/version/myService"), eq(false), handler.capture());
 
         doReturn("/version/changed").when(customEndpoint).getPath();
-        HttpResponse<String> response = request(handler.getValue(), "/version/hugo-hd-public", "GET");
+        HttpResponse<String> response = request(handler.getValue(), "/version/myService", "GET");
         assertEquals(StatusCodes.OK, response.statusCode());
         assertEquals("", response.body());
-        assertEquals(StatusCodes.NOT_FOUND, request(handler.getValue(), "/version/hugo-hd-public/other", "GET").statusCode());
+        assertEquals(StatusCodes.NOT_FOUND, request(handler.getValue(), "/version/myService/other", "GET").statusCode());
 
         customEndpoint.unregisterManagementRoutes(new Object());
         customEndpoint.unregisterManagementRoutes(new Object());
-        verify(management).removeContext("/version/hugo-hd-public");
+        verify(management).removeContext("/version/myService");
         verify(management, never()).removeContext("/version/changed");
     }
 

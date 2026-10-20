@@ -50,7 +50,7 @@ public class ManagementVersionInfo extends AbstractWildFlyManagementVersionInfo 
 }
 ----
 
-Ekkor a végpont `http://localhost:9990/version/hugo-hd-public` címen érhető el.
+Ekkor a végpont `http://localhost:9990/version/myService` címen érhető el.
 Az útvonal `/` karakterrel kezdődjön, és ne végződjön `/` karakterrel.
 A context root nem kerül automatikusan az útvonalba; deploymentenként egyedi útvonalat adjunk meg.
 Ha az alapértelmezett útvonal megfelelő, nem kell felülírni a metódust.

@@ -48,7 +48,7 @@ public class ManagementVersionInfo extends AbstractWildFlyManagementVersionInfo 
 }
 ----
 
-The endpoint is then available at `http://localhost:9990/version/hugo-hd-public`.
+The endpoint is then available at `http://localhost:9990/version/myService`.
 The path must start with `/` and must not end with `/`.
 The context root is not appended automatically; choose a unique path for each deployment.
 There is no need to override the method when the default path is suitable.
