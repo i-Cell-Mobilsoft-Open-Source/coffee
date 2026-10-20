@@ -94,4 +94,3 @@ Az `AbstractWildFlySystemRest.versionInfo()` Java-metódus és a `/versionInfo` 
 kompatibilitási okból megmaradt; a Java-metódus deprecated jelölést kapott.
 A fenti management bean hozzáadásával a verzióinformáció a management interfészen is elérhető.
 A Quarkus modul végpontját ez a változás nem érinti.
-

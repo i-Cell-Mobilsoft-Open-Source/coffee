@@ -23,9 +23,10 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 import jakarta.inject.Inject;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.ws.rs.container.ContainerRequestContext;
 import jakarta.ws.rs.container.ContainerRequestFilter;
+import jakarta.ws.rs.container.ContainerResponseContext;
+import jakarta.ws.rs.container.ContainerResponseFilter;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response.Status;
@@ -43,15 +44,19 @@ import hu.icellmobilsoft.coffee.rest.log.annotation.LogSpecifier;
 import hu.icellmobilsoft.coffee.rest.log.annotation.enumeration.LogSpecifierTarget;
 import hu.icellmobilsoft.coffee.rest.utils.RestLoggerUtil;
 import hu.icellmobilsoft.coffee.se.logging.mdc.MDC;
-import hu.icellmobilsoft.coffee.tool.utils.string.RandomUtil;
+import hu.icellmobilsoft.coffee.se.util.string.RandomUtil;
 
 /**
  * Base class for REST logging
  *
+ * @deprecated use {@link hu.icellmobilsoft.coffee.rest.log.optimized.BaseRestLogger} instead
+ *
  * @author ischeffer
  * @since 1.0.0
  */
-public abstract class BaseRestLogger implements ContainerRequestFilter, WriterInterceptor {
+@Deprecated
+public abstract class BaseRestLogger implements ContainerRequestFilter, WriterInterceptor, ContainerResponseFilter {
+    private static final String STATUS_PROPERTY = "response.status";
 
     @Inject
     @ThisLogger
@@ -65,9 +70,6 @@ public abstract class BaseRestLogger implements ContainerRequestFilter, WriterIn
 
     @Context
     private UriInfo uriInfo;
-
-    @Context
-    private HttpServletResponse httpServletResponse;
 
     /**
      * Default constructor, constructs a new object.
@@ -102,7 +104,7 @@ public abstract class BaseRestLogger implements ContainerRequestFilter, WriterIn
             return null;
         }
 
-        StringBuffer message = new StringBuffer();
+        StringBuffer message = new StringBuffer(64);
         printRequestLine(message, requestContext);
         printRequestHeaders(message, requestContext);
         printRequestEntity(message, requestContext);
@@ -114,7 +116,7 @@ public abstract class BaseRestLogger implements ContainerRequestFilter, WriterIn
 
     /**
      * Processes HTTP response.
-     * 
+     *
      * @param context
      *            context
      * @return HTTP response message or null if logging is disabled
@@ -127,7 +129,7 @@ public abstract class BaseRestLogger implements ContainerRequestFilter, WriterIn
             return null;
         }
 
-        StringBuffer message = new StringBuffer();
+        StringBuffer message = new StringBuffer(64);
         try {
 
             printResponseLine(message, context);
@@ -160,11 +162,11 @@ public abstract class BaseRestLogger implements ContainerRequestFilter, WriterIn
     }
 
     /**
-     * The name of the session key appearing in the HTTP headers. 
-     * The logger will search for this key in the HTTP headers and use its value in the <code>MDC.put(LogConstants.LOG_SESSION_ID, value)</code> section.<br>
+     * The name of the session key appearing in the HTTP headers. The logger will search for this key in the HTTP headers and use its value in the
+     * <code>MDC.put(LogConstants.LOG_SESSION_ID, value)</code> section.<br>
      * <br>
      * Process identification is highly meaningful in Graylog logging.
-     * 
+     *
      * @return session key
      */
     public abstract String sessionKey();
@@ -202,7 +204,7 @@ public abstract class BaseRestLogger implements ContainerRequestFilter, WriterIn
 
     /**
      * Prints http entity from {@link ContainerRequestContext} and appends given {@link StringBuffer} with the print result.
-     * 
+     *
      * @param b
      *            request message
      * @param requestContext
@@ -215,7 +217,7 @@ public abstract class BaseRestLogger implements ContainerRequestFilter, WriterIn
 
     /**
      * Prints response URL line and appends given {@link StringBuffer} with the print result.
-     * 
+     *
      * @param b
      *            response message
      * @param context
@@ -224,11 +226,16 @@ public abstract class BaseRestLogger implements ContainerRequestFilter, WriterIn
      */
     protected void printResponseLine(StringBuffer b, WriterInterceptorContext context) {
         String fullPath = uriInfo.getAbsolutePath().toASCIIString();
-        int status = httpServletResponse.getStatus();
+        int status = (int) context.getProperty(STATUS_PROPERTY);
         Status statusEnum = Status.fromStatusCode(status);
         String statusInfo = statusEnum != null ? statusEnum.getReasonPhrase() : null;
         MediaType mediaType = context.getMediaType();
         b.append(requestResponseLogger.printResponseLine(fullPath, status, String.valueOf(statusInfo), String.valueOf(mediaType)));
+    }
+
+    @Override
+    public void filter(ContainerRequestContext requestContext, ContainerResponseContext responseContext) throws IOException {
+        requestContext.setProperty(STATUS_PROPERTY, responseContext.getStatus());
     }
 
     /**

@@ -22,7 +22,8 @@ package hu.icellmobilsfoft.coffee.module.wildfly.rest.system;
 import jakarta.inject.Inject;
 import jakarta.servlet.ServletContext;
 
-import hu.icellmobilsoft.coffee.rest.system.AbstractSystemRest;
+import hu.icellmobilsoft.coffee.rest.rest.BaseRestService;
+import hu.icellmobilsoft.coffee.rest.system.ISystemRest;
 import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
 import hu.icellmobilsoft.coffee.se.api.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.se.api.exception.enums.CoffeeFaultType;
@@ -33,9 +34,17 @@ import hu.icellmobilsfoft.coffee.module.wildfly.util.VersionInfoUtil;
  * 
  * @author tamas.cserhati
  * @since 2.11.0
- * @see AbstractSystemRest
  */
-public abstract class AbstractWildFlySystemRest extends AbstractSystemRest {
+public abstract class AbstractWildFlySystemRest extends BaseRestService implements ISystemRest {
+
+    /**
+     * {@value #NEW_LINE}
+     */
+    protected static final String NEW_LINE = "\n";
+    /**
+     * {@value #META_INF_MANIFEST_MF}
+     */
+    protected static final String META_INF_MANIFEST_MF = "META-INF/MANIFEST.MF";
 
     @Inject
     private ServletContext servletContext;

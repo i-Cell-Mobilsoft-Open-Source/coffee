@@ -55,12 +55,13 @@ public class AnnotationUtil {
         if (clazz == null) {
             return null;
         }
-        final A annotation = clazz.getAnnotation(annotationClass);
 
-        if (annotation == null && (clazz.isSynthetic())) {
-            return getAnnotation(clazz.getSuperclass(), annotationClass);
-        } else {
-            return annotation;
+        while (true) {
+            A annotation = clazz.getAnnotation(annotationClass);
+            if (annotation != null || !clazz.isSynthetic()) {
+                return annotation;
+            }
+            clazz = clazz.getSuperclass();
         }
     }
 

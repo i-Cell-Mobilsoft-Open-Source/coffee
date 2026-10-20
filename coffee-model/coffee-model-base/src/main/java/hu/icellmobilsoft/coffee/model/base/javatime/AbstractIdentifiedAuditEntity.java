@@ -20,14 +20,11 @@
 package hu.icellmobilsoft.coffee.model.base.javatime;
 
 import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
 
-import org.hibernate.annotations.GenericGenerator;
-
 import hu.icellmobilsoft.coffee.model.base.IIdentifiedEntity;
+import hu.icellmobilsoft.coffee.model.base.generator.CoffeeIdGenerator;
 
 /**
  * Base class for id + audited (X__ID, X__INSDATE, X__MODDATE, X__INSUSER, X__MODUSER) entities.
@@ -51,9 +48,8 @@ public abstract class AbstractIdentifiedAuditEntity extends AbstractAuditEntity<
      * Primary key of the entity
      */
     @Id
+    @CoffeeIdGenerator
     @Column(name = "X__ID", length = 30)
-    @GenericGenerator(name = "javatime-entity-id-generator", strategy = "hu.icellmobilsoft.coffee.model.base.generator.EntityIdGenerator")
-    @GeneratedValue(generator = "javatime-entity-id-generator", strategy = GenerationType.IDENTITY)
     private String id;
 
     /**

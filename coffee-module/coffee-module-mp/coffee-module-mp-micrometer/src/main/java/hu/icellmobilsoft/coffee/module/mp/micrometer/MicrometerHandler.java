@@ -33,6 +33,7 @@ import hu.icellmobilsoft.coffee.se.logging.Logger;
 import io.micrometer.core.instrument.Gauge;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.Tag;
+import io.micrometer.core.instrument.search.Search;
 
 /**
  * Provides metrics for microprofile-metrics implementation
@@ -58,13 +59,15 @@ public class MicrometerHandler implements IMetricsHandler {
     @Override
     public Double searchGauge(String name, MetricTag... metricTags) {
         try {
-            Collection<Tag> tags = new ArrayList<>();
+            Search search = meterRegistry.find(name);
             if (metricTags != null && metricTags.length > 0) {
+                Collection<Tag> tags = new ArrayList<>(metricTags.length);
                 for (MetricTag metricTag : metricTags) {
                     tags.add(Tag.of(metricTag.getKey(), metricTag.getValue()));
                 }
+                search = search.tags(tags);
             }
-            Gauge gauge = meterRegistry.find(name).tags(tags).gauge();
+            Gauge gauge = search.gauge();
             return gauge != null ? gauge.value() : null;
         } catch (Exception e) {
             Logger.getLogger(MicrometerHandler.class).error(MessageFormat.format("Exception when trying to get [{0}] metric!", name), e);

@@ -1,0 +1,50 @@
+= v3.0.0
+
+== Changes
+
+=== General
+* https://jakarta.ee/release/11/[Jakarta EE 11] introducing Jakarta Data 1.0
+* WildFly 41+ support
+** https://www.wildfly.org/news/2026/05/21/WildFly-40-is-released/
+** https://www.wildfly.org/news/2026/07/16/WildFly-41-is-released/
+* Hibernate 7.x
+* minor optimizations
+* `hu.icellmobilsoft.coffee.rest.log.BaseRestLogger` became deprecated,
+`hu.icellmobilsoft.coffee.rest.log.optimized.BaseRestLogger` should be used instead
+
+.Migration
+* Upgrade Jakarta EE api versions
+* Follow the Hibernate https://hibernate.org/orm/documentation/migrate/[migration guide]
+
+=== coffee-grpc-metrics-mpmetrics
+* Module removed
+
+.Migration
+Before upgrading to this Coffee version, migrate to OpenTelemetry
+
+=== coffee-deltaspike
+* Module deprecated and will be removed in the future.
+
+.Migration
+Will be removed in the future, but for now the changes are backwards compatible doesn't need any migration.
+
+=== coffee-module-wildfly and coffee-module-wildfly-management
+
+* The new optional `coffee-module-wildfly-management` module exposes the WAR manifest
+on the WildFly HTTP management interface, at `GET /version` by default.
+* The `AbstractWildFlySystemRest.versionInfo()` Java method is deprecated;
+the existing `/versionInfo` REST endpoint remains available for compatibility.
+* Both endpoints use the same manifest reader with explicit UTF-8 encoding.
+Line order, continuation lines and sections are preserved, with line endings normalized to LF.
+
+.Migration
+To enable the management endpoint, add the `coffee-module-wildfly-management` dependency,
+create an `@ApplicationScoped` subclass of `AbstractWildFlyManagementVersionInfo`, and expose
+the required server modules in `jboss-deployment-structure.xml`.
+For multiple deployments, override `protected getPath()` to select a unique path.
+See the <<common_module_coffee-module-wildfly-management,coffee-module-wildfly-management>>
+documentation for configuration details and examples.
+
+Following the removal of `AbstractSystemRest`, `AbstractWildFlySystemRest` extends
+`BaseRestService` directly and implements `ISystemRest`.
+Existing subclasses of `AbstractWildFlySystemRest` do not need updating because of this change.

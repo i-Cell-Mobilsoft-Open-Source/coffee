@@ -90,4 +90,3 @@ registration fails without removing the existing context.
 for compatibility; the Java method is deprecated. Add the management bean above to expose
 the same version information on the management interface as well.
 The Quarkus module's endpoint is unaffected.
-

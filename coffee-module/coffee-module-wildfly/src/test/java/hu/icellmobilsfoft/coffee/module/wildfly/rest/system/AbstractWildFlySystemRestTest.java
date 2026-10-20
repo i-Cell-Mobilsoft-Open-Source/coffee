@@ -93,4 +93,3 @@ class AbstractWildFlySystemRestTest {
     public static class TestSystemRest extends AbstractWildFlySystemRest {
     }
 }
-

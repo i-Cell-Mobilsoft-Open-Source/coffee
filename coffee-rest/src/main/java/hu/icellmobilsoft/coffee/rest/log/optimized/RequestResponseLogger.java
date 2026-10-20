@@ -100,7 +100,7 @@ public class RequestResponseLogger {
      * @return HTTP request header or null if invalid parameter
      */
     protected String printRequestHeaders(Map<String, List<String>> headerValues) {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder(32);
         sb.append(REQUEST_PREFIX).append("-- Header parameters:").append('\n');
         if (headerValues == null) {
             return sb.toString();
@@ -165,7 +165,7 @@ public class RequestResponseLogger {
      */
     protected String printRequestLine(String method, String fullPath, Map<String, List<String>> pathParameters,
             Map<String, List<String>> queryParameters) {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder(128);
         sb.append(NOTIFICATION_PREFIX).append("Server in-bound request").append('\n');
         sb.append(REQUEST_PREFIX).append(method).append(" ").append(fullPath).append('\n');
         sb.append(REQUEST_PREFIX).append("-- Path parameters:").append('\n');
@@ -324,11 +324,9 @@ public class RequestResponseLogger {
      * @return response URL line
      */
     protected String printResponseLine(String fullPath, int httpStatus, String statusInfo, String mediaType) {
-        StringBuffer sb = new StringBuffer();
-        sb.append(RESPONSE_PREFIX).append("Server response from [").append(fullPath).append("]:\n");
-        sb.append(RESPONSE_PREFIX).append("Status: [").append(httpStatus).append("], [").append(statusInfo).append("]\n");
-        sb.append(RESPONSE_PREFIX).append("Media type: [").append(mediaType).append("]\n");
-        return sb.toString();
+        return RESPONSE_PREFIX + "Server response from [" + fullPath + "]:\n" //
+                + RESPONSE_PREFIX + "Status: [" + httpStatus + "], [" + statusInfo + "]\n" //
+                + RESPONSE_PREFIX + "Media type: [" + mediaType + "]\n";
     }
 
     /**
@@ -360,7 +358,7 @@ public class RequestResponseLogger {
      * @return header parameter values
      */
     public String printResponseHeaders(Map<String, List<Object>> headerValues) {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder(32);
         sb.append(RESPONSE_PREFIX).append("-- Header parameters:").append('\n');
         if (headerValues == null) {
             return sb.toString();
@@ -401,7 +399,7 @@ public class RequestResponseLogger {
         if (entity == null) {
             return null;
         }
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         String entityText;
         if (entity instanceof String) {
             entityText = (String) entity;
@@ -451,18 +449,15 @@ public class RequestResponseLogger {
      * @return response
      */
     public String printResponseEntity(String fullPath, WriterInterceptorContext writerInterceptorContext, byte[] entityCopy) {
-        StringBuffer sb = new StringBuffer();
         if (writerInterceptorContext == null) {
-            return sb.toString();
+            return "";
         }
         MediaType mediaType = writerInterceptorContext.getMediaType();
         if (skipLoggingForPathOrMediaType(fullPath, mediaType)) {
-            sb.append(RequestResponseLogger.RESPONSE_PREFIX)
-                    .append("Response outputstream logging disabled, because MediaType: [" + mediaType + "]\n");
+            return RequestResponseLogger.RESPONSE_PREFIX + "Response outputstream logging disabled, because MediaType: [" + mediaType + "]\n";
         } else {
             String responseText = new String(entityCopy, StandardCharsets.UTF_8);
-            sb.append(printResponseEntity(responseText, mediaType));
+            return printResponseEntity(responseText, mediaType);
         }
-        return sb.toString();
     }
 }

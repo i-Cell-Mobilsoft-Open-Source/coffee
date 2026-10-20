@@ -78,7 +78,7 @@ public class CatalogProducer {
         Optional<String[]> configCatalogPaths = applicationConfiguration.getOptionalValue(IConfigKey.CATALOG_XML_PATH, String[].class);
         String[] catalogPaths = configCatalogPaths
                 .orElseThrow(() -> new TechnicalException(MessageFormat.format("The config of [{0}] not found!", IConfigKey.CATALOG_XML_PATH)));
-        List<URI> catalogUris = new ArrayList<>();
+        List<URI> catalogUris = new ArrayList<>(catalogPaths.length);
 
         for (String catalogPath : catalogPaths) {
             try {
