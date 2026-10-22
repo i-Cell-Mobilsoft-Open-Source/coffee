@@ -28,3 +28,59 @@ Mielőtt erre a Coffee-verzióra frissítene, migráljon OpenTelemetryre.
 
 .Migration
 A jövőben el lesz távolítva, de a jelenlegi változtatások visszafelé kompatibilisek, és nincs szükség migrációra.
+
+[#migration_to_3_0_0_gson]
+=== coffee-tool
+* A `hu.icellmobilsoft.coffee.tool.utils.json.JsonUtil` kizárólag JSON-B-alapú konverziókat tartalmaz,
+így Gson nélkül is használható.
+* A Gson-alapú műveletek a szintén `coffee-tool` modulban található
+`hu.icellmobilsoft.coffee.tool.utils.json.GsonUtil` osztályba kerültek.
+* A `com.google.code.gson:gson` függőség a `coffee-tool` POM-jában opcionális (`optional=true`).
+A `coffee-tool` fordításához és tesztjeihez továbbra is elérhető, de ezen a függőségen keresztül
+nem kerül automatikusan a felhasználó alkalmazás classpathjára.
+Más függőség, például a `coffee-module-redis` vagy a `coffee-module-mongodb`, továbbra is behozhatja a Gsont.
+
+.Migration
+A korábbi Gson-alapú metódusok, köztük a már deprecated metódusok, eltűntek a `JsonUtil` osztályból.
+A változás nem visszafelé kompatibilis: az ezeket használó kódot át kell állítani és újra kell fordítani.
+A metódusnevek és paraméterek a `GsonUtil` osztályban megmaradtak; az alábbi átállás az overloadokra is vonatkozik.
+
+[cols="1,1",options="header"]
+|===
+|Korábbi hívás |Új hívás
+|`JsonUtil.getGsonConfig()` |`GsonUtil.getGsonConfig()`
+|`JsonUtil.toJsonGson(...)` |`GsonUtil.toJsonGson(...)`
+|`JsonUtil.toObjectGson(...)` |`GsonUtil.toObjectGson(...)`
+|`JsonUtil.toObjectUncheckedGson(...)` |`GsonUtil.toObjectUncheckedGson(...)`
+|`JsonUtil.toObjectUncheckedEx(...)` |`GsonUtil.toObjectUncheckedEx(...)`
+|`JsonUtil.toObjectUnchecked(...)` |`GsonUtil.toObjectUnchecked(...)`
+|`JsonUtil.toJsonEx(...)` |`GsonUtil.toJsonEx(...)`
+|`JsonUtil.toObjectEx(...)` |`GsonUtil.toObjectEx(...)`
+|===
+
+Gson használatakor az alkalmazásban deklaráljuk közvetlenül a függőséget:
+
+[source,xml]
+----
+<dependency>
+    <groupId>com.google.code.gson</groupId>
+    <artifactId>gson</artifactId>
+</dependency>
+----
+
+A fenti példa a `coffee-bom-all` dependency management használatát feltételezi, amely kezeli a Gson verzióját.
+Ha az alkalmazás dependency managementje nem kezeli ezt, verziót is meg kell adni.
+A Gsonnak futáskor is elérhetőnek kell lennie a `GsonUtil`, illetve a `hu.icellmobilsoft.coffee.tool.gson` adapterek használatához.
+
+[source,java]
+----
+import hu.icellmobilsoft.coffee.tool.utils.json.GsonUtil;
+
+String json = GsonUtil.toJsonGson(dto);
+MyDto result = GsonUtil.toObjectGson(json, MyDto.class);
+----
+
+A JSON-B-alapú `JsonUtil.toJson(...)`, `toObject(...)`, `toObjectOpt(...)` és `getJsonbContext()` hívásokat nem kell átírni,
+és ezek miatt nem szükséges Gson-függőséget felvenni. A JSON-B API és implementáció továbbra is szükséges.
+A Gsonról JSON-B-re váltáskor külön ellenőrizzük a formátumokat, adaptereket és annotációkat;
+a két szerializáló viselkedése nem minden esetben azonos.
