@@ -35,8 +35,8 @@ import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
 public class CachedEtcdConfigSource extends DefaultEtcdConfigSource {
 
     /**
-     * It caches configuration keys to avoid repeated querying. There are situations where it might be called multiple times
-     * (during runtime, new configuration keys are not added).)
+     * It caches configuration keys to avoid repeated querying. There are situations where it might be called multiple times (during runtime, new
+     * configuration keys are not added).)
      */
     private static final Set<String> PROPERTY_NAME_CACHE = Collections.synchronizedSet(new HashSet<>());
 
@@ -57,8 +57,9 @@ public class CachedEtcdConfigSource extends DefaultEtcdConfigSource {
     public Set<String> getPropertyNames() {
         if (!isEnabled()) {
             // not enabled, dont create cache
-            Collections.emptyMap();
+            return Collections.emptySet();
         }
+
         Set<String> propertyNames = new HashSet<>();
         if (PROPERTY_NAME_CACHE.isEmpty()) {
             PROPERTY_NAME_CACHE.addAll(super.getPropertyNames());
@@ -76,4 +77,5 @@ public class CachedEtcdConfigSource extends DefaultEtcdConfigSource {
     public String getName() {
         return this.getClass().getSimpleName();
     }
+
 }
