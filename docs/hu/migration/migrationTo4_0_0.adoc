@@ -1,0 +1,8 @@
+= v4.0.0
+
+== Változások
+
+=== karbantartás
+
+* A kód már fordítható JDK 25-tel
+* github action-ök upgrade-elve lettek a legfrissebb verzióra

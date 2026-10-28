@@ -169,50 +169,6 @@ DummyResponse helloResponse = GrpcClientWrapper.call(stub::getDummy, dummyReques
 <3> Grpc header bővítés
 <4> gRPC service hívás + hibakezelés
 
-== gRPC Metrics
-gRPC szerver és kliens opcionálisan aktiválhat interceptorokat metrika adatok szolgáltatására.
-Ehhez csak a maven dependency bekötése szükséges:
-
-.enable gRPC server https://github.com/eclipse/microprofile-metrics[microprofile-metrics] implementation
-[source,xml]
-----
-<dependency>
-    <groupId>hu.icellmobilsoft.coffee</groupId>
-    <artifactId>coffee-grpc-server-extension</artifactId>
-</dependency>
-<dependency>
-    <groupId>hu.icellmobilsoft.coffee</groupId>
-    <artifactId>coffee-grpc-metrics-mpmetrics</artifactId>
-</dependency>
-----
-
-.enable gRPC client https://github.com/eclipse/microprofile-metrics[microprofile-metrics] implementation
-[source,xml]
-----
-<dependency>
-    <groupId>hu.icellmobilsoft.coffee</groupId>
-    <artifactId>coffee-grpc-client-extension</artifactId>
-</dependency>
-<dependency>
-    <groupId>hu.icellmobilsoft.coffee</groupId>
-    <artifactId>coffee-grpc-metrics-mpmetrics</artifactId>
-</dependency>
-----
-
-Ha nincs dependency szinten bekötve az adott metrika modul akkor a szerver/kliens működés az eredeti,
-csak nem szolgáltat metrika adatot.
-
-Szolgáltatott metrikák: 
-
-* gRPC szerver
-** fogadott request számláló
-** válaszolt response számláló
-** request-response feldolgozás másodpercben
-* gRPC kliens
-** elküldött request számláló
-** válaszolt response számláló
-** request-response feldolgozás másodpercben
-
 == gRPC Tracing
 gRPC szerver és kliens opcionálisan aktiválhat interceptorokat tracing adatok szolgáltatására.
 Ehhez csak a maven dependency bekötése szükséges:

@@ -291,7 +291,7 @@ public class CoffeeGrpcGenerator extends Generator {
     }
 
     private List<PluginProtos.CodeGeneratorResponse.File> generateFiles(List<ServiceContext> services) {
-        List<PluginProtos.CodeGeneratorResponse.File> files = new ArrayList<>();
+        List<PluginProtos.CodeGeneratorResponse.File> files = new ArrayList<>(services.size() * 2);
         for (ServiceContext service : services) {
             files.add(buildFile(service, "ServiceInterface.mustache", absoluteFileName(service, service.serviceName + ".java")));
             files.add(buildFile(service, "ServiceImpl.mustache", absoluteFileName(service, service.delegatorImplName + ".java")));

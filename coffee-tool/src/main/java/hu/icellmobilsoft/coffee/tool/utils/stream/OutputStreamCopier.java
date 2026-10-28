@@ -48,8 +48,8 @@ import java.io.OutputStream;
  */
 public class OutputStreamCopier extends OutputStream {
 
-    private OutputStream outputStream;
-    private ByteArrayOutputStream copy;
+    private final OutputStream outputStream;
+    private final ByteArrayOutputStream copy;
 
     /**
      * Constructor
@@ -63,7 +63,18 @@ public class OutputStreamCopier extends OutputStream {
         this.copy = new ByteArrayOutputStream(1024);
     }
 
-    /** {@inheritDoc} */
+    @Override
+    public void write(byte[] b) throws IOException {
+        outputStream.write(b);
+        copy.write(b);
+    }
+
+    @Override
+    public void write(byte[] b, int off, int len) throws IOException {
+        outputStream.write(b, off, len);
+        copy.write(b, off, len);
+    }
+
     @Override
     public void write(int b) throws IOException {
         outputStream.write(b);

@@ -1,0 +1,8 @@
+= v4.0.0
+
+== Changes
+
+=== maintenance
+
+* The code can be compiled with JDK 25
+* Upgraded github actions to latest versions

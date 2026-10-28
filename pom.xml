@@ -4,12 +4,12 @@
 	<parent>
 		<groupId>hu.icellmobilsoft.pom</groupId>
 		<artifactId>parent-oss-pom</artifactId>
-		<version>1.5.0</version>
+		<version>1.6.0</version>
 	</parent>
 
 	<groupId>hu.icellmobilsoft.coffee</groupId>
 	<artifactId>coffee</artifactId>
-	<version>2.14.0-SNAPSHOT</version>
+	<version>4.0.0-SNAPSHOT</version>
 
 	<packaging>pom</packaging>
 
@@ -120,7 +120,8 @@
 				<plugin>
 					<groupId>io.smallrye</groupId>
 					<artifactId>jandex-maven-plugin</artifactId>
-					<version>3.1.5</version>
+					<!-- https://smallrye.io/jandex/jandex/main/index.html#persistent_index_format_versions -->
+					<version>3.2.7</version>
 					<executions>
 						<execution>
 							<id>make-index</id>
@@ -237,6 +238,7 @@
 							<excludePackageNames>hu.icellmobilsoft.coffee.dto.*,org.apache.deltaspike.*</excludePackageNames>
 							<sourceFileExcludes>
 								<sourceFileExclude>**/*_.java</sourceFileExclude>
+								<sourceFileExclude>**/_*.java</sourceFileExclude>
 								<sourceFileExclude>**/*$$*.java</sourceFileExclude>
 							</sourceFileExcludes>
 						</configuration>
