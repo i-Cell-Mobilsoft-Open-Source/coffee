@@ -32,3 +32,10 @@ A változtatások visszafelé kompatibilisek, migrációs lépés nem szüksége
 
 === Migration
 * `reloading.properties.watchWholeDir`-t false-ra kell állítani a régi viselkedéshez.
+
+== coffee-rest
+
+* Az `AbstractRestSystem` osztály megszűnt.
+
+=== Migration
+* Azoknak az osztályoknak, amelyek korábban ezt az osztályt terjesztették ki, mostantól az `ISystemRest` interfészt kell implementálniuk.

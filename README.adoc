@@ -28,8 +28,18 @@ This solution set is suitable for serving both SOA and Microservice architecture
 * resteasy
 * microprofile.io 7.1
 
-== Maven central
+== Maven central and versioning
 coff:ee can also be found in the official maven repository as well, it is enough to reference necessary BOM objects in the project which handles each sub-modules automatically:
+
+Starting from version 3.0.0, coff:ee is using semantic versioning based on the following rules:
+
+Major version::
+- Breaking changes, incompatible API changes, or major new features.
+- Major refactoring or dependency upgrades that require widespread changes in the codebase are aimed to be released as self-contained major versions.
+Minor version::
+- Backward-compatible new features, improvements, or enhancements.
+Patch version::
+- Backward-compatible bug fixes, security patches, or minor improvements.
 
 .dependencyManagement settings
 [source, xml]
