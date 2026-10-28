@@ -108,7 +108,7 @@ System.out.println(list.get(0).getKey());
 It remains part of `coffee-tool`, but applications using it should declare
 `com.google.code.gson:gson` directly, as `coffee-tool` marks this dependency as optional.
 Gson must also be available at runtime; the JSON-B-based `JsonUtil` does not require it.
-See the <<migration_to_3_0_0_gson,v3.0.0 migration guide>> for method replacements and the Maven dependency.
+See the <<migration_to_4_0_0_gson,v4.0.0 migration guide>> for method replacements and the Maven dependency.
 
 `AbstractCache`::
 

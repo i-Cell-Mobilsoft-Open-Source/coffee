@@ -109,7 +109,7 @@ Szintén a `coffee-tool` modul része, de használatához a `com.google.code.gso
 közvetlenül deklaráljuk az alkalmazásban, mert a `coffee-tool` ezt opcionális függőségként kezeli.
 A Gsonnak futáskor is elérhetőnek kell lennie; a JSON-B-alapú `JsonUtil` használatához nincs rá szükség.
 A korábbi Gson-metódusok átállítását és a Maven-függőséget a
-<<migration_to_3_0_0_gson,v3.0.0 migrációs leírás>> részletezi.
+<<migration_to_4_0_0_gson,v4.0.0 migrációs leírás>> részletezi.
 
 `AbstractCache`::
 

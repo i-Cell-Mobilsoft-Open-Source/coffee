@@ -57,7 +57,7 @@ import hu.icellmobilsoft.coffee.tool.gson.YearMonthConverter;
  * @author imre.scheffer
  * @author bucherarnold
  * @author balazs.bakos
- * @since 3.0.0
+ * @since 4.0.0
  */
 public class GsonUtil {
 
