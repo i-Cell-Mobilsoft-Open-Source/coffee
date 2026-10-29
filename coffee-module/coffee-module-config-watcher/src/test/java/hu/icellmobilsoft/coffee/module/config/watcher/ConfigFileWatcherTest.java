@@ -65,7 +65,7 @@ class ConfigFileWatcherTest {
             // THEN
             Awaitility.await().untilAsserted(() -> {
                 assertTrue(
-                        lastModificationTime.get().compareTo(lastNotificationTime.get()) <= 0,
+                        lastNotificationTime.get() != null && lastModificationTime.get().compareTo(lastNotificationTime.get()) <= 0,
                         MessageFormat.format(
                                 "last notification time [{0}] >= last write time [{1}]",
                                 lastNotificationTime.get(),
