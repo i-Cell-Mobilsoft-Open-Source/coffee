@@ -31,3 +31,15 @@ Existing callers of `AbstractWildFlySystemRest.versionInfo()` require no changes
 Following the removal of `AbstractSystemRest`, `AbstractWildFlySystemRest` extends
 `BaseRestService` directly and implements `ISystemRest`.
 Existing subclasses of `AbstractWildFlySystemRest` do not need updating because of this change.
+
+=== Package rename of WildFly and Quarkus modules
+
+The misspelled `hu.icellmobilsfoft` package prefix was corrected to `hu.icellmobilsoft`
+in `coffee-module-wildfly` and `coffee-module-quarkus` (breaking change).
+The class names did not change; the new `coffee-module-wildfly-management` module uses the corrected package from the start.
+
+.Migration
+Update the imports in the project:
+
+* `hu.icellmobilsfoft.coffee.module.wildfly.rest.system.AbstractWildFlySystemRest` -> `hu.icellmobilsoft.coffee.module.wildfly.rest.system.AbstractWildFlySystemRest`
+* `hu.icellmobilsfoft.coffee.module.quarkus.rest.system.AbstractQuarkusSystemRest` -> `hu.icellmobilsoft.coffee.module.quarkus.rest.system.AbstractQuarkusSystemRest`

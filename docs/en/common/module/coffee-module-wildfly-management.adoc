@@ -30,7 +30,7 @@ interface (by default, `http://localhost:9990/version`). Enable it with an appli
 ----
 import jakarta.enterprise.context.ApplicationScoped;
 
-import hu.icellmobilsfoft.coffee.module.wildfly.management.AbstractWildFlyManagementVersionInfo;
+import hu.icellmobilsoft.coffee.module.wildfly.management.AbstractWildFlyManagementVersionInfo;
 
 @ApplicationScoped
 public class ManagementVersionInfo extends AbstractWildFlyManagementVersionInfo {

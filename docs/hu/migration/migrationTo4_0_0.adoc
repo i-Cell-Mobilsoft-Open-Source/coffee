@@ -32,3 +32,15 @@ Az `AbstractWildFlySystemRest.versionInfo()` meglévő hívóit a közös manife
 Az `AbstractSystemRest` törlését követve az `AbstractWildFlySystemRest` közvetlenül a
 `BaseRestService` osztályból származik és az `ISystemRest` interfészt valósítja meg.
 A meglévő `AbstractWildFlySystemRest` leszármazottakat emiatt nem kell átírni.
+
+=== A WildFly és Quarkus modulok package-átnevezése
+
+A `coffee-module-wildfly` és `coffee-module-quarkus` modulokban a hibásan írt `hu.icellmobilsfoft`
+package-előtag `hu.icellmobilsoft`-ra lett javítva (breaking change).
+Az osztálynevek nem változtak; az új `coffee-module-wildfly-management` modul eleve a javított package-et használja.
+
+.Migráció
+A projektekben az importokat frissíteni kell:
+
+* `hu.icellmobilsfoft.coffee.module.wildfly.rest.system.AbstractWildFlySystemRest` -> `hu.icellmobilsoft.coffee.module.wildfly.rest.system.AbstractWildFlySystemRest`
+* `hu.icellmobilsfoft.coffee.module.quarkus.rest.system.AbstractQuarkusSystemRest` -> `hu.icellmobilsoft.coffee.module.quarkus.rest.system.AbstractQuarkusSystemRest`

@@ -33,7 +33,7 @@ A végpont bekapcsolásához az alkalmazásban hozzunk létre egy CDI beant:
 ----
 import jakarta.enterprise.context.ApplicationScoped;
 
-import hu.icellmobilsfoft.coffee.module.wildfly.management.AbstractWildFlyManagementVersionInfo;
+import hu.icellmobilsoft.coffee.module.wildfly.management.AbstractWildFlyManagementVersionInfo;
 
 @ApplicationScoped
 public class ManagementVersionInfo extends AbstractWildFlyManagementVersionInfo {

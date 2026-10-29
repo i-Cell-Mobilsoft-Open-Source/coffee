@@ -33,6 +33,11 @@ import java.nio.charset.StandardCharsets;
  */
 public final class ManifestUtil {
 
+    /**
+     * Standard resource path of the manifest inside an archive
+     */
+    public static final String MANIFEST_RESOURCE_PATH = "META-INF/MANIFEST.MF";
+
     private static final String NEW_LINE = "\n";
 
     private ManifestUtil() {
