@@ -76,7 +76,7 @@ import io.undertow.util.StatusCodes;
  * Tests management route registration, manifest responses and cleanup during application shutdown.
  *
  * @author balazs.bakos
- * @since 3.0.0
+ * @since 4.0.0
  */
 class AbstractWildFlyManagementVersionInfoTest {
 

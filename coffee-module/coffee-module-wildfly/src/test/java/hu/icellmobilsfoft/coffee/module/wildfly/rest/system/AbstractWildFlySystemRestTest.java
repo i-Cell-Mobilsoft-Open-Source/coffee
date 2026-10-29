@@ -45,7 +45,7 @@ import org.junit.jupiter.api.Test;
  * Tests the legacy manifest response and registration of the deprecated WildFly REST endpoint.
  *
  * @author balazs.bakos
- * @since 3.0.0
+ * @since 4.0.0
  */
 class AbstractWildFlySystemRestTest {
 

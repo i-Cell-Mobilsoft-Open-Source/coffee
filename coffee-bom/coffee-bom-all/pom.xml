@@ -13,6 +13,10 @@
     <name>Coff:ee BOM - All</name>
 
     <properties>
+        <version.org.wildfly.core>33.0.1.Final</version.org.wildfly.core>
+        <version.io.undertow>2.4.3.Final</version.io.undertow>
+        <version.org.jboss.msc>1.5.6.Final</version.org.jboss.msc>
+
         <version.com.google.code.findbugs.jsr305>3.0.2</version.com.google.code.findbugs.jsr305>
         <version.google.code.gson>2.13.1</version.google.code.gson>
 
@@ -86,6 +90,29 @@
                 <groupId>com.google.code.findbugs</groupId>
                 <artifactId>jsr305</artifactId>
                 <version>${version.com.google.code.findbugs.jsr305}</version>
+            </dependency>
+
+            <!-- WildFly management -->
+
+            <dependency>
+                <groupId>org.wildfly.core</groupId>
+                <artifactId>wildfly-server</artifactId>
+                <version>${version.org.wildfly.core}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wildfly.core</groupId>
+                <artifactId>wildfly-network</artifactId>
+                <version>${version.org.wildfly.core}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.undertow</groupId>
+                <artifactId>undertow-core</artifactId>
+                <version>${version.io.undertow}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.msc</groupId>
+                <artifactId>jboss-msc</artifactId>
+                <version>${version.org.jboss.msc}</version>
             </dependency>
 
             <!-- jboss logging -->

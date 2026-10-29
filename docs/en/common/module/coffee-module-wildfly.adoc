@@ -3,7 +3,8 @@
 
 The purpose of this module is to use wildfly specific functions.
 
-`VersionInfoUtil` reads the WAR manifest using the legacy response format.
+`ManifestUtil.getManifestContent(InputStream)` from `coffee-se-util` reads the manifest using the legacy response format.
+The caller obtains the WAR manifest stream from `ServletContext`.
 `AbstractWildFlySystemRest.versionInfo()` and the `/versionInfo` REST endpoint are
 retained for compatibility; the Java method is deprecated.
 The management endpoint is provided by the separate optional

@@ -22,12 +22,12 @@ package hu.icellmobilsfoft.coffee.module.wildfly.rest.system;
 import jakarta.inject.Inject;
 import jakarta.servlet.ServletContext;
 
-import hu.icellmobilsfoft.coffee.module.wildfly.util.VersionInfoUtil;
 import hu.icellmobilsoft.coffee.rest.rest.BaseRestService;
 import hu.icellmobilsoft.coffee.rest.system.ISystemRest;
 import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
 import hu.icellmobilsoft.coffee.se.api.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.se.api.exception.enums.CoffeeFaultType;
+import hu.icellmobilsoft.coffee.se.util.manifest.ManifestUtil;
 
 /**
  * SystemRest endpoint for wildfly application server - war deployment
@@ -55,11 +55,11 @@ public abstract class AbstractWildFlySystemRest extends BaseRestService implemen
      *             if the manifest cannot be read
      * @deprecated use the {@code /version} management endpoint
      */
-    @Deprecated(since = "3.0.0")
+    @Deprecated(since = "4.0.0")
     @Override
     public String versionInfo() throws BaseException {
         try {
-            return VersionInfoUtil.getVersionInfo(servletContext);
+            return ManifestUtil.getManifestContent(servletContext.getResourceAsStream("META-INF/MANIFEST.MF"));
         } catch (Exception e) {
             throw new TechnicalException(CoffeeFaultType.OPERATION_FAILED, e.getLocalizedMessage(), e);
         }

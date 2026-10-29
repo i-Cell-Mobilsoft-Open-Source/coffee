@@ -31,7 +31,7 @@ import org.jboss.as.server.CurrentServiceContainer;
 import org.jboss.as.server.mgmt.domain.ExtensibleHttpManagement;
 import org.jboss.msc.service.ServiceName;
 
-import hu.icellmobilsfoft.coffee.module.wildfly.util.VersionInfoUtil;
+import hu.icellmobilsoft.coffee.se.util.manifest.ManifestUtil;
 import io.undertow.server.HttpServerExchange;
 import io.undertow.util.Headers;
 import io.undertow.util.Methods;
@@ -43,7 +43,7 @@ import io.undertow.util.StatusCodes;
  * Applications can override {@link #getPath()} to use distinct paths for multiple deployments on the same server.
  *
  * @author balazs.bakos
- * @since 3.0.0
+ * @since 4.0.0
  */
 public abstract class AbstractWildFlyManagementVersionInfo {
 
@@ -80,7 +80,7 @@ public abstract class AbstractWildFlyManagementVersionInfo {
         String content;
         int status;
         try {
-            content = VersionInfoUtil.getVersionInfo(servletContext);
+            content = ManifestUtil.getManifestContent(servletContext.getResourceAsStream("META-INF/MANIFEST.MF"));
             status = StatusCodes.OK;
         } catch (IOException e) {
             content = "Error reading manifest: " + e.getMessage() + "\n";

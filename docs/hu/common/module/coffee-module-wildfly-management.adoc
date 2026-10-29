@@ -2,8 +2,9 @@
 = coffee-module-wildfly-management
 
 A modul opcionális integrációt biztosít a WildFly management HTTP interfészéhez.
-A manifest kiolvasását a `coffee-module-wildfly` modul biztosítja, amelynek nincs
-WildFly szerver API-függősége. Az új modul használatához adjuk hozzá a függőséget
+A manifest kiolvasását a <<common_core_coffee-se-util,coffee-se-util>> modul
+`ManifestUtil.getManifestContent(InputStream)` metódusa biztosítja, a Servlet és WildFly API-któl függetlenül.
+Az új modul használatához adjuk hozzá a függőséget
 (a verziót a Coffee BOM kezeli):
 
 [source,xml]
@@ -15,9 +16,12 @@ WildFly szerver API-függősége. Az új modul használatához adjuk hozzá a f�
 ----
 
 A szerver API-függőségek kizárólag ebben az opcionális modulban találhatók.
-A fordítási alap WildFly Core 26.0.0.Final (WildFly 34); a `provided` scope miatt
-futáskor a cél WildFly saját API-jai használatosak. Ez nem állít kizárólagos 34-es
-támogatást, de más szerververziókon deploymentteszt szükséges.
+A fordítási alap WildFly 41.0.1.Final, a Coffee WildFly 41+ támogatásával összhangban.
+A `coffee-bom-all` modul az ehhez a WildFly-kiadáshoz tartozó WildFly Core 33.0.1.Final,
+Undertow 2.4.3.Final és JBoss MSC 1.5.6.Final verziókat kezeli.
+A WildFly Core verziózása eltér a teljes WildFly disztribúcióétól.
+A `provided` scope miatt futáskor a cél WildFly saját API-jai használatosak;
+más szerververziókon deploymentteszt szükséges.
 
 == Verzióinformáció a management interfészen
 
@@ -50,7 +54,7 @@ public class ManagementVersionInfo extends AbstractWildFlyManagementVersionInfo 
 }
 ----
 
-Ekkor a végpont `http://localhost:9990/version/myService` címen érhető el.
+Ekkor a végpont `http://localhost:9990/version/contextRoot` címen érhető el.
 Az útvonal `/` karakterrel kezdődjön, és ne végződjön `/` karakterrel.
 A context root nem kerül automatikusan az útvonalba; deploymentenként egyedi útvonalat adjunk meg.
 Ha az alapértelmezett útvonal megfelelő, nem kell felülírni a metódust.

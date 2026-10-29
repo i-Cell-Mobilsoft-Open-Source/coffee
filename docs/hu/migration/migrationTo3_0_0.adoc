@@ -28,25 +28,3 @@ Mielőtt erre a Coffee-verzióra frissítene, migráljon OpenTelemetryre.
 
 .Migration
 A jövőben el lesz távolítva, de a jelenlegi változtatások visszafelé kompatibilisek, és nincs szükség migrációra.
-
-=== coffee-module-wildfly és coffee-module-wildfly-management
-
-* Új, opcionális `coffee-module-wildfly-management` modul biztosítja a WAR manifestjét
-a WildFly management HTTP interfészén, alapértelmezetten a `GET /version` útvonalon.
-* Az `AbstractWildFlySystemRest.versionInfo()` Java-metódus deprecated lett;
-a meglévő `/versionInfo` REST végpont kompatibilitási okból megmarad.
-* A REST- és management végpont közös manifestolvasót használ, explicit UTF-8 kódolással.
-A sorok sorrendje, folytatósorok és szekciók megmaradnak, a sorvégek LF-re normalizálódnak.
-
-.Migration
-A management végpont bekapcsolásához az alkalmazásban vegyük fel a
-`coffee-module-wildfly-management` függőséget, hozzunk létre egy `@ApplicationScoped`
-leszármazottat az `AbstractWildFlyManagementVersionInfo` osztályból, és adjuk meg a szükséges
-szervermodulokat a `jboss-deployment-structure.xml` fájlban.
-Több deployment esetén a `protected getPath()` felülírásával adjunk meg egyedi útvonalat.
-A részletes konfigurációt és példákat a
-<<common_module_coffee-module-wildfly-management,coffee-module-wildfly-management>> dokumentáció tartalmazza.
-
-Az `AbstractSystemRest` törlését követve az `AbstractWildFlySystemRest` közvetlenül a
-`BaseRestService` osztályból származik és az `ISystemRest` interfészt valósítja meg.
-A meglévő `AbstractWildFlySystemRest` leszármazottakat emiatt nem kell átírni.

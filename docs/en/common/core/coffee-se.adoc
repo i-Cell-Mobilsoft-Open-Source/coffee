@@ -3,4 +3,22 @@
 
 The purpose of this module is to collect classes that are as independent as possible from the Jakarta EE API.
 
+[#common_core_coffee-se-util]
+== coffee-se-util
+
+`hu.icellmobilsoft.coffee.se.util.manifest.ManifestUtil.getManifestContent(InputStream)`
+reads the complete manifest as UTF-8 text without Servlet or WildFly API dependencies.
+The caller obtains the input stream, for example from a file, a classloader or a `ServletContext`.
+The method closes the stream, including when reading fails, and propagates `IOException`.
+A `null` stream or an empty manifest produces an empty string.
+Line order, continuation lines, blank lines and named sections are preserved;
+line endings are normalized to LF, with an LF appended after each line.
+
+[source,java]
+----
+import hu.icellmobilsoft.coffee.se.util.manifest.ManifestUtil;
+
+String content = ManifestUtil.getManifestContent(inputStream);
+----
+
 include::coffee-se/coffee-se-logging.adoc[leveloffset=+1]

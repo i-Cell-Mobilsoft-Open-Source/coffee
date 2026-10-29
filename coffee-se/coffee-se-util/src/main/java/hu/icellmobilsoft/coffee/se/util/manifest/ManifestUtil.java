@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package hu.icellmobilsfoft.coffee.module.wildfly.util;
+package hu.icellmobilsoft.coffee.se.util.manifest;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -25,44 +25,40 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 
-import jakarta.servlet.ServletContext;
-
 /**
- * Reads version information from the deployed WAR, rather than a dependency's manifest.
+ * Reads manifest contents from an input stream.
  *
  * @author balazs.bakos
- * @since 3.0.0
+ * @since 4.0.0
  */
-public final class VersionInfoUtil {
+public final class ManifestUtil {
 
-    private static final String META_INF_MANIFEST_MF = "META-INF/MANIFEST.MF";
     private static final String NEW_LINE = "\n";
 
-    private VersionInfoUtil() {
+    private ManifestUtil() {
     }
 
     /**
-     * Reads the complete application manifest using the legacy versionInfo response format. Preserves line order, continuation lines and named
-     * sections, normalizing line endings to LF.
+     * Reads the complete manifest as UTF-8 text. Preserves line order, continuation lines and named sections, normalizing line endings to LF.
+     * Closes the supplied stream, including when reading fails.
      *
-     * @param servletContext
-     *            the deployed web application's servlet context
-     * @return manifest contents with an LF after each line, or an empty string if the WAR has no manifest
+     * @param inputStream
+     *            the manifest input stream, or {@code null} if no manifest is available
+     * @return manifest contents with an LF after each line, or an empty string if the stream is {@code null}
      * @throws IOException
      *             if the manifest cannot be read
      */
-    public static String getVersionInfo(ServletContext servletContext) throws IOException {
-        InputStream inputStream = servletContext.getResourceAsStream(META_INF_MANIFEST_MF);
+    public static String getManifestContent(InputStream inputStream) throws IOException {
         if (inputStream == null) {
             return "";
         }
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
-            StringBuilder version = new StringBuilder();
+            StringBuilder content = new StringBuilder();
             String line;
             while ((line = reader.readLine()) != null) {
-                version.append(line).append(NEW_LINE);
+                content.append(line).append(NEW_LINE);
             }
-            return version.toString();
+            return content.toString();
         }
     }
 }
