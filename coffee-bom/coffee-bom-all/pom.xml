@@ -13,6 +13,10 @@
     <name>Coff:ee BOM - All</name>
 
     <properties>
+        <!--
+            WildFly Core and the full WildFly distribution are versioned separately.
+            These versions match WildFly 41.0.1.Final, which bundles WildFly Core 33.0.1.Final.
+        -->
         <version.org.wildfly.core>33.0.1.Final</version.org.wildfly.core>
         <version.io.undertow>2.4.3.Final</version.io.undertow>
         <version.org.jboss.msc>1.5.6.Final</version.org.jboss.msc>
