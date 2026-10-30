@@ -127,6 +127,11 @@
             </dependency>
             <dependency>
                 <groupId>hu.icellmobilsoft.coffee</groupId>
+                <artifactId>coffee-module-wildfly-management</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>hu.icellmobilsoft.coffee</groupId>
                 <artifactId>coffee-module-quarkus</artifactId>
                 <version>${project.version}</version>
             </dependency>

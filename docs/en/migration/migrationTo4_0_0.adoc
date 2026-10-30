@@ -1,0 +1,45 @@
+= v4.0.0
+
+== Changes
+
+=== coffee-module-wildfly and coffee-module-wildfly-management
+
+* The management module's server API versions are managed centrally by `coffee-bom-all`,
+aligned with WildFly 41.0.1.Final: WildFly Core 33.0.1.Final, Undertow 2.4.3.Final and JBoss MSC 1.5.6.Final.
+WildFly Core and the full WildFly distribution have separate version numbers.
+* The new optional `coffee-module-wildfly-management` module exposes the WAR manifest
+on the WildFly HTTP management interface, at `GET /version` by default.
+* The `AbstractWildFlySystemRest.versionInfo()` Java method is deprecated;
+the existing `/versionInfo` REST endpoint remains available for compatibility.
+* Both endpoints use `ManifestUtil.getManifestContent(InputStream)` from `coffee-se-util`,
+with explicit UTF-8 encoding. The caller obtains the manifest stream from `ServletContext`;
+the utility itself has no Servlet or WildFly API dependency and closes the supplied stream.
+Line order, continuation lines and sections are preserved, with line endings normalized to LF.
+
+.Migration
+To enable the management endpoint, add the `coffee-module-wildfly-management` dependency,
+create an `@ApplicationScoped` subclass of `AbstractWildFlyManagementVersionInfo`, and expose
+the required server modules in `jboss-deployment-structure.xml`.
+For multiple deployments, override `protected getPath()` to select a unique path.
+See the <<common_module_coffee-module-wildfly-management,coffee-module-wildfly-management>>
+documentation for configuration details and examples.
+
+Applications importing `coffee-bom-all` do not need to specify the managed server API versions separately.
+The server API dependencies retain `provided` scope and must be supplied by the target WildFly server.
+Existing callers of `AbstractWildFlySystemRest.versionInfo()` require no changes for the shared manifest reader.
+
+Following the removal of `AbstractSystemRest`, `AbstractWildFlySystemRest` extends
+`BaseRestService` directly and implements `ISystemRest`.
+Existing subclasses of `AbstractWildFlySystemRest` do not need updating because of this change.
+
+=== Package rename of WildFly and Quarkus modules
+
+The misspelled `hu.icellmobilsfoft` package prefix was corrected to `hu.icellmobilsoft`
+in `coffee-module-wildfly` and `coffee-module-quarkus` (breaking change).
+The class names did not change; the new `coffee-module-wildfly-management` module uses the corrected package from the start.
+
+.Migration
+Update the imports in the project:
+
+* `hu.icellmobilsfoft.coffee.module.wildfly.rest.system.AbstractWildFlySystemRest` -> `hu.icellmobilsoft.coffee.module.wildfly.rest.system.AbstractWildFlySystemRest`
+* `hu.icellmobilsfoft.coffee.module.quarkus.rest.system.AbstractQuarkusSystemRest` -> `hu.icellmobilsoft.coffee.module.quarkus.rest.system.AbstractQuarkusSystemRest`

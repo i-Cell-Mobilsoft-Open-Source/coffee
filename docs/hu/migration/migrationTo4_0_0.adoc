@@ -1,0 +1,46 @@
+= v4.0.0
+
+== Változások
+
+=== coffee-module-wildfly és coffee-module-wildfly-management
+
+* A management modul szerver API-verzióit központilag a `coffee-bom-all` kezeli,
+a WildFly 41.0.1.Final kiadáshoz igazítva: WildFly Core 33.0.1.Final, Undertow 2.4.3.Final és JBoss MSC 1.5.6.Final.
+A WildFly Core és a teljes WildFly disztribúció külön verziózást követ.
+* Új, opcionális `coffee-module-wildfly-management` modul biztosítja a WAR manifestjét
+a WildFly management HTTP interfészén, alapértelmezetten a `GET /version` útvonalon.
+* Az `AbstractWildFlySystemRest.versionInfo()` Java-metódus deprecated lett;
+a meglévő `/versionInfo` REST végpont kompatibilitási okból megmarad.
+* A REST- és management végpont a `coffee-se-util` modul `ManifestUtil.getManifestContent(InputStream)`
+metódusát használja, explicit UTF-8 kódolással. A manifest streamjét a hívó kéri el a `ServletContext`-től;
+a segédosztálynak nincs Servlet vagy WildFly API-függősége, és lezárja a kapott streamet.
+A sorok sorrendje, folytatósorok és szekciók megmaradnak, a sorvégek LF-re normalizálódnak.
+
+.Migration
+A management végpont bekapcsolásához az alkalmazásban vegyük fel a
+`coffee-module-wildfly-management` függőséget, hozzunk létre egy `@ApplicationScoped`
+leszármazottat az `AbstractWildFlyManagementVersionInfo` osztályból, és adjuk meg a szükséges
+szervermodulokat a `jboss-deployment-structure.xml` fájlban.
+Több deployment esetén a `protected getPath()` felülírásával adjunk meg egyedi útvonalat.
+A részletes konfigurációt és példákat a
+<<common_module_coffee-module-wildfly-management,coffee-module-wildfly-management>> dokumentáció tartalmazza.
+
+A `coffee-bom-all` importálásakor a kezelt szerver API-verziókat nem szükséges külön megadni.
+A szerver API-függőségek továbbra is `provided` scope-úak, futáskor a cél WildFly biztosítja őket.
+Az `AbstractWildFlySystemRest.versionInfo()` meglévő hívóit a közös manifestolvasó miatt nem kell módosítani.
+
+Az `AbstractSystemRest` törlését követve az `AbstractWildFlySystemRest` közvetlenül a
+`BaseRestService` osztályból származik és az `ISystemRest` interfészt valósítja meg.
+A meglévő `AbstractWildFlySystemRest` leszármazottakat emiatt nem kell átírni.
+
+=== A WildFly és Quarkus modulok package-átnevezése
+
+A `coffee-module-wildfly` és `coffee-module-quarkus` modulokban a hibásan írt `hu.icellmobilsfoft`
+package-előtag `hu.icellmobilsoft`-ra lett javítva (breaking change).
+Az osztálynevek nem változtak; az új `coffee-module-wildfly-management` modul eleve a javított package-et használja.
+
+.Migráció
+A projektekben az importokat frissíteni kell:
+
+* `hu.icellmobilsfoft.coffee.module.wildfly.rest.system.AbstractWildFlySystemRest` -> `hu.icellmobilsoft.coffee.module.wildfly.rest.system.AbstractWildFlySystemRest`
+* `hu.icellmobilsfoft.coffee.module.quarkus.rest.system.AbstractQuarkusSystemRest` -> `hu.icellmobilsoft.coffee.module.quarkus.rest.system.AbstractQuarkusSystemRest`
