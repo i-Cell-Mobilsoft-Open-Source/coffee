@@ -23,6 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.io.StringReader;
 import java.time.YearMonth;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
@@ -36,6 +37,10 @@ import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.Duration;
 import javax.xml.datatype.XMLGregorianCalendar;
 
+import jakarta.json.Json;
+import jakarta.json.JsonReader;
+import jakarta.json.JsonValue;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -43,10 +48,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.function.Executable;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
-
-import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
 import hu.icellmobilsoft.coffee.se.api.exception.JsonConversionException;
 
 /**
@@ -78,6 +79,12 @@ class JsonUtilTest {
     private static final String INVALID_JSON_ARRAY_YEAR_MONTH = "{" + //
             "\"yearMonth\": []" + //
             "}";
+
+    private JsonValue parse(String json) {
+        try (JsonReader reader = Json.createReader(new StringReader(json))) {
+            return reader.read();
+        }
+    }
 
     private TestObject givenWeHaveTestObject() throws DatatypeConfigurationException {
         TestObject testObject = new TestObject();
@@ -185,116 +192,6 @@ class JsonUtilTest {
             }
         }
 
-        @Nested
-        @DisplayName("Testing toObjectEx()")
-        class ToObjectExTest {
-
-            @Test
-            @DisplayName("Test toObjectEx() with valid input JSON")
-            void validJSON() throws BaseException, DatatypeConfigurationException {
-                // given
-                TestObject expected = givenWeHaveTestObject();
-
-                // when
-                TestObject actual = JsonUtil.toObjectEx(TEST_OBJECT_AS_JSON, TestObject.class);
-
-                // then
-                assertEquals(expected, actual);
-            }
-
-            @Test
-            @DisplayName("Test toObjectEx() with invalid input JSON")
-            void invalidJSON() {
-                // given
-
-                // when
-                Executable operation = () -> JsonUtil.toObjectEx(INVALID_JSON, TestObject.class);
-
-                // then
-                assertThrows(BaseException.class, operation);
-            }
-
-            @Test
-            @DisplayName("Testing toObjectEx() with invalid JSON object YearMonth")
-            void invalidJsonObjectYearMonth() {
-                // given
-
-                // when
-                Executable operation = () -> JsonUtil.toObjectEx(INVALID_JSON_OBJECT_YEAR_MONTH, TestObject.class);
-
-                // then
-                assertThrows(BaseException.class, operation);
-            }
-
-            @Test
-            @DisplayName("Testing toObjectEx() with invalid JSON array YearMonth")
-            void invalidJsonArrayYearMonth() {
-                // given
-
-                // when
-                Executable operation = () -> JsonUtil.toObjectEx(INVALID_JSON_ARRAY_YEAR_MONTH, TestObject.class);
-
-                // then
-                assertThrows(BaseException.class, operation);
-            }
-        }
-
-        @Nested
-        @DisplayName("Testing toObjectGson()")
-        class ToObjectGsonTest {
-
-            @Test
-            @DisplayName("Test toObjectGson with valid input JSON")
-            void validJSON() throws DatatypeConfigurationException {
-                // given
-                TestObject expected = givenWeHaveTestObject();
-
-                // when
-                TestObject actual = JsonUtil.toObjectGson(TEST_OBJECT_AS_JSON, TestObject.class);
-
-                // then
-                assertEquals(expected, actual);
-
-            }
-
-            @Test
-            @DisplayName("Test toObjectGson with invalid input JSON")
-            void invalidJSON() {
-                // given
-
-                // when
-                Executable operation = () -> JsonUtil.toObjectGson(INVALID_JSON, TestObject.class);
-
-                // then
-                assertThrows(Exception.class, operation);
-
-            }
-
-            @Test
-            @DisplayName("Testing toObjectGson with invalid JSON object YearMonth")
-            void invalidJsonObjectYearMonth() {
-                // given
-
-                // when
-                Executable operation = () -> JsonUtil.toObjectGson(INVALID_JSON_OBJECT_YEAR_MONTH, TestObject.class);
-
-                // then
-                assertThrows(Exception.class, operation);
-            }
-
-            @Test
-            @DisplayName("Testing toObjectGson with invalid JSON array YearMonth")
-            void invalidJsonArrayYearMonth() {
-                // given
-
-                // when
-                Executable operation = () -> JsonUtil.toObjectGson(INVALID_JSON_ARRAY_YEAR_MONTH, TestObject.class);
-
-                // then
-                assertThrows(Exception.class, operation);
-            }
-        }
-
     }
 
     @Nested
@@ -311,13 +208,13 @@ class JsonUtilTest {
                 // given
                 TestObject source = givenWeHaveTestObject();
                 // parse the json strings to avoid whitespace and ordering related differences
-                JsonElement expectedJSONObject = JsonParser.parseString(TEST_OBJECT_AS_JSON);
+                JsonValue expectedJSONObject = parse(TEST_OBJECT_AS_JSON);
 
                 // when
                 String actual = JsonUtil.toJson(source);
 
                 // then
-                JsonElement actualJSONObject = JsonParser.parseString(actual);
+                JsonValue actualJSONObject = parse(actual);
                 assertEquals(expectedJSONObject, actualJSONObject);
             }
 
@@ -353,78 +250,6 @@ class JsonUtilTest {
 
         }
 
-        @Nested
-        @DisplayName("Testing toJsonEx()")
-        class ToJsonExTest {
-
-            @Test
-            @DisplayName("Testing toJsonGson() with parsable Object")
-            void parsable() throws Exception {
-                // given
-                TestObject source = givenWeHaveTestObject();
-                // parse the json strings to avoid whitespace and ordering related differences
-                JsonElement expectedJSONObject = JsonParser.parseString(TEST_OBJECT_AS_JSON);
-
-                // when
-                String actual = JsonUtil.toJsonEx(source);
-
-                // then
-                JsonElement actualJSONObject = JsonParser.parseString(actual);
-                assertEquals(expectedJSONObject, actualJSONObject);
-            }
-
-            @Test
-            @DisplayName("Testing toJsonGson() with unparsable Object")
-            void unparsable() throws Exception {
-                // given
-                TestObject source = givenWeHaveTestObject();
-                XMLGregorianCalendar unparseableXMLGregorianCalendar = DatatypeFactory.newInstance().newXMLGregorianCalendar();
-                source.setXmlGregorianCalendar(unparseableXMLGregorianCalendar);
-
-                // when
-                Executable operation = () -> JsonUtil.toJsonEx(source);
-
-                // then
-                assertThrows(BaseException.class, operation);
-            }
-
-        }
-
-        @Nested
-        @DisplayName("Testing toJsonGson()")
-        class ToJsonGsonTest {
-
-            @Test
-            @DisplayName("Testing toJsonGson() with parsable Object")
-            void parsable() throws Exception {
-                // given
-                TestObject source = givenWeHaveTestObject();
-                // parse the json strings to avoid whitespace and ordering related differences
-                JsonElement expectedJSONObject = JsonParser.parseString(TEST_OBJECT_AS_JSON);
-
-                // when
-                String actual = JsonUtil.toJsonGson(source);
-
-                // then
-                JsonElement actualJSONObject = JsonParser.parseString(actual);
-                assertEquals(expectedJSONObject, actualJSONObject);
-            }
-
-            @Test
-            @DisplayName("Testing toJsonGson() with unparsable Object")
-            void unparsable() throws Exception {
-                // given
-                TestObject source = givenWeHaveTestObject();
-                XMLGregorianCalendar unparseableXMLGregorianCalendar = DatatypeFactory.newInstance().newXMLGregorianCalendar();
-                source.setXmlGregorianCalendar(unparseableXMLGregorianCalendar);
-
-                // when
-                Executable operation = () -> JsonUtil.toJsonGson(source);
-
-                // then
-                assertThrows(Exception.class, operation);
-            }
-        }
     }
 
 }

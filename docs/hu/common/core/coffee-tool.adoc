@@ -90,16 +90,26 @@ A fenti beállításokban a következő értékek adhatóak meg:
 A példában megjelölt értékek az alapértelmezett értékei, amennyiben nincs külön konfiguráció megadva, ezeket az értékeket fogja használni.
 
 `JsonUtil`::
-A JsonUtil osztály egy a JSONB használatára épülő util osztály
+A `JsonUtil` osztály JSON-B-alapú konverziókat biztosít, Gson-függőség nélkül is használható.
 +
 [source, java]
 .példa - generikus típus deszerializációja
 ----
+import com.google.common.reflect.TypeToken;
+
 String paramString = "[{\"key\":\"testTitleKey\",\"value\":\"testTitleValue\"}]";
 Type paramListType = new TypeToken<List<ParameterType>>() {}.getType();
 List<ParameterType> list = JsonUtil.toObject(paramString, paramListType);
 System.out.println(list.get(0).getKey());
 ----
+
+`GsonUtil`::
+A `hu.icellmobilsoft.coffee.tool.utils.json.GsonUtil` osztály biztosítja a Gson-alapú konverziókat.
+Szintén a `coffee-tool` modul része, de használatához a `com.google.code.gson:gson` függőséget
+közvetlenül deklaráljuk az alkalmazásban, mert a `coffee-tool` ezt opcionális függőségként kezeli.
+A Gsonnak futáskor is elérhetőnek kell lennie; a JSON-B-alapú `JsonUtil` használatához nincs rá szükség.
+A korábbi Gson-metódusok átállítását és a Maven-függőséget a
+<<migration_to_4_0_0_gson,v4.0.0 migrációs leírás>> részletezi.
 
 `AbstractCache`::
 

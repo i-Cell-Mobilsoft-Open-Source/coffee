@@ -90,16 +90,25 @@ In the above configuration, the following elements can be set:
 The values mention above in the example are the default values, these are used in case of missing configuration.
 
 `JsonUtil`::
-JsonUtil is a kind of wrapper of JSONB
+`JsonUtil` provides JSON-B-based conversions and can be used without Gson.
 +
 [source, java]
 .example - deserialization of generic type
 ----
+import com.google.common.reflect.TypeToken;
+
 String paramString = "[{\"key\":\"testTitleKey\",\"value\":\"testTitleValue\"}]";
 Type paramListType = new TypeToken<List<ParameterType>>() {}.getType();
 List<ParameterType> list = JsonUtil.toObject(paramString, paramListType);
 System.out.println(list.get(0).getKey());
 ----
+
+`GsonUtil`::
+`hu.icellmobilsoft.coffee.tool.utils.json.GsonUtil` provides Gson-based conversions.
+It remains part of `coffee-tool`, but applications using it should declare
+`com.google.code.gson:gson` directly, as `coffee-tool` marks this dependency as optional.
+Gson must also be available at runtime; the JSON-B-based `JsonUtil` does not require it.
+See the <<migration_to_4_0_0_gson,v4.0.0 migration guide>> for method replacements and the Maven dependency.
 
 `AbstractCache`::
 

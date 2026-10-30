@@ -43,3 +43,59 @@ Update the imports in the project:
 
 * `hu.icellmobilsfoft.coffee.module.wildfly.rest.system.AbstractWildFlySystemRest` -> `hu.icellmobilsoft.coffee.module.wildfly.rest.system.AbstractWildFlySystemRest`
 * `hu.icellmobilsfoft.coffee.module.quarkus.rest.system.AbstractQuarkusSystemRest` -> `hu.icellmobilsoft.coffee.module.quarkus.rest.system.AbstractQuarkusSystemRest`
+
+[#migration_to_4_0_0_gson]
+=== coffee-tool
+* `hu.icellmobilsoft.coffee.tool.utils.json.JsonUtil` now contains only JSON-B-based conversions
+and can be used without Gson.
+* Gson-based operations have moved to `hu.icellmobilsoft.coffee.tool.utils.json.GsonUtil`,
+which remains in the `coffee-tool` module.
+* The `com.google.code.gson:gson` dependency is optional (`optional=true`) in the `coffee-tool` POM.
+It remains available when compiling and testing `coffee-tool`, but is no longer added automatically
+to a consuming application's classpath through this dependency.
+Other dependencies, such as `coffee-module-redis` or `coffee-module-mongodb`, may still bring in Gson.
+
+.Migration
+The previous Gson-based methods, including the already deprecated methods, have been removed from `JsonUtil`.
+This is a breaking API change: code using these methods must be updated and recompiled.
+Method names and parameters are preserved in `GsonUtil`; the following replacements also apply to overloads.
+
+[cols="1,1",options="header"]
+|===
+|Previous call |Replacement
+|`JsonUtil.getGsonConfig()` |`GsonUtil.getGsonConfig()`
+|`JsonUtil.toJsonGson(...)` |`GsonUtil.toJsonGson(...)`
+|`JsonUtil.toObjectGson(...)` |`GsonUtil.toObjectGson(...)`
+|`JsonUtil.toObjectUncheckedGson(...)` |`GsonUtil.toObjectUncheckedGson(...)`
+|`JsonUtil.toObjectUncheckedEx(...)` |`GsonUtil.toObjectUncheckedEx(...)`
+|`JsonUtil.toObjectUnchecked(...)` |`GsonUtil.toObjectUnchecked(...)`
+|`JsonUtil.toJsonEx(...)` |`GsonUtil.toJsonEx(...)`
+|`JsonUtil.toObjectEx(...)` |`GsonUtil.toObjectEx(...)`
+|===
+
+When using Gson, declare it as a direct application dependency:
+
+[source,xml]
+----
+<dependency>
+    <groupId>com.google.code.gson</groupId>
+    <artifactId>gson</artifactId>
+</dependency>
+----
+
+This example assumes that `coffee-bom-all` dependency management is imported, which manages the Gson version.
+If the application's dependency management does not manage Gson, specify a version as well.
+Gson must also be available at runtime when using `GsonUtil` or the `hu.icellmobilsoft.coffee.tool.gson` adapters.
+
+[source,java]
+----
+import hu.icellmobilsoft.coffee.tool.utils.json.GsonUtil;
+
+String json = GsonUtil.toJsonGson(dto);
+MyDto result = GsonUtil.toObjectGson(json, MyDto.class);
+----
+
+The JSON-B-based `JsonUtil.toJson(...)`, `toObject(...)`, `toObjectOpt(...)` and `getJsonbContext()` calls do not need updating
+and do not require adding Gson. The JSON-B API and an implementation are still required.
+When switching from Gson to JSON-B, review formats, adapters and annotations separately;
+the two serializers do not always behave identically.
