@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package hu.icellmobilsfoft.coffee.module.quarkus.rest.system;
+package hu.icellmobilsoft.coffee.module.quarkus.rest.system;
 
 import java.io.InputStream;
 import java.net.URL;

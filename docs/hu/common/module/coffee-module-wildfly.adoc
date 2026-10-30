@@ -3,10 +3,17 @@
 
 A modul célja a wildfly specifikus funkciók összegyűjtése.
 
-.AbstractWildflySystemRest
+A `coffee-se-util` modul `ManifestUtil.getManifestContent(InputStream)` metódusa a manifestet a régi válaszformátumban olvassa ki.
+A WAR manifestjének streamjét a hívó kéri el a `ServletContext`-től.
+Az `AbstractWildFlySystemRest.versionInfo()` és a `/versionInfo` REST végpont
+kompatibilitási okból megmaradt; a Java-metódus deprecated jelölést kapott.
+A management végpontot a külön, opcionális
+<<common_module_coffee-module-wildfly-management,coffee-module-wildfly-management>> modul biztosítja.
+
+.AbstractWildFlySystemRest
 [source,java]
 ----
-public class SystemRest extends AbstractWildflySystemRest {
+public class SystemRest extends AbstractWildFlySystemRest {
 
     @Inject
     private EvictAction evictAction;

@@ -17,11 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package hu.icellmobilsfoft.coffee.module.wildfly.rest.system;
-
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+package hu.icellmobilsoft.coffee.module.wildfly.rest.system;
 
 import jakarta.inject.Inject;
 import jakarta.servlet.ServletContext;
@@ -31,6 +27,7 @@ import hu.icellmobilsoft.coffee.rest.system.ISystemRest;
 import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
 import hu.icellmobilsoft.coffee.se.api.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.se.api.exception.enums.CoffeeFaultType;
+import hu.icellmobilsoft.coffee.se.util.manifest.ManifestUtil;
 
 /**
  * SystemRest endpoint for wildfly application server - war deployment
@@ -39,15 +36,6 @@ import hu.icellmobilsoft.coffee.se.api.exception.enums.CoffeeFaultType;
  * @since 2.11.0
  */
 public abstract class AbstractWildFlySystemRest extends BaseRestService implements ISystemRest {
-
-    /**
-     * {@value #NEW_LINE}
-     */
-    protected static final String NEW_LINE = "\n";
-    /**
-     * {@value #META_INF_MANIFEST_MF}
-     */
-    protected static final String META_INF_MANIFEST_MF = "META-INF/MANIFEST.MF";
 
     @Inject
     private ServletContext servletContext;
@@ -59,20 +47,19 @@ public abstract class AbstractWildFlySystemRest extends BaseRestService implemen
         // Default constructor for java 21
     }
 
+    /**
+     * Reads the WAR manifest for the deprecated REST endpoint and Java callers.
+     *
+     * @return the manifest contents
+     * @throws BaseException
+     *             if the manifest cannot be read
+     * @deprecated use the {@code /version} management endpoint
+     */
+    @Deprecated(since = "4.0.0")
     @Override
     public String versionInfo() throws BaseException {
         try {
-            InputStream inputStream = servletContext.getResourceAsStream(META_INF_MANIFEST_MF);
-            StringBuilder version = new StringBuilder();
-            if (inputStream != null) {
-                BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
-                String line;
-                while ((line = br.readLine()) != null) {
-                    version.append(line);
-                    version.append(NEW_LINE);
-                }
-            }
-            return version.toString();
+            return ManifestUtil.getManifestContent(servletContext.getResourceAsStream(ManifestUtil.MANIFEST_RESOURCE_PATH));
         } catch (Exception e) {
             throw new TechnicalException(CoffeeFaultType.OPERATION_FAILED, e.getLocalizedMessage(), e);
         }

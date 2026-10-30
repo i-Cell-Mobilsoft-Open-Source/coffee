@@ -3,4 +3,22 @@
 
 Modul célja a lehetőség szerint jakarta EE API-tól független osztályok gyűjtése.
 
+[#common_core_coffee-se-util]
+== coffee-se-util
+
+A `hu.icellmobilsoft.coffee.se.util.manifest.ManifestUtil.getManifestContent(InputStream)`
+metódus UTF-8 szövegként olvassa ki a teljes manifestet, Servlet és WildFly API-függőség nélkül.
+A streamet a hívó szerzi be, például fájlból, classloaderből vagy `ServletContext`-ből.
+A metódus olvasási hiba esetén is lezárja a streamet, és továbbadja az `IOException` kivételt.
+`null` stream vagy üres manifest esetén üres sztringet ad vissza.
+A sorok sorrendje, a folytatósorok, az üres sorok és a név szerinti szekciók megmaradnak;
+a sorvégek LF-re normalizálódnak, minden sor végére LF kerül.
+
+[source,java]
+----
+import hu.icellmobilsoft.coffee.se.util.manifest.ManifestUtil;
+
+String content = ManifestUtil.getManifestContent(inputStream);
+----
+
 include::coffee-se/coffee-se-logging.adoc[leveloffset=+1]
