@@ -502,23 +502,49 @@ public class MyBean {
 
 == Eviktálás
 
-Az EvictAction hívásával kipucolható a cache tartalma, ehhez a projekten létre kell hozni egy EvictAction osztályt (a megfelelő scope-pal) és le kell származtatni a coffee-ban lévő AbstractEvictAction-ből. Ezután egy REST végponton keresztül az EvictAction::evict metódust kell meghívni. Ennek hatására az összes Evictable interfészt implementáló beanen, configsource-on meghívódik az evict metódus
+A Coffee alapértelmezett `@ApplicationScoped` CDI beant biztosít
+`hu.icellmobilsoft.coffee.rest.action.evict.EvictAction` néven.
+Az `AbstractEvictAction` leszármazottjaként üríti az `ApplicationConfiguration` tartalmát,
+majd meghívja az `evict()` metódust a `hu.icellmobilsoft.coffee.dto.evict.Evictable` interfészt
+implementáló CDI beaneken és MicroProfile config source-okon.
+A válasz tartalmazza az ürített szolgáltatások listáját, a művelet időbélyegeit és kontextusát.
+Az action példánya az alkalmazásban közös; minden hívás saját választ és ürítési listát hoz létre.
+Mivel a példány közös és egyszerre több hívás is futhat rajta, a leszármazott `EvictAction` ne tároljon hívásfüggő állapotot példányszintű mezőben.
 
-.ISystemRest
+Az `ISystemRest` a végpont szerződését deklarálja, nem végez action-lekérést vagy -hívást.
+
+Az `AbstractWildFlySystemRest` és `AbstractQuarkusSystemRest` `getEvict()` implementációja
+a CDI által kiválasztott `EvictAction` metódusát hívja meg a `wrapNoParam` használatával.
+Az actiont `@Inject` injektálja, életciklusát a CDI kezeli.
+A megfelelő system REST osztályból származtatva a meglévő `GET /system/evict` végpont működik;
+az alapértelmezett működéshez nem szükséges alkalmazásoldali action vagy `getEvict()` felülírás.
+
+A működés testreszabható a Coffee konkrét `EvictAction` osztályából származtatott,
+`@Alternative`, `@Priority` és explicit CDI scope annotációkkal ellátott beannel:
+
 [source,java]
 ----
-public interface ISystemRest {
-  ...
-  
-  @GET
-  @Path(SystemPath.EVICT)
-  @Produces(value = { MediaType.APPLICATION_JSON, MediaType.TEXT_XML, MediaType.APPLICATION_XML })
-  EvictResponse evict() throws BaseException;
+import jakarta.annotation.Priority;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.inject.Alternative;
+import jakarta.interceptor.Interceptor;
+
+import hu.icellmobilsoft.coffee.dto.common.config.evict.EvictResponse;
+import hu.icellmobilsoft.coffee.rest.action.evict.EvictAction;
+
+@ApplicationScoped
+@Alternative
+@Priority(Interceptor.Priority.APPLICATION + 100)
+public class ProjectEvictAction extends EvictAction {
+    @Override
+    public EvictResponse evict() {
+        // Clear additional application-specific state here.
+        return super.evict();
+    }
+}
 ----
 
-.SystemRest
-
-Használd a <<common_module_coffee-module-quarkus,AbstractQuarkusSystemRest>> vagy
- <<common_module_coffee-module-wildfly,AbstractWildflySystemRest>> osztályt a SystemRest implementálásához.
-
- 
+A `super.evict()` hívás megőrzi a Coffee alapértelmezett ürítési működését.
+A meglévő alkalmazásoldali `getEvict()` felülírások továbbra is érvényesek.
+A közvetlenül az `AbstractEvictAction` osztályból származó saját action továbbra is hívható saját végpontból;
+az örökölt végpont actionjének CDI-alapú cseréjéhez viszont az `EvictAction` osztályból származtassunk.

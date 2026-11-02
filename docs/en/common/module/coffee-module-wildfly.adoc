@@ -14,13 +14,9 @@ The management endpoint is provided by the separate optional
 [source,java]
 ----
 public class SystemRest extends AbstractWildFlySystemRest {
-
-    @Inject
-    private EvictAction evictAction;
-
-    @Override
-    public hu.icellmobilsoft.coffee.dto.common.config.evict.EvictResponse getEvict() throws BaseException {
-        return wrapNoParam(evictAction::evict, "evict");
-    }
 }
 ----
+
+The inherited `getEvict()` implementation uses Coffee's default `@ApplicationScoped` CDI `EvictAction`.
+Customize eviction with an `EvictAction` subclass annotated with `@Alternative`, `@Priority` and a CDI scope;
+see <<common_core_coffee-rest,coffee-rest>> for the full example.

@@ -22,6 +22,8 @@ package hu.icellmobilsoft.coffee.module.wildfly.rest.system;
 import jakarta.inject.Inject;
 import jakarta.servlet.ServletContext;
 
+import hu.icellmobilsoft.coffee.dto.common.config.evict.EvictResponse;
+import hu.icellmobilsoft.coffee.rest.action.evict.EvictAction;
 import hu.icellmobilsoft.coffee.rest.rest.BaseRestService;
 import hu.icellmobilsoft.coffee.rest.system.ISystemRest;
 import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
@@ -40,11 +42,27 @@ public abstract class AbstractWildFlySystemRest extends BaseRestService implemen
     @Inject
     private ServletContext servletContext;
 
+    @Inject
+    private EvictAction evictAction;
+
     /**
      * Default constructor
      */
     public AbstractWildFlySystemRest() {
         // Default constructor for java 21
+    }
+
+    /**
+     * Clears caches using the CDI-selected eviction action.
+     *
+     * @return the eviction result
+     * @throws BaseException
+     *             if eviction fails
+     * @since 4.0.0
+     */
+    @Override
+    public EvictResponse getEvict() throws BaseException {
+        return wrapNoParam(evictAction::evict, "evict");
     }
 
     /**
