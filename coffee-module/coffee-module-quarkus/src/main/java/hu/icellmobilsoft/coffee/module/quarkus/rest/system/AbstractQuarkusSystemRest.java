@@ -34,6 +34,8 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import hu.icellmobilsoft.coffee.cdi.config.IConfigKey;
 import hu.icellmobilsoft.coffee.cdi.config.IQuarkusConfigKey;
+import hu.icellmobilsoft.coffee.dto.common.config.evict.EvictResponse;
+import hu.icellmobilsoft.coffee.rest.action.evict.EvictAction;
 import hu.icellmobilsoft.coffee.rest.rest.BaseRestService;
 import hu.icellmobilsoft.coffee.rest.system.ISystemRest;
 import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
@@ -73,11 +75,27 @@ public abstract class AbstractQuarkusSystemRest extends BaseRestService implemen
     @ConfigProperty(name = IConfigKey.COFFEE_APP_NAME)
     Optional<String> coffeeAppName;
 
+    @Inject
+    EvictAction evictAction;
+
     /**
      * Default constructor
      */
     public AbstractQuarkusSystemRest() {
         // Default constructor for java 21
+    }
+
+    /**
+     * Clears caches using the CDI-selected eviction action.
+     *
+     * @return the eviction result
+     * @throws BaseException
+     *             if eviction fails
+     * @since 4.0.0
+     */
+    @Override
+    public EvictResponse getEvict() throws BaseException {
+        return wrapNoParam(evictAction::evict, "evict");
     }
 
     @Override

@@ -2,6 +2,23 @@
 
 == Változások
 
+=== Alapértelmezett evict action
+
+A `coffee-rest` alapértelmezett `@ApplicationScoped` CDI `EvictAction` beant biztosít az `AbstractEvictAction` leszármazottjaként.
+Az `ISystemRest.getEvict()` mostantól absztrakt végpontdeklaráció, action-hívást nem tartalmaz.
+Az `AbstractWildFlySystemRest.getEvict()` és az `AbstractQuarkusSystemRest.getEvict()` ezt hívja
+a `wrapNoParam` használatával. Alkalmazásoldali felülírás nélkül a `GET /system/evict` végpont
+mostantól üríti a cache-eket a nem implementált működést jelző hiba helyett.
+
+.Migráció
+Az alapértelmezett működéshez már nem szükséges saját evict action és delegáló `getEvict()` felülírás.
+Az `ISystemRest` közvetlen implementációiban meg kell valósítani a `getEvict()` metódust, vagy a megfelelő abstract system REST osztályból kell származtatni.
+A meglévő végpontfelülírások továbbra is működnek. Az örökölt végpont CDI-alapú testreszabásához
+a `hu.icellmobilsoft.coffee.rest.action.evict.EvictAction` osztályból származtassunk,
+és a leszármazottat lássuk el `@Alternative`, `@Priority` és explicit CDI scope (például `@ApplicationScoped`) annotációkkal.
+A `super.evict()` hívással megtartható az alapértelmezett működés.
+Példa a <<common_core_coffee-rest,coffee-rest>> dokumentációban található.
+
 === coffee-module-wildfly és coffee-module-wildfly-management
 
 * A management modul szerver API-verzióit központilag a `coffee-bom-all` kezeli,

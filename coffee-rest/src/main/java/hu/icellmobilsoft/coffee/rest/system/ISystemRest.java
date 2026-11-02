@@ -28,10 +28,8 @@ import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 
 import hu.icellmobilsoft.coffee.dto.common.config.evict.EvictResponse;
-import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 import hu.icellmobilsoft.coffee.dto.url.BaseServicePath;
 import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
-import hu.icellmobilsoft.coffee.se.api.exception.TechnicalException;
 
 /**
  * REST endpoint for system service functions.
@@ -56,7 +54,7 @@ public interface ISystemRest {
     String versionInfo() throws BaseException;
 
     /**
-     * Clear caches
+     * Clears caches. The REST implementation supplies the eviction behavior.
      * 
      * @return the evict result
      * @throws BaseException
@@ -65,14 +63,10 @@ public interface ISystemRest {
     @Tag(name = "Maintenance", description = "Clearing internal state")
     @GET
     @Operation(summary = "Clearing internal state", description = """
-            Iterates over implementations of the hu.icellmobilsoft.dookug.common.core.evictable.Evictable interface,
-            and explicitly calls the clear function for known framework-level services.
-            If there’s a change at runtime in the content of a template stored in the TEMPLATE_PART_CONTENT
-            database table, this endpoint must be called to apply the changes, since the module caches this data.""")
+            Clears application configuration and invokes eviction on CDI beans and configuration sources
+            implementing the hu.icellmobilsoft.coffee.dto.evict.Evictable interface.""")
     @Path(BaseServicePath.SYSTEM_EVICT)
     @Produces(value = { MediaType.TEXT_XML, MediaType.APPLICATION_XML })
-    default EvictResponse getEvict() throws BaseException {
-        throw new TechnicalException(CoffeeFaultType.OPERATION_FAILED, "Evict not implemented");
-    }
+    EvictResponse getEvict() throws BaseException;
 
 }

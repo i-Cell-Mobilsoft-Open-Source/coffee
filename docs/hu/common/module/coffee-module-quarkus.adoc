@@ -7,16 +7,12 @@ A modul célja a quarkus specifikus funkciók (nem extension-ök) összegyűjté
 [source,java]
 ----
 public class SystemRest extends AbstractQuarkusSystemRest {
-
-    @Inject
-    private EvictAction evictAction;
-
-    @Override
-    public hu.icellmobilsoft.coffee.dto.common.config.evict.EvictResponse getEvict() throws BaseException {
-        return wrapNoParam(evictAction::evict, "evict");
-    }
 }
 ----
+
+Az örökölt `getEvict()` implementáció a Coffee alapértelmezett `@ApplicationScoped` CDI `EvictAction` beanjét használja.
+Az ürítés az `EvictAction` osztályból származtatott, `@Alternative`, `@Priority` és CDI scope annotációkkal
+ellátott beannel szabható testre; teljes példa a <<common_core_coffee-rest,coffee-rest>> dokumentációban található.
 
 [NOTE]
 ====
