@@ -409,3 +409,41 @@ private void onEventRegisterRedisStreamMetrics(@ObservesAsync RedisStreamMetricE
 }
 
 ----
+
+[#common_module_coffee-module-redisstream_tracing]
+=== Tracing
+
+==== types
+
+Kettő tracing típus tágomatott:
+
+* *PARENT*: A consumer a publisher gyermekeként kerül hozzáadásra,
+a Jaeger egy képernyőn jeleníti meg a publisher-t és a consumer-t.
+Ideális alacsony fan-out esetén.
+* *LINK*: A consumer tartalmazni fog egy hivatkozást a publisher-re;
+a Jaeger külön képernyőkön jeleníti meg a publisher-t és a consumer-t.
+Ideális nagy fan-out és batch publish esetén.
+
+==== usage
+
+Publish híváskor lehet aktiválni:
+
+[source,java]
+----
+redisStreamPublisher.publishPublication(
+        RedisStreamPublication.of("randomId")
+            .withTrace() // <1>
+);
+----
+<1> a default `PARENT` típust használja
+
+[source,java]
+----
+redisStreamPublisher.publishPublication(
+        RedisStreamPublication.of("randomId")
+            .withTrace(RedisStreamPublication.TraceParentType.LINK)
+);
+----
+
+Vagy globálisan is aktiválható az alábbi konfiguráció használatával:
+`coffee.redisstream.traceparenttype=parent`

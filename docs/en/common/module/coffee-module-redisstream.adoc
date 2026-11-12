@@ -268,7 +268,7 @@ public class SampleConsumer implements IRedisStreamConsumer {
     }
 }
 ----
-<1> The Counter class works in RequestScope
+0 The Counter class works in RequestScope
 <2> The CounterDependent class works as Dependent
 <3> The CounterApplication class operates in ApplicationScope
 
@@ -406,3 +406,41 @@ private void onEventRegisterRedisStreamMetrics(@ObservesAsync RedisStreamMetricE
 }
 
 ----
+
+[#common_module_coffee-module-redisstream_tracing]
+=== Tracing
+
+==== types
+
+Two types of tracing modes are supported:
+
+* *PARENT*: The consumer added as a child of the published,
+Jaeger shows the published and consumer in one screen.
+Ideal for low fan-out.
+* *LINK*: The consumer will contain a link to the publisher,
+Jaeger shows the published and consumer is separate screens.
+Ideal for high fan-out, and batch publishing.
+
+==== usage
+
+Can be activated at publication locally:
+
+[source,java]
+----
+redisStreamPublisher.publishPublication(
+        RedisStreamPublication.of("randomId")
+            .withTrace() // <1>
+);
+----
+<1> uses the default `PARENT` type
+
+[source,java]
+----
+redisStreamPublisher.publishPublication(
+        RedisStreamPublication.of("randomId")
+            .withTrace(RedisStreamPublication.TraceParentType.LINK)
+);
+----
+
+Or can be activated globally using the following config:
+`coffee.redisstream.traceparenttype=parent`
