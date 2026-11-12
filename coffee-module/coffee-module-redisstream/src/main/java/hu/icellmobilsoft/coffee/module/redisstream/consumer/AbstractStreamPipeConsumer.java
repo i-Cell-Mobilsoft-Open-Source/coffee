@@ -22,8 +22,11 @@ package hu.icellmobilsoft.coffee.module.redisstream.consumer;
 import java.util.Collections;
 import java.util.Map;
 
+import jakarta.inject.Inject;
+
 import hu.icellmobilsoft.coffee.cdi.trace.annotation.Traced;
 import hu.icellmobilsoft.coffee.cdi.trace.constants.SpanAttribute;
+import hu.icellmobilsoft.coffee.cdi.trace.spi.ITraceHandler;
 import hu.icellmobilsoft.coffee.module.redisstream.config.IRedisStreamConstant;
 import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
 import redis.clients.jedis.resps.StreamEntry;
@@ -35,6 +38,15 @@ import redis.clients.jedis.resps.StreamEntry;
  * @since 1.5.0
  */
 public abstract class AbstractStreamPipeConsumer extends BaseStreamConsumer implements IRedisStreamPipeConsumer {
+
+    private static final Traced.Literal TRACED = new Traced.Literal(
+            SpanAttribute.Redis.Stream.COMPONENT,
+            SpanAttribute.Redis.Stream.KIND,
+            SpanAttribute.Redis.DB_TYPE);
+
+    @Inject
+    private ITraceHandler traceHandler;
+
     /**
      * Default constructor, constructs a new object.
      */
@@ -51,16 +63,17 @@ public abstract class AbstractStreamPipeConsumer extends BaseStreamConsumer impl
      * <br>
      * If opentrace extension is active, the method will be traced by opentracing implementation
      */
-    @Traced(component = SpanAttribute.Redis.Stream.COMPONENT, kind = SpanAttribute.Redis.Stream.KIND, dbType = SpanAttribute.Redis.DB_TYPE)
     @Override
     public Map<String, Object> onStream(StreamEntry streamEntry) throws BaseException {
-        handleMDC(streamEntry);
+        return traceHandler.runWithTrace(() -> {
+            handleMDC(streamEntry);
 
-        if (customize(streamEntry)) {
-            return Collections.emptyMap();
-        }
-        String mainData = streamEntry.getFields().get(IRedisStreamConstant.Common.DATA_KEY_MESSAGE);
-        return doWork(mainData);
+            if (customize(streamEntry)) {
+                return Collections.emptyMap();
+            }
+            String mainData = streamEntry.getFields().get(IRedisStreamConstant.Common.DATA_KEY_MESSAGE);
+            return doWork(mainData);
+        }, TRACED, getClass().getCanonicalName() + ".onStream", streamEntry.getFields());
     }
 
     /**

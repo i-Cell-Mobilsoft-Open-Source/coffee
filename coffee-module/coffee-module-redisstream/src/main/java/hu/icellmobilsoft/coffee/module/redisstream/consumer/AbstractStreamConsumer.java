@@ -19,8 +19,11 @@
  */
 package hu.icellmobilsoft.coffee.module.redisstream.consumer;
 
+import jakarta.inject.Inject;
+
 import hu.icellmobilsoft.coffee.cdi.trace.annotation.Traced;
 import hu.icellmobilsoft.coffee.cdi.trace.constants.SpanAttribute;
+import hu.icellmobilsoft.coffee.cdi.trace.spi.ITraceHandler;
 import hu.icellmobilsoft.coffee.module.redisstream.config.IRedisStreamConstant;
 import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
 import redis.clients.jedis.resps.StreamEntry;
@@ -32,6 +35,14 @@ import redis.clients.jedis.resps.StreamEntry;
  * @since 1.3.0
  */
 public abstract class AbstractStreamConsumer extends BaseStreamConsumer implements IRedisStreamConsumer {
+
+    private static final Traced.Literal TRACED = new Traced.Literal(
+            SpanAttribute.Redis.Stream.COMPONENT,
+            SpanAttribute.Redis.Stream.KIND,
+            SpanAttribute.Redis.DB_TYPE);
+
+    @Inject
+    private ITraceHandler traceHandler;
 
     /**
      * Default constructor, constructs a new object.
@@ -50,16 +61,17 @@ public abstract class AbstractStreamConsumer extends BaseStreamConsumer implemen
      * If opentrace extension is active, the method will be traced by opentracing implementation
      *
      */
-    @Traced(component = SpanAttribute.Redis.Stream.COMPONENT, kind = SpanAttribute.Redis.Stream.KIND, dbType = SpanAttribute.Redis.DB_TYPE)
     @Override
     public void onStream(StreamEntry streamEntry) throws BaseException {
-        handleMDC(streamEntry);
+        traceHandler.runWithTrace(() -> {
+            handleMDC(streamEntry);
 
-        if (customize(streamEntry)) {
-            return;
-        }
-        String mainData = streamEntry.getFields().get(IRedisStreamConstant.Common.DATA_KEY_MESSAGE);
-        doWork(mainData);
+            if (customize(streamEntry)) {
+                return;
+            }
+            String mainData = streamEntry.getFields().get(IRedisStreamConstant.Common.DATA_KEY_MESSAGE);
+            doWork(mainData);
+        }, TRACED, getClass().getCanonicalName() + ".onStream", streamEntry.getFields());
     }
 
     /**

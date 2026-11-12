@@ -19,12 +19,17 @@
  */
 package hu.icellmobilsoft.coffee.module.mp.telemetry.extension;
 
+import java.util.Map;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
+import org.apache.commons.lang3.StringUtils;
+
 import hu.icellmobilsoft.coffee.cdi.trace.annotation.Traced;
+import hu.icellmobilsoft.coffee.cdi.trace.constants.SpanAttribute;
 import hu.icellmobilsoft.coffee.cdi.trace.spi.ITraceHandler;
 import hu.icellmobilsoft.coffee.cdi.trace.spi.TraceHandlerQualifier;
 import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
@@ -33,6 +38,10 @@ import hu.icellmobilsoft.coffee.se.function.BaseExceptionSupplier;
 import io.opentelemetry.api.trace.Span;
 import io.opentelemetry.api.trace.SpanBuilder;
 import io.opentelemetry.api.trace.Tracer;
+import io.opentelemetry.api.trace.propagation.W3CTraceContextPropagator;
+import io.opentelemetry.context.Context;
+import io.opentelemetry.context.Scope;
+import io.opentelemetry.context.propagation.TextMapGetter;
 
 /**
  * Provides telemetry functions for {@code Traced} annotation, where interceptor cannot be used or when working with dynamic proxies
@@ -43,6 +52,18 @@ import io.opentelemetry.api.trace.Tracer;
 @ApplicationScoped
 @TraceHandlerQualifier
 public class TelemetryHandler implements ITraceHandler {
+
+    private final TextMapGetter<Map<String, String>> TEXT_MAP_GETTER = new TextMapGetter<>() {
+        @Override
+        public Iterable<String> keys(Map<String, String> carrier) {
+            return carrier.keySet();
+        }
+
+        @Override
+        public String get(Map<String, String> carrier, String key) {
+            return carrier.get(key);
+        }
+    };
 
     @Inject
     private Tracer tracer;
@@ -86,10 +107,16 @@ public class TelemetryHandler implements ITraceHandler {
 
     @Override
     public <T> T runWithTrace(BaseExceptionSupplier<T> function, Traced traced, String operation) throws BaseException {
-        SpanBuilder spanBuilder = TelemetryUtil.createSpanBuilder(tracer, traced, operation);
-        Span span = spanBuilder.startSpan();
-        TelemetryUtil.fillSpan(span, traced);
-        try {
+        return runWithTrace(function, traced, operation, null);
+    }
+
+    @Override
+    public <T> T runWithTrace(BaseExceptionSupplier<T> function, Traced traced, String operation, Map<String, String> parentContextCarrier)
+            throws BaseException {
+        String traceParentType = getTraceParentType(parentContextCarrier);
+        Span span = createSpan(traced, operation, parentContextCarrier, traceParentType);
+
+        try (Scope ignored = getScope(traced, traceParentType, span)) {
             return function.get();
         } catch (RuntimeException | BaseException e) {
             TelemetryUtil.recordException(span, e);
@@ -101,10 +128,16 @@ public class TelemetryHandler implements ITraceHandler {
 
     @Override
     public void runWithTrace(BaseExceptionRunner function, Traced traced, String operation) throws BaseException {
-        SpanBuilder spanBuilder = TelemetryUtil.createSpanBuilder(tracer, traced, operation);
-        Span span = spanBuilder.startSpan();
-        TelemetryUtil.fillSpan(span, traced);
-        try {
+        runWithTrace(function, traced, operation, null);
+    }
+
+    @Override
+    public void runWithTrace(BaseExceptionRunner function, Traced traced, String operation, Map<String, String> parentContextCarrier)
+            throws BaseException {
+        String traceParentType = getTraceParentType(parentContextCarrier);
+        Span span = createSpan(traced, operation, parentContextCarrier, traceParentType);
+
+        try (Scope ignored = getScope(traced, traceParentType, span);) {
             function.run();
         } catch (RuntimeException | BaseException e) {
             TelemetryUtil.recordException(span, e);
@@ -112,6 +145,52 @@ public class TelemetryHandler implements ITraceHandler {
         } finally {
             span.end();
         }
+    }
+
+    private Scope getScope(Traced traced, String traceParentType, Span span) {
+        Scope scope = null;
+        if ("P".equals(traceParentType)) {
+            scope = span.makeCurrent();
+        } else if (checkStreamConsumer(traced.component())) {
+            scope = attachSpan(span);
+        }
+        return scope;
+    }
+
+    @Override
+    public void inject(Map<String, String> carrier) {
+        W3CTraceContextPropagator.getInstance().inject(Context.current(), carrier, Map::put);
+    }
+
+    private Span createSpan(Traced traced, String operation, Map<String, String> parentContextCarrier, String traceParentType) {
+        SpanBuilder spanBuilder = TelemetryUtil.createSpanBuilder(tracer, traced, operation);
+        if ("P".equals(traceParentType)) {
+            spanBuilder.setParent(extract(parentContextCarrier));
+        } else if ("L".equals(traceParentType)) {
+            spanBuilder.addLink(Span.fromContext(extract(parentContextCarrier)).getSpanContext());
+        }
+
+        Span span = spanBuilder.startSpan();
+        TelemetryUtil.fillSpan(span, traced);
+        return span;
+    }
+
+    private String getTraceParentType(Map<String, String> parentContextCarrier) {
+        return Optional.ofNullable(parentContextCarrier).map(m -> m.get("traceparenttype")).orElse(null);
+    }
+
+    private boolean checkStreamConsumer(String component) {
+        return StringUtils.equals(component, SpanAttribute.Redis.Stream.COMPONENT);
+    }
+
+    private Scope attachSpan(Span span) {
+        Context context = Context.current();
+        context = context.with(span);
+        return context.makeCurrent();
+    }
+
+    private Context extract(Map<String, String> carrier) {
+        return W3CTraceContextPropagator.getInstance().extract(Context.current(), carrier, TEXT_MAP_GETTER);
     }
 
 }

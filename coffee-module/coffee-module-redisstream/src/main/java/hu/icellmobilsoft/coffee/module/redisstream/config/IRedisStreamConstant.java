@@ -70,6 +70,10 @@ public interface IRedisStreamConstant {
          * Key for redis stream message data
          */
         String DATA_MESSAGE_TYPE = "messageType";
+        /**
+         * Key for Redis stream message data containing the trace parent type.
+         */
+        String TRACE_PARENT_TYPE = "traceparenttype";
     }
 
     /**

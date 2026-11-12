@@ -49,6 +49,27 @@ public class RedisStreamPublication {
      */
     private Map<String, String> parameters;
 
+    private TraceParentType traceParentType;
+
+    /**
+     * Defines how trace context is associated with a Redis stream publication.
+     * <p>
+     * Used to indicate whether the current trace context should be attached as a linked context or as the direct parent context for the published
+     * message.
+     */
+    public enum TraceParentType {
+        /**
+         * Indicates that the current trace context is associated with the Redis stream publication as a linked context, without making it the direct
+         * parent of the published message.
+         */
+        LINK,
+        /**
+         * Indicates that the current trace context is associated with the Redis stream publication as the direct parent context of the published
+         * message.
+         */
+        PARENT,
+    }
+
     /**
      * Creates the value class for redis stream publication
      *
@@ -126,6 +147,27 @@ public class RedisStreamPublication {
         return this;
     }
 
+    /**
+     * Sets the current trace context as the direct parent context for this Redis stream publication.
+     *
+     * @return same publication instance with the trace parent type set to {@link TraceParentType#PARENT}
+     */
+    public RedisStreamPublication withTrace() {
+        return withTrace(TraceParentType.PARENT);
+    }
+
+    /**
+     * Sets how the current trace context is associated with this Redis stream publication.
+     *
+     * @param traceParentType
+     *            trace parent type defining whether the trace context is linked or used as the direct parent
+     * @return same publication instance with the trace parent type set
+     */
+    public RedisStreamPublication withTrace(TraceParentType traceParentType) {
+        this.traceParentType = traceParentType;
+        return this;
+    }
+
     private Map<String, String> getInitializedParameters() {
         if (this.getParameters() == null) {
             this.parameters = new HashMap<>();
@@ -179,5 +221,14 @@ public class RedisStreamPublication {
      */
     public Map<String, String> getParameters() {
         return parameters;
+    }
+
+    /**
+     * Returns how the trace context is associated with this Redis stream publication.
+     *
+     * @return trace parent type defining whether the trace context is linked or used as the direct parent
+     */
+    public TraceParentType getTraceParentType() {
+        return traceParentType;
     }
 }
