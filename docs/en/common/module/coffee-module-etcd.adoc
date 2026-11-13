@@ -49,6 +49,12 @@ even if the ETCD does not contain it,
 so we can reduce a lot of repetitive queries.
 Cache is a thread safe singleton,
 it is possible to clear it by calling `EtcdConfigSourceCache.instance().clear()`.
+Can be activated during runtime as needed as follows
++
+[source,java]
+----
+CachedEtcdConfigSource.setActive(true);
+----
 * `hu.icellmobilsoft.coffee.module.etcd.producer.RuntimeEtcdConfigSource` -
 Can be activated during runtime as needed (e.g., AfterBeanDiscovery) as follows
 +
