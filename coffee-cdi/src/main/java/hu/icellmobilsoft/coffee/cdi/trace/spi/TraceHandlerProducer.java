@@ -19,6 +19,7 @@
  */
 package hu.icellmobilsoft.coffee.cdi.trace.spi;
 
+import java.util.Map;
 import java.util.function.Supplier;
 
 import jakarta.enterprise.context.ApplicationScoped;
@@ -40,6 +41,45 @@ import hu.icellmobilsoft.coffee.se.function.BaseExceptionSupplier;
 @ApplicationScoped
 public class TraceHandlerProducer {
 
+    // default implementation
+    private final ITraceHandler noopTraceHandler = new ITraceHandler() {
+        @Override
+        public <T> T runWithTraceNoException(Supplier<T> function, Traced traced, String operation) {
+            return function.get();
+        }
+
+        @Override
+        public void runWithTraceNoException(Runnable function, Traced traced, String operation) {
+            function.run();
+        }
+
+        @Override
+        public <T> T runWithTrace(BaseExceptionSupplier<T> function, Traced traced, String operation) throws BaseException {
+            return function.get();
+        }
+
+        @Override
+        public <T> T runWithTrace(BaseExceptionSupplier<T> function, Traced traced, String operation, Map<String, String> parentContextCarrier)
+                throws BaseException {
+            return function.get();
+        }
+
+        @Override
+        public void runWithTrace(BaseExceptionRunner function, Traced traced, String operation) throws BaseException {
+            function.run();
+        }
+
+        @Override
+        public void runWithTrace(BaseExceptionRunner function, Traced traced, String operation, Map<String, String> parentContextCarrier)
+                throws BaseException {
+            function.run();
+        }
+
+        @Override
+        public void inject(Map<String, String> carrier) {
+        }
+    };
+
     /**
      * Default constructor, constructs a new object.
      */
@@ -60,31 +100,7 @@ public class TraceHandlerProducer {
             return openTraceHandler.get();
         }
 
-        // default implementation
-        ITraceHandler noTraceHandler = new ITraceHandler() {
-            @Override
-            public <T> T runWithTraceNoException(Supplier<T> function, Traced traced, String operation) {
-                return function.get();
-            }
-
-            @Override
-            public void runWithTraceNoException(Runnable function, Traced traced, String operation) {
-                function.run();
-            }
-
-            @Override
-            public <T> T runWithTrace(BaseExceptionSupplier<T> function, Traced traced, String operation) throws BaseException {
-                return function.get();
-            }
-
-            @Override
-            public void runWithTrace(BaseExceptionRunner function, Traced traced, String operation) throws BaseException {
-                function.run();
-            }
-        };
-
-        return noTraceHandler;
-
+        return noopTraceHandler;
     }
 
 }

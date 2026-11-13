@@ -19,6 +19,7 @@
  */
 package hu.icellmobilsoft.coffee.cdi.trace.spi;
 
+import java.util.Map;
 import java.util.function.Supplier;
 
 import hu.icellmobilsoft.coffee.cdi.trace.annotation.Traced;
@@ -79,6 +80,26 @@ public interface ITraceHandler {
     <T> T runWithTrace(BaseExceptionSupplier<T> function, Traced traced, String operation) throws BaseException;
 
     /**
+     * Runs the specified function within a trace context using the supplied operation name and parent context carrier.
+     *
+     * @param <T>
+     *            the result type returned by the function
+     * @param function
+     *            the function to run within the trace context
+     * @param traced
+     *            holds information about tracing tags
+     * @param operation
+     *            the name of the span
+     * @param parentContextCarrier
+     *            the carrier containing the parent trace context to use for span propagation
+     * @return the function result
+     * @throws BaseException
+     *             if the wrapped function fails
+     */
+    <T> T runWithTrace(BaseExceptionSupplier<T> function, Traced traced, String operation, Map<String, String> parentContextCarrier)
+            throws BaseException;
+
+    /**
      * Wrapping function in trace context.
      *
      * @param function
@@ -91,5 +112,29 @@ public interface ITraceHandler {
      *             on error
      */
     void runWithTrace(BaseExceptionRunner function, Traced traced, String operation) throws BaseException;
+
+    /**
+     * Runs the specified function within a trace context using the supplied operation name and parent context carrier.
+     *
+     * @param function
+     *            the function to run within the trace context
+     * @param traced
+     *            holds information about tracing tags
+     * @param operation
+     *            the name of the span
+     * @param parentContextCarrier
+     *            the carrier containing the parent trace context to use for span propagation
+     * @throws BaseException
+     *             if the wrapped function fails
+     */
+    void runWithTrace(BaseExceptionRunner function, Traced traced, String operation, Map<String, String> parentContextCarrier) throws BaseException;
+
+    /**
+     * Injects the current trace context into the specified carrier for propagation to downstream calls.
+     *
+     * @param carrier
+     *            the carrier map to receive trace context entries
+     */
+    void inject(Map<String, String> carrier);
 
 }

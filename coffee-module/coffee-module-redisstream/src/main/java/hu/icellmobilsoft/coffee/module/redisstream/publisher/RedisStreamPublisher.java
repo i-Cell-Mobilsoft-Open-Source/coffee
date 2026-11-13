@@ -31,7 +31,9 @@ import jakarta.enterprise.context.Dependent;
 import jakarta.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 
+import hu.icellmobilsoft.coffee.cdi.trace.spi.ITraceHandler;
 import hu.icellmobilsoft.coffee.dto.common.LogConstants;
 import hu.icellmobilsoft.coffee.dto.exception.InvalidParameterException;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
@@ -70,6 +72,13 @@ public class RedisStreamPublisher {
 
     @Inject
     private StreamGroupConfig config;
+
+    @Inject
+    private ITraceHandler traceHandler;
+
+    @Inject
+    @ConfigProperty(name = "coffee.redisstream." + IRedisStreamConstant.Common.TRACE_PARENT_TYPE)
+    private Optional<RedisStreamPublication.TraceParentType> traceParentType;
 
     private RedisManager redisManager;
 
@@ -122,7 +131,7 @@ public class RedisStreamPublisher {
      */
     public Optional<StreamEntryID> publish(String streamMessage, Map<String, String> parameters) throws BaseException {
         checkInitialization();
-        return publishInNewConnection(streamGroup, streamMessage, parameters);
+        return publishInNewConnection(streamGroup, createJedisMessage(streamMessage, parameters));
     }
 
     /**
@@ -156,7 +165,7 @@ public class RedisStreamPublisher {
     public Optional<StreamEntryID> publish(String streamGroup, String streamMessage, Map<String, String> parameters) throws BaseException {
         checkRedisManager();
         validateGroup(streamGroup);
-        return publishInNewConnection(streamGroup, streamMessage, parameters);
+        return publishInNewConnection(streamGroup, createJedisMessage(streamMessage, parameters));
     }
 
     /**
@@ -175,9 +184,9 @@ public class RedisStreamPublisher {
         checkRedisManager();
         if (StringUtils.isBlank(publication.getStreamGroup())) {
             validateGroup(streamGroup);
-            return publishInNewConnection(streamGroup, publication.getStreamMessage(), publication.getParameters());
+            return publishInNewConnection(streamGroup, createJedisMessage(publication));
         } else {
-            return publishInNewConnection(publication.getStreamGroup(), publication.getStreamMessage(), publication.getParameters());
+            return publishInNewConnection(publication.getStreamGroup(), createJedisMessage(publication));
         }
     }
 
@@ -202,11 +211,9 @@ public class RedisStreamPublisher {
                 Optional<StreamEntryID> id;
                 if (StringUtils.isBlank(publication.getStreamGroup())) {
                     validateGroup(streamGroup);
-                    id = publishInActiveConnection(createJedisMessage(publication.getStreamMessage(), publication.getParameters()), streamGroup);
+                    id = publishInActiveConnection(createJedisMessage(publication), streamGroup);
                 } else {
-                    id = publishInActiveConnection(
-                            createJedisMessage(publication.getStreamMessage(), publication.getParameters()),
-                            publication.getStreamGroup());
+                    id = publishInActiveConnection(createJedisMessage(publication), publication.getStreamGroup());
                 }
                 ids.add(id);
             }
@@ -236,16 +243,10 @@ public class RedisStreamPublisher {
                 Response<StreamEntryID> response;
                 if (StringUtils.isBlank(publication.getStreamGroup())) {
                     validateGroup(streamGroup);
-                    response = publishThroughPipeline(
-                            pipeline,
-                            streamGroup,
-                            createJedisMessage(publication.getStreamMessage(), publication.getParameters()));
+                    response = publishThroughPipeline(pipeline, streamGroup, createJedisMessage(publication));
                 } else {
                     validateGroup(publication.getStreamGroup());
-                    response = publishThroughPipeline(
-                            pipeline,
-                            publication.getStreamGroup(),
-                            createJedisMessage(publication.getStreamMessage(), publication.getParameters()));
+                    response = publishThroughPipeline(pipeline, publication.getStreamGroup(), createJedisMessage(publication));
                 }
                 responses.add(response);
                 i = syncPipelineIfNeeded(pipeline, publications.size(), i);
@@ -456,19 +457,26 @@ public class RedisStreamPublisher {
      *
      * @param streamGroup
      *            Stream group to send (another than initialized)
-     * @param streamMessage
-     *            Message in stream. Can be String or JSON List
-     * @param parameters
-     *            Messages parameters, nullable. Map key value is standardized in {@link StreamMessageParameter} enum value
+     * @param jedisMessage
+     *            Redis Stream message structure, ready to publish
      * @return Created Redis Stream message identifier from Redis server
      * @throws BaseException
      *             exception on sending
      */
-    protected Optional<StreamEntryID> publishInNewConnection(String streamGroup, String streamMessage, Map<String, String> parameters)
-            throws BaseException {
+    protected Optional<StreamEntryID> publishInNewConnection(String streamGroup, Map<String, String> jedisMessage) throws BaseException {
         try (RedisManagerConnection ignored = redisManager.initConnection()) {
-            return publishInActiveConnection(createJedisMessage(streamMessage, parameters), streamGroup);
+            return publishInActiveConnection(jedisMessage, streamGroup);
         }
+    }
+
+    private Map<String, String> createJedisMessage(RedisStreamPublication publication) {
+        Map<String, String> jedisMessage = createJedisMessage(publication.getStreamMessage(), publication.getParameters());
+        var traceParentType = publication.getTraceParentType();
+        if (traceParentType != null) {
+            traceHandler.inject(jedisMessage);
+            jedisMessage.put(IRedisStreamConstant.Common.TRACE_PARENT_TYPE, traceParentType.name().substring(0, 1));
+        }
+        return jedisMessage;
     }
 
     /**
@@ -484,6 +492,12 @@ public class RedisStreamPublisher {
         Map<String, String> keyValues = new HashMap<>();
         keyValues.put(IRedisStreamConstant.Common.DATA_KEY_FLOW_ID, getFlowIdMessage(parameters));
         keyValues.put(IRedisStreamConstant.Common.DATA_KEY_MESSAGE, streamMessage);
+
+        if (traceParentType.isPresent()) {
+            traceHandler.inject(keyValues);
+            keyValues.put(IRedisStreamConstant.Common.TRACE_PARENT_TYPE, traceParentType.get().name().substring(0, 1));
+        }
+
         // Intentionally, it's positioned at the end so that the above values can be overridden if needed.
         if (parameters != null) {
             keyValues.putAll(parameters);

@@ -100,3 +100,15 @@ A JSON-B-alapú `JsonUtil.toJson(...)`, `toObject(...)`, `toObjectOpt(...)` és 
 és ezek miatt nem szükséges Gson-függőséget felvenni. A JSON-B API és implementáció továbbra is szükséges.
 A Gsonról JSON-B-re váltáskor külön ellenőrizzük a formátumokat, adaptereket és annotációkat;
 a két szerializáló viselkedése nem minden esetben azonos.
+
+=== coffee-module-redisstream
+* Tracing támogatás hozzáadásra került. Lásd link:#common_module_coffee-module-redisstream_tracing[dokumentáció]
+
+.Migration
+A változtatások visszafelé kompatibilisek, migrációs lépés nem szükséges.
+
+=== coffee-module-mp-opentracing
+*  modul deprecated, és a jövőben el lesz távolítva..
+
+.Migration
+A jövőben el lesz távolítva, de a jelenlegi változtatások visszafelé kompatibilisek, és nincs szükség migrációra.

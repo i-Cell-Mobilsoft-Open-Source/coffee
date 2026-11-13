@@ -19,6 +19,8 @@
  */
 package hu.icellmobilsoft.coffee.module.mp.opentracing.extension;
 
+import java.util.Map;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 import jakarta.enterprise.context.ApplicationScoped;
@@ -30,10 +32,14 @@ import hu.icellmobilsoft.coffee.cdi.trace.spi.TraceHandlerQualifier;
 import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
 import hu.icellmobilsoft.coffee.se.function.BaseExceptionRunner;
 import hu.icellmobilsoft.coffee.se.function.BaseExceptionSupplier;
+import io.opentracing.References;
 import io.opentracing.Scope;
 import io.opentracing.Span;
+import io.opentracing.SpanContext;
 import io.opentracing.Tracer;
 import io.opentracing.Tracer.SpanBuilder;
+import io.opentracing.propagation.Format;
+import io.opentracing.propagation.TextMapAdapter;
 
 /**
  * Provides opentracing functions for {@code Traced} annotation, where interceptor cannot be used or when working with dynamic proxies
@@ -91,9 +97,14 @@ public class OpenTraceHandler implements ITraceHandler {
 
     @Override
     public <T> T runWithTrace(BaseExceptionSupplier<T> function, Traced traced, String operation) throws BaseException {
+        return runWithTrace(function, traced, operation, null);
+    }
+
+    @Override
+    public <T> T runWithTrace(BaseExceptionSupplier<T> function, Traced traced, String operation, Map<String, String> parentContextCarrier)
+            throws BaseException {
         Tracer tracer = openTraceResolver.resolveTracer();
-        SpanBuilder spanBuilder = OpenTraceUtil.createSpanBuilder(tracer, traced, operation);
-        Span span = spanBuilder.start();
+        Span span = createSpan(traced, operation, parentContextCarrier, tracer);
         Scope scope = tracer.activateSpan(span);
         try {
             return function.get();
@@ -108,9 +119,14 @@ public class OpenTraceHandler implements ITraceHandler {
 
     @Override
     public void runWithTrace(BaseExceptionRunner function, Traced traced, String operation) throws BaseException {
+        runWithTrace(function, traced, operation, null);
+    }
+
+    @Override
+    public void runWithTrace(BaseExceptionRunner function, Traced traced, String operation, Map<String, String> parentContextCarrier)
+            throws BaseException {
         Tracer tracer = openTraceResolver.resolveTracer();
-        SpanBuilder spanBuilder = OpenTraceUtil.createSpanBuilder(tracer, traced, operation);
-        Span span = spanBuilder.start();
+        Span span = createSpan(traced, operation, parentContextCarrier, tracer);
         Scope scope = tracer.activateSpan(span);
         try {
             function.run();
@@ -121,6 +137,34 @@ public class OpenTraceHandler implements ITraceHandler {
             span.finish();
             scope.close();
         }
+    }
+
+    @Override
+    public void inject(Map<String, String> carrier) {
+        Tracer tracer = openTraceResolver.resolveTracer();
+        tracer.inject(tracer.activeSpan().context(), Format.Builtin.TEXT_MAP_INJECT, carrier::put);
+    }
+
+    private Span createSpan(Traced traced, String operation, Map<String, String> parentContextCarrier, Tracer tracer) {
+        SpanBuilder spanBuilder = OpenTraceUtil.createSpanBuilder(tracer, traced, operation);
+        if (parentContextCarrier != null) {
+            SpanContext extracted = extract(parentContextCarrier);
+            String traceParentType = getTraceParentType(parentContextCarrier);
+            if ("P".equals(traceParentType)) {
+                spanBuilder.asChildOf(extracted);
+            } else if ("L".equals(traceParentType)) {
+                spanBuilder.addReference(References.FOLLOWS_FROM, extracted);
+            }
+        }
+        return spanBuilder.start();
+    }
+
+    private SpanContext extract(Map<String, String> carrier) {
+        return openTraceResolver.resolveTracer().extract(Format.Builtin.TEXT_MAP_EXTRACT, new TextMapAdapter(carrier));
+    }
+
+    private String getTraceParentType(Map<String, String> parentContextCarrier) {
+        return Optional.ofNullable(parentContextCarrier).map(m -> m.get("traceparenttype")).orElse(null);
     }
 
 }
