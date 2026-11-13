@@ -500,22 +500,47 @@ public class MyBean {
 
 == Eviction
 
-By calling EvictAction, the cache content can be cleared. To do this, an EvictAction class must be created in the project (with the appropriate scope) and it should extend the AbstractEvictAction from Coffee. After that, the EvictAction::evict method should be called through a REST endpoint. As a result, the evict method will be invoked on all beans and config sources that implement the Evictable interface.
+Coffee provides `hu.icellmobilsoft.coffee.rest.action.evict.EvictAction` as a default `@ApplicationScoped` CDI bean.
+It extends `AbstractEvictAction`, clears `ApplicationConfiguration`, and calls `evict()` on CDI beans and
+MicroProfile config sources implementing `hu.icellmobilsoft.coffee.dto.evict.Evictable`.
+The response lists the evicted services and contains the operation timestamps and context.
+The action instance is shared across the application; each invocation creates its own response and eviction list.
+Because the instance is shared and invocations may run concurrently, an `EvictAction` subclass must not keep per-invocation state in instance fields.
 
-.ISystemRest
+`ISystemRest` declares the endpoint contract; it does not look up or invoke an action.
+
+The `getEvict()` implementations in `AbstractWildFlySystemRest` and `AbstractQuarkusSystemRest`
+delegate to the CDI-selected `EvictAction` through `wrapNoParam`.
+The action is injected with `@Inject`, and CDI manages its lifecycle.
+Extending the appropriate system REST class enables the existing `GET /system/evict` endpoint;
+no application-level action or `getEvict()` override is required for the default behavior.
+
+To customize eviction, extend Coffee's concrete `EvictAction` and select the application bean
+with `@Alternative`, `@Priority` and an explicit CDI scope:
+
 [source,java]
 ----
-public interface ISystemRest {
-  ...
-  
-  @GET
-  @Path(SystemPath.EVICT)
-  @Produces(value = { MediaType.APPLICATION_JSON, MediaType.TEXT_XML, MediaType.APPLICATION_XML })
-  EvictResponse evict() throws BaseException;
+import jakarta.annotation.Priority;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.inject.Alternative;
+import jakarta.interceptor.Interceptor;
+
+import hu.icellmobilsoft.coffee.dto.common.config.evict.EvictResponse;
+import hu.icellmobilsoft.coffee.rest.action.evict.EvictAction;
+
+@ApplicationScoped
+@Alternative
+@Priority(Interceptor.Priority.APPLICATION + 100)
+public class ProjectEvictAction extends EvictAction {
+    @Override
+    public EvictResponse evict() {
+        // Clear additional application-specific state here.
+        return super.evict();
+    }
+}
 ----
 
-.SystemRest
-
-Use <<common_module_coffee-module-quarkus,AbstractQuarkusSystemRest>> or
- <<common_module_coffee-module-wildfly,AbstractWildflySystemRest>> to implement SystemRest on the project.
- 
+Calling `super.evict()` preserves Coffee's default eviction behavior.
+Existing application overrides of `getEvict()` remain in effect.
+An action extending only `AbstractEvictAction` can still be called by such a custom endpoint;
+to replace the inherited endpoint's action via CDI, extend `EvictAction` instead.

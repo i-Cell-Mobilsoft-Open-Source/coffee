@@ -2,6 +2,23 @@
 
 == Changes
 
+=== Default eviction action
+
+`coffee-rest` provides a default `@ApplicationScoped` CDI `EvictAction` extending `AbstractEvictAction`.
+`ISystemRest.getEvict()` is now an abstract endpoint declaration; it contains no action invocation.
+`AbstractWildFlySystemRest.getEvict()` and `AbstractQuarkusSystemRest.getEvict()` now invoke it
+through `wrapNoParam`. Without an application override, `GET /system/evict` now clears caches
+instead of reporting that eviction is not implemented.
+
+.Migration
+For the default behavior, application-level eviction actions and delegating `getEvict()` overrides are no longer required.
+Classes implementing `ISystemRest` directly must implement `getEvict()` or extend the appropriate abstract system REST class.
+Existing endpoint overrides continue to work. To customize the inherited endpoint via CDI,
+extend `hu.icellmobilsoft.coffee.rest.action.evict.EvictAction` and annotate the subclass with
+`@Alternative`, `@Priority` and an explicit CDI scope, such as `@ApplicationScoped`.
+Call `super.evict()` to retain the default behavior.
+See <<common_core_coffee-rest,coffee-rest>> for an example.
+
 === coffee-module-wildfly and coffee-module-wildfly-management
 
 * The management module's server API versions are managed centrally by `coffee-bom-all`,
