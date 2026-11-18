@@ -1,0 +1,15 @@
+= v3.1.0
+
+== Változások
+
+=== coffee-module-redisstream
+* Tracing támogatás hozzáadásra került. Lásd link:#common_module_coffee-module-redisstream_tracing[dokumentáció]
+
+.Migration
+A változtatások visszafelé kompatibilisek, migrációs lépés nem szükséges.
+
+=== coffee-module-mp-opentracing
+*  modul deprecated, és a jövőben el lesz távolítva..
+
+.Migration
+A jövőben el lesz távolítva, de a jelenlegi változtatások visszafelé kompatibilisek, és nincs szükség migrációra.
