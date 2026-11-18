@@ -28,10 +28,5 @@
 			<groupId>hu.icellmobilsoft.coffee</groupId>
 			<artifactId>coffee-tool</artifactId>
 		</dependency>
-
-		<dependency>
-			<groupId>commons-collections</groupId>
-			<artifactId>commons-collections</artifactId>
-		</dependency>
 	</dependencies>
 </project>

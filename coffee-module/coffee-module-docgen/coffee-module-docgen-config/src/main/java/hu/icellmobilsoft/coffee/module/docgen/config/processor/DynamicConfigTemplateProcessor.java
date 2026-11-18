@@ -40,9 +40,6 @@ import javax.tools.Diagnostic;
 import javax.tools.FileObject;
 import javax.tools.StandardLocation;
 
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.MapUtils;
-
 import com.google.auto.service.AutoService;
 
 import hu.icellmobilsoft.coffee.module.docgen.common.writer.IDocWriter;
@@ -79,7 +76,7 @@ public class DynamicConfigTemplateProcessor extends AbstractProcessor {
         }
 
         Map<String, List<DocData>> docFileMap = collectDocData(annotations, roundEnv);
-        if (MapUtils.isNotEmpty(docFileMap)) {
+        if (!docFileMap.isEmpty()) {
             docFileMap.forEach((fileName, lDataList) -> writeDataListSorted(fileName, lDataList, config));
         }
 
@@ -87,7 +84,7 @@ public class DynamicConfigTemplateProcessor extends AbstractProcessor {
     }
 
     private void writeDataListSorted(String fileName, List<DocData> lDataList, ConfigDocConfig config) {
-        if (CollectionUtils.isNotEmpty(lDataList)) {
+        if (!lDataList.isEmpty()) {
             List<DocData> sortedList = new ArrayList<>(
                     lDataList.stream().collect(Collectors.toMap(DocData::getKey, Function.identity(), (o1, o2) -> o2)).values());
             sortedList.sort(Comparator.comparing(DocData::getKey));
