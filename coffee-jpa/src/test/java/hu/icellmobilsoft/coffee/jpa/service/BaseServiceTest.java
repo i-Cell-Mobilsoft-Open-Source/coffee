@@ -23,8 +23,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
+import hu.icellmobilsoft.coffee.se.api.exception.TechnicalException;
 
 /**
  * @author zsolt.tomai
@@ -45,7 +45,8 @@ public class BaseServiceTest {
 
         // then
         Assertions.assertEquals(CoffeeFaultType.REPOSITORY_FAILED, technicalException.getFaultTypeEnum());
-        Assertions.assertEquals("Error occurred in  BaseService.testMethod() : [test exception message with {brace} bracket]",
+        Assertions.assertEquals(
+                "Error occurred in  BaseService.testMethod() : [test exception message with {brace} bracket]",
                 technicalException.getMessage());
     }
 
@@ -62,7 +63,8 @@ public class BaseServiceTest {
 
         // then
         Assertions.assertEquals(CoffeeFaultType.REPOSITORY_FAILED, technicalException.getFaultTypeEnum());
-        Assertions.assertEquals("Error occurred in  BaseService.testMethod(param1: [param1]) : [test exception message with {brace} bracket]",
+        Assertions.assertEquals(
+                "Error occurred in  BaseService.testMethod(param1: [param1]) : [test exception message with {brace} bracket]",
                 technicalException.getMessage());
     }
 }

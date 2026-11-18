@@ -25,6 +25,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -43,9 +44,9 @@ import hu.icellmobilsoft.coffee.cdi.logger.ThisLogger;
 import hu.icellmobilsoft.coffee.cdi.util.ProxyUtils;
 import hu.icellmobilsoft.coffee.dto.exception.BONotFoundException;
 import hu.icellmobilsoft.coffee.dto.exception.InvalidParameterException;
-import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
+import hu.icellmobilsoft.coffee.se.api.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.se.function.BaseExceptionFunction;
 import hu.icellmobilsoft.coffee.se.function.BaseExceptionFunction2;
 import hu.icellmobilsoft.coffee.se.function.BaseExceptionFunction3;
@@ -187,39 +188,135 @@ public class BaseService<T> {
     }
 
     /**
-     * Transaction required!
+     * Saves the entity with <code>merge + flush + refresh</code>. Transaction required!
+     * <p>
+     * Depending on the entity state, this method may perform either an INSERT or an UPDATE, and it always runs an extra SELECT because of the
+     * <code>refresh</code>. If the entity has an ID that does not exist in the database, <code>merge</code> silently inserts a new row.
+     * <p>
+     * Prefer the dedicated methods with explicit behavior:
+     * <ul>
+     * <li>{@link #insert(Object)} - INSERT only,</li>
+     * <li>{@link #insertAndRefresh(Object)} - INSERT, then refresh,</li>
+     * <li>{@link #update(Object)} - UPDATE only, fails if the entity does not exist,</li>
+     * <li>{@link #updateAndRefresh(Object)} - UPDATE, then refresh, fails if the entity does not exist.</li>
+     * </ul>
      *
      * @param entity
      *            entity to save
-     * @return saved entity
+     * @return saved entity (the managed instance returned by <code>merge</code>)
      * @throws BaseException
      *             exception
      */
     public T save(T entity) throws BaseException {
+        return applyJpaOperation("save", entity, e -> {
+            T merged = getEntityManager().merge(e);
+            getEntityManager().flush();
+            getEntityManager().refresh(merged);
+            return merged;
+        });
+    }
+
+    /**
+     * Inserts the entity with <code>persist + flush</code>. Transaction required!
+     *
+     * @param entity
+     *            entity to save
+     * @throws BaseException
+     *             exception
+     */
+    public void insert(T entity) throws BaseException {
+        applyJpaOperation("insert", entity, e -> {
+            getEntityManager().persist(e);
+            getEntityManager().flush();
+            return e;
+        });
+    }
+
+    /**
+     * Inserts the entity with <code>persist + flush + refresh</code>. Transaction required!
+     *
+     * @param entity
+     *            entity to save
+     * @return saved entity (the managed instance returned by <code>persist</code>)
+     * @throws BaseException
+     *             exception
+     */
+    public T insertAndRefresh(T entity) throws BaseException {
+        return applyJpaOperation("insertAndRefresh", entity, e -> {
+            getEntityManager().persist(e);
+            getEntityManager().flush();
+            getEntityManager().refresh(e);
+            return e;
+        });
+    }
+
+    /**
+     * Updates the entity with <code>merge + flush</code>. Transaction required!
+     *
+     * @param entity
+     *            entity to save
+     * @throws BaseException
+     *             exception
+     */
+    public void update(T entity) throws BaseException {
+        applyJpaOperation("update", entity, this::mergeExisting);
+    }
+
+    /**
+     * Updates the entity with <code>merge + flush + refresh</code>. Transaction required!
+     *
+     * @param entity
+     *            entity to save
+     * @return saved entity (the managed instance returned by <code>merge</code>)
+     * @throws BaseException
+     *             exception
+     */
+    public T updateAndRefresh(T entity) throws BaseException {
+        return applyJpaOperation("updateAndRefresh", entity, e -> {
+            T merged = mergeExisting(e);
+            getEntityManager().refresh(merged);
+            return merged;
+        });
+    }
+
+    private T applyJpaOperation(String operationName, T entity, BaseExceptionFunction<T, T> jpaOperation) throws BaseException {
         if (entity == null) {
-            log.warn("Entity is null skipped to save!");
+            log.warn("Entity is null, operation [{0}] skipped!", operationName);
             throw new InvalidParameterException("entity is null!");
         }
         String entityName = entity.getClass().getSimpleName();
-        log.debug(">> save([{0}]: [{1}]", entityName, entity);
-        T savedEntity = null;
+        log.debug(">> {0} ([{1}]: [{2}])", operationName, entityName, entity);
+        T managedEntity = null;
         try {
-            savedEntity = getEntityManager().merge(entity);
-            getEntityManager().flush();
-            getEntityManager().refresh(savedEntity);
-            log.debug("[{0}] entity has been saved", entityName);
-            return savedEntity;
+            managedEntity = jpaOperation.apply(entity);
+            log.debug("[{0}] entity has been processed by operation [{1}]", entityName, operationName);
+            return managedEntity;
         } catch (OptimisticLockException | OptimisticLockingFailureException e) {
-            String msg = MessageFormat.format("Optimistic Lock Error in saving [{0}]: [{1}]", entityName, e.getLocalizedMessage());
+            String msg = MessageFormat
+                    .format("Optimistic Lock Error in operation [{0}] [{1}]: [{2}]", operationName, entityName, e.getLocalizedMessage());
             log.error(msg, e);
             throw new hu.icellmobilsoft.coffee.dto.exception.OptimisticLockException(CoffeeFaultType.OPTIMISTIC_LOCK_EXCEPTION, msg, e);
         } catch (Exception e) {
-            String msg = MessageFormat.format("Error in saving [{0}]: [{1}]", entityName, e.getLocalizedMessage());
+            String msg = MessageFormat.format("Error in operation [{0}] [{1}]: [{2}]", operationName, entityName, e.getLocalizedMessage());
             log.error(msg, e);
             throw new TechnicalException(CoffeeFaultType.ENTITY_SAVE_FAILED, msg, e);
         } finally {
-            log.debug("<< save([{0}]: [{1}]", entityName, savedEntity == null ? entity : savedEntity);
+            log.debug("<< {0} ([{1}]: [{2}])", operationName, entityName, managedEntity == null ? entity : managedEntity);
         }
+    }
+
+    private T mergeExisting(T entity) throws BaseException {
+        Object id = getEntityManager().getEntityManagerFactory().getPersistenceUnitUtil().getIdentifier(entity);
+        if (Objects.isNull(id)) {
+            log.warn("Entity ID is null, update is not possible!");
+            throw new InvalidParameterException("entity ID is null!");
+        }
+        if (!getEntityManager().contains(entity) && Objects.isNull(getEntityManager().find(entity.getClass(), id))) {
+            throw new InvalidParameterException("Entity not found, update is not possible!");
+        }
+        T merged = getEntityManager().merge(entity);
+        getEntityManager().flush();
+        return merged;
     }
 
     /**
