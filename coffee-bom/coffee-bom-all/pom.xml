@@ -20,21 +20,21 @@
         <version.org.apache.commons.commons-lang3>3.20.0</version.org.apache.commons.commons-lang3>
         <version.com.google.guava>33.0.0-jre</version.com.google.guava>
         <version.commons-beanutils>1.11.0</version.commons-beanutils>
-        <version.commons-codec>1.17.2</version.commons-codec>
-        <version.commons-collections>3.2.2</version.commons-collections>
+        <version.commons-codec>1.23.0</version.commons-codec>
         <version.commons-io>2.22.0</version.commons-io>
         <version.commons-email2-jakarta>2.0.0-M1</version.commons-email2-jakarta>
         <version.org.jboss.resteasy>7.0.3.Final</version.org.jboss.resteasy>
         <version.org.hibernate>7.4.5.Final</version.org.hibernate>
-        <version.org.apache.httpcomponents.httpclient>4.5.14</version.org.apache.httpcomponents.httpclient>
-        <version.org.apache.httpcomponents.httpcore>4.4.16</version.org.apache.httpcomponents.httpcore>
+        <version.org.apache.httpcomponents.httpclient>5.6.5</version.org.apache.httpcomponents.httpclient>
+        <version.org.apache.httpcomponents.httpcore>5.4.4</version.org.apache.httpcomponents.httpcore>
 
         <version.io.etcd.jetcd-core>0.8.5</version.io.etcd.jetcd-core>
 
         <version.io.micrometer>1.16.6</version.io.micrometer>
-        <version.org.eclipse.yasson>3.0.4</version.org.eclipse.yasson>
-        <version.jedis>7.2.1</version.jedis>
+        <version.org.eclipse.yasson>3.0.5</version.org.eclipse.yasson>
+        <version.jedis>8.0.2</version.jedis>
         <version.org.mongodb.driver.sync>5.5.2</version.org.mongodb.driver.sync>
+        <version.com.opencsv>5.12.0</version.com.opencsv>
     </properties>
 
 
@@ -164,12 +164,6 @@
             </dependency>
 
             <dependency>
-                <groupId>commons-collections</groupId>
-                <artifactId>commons-collections</artifactId>
-                <version>${version.commons-collections}</version>
-            </dependency>
-
-            <dependency>
                 <groupId>commons-io</groupId>
                 <artifactId>commons-io</artifactId>
                 <version>${version.commons-io}</version>
@@ -222,8 +216,8 @@
             <!-- Http components -->
 
             <dependency>
-                <groupId>org.apache.httpcomponents</groupId>
-                <artifactId>httpclient</artifactId>
+                <groupId>org.apache.httpcomponents.client5</groupId>
+                <artifactId>httpclient5</artifactId>
                 <version>${version.org.apache.httpcomponents.httpclient}</version>
                 <exclusions>
                     <exclusion>
@@ -232,22 +226,9 @@
                     </exclusion>
                 </exclusions>
             </dependency>
-
             <dependency>
-                <groupId>org.apache.httpcomponents</groupId>
-                <artifactId>httpmime</artifactId>
-                <version>${version.org.apache.httpcomponents.httpclient}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>commons-logging</groupId>
-                        <artifactId>commons-logging</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-
-            <dependency>
-                <groupId>org.apache.httpcomponents</groupId>
-                <artifactId>httpcore</artifactId>
+                <groupId>org.apache.httpcomponents.core5</groupId>
+                <artifactId>httpcore5</artifactId>
                 <version>${version.org.apache.httpcomponents.httpcore}</version>
                 <exclusions>
                     <exclusion>
@@ -255,6 +236,12 @@
                         <artifactId>commons-logging</artifactId>
                     </exclusion>
                 </exclusions>
+            </dependency>
+
+            <dependency>
+                <groupId>com.opencsv</groupId>
+                <artifactId>opencsv</artifactId>
+                <version>${version.com.opencsv}</version>
             </dependency>
 
             <!-- jetcd for etcd -->
@@ -279,7 +266,7 @@
 
             <!-- JSONB implementation -->
             <dependency>
-                <groupId>org.eclipse</groupId>
+                <groupId>org.eclipse.yasson</groupId>
                 <artifactId>yasson</artifactId>
                 <version>${version.org.eclipse.yasson}</version>
             </dependency>
