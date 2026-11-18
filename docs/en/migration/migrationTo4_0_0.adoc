@@ -61,6 +61,28 @@ Update the imports in the project:
 * `hu.icellmobilsfoft.coffee.module.wildfly.rest.system.AbstractWildFlySystemRest` -> `hu.icellmobilsoft.coffee.module.wildfly.rest.system.AbstractWildFlySystemRest`
 * `hu.icellmobilsfoft.coffee.module.quarkus.rest.system.AbstractQuarkusSystemRest` -> `hu.icellmobilsoft.coffee.module.quarkus.rest.system.AbstractQuarkusSystemRest`
 
+=== coffee-jpa
+
+`BaseService` now provides explicit persistence methods:
+
+* `insert(T)` - `persist + flush`, INSERT only.
+* `insertAndRefresh(T)` - `persist + flush + refresh`, INSERT and SELECT.
+* `update(T)` - `merge + flush`, UPDATE only. Throws `InvalidParameterException` if the entity ID is null or the entity does not exist.
+* `updateAndRefresh(T)` - `merge + flush + refresh`, UPDATE and SELECT. Same existence check as `update(T)`.
+
+NOTE: When `update(T)` or `updateAndRefresh(T)` is called with a detached entity, an extra `SELECT` statement is executed before the `UPDATE`.
+
+`save(T)` keeps its previous behavior (`merge + flush + refresh`), but its documentation now recommends the dedicated methods above,
+because `merge` silently inserts a new row if the entity has an ID that does not exist in the database.
+The exceptions thrown by `BaseService` now use `hu.icellmobilsoft.coffee.se.api.exception.TechnicalException`
+instead of `hu.icellmobilsoft.coffee.dto.exception.TechnicalException`.
+
+.Migration
+The existing `save(T)` calls do not need to be changed. For new code, prefer the explicit methods.
+
+If your code references `hu.icellmobilsoft.coffee.dto.exception.TechnicalException` in connection with `BaseService`,
+update the import to `hu.icellmobilsoft.coffee.se.api.exception.TechnicalException`.
+
 [#migration_to_4_0_0_gson]
 === coffee-tool
 * `hu.icellmobilsoft.coffee.tool.utils.json.JsonUtil` now contains only JSON-B-based conversions
