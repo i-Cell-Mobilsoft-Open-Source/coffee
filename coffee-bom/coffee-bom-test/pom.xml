@@ -20,8 +20,8 @@
         <version.org.mockito>4.9.0</version.org.mockito>
         <version.smallrye-config>3.0.0</version.smallrye-config>
         <version.org.glassfish.jaxb.jaxb-runtime>4.0.1</version.org.glassfish.jaxb.jaxb-runtime>
-        <version.org.hibernate.validator>8.0.0.Final</version.org.hibernate.validator>
-        <version.org.glassfish.expressly.expressly>5.0.0</version.org.glassfish.expressly.expressly>
+        <version.org.hibernate.validator>9.1.1.Final</version.org.hibernate.validator>
+        <version.org.glassfish.expressly.expressly>6.0.0</version.org.glassfish.expressly.expressly>
         <version.org.openjdk.jmh>1.36</version.org.openjdk.jmh>
     </properties>
 

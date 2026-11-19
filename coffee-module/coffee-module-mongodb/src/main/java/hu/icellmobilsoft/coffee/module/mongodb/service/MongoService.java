@@ -26,13 +26,13 @@ import java.util.List;
 import jakarta.enterprise.context.Dependent;
 import jakarta.inject.Inject;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.client.MongoCollection;
+
 import hu.icellmobilsoft.coffee.dto.exception.BONotFoundException;
 import hu.icellmobilsoft.coffee.dto.exception.InvalidParameterException;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
@@ -309,7 +309,7 @@ public class MongoService<T> {
     public void insertMany(List<T> documents) throws BaseException {
         log.trace(">> BaseMongoService.insertMany(documents: [{0}]", documents);
 
-        if (CollectionUtils.isEmpty(documents)) {
+        if (documents == null || documents.isEmpty()) {
             log.info("<< BaseMongoService.insertMany(No documents to save!)");
             return;
         }
