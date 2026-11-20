@@ -2,6 +2,20 @@
 
 == Changes
 
+=== dependencies
+
+* upgraded dependencies:
+** commons-codec 1.17.2 -> 1.23.0
+** apache httpclient 4.5.1 -> 5.6.5
+** yasson 3.0.4 -> 3.0.5
+** jedis 7.2.1 -> 8.0.2
+** opencsv 5.5.2 -> 5.12.0
+* removed commons-collections (only available from opencsv)
+
+.Migration
+* If you transitively use apache httpclient then replace package names with the new ones.
+e.g.: `org.apache.http.entity.ContentType` -> `org.apache.hc.core5.http.ContentType`
+
 === Default eviction action
 
 `coffee-rest` provides a default `@ApplicationScoped` CDI `EvictAction` extending `AbstractEvictAction`.

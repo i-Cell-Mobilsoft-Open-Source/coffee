@@ -35,7 +35,6 @@ import jakarta.enterprise.inject.spi.CDI;
 import jakarta.enterprise.util.TypeLiteral;
 import jakarta.inject.Inject;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import hu.icellmobilsoft.coffee.cdi.annotation.Range;
@@ -254,9 +253,9 @@ public abstract class AbstractEvaluator<INPUT, RULERESULT extends RuleResult> im
         }
 
         List<RULERESULT> ruleResults = rule.applyList(input);
-        if (CollectionUtils.isNotEmpty(ruleResults)) {
+        if (ruleResults != null && !ruleResults.isEmpty()) {
             if (inputIndex != null) {
-                ruleResults.stream().forEach(r -> r.setIndex(inputIndex));
+                ruleResults.forEach(r -> r.setIndex(inputIndex));
             }
             validationResults.addAll(ruleResults);
         }

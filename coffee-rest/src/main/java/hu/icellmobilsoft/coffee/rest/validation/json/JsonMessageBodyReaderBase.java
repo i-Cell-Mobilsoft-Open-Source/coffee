@@ -34,8 +34,7 @@ import jakarta.ws.rs.core.MultivaluedMap;
 import jakarta.ws.rs.ext.MessageBodyReader;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.apache.http.ParseException;
-import org.apache.http.entity.ContentType;
+import org.apache.hc.core5.http.ContentType;
 
 import hu.icellmobilsoft.coffee.cdi.annotation.xml.ValidateXML;
 import hu.icellmobilsoft.coffee.cdi.logger.LogProducer;
@@ -130,7 +129,7 @@ public abstract class JsonMessageBodyReaderBase<T> implements MessageBodyReader<
                 return contentType.getCharset();
             }
             LogProducer.logToAppLogger(log -> log.trace("Content-Type charset is not set - returning UTF-8 by default"), getClass());
-        } catch (ParseException | IllegalArgumentException e) {
+        } catch (IllegalArgumentException e) {
             LogProducer.logToAppLogger(log -> log.warn("Unknown charset in Content-Type! Returning UTF-8 by default", e), getClass());
         }
         return StandardCharsets.UTF_8;

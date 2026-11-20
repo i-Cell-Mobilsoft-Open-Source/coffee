@@ -20,8 +20,8 @@
 package hu.icellmobilsoft.coffee.rest.apache;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
@@ -30,22 +30,21 @@ import java.util.concurrent.TimeUnit;
 import jakarta.enterprise.context.Dependent;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.http.Consts;
-import org.apache.http.Header;
-import org.apache.http.HttpHeaders;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.config.RequestConfig;
-import org.apache.http.client.methods.HttpDelete;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpPut;
-import org.apache.http.client.methods.HttpRequestBase;
-import org.apache.http.entity.ByteArrayEntity;
-import org.apache.http.entity.ContentType;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.hc.client5.http.ClientProtocolException;
+import org.apache.hc.client5.http.classic.methods.HttpDelete;
+import org.apache.hc.client5.http.classic.methods.HttpGet;
+import org.apache.hc.client5.http.classic.methods.HttpPost;
+import org.apache.hc.client5.http.classic.methods.HttpPut;
+import org.apache.hc.client5.http.classic.methods.HttpUriRequestBase;
+import org.apache.hc.client5.http.config.RequestConfig;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
+import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
+import org.apache.hc.core5.http.ContentType;
+import org.apache.hc.core5.http.Header;
+import org.apache.hc.core5.http.HttpHeaders;
+import org.apache.hc.core5.http.HttpResponse;
+import org.apache.hc.core5.http.io.entity.ByteArrayEntity;
+import org.apache.hc.core5.http.io.entity.StringEntity;
 
 import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
@@ -62,13 +61,13 @@ import hu.icellmobilsoft.coffee.tool.utils.json.JsonUtil;
 @Dependent
 public class BaseApacheHttpClient {
 
-    private static Logger LOGGER = Logger.getLogger(BaseApacheHttpClient.class);
+    private static final Logger LOGGER = Logger.getLogger(BaseApacheHttpClient.class);
 
     /** constant connection time-out: 1 minute response time */
     public static final int CONNECTION_TIMEOUT_MILLIS = (int) TimeUnit.MINUTES.toMillis(1);
 
     /** Constant <code>CONTENT_TYPE_TEXT_PLAIN_UTF8</code> */
-    public static final ContentType CONTENT_TYPE_TEXT_PLAIN_UTF8 = ContentType.create("text/plain", Consts.UTF_8);
+    public static final ContentType CONTENT_TYPE_TEXT_PLAIN_UTF8 = ContentType.create("text/plain", StandardCharsets.UTF_8);
 
     /** "application/xml" */
     public final static String APPLICATION_XML = "application/xml";
@@ -92,7 +91,7 @@ public class BaseApacheHttpClient {
      * @throws BaseException
      *             if any exception occurs
      */
-    protected void beforeAll(HttpRequestBase request) throws BaseException {
+    protected void beforeAll(HttpUriRequestBase request) throws BaseException {
     }
 
     /**
@@ -113,7 +112,10 @@ public class BaseApacheHttpClient {
      * @return {@code RequestConfig.Builder}
      */
     protected RequestConfig.Builder createRequestConfig() {
-        return RequestConfig.custom().setConnectionRequestTimeout(getTimeOut()).setConnectTimeout(getTimeOut()).setSocketTimeout(getTimeOut());
+        return RequestConfig.custom()
+                .setConnectionRequestTimeout(getTimeOut(), TimeUnit.MILLISECONDS)
+                .setConnectTimeout(getTimeOut(), TimeUnit.MILLISECONDS)
+                .setResponseTimeout(getTimeOut(), TimeUnit.MILLISECONDS);
     }
 
     /**
@@ -146,7 +148,11 @@ public class BaseApacheHttpClient {
         CloseableHttpClient client = createHttpClientBuilder(config).build();
 
         // SSL handling
-        handleSSL(client, get.getURI());
+        try {
+            handleSSL(client, get.getUri());
+        } catch (URISyntaxException e) {
+            throw new TechnicalException(CoffeeFaultType.OPERATION_FAILED, "Invalid URI: " + e.getLocalizedMessage(), e);
+        }
 
         try {
             // Modification option
@@ -197,7 +203,11 @@ public class BaseApacheHttpClient {
         CloseableHttpClient client = createHttpClientBuilder(config).build();
 
         // SSL handling
-        handleSSL(client, post.getURI());
+        try {
+            handleSSL(client, post.getUri());
+        } catch (URISyntaxException e) {
+            throw new TechnicalException(CoffeeFaultType.OPERATION_FAILED, "Invalid URI: " + e.getLocalizedMessage(), e);
+        }
 
         // add header
         post.setHeader(HttpHeaders.CONTENT_TYPE, contentType.getMimeType() + ";charset=" + contentType.getCharset());
@@ -242,13 +252,17 @@ public class BaseApacheHttpClient {
         CloseableHttpClient client = createHttpClientBuilder(config).build();
 
         // SSL handling
-        handleSSL(client, post.getURI());
+        try {
+            handleSSL(client, post.getUri());
+        } catch (URISyntaxException e) {
+            throw new TechnicalException(CoffeeFaultType.OPERATION_FAILED, "Invalid URI: " + e.getLocalizedMessage(), e);
+        }
 
         // add header
         post.setHeader(HttpHeaders.CONTENT_TYPE, contentType.getMimeType());
 
         try {
-            ByteArrayEntity byteEntityRequest = new ByteArrayEntity(request);
+            ByteArrayEntity byteEntityRequest = new ByteArrayEntity(request, contentType);
             post.setEntity(byteEntityRequest);
             // Modification option
             beforePost(post);
@@ -297,7 +311,11 @@ public class BaseApacheHttpClient {
         CloseableHttpClient client = createHttpClientBuilder(config).build();
 
         // SSL handling
-        handleSSL(client, put.getURI());
+        try {
+            handleSSL(client, put.getUri());
+        } catch (URISyntaxException e) {
+            throw new TechnicalException(CoffeeFaultType.OPERATION_FAILED, "Invalid URI: " + e.getLocalizedMessage(), e);
+        }
 
         // add header
         put.setHeader(HttpHeaders.CONTENT_TYPE, contentType.getMimeType() + ";charset=" + contentType.getCharset());
@@ -342,13 +360,17 @@ public class BaseApacheHttpClient {
         CloseableHttpClient client = createHttpClientBuilder(config).build();
 
         // SSL handling
-        handleSSL(client, put.getURI());
+        try {
+            handleSSL(client, put.getUri());
+        } catch (URISyntaxException e) {
+            throw new TechnicalException(CoffeeFaultType.OPERATION_FAILED, "Invalid URI: " + e.getLocalizedMessage(), e);
+        }
 
         // add header
         put.setHeader(HttpHeaders.CONTENT_TYPE, contentType.getMimeType());
 
         try {
-            ByteArrayEntity byteEntityRequest = new ByteArrayEntity(request);
+            ByteArrayEntity byteEntityRequest = new ByteArrayEntity(request, contentType);
             put.setEntity(byteEntityRequest);
             // Modification option
             beforePut(put);
@@ -393,7 +415,11 @@ public class BaseApacheHttpClient {
         CloseableHttpClient client = createHttpClientBuilder(config).build();
 
         // SSL handling
-        handleSSL(client, delete.getURI());
+        try {
+            handleSSL(client, delete.getUri());
+        } catch (URISyntaxException e) {
+            throw new TechnicalException(CoffeeFaultType.OPERATION_FAILED, "Invalid URI: " + e.getLocalizedMessage(), e);
+        }
 
         try {
             // Modification option
@@ -433,13 +459,7 @@ public class BaseApacheHttpClient {
      * @return URL encoded {@code String} or null if encoding error
      */
     public String urlEncodeUTF8(String s) {
-        try {
-            return URLEncoder.encode(s, StandardCharsets.UTF_8.name());
-        } catch (UnsupportedEncodingException e) {
-            // NOTE TK: Impossible case
-            LOGGER.error("Unsupported encoding: ", e);
-            return null;
-        }
+        return URLEncoder.encode(s, StandardCharsets.UTF_8);
     }
 
     /**
@@ -456,7 +476,7 @@ public class BaseApacheHttpClient {
                 continue;
             }
 
-            if (sb.length() > 0) {
+            if (!sb.isEmpty()) {
                 sb.append("&");
             }
 
@@ -469,11 +489,13 @@ public class BaseApacheHttpClient {
      * Logs http request.
      *
      * @param request
-     *            {@link HttpRequestBase}, could be extended to its parent object
+     *            {@link HttpUriRequestBase}, could be extended to its parent object
      * @param entity
      *            instead of using input stream
+     * @throws BaseException
+     *             if any exception occurs
      */
-    protected void logRequest(HttpRequestBase request, String entity) {
+    protected void logRequest(HttpUriRequestBase request, String entity) throws BaseException {
         StringBuffer msg = createLogRequest(request);
         msg.append("> entity: [").append(entity).append("]\n");
         LOGGER.info(msg.toString());
@@ -484,8 +506,10 @@ public class BaseApacheHttpClient {
      *
      * @param request
      *            http request
+     * @throws BaseException
+     *             if any exception occurs
      */
-    protected void logRequest(HttpRequestBase request) {
+    protected void logRequest(HttpUriRequestBase request) throws BaseException {
         LOGGER.info(createLogRequest(request).toString());
     }
 
@@ -493,15 +517,21 @@ public class BaseApacheHttpClient {
      * Creates log request.
      *
      * @param request
-     *            {@link HttpRequestBase}, could be extended to its parent object
+     *            {@link HttpUriRequestBase}, could be extended to its parent object
      * @return log request {@link StringBuffer}
+     * @throws BaseException
+     *             if any exception occurs
      */
-    protected StringBuffer createLogRequest(HttpRequestBase request) {
+    protected StringBuffer createLogRequest(HttpUriRequestBase request) throws BaseException {
         StringBuffer msg = new StringBuffer();
         msg.append(">> ApacheHttpClient.request ->\n");
-        msg.append("> url: [").append(request.getMethod()).append(" ").append(request.getURI()).append("]\n");
+        try {
+            msg.append("> url: [").append(request.getMethod()).append(" ").append(request.getUri()).append("]\n");
+        } catch (URISyntaxException e) {
+            throw new TechnicalException(CoffeeFaultType.OPERATION_FAILED, "Invalid URI: " + e.getLocalizedMessage(), e);
+        }
         msg.append("> headers: [");
-        for (Header header : request.getAllHeaders()) {
+        for (Header header : request.getHeaders()) {
             msg.append("\n>    ").append(header.getName()).append(":").append(header.getValue());
         }
         msg.append("]\n");
@@ -518,19 +548,16 @@ public class BaseApacheHttpClient {
      *
      */
     public void logResponse(HttpResponse response, byte[] byteEntity) {
-        StringBuffer msg = new StringBuffer();
+        StringBuilder msg = new StringBuilder();
         msg.append("<< ApacheHttpClient.response ->\n");
         msg.append("< status: [");
-        if (response.getStatusLine() != null) {
-            msg.append(response.getStatusLine().getStatusCode()).append(" ");
-            msg.append(response.getStatusLine().getReasonPhrase()).append("; ");
-            msg.append(response.getStatusLine().getProtocolVersion());
-        }
+        msg.append(response.getCode()).append(" ");
+        msg.append(response.getReasonPhrase());
         msg.append("]\n");
         msg.append("< locale: [").append(response.getLocale()).append("]\n");
-        msg.append("< protocol: [").append(response.getProtocolVersion()).append("]\n");
+        msg.append("< protocol: [").append(response.getVersion().getProtocol()).append("]\n");
         msg.append("< headers: [");
-        for (Header header : response.getAllHeaders()) {
+        for (Header header : response.getHeaders()) {
             msg.append("\n<    ").append(header.getName()).append(":").append(header.getValue());
         }
         msg.append("]\n");
