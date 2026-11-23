@@ -34,11 +34,14 @@ import jakarta.enterprise.inject.spi.AnnotatedType;
 import jakarta.enterprise.inject.spi.Extension;
 import jakarta.enterprise.inject.spi.ProcessAnnotatedType;
 
-import hu.icellmobilsoft.coffee.cdi.annotation.FaultTypeCode;
+import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
+import hu.icellmobilsoft.coffee.se.api.annotation.FaultTypeCode;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
 
 /**
- * Extension for processing FaultType enums. In order to discover an implementation beans.xml must be present in the implementation's module.
+ * Extension for processing FaultType enums. The built-in {@link CoffeeFaultType} is always registered. Custom enums annotated with the legacy
+ * CDI based {@code hu.icellmobilsoft.coffee.cdi.annotation.FaultTypeCode} are discovered if beans.xml is present in the implementation's module,
+ * the CDI-free {@link FaultTypeCode} does not make an enum discoverable in annotated bean archives on its own.
  *
  * @author mark.petrenyi
  * @since 1.3.0
@@ -71,8 +74,9 @@ public class FaultTypeParserExtension implements Extension {
     <T> void processAnnotatedType(@Observes ProcessAnnotatedType<T> processAnnotatedType) {
         AnnotatedType<T> annotatedType = processAnnotatedType.getAnnotatedType();
         Class<T> javaClass = annotatedType.getJavaClass();
-        if ((annotatedType.isAnnotationPresent(FaultTypeCode.class) || javaClass.isAnnotationPresent(FaultTypeCode.class))
-                && !InvocationHandler.class.isAssignableFrom(javaClass) && javaClass.isEnum()) {
+        if (isFaultTypeCodePresent(annotatedType, javaClass)
+                && !InvocationHandler.class.isAssignableFrom(javaClass) && javaClass.isEnum()
+                && !hu.icellmobilsoft.coffee.se.api.exception.enums.CoffeeFaultType.class.equals(javaClass)) {
             Logger.getLogger(FaultTypeParserExtension.class)
                     .debug("IFaultType implementation found:[{0}], registering as fault type enum", javaClass);
             synchronized (FaultTypeParserExtension.class) {
@@ -90,9 +94,12 @@ public class FaultTypeParserExtension implements Extension {
     @SuppressWarnings("rawtypes")
     void afterTypeDiscovery(@Observes AfterTypeDiscovery afterTypeDiscovery) {
         synchronized (FaultTypeParserExtension.class) {
+            // CDI-free @FaultTypeCode does not make the enum discoverable, so the built-in fault type is registered explicitly
+            faultTypePriorityMap.putIfAbsent(CoffeeFaultType.class, DEFAULT_FAULT_TYPE_PRIORITY);
             List<Class<? extends Enum>> sortedFaultTypes = faultTypePriorityMap.entrySet()
                     .stream()
-                    .sorted(Map.Entry.comparingByValue())
+                    .sorted(Map.Entry.<Class<? extends Enum>, Integer> comparingByValue()
+                            .thenComparing(entry -> entry.getKey().getName()))
                     .map(Map.Entry::getKey)
                     .collect(Collectors.toList());
             faultTypeClasses.addAll(sortedFaultTypes);
@@ -106,6 +113,13 @@ public class FaultTypeParserExtension implements Extension {
             priority = priorityAnnotation.value();
         }
         return priority > 0 ? priority : DEFAULT_FAULT_TYPE_PRIORITY;
+    }
+
+    private static <T> boolean isFaultTypeCodePresent(AnnotatedType<T> annotatedType, Class<T> javaClass) {
+        return annotatedType.isAnnotationPresent(FaultTypeCode.class)
+                || javaClass.isAnnotationPresent(FaultTypeCode.class)
+                || annotatedType.isAnnotationPresent(hu.icellmobilsoft.coffee.cdi.annotation.FaultTypeCode.class)
+                || javaClass.isAnnotationPresent(hu.icellmobilsoft.coffee.cdi.annotation.FaultTypeCode.class);
     }
 
     /**

@@ -21,6 +21,7 @@ package hu.icellmobilsoft.coffee.quarkus.extension.module.mp.restclient.deployme
 
 import static io.quarkus.deployment.annotations.ExecutionTime.STATIC_INIT;
 
+import java.lang.annotation.Annotation;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -34,7 +35,7 @@ import org.jboss.jandex.AnnotationInstance;
 import org.jboss.jandex.DotName;
 import org.jboss.logging.Logger;
 
-import hu.icellmobilsoft.coffee.cdi.annotation.FaultTypeCode;
+import hu.icellmobilsoft.coffee.se.api.annotation.FaultTypeCode;
 import hu.icellmobilsoft.coffee.module.mp.restclient.exception.FaultTypeClasses;
 import hu.icellmobilsoft.coffee.quarkus.extension.module.mp.restclient.FaultTypeClassesRecorder;
 import io.quarkus.arc.deployment.SyntheticBeanBuildItem;
@@ -85,19 +86,12 @@ class MpRestclientProcessor {
         final Map<Class<? extends Enum>, Integer> faultTypePriorityMap = new HashMap<>();
 
         try {
-
-            for (AnnotationInstance annotationInstance : combinedIndex.getComputingIndex()
-                    .getAnnotations(DotName.createSimple(FaultTypeCode.class))) {
-
-                if (annotationInstance.target().hasAnnotation(DotName.createSimple(FaultTypeCode.class))) {
-
-                    Class<? extends Enum> javaClass = (Class<? extends Enum>) Class.forName(annotationInstance.target().asClass().name().toString());
-                    faultTypePriorityMap.put(javaClass, getPriority(javaClass));
-                }
-            }
+            collectFaultTypeClasses(combinedIndex, FaultTypeCode.class, faultTypePriorityMap);
+            collectFaultTypeClasses(combinedIndex, hu.icellmobilsoft.coffee.cdi.annotation.FaultTypeCode.class, faultTypePriorityMap);
             List<Class<? extends Enum>> sortedFaultTypes = faultTypePriorityMap.entrySet()
                     .stream()
-                    .sorted(Map.Entry.comparingByValue())
+                    .sorted(Map.Entry.<Class<? extends Enum>, Integer> comparingByValue()
+                            .thenComparing(entry -> entry.getKey().getName()))
                     .map(Map.Entry::getKey)
                     .collect(Collectors.toList());
             faultTypeClasses = List.copyOf(sortedFaultTypes);
@@ -141,5 +135,20 @@ class MpRestclientProcessor {
             priority = priorityAnnotation.value();
         }
         return priority > 0 ? priority : DEFAULT_FAULT_TYPE_PRIORITY;
+    }
+
+    @SuppressWarnings("unchecked")
+    private static void collectFaultTypeClasses(CombinedIndexBuildItem combinedIndex, Class<? extends Annotation> annotationClass,
+            Map<Class<? extends Enum>, Integer> faultTypePriorityMap) throws ClassNotFoundException {
+        DotName annotationDotName = DotName.createSimple(annotationClass);
+        for (AnnotationInstance annotationInstance : combinedIndex.getComputingIndex().getAnnotations(annotationDotName)) {
+            if (annotationInstance.target().hasAnnotation(annotationDotName)) {
+                Class<? extends Enum> javaClass = (Class<? extends Enum>) Class.forName(annotationInstance.target().asClass().name().toString());
+                // the SE enum duplicates the DTO CoffeeFaultType values, the DTO one is the canonical fallback type
+                if (!hu.icellmobilsoft.coffee.se.api.exception.enums.CoffeeFaultType.class.equals(javaClass)) {
+                    faultTypePriorityMap.put(javaClass, getPriority(javaClass));
+                }
+            }
+        }
     }
 }

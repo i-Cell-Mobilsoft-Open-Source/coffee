@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import hu.icellmobilsoft.coffee.se.api.exception.enums.CoffeeFaultType;
 import hu.icellmobilsoft.coffee.se.api.exception.enums.Severity;
 
 /**
@@ -37,6 +38,8 @@ import hu.icellmobilsoft.coffee.se.api.exception.enums.Severity;
 public class BaseException extends Exception {
 
     private static final long serialVersionUID = 1L;
+
+    private static final CoffeeFaultType DEFAULT_FAULT_TYPE = CoffeeFaultType.OPERATION_FAILED;
 
     /**
      * FaultType.
@@ -52,6 +55,28 @@ public class BaseException extends Exception {
      * The parameters of the message.
      */
     private List<Serializable> messageParameters;
+
+    /**
+     * Constructor for BaseException.
+     *
+     * @param message
+     *            message
+     */
+    public BaseException(String message) {
+        this(DEFAULT_FAULT_TYPE, message, null, null);
+    }
+
+    /**
+     * Constructor for BaseException.
+     *
+     * @param message
+     *            message
+     * @param e
+     *            e
+     */
+    public BaseException(String message, Throwable e) {
+        this(DEFAULT_FAULT_TYPE, message, e, null);
+    }
 
     /**
      * Constructor for BaseException.
