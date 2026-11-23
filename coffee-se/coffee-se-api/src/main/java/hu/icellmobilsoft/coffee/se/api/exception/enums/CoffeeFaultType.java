@@ -19,12 +19,15 @@
  */
 package hu.icellmobilsoft.coffee.se.api.exception.enums;
 
+import hu.icellmobilsoft.coffee.se.api.annotation.FaultTypeCode;
+
 /**
  * Coffee exceptions type
  *
  * @author imre.scheffer
  * @since 2.7.0
  */
+@FaultTypeCode
 public enum CoffeeFaultType {
 
     /**
