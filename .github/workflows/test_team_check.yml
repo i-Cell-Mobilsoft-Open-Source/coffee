@@ -1,0 +1,69 @@
+# Temporary workflow to test team membership check without triggering a real release.
+# DELETE THIS FILE after testing is complete.
+
+name: Test Team Membership Check
+
+on:
+  workflow_dispatch:
+    inputs:
+      comment:
+        description: 'Test comment'
+        default: 'Testing team membership check'
+        required: false
+
+jobs:
+  check-actor:
+    name: Check actor is a member of the release team
+    runs-on: ubuntu-latest
+    outputs:
+      allowed: ${{ steps.membership.outputs.allowed }}
+    steps:
+      - name: Check team membership
+        id: membership
+        env:
+          GITHUB_TOKEN: '${{ secrets.GH_TOKEN_TECHUSER_JAVA }}'
+          ORG: 'i-Cell-Mobilsoft-Open-Source'
+          TEAM_SLUG: 'coffee-releases'
+          ACTOR: '${{ github.actor }}'
+        run: |
+          echo "Checking membership for actor '${ACTOR}' in team '${ORG}/${TEAM_SLUG}'..."
+          status=$(curl -s -o /tmp/response.json -w "%{http_code}" \
+            -H "Authorization: token ${GITHUB_TOKEN}" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/orgs/${ORG}/teams/${TEAM_SLUG}/memberships/${ACTOR}")
+          echo "HTTP status: ${status}"
+          echo "Response body:"
+          cat /tmp/response.json
+          echo ""
+          if [ "$status" = "200" ]; then
+            echo "allowed=true" >> "$GITHUB_OUTPUT"
+            echo "::notice::Actor '${ACTOR}' IS a member of '${ORG}/${TEAM_SLUG}'. Release would PROCEED."
+          else
+            echo "allowed=false" >> "$GITHUB_OUTPUT"
+            echo "::warning::Actor '${ACTOR}' is NOT a member of '${ORG}/${TEAM_SLUG}' (HTTP ${status}). Release would be SKIPPED."
+          fi
+
+  simulate-release:
+    needs: check-actor
+    runs-on: ubuntu-latest
+    if: needs.check-actor.outputs.allowed == 'true'
+    steps:
+      - name: Simulated release (no-op)
+        run: |
+          echo "========================================="
+          echo "  SIMULATION: Release WOULD run here."
+          echo "  Actor '${{ github.actor }}' is authorized."
+          echo "========================================="
+
+  report-skipped:
+    needs: check-actor
+    runs-on: ubuntu-latest
+    if: needs.check-actor.outputs.allowed != 'true'
+    steps:
+      - name: Report blocked
+        run: |
+          echo "========================================="
+          echo "  SIMULATION: Release would be BLOCKED."
+          echo "  Actor '${{ github.actor }}' is NOT authorized."
+          echo "========================================="
+

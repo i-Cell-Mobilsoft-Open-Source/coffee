@@ -18,10 +18,38 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  mvn-release:
+  check-actor:
+    name: Check actor is a member of the release team
     runs-on: ubuntu-latest
-    # Permission check https://github.community/t/who-has-permission-to-workflow-dispatch/133981
-    if: contains('["rombow","czenczl","petrenyi-mark","speter555","bucherarnold"]', github.actor)
+    outputs:
+      allowed: ${{ steps.membership.outputs.allowed }}
+    steps:
+      - name: Check team membership
+        id: membership
+        env:
+          GITHUB_TOKEN: '${{ secrets.GH_TOKEN_TECHUSER_JAVA }}'
+          ORG: 'i-Cell-Mobilsoft-Open-Source'
+          # Use the slug of the team whose members are allowed to release.
+          # Find your team slug at: https://github.com/orgs/i-Cell-Mobilsoft-Open-Source/teams
+          # For a nested team (e.g. java > coffee-releases), the slug is still just 'coffee-releases'.
+          TEAM_SLUG: 'coffee-releases'
+          ACTOR: '${{ github.actor }}'
+        run: |
+          status=$(curl -s -o /dev/null -w "%{http_code}" \
+            -H "Authorization: token ${GITHUB_TOKEN}" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/orgs/${ORG}/teams/${TEAM_SLUG}/memberships/${ACTOR}")
+          if [ "$status" = "200" ]; then
+            echo "allowed=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "allowed=false" >> "$GITHUB_OUTPUT"
+            echo "::warning::Actor '${ACTOR}' is not a member of the '${ORG}/${TEAM_SLUG}' team (HTTP ${status})."
+          fi
+
+  mvn-release:
+    needs: check-actor
+    runs-on: ubuntu-latest
+    if: needs.check-actor.outputs.allowed == 'true'
 
     steps:
       - name: Release
