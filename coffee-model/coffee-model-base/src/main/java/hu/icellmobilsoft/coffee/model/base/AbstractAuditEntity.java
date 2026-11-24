@@ -19,13 +19,12 @@
  */
 package hu.icellmobilsoft.coffee.model.base;
 
-import java.util.Date;
+import java.io.Serializable;
+import java.time.OffsetDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
 import jakarta.validation.constraints.NotNull;
 
 import hu.icellmobilsoft.coffee.model.base.annotation.CreatedBy;
@@ -36,17 +35,16 @@ import hu.icellmobilsoft.coffee.model.base.javatime.annotation.ModifiedOn;
 import hu.icellmobilsoft.coffee.model.base.javatime.listener.TimestampsProvider;
 
 /**
- * Base class for audited entities.
- * 
+ * Base class for audited (X__INSDATE, X__MODDATE, X__INSUSER, X__MODUSER) entities.
+ *
  * @param <T>
  *            The type of the creator and modifier user
- *
  * @author imre.scheffer
  * @since 1.0.0
  */
 @MappedSuperclass
 @EntityListeners({ TimestampsProvider.class, AuditProvider.class })
-public abstract class AbstractAuditEntity<T> extends AbstractEntity implements IAuditEntity<Date, T> {
+public abstract class AbstractAuditEntity<T extends Serializable> extends AbstractEntity implements IAuditEntity<OffsetDateTime, T> {
 
     private static final long serialVersionUID = 1L;
 
@@ -62,17 +60,15 @@ public abstract class AbstractAuditEntity<T> extends AbstractEntity implements I
      */
     @CreatedOn
     @NotNull
-    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "X__INSDATE", updatable = false)
-    private Date creationDate;
+    private OffsetDateTime creationDate;
 
     /**
      * Last modification date of the entity
      */
     @ModifiedOn
-    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "X__MODDATE")
-    private Date modificationDate;
+    private OffsetDateTime modificationDate;
 
     /**
      * Creator user of the entity
@@ -94,7 +90,7 @@ public abstract class AbstractAuditEntity<T> extends AbstractEntity implements I
      *
      * @return creationDate
      */
-    public Date getCreationDate() {
+    public OffsetDateTime getCreationDate() {
         return this.creationDate;
     }
 
@@ -104,7 +100,7 @@ public abstract class AbstractAuditEntity<T> extends AbstractEntity implements I
      * @param creationDate
      *            creationDate
      */
-    public void setCreationDate(Date creationDate) {
+    public void setCreationDate(OffsetDateTime creationDate) {
         this.creationDate = creationDate;
     }
 
@@ -113,7 +109,7 @@ public abstract class AbstractAuditEntity<T> extends AbstractEntity implements I
      *
      * @return modificationDate
      */
-    public Date getModificationDate() {
+    public OffsetDateTime getModificationDate() {
         return this.modificationDate;
     }
 
@@ -123,7 +119,7 @@ public abstract class AbstractAuditEntity<T> extends AbstractEntity implements I
      * @param modificationDate
      *            modificationDate
      */
-    public void setModificationDate(Date modificationDate) {
+    public void setModificationDate(OffsetDateTime modificationDate) {
         this.modificationDate = modificationDate;
     }
 

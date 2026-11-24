@@ -24,11 +24,11 @@ import java.util.List;
 import jakarta.enterprise.context.Dependent;
 
 import hu.icellmobilsoft.coffee.dto.common.common.CommonIdListType;
-import hu.icellmobilsoft.coffee.model.base.AbstractIdentifiedAuditEntity;
+import hu.icellmobilsoft.coffee.model.base.IIdentifiedEntity;
 import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
 
 /**
- * {@link CommonIdListType} dto &lt;-&gt; {@link AbstractIdentifiedAuditEntity} list converter
+ * {@link CommonIdListType} dto &lt;-&gt; {@link IIdentifiedEntity} list converter
  *
  * @author karoly.tamas
  * @since 1.0.0
@@ -54,7 +54,7 @@ public class CommonIdListTypeConverter {
      * @throws BaseException
      *             exception
      */
-    public <T extends AbstractIdentifiedAuditEntity> CommonIdListType convert(List<T> sourceEntities) throws BaseException {
+    public <T extends IIdentifiedEntity<String>> CommonIdListType convert(List<T> sourceEntities) throws BaseException {
         CommonIdListType commonIdListType = new CommonIdListType();
         convert(commonIdListType, sourceEntities);
         return commonIdListType;
@@ -72,7 +72,7 @@ public class CommonIdListTypeConverter {
      * @throws BaseException
      *             exception
      */
-    public <T extends AbstractIdentifiedAuditEntity> void convert(CommonIdListType commonIdListType, List<T> sourceEntities) throws BaseException {
+    public <T extends IIdentifiedEntity<String>> void convert(CommonIdListType commonIdListType, List<T> sourceEntities) throws BaseException {
         for (T entity : sourceEntities) {
             commonIdListType.getId().add(entity.getId());
         }

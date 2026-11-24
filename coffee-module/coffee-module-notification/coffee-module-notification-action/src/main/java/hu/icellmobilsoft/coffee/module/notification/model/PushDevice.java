@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,18 +19,16 @@
  */
 package hu.icellmobilsoft.coffee.module.notification.model;
 
-import java.util.Date;
+import java.time.OffsetDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Table;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
 import jakarta.validation.constraints.Size;
 
-import hu.icellmobilsoft.coffee.model.base.AbstractIdentifiedAuditEntity;
+import hu.icellmobilsoft.coffee.model.base.AbstractVersionableAuditEntity;
 import hu.icellmobilsoft.coffee.module.notification.model.enums.DeviceType;
 
 /**
@@ -41,7 +39,7 @@ import hu.icellmobilsoft.coffee.module.notification.model.enums.DeviceType;
  */
 @Entity
 @Table(name = "push_device")
-public class PushDevice extends AbstractIdentifiedAuditEntity {
+public class PushDevice extends AbstractVersionableAuditEntity<String> {
 
     private static final long serialVersionUID = 1L;
 
@@ -76,9 +74,8 @@ public class PushDevice extends AbstractIdentifiedAuditEntity {
     /**
      * Push message sent time
      */
-    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "sent_time")
-    private Date sentTime;
+    private OffsetDateTime sentTime;
 
     /**
      * Push send was successful
@@ -155,7 +152,7 @@ public class PushDevice extends AbstractIdentifiedAuditEntity {
      *
      * @return {@code sentTime}
      */
-    public Date getSentTime() {
+    public OffsetDateTime getSentTime() {
         return sentTime;
     }
 
@@ -165,7 +162,7 @@ public class PushDevice extends AbstractIdentifiedAuditEntity {
      * @param sentTime
      *            sentTime to set
      */
-    public void setSentTime(Date sentTime) {
+    public void setSentTime(OffsetDateTime sentTime) {
         this.sentTime = sentTime;
     }
 

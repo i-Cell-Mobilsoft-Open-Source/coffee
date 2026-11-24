@@ -29,7 +29,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import hu.icellmobilsoft.coffee.model.base.DefaultImplAbstractIdentifiedAuditEntity;
+import hu.icellmobilsoft.coffee.model.base.DefaultImplAbstractVersionableAuditEntity;
 import hu.icellmobilsoft.coffee.model.base.GetterAnnotatedEntity;
 import hu.icellmobilsoft.coffee.model.base.javatime.listener.TimestampsProvider;
 
@@ -49,7 +49,7 @@ class TimestampsProviderTest {
     void testPrePersist() {
         // given
         TimestampsProvider timestampsProvider = new TimestampsProvider();
-        DefaultImplAbstractIdentifiedAuditEntity testEntity = new DefaultImplAbstractIdentifiedAuditEntity();
+        DefaultImplAbstractVersionableAuditEntity testEntity = new DefaultImplAbstractVersionableAuditEntity();
         // when
         timestampsProvider.prePersist(testEntity);
         // then
@@ -62,7 +62,7 @@ class TimestampsProviderTest {
     void testPreUpdate() {
         // given
         TimestampsProvider timestampsProvider = new TimestampsProvider();
-        DefaultImplAbstractIdentifiedAuditEntity testEntity = new DefaultImplAbstractIdentifiedAuditEntity();
+        DefaultImplAbstractVersionableAuditEntity testEntity = new DefaultImplAbstractVersionableAuditEntity();
         // when
         timestampsProvider.preUpdate(testEntity);
         // then
@@ -100,7 +100,7 @@ class TimestampsProviderTest {
     @DisplayName("zoneId through system property test")
     void testTimeZoneProperty() {
         // given
-        System.setProperty(TIMEZONE_ID_PROP,"America/New_York");
+        System.setProperty(TIMEZONE_ID_PROP, "America/New_York");
         TimestampsProvider timestampsProvider = new TimestampsProvider();
         GetterAnnotatedEntity testEntity = new GetterAnnotatedEntity();
         // when
@@ -108,8 +108,9 @@ class TimestampsProviderTest {
         // then
         assertNotNull(testEntity.getCreationDate());
         assertNull(testEntity.getModificationDate());
-        Assertions.assertEquals(ZoneId.of("America/New_York").getRules().getOffset(Instant.now()),testEntity.getCreationDate().toZonedDateTime().getZone());
+        Assertions.assertEquals(
+                ZoneId.of("America/New_York").getRules().getOffset(Instant.now()),
+                testEntity.getCreationDate().toZonedDateTime().getZone());
     }
-
 
 }

@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -22,6 +22,10 @@ package hu.icellmobilsoft.coffee.model.base.audit;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.enterprise.inject.spi.BeanManager;
+import jakarta.inject.Inject;
+
 import org.jboss.weld.junit5.EnableWeld;
 import org.jboss.weld.junit5.WeldInitiator;
 import org.jboss.weld.junit5.WeldSetup;
@@ -31,12 +35,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import hu.icellmobilsoft.coffee.model.base.DefaultImplAbstractIdentifiedAuditEntity;
+import hu.icellmobilsoft.coffee.model.base.DefaultImplAbstractVersionableAuditEntity;
 import hu.icellmobilsoft.coffee.model.base.GetterAnnotatedEntity;
-import hu.icellmobilsoft.coffee.model.base.ModifiedByOnCreateImplAbstractIdentifiedAuditEntity;
-import jakarta.enterprise.context.RequestScoped;
-import jakarta.enterprise.inject.spi.BeanManager;
-import jakarta.inject.Inject;
+import hu.icellmobilsoft.coffee.model.base.ModifiedByOnCreateImplAbstractVersionableAuditEntity;
 
 /**
  * Testing AuditProvider class
@@ -60,7 +61,7 @@ class AuditProviderTest {
     @DisplayName("prePersist test")
     void prePersistTest() {
         // given
-        DefaultImplAbstractIdentifiedAuditEntity entity = new DefaultImplAbstractIdentifiedAuditEntity();
+        DefaultImplAbstractVersionableAuditEntity entity = new DefaultImplAbstractVersionableAuditEntity();
         // when
         auditProvider.prePersist(entity);
         // then
@@ -72,7 +73,7 @@ class AuditProviderTest {
     @DisplayName("preUpdate test")
     void preUpdateTest() {
         // given
-        DefaultImplAbstractIdentifiedAuditEntity entity = new DefaultImplAbstractIdentifiedAuditEntity();
+        DefaultImplAbstractVersionableAuditEntity entity = new DefaultImplAbstractVersionableAuditEntity();
         // when
         auditProvider.preUpdate(entity);
         // then
@@ -84,7 +85,7 @@ class AuditProviderTest {
     @DisplayName("prePersist if modifiedBy oncreate true test")
     void prePersistIfModifiedByOnCreateTest() {
         // given
-        ModifiedByOnCreateImplAbstractIdentifiedAuditEntity entity = new ModifiedByOnCreateImplAbstractIdentifiedAuditEntity();
+        ModifiedByOnCreateImplAbstractVersionableAuditEntity entity = new ModifiedByOnCreateImplAbstractVersionableAuditEntity();
         // when
         auditProvider.prePersist(entity);
         // then

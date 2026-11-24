@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -25,7 +25,7 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
-import hu.icellmobilsoft.coffee.model.base.AbstractIdentifiedAuditEntity;
+import hu.icellmobilsoft.coffee.model.base.AbstractVersionableAuditEntity;
 
 /**
  * recipient table entity
@@ -35,7 +35,7 @@ import hu.icellmobilsoft.coffee.model.base.AbstractIdentifiedAuditEntity;
  */
 @Entity
 @Table(name = "recipient")
-public class Recipient extends AbstractIdentifiedAuditEntity {
+public class Recipient extends AbstractVersionableAuditEntity<String> {
 
     private static final long serialVersionUID = 1L;
 

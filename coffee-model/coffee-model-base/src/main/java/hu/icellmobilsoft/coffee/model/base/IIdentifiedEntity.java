@@ -22,7 +22,7 @@ package hu.icellmobilsoft.coffee.model.base;
 import java.io.Serializable;
 
 /**
- * Interface for the identified audit entities. Contains setters, getters for id, version, and for the basic audit fields.
+ * Interface for the identified entities. Contains setter and getters for id field.
  *
  * @param <ID>
  *            The type of the entity id

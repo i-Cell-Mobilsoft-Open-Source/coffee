@@ -20,7 +20,7 @@
 package hu.icellmobilsoft.coffee.system.jpa.converter;
 
 import hu.icellmobilsoft.coffee.dto.common.common.AbstractDtoType;
-import hu.icellmobilsoft.coffee.model.base.AbstractEntity;
+import hu.icellmobilsoft.coffee.model.base.IVersionable;
 import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
 
 /**
@@ -28,12 +28,12 @@ import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
  *
  * @author karoly.tamas
  * @param <E>
- *            AbstractEntity
+ *            IVersionable
  * @param <D>
  *            AbstractDtoType
  * @since 1.0.0
  */
-public interface Converter<E extends AbstractEntity, D extends AbstractDtoType> {
+public interface Converter<E extends IVersionable, D extends AbstractDtoType> {
 
     /**
      * convert

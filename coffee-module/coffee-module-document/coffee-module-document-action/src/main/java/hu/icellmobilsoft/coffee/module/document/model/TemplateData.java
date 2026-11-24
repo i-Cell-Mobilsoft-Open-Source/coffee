@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,19 +19,17 @@
  */
 package hu.icellmobilsoft.coffee.module.document.model;
 
-import java.util.Date;
+import java.time.OffsetDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Table;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
-import hu.icellmobilsoft.coffee.model.base.AbstractIdentifiedAuditEntity;
+import hu.icellmobilsoft.coffee.model.base.AbstractVersionableAuditEntity;
 import hu.icellmobilsoft.coffee.module.document.model.enums.TemplateDataType;
 
 /**
@@ -42,7 +40,7 @@ import hu.icellmobilsoft.coffee.module.document.model.enums.TemplateDataType;
  */
 @Entity
 @Table(name = "template_data")
-public class TemplateData extends AbstractIdentifiedAuditEntity {
+public class TemplateData extends AbstractVersionableAuditEntity<String> {
 
     private static final long serialVersionUID = 1L;
 
@@ -99,17 +97,15 @@ public class TemplateData extends AbstractIdentifiedAuditEntity {
     /**
      * template valid from
      */
-    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "valid_from", nullable = false)
     @NotNull
-    private Date validFrom;
+    private OffsetDateTime validFrom;
 
     /**
      * template valid to
      */
-    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "valid_to")
-    private Date validTo;
+    private OffsetDateTime validTo;
 
     /**
      * Getter for the field {@code templateKey}.
@@ -230,7 +226,7 @@ public class TemplateData extends AbstractIdentifiedAuditEntity {
      *
      * @return validFrom
      */
-    public Date getValidFrom() {
+    public OffsetDateTime getValidFrom() {
         return validFrom;
     }
 
@@ -240,7 +236,7 @@ public class TemplateData extends AbstractIdentifiedAuditEntity {
      * @param validFrom
      *            validFrom to set
      */
-    public void setValidFrom(Date validFrom) {
+    public void setValidFrom(OffsetDateTime validFrom) {
         this.validFrom = validFrom;
     }
 
@@ -249,7 +245,7 @@ public class TemplateData extends AbstractIdentifiedAuditEntity {
      *
      * @return validTo
      */
-    public Date getValidTo() {
+    public OffsetDateTime getValidTo() {
         return validTo;
     }
 
@@ -259,7 +255,7 @@ public class TemplateData extends AbstractIdentifiedAuditEntity {
      * @param validTo
      *            validTo to set
      */
-    public void setValidTo(Date validTo) {
+    public void setValidTo(OffsetDateTime validTo) {
         this.validTo = validTo;
     }
 }

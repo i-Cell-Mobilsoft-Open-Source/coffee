@@ -29,15 +29,14 @@ import java.sql.Blob;
 import java.sql.Clob;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
-import jakarta.persistence.Transient;
-import jakarta.persistence.Version;
-import jakarta.validation.constraints.NotNull;
 
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import hu.icellmobilsoft.coffee.model.base.generator.CoffeeIdGenerator;
 import hu.icellmobilsoft.coffee.se.logging.Logger;
 
 /**
@@ -47,9 +46,17 @@ import hu.icellmobilsoft.coffee.se.logging.Logger;
  * @since 1.0.0
  */
 @MappedSuperclass
-public abstract class AbstractEntity implements IVersionable, Serializable {
+public abstract class AbstractEntity implements IIdentifiedEntity<String>, Serializable {
 
     private static final long serialVersionUID = 1L;
+
+    /**
+     * Identity field of the entity
+     */
+    @Id
+    @CoffeeIdGenerator
+    @Column(name = "X__ID", length = 30)
+    private String id;
 
     /**
      * Default constructor, constructs a new object.
@@ -59,58 +66,24 @@ public abstract class AbstractEntity implements IVersionable, Serializable {
     }
 
     /**
-     * The version of the entity for optimistic lock checking
-     */
-    @Column(name = "X__VERSION", precision = 20, scale = 0)
-    @NotNull
-    @Version
-    private long version;
-
-    /**
-     * Transient interval version
-     */
-    @Transient
-    private Long internalVersion;
-
-    /**
-     * Getter for the field {@code version}.
+     * Getter for the field {@code id}.
      *
-     * @return version
+     * @return id
      */
     @Override
-    public long getVersion() {
-        return version;
+    public String getId() {
+        return id;
     }
 
     /**
-     * Setter for the field {@code version}.
+     * Setter for the field {@code id}.
      *
-     * @param version
-     *            version
+     * @param id
+     *            id
      */
     @Override
-    public void setVersion(long version) {
-        if (internalVersion == null || this.version != version) {
-            internalVersion = this.version;
-        }
-        this.version = version;
-    }
-
-    /**
-     * rollbackVersion.
-     */
-    public void rollbackVersion() {
-        if (internalVersion != null) {
-            version = internalVersion;
-            internalVersion = null;
-        }
-    }
-
-    /**
-     * updateVersion.
-     */
-    public void updateVersion() {
-        internalVersion = version;
+    public void setId(String id) {
+        this.id = id;
     }
 
     /**
@@ -140,6 +113,6 @@ public abstract class AbstractEntity implements IVersionable, Serializable {
             }
         }
         return s.toString();
-        // return ReflectionToStringBuilder.toString(this, ToStringStyle.DEFAULT_STYLE);
     }
+
 }

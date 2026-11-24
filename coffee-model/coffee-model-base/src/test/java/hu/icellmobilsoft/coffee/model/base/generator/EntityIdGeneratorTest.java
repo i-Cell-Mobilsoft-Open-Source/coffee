@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -25,8 +25,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import hu.icellmobilsoft.coffee.model.base.DefaultImplAbstractIdentifiedAuditEntity;
-
+import hu.icellmobilsoft.coffee.model.base.DefaultImplAbstractVersionableAuditEntity;
 
 /**
  * Testing EntityIdGenerator class
@@ -37,6 +36,7 @@ import hu.icellmobilsoft.coffee.model.base.DefaultImplAbstractIdentifiedAuditEnt
 public class EntityIdGeneratorTest {
 
     private static final String ID_REGEX = "[0-9A-Za-z]{16}";
+
     @Test
     @DisplayName("Testing generateId size")
     public void generateIdTest() {
@@ -76,11 +76,11 @@ public class EntityIdGeneratorTest {
     }
 
     @Test
-    @DisplayName("Testing direct identifierGenerator with AbstractIdentifiedAuditEntity")
+    @DisplayName("Testing direct identifierGenerator with AbstractVersionableAuditEntity")
     public void identifierGeneratorWithEntityTest() {
         // given
         EntityIdGenerator entityIdGenerator = new EntityIdGenerator();
-        DefaultImplAbstractIdentifiedAuditEntity entity = new DefaultImplAbstractIdentifiedAuditEntity();
+        DefaultImplAbstractVersionableAuditEntity entity = new DefaultImplAbstractVersionableAuditEntity();
 
         // when
         Serializable generatedId = entityIdGenerator.generate(null, entity);
@@ -90,11 +90,11 @@ public class EntityIdGeneratorTest {
     }
 
     @Test
-    @DisplayName("Testing direct identifierGenerator with AbstractIdentifiedAuditEntity")
+    @DisplayName("Testing direct identifierGenerator with AbstractVersionableAuditEntity")
     public void identifierGeneratorWithEntityIdTest() {
         // given
         EntityIdGenerator entityIdGenerator = new EntityIdGenerator();
-        DefaultImplAbstractIdentifiedAuditEntity entity = new DefaultImplAbstractIdentifiedAuditEntity();
+        DefaultImplAbstractVersionableAuditEntity entity = new DefaultImplAbstractVersionableAuditEntity();
         entity.setId("123");
 
         // when
