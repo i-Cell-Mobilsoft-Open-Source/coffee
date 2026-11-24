@@ -20,7 +20,7 @@
 package hu.icellmobilsoft.coffee.model.base;
 
 /**
- * Interface for the identified audit entities. Contains setters, getters for id, version, and for the basic audit fields.
+ * Interface for the identified audit entities. Contains setters and getters for the basic audit fields.
  *
  * @param <DATE>
  *            The type of the date. E.g.: {@link java.util.Date}, {@link java.time.OffsetDateTime}, {@link java.time.Instant}
@@ -29,7 +29,7 @@ package hu.icellmobilsoft.coffee.model.base;
  * @author arnold.bucher
  * @since 1.8.1
  */
-public interface IAuditEntity<DATE, USER> extends IVersionable {
+public interface IAuditEntity<DATE, USER> {
 
     /**
      * Returns the creation date of the entity

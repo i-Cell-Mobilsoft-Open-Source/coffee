@@ -20,7 +20,6 @@
 package hu.icellmobilsoft.coffee.module.notification.action.push;
 
 import java.io.Serializable;
-import java.util.Date;
 import java.util.List;
 
 import jakarta.enterprise.context.Dependent;
@@ -36,8 +35,9 @@ import hu.icellmobilsoft.coffee.module.notification.model.PushDevice;
 import hu.icellmobilsoft.coffee.module.notification.service.PushDeviceService;
 import hu.icellmobilsoft.coffee.module.notification.service.PushService;
 import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
-import hu.icellmobilsoft.coffee.tool.utils.json.JsonUtil;
+import hu.icellmobilsoft.coffee.tool.utils.date.DateUtil;
 import hu.icellmobilsoft.coffee.tool.utils.enums.EnumUtil;
+import hu.icellmobilsoft.coffee.tool.utils.json.JsonUtil;
 
 /**
  * CDI helper class for push handling
@@ -149,7 +149,7 @@ public class PushHelper implements Serializable {
 
         PushDevice pushDeviceEntity = pushEntity.getPushDevices().get(deviceId);
 
-        pushDeviceEntity.setSentTime(new Date());
+        pushDeviceEntity.setSentTime(DateUtil.nowUTC());
         pushDeviceEntity.setSuccess(success);
         pushDeviceEntity.setResult(StringUtils.abbreviate(sendResult, 2048));
         pushDeviceService.save(pushDeviceEntity);

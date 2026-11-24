@@ -62,6 +62,68 @@ A projektekben az importokat frissíteni kell:
 * `hu.icellmobilsfoft.coffee.module.wildfly.rest.system.AbstractWildFlySystemRest` -> `hu.icellmobilsoft.coffee.module.wildfly.rest.system.AbstractWildFlySystemRest`
 * `hu.icellmobilsfoft.coffee.module.quarkus.rest.system.AbstractQuarkusSystemRest` -> `hu.icellmobilsoft.coffee.module.quarkus.rest.system.AbstractQuarkusSystemRest`
 
+=== coffee-model-base
+
+* Az `IAuditEntity` interfész már nem terjeszti ki az `IVersionable` interfészt.
+* `AbstractEntity` már csak az `id` mezőt (`X__ID`, `@CoffeeIdGenerator`) tartalmazza, és az `IIdentifiedEntity<String>` interfészt valósítja meg.
+A `version` mező és a verziókezelő metódusok (`rollbackVersion()`, `updateVersion()`) kikerültek belőle, és már nem implementálja az `IVersionable` interfészt.
+* Új `AbstractVersionableEntity` osztály: az `AbstractEntity` leszármazottja, amely a `version` (`X__VERSION`, `@Version`) mezőt és a verziókezelő metódusokat tartalmazza. Az `IVersionable` interfészt valósítja meg.
+* Új `AbstractVersionableAuditEntity<T extends Serializable>` osztály: az `AbstractAuditEntity` leszármazottja, verziókezeléssel (`IVersionable`).
+* A `hu.icellmobilsoft.coffee.model.base.AbstractAuditEntity` osztály mostantól `OffsetDateTime` típusú `creationDate` és `modificationDate` mezőket használ, `@Temporal` nélkül. A típusparaméter `T extends Serializable`.
+* Megszűntek a következő osztályok: `AbstractIdentifiedEntity`, `AbstractIdentifiedAuditEntity`, valamint a `javatime` package `AbstractAuditEntity` és `AbstractIdentifiedAuditEntity` osztályai.
+
+.Migráció
+Az alábbi táblázat szerint frissítsük az ősosztályokat és az importokat:
+
+[cols="1,1",options="header"]
+|===
+|Korábbi osztály |Új osztály
+|`model.base.AbstractIdentifiedEntity` |`model.base.AbstractVersionableEntity`
+|`model.base.AbstractIdentifiedAuditEntity` |`model.base.AbstractVersionableAuditEntity<String>`
+|`model.base.javatime.AbstractAuditEntity` |`model.base.AbstractAuditEntity`
+|`model.base.javatime.AbstractIdentifiedAuditEntity` |`model.base.AbstractVersionableAuditEntity<String>`
+|===
+
+Figyelem:
+
+* A `model.base.AbstractAuditEntity` az `AbstractEntity`-ből örökli az `id` mezőt, ezért az `X__ID` elsődleges kulcs lesz akkor is, ha az entitás közvetlenül ebből származik. Ha ez nem kívánt, a leszármazott entitást másik ősosztályból kell származtatni, vagy az adatbázis sémát ehhez igazítani.
+* Ha az entitás verziókezelést igényel, az `AbstractVersionableEntity` vagy `AbstractVersionableAuditEntity` osztályból származzon.
+* Az `X__VERSION` oszlop definíciójából megszűnt a `precision = 20, scale = 0` megadás. A séma-generálás vagy a sémaellenőrzés eltérést mutathat.
+* Ahol a kód `AbstractEntity` típusra hivatkozva használ `getVersion()`-t, `IVersionable` típusra kell váltani.
+
+=== coffee-model-security
+
+* A `SecurityGroup`, `SecurityPermission`, `SecurityRole`, `SecurityRoleSecurityGroup`, `SecurityRoleSecurityPermission`, `SecurityUser`, `SecurityUserSecurityGroup` és `SecurityUserSecurityRole` entitások mostantól az `AbstractVersionableAuditEntity<String>` osztályból származnak.
+
+.Migráció
+A `AbstractIdentifiedAuditEntity` ősosztályt `AbstractVersionableAuditEntity<String>` osztályra kell cserélni, az importtal együtt.
+
+=== coffee-module-document
+
+* A `TemplateData` és `TemplateParameter` entitások mostantól az `AbstractVersionableAuditEntity<String>` osztályból származnak.
+* A `TemplateData` `validFrom` és `validTo` mezői `OffsetDateTime` típusúak, `@Temporal` nélkül.
+
+.Migráció
+Az ősosztályt cseréljük `AbstractVersionableAuditEntity<String>` osztályra. A `validFrom` és `validTo` getterek és setterek típusát `Date`-ről `OffsetDateTime`-ra kell átállítani.
+
+=== coffee-module-notification
+
+* Az `Email`, `EmailRecipient`, `Push`, `PushDevice` és `Recipient` entitások mostantól az `AbstractVersionableAuditEntity<String>` osztályból származnak.
+* Az `Email.sentTime` és `PushDevice.sentTime` mezők `OffsetDateTime` típusúak, `@Temporal` nélkül.
+* Az `EmailHelper` és a `PushHelper` a `new Date()` helyett `DateUtil.nowUTC()` értéket állítja be a küldési időpontnak.
+
+.Migráció
+Az ősosztályt cseréljük `AbstractVersionableAuditEntity<String>` osztályra. A `sentTime` getterek és setterek típusát `Date`-ről `OffsetDateTime`-ra kell átállítani.
+
+=== coffee-system-jpa
+
+* A `Converter` és a `DtoConverter` generikus korlátja `IVersionable` lett (korábban `AbstractEntity`).
+* A `DtoAuditConverter` generikus korlátja `IAuditEntity<OffsetDateTime, String> & IVersionable` lett (korábban `javatime.AbstractAuditEntity<String>`).
+* A `CommonIdListTypeConverter.convert(...)` paramétere `IIdentifiedEntity<String>` lett (korábban `AbstractIdentifiedAuditEntity`).
+
+.Migráció
+A saját konverterek generikus korlátját és az importokat a fenti változásoknak megfelelően kell frissíteni.
+
 [#migration_to_4_0_0_gson]
 === coffee-tool
 * A `hu.icellmobilsoft.coffee.tool.utils.json.JsonUtil` kizárólag JSON-B-alapú konverziókat tartalmaz,

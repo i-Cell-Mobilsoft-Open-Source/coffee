@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -25,7 +25,7 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
-import hu.icellmobilsoft.coffee.model.base.AbstractIdentifiedAuditEntity;
+import hu.icellmobilsoft.coffee.model.base.AbstractVersionableAuditEntity;
 
 /**
  * Join table for {@link SecurityUser} and {@link SecurityGroup}.
@@ -35,7 +35,7 @@ import hu.icellmobilsoft.coffee.model.base.AbstractIdentifiedAuditEntity;
  */
 @Entity
 @Table(name = "security_user_security_group")
-public class SecurityUserSecurityGroup extends AbstractIdentifiedAuditEntity {
+public class SecurityUserSecurityGroup extends AbstractVersionableAuditEntity<String> {
 
     private static final long serialVersionUID = 1L;
 
@@ -64,7 +64,7 @@ public class SecurityUserSecurityGroup extends AbstractIdentifiedAuditEntity {
 
     /**
      * Getter for the field {@code groupId}.
-     * 
+     *
      * @return groupId
      */
     public String getGroupId() {
@@ -73,7 +73,7 @@ public class SecurityUserSecurityGroup extends AbstractIdentifiedAuditEntity {
 
     /**
      * Setter for the field {@code groupId}.
-     * 
+     *
      * @param groupId
      *            groupId
      */
@@ -83,7 +83,7 @@ public class SecurityUserSecurityGroup extends AbstractIdentifiedAuditEntity {
 
     /**
      * Getter for the field {@code userId}.
-     * 
+     *
      * @return userId
      */
     public String getSecurityUserId() {
@@ -92,7 +92,7 @@ public class SecurityUserSecurityGroup extends AbstractIdentifiedAuditEntity {
 
     /**
      * Setter for the field {@code userId}.
-     * 
+     *
      * @param userId
      *            userId
      */

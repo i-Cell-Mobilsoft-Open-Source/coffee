@@ -38,6 +38,8 @@ import jakarta.persistence.Table;
 @Table(name = "dummy")
 public class DefaultImplAbstractEntity extends AbstractEntity {
 
+    private static final long serialVersionUID = 1L;
+
     @Column
     private byte[] byteArrayColumn;
 

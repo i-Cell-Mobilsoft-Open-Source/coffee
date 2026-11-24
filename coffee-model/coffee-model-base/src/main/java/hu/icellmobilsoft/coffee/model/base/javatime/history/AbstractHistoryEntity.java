@@ -26,9 +26,9 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
 
+import hu.icellmobilsoft.coffee.model.base.AbstractAuditEntity;
 import hu.icellmobilsoft.coffee.model.base.history.HistoryPk;
 import hu.icellmobilsoft.coffee.model.base.history.enums.State;
-import hu.icellmobilsoft.coffee.model.base.javatime.AbstractAuditEntity;
 
 /**
  * Abstract entity class for history tables

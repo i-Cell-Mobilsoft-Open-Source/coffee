@@ -19,21 +19,25 @@
  */
 package hu.icellmobilsoft.coffee.system.jpa.converter;
 
+import java.time.OffsetDateTime;
+
 import hu.icellmobilsoft.coffee.dto.common.common.AbstractAuditDtoType;
-import hu.icellmobilsoft.coffee.model.base.javatime.AbstractAuditEntity;
+import hu.icellmobilsoft.coffee.model.base.IAuditEntity;
+import hu.icellmobilsoft.coffee.model.base.IVersionable;
 import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
 
 /**
- * Basic converter {@link AbstractAuditEntity} &lt;-&gt; {@link AbstractAuditDtoType}
+ * Basic converter {@link IAuditEntity} &amp; {@link IVersionable} &lt;-&gt; {@link AbstractAuditDtoType}
  *
  * @author karoly.tamas
  * @param <E>
- *            {@link AbstractAuditEntity}
+ *            {@link IAuditEntity} &amp; {@link IVersionable}
  * @param <D>
  *            {@link AbstractAuditDtoType}
  * @since 1.0.0
  */
-public abstract class DtoAuditConverter<E extends AbstractAuditEntity<String>, D extends AbstractAuditDtoType> extends DtoConverter<E, D> {
+public abstract class DtoAuditConverter<E extends IAuditEntity<OffsetDateTime, String> & IVersionable, D extends AbstractAuditDtoType>
+        extends DtoConverter<E, D> {
 
     /**
      * Default constructor, constructs a new object.

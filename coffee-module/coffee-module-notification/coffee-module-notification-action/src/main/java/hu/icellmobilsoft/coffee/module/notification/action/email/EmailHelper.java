@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,7 +20,6 @@
 package hu.icellmobilsoft.coffee.module.notification.action.email;
 
 import java.io.Serializable;
-import java.util.Date;
 
 import jakarta.enterprise.context.Dependent;
 import jakarta.inject.Inject;
@@ -38,6 +37,7 @@ import hu.icellmobilsoft.coffee.module.notification.service.EmailRecipientServic
 import hu.icellmobilsoft.coffee.module.notification.service.EmailService;
 import hu.icellmobilsoft.coffee.module.notification.service.RecipientService;
 import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
+import hu.icellmobilsoft.coffee.tool.utils.date.DateUtil;
 
 /**
  * CDI helper class for email handling
@@ -67,7 +67,6 @@ public class EmailHelper implements Serializable {
      */
     @Inject
     private EmailService emailService;
-
 
     /**
      * Default constructor, constructs a new object.
@@ -156,7 +155,7 @@ public class EmailHelper implements Serializable {
         if (emailEntity == null) {
             return null;
         }
-        emailEntity.setSentTime(new Date());
+        emailEntity.setSentTime(DateUtil.nowUTC());
         emailEntity.setSuccess(success);
         emailEntity.setResult(StringUtils.abbreviate(sendResult, 2048));
         return emailService.save(emailEntity);

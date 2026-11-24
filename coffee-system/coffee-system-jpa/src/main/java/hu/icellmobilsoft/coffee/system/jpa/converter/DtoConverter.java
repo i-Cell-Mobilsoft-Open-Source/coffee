@@ -20,21 +20,21 @@
 package hu.icellmobilsoft.coffee.system.jpa.converter;
 
 import hu.icellmobilsoft.coffee.dto.common.common.AbstractDtoType;
-import hu.icellmobilsoft.coffee.model.base.AbstractEntity;
+import hu.icellmobilsoft.coffee.model.base.IVersionable;
 import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
 import hu.icellmobilsoft.coffee.se.api.exception.DtoConversionException;
 
 /**
- * Basic converter {@link AbstractEntity} &lt;-&gt; {@link AbstractDtoType}
+ * Basic converter {@link IVersionable} &lt;-&gt; {@link AbstractDtoType}
  *
  * @author karoly.tamas
  * @param <E>
- *            {@link AbstractEntity}
+ *            {@link IVersionable}
  * @param <D>
  *            {@link AbstractDtoType}
  * @since 1.0.0
  */
-public abstract class DtoConverter<E extends AbstractEntity, D extends AbstractDtoType> implements Converter<E, D> {
+public abstract class DtoConverter<E extends IVersionable, D extends AbstractDtoType> implements Converter<E, D> {
 
     /**
      * Default constructor, constructs a new object.

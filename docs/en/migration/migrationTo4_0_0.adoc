@@ -61,6 +61,68 @@ Update the imports in the project:
 * `hu.icellmobilsfoft.coffee.module.wildfly.rest.system.AbstractWildFlySystemRest` -> `hu.icellmobilsoft.coffee.module.wildfly.rest.system.AbstractWildFlySystemRest`
 * `hu.icellmobilsfoft.coffee.module.quarkus.rest.system.AbstractQuarkusSystemRest` -> `hu.icellmobilsoft.coffee.module.quarkus.rest.system.AbstractQuarkusSystemRest`
 
+=== coffee-model-base
+
+* The `IAuditEntity` interface no longer extends the `IVersionable` interface.
+* `AbstractEntity` now contains only the `id` field (`X__ID`, `@CoffeeIdGenerator`) and implements the `IIdentifiedEntity<String>` interface.
+The `version` field and the version management methods (`rollbackVersion()`, `updateVersion()`) have been removed from it, and it no longer implements the `IVersionable` interface.
+* New `AbstractVersionableEntity` class: a subclass of `AbstractEntity` that contains the `version` (`X__VERSION`, `@Version`) field and the version management methods. It implements the `IVersionable` interface.
+* New `AbstractVersionableAuditEntity<T extends Serializable>` class: a subclass of `AbstractAuditEntity` with version management (`IVersionable`).
+* The `hu.icellmobilsoft.coffee.model.base.AbstractAuditEntity` class now uses `OffsetDateTime` typed `creationDate` and `modificationDate` fields, without `@Temporal`. The type parameter is `T extends Serializable`.
+* The following classes have been removed: `AbstractIdentifiedEntity`, `AbstractIdentifiedAuditEntity`, and the `AbstractAuditEntity` and `AbstractIdentifiedAuditEntity` classes of the `javatime` package.
+
+.Migration
+Update the superclasses and imports according to the table below:
+
+[cols="1,1",options="header"]
+|===
+|Previous class |New class
+|`model.base.AbstractIdentifiedEntity` |`model.base.AbstractVersionableEntity`
+|`model.base.AbstractIdentifiedAuditEntity` |`model.base.AbstractVersionableAuditEntity<String>`
+|`model.base.javatime.AbstractAuditEntity` |`model.base.AbstractAuditEntity`
+|`model.base.javatime.AbstractIdentifiedAuditEntity` |`model.base.AbstractVersionableAuditEntity<String>`
+|===
+
+Attention:
+
+* `model.base.AbstractAuditEntity` inherits the `id` field from `AbstractEntity`, so `X__ID` becomes the primary key even when the entity extends it directly. If this is not desired, derive the entity from a different superclass, or adjust the database schema accordingly.
+* If the entity requires version management, it should extend `AbstractVersionableEntity` or `AbstractVersionableAuditEntity`.
+* The `precision = 20, scale = 0` specification has been removed from the `X__VERSION` column definition. Schema generation or schema validation may report differences.
+* Where code uses `getVersion()` through an `AbstractEntity` reference, switch the type to `IVersionable`.
+
+=== coffee-model-security
+
+* The `SecurityGroup`, `SecurityPermission`, `SecurityRole`, `SecurityRoleSecurityGroup`, `SecurityRoleSecurityPermission`, `SecurityUser`, `SecurityUserSecurityGroup` and `SecurityUserSecurityRole` entities now extend `AbstractVersionableAuditEntity<String>`.
+
+.Migration
+Replace the `AbstractIdentifiedAuditEntity` superclass with `AbstractVersionableAuditEntity<String>`, together with the import.
+
+=== coffee-module-document
+
+* The `TemplateData` and `TemplateParameter` entities now extend `AbstractVersionableAuditEntity<String>`.
+* The `validFrom` and `validTo` fields of `TemplateData` are `OffsetDateTime` typed, without `@Temporal`.
+
+.Migration
+Replace the superclass with `AbstractVersionableAuditEntity<String>`. The types of the `validFrom` and `validTo` getters and setters must be changed from `Date` to `OffsetDateTime`.
+
+=== coffee-module-notification
+
+* The `Email`, `EmailRecipient`, `Push`, `PushDevice` and `Recipient` entities now extend `AbstractVersionableAuditEntity<String>`.
+* The `Email.sentTime` and `PushDevice.sentTime` fields are `OffsetDateTime` typed, without `@Temporal`.
+* `EmailHelper` and `PushHelper` set the sending time using `DateUtil.nowUTC()` instead of `new Date()`.
+
+.Migration
+Replace the superclass with `AbstractVersionableAuditEntity<String>`. The types of the `sentTime` getters and setters must be changed from `Date` to `OffsetDateTime`.
+
+=== coffee-system-jpa
+
+* The generic bound of `Converter` and `DtoConverter` is now `IVersionable` (previously `AbstractEntity`).
+* The generic bound of `DtoAuditConverter` is now `IAuditEntity<OffsetDateTime, String> & IVersionable` (previously `javatime.AbstractAuditEntity<String>`).
+* The parameter of `CommonIdListTypeConverter.convert(...)` is now `IIdentifiedEntity<String>` (previously `AbstractIdentifiedAuditEntity`).
+
+.Migration
+Update the generic bounds of your own converters and the imports according to the changes above.
+
 [#migration_to_4_0_0_gson]
 === coffee-tool
 * `hu.icellmobilsoft.coffee.tool.utils.json.JsonUtil` now contains only JSON-B-based conversions

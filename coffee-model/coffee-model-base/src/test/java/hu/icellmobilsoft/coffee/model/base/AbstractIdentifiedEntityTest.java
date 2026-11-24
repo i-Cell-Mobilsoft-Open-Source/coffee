@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -32,11 +32,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 /**
- * Testing AbstractIdentifiedEntity class
+ * Testing AbstractVersionableEntity class
  *
  * @author arnold.bucher
  */
-@DisplayName("Testing AbstractIdentified class")
+@DisplayName("Testing AbstractVersionableEntity class")
 public class AbstractIdentifiedEntityTest {
 
     private static Validator validator;
@@ -51,7 +51,7 @@ public class AbstractIdentifiedEntityTest {
     @DisplayName("Testing default version")
     public void defaultVersionTest() {
         // given
-        DefaultImplAbstractIdentifiedEntity entity = new DefaultImplAbstractIdentifiedEntity();
+        DefaultImplAbstractVersionableEntity entity = new DefaultImplAbstractVersionableEntity();
 
         // when
 
@@ -63,7 +63,7 @@ public class AbstractIdentifiedEntityTest {
     @DisplayName("Testing version")
     public void versionTest() {
         // given
-        DefaultImplAbstractIdentifiedEntity entity = new DefaultImplAbstractIdentifiedEntity();
+        DefaultImplAbstractVersionableEntity entity = new DefaultImplAbstractVersionableEntity();
 
         // when
         entity.setVersion(1L);
@@ -77,7 +77,7 @@ public class AbstractIdentifiedEntityTest {
     @DisplayName("Testing version")
     public void duplicateTest() {
         // given
-        DefaultImplAbstractIdentifiedEntity entity = new DefaultImplAbstractIdentifiedEntity();
+        DefaultImplAbstractVersionableEntity entity = new DefaultImplAbstractVersionableEntity();
 
         // when
         entity.setVersion(1L);
@@ -91,7 +91,7 @@ public class AbstractIdentifiedEntityTest {
     @DisplayName("Testing rollbackVersion")
     public void rollbackVersionTest() {
         // given
-        DefaultImplAbstractIdentifiedEntity entity = new DefaultImplAbstractIdentifiedEntity();
+        DefaultImplAbstractVersionableEntity entity = new DefaultImplAbstractVersionableEntity();
 
         // when
         entity.rollbackVersion();
@@ -106,7 +106,7 @@ public class AbstractIdentifiedEntityTest {
     @DisplayName("Testing maxVersion")
     public void maxVersionTest() {
         // given
-        DefaultImplAbstractIdentifiedEntity entity = new DefaultImplAbstractIdentifiedEntity();
+        DefaultImplAbstractVersionableEntity entity = new DefaultImplAbstractVersionableEntity();
 
         // when
         entity.setVersion(Long.MAX_VALUE);
@@ -119,7 +119,7 @@ public class AbstractIdentifiedEntityTest {
     @DisplayName("Testing maxVersion bean validation")
     public void maxVersionBeanValidationTest() {
         // given
-        DefaultImplAbstractIdentifiedEntity entity = new DefaultImplAbstractIdentifiedEntity();
+        DefaultImplAbstractVersionableEntity entity = new DefaultImplAbstractVersionableEntity();
 
         // when
         entity.setVersion(Long.MAX_VALUE);
@@ -133,7 +133,7 @@ public class AbstractIdentifiedEntityTest {
     @DisplayName("Testing update version")
     public void updateVersionTest() {
         // given
-        DefaultImplAbstractIdentifiedEntity entity = new DefaultImplAbstractIdentifiedEntity();
+        DefaultImplAbstractVersionableEntity entity = new DefaultImplAbstractVersionableEntity();
 
         // when
         entity.setVersion(Long.MAX_VALUE);
@@ -147,7 +147,7 @@ public class AbstractIdentifiedEntityTest {
     @DisplayName("Testing maxVersion bean validation")
     public void idTest() {
         // given
-        DefaultImplAbstractIdentifiedEntity entity = new DefaultImplAbstractIdentifiedEntity();
+        DefaultImplAbstractVersionableEntity entity = new DefaultImplAbstractVersionableEntity();
         String id = "2OEVAEF1H0ITAO0A";
 
         // when

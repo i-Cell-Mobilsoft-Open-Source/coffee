@@ -19,8 +19,9 @@
  */
 package hu.icellmobilsoft.coffee.model.base.audit;
 
+import hu.icellmobilsoft.coffee.model.base.AbstractAuditEntity;
 import hu.icellmobilsoft.coffee.model.base.annotation.CurrentUser;
-import hu.icellmobilsoft.coffee.model.base.javatime.AbstractAuditEntity;
+
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.Produces;
 

@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,7 +19,7 @@
  */
 package hu.icellmobilsoft.coffee.model.base;
 
-import java.util.Date;
+import java.time.OffsetDateTime;
 import java.util.Set;
 
 import jakarta.validation.ConstraintViolation;
@@ -33,12 +33,12 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 /**
- * Testing AbstractIdentifiedAuditEntity class
+ * Testing AbstractVersionableAuditEntity class
  *
  * @author arnold.bucher
  */
-@DisplayName("Testing AbstractIdentifiedAuditEntity class")
-public class AbstractIdentifiedAuditEntityTest {
+@DisplayName("Testing AbstractVersionableAuditEntity class")
+public class AbstractVersionableAuditEntityTest {
 
     private static Validator validator;
 
@@ -52,7 +52,7 @@ public class AbstractIdentifiedAuditEntityTest {
     @DisplayName("Testing default version")
     public void defaultVersionTest() {
         // given
-        DefaultImplAbstractIdentifiedAuditEntity entity = new DefaultImplAbstractIdentifiedAuditEntity();
+        DefaultImplAbstractVersionableAuditEntity entity = new DefaultImplAbstractVersionableAuditEntity();
 
         // when
 
@@ -64,7 +64,7 @@ public class AbstractIdentifiedAuditEntityTest {
     @DisplayName("Testing version")
     public void versionTest() {
         // given
-        DefaultImplAbstractIdentifiedAuditEntity entity = new DefaultImplAbstractIdentifiedAuditEntity();
+        DefaultImplAbstractVersionableAuditEntity entity = new DefaultImplAbstractVersionableAuditEntity();
 
         // when
         entity.setVersion(1L);
@@ -78,7 +78,7 @@ public class AbstractIdentifiedAuditEntityTest {
     @DisplayName("Testing version")
     public void duplicateTest() {
         // given
-        DefaultImplAbstractIdentifiedAuditEntity entity = new DefaultImplAbstractIdentifiedAuditEntity();
+        DefaultImplAbstractVersionableAuditEntity entity = new DefaultImplAbstractVersionableAuditEntity();
 
         // when
         entity.setVersion(1L);
@@ -92,7 +92,7 @@ public class AbstractIdentifiedAuditEntityTest {
     @DisplayName("Testing rollbackVersion")
     public void rollbackVersionTest() {
         // given
-        DefaultImplAbstractIdentifiedAuditEntity entity = new DefaultImplAbstractIdentifiedAuditEntity();
+        DefaultImplAbstractVersionableAuditEntity entity = new DefaultImplAbstractVersionableAuditEntity();
 
         // when
         entity.rollbackVersion();
@@ -107,7 +107,7 @@ public class AbstractIdentifiedAuditEntityTest {
     @DisplayName("Testing maxVersion")
     public void maxVersionTest() {
         // given
-        DefaultImplAbstractIdentifiedAuditEntity entity = new DefaultImplAbstractIdentifiedAuditEntity();
+        DefaultImplAbstractVersionableAuditEntity entity = new DefaultImplAbstractVersionableAuditEntity();
 
         // when
         entity.setVersion(Long.MAX_VALUE);
@@ -120,10 +120,10 @@ public class AbstractIdentifiedAuditEntityTest {
     @DisplayName("Testing maxVersion bean validation")
     public void maxVersionBeanValidationTest() {
         // given
-        DefaultImplAbstractIdentifiedAuditEntity entity = new DefaultImplAbstractIdentifiedAuditEntity();
+        DefaultImplAbstractVersionableAuditEntity entity = new DefaultImplAbstractVersionableAuditEntity();
 
         // when
-        entity.setCreationDate(new Date());
+        entity.setCreationDate(OffsetDateTime.now());
         entity.setCreatorUser("0");
         entity.setVersion(Long.MAX_VALUE);
         Set<ConstraintViolation<AbstractEntity>> violations = validator.validate(entity);
@@ -136,7 +136,7 @@ public class AbstractIdentifiedAuditEntityTest {
     @DisplayName("Testing maxVersion bean validation")
     public void idTest() {
         // given
-        DefaultImplAbstractIdentifiedAuditEntity entity = new DefaultImplAbstractIdentifiedAuditEntity();
+        DefaultImplAbstractVersionableAuditEntity entity = new DefaultImplAbstractVersionableAuditEntity();
         String id = "2OEVAEF1H0ITAO0A";
 
         // when
@@ -150,27 +150,27 @@ public class AbstractIdentifiedAuditEntityTest {
     @DisplayName("Testing creationDate")
     public void creationDateTest() {
         // given
-        DefaultImplAbstractIdentifiedAuditEntity entity = new DefaultImplAbstractIdentifiedAuditEntity();
-        Date creationDate = new Date();
+        DefaultImplAbstractVersionableAuditEntity entity = new DefaultImplAbstractVersionableAuditEntity();
+        OffsetDateTime creationDate = OffsetDateTime.now();
 
         // when
         entity.setCreationDate(creationDate);
         entity.setCreatorUser("0");
 
         // then
-        Assertions.assertEquals(creationDate.getTime(), entity.getCreationDate().getTime());
+        Assertions.assertEquals(creationDate, entity.getCreationDate());
     }
 
     @Test
     @DisplayName("Testing creationDate bean validation")
     public void creationDateBeanValidationTest() {
         // given
-        DefaultImplAbstractIdentifiedAuditEntity entity = new DefaultImplAbstractIdentifiedAuditEntity();
+        DefaultImplAbstractVersionableAuditEntity entity = new DefaultImplAbstractVersionableAuditEntity();
 
         // when
         entity.setCreationDate(null);
         entity.setCreatorUser("0");
-        Set<ConstraintViolation<AbstractIdentifiedAuditEntity>> violations = validator.validate(entity);
+        Set<ConstraintViolation<AbstractVersionableAuditEntity<String>>> violations = validator.validate(entity);
 
         // then
         Assertions.assertEquals(1, violations.size());
@@ -180,29 +180,29 @@ public class AbstractIdentifiedAuditEntityTest {
     @DisplayName("Testing modificationDate")
     public void modificationDateTest() {
         // given
-        DefaultImplAbstractIdentifiedAuditEntity entity = new DefaultImplAbstractIdentifiedAuditEntity();
-        Date modificationDate = new Date();
+        DefaultImplAbstractVersionableAuditEntity entity = new DefaultImplAbstractVersionableAuditEntity();
+        OffsetDateTime modificationDate = OffsetDateTime.now();
 
         // when
-        entity.setCreationDate(new Date());
+        entity.setCreationDate(OffsetDateTime.now());
         entity.setCreatorUser("0");
         entity.setModificationDate(modificationDate);
 
         // then
-        Assertions.assertEquals(modificationDate.getTime(), entity.getModificationDate().getTime());
+        Assertions.assertEquals(modificationDate, entity.getModificationDate());
     }
 
     @Test
     @DisplayName("Testing modificationDate bean validation")
     public void modificationDateBeanValidationTest() {
         // given
-        DefaultImplAbstractIdentifiedAuditEntity entity = new DefaultImplAbstractIdentifiedAuditEntity();
+        DefaultImplAbstractVersionableAuditEntity entity = new DefaultImplAbstractVersionableAuditEntity();
 
         // when
-        entity.setCreationDate(new Date());
+        entity.setCreationDate(OffsetDateTime.now());
         entity.setCreatorUser("0");
         entity.setModificationDate(null);
-        Set<ConstraintViolation<AbstractIdentifiedAuditEntity>> violations = validator.validate(entity);
+        Set<ConstraintViolation<AbstractVersionableAuditEntity<String>>> violations = validator.validate(entity);
 
         // then
         Assertions.assertTrue(violations.isEmpty());
@@ -213,11 +213,11 @@ public class AbstractIdentifiedAuditEntityTest {
     @DisplayName("Testing creatorUser")
     public void creatorUserTest() {
         // given
-        DefaultImplAbstractIdentifiedAuditEntity entity = new DefaultImplAbstractIdentifiedAuditEntity();
+        DefaultImplAbstractVersionableAuditEntity entity = new DefaultImplAbstractVersionableAuditEntity();
         String creatorUser = "2OEVAEF1H0ITAO0A";
 
         // when
-        entity.setCreationDate(new Date());
+        entity.setCreationDate(OffsetDateTime.now());
         entity.setCreatorUser(creatorUser);
 
         // then
@@ -228,12 +228,12 @@ public class AbstractIdentifiedAuditEntityTest {
     @DisplayName("Testing creatorUser null bean validation")
     public void creatorUserNullBeanValidationTest() {
         // given
-        DefaultImplAbstractIdentifiedAuditEntity entity = new DefaultImplAbstractIdentifiedAuditEntity();
+        DefaultImplAbstractVersionableAuditEntity entity = new DefaultImplAbstractVersionableAuditEntity();
 
         // when
-        entity.setCreationDate(new Date());
+        entity.setCreationDate(OffsetDateTime.now());
         entity.setCreatorUser(null);
-        Set<ConstraintViolation<AbstractIdentifiedAuditEntity>> violations = validator.validate(entity);
+        Set<ConstraintViolation<AbstractVersionableAuditEntity<String>>> violations = validator.validate(entity);
 
         // then
         Assertions.assertEquals(1, violations.size());
@@ -243,11 +243,11 @@ public class AbstractIdentifiedAuditEntityTest {
     @DisplayName("Testing modifierUser")
     public void modifierUserTest() {
         // given
-        DefaultImplAbstractIdentifiedAuditEntity entity = new DefaultImplAbstractIdentifiedAuditEntity();
+        DefaultImplAbstractVersionableAuditEntity entity = new DefaultImplAbstractVersionableAuditEntity();
         String modifierUser = "2OEVAEF1H0ITAO0A";
 
         // when
-        entity.setCreationDate(new Date());
+        entity.setCreationDate(OffsetDateTime.now());
         entity.setCreatorUser("0");
         entity.setModifierUser(modifierUser);
 
@@ -259,13 +259,13 @@ public class AbstractIdentifiedAuditEntityTest {
     @DisplayName("Testing modifierUser bean validation")
     public void modifierUserBeanValidationTest() {
         // given
-        DefaultImplAbstractIdentifiedAuditEntity entity = new DefaultImplAbstractIdentifiedAuditEntity();
+        DefaultImplAbstractVersionableAuditEntity entity = new DefaultImplAbstractVersionableAuditEntity();
 
         // when
-        entity.setCreationDate(new Date());
+        entity.setCreationDate(OffsetDateTime.now());
         entity.setCreatorUser("0");
         entity.setModifierUser(null);
-        Set<ConstraintViolation<AbstractIdentifiedAuditEntity>> violations = validator.validate(entity);
+        Set<ConstraintViolation<AbstractVersionableAuditEntity<String>>> violations = validator.validate(entity);
 
         // then
         Assertions.assertTrue(violations.isEmpty());
