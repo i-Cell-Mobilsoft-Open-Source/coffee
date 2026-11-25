@@ -34,12 +34,9 @@ import jakarta.ws.rs.core.MultivaluedMap;
 import jakarta.ws.rs.ext.MessageBodyReader;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.apache.http.ParseException;
-import org.apache.http.entity.ContentType;
 
 import hu.icellmobilsoft.coffee.cdi.annotation.xml.ValidateXML;
 import hu.icellmobilsoft.coffee.cdi.logger.LogProducer;
-import hu.icellmobilsoft.coffee.dto.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.dto.exception.enums.CoffeeFaultType;
 import hu.icellmobilsoft.coffee.rest.validation.xml.JaxbTool;
 import hu.icellmobilsoft.coffee.rest.validation.xml.XmlMessageBodyReaderBase;
@@ -47,6 +44,7 @@ import hu.icellmobilsoft.coffee.rest.validation.xml.exception.BaseProcessingExce
 import hu.icellmobilsoft.coffee.rest.validation.xml.exception.XsdProcessingException;
 import hu.icellmobilsoft.coffee.rest.validation.xml.reader.IRequestVersionReader;
 import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
+import hu.icellmobilsoft.coffee.se.api.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.tool.utils.json.JsonUtil;
 
 /**
@@ -124,15 +122,20 @@ public abstract class JsonMessageBodyReaderBase<T> implements MessageBodyReader<
      * @return the charset or UTF-8 if its unknown
      */
     private Charset getCharsetOrUTF8(MultivaluedMap<String, String> httpHeaders) {
+        String contentTypeHeader = httpHeaders.getFirst(HttpHeaders.CONTENT_TYPE);
+        if (contentTypeHeader == null || contentTypeHeader.isBlank()) {
+            LogProducer.logToAppLogger(log -> log.trace("Content-Type header is not set - returning UTF-8 by default"), getClass());
+            return StandardCharsets.UTF_8;
+        }
         try {
-            ContentType contentType = ContentType.parse(httpHeaders.getFirst(HttpHeaders.CONTENT_TYPE));
-            if (contentType.getCharset() != null) {
-                return contentType.getCharset();
+            String charset = MediaType.valueOf(contentTypeHeader).getParameters().get(MediaType.CHARSET_PARAMETER);
+            if (charset != null && !charset.isBlank()) {
+                return Charset.forName(charset.trim());
             }
-            LogProducer.logToAppLogger(log -> log.trace("Content-Type charset is not set - returning UTF-8 by default"), getClass());
-        } catch (ParseException | IllegalArgumentException e) {
+        } catch (IllegalArgumentException e) {
             LogProducer.logToAppLogger(log -> log.warn("Unknown charset in Content-Type! Returning UTF-8 by default", e), getClass());
         }
+        LogProducer.logToAppLogger(log -> log.trace("Content-Type charset is not set - returning UTF-8 by default"), getClass());
         return StandardCharsets.UTF_8;
     }
 
@@ -149,8 +152,10 @@ public abstract class JsonMessageBodyReaderBase<T> implements MessageBodyReader<
         try {
             return requestVersionReader.readVersion(object);
         } catch (TechnicalException e) {
-            throw new XsdProcessingException(CoffeeFaultType.INVALID_INPUT,
-                    MessageFormat.format("Error in reading object [class: {0}]: [{1}]", object.getClass(), e.getLocalizedMessage()), e);
+            throw new XsdProcessingException(
+                    CoffeeFaultType.INVALID_INPUT,
+                    MessageFormat.format("Error in reading object [class: {0}]: [{1}]", object.getClass(), e.getLocalizedMessage()),
+                    e);
         }
     }
 

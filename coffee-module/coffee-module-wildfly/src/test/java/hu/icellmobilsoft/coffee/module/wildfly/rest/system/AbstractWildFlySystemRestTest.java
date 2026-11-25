@@ -40,7 +40,6 @@ import org.jboss.resteasy.spi.metadata.ResourceBuilder;
 import org.jboss.resteasy.spi.metadata.ResourceMethod;
 import org.junit.jupiter.api.Test;
 
-
 /**
  * Tests the legacy manifest response and registration of the deprecated WildFly REST endpoint.
  *
@@ -54,8 +53,10 @@ class AbstractWildFlySystemRestTest {
         String manifestText = "Manifest-Version: 1.0\r\nBuild-Description: \u00e1rv\u00edzt\u0171r\u0151\r\n second\r\n\r\n"
                 + "Name: sample.txt\r\nSHA-256-Digest: example-digest";
         StringBuilder legacyResponse = new StringBuilder();
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(
-                new ByteArrayInputStream(manifestText.getBytes(StandardCharsets.UTF_8)), StandardCharsets.UTF_8))) {
+        try (BufferedReader reader = new BufferedReader(
+                new InputStreamReader(
+                        new ByteArrayInputStream(manifestText.getBytes(StandardCharsets.UTF_8)),
+                        StandardCharsets.UTF_8))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 legacyResponse.append(line).append("\n");
@@ -65,8 +66,8 @@ class AbstractWildFlySystemRestTest {
         ServletContext context = mock(ServletContext.class);
         when(context.getResourceAsStream("META-INF/MANIFEST.MF"))
                 .thenReturn(new ByteArrayInputStream(manifestText.getBytes(StandardCharsets.UTF_8)));
-        TestSystemRest rest = new TestSystemRest();
-        Field field = AbstractWildFlySystemRest.class.getDeclaredField("servletContext");
+        TestVersionInfoRest rest = new TestVersionInfoRest();
+        Field field = AbstractWildFlyVersionInfoRest.class.getDeclaredField("servletContext");
         field.setAccessible(true);
         field.set(rest, context);
         assertEquals(legacyResponse.toString(), rest.versionInfo());
@@ -76,11 +77,15 @@ class AbstractWildFlySystemRestTest {
     void stillRegistersDeprecatedVersionInfo() throws Exception {
         ResteasyProviderFactory.setInstance(new ResteasyProviderFactoryImpl());
         try {
-            ResourceMethod[] methods = ResourceBuilder.rootResourceFromAnnotations(TestSystemRest.class).getResourceMethods();
-            assertTrue(Arrays.stream(methods).anyMatch(method -> "versionInfo".equals(method.getMethod().getName())
-                    && method.getHttpMethods().contains("GET") && "/versionInfo".equals(method.getPath())));
-            assertTrue(Arrays.stream(methods).anyMatch(method -> "getEvict".equals(method.getMethod().getName())));
-            assertTrue(AbstractWildFlySystemRest.class.getMethod("versionInfo").isAnnotationPresent(Deprecated.class));
+            ResourceMethod[] systemEvictMethods = ResourceBuilder.rootResourceFromAnnotations(TestSystemEvictRest.class).getResourceMethods();
+            ResourceMethod[] versionInfoMethods = ResourceBuilder.rootResourceFromAnnotations(TestVersionInfoRest.class).getResourceMethods();
+            assertTrue(
+                    Arrays.stream(versionInfoMethods)
+                            .anyMatch(
+                                    method -> "versionInfo".equals(method.getMethod().getName())
+                                            && method.getHttpMethods().contains("GET") && "/versionInfo".equals(method.getPath())));
+            assertTrue(Arrays.stream(systemEvictMethods).anyMatch(method -> "getEvict".equals(method.getMethod().getName())));
+            assertTrue(AbstractWildFlyVersionInfoRest.class.getMethod("versionInfo").isAnnotationPresent(Deprecated.class));
         } finally {
             ResteasyProviderFactory.setInstance(null);
         }
@@ -90,6 +95,14 @@ class AbstractWildFlySystemRestTest {
      * Concrete REST resource used to verify the inherited endpoint annotations.
      */
     @Path("")
-    public static class TestSystemRest extends AbstractWildFlySystemRest {
+    public static class TestSystemEvictRest extends AbstractWildFlySystemEvictRest {
     }
+
+    /**
+     * Concrete REST resource used to verify the inherited endpoint annotations.
+     */
+    @Path("")
+    public static class TestVersionInfoRest extends AbstractWildFlyVersionInfoRest {
+    }
+
 }

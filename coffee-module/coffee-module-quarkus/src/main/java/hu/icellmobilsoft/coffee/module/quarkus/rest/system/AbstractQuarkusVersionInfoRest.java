@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -34,21 +34,20 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import hu.icellmobilsoft.coffee.cdi.config.IConfigKey;
 import hu.icellmobilsoft.coffee.cdi.config.IQuarkusConfigKey;
-import hu.icellmobilsoft.coffee.dto.common.config.evict.EvictResponse;
-import hu.icellmobilsoft.coffee.rest.action.evict.EvictAction;
 import hu.icellmobilsoft.coffee.rest.rest.BaseRestService;
-import hu.icellmobilsoft.coffee.rest.system.ISystemRest;
+import hu.icellmobilsoft.coffee.rest.versioninfo.IVersionInfoRest;
 import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
 import hu.icellmobilsoft.coffee.se.api.exception.TechnicalException;
 import hu.icellmobilsoft.coffee.se.api.exception.enums.CoffeeFaultType;
 
 /**
- * SystemRest endpoint for quarkus
- * 
+ * Version Info Rest endpoint for quarkus
+ *
  * @author tamas.cserhati
- * @since 2.11.0
+ * @author attila.kiss
+ * @since 4.0.0
  */
-public abstract class AbstractQuarkusSystemRest extends BaseRestService implements ISystemRest {
+public abstract class AbstractQuarkusVersionInfoRest extends BaseRestService implements IVersionInfoRest {
 
     /**
      * {@value #NEW_LINE}
@@ -75,27 +74,11 @@ public abstract class AbstractQuarkusSystemRest extends BaseRestService implemen
     @ConfigProperty(name = IConfigKey.COFFEE_APP_NAME)
     Optional<String> coffeeAppName;
 
-    @Inject
-    EvictAction evictAction;
-
     /**
      * Default constructor
      */
-    public AbstractQuarkusSystemRest() {
+    public AbstractQuarkusVersionInfoRest() {
         // Default constructor for java 21
-    }
-
-    /**
-     * Clears caches using the CDI-selected eviction action.
-     *
-     * @return the eviction result
-     * @throws BaseException
-     *             if eviction fails
-     * @since 4.0.0
-     */
-    @Override
-    public EvictResponse getEvict() throws BaseException {
-        return wrapNoParam(evictAction::evict, "evict");
     }
 
     @Override

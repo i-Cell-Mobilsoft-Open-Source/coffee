@@ -1,8 +1,8 @@
 /*-
  * #%L
- * DookuG
+ * Coffee
  * %%
- * Copyright (C) 2023 i-Cell Mobilsoft Zrt.
+ * Copyright (C) 2020 - 2026 i-Cell Mobilsoft Zrt.
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,40 +32,27 @@ import hu.icellmobilsoft.coffee.dto.url.BaseServicePath;
 import hu.icellmobilsoft.coffee.se.api.exception.BaseException;
 
 /**
- * REST endpoint for system service functions.
- * 
- * @author tamas.cserhati
- * @since 2.11.0
+ * REST endpoint for system eviction service functions.
+ *
+ * @author attila.kiss
+ * @since 4.0.0
  */
 @Path("")
-public interface ISystemRest {
-
-    /**
-     * META-INF/MANIFEST.MF content in Rest response
-     * 
-     * @return META-INF/MANIFEST.MF content in text format
-     * @throws BaseException
-     *             if any error occurs
-     */
-    @Operation(hidden = true)
-    @GET
-    @Path(BaseServicePath.VERSION_INFO)
-    @Produces(MediaType.TEXT_PLAIN)
-    String versionInfo() throws BaseException;
+public interface ISystemEvictRest {
 
     /**
      * Clears caches. The REST implementation supplies the eviction behavior.
-     * 
+     *
      * @return the evict result
      * @throws BaseException
      *             if any error occurs
      */
     @Tag(name = "Maintenance", description = "Clearing internal state")
     @GET
+    @Path(BaseServicePath.SYSTEM_EVICT)
     @Operation(summary = "Clearing internal state", description = """
             Clears application configuration and invokes eviction on CDI beans and configuration sources
             implementing the hu.icellmobilsoft.coffee.dto.evict.Evictable interface.""")
-    @Path(BaseServicePath.SYSTEM_EVICT)
     @Produces(value = { MediaType.TEXT_XML, MediaType.APPLICATION_XML })
     EvictResponse getEvict() throws BaseException;
 
