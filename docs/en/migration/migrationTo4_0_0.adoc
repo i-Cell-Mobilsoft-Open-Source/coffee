@@ -128,3 +128,124 @@ The changes do not result in any migration work, it is backwards compatible.
 
 .Migration
 Will be removed in the future, but for now the changes are backwards compatible doesn't need any migration.
+
+=== coffee-bom-all
+* The Apache HTTP client dependencies (`org.apache.httpcomponents:httpclient`, `httpcore` and `httpmime`)
+and the `version.org.apache.httpcomponents.httpclient` and `version.org.apache.httpcomponents.httpcore` properties
+have been removed from the dependency management (breaking change).
+
+.Migration
+Projects that use Apache HTTP client classes directly must declare the dependencies with an explicit version
+(or manage the versions in their own dependency management), for example:
+
+[source,xml]
+----
+<dependency>
+    <groupId>org.apache.httpcomponents</groupId>
+    <artifactId>httpclient</artifactId>
+    <version>4.5.14</version>
+</dependency>
+----
+
+=== coffee-rest
+* `hu.icellmobilsoft.coffee.rest.apache.BaseApacheHttpClient` has been removed (breaking change).
+* The Apache HTTP client dependencies (`org.apache.httpcomponents:httpclient`, `httpcore` and `httpmime`)
+have been removed from `coffee-rest`, so they are no longer added to the application's classpath through this module.
+* `JsonMessageBodyReaderBase` now reads the `Content-Type` charset with the Jakarta REST `MediaType`
+instead of the Apache `ContentType`. The behavior is unchanged.
+* The `ISystemRest` interface has been split into two separate interfaces (breaking change):
+** `hu.icellmobilsoft.coffee.rest.system.ISystemEvictRest` - the `getEvict()` endpoint (`GET /system/evict`)
+** `hu.icellmobilsoft.coffee.rest.versioninfo.IVersionInfoRest` - the `versionInfo()` endpoint (`GET /versionInfo`)
++
+The endpoint paths did not change.
+* `IRequestVersionReader.readVersion(...)` now declares `hu.icellmobilsoft.coffee.se.api.exception.TechnicalException`
+instead of `hu.icellmobilsoft.coffee.dto.exception.TechnicalException`.
+
+.Migration
+If the project used `BaseApacheHttpClient`, switch to the MicroProfile Rest Client
+(<<common_module_coffee-module-mp-restclient,coffee-module-mp-restclient>>), the Jakarta REST Client API or `java.net.http.HttpClient`.
+If the project uses Apache HTTP client classes directly and received them transitively through `coffee-rest`,
+declare the dependencies explicitly with a version (see the `coffee-bom-all` section).
+
+Classes implementing `hu.icellmobilsoft.coffee.rest.system.ISystemRest` directly must implement
+`ISystemEvictRest` and/or `IVersionInfoRest` instead. The previous interface has been removed without deprecation.
+For the abstract implementations, see the `coffee-module-wildfly` and `coffee-module-quarkus` sections.
+
+Code calling `IRequestVersionReader.readVersion(...)` that only handles
+`hu.icellmobilsoft.coffee.dto.exception.TechnicalException` must handle
+`hu.icellmobilsoft.coffee.se.api.exception.TechnicalException` (or `BaseException`) instead.
+Existing implementations of `IRequestVersionReader` do not need to be changed.
+
+=== coffee-system-jpa
+* The `coffee-rest` dependency has been removed from `coffee-system-jpa`.
+
+.Migration
+Projects that received `coffee-rest` (and its transitive dependencies) only through `coffee-system-jpa`
+must declare it explicitly:
+
+[source,xml]
+----
+<dependency>
+    <groupId>hu.icellmobilsoft.coffee</groupId>
+    <artifactId>coffee-rest</artifactId>
+</dependency>
+----
+
+=== coffee-module-wildfly
+* `AbstractWildFlySystemRest` has been split into two classes (breaking change):
+** `hu.icellmobilsoft.coffee.module.wildfly.rest.system.AbstractWildFlySystemEvictRest` - implements `ISystemEvictRest`,
+its `getEvict()` invokes the CDI-selected `EvictAction`
+** `hu.icellmobilsoft.coffee.module.wildfly.rest.system.AbstractWildFlyVersionInfoRest` - implements `IVersionInfoRest`,
+its `versionInfo()` Java method remains deprecated
+
+.Migration
+The previous class has been removed without deprecation. Split the class serving both endpoints
+into two REST resource classes (only the endpoints actually needed have to be implemented):
+
+[source,java]
+----
+// before
+public class SystemRest extends AbstractWildFlySystemRest {
+}
+
+// after
+import hu.icellmobilsoft.coffee.module.wildfly.rest.system.AbstractWildFlySystemEvictRest;
+import hu.icellmobilsoft.coffee.module.wildfly.rest.system.AbstractWildFlyVersionInfoRest;
+
+public class SystemEvictRest extends AbstractWildFlySystemEvictRest {
+}
+
+public class VersionInfoRest extends AbstractWildFlyVersionInfoRest {
+}
+----
+
+Existing `getEvict()` overrides and the CDI `EvictAction` customization continue to work in the evict class.
+
+=== coffee-module-quarkus
+* `AbstractQuarkusSystemRest` has been split into two classes (breaking change):
+** `hu.icellmobilsoft.coffee.module.quarkus.rest.system.AbstractQuarkusSystemEvictRest` - implements `ISystemEvictRest`,
+its `getEvict()` invokes the CDI-selected `EvictAction`
+** `hu.icellmobilsoft.coffee.module.quarkus.rest.system.AbstractQuarkusVersionInfoRest` - implements `IVersionInfoRest`
+
+.Migration
+The previous class has been removed without deprecation. Split the class serving both endpoints
+into two REST resource classes (only the endpoints actually needed have to be implemented):
+
+[source,java]
+----
+// before
+public class SystemRest extends AbstractQuarkusSystemRest {
+}
+
+// after
+import hu.icellmobilsoft.coffee.module.quarkus.rest.system.AbstractQuarkusSystemEvictRest;
+import hu.icellmobilsoft.coffee.module.quarkus.rest.system.AbstractQuarkusVersionInfoRest;
+
+public class SystemEvictRest extends AbstractQuarkusSystemEvictRest {
+}
+
+public class VersionInfoRest extends AbstractQuarkusVersionInfoRest {
+}
+----
+
+Existing `getEvict()` overrides and the CDI `EvictAction` customization continue to work in the evict class.

@@ -67,7 +67,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 
-import hu.icellmobilsoft.coffee.module.wildfly.rest.system.AbstractWildFlySystemRest;
+import hu.icellmobilsoft.coffee.module.wildfly.rest.system.AbstractWildFlyVersionInfoRest;
 import io.undertow.Undertow;
 import io.undertow.server.HttpHandler;
 import io.undertow.util.StatusCodes;
@@ -137,7 +137,7 @@ class AbstractWildFlyManagementVersionInfoTest {
         assertEquals("text/plain; charset=UTF-8", response.headers().firstValue("Content-Type").orElseThrow());
         assertEquals(manifestText.replace("\r\n", "\n"), response.body());
         TestSystemRest legacy = new TestSystemRest();
-        Field contextField = AbstractWildFlySystemRest.class.getDeclaredField("servletContext");
+        Field contextField = AbstractWildFlyVersionInfoRest.class.getDeclaredField("servletContext");
         contextField.setAccessible(true);
         contextField.set(legacy, servletContext);
         assertEquals(response.body(), legacy.versionInfo());
@@ -259,7 +259,7 @@ class AbstractWildFlyManagementVersionInfoTest {
      * Concrete legacy REST resource used to compare the two endpoint responses.
      */
     @Path("")
-    public static class TestSystemRest extends AbstractWildFlySystemRest {
+    public static class TestSystemRest extends AbstractWildFlyVersionInfoRest {
     }
 
     private HttpResponse<String> request(HttpHandler handler, String path, String method) throws Exception {

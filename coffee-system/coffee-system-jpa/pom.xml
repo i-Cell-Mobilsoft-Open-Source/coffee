@@ -11,10 +11,6 @@
 	<name>Coff:ee System - JPA</name>
 
 	<dependencies>
-		<dependency>
-			<groupId>hu.icellmobilsoft.coffee</groupId>
-			<artifactId>coffee-rest</artifactId>
-		</dependency>
 
 		<dependency>
 			<groupId>hu.icellmobilsoft.coffee</groupId>
