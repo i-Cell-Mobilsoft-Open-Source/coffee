@@ -129,3 +129,124 @@ A változtatások visszafelé kompatibilisek, migrációs lépés nem szüksége
 
 .Migration
 A jövőben el lesz távolítva, de a jelenlegi változtatások visszafelé kompatibilisek, és nincs szükség migrációra.
+
+=== coffee-bom-all
+* Az Apache HTTP kliens függőségek (`org.apache.httpcomponents:httpclient`, `httpcore` és `httpmime`),
+valamint a `version.org.apache.httpcomponents.httpclient` és `version.org.apache.httpcomponents.httpcore` property-k
+kikerültek a dependency managementből (breaking change).
+
+.Migráció
+Azoknak a projekteknek, amelyek közvetlenül használnak Apache HTTP kliens osztályokat, a függőségeket
+explicit verzióval kell felvenniük (vagy a saját dependency managementjükben kell kezelniük a verziót), például:
+
+[source,xml]
+----
+<dependency>
+    <groupId>org.apache.httpcomponents</groupId>
+    <artifactId>httpclient</artifactId>
+    <version>4.5.14</version>
+</dependency>
+----
+
+=== coffee-rest
+* A `hu.icellmobilsoft.coffee.rest.apache.BaseApacheHttpClient` osztály törlésre került (breaking change).
+* Az Apache HTTP kliens függőségek (`org.apache.httpcomponents:httpclient`, `httpcore` és `httpmime`)
+kikerültek a `coffee-rest` modulból, így ezen a modulon keresztül már nem kerülnek az alkalmazás classpathjára.
+* A `JsonMessageBodyReaderBase` a `Content-Type` charsetet az Apache `ContentType` helyett
+a Jakarta REST `MediaType` segítségével olvassa ki. A működés nem változott.
+* Az `ISystemRest` interfész két külön interfészre lett bontva (breaking change):
+** `hu.icellmobilsoft.coffee.rest.system.ISystemEvictRest` - a `getEvict()` végpont (`GET /system/evict`)
+** `hu.icellmobilsoft.coffee.rest.versioninfo.IVersionInfoRest` - a `versionInfo()` végpont (`GET /versionInfo`)
++
+A végpontok útvonala nem változott.
+* Az `IRequestVersionReader.readVersion(...)` metódus a `hu.icellmobilsoft.coffee.dto.exception.TechnicalException`
+helyett mostantól a `hu.icellmobilsoft.coffee.se.api.exception.TechnicalException` kivételt deklarálja.
+
+.Migráció
+Ha a projekt a `BaseApacheHttpClient` osztályt használta, térjünk át a MicroProfile Rest Client
+(<<common_module_coffee-module-mp-restclient,coffee-module-mp-restclient>>), a Jakarta REST Client API vagy a `java.net.http.HttpClient` használatára.
+Ha a projekt közvetlenül használ Apache HTTP kliens osztályokat, és azokat tranzitívan a `coffee-rest`-en keresztül kapta,
+vegyük fel explicit módon, verzióval a függőségeket (lásd a `coffee-bom-all` szekciót).
+
+A `hu.icellmobilsoft.coffee.rest.system.ISystemRest` interfészt közvetlenül implementáló osztályoknak helyette
+az `ISystemEvictRest` és/vagy `IVersionInfoRest` interfészt kell implementálniuk. A korábbi interfész deprecation nélkül törlésre került.
+Az abstract implementációkkal kapcsolatban lásd a `coffee-module-wildfly` és `coffee-module-quarkus` szekciókat.
+
+Az `IRequestVersionReader.readVersion(...)` metódust hívó kódban, amely csak a
+`hu.icellmobilsoft.coffee.dto.exception.TechnicalException` kivételt kezeli, helyette a
+`hu.icellmobilsoft.coffee.se.api.exception.TechnicalException` (vagy `BaseException`) kivételt kell kezelni.
+Az `IRequestVersionReader` meglévő implementációit nem kell módosítani.
+
+=== coffee-system-jpa
+* A `coffee-system-jpa` modulból kikerült a `coffee-rest` függőség.
+
+.Migráció
+Azoknak a projekteknek, amelyek a `coffee-rest` modult (és annak tranzitív függőségeit) csak a `coffee-system-jpa`-n keresztül kapták,
+explicit módon fel kell venniük:
+
+[source,xml]
+----
+<dependency>
+    <groupId>hu.icellmobilsoft.coffee</groupId>
+    <artifactId>coffee-rest</artifactId>
+</dependency>
+----
+
+=== coffee-module-wildfly
+* Az `AbstractWildFlySystemRest` két osztályra lett bontva (breaking change):
+** `hu.icellmobilsoft.coffee.module.wildfly.rest.system.AbstractWildFlySystemEvictRest` - az `ISystemEvictRest` interfészt valósítja meg,
+a `getEvict()` a CDI által kiválasztott `EvictAction`-t hívja
+** `hu.icellmobilsoft.coffee.module.wildfly.rest.system.AbstractWildFlyVersionInfoRest` - az `IVersionInfoRest` interfészt valósítja meg,
+a `versionInfo()` Java-metódus továbbra is deprecated
+
+.Migráció
+A korábbi osztály deprecation nélkül törlésre került. A mindkét végpontot kiszolgáló osztályt
+bontsuk két REST resource osztályra (elég csak a ténylegesen szükséges végpontokat implementálni):
+
+[source,java]
+----
+// korábban
+public class SystemRest extends AbstractWildFlySystemRest {
+}
+
+// mostantól
+import hu.icellmobilsoft.coffee.module.wildfly.rest.system.AbstractWildFlySystemEvictRest;
+import hu.icellmobilsoft.coffee.module.wildfly.rest.system.AbstractWildFlyVersionInfoRest;
+
+public class SystemEvictRest extends AbstractWildFlySystemEvictRest {
+}
+
+public class VersionInfoRest extends AbstractWildFlyVersionInfoRest {
+}
+----
+
+A meglévő `getEvict()` felülírások és a CDI-alapú `EvictAction` testreszabás az evict osztályban továbbra is működnek.
+
+=== coffee-module-quarkus
+* Az `AbstractQuarkusSystemRest` két osztályra lett bontva (breaking change):
+** `hu.icellmobilsoft.coffee.module.quarkus.rest.system.AbstractQuarkusSystemEvictRest` - az `ISystemEvictRest` interfészt valósítja meg,
+a `getEvict()` a CDI által kiválasztott `EvictAction`-t hívja
+** `hu.icellmobilsoft.coffee.module.quarkus.rest.system.AbstractQuarkusVersionInfoRest` - az `IVersionInfoRest` interfészt valósítja meg
+
+.Migráció
+A korábbi osztály deprecation nélkül törlésre került. A mindkét végpontot kiszolgáló osztályt
+bontsuk két REST resource osztályra (elég csak a ténylegesen szükséges végpontokat implementálni):
+
+[source,java]
+----
+// korábban
+public class SystemRest extends AbstractQuarkusSystemRest {
+}
+
+// mostantól
+import hu.icellmobilsoft.coffee.module.quarkus.rest.system.AbstractQuarkusSystemEvictRest;
+import hu.icellmobilsoft.coffee.module.quarkus.rest.system.AbstractQuarkusVersionInfoRest;
+
+public class SystemEvictRest extends AbstractQuarkusSystemEvictRest {
+}
+
+public class VersionInfoRest extends AbstractQuarkusVersionInfoRest {
+}
+----
+
+A meglévő `getEvict()` felülírások és a CDI-alapú `EvictAction` testreszabás az evict osztályban továbbra is működnek.
